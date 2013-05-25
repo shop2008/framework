@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -91,11 +92,18 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 			throw new IllegalArgumentException("Preference of :"+pid+" not found !");
 		}
 		SharedPreferences pref = d.getPreference();
+		Set<String> keys = new HashSet<String>(pref.getAll().keySet());
 		Editor editor = pref.edit();
 		for(Enumeration<String> enu = config.keys();enu.hasMoreElements();){
 			String key = enu.nextElement();
 			String val = config.get(key);
 			editor.putString(key, val);
+			keys.remove(key);
+		}
+		if(!keys.isEmpty()){
+			for (String key : keys) {
+				editor.remove(key);
+			}
 		}
 		editor.commit();
 		return d;

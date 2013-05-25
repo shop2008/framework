@@ -19,19 +19,19 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
  *
  */
 public class NetworkManagementModule<T extends IAndroidAppContext> extends AbstractModule<T> implements
-		IDataExchangeCoordinator {
+IDataExchangeCoordinator {
 	private static final Trace log = Trace.register(NetworkManagementModule.class);
-	
+
 	private LinkedList<IExchangeHandler> handlers = new LinkedList<IExchangeHandler>();
 	private long lastActiveTime = 0;
 	private long gsmActiveInterval = 3*60*1000L;		// 3 minute
 	private long wifiActiveInterval = 1*60*1000L;		// 1 minute
 	private NetworkMonitor monitor;
-	
+
 	private class NetworkMonitor implements Runnable {
 		private boolean stopRequired = false;
 		private Thread thread;
-		
+
 		public void run() {
 			this.thread = Thread.currentThread();
 			this.thread.setName("Mobile network monitor thread");
@@ -43,23 +43,23 @@ public class NetworkManagementModule<T extends IAndroidAppContext> extends Abstr
 					continue;
 				}
 				switch(checkAvailableConnection()){
-					case ConnectivityManager.TYPE_WIFI:
-						if((System.currentTimeMillis() - lastActiveTime) > wifiActiveInterval){
-							activateDataExchange();
-						}
-						break;
-					case ConnectivityManager.TYPE_MOBILE:
-						if((System.currentTimeMillis() - lastActiveTime) > gsmActiveInterval){
-							activateDataExchange();
-						}
-						break;
-					default:
-						break;
+				case ConnectivityManager.TYPE_WIFI:
+					if((System.currentTimeMillis() - lastActiveTime) > wifiActiveInterval){
+						activateDataExchange();
+					}
+					break;
+				case ConnectivityManager.TYPE_MOBILE:
+					if((System.currentTimeMillis() - lastActiveTime) > gsmActiveInterval){
+						activateDataExchange();
+					}
+					break;
+				default:
+					break;
 				}
 			}
 			this.thread = null;
 		}
-		
+
 		public void stop() {
 			stopRequired = true;
 			try {
@@ -72,9 +72,9 @@ public class NetworkManagementModule<T extends IAndroidAppContext> extends Abstr
 				}
 			}catch(Throwable t){}
 		}
-		
+
 	}
-	
+
 	protected void activateDataExchange() {
 		IExchangeHandler[] vals = null;
 		synchronized (handlers) {
@@ -93,27 +93,31 @@ public class NetworkManagementModule<T extends IAndroidAppContext> extends Abstr
 		}
 		lastActiveTime = System.currentTimeMillis();
 	}
-	
+
 	protected int checkAvailableConnection()
-    {
-        ConnectivityManager connMgr = (ConnectivityManager)
-        context.getApplication().getAndroidApplication().getSystemService(Context.CONNECTIVITY_SERVICE);    
-     
-        final android.net.NetworkInfo wifi =
-        connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);  
-             
-        final android.net.NetworkInfo mobile =
-        connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-     
-        if( wifi.isConnected() ){
-            return ConnectivityManager.TYPE_WIFI;
-        }
-        else if( mobile.isConnected()&&(!mobile.isRoaming()) ){
-            return ConnectivityManager.TYPE_MOBILE;
-        }
-        return -1;
-    }
-		
+	{
+		try {
+			ConnectivityManager connMgr = (ConnectivityManager)
+					context.getApplication().getAndroidApplication().getSystemService(Context.CONNECTIVITY_SERVICE);    
+
+			final android.net.NetworkInfo wifi =
+					connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);  
+
+			final android.net.NetworkInfo mobile =
+					connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+			if( wifi.isConnected() ){
+				return ConnectivityManager.TYPE_WIFI;
+			}
+			else if( mobile.isConnected()&&(!mobile.isRoaming()) ){
+				return ConnectivityManager.TYPE_MOBILE;
+			}
+		}catch(Throwable t){
+			log.warn("Caught exception when checking network status", t);
+		}
+		return -1;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.api.IDataExchangeCoordinator#registerHandler(com.wxxr.mobile.core.api.IExchangeHandler)
 	 */
@@ -138,7 +142,7 @@ public class NetworkManagementModule<T extends IAndroidAppContext> extends Abstr
 
 	@Override
 	protected void initServiceDependency() {
-		
+
 	}
 
 	@Override
@@ -155,7 +159,7 @@ public class NetworkManagementModule<T extends IAndroidAppContext> extends Abstr
 			this.monitor = null;
 		}
 		context.unregisterService(IDataExchangeCoordinator.class, this);
-		
+
 	}
 
 }

@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.preference;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -167,6 +168,7 @@ public class PreferenceDictionary extends Dictionary<String, String> {
 		throw new UnsupportedOperationException("This Dictionary is read only !");
 	}
 
+	
 	public void destroy() {
 		synchronized(this){
 			if(this.listener != null){
