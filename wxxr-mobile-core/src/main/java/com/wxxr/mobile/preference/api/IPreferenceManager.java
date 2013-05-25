@@ -11,6 +11,7 @@ import java.util.Set;
  *
  */
 public interface IPreferenceManager {
+	String SYSTEM_PREFERENCE_NAME = "SYSTEM";
     /**
      * Get the set of registered PIDs
      * @return The set of registered PIDs or an empty set.
