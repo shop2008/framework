@@ -1,6 +1,7 @@
 package com.wxxr.mobile.core.rpc.rest;
 import java.net.URI;
 import java.security.KeyStore;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.wxxr.mobile.core.rpc.rest.provider.JaxrsFormProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.SerializableProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.StreamingOutputProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.XStreamProvider;
+import com.wxxr.mobile.preference.api.IPreferenceManager;
 
 /**
  * Abstraction for creating Clients.  Allows SSL configuration.  Currently defaults to using Apache Http Client under
@@ -244,6 +246,24 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 	@Override
 	public <T> T getRestService(Class<T> clazz, URI target) {
 		return build().target(target).proxy(clazz);
+	}
+
+	protected String getDefaultServerUrl(){
+		IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
+		if(prefManager == null){
+			return null;
+		}
+		Dictionary<String, String> d = prefManager.getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME);
+		return d != null ? d.get(IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL) : null;
+	}
+
+	@Override
+	public <T> T getRestService(Class<T> clazz) {
+		String url = getDefaultServerUrl();
+		if(url == null){
+			throw new IllegalArgumentException("There is not default server url setup, you should specified server target url !!!");
+		}
+		return getRestService(clazz, url);
 	}
 
 }

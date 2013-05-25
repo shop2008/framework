@@ -12,6 +12,7 @@ import java.util.Set;
  */
 public interface IPreferenceManager {
 	String SYSTEM_PREFERENCE_NAME = "SYSTEM";
+	String SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL = "HomeServer";
     /**
      * Get the set of registered PIDs
      * @return The set of registered PIDs or an empty set.
