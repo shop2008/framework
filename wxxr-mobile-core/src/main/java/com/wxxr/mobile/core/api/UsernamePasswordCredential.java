@@ -10,6 +10,27 @@ package com.wxxr.mobile.core.api;
 public class UsernamePasswordCredential implements IUserAuthCredential {
 
 	private String userName,password;
+	
+	
+	
+	public UsernamePasswordCredential() {
+		super();
+	}
+
+
+	public UsernamePasswordCredential(String userName) {
+		super();
+		this.userName = userName;
+	}
+
+	
+	public UsernamePasswordCredential(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.api.IUserAuthCredential#getUserName()
 	 */
