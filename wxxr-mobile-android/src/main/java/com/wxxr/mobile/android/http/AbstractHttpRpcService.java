@@ -14,6 +14,10 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
@@ -28,9 +32,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
-import com.wxxr.mobile.core.api.IApplication;
+import com.wxxr.mobile.core.api.IUserAuthCredential;
+import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
@@ -52,12 +59,14 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	protected int connectionPoolSize;
 	protected int maxPooledPerRoute = 0;
 	protected long connectionTTL = -1;
+	private HttpContext localContext = new BasicHttpContext();
+	
 	private IHttpClientContext context = new IHttpClientContext() {
 
 		@Override
 		public HttpResponse invoke(HttpRequestBase request) throws Exception 
 		{
-			return new HttpResponseImpl(httpClient.execute(request));
+			return new HttpResponseImpl(httpClient.execute(request,localContext));
 		}
 
 		@Override
@@ -140,7 +149,33 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			{
 				cm = new SingleClientConnManager(new BasicHttpParams(),registry);
 			}
-			this.httpClient = new DefaultHttpClient(cm, new BasicHttpParams());
+			DefaultHttpClient client = new DefaultHttpClient(cm, new BasicHttpParams());
+			client.setCredentialsProvider(new CredentialsProvider() {
+				
+				@Override
+				public void setCredentials(AuthScope authscope, Credentials credentials) {					
+				}
+				
+				@Override
+				public Credentials getCredentials(AuthScope authscope) {
+					IUserAuthManager authMgr = appContext.getService(IUserAuthManager.class);
+					if(authMgr == null){
+						return null;
+					}
+					String host = new StringBuffer().append(authscope.getHost()).append(':').append(authscope.getPort()).toString();					
+					IUserAuthCredential cred = authMgr.getAuthCredential(host, authscope.getRealm());
+					return (cred != null) ? new UsernamePasswordCredentials(cred.getUserName(), cred.getAuthPassword()) : null;
+				}
+				
+				@Override
+				public void clear() {
+				}
+			});
+//			List<String> authpref = new ArrayList<String>();
+//			authpref.add(AuthPolicy.DIGEST);
+//			authpref.add(AuthPolicy.BASIC);
+//			client.getParams().setParameter(AllClientPNames., authpref);
+			this.httpClient = client;
 		}
 		catch (Exception e)
 		{
