@@ -106,7 +106,7 @@ public class PropertyDictionary implements Caching {
             BeanInfo beanInfo;
             try {
                 beanInfo = JavaBeanIntrospector.getBeanInfo(type, Object.class);
-            } catch (IntrospectionException e) {
+            } catch (Throwable e) {
                 throw new ObjectAccessException(
                     "Cannot get BeanInfo of type " + type.getName(), e);
             }

@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractMicroKernel;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.microkernel.api.IKernelModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelServiceListener;
+import com.wxxr.mobile.core.microkernel.api.IMicroKernel;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.microkernel.api.ServiceFuture;
 
@@ -120,6 +121,11 @@ public abstract class MockApplication extends AbstractMicroKernel<IAndroidAppCon
 		public IAndroidApplication getApplication() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public IMicroKernel getKernel() {
+			return MockApplication.this;
 		}
 		
 	};
