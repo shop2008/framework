@@ -196,6 +196,9 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 		if(old == null){
 			save2File();
 		}
+		if((config != null)&&(config.size() > 0)){
+			putPreference(pid, config);
+		}
 	}
 	
 	private void save2File(){
