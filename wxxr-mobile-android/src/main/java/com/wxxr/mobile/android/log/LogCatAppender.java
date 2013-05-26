@@ -1,4 +1,7 @@
 package com.wxxr.mobile.android.log;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
@@ -13,7 +16,7 @@ import android.util.Log;
  * @author Rolf Kulemann, Pascal Bockhorn
  */
 public class LogCatAppender extends AppenderSkeleton {
-	
+	private Map<String, String> map = new ConcurrentHashMap<String, String>();
 
 	public LogCatAppender(final Layout messageLayout, final Layout tagLayout) {
 		setLayout(messageLayout); 
@@ -28,38 +31,41 @@ public class LogCatAppender extends AppenderSkeleton {
 	}
 
 	private String getTag(String loggerName) {
-		String tag = null;
-		int idx = loggerName.lastIndexOf('.');
-		if(idx > 0){
-			tag = loggerName.substring(idx+1);
-		}else{
-			tag = loggerName;
-		}
-		int len = tag.length();
-		if(len > 23) {		// limitted by logCat
-			tag = tag.substring(len-23);
+		String tag = map.get(loggerName);
+		if(tag == null){
+			int idx = loggerName.lastIndexOf('.');
+			if(idx > 0){
+				tag = loggerName.substring(idx+1);
+			}else{
+				tag = loggerName;
+			}
+			int len = tag.length();
+			if(len > 23) {		// limitted by logCat
+				tag = tag.substring(len-23);
+			}
+			map.put(loggerName, tag);
 		}
 		return tag;
 	}
 
-	private static int translate(final int level) {
-		switch (level) {
-			case Level.FATAL_INT: return android.util.Log.ASSERT;
-			case Level.ERROR_INT: return android.util.Log.ERROR;
-			case Level.WARN_INT:  return android.util.Log.WARN;
-			case Level.INFO_INT:  return android.util.Log.INFO;
-			case Level.DEBUG_INT: return android.util.Log.DEBUG;
-			case Level.TRACE_INT: return android.util.Log.VERBOSE;
-		}
-		return android.util.Log.VERBOSE;
-	}
+//	private static int translate(final int level) {
+//		switch (level) {
+//			case Level.FATAL_INT: return android.util.Log.ASSERT;
+//			case Level.ERROR_INT: return android.util.Log.ERROR;
+//			case Level.WARN_INT:  return android.util.Log.WARN;
+//			case Level.INFO_INT:  return android.util.Log.INFO;
+//			case Level.DEBUG_INT: return android.util.Log.DEBUG;
+//			case Level.TRACE_INT: return android.util.Log.VERBOSE;
+//		}
+//		return android.util.Log.VERBOSE;
+//	}
 
 	@Override
 	protected void append(final LoggingEvent le) {
 		String tag = getTag(le.getLoggerName());
-		if(!Log.isLoggable(tag, translate(le.getLevel().toInt()))){
-			return;
-		}
+//		if(!Log.isLoggable(tag, translate(le.getLevel().toInt()))){
+//			return;
+//		}
 		switch (le.getLevel().toInt()) {
 		case Level.TRACE_INT:
 			if (le.getThrowableInformation() != null) {

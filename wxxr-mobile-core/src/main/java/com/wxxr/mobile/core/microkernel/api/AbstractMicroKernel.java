@@ -111,7 +111,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 		@Override
 		public void invokeLater(final Runnable task, long delay, TimeUnit unit) {
-			timer.purge();
 			timer.schedule(new TimerTask() {
 				
 				@Override
@@ -122,7 +121,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 						log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
 					}
 				}
-			}, unit.convert(delay, TimeUnit.MILLISECONDS));
+			}, TimeUnit.MILLISECONDS.convert(delay, unit));
 		}
 	};
 	

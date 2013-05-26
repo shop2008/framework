@@ -1,0 +1,52 @@
+/**
+ * 
+ */
+package com.wxxr.mobile.android.app;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+
+import com.wxxr.mobile.core.log.api.Trace;
+
+/**
+ * @author neillin
+ *
+ */
+public class UnexpectingExceptionHandler implements UncaughtExceptionHandler {
+	private static final Trace log = Trace.register(UnexpectingExceptionHandler.class);
+	private static UnexpectingExceptionHandler instance;
+	
+	static UnexpectingExceptionHandler install() {
+		if(instance == null){
+			instance = new UnexpectingExceptionHandler();
+		}
+		return instance;
+	}
+	
+	private Thread uiThread;
+	private UncaughtExceptionHandler defaultHandler;
+
+	
+	private UnexpectingExceptionHandler(){
+		this.uiThread = Thread.currentThread();
+		this.defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+		Thread.setDefaultUncaughtExceptionHandler(this);
+	}
+	
+	public Thread getUiThread() {
+		return this.uiThread;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
+	 */
+	@Override
+	public void uncaughtException(Thread t, Throwable e) {
+		if(t == uiThread){
+			log.fatal("Caught unexpecting exception on ui thread, that's critical!",e);
+			this.defaultHandler.uncaughtException(t, e);
+		}else{
+			log.error("Caught unexpecting exception on thread :"+t+", uiThread :"+uiThread,e);
+		}
+
+	}
+
+}
