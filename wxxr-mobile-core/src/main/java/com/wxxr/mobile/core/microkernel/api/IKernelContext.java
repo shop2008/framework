@@ -10,6 +10,7 @@
 package com.wxxr.mobile.core.microkernel.api;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public interface IKernelContext {
@@ -29,5 +30,7 @@ public interface IKernelContext {
    Object getAttribute(String key);
    
 	ExecutorService getExecutor();
+	
+	void invokeLater(Runnable task, long delay, TimeUnit unit);
 
 }

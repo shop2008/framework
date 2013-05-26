@@ -15,8 +15,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
 
@@ -105,6 +108,21 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		public IMicroKernel getKernel() {
 			return AbstractMicroKernel.this;
 		}
+
+		@Override
+		public void invokeLater(final Runnable task, long delay, TimeUnit unit) {
+			timer.schedule(new TimerTask() {
+				
+				@Override
+				public void run() {
+					try {
+						getExecutor().execute(task);
+					}catch(Throwable t){
+						log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
+					}
+				}
+			}, unit.convert(delay, TimeUnit.MILLISECONDS));
+		}
 	};
 	
 //	private Element moduleConfigure;
@@ -122,6 +140,8 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	private LinkedList<IKernelServiceListener> serviceListeners = new LinkedList<IKernelServiceListener>();
 	private LinkedList<IModuleListener> moduleListeners = new LinkedList<IModuleListener>();
+	
+	private Timer timer = new Timer("MicroKernel Timer Thread");
 
 	protected IKernelContext getAbstractContext() {
 		return this.abstractContext;
@@ -148,6 +168,8 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		}
 		this.started = false;
 		fireKernelStopped();
+		timer.purge();
+		timer.cancel();
 	}
 
 
@@ -527,5 +549,13 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		synchronized(moduleListeners){
 			return moduleListeners.remove(listener);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.microkernel.api.IMicroKernel#invokeLater(java.lang.Runnable, long, java.util.concurrent.TimeUnit)
+	 */
+	@Override
+	public void invokeLater(Runnable task, long delay, TimeUnit unit) {
+		getAbstractContext().invokeLater(task, delay, unit);
 	}
 }
