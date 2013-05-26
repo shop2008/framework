@@ -119,13 +119,13 @@ public class Trace
 	 * @param arg1
 	 */
 	public void warn(String message, Throwable e) {
-//		if(logger.isEnabled(SeverityLevel.DEBUG)){
+		if(logger.isEnabled(SeverityLevel.DEBUG)){
 			logger.log(SeverityLevel.WARN,message, e);
-//		}else if(e != null){
-//			logger.log(SeverityLevel.WARN,new StringBuilder(message).append(",Exception :").append(e.getClass().getName()).append(", message :").append(e.getLocalizedMessage()).toString());
-//		}else{
-//			logger.log(SeverityLevel.WARN,message);
-//		}
+		}else if(e != null){
+			logger.log(SeverityLevel.WARN,new StringBuilder(message).append(",Exception :").append(e.getClass().getName()).append(", message :").append(e.getLocalizedMessage()).toString());
+		}else{
+			logger.log(SeverityLevel.WARN,message);
+		}
 		if(delegate != null){
 			delegate.log(SeverityLevel.WARN,message, e);
 		}

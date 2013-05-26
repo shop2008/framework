@@ -111,6 +111,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 		@Override
 		public void invokeLater(final Runnable task, long delay, TimeUnit unit) {
+			timer.purge();
 			timer.schedule(new TimerTask() {
 				
 				@Override
