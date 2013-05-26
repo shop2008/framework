@@ -1,6 +1,7 @@
 package com.wxxr.mobile.core.rpc.impl;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.android.app.IAndroidApplication;
@@ -126,6 +127,11 @@ public abstract class MockApplication extends AbstractMicroKernel<IAndroidAppCon
 		@Override
 		public IMicroKernel getKernel() {
 			return MockApplication.this;
+		}
+
+		@Override
+		public void invokeLater(Runnable task, long delay, TimeUnit unit) {
+			delegate.invokeLater(task, delay, unit);
 		}
 		
 	};
