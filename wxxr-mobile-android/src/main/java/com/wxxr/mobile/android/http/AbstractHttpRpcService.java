@@ -14,6 +14,9 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
+import org.apache.http.Header;
+import org.apache.http.RequestLine;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -66,7 +69,19 @@ public class AbstractHttpRpcService implements HttpRpcService {
 		@Override
 		public HttpResponse invoke(HttpRequestBase request) throws Exception 
 		{
-			return new HttpResponseImpl(httpClient.execute(request,localContext));
+			org.apache.http.HttpResponse resp = null;
+			try {
+				resp = httpClient.execute(request,localContext);
+				return new HttpResponseImpl(resp);
+			}finally {
+				if(log.isDebugEnabled()){
+					log.debug("Sending HttpRequest :["+printRequest(request)+"]");
+					log.debug("\n");
+					if(resp != null){
+						log.debug("HttpResponse :["+printResponse(resp)+"]");
+					}
+				}
+			}
 		}
 
 		@Override
@@ -74,6 +89,36 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			return appContext.getExecutor();
 		}
 	};
+
+	protected String printRequest(org.apache.http.HttpRequest req) {
+		RequestLine line = req.getRequestLine();
+		Header[] headers = req.getAllHeaders();
+		StringBuffer buf = new StringBuffer();
+		buf.append("Target URI :").append(line.getUri()).append(" , Method :").append(line.getMethod()).append(" , Protocol :").append(line.getProtocolVersion()).append('\n');
+		if(headers != null){
+			buf.append("Request Headers :[\n");
+			for (Header header : headers) {
+				buf.append('\t').append(header.getName()).append(" -> ").append(header.getValue()).append('\n');
+			}
+			buf.append("]\n");
+		}
+		return buf.toString();
+	}
+	
+	protected String printResponse(org.apache.http.HttpResponse resp) {
+		StatusLine line = resp.getStatusLine();
+		Header[] headers = resp.getAllHeaders();
+		StringBuffer buf = new StringBuffer();
+		buf.append("Status :").append(line.getReasonPhrase()).append(" , code :").append(line.getStatusCode()).append(" , Protocol :").append(line.getProtocolVersion()).append('\n');
+		if(headers != null){
+			buf.append("Request Headers :[\n");
+			for (Header header : headers) {
+				buf.append('\t').append(header.getName()).append(" -> ").append(header.getValue()).append('\n');
+			}
+			buf.append("]\n");
+		}
+		return buf.toString();
+	}
 
 
 	protected void initHttpEngine(ISiteSecurityService securityService)
