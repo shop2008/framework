@@ -70,7 +70,7 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 	 */
 	@Override
 	public boolean hasPreference(String pid) {
-			return this.prefs.contains(pid);
+			return this.prefs.containsKey(pid);
 	}
 
 	/* (non-Javadoc)
