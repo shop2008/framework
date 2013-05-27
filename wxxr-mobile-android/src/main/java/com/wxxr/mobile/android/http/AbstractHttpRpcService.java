@@ -75,10 +75,10 @@ public class AbstractHttpRpcService implements HttpRpcService {
 				return new HttpResponseImpl(resp);
 			}finally {
 				if(log.isDebugEnabled()){
-					log.debug("Sending HttpRequest :["+printRequest(request)+"]");
+					log.debug("Sending HttpRequest :{"+printRequest(request)+"\n}");
 					log.debug("\n");
 					if(resp != null){
-						log.debug("HttpResponse :["+printResponse(resp)+"]");
+						log.debug("HttpResponse :{"+printResponse(resp)+"\n}");
 					}
 				}
 			}
@@ -94,9 +94,9 @@ public class AbstractHttpRpcService implements HttpRpcService {
 		RequestLine line = req.getRequestLine();
 		Header[] headers = req.getAllHeaders();
 		StringBuffer buf = new StringBuffer();
-		buf.append("Target URI :").append(line.getUri()).append(" , Method :").append(line.getMethod()).append(" , Protocol :").append(line.getProtocolVersion()).append('\n');
+		buf.append("URI :").append(line.getUri()).append(" , Method :").append(line.getMethod()).append(" , Protocol :").append(line.getProtocolVersion()).append('\n');
 		if(headers != null){
-			buf.append("Request Headers :[\n");
+			buf.append("Headers :[\n");
 			for (Header header : headers) {
 				buf.append('\t').append(header.getName()).append(" -> ").append(header.getValue()).append('\n');
 			}
