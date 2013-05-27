@@ -12,6 +12,8 @@ package com.wxxr.mobile.core.microkernel.api;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.util.ICancellable;
+
 
 public interface IKernelContext {
 	@SuppressWarnings("rawtypes")
@@ -31,6 +33,6 @@ public interface IKernelContext {
    
 	ExecutorService getExecutor();
 	
-	void invokeLater(Runnable task, long delay, TimeUnit unit);
+	ICancellable invokeLater(Runnable task, long delay, TimeUnit unit);
 
 }

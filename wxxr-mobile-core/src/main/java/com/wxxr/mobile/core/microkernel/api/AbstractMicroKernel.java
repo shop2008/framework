@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.util.ICancellable;
 
 
 /**
@@ -34,7 +35,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IKernelModule<C>> implements IMicroKernel<C,M>{
 	private static Trace log = Trace.register(AbstractMicroKernel.class);
 	
-	private IKernelContext abstractContext = new IKernelContext() {
+	protected class AbstractContext implements IKernelContext {
 
 		@Override
 		public Object getAttribute(String key) {
@@ -110,8 +111,8 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		}
 
 		@Override
-		public void invokeLater(final Runnable task, long delay, TimeUnit unit) {
-			timer.schedule(new TimerTask() {
+		public ICancellable invokeLater(final Runnable task, long delay, TimeUnit unit) {
+			final TimerTask t = new TimerTask() {
 				
 				@Override
 				public void run() {
@@ -121,7 +122,20 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 						log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
 					}
 				}
-			}, TimeUnit.MILLISECONDS.convert(delay, unit));
+			};
+			timer.schedule(t, TimeUnit.MILLISECONDS.convert(delay, unit));
+			return new ICancellable() {
+				private boolean cancelled = false;
+				@Override
+				public boolean isCancelled() {
+					return cancelled;
+				}
+				
+				@Override
+				public void cancel() {
+					cancelled = t.cancel();
+				}
+			};
 		}
 	};
 	
@@ -143,9 +157,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	
 	private Timer timer = new Timer("MicroKernel Timer Thread");
 
-	protected IKernelContext getAbstractContext() {
-		return this.abstractContext;
-	}
 
 	@SuppressWarnings("unchecked")
 	public void start() throws Exception{
@@ -509,7 +520,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 */
 	@Override
 	public <S> S getService(Class<S> interfaceClazz) {
-		return getAbstractContext().getService(interfaceClazz);
+		return getContext().getService(interfaceClazz);
 	}
 
 	/* (non-Javadoc)
@@ -517,7 +528,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 */
 	@Override
 	public <S> ServiceFuture<S> getServiceAsync(Class<S> interfaceClazz) {
-		return getAbstractContext().getServiceAsync(interfaceClazz);
+		return getContext().getServiceAsync(interfaceClazz);
 	}
 
 	/* (non-Javadoc)
@@ -526,7 +537,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	@Override
 	public <S> void checkServiceAvailable(Class<S> interfaceClazz,
 			IServiceAvailableCallback<S> callback) {
-		getAbstractContext().checkServiceAvailable(interfaceClazz, callback);
+		getContext().checkServiceAvailable(interfaceClazz, callback);
 	}
 
 	/* (non-Javadoc)
@@ -555,7 +566,8 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 * @see com.wxxr.mobile.core.microkernel.api.IMicroKernel#invokeLater(java.lang.Runnable, long, java.util.concurrent.TimeUnit)
 	 */
 	@Override
-	public void invokeLater(Runnable task, long delay, TimeUnit unit) {
-		getAbstractContext().invokeLater(task, delay, unit);
+	public ICancellable invokeLater(Runnable task, long delay, TimeUnit unit) {
+		return getContext().invokeLater(task, delay, unit);
 	}
+	
 }

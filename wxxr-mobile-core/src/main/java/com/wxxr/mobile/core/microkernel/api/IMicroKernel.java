@@ -7,6 +7,8 @@ package com.wxxr.mobile.core.microkernel.api;
 
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.util.ICancellable;
+
 public interface IMicroKernel<C extends IKernelContext, T extends IKernelModule<C>> {
 
    public void registerKernelModule(T module);
@@ -27,7 +29,7 @@ public interface IMicroKernel<C extends IKernelContext, T extends IKernelModule<
    
    boolean removeModuleListener(IModuleListener listener);
 
-	void invokeLater(Runnable task, long delay, TimeUnit unit);
+	ICancellable invokeLater(Runnable task, long delay, TimeUnit unit);
 
 
 }
