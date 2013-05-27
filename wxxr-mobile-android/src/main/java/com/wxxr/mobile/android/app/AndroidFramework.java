@@ -29,9 +29,9 @@ import com.wxxr.mobile.core.microkernel.api.IKernelModule;
  * @author neillin
  *
  */
-public abstract class AndroidApplication<C extends IAndroidAppContext, M extends IKernelModule<C>> extends AbstractMicroKernel<C, M> implements IAndroidApplication<C,M>{
+public abstract class AndroidFramework<C extends IAndroidAppContext, M extends IKernelModule<C>> extends AbstractMicroKernel<C, M> implements IAndroidFramework<C,M>{
 
-	private static final Trace log = Trace.register(AndroidApplication.class);
+	private static final Trace log = Trace.register(AndroidFramework.class);
 	
 	private ExecutorService executor;
 	private int maxThread = 10;
@@ -39,12 +39,12 @@ public abstract class AndroidApplication<C extends IAndroidAppContext, M extends
 	private Map<String, String> info = new HashMap<String, String>();
 
 //	private Log4jConfigurator logConfig = new Log4jConfigurator();
-	public AndroidApplication() {
+	public AndroidFramework() {
 		super();
 		handler = UnexpectingExceptionHandler.install();
 	}
 
-	public AndroidApplication(int maxThreads) {
+	public AndroidFramework(int maxThreads) {
 		this.maxThread = maxThreads;
 		UnexpectingExceptionHandler.install();
 	}
@@ -58,7 +58,7 @@ public abstract class AndroidApplication<C extends IAndroidAppContext, M extends
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
+	 * @see com.wxxr.mobile.android.app.AndroidFramework#start()
 	 */
 	@Override
 	public void start() {

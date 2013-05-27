@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
-import com.wxxr.mobile.android.app.IAndroidApplication;
+import com.wxxr.mobile.android.app.IAndroidFramework;
 import com.wxxr.mobile.core.microkernel.api.AbstractMicroKernel;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.microkernel.api.IKernelModule;
@@ -119,7 +119,7 @@ public abstract class MockApplication extends AbstractMicroKernel<IAndroidAppCon
 		 * @see com.wxxr.mobile.android.app.IAndroidAppContext#getApplication()
 		 */
 		@Override
-		public IAndroidApplication getApplication() {
+		public IAndroidFramework getApplication() {
 			// TODO Auto-generated method stub
 			return null;
 		}

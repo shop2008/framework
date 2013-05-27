@@ -12,6 +12,6 @@ import com.wxxr.mobile.core.microkernel.api.IKernelModule;
  * @author neillin
  *
  */
-public interface IAndroidApplication<C extends IAndroidAppContext, M extends IKernelModule<C>> extends IApplication<C, M> {
+public interface IAndroidFramework<C extends IAndroidAppContext, M extends IKernelModule<C>> extends IApplication<C, M> {
 	Application getAndroidApplication();
 }

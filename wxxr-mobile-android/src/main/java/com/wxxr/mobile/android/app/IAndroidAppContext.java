@@ -11,5 +11,5 @@ import com.wxxr.mobile.core.microkernel.api.IKernelContext;
  */
 public interface IAndroidAppContext extends IKernelContext {
 	@SuppressWarnings("rawtypes")
-	IAndroidApplication getApplication();
+	IAndroidFramework getApplication();
 }
