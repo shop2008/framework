@@ -13,6 +13,7 @@ import org.apache.http.message.BasicHeader;
 
 import com.wxxr.javax.ws.rs.ProcessingException;
 import com.wxxr.javax.ws.rs.core.MultivaluedMap;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
@@ -28,6 +29,7 @@ import com.wxxr.mobile.core.util.SelfExpandingBufferredInputStream;
  */
 public class HttpRpcClientEngine implements ClientHttpEngine
 {
+	private static final Trace log = Trace.register(HttpRpcClientEngine.class);
    protected final HttpRpcService httpClient;
 
 
@@ -144,6 +146,11 @@ public class HttpRpcClientEngine implements ClientHttpEngine
                   return new BasicHeader("Content-Type", request.getHeaders().getMediaType().toString());
                }
             };
+            if(log.isDebugEnabled()){
+            	try {
+            		log.debug("Request Body :",new String(baos.toByteArray(),"UTF-8"));
+            	}catch(Throwable t){}
+            }
             commitHeaders(request, httpMethod);
             httpMethod.setRequestEntity(new DataEntity() {
 				

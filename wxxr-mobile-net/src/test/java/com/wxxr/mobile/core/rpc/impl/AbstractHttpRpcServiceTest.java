@@ -52,6 +52,30 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 				// TODO Auto-generated method stub
 				
 			}
+
+			@Override
+			public String getMacIdentity() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getApplicationId() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getApplicationVersion() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getApplicationBuildNnumber() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 		IAndroidAppContext context = app.getContext();
 		service.startup(context);
