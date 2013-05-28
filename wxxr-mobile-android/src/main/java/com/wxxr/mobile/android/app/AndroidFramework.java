@@ -157,6 +157,25 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		}
 	}
 
+	
+	@Override
+	public String getMacIdentity() {
+		
+		return null;
+	}
+	@Override
+	public String getApplicationId() {
+		return getAndroidApplication().getPackageName();
+	}
+	@Override
+	public String getApplicationVersion() {
+		return this.info.get("versionName");
+	}
+	@Override
+	public String getApplicationBuildNnumber() {
+		return null;
+	}
+
 
 
 }

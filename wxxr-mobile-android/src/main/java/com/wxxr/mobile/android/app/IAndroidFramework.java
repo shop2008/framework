@@ -14,4 +14,8 @@ import com.wxxr.mobile.core.microkernel.api.IKernelModule;
  */
 public interface IAndroidFramework<C extends IAndroidAppContext, M extends IKernelModule<C>> extends IApplication<C, M> {
 	Application getAndroidApplication();
+	String getMacIdentity();
+	String getApplicationId();
+	String getApplicationVersion();
+	String getApplicationBuildNnumber();
 }

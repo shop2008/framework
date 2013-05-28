@@ -70,13 +70,14 @@ public class AbstractHttpRpcService implements HttpRpcService {
 		public HttpResponse invoke(HttpRequestBase request) throws Exception 
 		{
 			org.apache.http.HttpResponse resp = null;
+			if(log.isDebugEnabled()){
+				log.debug("Sending HttpRequest :{"+printRequest(request)+"\n}");
+			}
 			try {
 				resp = httpClient.execute(request,localContext);
 				return new HttpResponseImpl(resp);
 			}finally {
 				if(log.isDebugEnabled()){
-					log.debug("Sending HttpRequest :{"+printRequest(request)+"\n}");
-					log.debug("\n");
 					if(resp != null){
 						log.debug("HttpResponse :{"+printResponse(resp)+"\n}");
 					}

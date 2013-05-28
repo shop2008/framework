@@ -10,9 +10,14 @@ package com.wxxr.mobile.core.api;
  *
  */
 public interface IDataExchangeCoordinator {
+	int NETWORK_ID_WIFI = 1;
+	int NETWORK_ID_3G = 2;
+	int NETWORK_ID_GSM = 3;
 	
 	void registerHandler(IExchangeHandler handler);
 	
 	boolean unregisterHandler(IExchangeHandler handler);
+	
+	int checkAvailableNetwork();
 
 }

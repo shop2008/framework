@@ -12,8 +12,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-
-import org.apache.http.Header;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
@@ -22,12 +20,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.message.BasicHeader;
 
 import com.wxxr.mobile.core.rpc.api.DataEntity;
 import com.wxxr.mobile.core.rpc.api.RequestCallback;
-import com.wxxr.mobile.core.rpc.api.Response;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
@@ -163,21 +158,7 @@ public class HttpRequestImpl implements HttpRequest {
         	 final DataEntity entity = this.dataEntity;
              HttpPost post = (HttpPost) httpMethod;
              commitHeaders(httpMethod);
-             post.setEntity(new InputStreamEntity(entity.getContent(), entity.getContentLength()){
-            	
-            	@Override
-                public boolean isRepeatable() {
-                    return false;
-                }
-            	
-                @Override
-                public Header getContentType()
-                {
-                   return new BasicHeader("Content-Type", entity.getContentType());
-                }
-
-
-            });
+             post.setEntity(new EntityWrapper(entity));
 	      } else { // no body
 	         commitHeaders(httpMethod);
 	      }

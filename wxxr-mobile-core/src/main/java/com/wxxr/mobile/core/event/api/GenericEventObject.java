@@ -10,7 +10,7 @@ package com.wxxr.mobile.core.event.api;
 public class GenericEventObject implements IEventObject {
 
 	private Object source;
-	private boolean needSync;
+	private boolean needSync = true;
 	private long timestamp = System.currentTimeMillis();
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.event.api.IEventObject#getSource()

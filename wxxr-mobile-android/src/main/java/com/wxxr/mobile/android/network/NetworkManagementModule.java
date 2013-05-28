@@ -162,4 +162,17 @@ IDataExchangeCoordinator {
 
 	}
 
+	@Override
+	public int checkAvailableNetwork() {
+		switch(checkAvailableConnection()){
+		case ConnectivityManager.TYPE_WIFI:
+			return NETWORK_ID_WIFI;
+		case ConnectivityManager.TYPE_MOBILE:
+			return NETWORK_ID_GSM;
+		default:
+			return -1;
+		}
+
+	}
+
 }

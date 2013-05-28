@@ -15,7 +15,6 @@ import java.util.concurrent.Callable;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
-import com.wxxr.mobile.core.microkernel.api.IKernelModule;
 
 /**
  * @class desc A SimpleEventRouter.
@@ -24,7 +23,7 @@ import com.wxxr.mobile.core.microkernel.api.IKernelModule;
  * @version v1.0 
  * @created time May 18, 2011  3:49:19 PM
  */
-public class EventRouterImpl<T extends IKernelContext, M extends IKernelModule<T>> extends AbstractModule<T> implements IEventRouter {
+public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T> implements IEventRouter {
 
 	private static final Trace log = Trace.register(EventRouterImpl.class);
 	
