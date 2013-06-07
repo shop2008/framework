@@ -17,15 +17,15 @@
 
 package org.apache.log4j.pattern;
 
-import org.apache.log4j.helpers.LogLog;
-import org.apache.log4j.spi.LoggingEvent;
-
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import org.apache.log4j.IDateFormat;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.PatternDateFormat;
+import org.apache.log4j.spi.LoggingEvent;
 
 
 /**
@@ -70,7 +70,7 @@ public final class DatePatternConverter extends LoggingEventPatternConverter {
      * This class wraps a DateFormat and forces the time zone to the
      *   default time zone before each format and parse request.
      */
-  private static class DefaultZoneDateFormat extends DateFormat {
+  private static class DefaultZoneDateFormat implements IDateFormat {
      /**
       * Serialization version ID.
       */
@@ -78,31 +78,29 @@ public final class DatePatternConverter extends LoggingEventPatternConverter {
      /**
          * Wrapped instance of DateFormat.
          */
-    private final DateFormat dateFormat;
+    private final IDateFormat dateFormat;
 
         /**
          * Construct new instance.
          * @param format format, may not be null.
          */
-    public DefaultZoneDateFormat(final DateFormat format) {
+    public DefaultZoneDateFormat(final IDateFormat format) {
         dateFormat = format;
     }
 
         /**
          * @{inheritDoc}
          */
-    public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+    public String format(Date date) {
         dateFormat.setTimeZone(TimeZone.getDefault());
-        return dateFormat.format(date, toAppendTo, fieldPosition);
+        return dateFormat.format(date);
     }
 
-        /**
-         * @{inheritDoc}
-         */
-    public Date parse(String source, ParsePosition pos) {
-        dateFormat.setTimeZone(TimeZone.getDefault());
-        return dateFormat.parse(source, pos);
-    }
+		@Override
+		public void setTimeZone(TimeZone timezone) {
+			dateFormat.setTimeZone(timezone);
+		}
+
   }
   
   /**
@@ -137,10 +135,10 @@ public final class DatePatternConverter extends LoggingEventPatternConverter {
     }
 
     int maximumCacheValidity = 1000;
-    DateFormat simpleFormat = null;
+    IDateFormat simpleFormat = null;
 
     try {
-      simpleFormat = new SimpleDateFormat(pattern);
+      simpleFormat = new PatternDateFormat(pattern);
       maximumCacheValidity = CachedDateFormat.getMaximumCacheValidity(pattern);
     } catch (IllegalArgumentException e) {
         LogLog.warn(
@@ -148,7 +146,7 @@ public final class DatePatternConverter extends LoggingEventPatternConverter {
           + patternOption, e);
 
       // default to the ISO8601 format
-      simpleFormat = new SimpleDateFormat(ISO8601_PATTERN);
+      simpleFormat = new PatternDateFormat(ISO8601_PATTERN);
     }
 
     // if the option list contains a TZ option, then set it.

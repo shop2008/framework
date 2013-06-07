@@ -39,8 +39,6 @@ import org.apache.log4j.helpers.NullEnumeration;
 import org.apache.log4j.helpers.AppenderAttachableImpl;
 
 import java.util.Enumeration;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Vector;
 
 
@@ -117,7 +115,7 @@ public class Category implements AppenderAttachable {
      getFQCN method. */
   private static final String FQCN = Category.class.getName();
 
-  protected ResourceBundle resourceBundle;
+//  protected ResourceBundle resourceBundle;
 
   // Categories need to know what Hierarchy they are in
   protected LoggerRepository repository;
@@ -587,57 +585,57 @@ public class Category implements AppenderAttachable {
     return LogManager.getRootLogger();
   }
 
-  /**
-     Return the <em>inherited</em> {@link ResourceBundle} for this
-     category.
-
-     <p>This method walks the hierarchy to find the appropriate
-     resource bundle. It will return the resource bundle attached to
-     the closest ancestor of this category, much like the way
-     priorities are searched. In case there is no bundle in the
-     hierarchy then <code>null</code> is returned.
-
-     @since 0.9.0 */
-  public
-  ResourceBundle getResourceBundle() {
-    for(Category c = this; c != null; c=c.parent) {
-      if(c.resourceBundle != null)
-	return c.resourceBundle;
-    }
-    // It might be the case that there is no resource bundle
-    return null;
-  }
-
-  /**
-     Returns the string resource coresponding to <code>key</code> in
-     this category's inherited resource bundle. See also {@link
-     #getResourceBundle}.
-
-     <p>If the resource cannot be found, then an {@link #error error}
-     message will be logged complaining about the missing resource.
-  */
-  protected
-  String getResourceBundleString(String key) {
-    ResourceBundle rb = getResourceBundle();
-    // This is one of the rare cases where we can use logging in order
-    // to report errors from within log4j.
-    if(rb == null) {
-      //if(!hierarchy.emittedNoResourceBundleWarning) {
-      //error("No resource bundle has been set for category "+name);
-      //hierarchy.emittedNoResourceBundleWarning = true;
-      //}
-      return null;
-    }
-    else {
-      try {
-	return rb.getString(key);
-      }
-      catch(MissingResourceException mre) {
-	error("No resource is associated with key \""+key+"\".");
-	return null;
-      }
-    }
-  }
+//  /**
+//     Return the <em>inherited</em> {@link ResourceBundle} for this
+//     category.
+//
+//     <p>This method walks the hierarchy to find the appropriate
+//     resource bundle. It will return the resource bundle attached to
+//     the closest ancestor of this category, much like the way
+//     priorities are searched. In case there is no bundle in the
+//     hierarchy then <code>null</code> is returned.
+//
+//     @since 0.9.0 */
+//  public
+//  ResourceBundle getResourceBundle() {
+//    for(Category c = this; c != null; c=c.parent) {
+//      if(c.resourceBundle != null)
+//	return c.resourceBundle;
+//    }
+//    // It might be the case that there is no resource bundle
+//    return null;
+//  }
+//
+//  /**
+//     Returns the string resource coresponding to <code>key</code> in
+//     this category's inherited resource bundle. See also {@link
+//     #getResourceBundle}.
+//
+//     <p>If the resource cannot be found, then an {@link #error error}
+//     message will be logged complaining about the missing resource.
+//  */
+//  protected
+//  String getResourceBundleString(String key) {
+//    ResourceBundle rb = getResourceBundle();
+//    // This is one of the rare cases where we can use logging in order
+//    // to report errors from within log4j.
+//    if(rb == null) {
+//      //if(!hierarchy.emittedNoResourceBundleWarning) {
+//      //error("No resource bundle has been set for category "+name);
+//      //hierarchy.emittedNoResourceBundleWarning = true;
+//      //}
+//      return null;
+//    }
+//    else {
+//      try {
+//	return rb.getString(key);
+//      }
+//      catch(MissingResourceException mre) {
+//	error("No resource is associated with key \""+key+"\".");
+//	return null;
+//      }
+//    }
+//  }
 
   /**
     Log a message object with the {@link Level#INFO INFO} Level.
@@ -780,7 +778,7 @@ public class Category implements AppenderAttachable {
       return;
     }
     if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {
-      String msg = getResourceBundleString(key);
+      String msg = null; //getResourceBundleString(key);
       // if message corresponding to 'key' could not be found in the
       // resource bundle, then default to 'key'.
       if(msg == null) {
@@ -804,12 +802,12 @@ public class Category implements AppenderAttachable {
       return;
     }
     if(priority.isGreaterOrEqual(this.getEffectiveLevel())) {
-      String pattern = getResourceBundleString(key);
-      String msg;
+      String pattern = null; //getResourceBundleString(key);
+      String msg = null;
       if(pattern == null)
 	msg = key;
-      else
-	msg = java.text.MessageFormat.format(pattern, params);
+//      else
+//	msg = java.text.MessageFormat.format(pattern, params);
       forcedLog(FQCN, priority, msg, t);
     }
   }
@@ -977,17 +975,17 @@ public class Category implements AppenderAttachable {
   }
 
 
-  /**
-     Set the resource bundle to be used with localized logging
-     methods {@link #l7dlog(Priority,String,Throwable)} and {@link
-     #l7dlog(Priority,String,Object[],Throwable)}.
-
-     @since 0.8.4
-   */
-  public
-  void setResourceBundle(ResourceBundle bundle) {
-    resourceBundle = bundle;
-  }
+//  /**
+//     Set the resource bundle to be used with localized logging
+//     methods {@link #l7dlog(Priority,String,Throwable)} and {@link
+//     #l7dlog(Priority,String,Object[],Throwable)}.
+//
+//     @since 0.8.4
+//   */
+//  public
+//  void setResourceBundle(ResourceBundle bundle) {
+//    resourceBundle = bundle;
+//  }
 
   /**
      Calling this method will <em>safely</em> close and remove all

@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
 import java.util.Enumeration;
-import java.util.ResourceBundle;
 import java.util.Vector;
 
 /**
@@ -106,10 +105,10 @@ public final class NOPLogger extends Logger {
       return getEffectiveLevel();
     }
 
-    /** {@inheritDoc} */
-    public ResourceBundle getResourceBundle() {
-      return null;
-    }
+//    /** {@inheritDoc} */
+//    public ResourceBundle getResourceBundle() {
+//      return null;
+//    }
 
 
     /** {@inheritDoc} */
@@ -183,9 +182,9 @@ public final class NOPLogger extends Logger {
     public void setPriority(final Priority priority) {
     }
 
-    /** {@inheritDoc} */
-    public void setResourceBundle(final ResourceBundle bundle) {
-    }
+//    /** {@inheritDoc} */
+//    public void setResourceBundle(final ResourceBundle bundle) {
+//    }
 
     /** {@inheritDoc} */
     public void warn(final Object message) {

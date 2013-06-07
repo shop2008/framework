@@ -1,6 +1,5 @@
 package com.wxxr.mobile.core.util;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.lang.reflect.Method;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
@@ -30,8 +29,8 @@ public class MethodHashing
       long hash = 0;
       ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
       MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-      DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
-      dataoutputstream.writeUTF(methodDesc);
+      DigestOutputStream dataoutputstream = new DigestOutputStream(bytearrayoutputstream, messagedigest);
+      dataoutputstream.write(methodDesc.getBytes("UTF-8"));
       dataoutputstream.flush();
       byte abyte0[] = messagedigest.digest();
       for (int j = 0; j < Math.min(8, abyte0.length); j++)

@@ -17,23 +17,17 @@
 
 package org.apache.log4j;
 
-import org.apache.log4j.spi.LoggerRepository;
-import org.apache.log4j.spi.LoggerFactory;
-import org.apache.log4j.spi.RepositorySelector;
-import org.apache.log4j.spi.DefaultRepositorySelector;
-import org.apache.log4j.spi.RootLogger;
-import org.apache.log4j.spi.NOPLoggerRepository;
-import org.apache.log4j.helpers.Loader;
-import org.apache.log4j.helpers.OptionConverter;
-import org.apache.log4j.helpers.LogLog;
-
-import java.net.URL;
-import java.net.MalformedURLException;
-
-
-import java.util.Enumeration;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Enumeration;
+
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.spi.DefaultRepositorySelector;
+import org.apache.log4j.spi.LoggerFactory;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.NOPLoggerRepository;
+import org.apache.log4j.spi.RepositorySelector;
+import org.apache.log4j.spi.RootLogger;
 
 /**
  * Use the <code>LogManager</code> class to retreive {@link Logger}
@@ -82,60 +76,60 @@ public class LogManager {
     Hierarchy h = new Hierarchy(new RootLogger((Level) Level.DEBUG));
     repositorySelector = new DefaultRepositorySelector(h);
 
-    /** Search for the properties file log4j.properties in the CLASSPATH.  */
-    String override =OptionConverter.getSystemProperty(DEFAULT_INIT_OVERRIDE_KEY,
-						       null);
-
-    // if there is no default init override, then get the resource
-    // specified by the user or the default config file.
-    if(override == null || "false".equalsIgnoreCase(override)) {
-
-      String configurationOptionStr = OptionConverter.getSystemProperty(
-							  DEFAULT_CONFIGURATION_KEY, 
-							  null);
-
-      String configuratorClassName = OptionConverter.getSystemProperty(
-                                                   CONFIGURATOR_CLASS_KEY, 
-						   null);
-
-      URL url = null;
-
-      // if the user has not specified the log4j.configuration
-      // property, we search first for the file "log4j.xml" and then
-      // "log4j.properties"
-      if(configurationOptionStr == null) {	
-	url = Loader.getResource(DEFAULT_XML_CONFIGURATION_FILE);
-	if(url == null) {
-	  url = Loader.getResource(DEFAULT_CONFIGURATION_FILE);
-	}
-      } else {
-	try {
-	  url = new URL(configurationOptionStr);
-	} catch (MalformedURLException ex) {
-	  // so, resource is not a URL:
-	  // attempt to get the resource from the class path
-	  url = Loader.getResource(configurationOptionStr); 
-	}	
-      }
-      
-      // If we have a non-null url, then delegate the rest of the
-      // configuration to the OptionConverter.selectAndConfigure
-      // method.
-      if(url != null) {
-	    LogLog.debug("Using URL ["+url+"] for automatic log4j configuration.");
-        try {
-            OptionConverter.selectAndConfigure(url, configuratorClassName,
-					   LogManager.getLoggerRepository());
-        } catch (NoClassDefFoundError e) {
-            LogLog.warn("Error during default initialization", e);
-        }
-      } else {
-	    LogLog.debug("Could not find resource: ["+configurationOptionStr+"].");
-      }
-    } else {
-        LogLog.debug("Default initialization of overridden by " + 
-            DEFAULT_INIT_OVERRIDE_KEY + "property."); 
-    }  
+//    /** Search for the properties file log4j.properties in the CLASSPATH.  */
+//    String override =OptionConverter.getSystemProperty(DEFAULT_INIT_OVERRIDE_KEY,
+//						       null);
+//
+//    // if there is no default init override, then get the resource
+//    // specified by the user or the default config file.
+//    if(override == null || "false".equalsIgnoreCase(override)) {
+//
+//      String configurationOptionStr = OptionConverter.getSystemProperty(
+//							  DEFAULT_CONFIGURATION_KEY, 
+//							  null);
+//
+//      String configuratorClassName = OptionConverter.getSystemProperty(
+//                                                   CONFIGURATOR_CLASS_KEY, 
+//						   null);
+//
+//      URL url = null;
+//
+//      // if the user has not specified the log4j.configuration
+//      // property, we search first for the file "log4j.xml" and then
+//      // "log4j.properties"
+//      if(configurationOptionStr == null) {	
+//	url = Loader.getResource(DEFAULT_XML_CONFIGURATION_FILE);
+//	if(url == null) {
+//	  url = Loader.getResource(DEFAULT_CONFIGURATION_FILE);
+//	}
+//      } else {
+//	try {
+//	  url = new URL(configurationOptionStr);
+//	} catch (MalformedURLException ex) {
+//	  // so, resource is not a URL:
+//	  // attempt to get the resource from the class path
+//	  url = Loader.getResource(configurationOptionStr); 
+//	}	
+//      }
+//      
+//      // If we have a non-null url, then delegate the rest of the
+//      // configuration to the OptionConverter.selectAndConfigure
+//      // method.
+//      if(url != null) {
+//	    LogLog.debug("Using URL ["+url+"] for automatic log4j configuration.");
+//        try {
+//            OptionConverter.selectAndConfigure(url, configuratorClassName,
+//					   LogManager.getLoggerRepository());
+//        } catch (NoClassDefFoundError e) {
+//            LogLog.warn("Error during default initialization", e);
+//        }
+//      } else {
+//	    LogLog.debug("Could not find resource: ["+configurationOptionStr+"].");
+//      }
+//    } else {
+//        LogLog.debug("Default initialization of overridden by " + 
+//            DEFAULT_INIT_OVERRIDE_KEY + "property."); 
+//    }  
   } 
 
   /**

@@ -383,7 +383,7 @@ public
   void resetConfiguration() {
 
     getRootLogger().setLevel((Level) Level.DEBUG);
-    root.setResourceBundle(null);
+//    root.setResourceBundle(null);
     setThreshold(Level.ALL);
 
     // the synchronization is needed to prevent JDK 1.2.x hashtable
@@ -396,7 +396,7 @@ public
 	Logger c = (Logger) cats.nextElement();
 	c.setLevel(null);
 	c.setAdditivity(true);
-	c.setResourceBundle(null);
+//	c.setResourceBundle(null);
       }
     }
     rendererMap.clear();

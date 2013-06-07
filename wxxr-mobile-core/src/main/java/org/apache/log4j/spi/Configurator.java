@@ -18,7 +18,6 @@
 package org.apache.log4j.spi;
 
 import java.io.InputStream;
-import java.net.URL;
 
 /**
    Implemented by classes capable of configuring log4j using a URL.
@@ -55,14 +54,4 @@ public interface Configurator {
    */
   void doConfigure(InputStream inputStream, LoggerRepository repository);
 
-  /**
-     Interpret a resource pointed by a URL and set up log4j accordingly.
-
-     The configuration is done relative to the <code>hierarchy</code>
-     parameter.
-
-     @param url The URL to parse
-     @param repository The hierarchy to operation upon.
-   */
-  void doConfigure(URL url, LoggerRepository repository);
 }

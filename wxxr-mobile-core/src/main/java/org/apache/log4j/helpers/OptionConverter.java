@@ -19,7 +19,6 @@ package org.apache.log4j.helpers;
 
 import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.net.URL;
 import java.util.Properties;
 
 import org.apache.log4j.Level;
@@ -479,50 +478,5 @@ configurator.doConfigure(inputStream, hierarchy);
 }
 
 
-  /**
-     Configure log4j given a URL.
 
-     <p>The url must point to a file or resource which will be interpreted by
-     a new instance of a log4j configurator.
-
-     <p>All configurations steps are taken on the
-     <code>hierarchy</code> passed as a parameter.
-
-     <p>
-     @param url The location of the configuration file or resource.
-     @param clazz The classname, of the log4j configurator which will parse
-     the file or resource at <code>url</code>. This must be a subclass of
-     {@link Configurator}, or null. If this value is null then a default
-     configurator of {@link PropertyConfigurator} is used, unless the
-     filename pointed to by <code>url</code> ends in '.xml', in which case
-     {@link org.apache.log4j.xml.DOMConfigurator} is used.
-     @param hierarchy The {@link org.apache.log4j.Hierarchy} to act on.
-
-     @since 1.1.4 */
-
-  static
-  public
-  void selectAndConfigure(URL url, String clazz, LoggerRepository hierarchy) {
-   Configurator configurator = null;
-   String filename = url.getFile();
-
-   if(clazz == null && filename != null && filename.endsWith(".xml")) {
-     clazz = "org.apache.log4j.xml.DOMConfigurator";
-   }
-
-   if(clazz != null) {
-     LogLog.debug("Preferred configurator class: " + clazz);
-     configurator = (Configurator) instantiateByClassName(clazz,
-							  Configurator.class,
-							  null);
-     if(configurator == null) {
-   	  LogLog.error("Could not instantiate configurator ["+clazz+"].");
-   	  return;
-     }
-   } else {
-     configurator = new PropertyConfigurator();
-   }
-
-   configurator.doConfigure(url, hierarchy);
-  }
 }

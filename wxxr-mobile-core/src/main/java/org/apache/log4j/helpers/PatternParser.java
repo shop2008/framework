@@ -16,14 +16,16 @@
  */
 package org.apache.log4j.helpers;
 
-import org.apache.log4j.Layout;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.LocationInfo;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
-import java.util.Arrays;
+
+import org.apache.log4j.IDateFormat;
+import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LocationInfo;
+import org.apache.log4j.spi.LoggingEvent;
 
 // Contributors:   Nelson Minar <(nelson@monkey.org>
 //                 Igor E. Poteryaev <jah@mail.ru>
@@ -246,7 +248,7 @@ public class PatternParser {
       break;
     case 'd':
       String dateFormatStr = AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT;
-      DateFormat df;
+      IDateFormat df;
       String dOpt = extractOption();
       if(dOpt != null)
 	dateFormatStr = dOpt;
@@ -262,14 +264,12 @@ public class PatternParser {
 	df = new DateTimeDateFormat();
       else {
 	try {
-	  df = new SimpleDateFormat(dateFormatStr);
+	  df = new PatternDateFormat(dateFormatStr);
 	}
 	catch (IllegalArgumentException e) {
 	  LogLog.error("Could not instantiate SimpleDateFormat with " +
 		       dateFormatStr, e);
-	  df = (DateFormat) OptionConverter.instantiateByClassName(
-			           "org.apache.log4j.helpers.ISO8601DateFormat",
-				   DateFormat.class, null);
+	  df = new ISO8601DateFormat();
 	}
       }
       pc = new DatePatternConverter(formattingInfo, df);
@@ -391,7 +391,7 @@ public class PatternParser {
     String convert(LoggingEvent event) {
       switch(type) {
       case RELATIVE_TIME_CONVERTER:
-	return (Long.toString(event.timeStamp - LoggingEvent.getStartTime()));
+	return (String.valueOf(event.timeStamp - LoggingEvent.getStartTime()));
       case THREAD_CONVERTER:
 	return event.getThreadName();
       case LEVEL_CONVERTER:
@@ -426,10 +426,10 @@ public class PatternParser {
   }
 
   private static class DatePatternConverter extends PatternConverter {
-    private DateFormat df;
+    private IDateFormat df;
     private Date date;
 
-    DatePatternConverter(FormattingInfo formattingInfo, DateFormat df) {
+    DatePatternConverter(FormattingInfo formattingInfo, IDateFormat df) {
       super(formattingInfo);
       date = new Date();
       this.df = df;

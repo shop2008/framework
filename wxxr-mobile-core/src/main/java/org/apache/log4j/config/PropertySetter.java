@@ -19,23 +19,24 @@
 
 package org.apache.log4j.config;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Priority;
-import org.apache.log4j.helpers.LogLog;
-import org.apache.log4j.helpers.OptionConverter;
-import org.apache.log4j.spi.OptionHandler;
-import org.apache.log4j.spi.ErrorHandler;
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.InterruptedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.OptionConverter;
+import org.apache.log4j.spi.ErrorHandler;
+import org.apache.log4j.spi.OptionHandler;
+
+import com.wxxr.mobile.core.util.BeanInfo;
+import com.wxxr.mobile.core.util.IntrospectionException;
+import com.wxxr.mobile.core.util.JavaBeanIntrospector;
+import com.wxxr.mobile.core.util.PropertyDescriptor;
 
 /**
    General purpose Object property setter. Clients repeatedly invokes
@@ -80,9 +81,9 @@ public class PropertySetter {
   protected
   void introspect() {
     try {
-      BeanInfo bi = Introspector.getBeanInfo(obj.getClass());
+      BeanInfo bi = JavaBeanIntrospector.getBeanInfo(obj.getClass());
       props = bi.getPropertyDescriptors();
-    } catch (IntrospectionException ex) {
+    } catch (Exception ex) {
       LogLog.error("Failed to introspect "+obj+": " + ex.getMessage());
       props = new PropertyDescriptor[0];
     }
@@ -137,7 +138,7 @@ public class PropertySetter {
         //
         //   if the property type is an OptionHandler
         //     (for example, triggeringPolicy of org.apache.log4j.rolling.RollingFileAppender)
-        PropertyDescriptor prop = getPropertyDescriptor(Introspector.decapitalize(key));
+        PropertyDescriptor prop = getPropertyDescriptor(JavaBeanIntrospector.decapitalize(key));
         if (prop != null
                 && OptionHandler.class.isAssignableFrom(prop.getPropertyType())
                 && prop.getWriteMethod() != null) {
@@ -191,7 +192,7 @@ public class PropertySetter {
   void setProperty(String name, String value) {
     if (value == null) return;
     
-    name = Introspector.decapitalize(name);
+    name = JavaBeanIntrospector.decapitalize(name);
     PropertyDescriptor prop = getPropertyDescriptor(name);
     
     //LogLog.debug("---------Key: "+name+", type="+prop.getPropertyType());

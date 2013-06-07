@@ -9,7 +9,12 @@
 
 package com.wxxr.mobile.core.event.api;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -28,10 +33,12 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 	private static final Trace log = Trace.register(EventRouterImpl.class);
 	
 	protected LinkedList<ListenerHolder> listeners = new LinkedList<ListenerHolder>();
+	protected LinkedList<WeakReference<IStreamEventListener>> streamListeners = new LinkedList<WeakReference<IStreamEventListener>>();
 
 	private static class ListenerHolder {
-		IEventSelector selector;
-		IEventListener listener;
+		WeakReference<IEventSelector> selector;
+		WeakReference<IEventListener> listener;
+		EventTypeSelector ref;
 	}
 
 	private static class EventTypeSelector implements IEventSelector {
@@ -50,12 +57,12 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		}     
 	}
 
-	private class EventDispatcher implements Callable<Object> {
+	private class EventBroadcaster implements Callable<Object> {
 
-		private final IEventObject event;
+		private final IBroadcastEvent event;
 		private final ListenerHolder[] allParties;
 
-		public EventDispatcher(IEventObject evt, ListenerHolder[] parties){
+		public EventBroadcaster(IBroadcastEvent evt, ListenerHolder[] parties){
 			this.event = evt;
 			this.allParties = parties;
 		}
@@ -63,8 +70,12 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		public Object call() {
 			for (ListenerHolder h : allParties) {
 				if(h != null){
-					if((h.selector == null)||h.selector.isEventApply(event)){
-						handleEvent(h.listener,event);
+					if((h.listener.get() == null)||((h.selector != null)&&(h.selector.get() == null))){
+						continue;
+					}
+					
+					if((h.selector == null)||h.selector.get().isEventApply(event)){
+						handleEvent(h.listener.get(),event);
 					}
 				}
 			}
@@ -72,26 +83,87 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		}
 
 	}
+	
+	private class EventPipeLine implements Callable<Object>,IListenerChain {
+
+		private final IStreamEvent event;
+		private final WeakReference<IStreamEventListener>[] allParties;
+		private Map<String, Object> attrs;
+		private int idx = 0;
+
+		public EventPipeLine(IStreamEvent evt, WeakReference<IStreamEventListener>[] parties){
+			this.event = evt;
+			this.allParties = parties;
+		}
+
+		public Object call() {
+			invokeNext(event);
+			return null;
+		}
+
+		@Override
+		public void invokeNext(IStreamEvent event) {
+			IStreamEventListener l = null;
+			for(;idx < allParties.length;idx++){
+				WeakReference<IStreamEventListener> ref = allParties[idx];
+				if((ref != null)&&(ref.get() != null)){
+					l = ref.get();
+					break;
+				}
+			}
+			if(l != null){
+				idx++;
+				l.onEvent(event, this);
+			}
+			return;
+			
+		}
+
+		@Override
+		public void setAttribute(String name, Object val) {
+			if(this.attrs == null){
+				this.attrs = new HashMap<String, Object>();
+			}
+			this.attrs.put(name, val);
+		}
+
+		@Override
+		public Object getAttribute(String name) {
+			return this.attrs != null ? this.attrs.get(name) : null;
+		}
+
+		@Override
+		public List<String> getAttributeNames() {
+			return this.attrs != null ? new ArrayList<String>(this.attrs.keySet()) : null;
+		}
+
+	}
+
 
 	private synchronized ListenerHolder[] getAllListeners() {
 		return this.listeners.toArray(new ListenerHolder[this.listeners.size()]);
 	}
+	
+	private synchronized WeakReference<IStreamEventListener>[] getAllStreamListeners() {
+		return this.streamListeners.toArray(new WeakReference[this.streamListeners.size()]);
+	}
+
 
 	private synchronized ListenerHolder findListener(Class<? extends IEventObject> eventType, IEventListener listener) {
 		for (ListenerHolder l : listeners) {
 			if(l == null){
 				continue;
 			}
-			if(l.listener != listener){
+			if(l.listener.get() != listener){
 				continue;
 			}
-			if(!(l.selector instanceof EventTypeSelector)){
+			if(!(l.selector.get() instanceof EventTypeSelector)){
 				continue;
 			}
-			if((eventType == null)&&(((EventTypeSelector)l.selector).type != null)){
+			if((eventType == null)&&(((EventTypeSelector)l.selector.get()).type != null)){
 				continue;
 			}
-			if((eventType != null)&&(eventType.equals(((EventTypeSelector)l.selector).type) != true)){
+			if((eventType != null)&&(eventType.equals(((EventTypeSelector)l.selector.get()).type) != true)){
 				continue;
 			}
 			return l;
@@ -104,10 +176,10 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 			if(l == null){
 				continue;
 			}
-			if(l.listener != listener){
+			if(l.listener.get() != listener){
 				continue;
 			}
-			if(((selector == null)&&(l.selector== null))||(selector == l.selector)){
+			if(((selector == null)&&(l.selector== null))||(selector == l.selector.get())){
 				return l;
 			}
 		}
@@ -119,8 +191,11 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		ListenerHolder l = findListener(eventType, listener);
 		if(l == null){
 			l = new ListenerHolder();
-			l.selector = new EventTypeSelector(eventType);
-			l.listener = listener;
+			if(eventType != null){
+				l.ref = new EventTypeSelector(eventType);
+				l.selector = new WeakReference<IEventSelector>(l.ref);
+			}
+			l.listener = new WeakReference<IEventListener>(listener);
 			listeners.add(l);
 		}
 	}
@@ -140,8 +215,10 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		ListenerHolder l = findListener(selector, listener);
 		if(l == null){
 			l = new ListenerHolder();
-			l.selector = selector;
-			l.listener = listener;
+			if(selector != null){
+				l.selector = new WeakReference<IEventSelector>(selector);
+			}
+			l.listener = new WeakReference<IEventListener>(listener);
 			listeners.add(l);
 		}
 
@@ -158,21 +235,31 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 
 	}
 	
-	protected void handleEvent(IEventListener listener,IEventObject event) {
+	protected void handleEvent(IEventListener listener,IBroadcastEvent event) {
 		listener.onEvent(event);
 	}
 
 
 
 	public Object routeEvent(IEventObject event) {
-		EventDispatcher dispatcher = new EventDispatcher(event, getAllListeners());
+	
+		Callable<Object> call = null;
+		if(event instanceof IBroadcastEvent){
+			call = new EventBroadcaster((IBroadcastEvent)event, getAllListeners());
+		}else{
+			call = new EventPipeLine((IStreamEvent)event, getAllStreamListeners());
+		}
 		if(log.isDebugEnabled()){
 			log.debug("Going to route event :"+event);
 		}
 		if(event.needSyncProcessed()){
-			return dispatcher.call();
+			try {
+				return call.call();
+			} catch (Exception e) {
+				return null;
+			}
 		}else{
-			return this.context.getExecutor().submit(dispatcher);
+			return this.context.getExecutor().submit(call);
 		}
 	}
 
@@ -189,6 +276,39 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 	@Override
 	protected void stopService() {
 		context.unregisterService(IEventRouter.class, this);
+	}
+	
+	private WeakReference<IStreamEventListener> findListener(IStreamEventListener listener){
+		for (WeakReference<IStreamEventListener> l : this.streamListeners) {
+			if(l.get() == listener){
+				return l;
+			}
+		}
+		return null;
+	}
+
+
+	private boolean hasListener(IStreamEventListener listener){
+		return findListener(listener) != null;
+	}
+	@Override
+	public synchronized void addListenerFirst(IStreamEventListener listener) {
+		if(!hasListener(listener)){
+			this.streamListeners.addFirst(new WeakReference<IStreamEventListener>(listener));
+		}
+	}
+
+	@Override
+	public synchronized void addListenerLast(IStreamEventListener listener) {
+		if(!hasListener(listener)){
+			this.streamListeners.addLast(new WeakReference<IStreamEventListener>(listener));
+		}
+	}
+
+	@Override
+	public synchronized boolean removeListener(IStreamEventListener listener) {
+		WeakReference<IStreamEventListener> l = findListener(listener);
+		return l != null ? this.streamListeners.remove(l) : false;
 	}
 
 }

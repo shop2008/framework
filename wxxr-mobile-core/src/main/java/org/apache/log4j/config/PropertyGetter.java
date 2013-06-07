@@ -17,16 +17,17 @@
 
 package org.apache.log4j.config;
 
-import org.apache.log4j.Priority;
-import org.apache.log4j.helpers.LogLog;
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.InterruptedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.apache.log4j.Priority;
+import org.apache.log4j.helpers.LogLog;
+
+import com.wxxr.mobile.core.util.BeanInfo;
+import com.wxxr.mobile.core.util.IntrospectionException;
+import com.wxxr.mobile.core.util.JavaBeanIntrospector;
+import com.wxxr.mobile.core.util.PropertyDescriptor;
 
 
 /**
@@ -52,7 +53,7 @@ public class PropertyGetter {
     @param obj the object for which to set properties */
   public
   PropertyGetter(Object obj) throws IntrospectionException {
-    BeanInfo bi = Introspector.getBeanInfo(obj.getClass());
+    BeanInfo bi = JavaBeanIntrospector.getBeanInfo(obj.getClass());
     props = bi.getPropertyDescriptors();
     this.obj = obj;
   }

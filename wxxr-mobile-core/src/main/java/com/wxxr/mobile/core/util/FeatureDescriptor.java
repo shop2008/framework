@@ -1,7 +1,6 @@
 package com.wxxr.mobile.core.util;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.ref.SoftReference;
 
 /**
  * The FeatureDescriptor class is the common baseclass for PropertyDescriptor,
@@ -269,11 +268,11 @@ public class FeatureDescriptor {
     static Reference createReference(Object obj, boolean soft) {
 	Reference ref = null;
 	if (obj != null) {
-	    if (soft) {
-		ref = new SoftReference(obj);
-	    } else {
+//	    if (soft) {
+//		ref = new SoftReference(obj);
+//	    } else {
 		ref = new WeakReference(obj);
-	    }
+//	    }
 	}
 	return ref;
     }

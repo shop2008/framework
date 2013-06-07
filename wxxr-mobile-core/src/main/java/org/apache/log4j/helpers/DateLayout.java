@@ -17,13 +17,13 @@
 
 package org.apache.log4j.helpers;
 
+import org.apache.log4j.IDateFormat;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.text.FieldPosition;
 
 
 /**
@@ -48,7 +48,6 @@ abstract public class DateLayout extends Layout {
    */
   public final static String RELATIVE_TIME_DATE_FORMAT = "RELATIVE";
 
-  protected FieldPosition pos = new FieldPosition(0);
 
   /**
      @deprecated Options are now handled using the JavaBeans paradigm.
@@ -67,7 +66,7 @@ abstract public class DateLayout extends Layout {
   private String timeZoneID;
   private String dateFormatOption;  
 
-  protected DateFormat dateFormat;
+  protected IDateFormat dateFormat;
   protected Date date = new Date();
 
   /**
@@ -143,7 +142,8 @@ abstract public class DateLayout extends Layout {
   void dateFormat(StringBuffer buf, LoggingEvent event) {
     if(dateFormat != null) {
       date.setTime(event.timeStamp);
-      dateFormat.format(date, buf, this.pos);
+      String s = dateFormat.format(date);
+      buf.append(s);
       buf.append(' ');
     }
   }
@@ -153,7 +153,7 @@ abstract public class DateLayout extends Layout {
      zone determined by <code>timeZone</code>.
    */
   public
-  void setDateFormat(DateFormat dateFormat, TimeZone timeZone) {
+  void setDateFormat(IDateFormat dateFormat, TimeZone timeZone) {
     this.dateFormat = dateFormat;    
     this.dateFormat.setTimeZone(timeZone);
   }
@@ -193,7 +193,7 @@ abstract public class DateLayout extends Layout {
                               AbsoluteTimeDateFormat.ISO8601_DATE_FORMAT)) {
       this.dateFormat =  new ISO8601DateFormat(timeZone);
     } else {
-      this.dateFormat = new SimpleDateFormat(dateFormatType);
+      this.dateFormat = new PatternDateFormat(dateFormatType);
       this.dateFormat.setTimeZone(timeZone);
     }
   }

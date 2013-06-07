@@ -18,10 +18,8 @@
 package org.apache.log4j.helpers;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.Date;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
+import java.util.TimeZone;
 
 // Contributors: Arndt Schoenewald <arndt@ibm23093i821.mc.schoenewald.de>
 
@@ -61,9 +59,9 @@ public class ISO8601DateFormat extends AbsoluteTimeDateFormat {
      @param sbuf the <code>StringBuffer</code> to write to
   */
   public
-  StringBuffer format(Date date, StringBuffer sbuf,
-		      FieldPosition fieldPosition) {
+  String format(Date date) {
 
+	  StringBuffer sbuf = new StringBuffer();
     long now = date.getTime();
     int millis = (int)(now % 1000);
 
@@ -141,15 +139,8 @@ public class ISO8601DateFormat extends AbsoluteTimeDateFormat {
       sbuf.append('0');
 
     sbuf.append(millis);
-    return sbuf;
+    return sbuf.toString();
   }
 
-  /**
-    This method does not do anything but return <code>null</code>.
-   */
-  public
-  Date parse(java.lang.String s, ParsePosition pos) {
-    return null;
-  }
 }
 

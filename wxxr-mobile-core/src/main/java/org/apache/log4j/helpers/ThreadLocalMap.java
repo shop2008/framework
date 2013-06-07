@@ -27,7 +27,7 @@ import java.util.Hashtable;
    @author Ceki G&uuml;lc&uuml;
    @since 1.2
 */
-final public class ThreadLocalMap extends InheritableThreadLocal {
+final public class ThreadLocalMap extends ThreadLocal {
 
   public
   final

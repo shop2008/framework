@@ -17,12 +17,10 @@
 
 package org.apache.log4j.pattern;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.Date;
 import java.util.TimeZone;
+
+import org.apache.log4j.IDateFormat;
 
 
 /**
@@ -33,7 +31,7 @@ import java.util.TimeZone;
  * same value is requested.
  *
  */
-public final class CachedDateFormat extends DateFormat {
+public final class CachedDateFormat implements IDateFormat {
   /**
    *  Serialization version.
   */
@@ -86,7 +84,7 @@ public final class CachedDateFormat extends DateFormat {
   /**
    *   Wrapped formatter.
    */
-  private final DateFormat formatter;
+  private final IDateFormat formatter;
 
   /**
    *  Index of initial digit of millisecond pattern or
@@ -129,7 +127,7 @@ public final class CachedDateFormat extends DateFormat {
    *      caching algorithm, use a value of 0 to totally disable
    *      caching or 1 to only use cache for duplicate requests.
    */
-  public CachedDateFormat(final DateFormat dateFormat, final int expiration) {
+  public CachedDateFormat(final IDateFormat dateFormat, final int expiration) {
     if (dateFormat == null) {
       throw new IllegalArgumentException("dateFormat cannot be null");
     }
@@ -159,7 +157,7 @@ public final class CachedDateFormat extends DateFormat {
    *    field (likely RelativeTimeDateFormat)
    */
   public static int findMillisecondStart(
-    final long time, final String formatted, final DateFormat formatter) {
+    final long time, final String formatted, final IDateFormat formatter) {
     long slotBegin = (time / 1000) * 1000;
 
     if (slotBegin > time) {
@@ -224,11 +222,11 @@ public final class CachedDateFormat extends DateFormat {
    *  @param fieldPosition remains untouched.
    * @return the formatted time string.
    */
-  public StringBuffer format(
-    Date date, StringBuffer sbuf, FieldPosition fieldPosition) {
+  public String format(Date date) {
+	  StringBuffer sbuf = new StringBuffer();
     format(date.getTime(), sbuf);
 
-    return sbuf;
+    return sbuf.toString();
   }
 
   /**
@@ -328,25 +326,6 @@ public final class CachedDateFormat extends DateFormat {
     slotBegin = Long.MIN_VALUE;
   }
 
-  /**
-   *  This method is delegated to the formatter which most
-   *  likely returns null.
-   * @param s string representation of date.
-   * @param pos field position, unused.
-   * @return parsed date, likely null.
-   */
-  public Date parse(String s, ParsePosition pos) {
-    return formatter.parse(s, pos);
-  }
-
-  /**
-   * Gets number formatter.
-   *
-   * @return NumberFormat number formatter
-   */
-  public NumberFormat getNumberFormat() {
-    return formatter.getNumberFormat();
-  }
 
   /**
    * Gets maximum cache validity for the specified SimpleDateTime

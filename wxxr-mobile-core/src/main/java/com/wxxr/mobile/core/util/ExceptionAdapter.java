@@ -63,7 +63,7 @@ public class ExceptionAdapter extends RuntimeException
    {
       synchronized (s)
       {
-         s.printf("%s: ", getClass().getName());
+         s.print(String.format("%s: ", getClass().getName()));
          s.print(stackTrace);
       }
    }

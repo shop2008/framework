@@ -4,6 +4,11 @@ public interface IEventRouter {
 	boolean unregisterEventListener(Class<? extends IEventObject> eventType,IEventListener listener);
 	void registerEventListener(IEventSelector selector,IEventListener listener);
 	boolean unregisterEventListener(IEventSelector selector,IEventListener listener);
+	
+	void addListenerFirst(IStreamEventListener listener);
+	void addListenerLast(IStreamEventListener listener);
+	boolean removeListener(IStreamEventListener listener);
+	
 	/**
 	 * 
 	 * @param event

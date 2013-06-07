@@ -3,22 +3,15 @@
  */
 package com.wxxr.mobile.core.security.api;
 
-import java.security.KeyStore;
-
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
 
 /**
  * @author neillin
  *
  */
 public interface ISiteSecurityService {
-    /**
-     * Get the SSL context configured to be used with SSL connection.
-     *
-     * @return SSL context configured to be used with tSSL connection.
-     */
-    public SSLContext getSslContext(String protocol);
 
     /**
      * Get the hostname verifier configured in the client or {@code null} in case
@@ -33,13 +26,13 @@ public interface ISiteSecurityService {
      * the peer is you expect to communicate with, or from Certificate Authorities that are trusted to
      * identify other parties.
      */
-    KeyStore getTrustKeyStore();
+     TrustManager getTrustManager();
     
     
     /**
      * Return the client-side key store. Key store contains client's private keys, and the certificates with their
      * corresponding public keys.
      */
-    KeyStore getSiteKeyStore();
+    KeyManager getSiteKeyManager();
 
 }

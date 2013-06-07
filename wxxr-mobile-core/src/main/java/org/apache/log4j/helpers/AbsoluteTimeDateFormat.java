@@ -17,12 +17,11 @@
 
 package org.apache.log4j.helpers;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.text.DateFormat;
+
+import org.apache.log4j.IDateFormat;
 
 
 /**
@@ -34,7 +33,7 @@ import java.text.DateFormat;
 
    @since 0.7.5
 */
-public class AbsoluteTimeDateFormat extends DateFormat {
+public class AbsoluteTimeDateFormat implements IDateFormat {
    private static final long serialVersionUID = -388856345976723342L;
 
   /**
@@ -57,14 +56,15 @@ public class AbsoluteTimeDateFormat extends DateFormat {
   */
   public final static String ISO8601_DATE_FORMAT = "ISO8601";
 
-  public
-  AbsoluteTimeDateFormat() {
-    setCalendar(Calendar.getInstance());
+  protected Calendar calendar ;
+  
+  public AbsoluteTimeDateFormat() {
+    this.calendar = Calendar.getInstance();
   }
   
   public
   AbsoluteTimeDateFormat(TimeZone timeZone) {
-    setCalendar(Calendar.getInstance(timeZone));
+	  this.calendar = Calendar.getInstance(timeZone);
   }
 
   private static long   previousTime;
@@ -78,11 +78,10 @@ public class AbsoluteTimeDateFormat extends DateFormat {
      @param sbuf the string buffer to write to
      @param fieldPosition remains untouched
     */
-  public
-  StringBuffer format(Date date, StringBuffer sbuf,
-		      FieldPosition fieldPosition) {
+  public String format(Date date) {
 
     long now = date.getTime();
+    StringBuffer sbuf = new StringBuffer();
     int millis = (int)(now % 1000);
 
     if ((now - millis) != previousTime || previousTimeWithoutMillis[0] == 0) {
@@ -132,14 +131,19 @@ public class AbsoluteTimeDateFormat extends DateFormat {
       sbuf.append('0');
     
     sbuf.append(millis);
-    return sbuf;
+    return sbuf.toString();
   }
 
   /**
      This method does not do anything but return <code>null</code>.
    */
   public
-  Date parse(String s, ParsePosition pos) {
+  Date parse(String s) {
     return null;
-  }  
+  }
+
+	@Override
+	public void setTimeZone(TimeZone arg0) {
+		this.calendar = Calendar.getInstance(arg0);
+	}  
 }

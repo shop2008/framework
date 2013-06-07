@@ -18,8 +18,6 @@ package org.apache.log4j;
 
 import org.apache.log4j.spi.LoggingEvent;
 
-import java.util.ResourceBundle;
-
 
 /**
  * This class provides parameterized logging services
@@ -113,18 +111,18 @@ public final class LogSF extends LogXF {
             final String resourceBundleName,
             final String key,
             final Object[] arguments) {
-        String pattern;
-        if (resourceBundleName != null) {
-            try {
-                ResourceBundle bundle =
-                        ResourceBundle.getBundle(resourceBundleName);
-                pattern = bundle.getString(key);
-            } catch (Exception ex) {
-                pattern = key;
-            }
-        } else {
-            pattern = key;
-        }
+        String pattern = key;
+//        if (resourceBundleName != null) {
+//            try {
+//                ResourceBundle bundle =
+//                        ResourceBundle.getBundle(resourceBundleName);
+//                pattern = bundle.getString(key);
+//            } catch (Exception ex) {
+//                pattern = key;
+//            }
+//        } else {
+//            pattern = key;
+//        }
         return format(pattern, arguments);
     }
 

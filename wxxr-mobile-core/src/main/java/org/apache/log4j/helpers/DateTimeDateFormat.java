@@ -17,12 +17,10 @@
 
 package org.apache.log4j.helpers;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.Date;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
    Formats a {@link Date} in the format "dd MMM yyyy HH:mm:ss,SSS" for example,
@@ -45,7 +43,7 @@ public class DateTimeDateFormat extends AbsoluteTimeDateFormat {
   public
   DateTimeDateFormat(TimeZone timeZone) {
     this();
-    setCalendar(Calendar.getInstance(timeZone));
+   setTimeZone(timeZone);
   }
 
   /**
@@ -55,9 +53,8 @@ public class DateTimeDateFormat extends AbsoluteTimeDateFormat {
      @param sbuf the string buffer to write to
   */
   public
-  StringBuffer format(Date date, StringBuffer sbuf,
-		      FieldPosition fieldPosition) {
-
+  String format(Date date) {
+	  StringBuffer sbuf = new StringBuffer();
     calendar.setTime(date);
 
     int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -72,14 +69,7 @@ public class DateTimeDateFormat extends AbsoluteTimeDateFormat {
     sbuf.append(year);
     sbuf.append(' ');
 
-    return super.format(date, sbuf, fieldPosition);
+    return sbuf.append(super.format(date)).toString();
   }
 
-  /**
-     This method does not do anything but return <code>null</code>.
-   */
-  public
-  Date parse(java.lang.String s, ParsePosition pos) {
-    return null;
-  }
 }
