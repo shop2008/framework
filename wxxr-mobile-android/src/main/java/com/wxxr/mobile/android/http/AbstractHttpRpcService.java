@@ -232,7 +232,12 @@ public class AbstractHttpRpcService implements HttpRpcService {
 
 	@Override
 	public HttpRequest createRequest(String endpointUrl, Map<String, Object> params) {
-		return new HttpRequestImpl(this.context, endpointUrl, params);
+		HttpRequest request=new HttpRequestImpl(this.context, endpointUrl, params);
+		request.setHeader("deviceid", appContext.getApplication().getDeviceId());
+		request.setHeader("deviceType", appContext.getApplication().getDeviceType());
+		request.setHeader("appName", appContext.getApplication().getApplicationName());
+		request.setHeader("appVer", appContext.getApplication().getApplicationVersion());
+		return request;
 	}
 
 

@@ -18,4 +18,7 @@ public interface IAndroidFramework<C extends IAndroidAppContext, M extends IKern
 	String getApplicationId();
 	String getApplicationVersion();
 	String getApplicationBuildNnumber();
+	String getApplicationName();
+	String getDeviceId();
+	String getDeviceType();
 }

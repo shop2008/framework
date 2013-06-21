@@ -19,11 +19,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 
 import com.wxxr.mobile.core.api.ApplicationFactory;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractMicroKernel;
 import com.wxxr.mobile.core.microkernel.api.IKernelModule;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -176,6 +178,25 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		return null;
 	}
 
+	@Override
+	public String getDeviceId() {
+		if(info.get("deviceId")==null){
+			TelephonyManager telephonyManager = (TelephonyManager) getAndroidApplication()
+					.getSystemService(Context.TELEPHONY_SERVICE);
+			String deviceId = telephonyManager.getDeviceId();
+			info.put("deviceId", StringUtils.trimToEmpty(deviceId));
+		}
 
+		return info.get("deviceId");
+	}
+
+	@Override
+	public String getDeviceType() {
+		return "2";
+	}
+
+
+	
+	
 
 }
