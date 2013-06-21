@@ -27,11 +27,6 @@ public class DummySiteSecurityModule<T extends IAndroidAppContext> extends
 	}
 
 	@Override
-	public SSLContext getSslContext(String protocol) {
-		return null;
-	}
-
-	@Override
 	public HostnameVerifier getHostnameVerifier() {
 		return null;
 	}

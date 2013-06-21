@@ -3,16 +3,16 @@
  */
 package com.wxxr.mobile.core.security.api;
 
+import java.security.KeyStore;
+
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.SSLContext;
 
 /**
  * @author neillin
  *
  */
 public interface ISiteSecurityService {
-
     /**
      * Get the hostname verifier configured in the client or {@code null} in case
      * no hostname verifier has been configured.
@@ -26,13 +26,13 @@ public interface ISiteSecurityService {
      * the peer is you expect to communicate with, or from Certificate Authorities that are trusted to
      * identify other parties.
      */
-     TrustManager getTrustManager();
+    KeyStore getTrustKeyStore();
     
     
     /**
      * Return the client-side key store. Key store contains client's private keys, and the certificates with their
      * corresponding public keys.
      */
-    KeyManager getSiteKeyManager();
+    KeyStore getSiteKeyStore();
 
 }
