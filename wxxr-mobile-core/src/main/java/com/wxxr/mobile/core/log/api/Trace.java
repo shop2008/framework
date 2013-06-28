@@ -155,6 +155,14 @@ public class Trace
 	public static Trace getTrace(String name) {
 		return register(name);
 	}
+	
+	public static Trace getLogger(String name){
+		return register(name);
+	}
+	
+	public static Trace getLogger(Class<?> cls){
+		return register(cls);
+	}
 
 	/**
    @param catagory
