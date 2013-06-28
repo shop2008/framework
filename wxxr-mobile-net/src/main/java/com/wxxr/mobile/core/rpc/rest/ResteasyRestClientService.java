@@ -243,11 +243,6 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 	}
 
 
-	@Override
-	public <T> T getRestService(Class<T> clazz, URI target) {
-		return build().target(target).proxy(clazz);
-	}
-
 	protected String getDefaultServerUrl(){
 		IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
 		if(prefManager == null){

@@ -12,10 +12,6 @@ import javax.net.ssl.SSLContext;
 
 import junit.framework.TestCase;
 
-import com.wxxr.mobile.android.app.IAndroidAppContext;
-import com.wxxr.mobile.android.http.AbstractHttpRpcService;
-import com.wxxr.mobile.core.api.IApplication;
-import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpParamsBean;
