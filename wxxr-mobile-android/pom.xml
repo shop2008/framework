@@ -27,5 +27,10 @@
             <artifactId>wxxr-mobile-core</artifactId>
             <version>${framework.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile</groupId>
+            <artifactId>wxxr-mobile-ui</artifactId>
+            <version>${framework.version}</version>
+        </dependency>
 	</dependencies>
 </project>
