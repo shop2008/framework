@@ -195,6 +195,20 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		return "2";
 	}
 
+	/**
+	 * @return the maxThread
+	 */
+	public int getMaxThread() {
+		return maxThread;
+	}
+
+	/**
+	 * @param maxThread the maxThread to set
+	 */
+	public void setMaxThread(int maxThread) {
+		this.maxThread = maxThread;
+	}
+
 
 	
 	
