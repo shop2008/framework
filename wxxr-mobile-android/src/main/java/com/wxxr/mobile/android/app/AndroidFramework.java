@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -71,7 +73,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		}
 		log.warn("Starting up application ...");
 		try {
-			this.executor = new ThreadPoolExecutor(1, maxThread, 20, TimeUnit.SECONDS, 
+			this.executor = new ThreadPoolExecutor(5, maxThread, 20, TimeUnit.SECONDS, 
 					new SynchronousQueue<Runnable>(),
 					new ThreadFactory() {
 						private AtomicInteger sq = new AtomicInteger(1);
