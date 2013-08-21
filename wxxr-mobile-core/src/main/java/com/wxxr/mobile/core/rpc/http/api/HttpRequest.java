@@ -19,4 +19,8 @@ public interface HttpRequest extends Request<HttpResponse> {
 	
 	void setHeader(String key, String value);
 	
+	String getURI();
+	
+	void abort();
+	
 }
