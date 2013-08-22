@@ -8,6 +8,10 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLException;
@@ -24,7 +28,12 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ClientConnectionRequest;
+import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.params.ConnPerRouteBean;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -62,6 +71,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	protected int connectionPoolSize;
 	protected int maxPooledPerRoute = 0;
 	protected long connectionTTL = -1;
+	private ExecutorService executor;
 	private HttpContext localContext = new BasicHttpContext();
 	
 	private IHttpClientContext context = new IHttpClientContext() {
@@ -87,7 +97,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 
 		@Override
 		public ExecutorService getExecutor() {
-			return appContext.getExecutor();
+			return executor;
 		}
 	};
 
@@ -186,8 +196,36 @@ public class AbstractHttpRpcService implements HttpRpcService {
 				BasicHttpParams params = new BasicHttpParams();
 				ConnManagerParams.setMaxTotalConnections(params, connectionPoolSize);
 				ConnManagerParams.setTimeout(params, connectionTTL);
-				if (maxPooledPerRoute == 0) maxPooledPerRoute = connectionPoolSize;
-				ThreadSafeClientConnManager tcm = new ThreadSafeClientConnManager(params,registry);
+				if (maxPooledPerRoute == 0) maxPooledPerRoute = connectionPoolSize/2;
+				ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRoute() {
+			        
+			        public int getMaxForRoute(HttpRoute route) {
+			            return maxPooledPerRoute;
+			        }
+			        
+			    });
+				ThreadSafeClientConnManager tcm = new ThreadSafeClientConnManager(params,registry){
+
+					@Override
+					public void releaseConnection(ManagedClientConnection conn,
+							long validDuration, TimeUnit timeUnit) {
+						super.releaseConnection(conn, validDuration, timeUnit);
+						if(log.isDebugEnabled()){
+							log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit);
+						}
+					}
+
+					@Override
+					public ClientConnectionRequest requestConnection(
+							HttpRoute route, Object state) {
+						ClientConnectionRequest req = super.requestConnection(route, state);
+						if(log.isDebugEnabled()){
+							log.debug("Acquired connection for :"+route+", state :"+state);
+						}
+						return req;
+					}
+					
+				};
 				cm = tcm;
 
 			}
@@ -291,6 +329,13 @@ public class AbstractHttpRpcService implements HttpRpcService {
 
 	public void startup(IKernelContext ctx) {
 		this.appContext = ctx;
+		this.executor = Executors.newFixedThreadPool(connectionPoolSize, new ThreadFactory() {
+			private AtomicInteger seqNo = new AtomicInteger(1);
+			@Override
+			public Thread newThread(Runnable r) {
+				return new Thread(r, "Http Request execution thread - "+seqNo.getAndIncrement());
+			}
+		});
 		try {
 			initHttpEngine(this.appContext.getService(ISiteSecurityService.class));
 			appContext.registerService(HttpRpcService.class, AbstractHttpRpcService.this);
@@ -303,6 +348,10 @@ public class AbstractHttpRpcService implements HttpRpcService {
 
 	public void shutdown() {
 		appContext.unregisterService(HttpRpcService.class, this);
+		if(this.executor != null){
+			this.executor.shutdown();
+			this.executor = null;
+		}
 		if(this.httpClient != null){
 			this.httpClient.getConnectionManager().shutdown();
 			this.httpClient = null;

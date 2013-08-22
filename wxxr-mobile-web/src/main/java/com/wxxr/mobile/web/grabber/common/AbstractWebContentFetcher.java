@@ -18,6 +18,7 @@
 package com.wxxr.mobile.web.grabber.common;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,10 +27,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
+import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.HttpStatus;
+import com.wxxr.mobile.core.rpc.http.api.ParamConstants;
 import com.wxxr.mobile.web.grabber.api.IWebContentFetcher;
 import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.URLCanonicalizer;
@@ -47,7 +50,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 	protected final Object mutex = new Object();
 
 	protected long lastFetchTime = 0;
-	private int httpRequestTimeout = 30,politenessDelay = 0;
+	private int httpRequestTimeout = 60,politenessDelay = 0;
 
 	protected HttpRpcService getHttpService() {
 		return getService(HttpRpcService.class);
@@ -59,9 +62,10 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 	@Override
 	public WebContentFetchResult fetchHeader(IWebGrabbingTask task,WebURL webUrl) {
 		WebContentFetchResult fetchResult = new WebContentFetchResult();
-		String toFetchURL = webUrl.getURL();
 		HttpRequest request = null;
+		String toFetchURL = webUrl.getURL();
 		try {
+//			String toFetchURL = URLEncoder.encode(webUrl.getURL(),"UTF-8");
 			synchronized (mutex) {
 				long now = (new Date()).getTime();
 				if (now - lastFetchTime < this.politenessDelay) {
@@ -71,6 +75,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 			}
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("Accept-Encoding", "gzip");
+			params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.GET);
 			request = getHttpService().createRequest(toFetchURL, params);
 			HttpResponse response = request.invoke(this.httpRequestTimeout, TimeUnit.SECONDS);
 			fetchResult.setEntity((HttpEntity)response.getResponseEntity());
@@ -138,11 +143,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 			// ignoring exceptions that occur because of not registering https
 			// and other schemes
 		} catch (Exception e) {
-			if (e.getMessage() == null) {
-				logger.error("Error while fetching " + webUrl.getURL());
-			} else {
-				logger.error(e.getMessage() + " while fetching " + webUrl.getURL());
-			}
+				logger.error("Error while fetching " + webUrl.getURL(),e);
 		} finally {
 			try {
 				if (fetchResult.getEntity() == null && request != null) {

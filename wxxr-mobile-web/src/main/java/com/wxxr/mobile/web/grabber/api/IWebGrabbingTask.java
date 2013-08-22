@@ -72,6 +72,8 @@ public interface IWebGrabbingTask {
 	int getMaxOutgoingLinksToFollow();
 	
 	int getMaxDownloadSize();
+	
+	IGrabberServiceContext getContext();
 
 
 }

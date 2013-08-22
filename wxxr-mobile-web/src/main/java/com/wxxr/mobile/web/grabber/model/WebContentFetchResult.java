@@ -2,8 +2,9 @@ package com.wxxr.mobile.web.grabber.model;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import android.util.Log;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
 import com.wxxr.mobile.core.rpc.http.util.EntityUtils;
 
@@ -14,7 +15,7 @@ import com.wxxr.mobile.core.rpc.http.util.EntityUtils;
  */
 public class WebContentFetchResult {
 
-	protected static final Logger logger = Logger.getLogger(WebContentFetchResult.class);
+	protected static final Trace logger = Trace.getLogger(WebContentFetchResult.class);
 
 	protected int statusCode;
 	protected HttpEntity entity = null;
@@ -72,7 +73,9 @@ public class WebContentFetchResult {
 				EntityUtils.consume(entity);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			if(logger.isTraceEnabled()){
+				logger.trace("Caught exception when discardContentIfNotConsumed", e);
+			}
 		}
 	}
 

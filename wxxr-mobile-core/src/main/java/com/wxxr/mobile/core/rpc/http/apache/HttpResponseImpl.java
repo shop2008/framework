@@ -38,7 +38,7 @@ public class HttpResponseImpl implements HttpResponse {
 	@Override
 	public DataEntity getResponseEntity() {
 		final HttpEntity entity = response.getEntity();
-		return entity == null ? null : new DataEntity() {
+		return entity == null ? null : new com.wxxr.mobile.core.rpc.http.api.HttpEntity() {
 
 			@Override
 			public boolean isRepeatable() {

@@ -31,9 +31,9 @@ public abstract class BindableActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		this.layoutView = setupContentView();
 		super.onCreate(savedInstanceState);
-		IUIBinder<BindableActivity> binder = AppUtils.getService(IWorkbenchManager.class).getUIBinder(BindableActivity.class);
-		this.binding = binder.doBinding(this);
-		AppUtils.getService(IAndroidPageNavigator.class).onPageCreate(((UIBinding)this.binding).getPage().getName(), this);
+//		IUIBinder<BindableActivity> binder = AppUtils.getService(IWorkbenchManager.class).getUIBinder(BindableActivity.class);
+//		this.binding = binder.doBinding(this);
+//		AppUtils.getService(IAndroidPageNavigator.class).onPageCreate(((UIBinding)this.binding).getPage().getName(), this);
 	}
 	
 	

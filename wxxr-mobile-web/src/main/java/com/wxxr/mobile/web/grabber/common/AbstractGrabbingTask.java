@@ -34,6 +34,10 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 		this.context = context;
 		this.pageUrl = url;
 		this.customData = customData;
+		WebURL webUrl = new WebURL();
+		webUrl.setURL(this.pageUrl);
+		webUrl.setDepth((short)0);
+		scheduleURL(webUrl);
 	}
 
 	/* (non-Javadoc)
@@ -265,5 +269,14 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 		this.htmlData = data;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#getHtmlData()
+	 */
+	@Override
+	public HtmlProcessingData getHtmlData() {
+		return this.htmlData;
+	}
+
+	
 
 }

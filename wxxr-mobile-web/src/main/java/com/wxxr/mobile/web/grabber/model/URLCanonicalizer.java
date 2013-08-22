@@ -206,6 +206,6 @@ public class URLCanonicalizer {
 	}
 
 	private static String normalizePath(final String path) {
-		return path.replace("%7E", "~").replace(" ", "%20");
+		return percentEncodeRfc3986(path).replace("%2F", "/").replace(" ", "%20");
 	}
 }

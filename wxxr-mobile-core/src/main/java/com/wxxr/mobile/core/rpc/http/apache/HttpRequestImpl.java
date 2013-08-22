@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -21,6 +22,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
 import com.wxxr.mobile.core.rpc.api.RequestCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
@@ -32,7 +34,7 @@ import com.wxxr.mobile.core.rpc.http.api.ParamConstants;
  *
  */
 public class HttpRequestImpl implements HttpRequest {
-
+	private static final Trace log = Trace.register(HttpRequestImpl.class);
 	private IHttpClientContext clientContext;
 	private Map<String,String> headers = new HashMap<String,String>();
 	private DataEntity dataEntity;
@@ -120,23 +122,42 @@ public class HttpRequestImpl implements HttpRequest {
 	  protected HttpRequestBase createHttpMethod(String url, Map<String, Object> params)
 	   {
 		   HttpMethod method = (HttpMethod)params.get(ParamConstants.PARAMETER_KEY_HTTP_METHOD);
+		   HttpRequestBase m = null;
 		   switch(method){
 		   case GET:
-			   HttpGet m = new HttpGet(url);
-			   HttpClientParams.setRedirecting(m.getParams(), true);
-			   return m;
+			   HttpGet get = new HttpGet(url);
+			   HttpClientParams.setRedirecting(get.getParams(), true);
+			   m = get;
+			   break;
 		   case POST:
-			   return new HttpPost(url);
+			   m = new HttpPost(url);
+			   break;
 		   case DELETE:
-			   return new HttpDelete(url);
+			   m = new HttpDelete(url);
+			   break;
 		   case HEAD:
-			   return new HttpHead(url);
+			   m = new HttpHead(url);
+			   break;
 		   case PUT:
-		         return new HttpPut(url);
+		         m = new HttpPut(url);
+		         break;
 		   case OPTIONS:
-			   return new HttpOptions(url);
+			   m = new HttpOptions(url);
+			   break;
 		   }
-		   throw new IllegalArgumentException("Invalid http method :"+method);
+		   if(m == null){
+			   throw new IllegalArgumentException("Invalid http method :"+method);
+		   }
+		   for (String key : params.keySet()) {
+			   if(ParamConstants.PARAMETER_KEY_HTTP_METHOD.equals(key)){
+				   continue;
+			   }
+			   Object val = params.get(key);
+			   if(val instanceof String){
+				   m.addHeader(key, (String)val);
+			   }
+		   }
+		   return m;
 	   }
 
 
@@ -181,15 +202,31 @@ public class HttpRequestImpl implements HttpRequest {
 			httpRequest = loadHttpMethod(createHttpMethod(targetUrl, httpParams));
 			return clientContext.invoke(httpRequest);
 		}else{
-			Future<HttpResponse> future = clientContext.getExecutor().submit(new Callable<HttpResponse>() {
-
-				@Override
-				public HttpResponse call() throws Exception {
-					httpRequest = loadHttpMethod(createHttpMethod(targetUrl, httpParams));
-					return clientContext.invoke(httpRequest);
+			long time = System.currentTimeMillis();
+			long timeoutInMills = TimeUnit.MILLISECONDS.convert(timeout, unit);
+			while(true){
+				if((System.currentTimeMillis() - time) > timeoutInMills){
+					throw new TimeoutException();
 				}
-			});
-			return future.get(timeout, unit);
+				try {
+					Future<HttpResponse> future = clientContext.getExecutor().submit(new Callable<HttpResponse>() {
+		
+						@Override
+						public HttpResponse call() throws Exception {
+							httpRequest = loadHttpMethod(createHttpMethod(targetUrl, httpParams));
+							return clientContext.invoke(httpRequest);
+						}
+					});
+					timeoutInMills -= (System.currentTimeMillis() - time);
+					if(timeoutInMills <= 0){
+						timeoutInMills = 1;
+					}
+					return future.get(timeoutInMills, TimeUnit.MILLISECONDS);
+				}catch(RejectedExecutionException e){
+					log.warn("Caught RejectedExecutionException when submit remote http call, going to try in 100 ms");
+					Thread.sleep(100);
+				}
+			}
 		}
 	}
 	

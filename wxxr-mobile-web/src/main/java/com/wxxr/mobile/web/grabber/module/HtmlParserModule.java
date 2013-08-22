@@ -4,6 +4,7 @@
 package com.wxxr.mobile.web.grabber.module;
 
 import com.wxxr.mobile.web.grabber.api.IHTMLParser;
+import com.wxxr.mobile.web.grabber.api.IWebLinkExractorRegistry;
 import com.wxxr.mobile.web.grabber.common.AbstractGrabberModule;
 import com.wxxr.mobile.web.grabber.common.HtmlParserImpl;
 
@@ -19,7 +20,7 @@ public class HtmlParserModule extends AbstractGrabberModule {
 	 */
 	@Override
 	protected void initServiceDependency() {
-
+		addRequiredService(IWebLinkExractorRegistry.class);
 	}
 
 	/* (non-Javadoc)

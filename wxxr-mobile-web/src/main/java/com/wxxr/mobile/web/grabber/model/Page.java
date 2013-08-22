@@ -20,6 +20,7 @@ package com.wxxr.mobile.web.grabber.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
 import com.wxxr.mobile.core.rpc.http.util.EntityUtils;
@@ -106,8 +107,11 @@ public class Page implements IWebContent {
 		if (charset != null) {
 			contentCharset = charset;	
 		}
-
-		contentData = entity.getContent();
+		if("gzip".equalsIgnoreCase(this.contentEncoding)){
+			contentData = new GZIPInputStream(entity.getContent());
+		}else{
+			contentData = entity.getContent();
+		}
 	}
 	
 	/**

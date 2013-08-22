@@ -5,7 +5,6 @@ import org.jsoup.nodes.Element;
 public class ExtractedUrlAnchorPair {
 
 	private String href;
-	private String anchor;
 	private Element element;
 	private String attrName;
 
@@ -15,14 +14,6 @@ public class ExtractedUrlAnchorPair {
 
 	public void setHref(String href) {
 		this.href = href;
-	}
-
-	public String getAnchor() {
-		return anchor;
-	}
-
-	public void setAnchor(String anchor) {
-		this.anchor = anchor;
 	}
 
 	/**
@@ -52,7 +43,15 @@ public class ExtractedUrlAnchorPair {
 	public void setAttrName(String attrName) {
 		this.attrName = attrName;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ExtractedUrlAnchorPair [href=" + href 
+				+ ", attrName=" + attrName + ", element={" + element.outerHtml()+ "} ]";
+	}
 	
 
 }

@@ -36,7 +36,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 		
 	}
 	
-	private int maxThreads = 10, minThread = 2, taskQueueSize = 5, maxCrawler = 10;
+	private int maxThreads = 10, minThread = 2, taskQueueSize = 5, maxCrawler = 2;
 	private ExecutorService executor;
 	
 	private CrawlerServiceContext context = new CrawlerServiceContext();
@@ -124,6 +124,10 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 						}
 					}
 				}
+			}
+			try {
+				latch.await();
+			} catch (InterruptedException e) {
 			}
 		}
 		task.finish(null);

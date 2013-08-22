@@ -33,7 +33,7 @@ public class WebURL implements Serializable {
 	private short depth;
 	private String path;
 	private ExtractedUrlAnchorPair anchor;
-	private String domain,subDomain;
+	private String domain; //,subDomain;
 
 	
 	@Override
@@ -57,7 +57,7 @@ public class WebURL implements Serializable {
 
 	@Override
 	public String toString() {
-		return url;
+		return url+((this.anchor != null) ? ","+this.anchor.toString() : "");
 	}
 
 	/**
@@ -70,29 +70,40 @@ public class WebURL implements Serializable {
 	public void setURL(String url) {
 		this.url = url;
 
-		int domainStartIdx = url.indexOf("//") + 2;
-		int domainEndIdx = url.indexOf('/', domainStartIdx);
-		domain = url.substring(domainStartIdx, domainEndIdx);
-		subDomain = "";
-		String[] parts = domain.split("\\.");
-		if (parts.length > 2) {
-			domain = parts[parts.length - 2] + "." + parts[parts.length - 1];
-			int limit = 2;
-			if (TLDList.getInstance().contains(domain)) {
-				domain = parts[parts.length - 3] + "." + domain;
-				limit = 3;
-			}
-			for (int i = 0; i < parts.length - limit; i++) {
-				if (subDomain.length() > 0) {
-					subDomain += ".";
-				}
-				subDomain += parts[i];
-			}
+		int domainStartIdx = url.indexOf("//");
+		if(domainStartIdx < 0){
+			domainStartIdx = 0;
+		}else{
+			 domainStartIdx = domainStartIdx+2;
 		}
-		path = url.substring(domainEndIdx);
-		int pathEndIdx = path.indexOf('?');
-		if (pathEndIdx >= 0) {
-			path = path.substring(0, pathEndIdx);
+		int domainEndIdx = url.indexOf('/', domainStartIdx);
+		if(domainEndIdx < 0){
+			domain = url.substring(domainStartIdx);
+		}else{
+			domain = url.substring(domainStartIdx, domainEndIdx);
+		}
+//		subDomain = "";
+//		String[] parts = domain.split("\\.");
+//		if (parts.length > 2) {
+//			domain = parts[parts.length - 2] + "." + parts[parts.length - 1];
+//			int limit = 2;
+//			if (TLDList.getInstance().contains(domain)) {
+//				domain = parts[parts.length - 3] + "." + domain;
+//				limit = 3;
+//			}
+//			for (int i = 0; i < parts.length - limit; i++) {
+//				if (subDomain.length() > 0) {
+//					subDomain += ".";
+//				}
+//				subDomain += parts[i];
+//			}
+//		}
+		if(domainEndIdx > 0){
+			path = url.substring(domainEndIdx);
+			int pathEndIdx = path.indexOf('?');
+			if (pathEndIdx >= 0) {
+				path = path.substring(0, pathEndIdx);
+			}
 		}
 	}
 
@@ -141,9 +152,9 @@ public class WebURL implements Serializable {
 		return domain;
 	}
 
-	public String getSubDomain() {
-		return subDomain;
-	}
+//	public String getSubDomain() {
+//		return subDomain;
+//	}
 
 	/**
 	 * Returns the path of this Url. For 'http://www.example.com/sample.htm',
@@ -169,4 +180,5 @@ public class WebURL implements Serializable {
 		this.anchor = anchor;
 	}
 
+	
 }

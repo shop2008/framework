@@ -12,8 +12,11 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Properties;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.web.grabber.api.IWebContentStorage;
 import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebLinkExractorRegistry;
+import com.wxxr.mobile.web.grabber.api.IWebLinkExtractor;
 import com.wxxr.mobile.web.grabber.model.ExtractedUrlAnchorPair;
 import com.wxxr.mobile.web.grabber.model.HtmlProcessingData;
 import com.wxxr.mobile.web.grabber.model.IWebContent;
@@ -26,6 +29,8 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  */
 public abstract class AbstractContentStorage implements IWebContentStorage {
 
+	private static final Trace log = Trace.register(AbstractContentStorage.class);
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
 	 */
@@ -51,7 +56,6 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 		fis = new FileInputStream(resFile);
 		Page page = new Page(p.getProperty("URL"));
 		page.setContentCharset(p.getProperty("Charset"));
-		page.setContentEncoding(p.getProperty("Encoding"));
 		page.setContentType(p.getProperty("ContentType"));
 		page.setContentData(fis);
 		return page;
@@ -83,7 +87,6 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			fos = null;
 			Properties p = new Properties();
 			p.setProperty("Charset", content.getContentCharset());
-			p.setProperty("Encoding", content.getContentEncoding());
 			p.setProperty("ContentType", content.getContentType());
 			p.setProperty("URL", content.getWebURL());
 			fos = new FileOutputStream(propFile);
@@ -115,19 +118,31 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 	@Override
 	public void makeContentReady(IWebGrabbingTask task) throws IOException {
 		HtmlProcessingData data = task.getHtmlData();
-		List<WebURL> outLinks = data.getDownloadedUrls();
+		List<WebURL> outLinks = data.getOutgoingUrls();
 		List<WebURL> downloadedLinks = data.getDownloadedUrls();
 		boolean domUpdated = false;
 		if(outLinks != null){
 			for (WebURL webURL : outLinks) {
+				if(log.isDebugEnabled()){
+					log.debug("Going to update link :"+webURL);
+				}
 				ExtractedUrlAnchorPair anchor = webURL.getAnchor();
 				if(anchor != null){
 					String url = webURL.getURL();
 					if((downloadedLinks != null)&&downloadedLinks.contains(webURL)){
 						url = getRelativePath(task, webURL);
 					}
-					anchor.getElement().attr(anchor.getAttrName(), url);
-					domUpdated = true;
+					IWebLinkExtractor[] extractors = task.getContext().getService(IWebLinkExractorRegistry.class).getLinkExtractors(anchor.getElement().tagName().toLowerCase());
+					if(extractors != null){
+						for (IWebLinkExtractor extractor : extractors) {
+							if(extractor.updateLink(task.getContext(), anchor, url)){
+								domUpdated = true;
+								if(log.isDebugEnabled()){
+									log.debug("Link :"+webURL+" was updated !");
+								}
+							}
+						}
+					}
 				}
 			}
 		}

@@ -8,6 +8,9 @@ import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import android.util.Log;
+
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.web.grabber.api.IHTMLParser;
 import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.ExtractedUrlAnchorPair;
@@ -21,7 +24,7 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  */
 public class HtmlParserImpl implements IHTMLParser {
 
-	protected static final Logger logger = Logger.getLogger(HtmlParserImpl.class.getName());
+	protected static final Trace logger = Trace.getLogger(HtmlParserImpl.class.getName());
 
 	
 	/* (non-Javadoc)
@@ -31,7 +34,7 @@ public class HtmlParserImpl implements IHTMLParser {
 	public HtmlProcessingData parse(IWebGrabbingTask task,IWebContent page, String contextURL) throws IOException {
 
 		HtmlProcessingData parseData = null;
-		HtmlContentHandler contentHandler = new HtmlContentHandler();
+		HtmlContentHandler contentHandler = new HtmlContentHandler(task.getContext());
 		Document dom = Jsoup.parse(page.getContentData(),page.getContentCharset(),page.getWebURL());
 		contentHandler.visit(dom);
 		parseData = new HtmlProcessingData(dom,page.getWebURL());
@@ -63,6 +66,9 @@ public class HtmlParserImpl implements IHTMLParser {
 					webURL.setAnchor(urlAnchorPair);
 					outgoingUrls.add(webURL);
 					urlCount++;
+					if(logger.isDebugEnabled()){
+						logger.debug("Found outgoing link"+urlCount+" :"+webURL);
+					}
 					if (urlCount > task.getMaxOutgoingLinksToFollow()) {
 						break;
 					}
