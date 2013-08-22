@@ -148,7 +148,6 @@ public class WebGrabberServiceImplTest {
 		BasicLog4jConfigurator logConfig = new BasicLog4jConfigurator();
 		logConfig.configure();
 		logConfig.configureConsoleAppender("com.wxxr.mobile",Level.DEBUG);
-		System.out.print(URLCanonicalizer.getCanonicalURL("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs/node13/web_content/img/激活大脑.jpg"));
 		WebGrabberServiceImplTest tester = new WebGrabberServiceImplTest();
 		tester.setUp();
 		tester.testDoCrawl();
