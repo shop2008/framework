@@ -178,6 +178,12 @@ public class HttpRpcClientEngine implements ClientHttpEngine
 				public String getContentEncoding() {
 					return entity.getContentEncoding().getValue();
 				}
+
+				@Override
+				public void consumeContent() throws IOException {
+					entity.consumeContent();
+					
+				}
 			});
          }
          catch (IOException e)
