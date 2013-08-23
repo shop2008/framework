@@ -13,9 +13,9 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  *
  */
 public interface IWebContentStorage {
-	boolean isDownloaded(IWebGrabbingTask task, WebURL url);
-	void saveContent(IWebGrabbingTask task,IWebContent content,WebURL url) throws IOException;
-	IWebContent getContent(IWebGrabbingTask task, WebURL url) throws IOException;
-	void makeContentReady(IWebGrabbingTask task) throws IOException;
-	boolean isContentReady(IWebGrabbingTask task);
+	boolean isDownloaded(IWebPageGrabbingTask task, WebURL url);
+	void saveContent(IWebPageGrabbingTask task,IWebContent content,WebURL url) throws IOException;
+	IWebContent getContent(IWebPageGrabbingTask task, WebURL url) throws IOException;
+	void makeContentReady(IWebPageGrabbingTask task) throws IOException;
+	boolean isContentReady(IWebPageGrabbingTask task);
 }

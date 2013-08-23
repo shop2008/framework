@@ -7,6 +7,7 @@ public class ExtractedUrlAnchorPair {
 	private String href;
 	private Element element;
 	private String attrName;
+	private boolean prefetchable;
 
 	public String getHref() {
 		return href;
@@ -51,6 +52,20 @@ public class ExtractedUrlAnchorPair {
 	public String toString() {
 		return "ExtractedUrlAnchorPair [href=" + href 
 				+ ", attrName=" + attrName + ", element={" + element.outerHtml()+ "} ]";
+	}
+
+	/**
+	 * @return the prefetchable
+	 */
+	public boolean isPrefetchable() {
+		return prefetchable;
+	}
+
+	/**
+	 * @param prefetchable the prefetchable to set
+	 */
+	public void setPrefetchable(boolean prefetchable) {
+		this.prefetchable = prefetchable;
 	}
 	
 

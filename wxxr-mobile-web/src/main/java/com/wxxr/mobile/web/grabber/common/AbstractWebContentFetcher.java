@@ -18,7 +18,6 @@
 package com.wxxr.mobile.web.grabber.common;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +33,7 @@ import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.HttpStatus;
 import com.wxxr.mobile.core.rpc.http.api.ParamConstants;
 import com.wxxr.mobile.web.grabber.api.IWebContentFetcher;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.URLCanonicalizer;
 import com.wxxr.mobile.web.grabber.model.WebContentFetchResult;
 import com.wxxr.mobile.web.grabber.model.WebURL;
@@ -60,7 +59,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 	 * @see edu.uci.ics.crawler4j.fetcher.IPageFetcher#fetchHeader(edu.uci.ics.crawler4j.url.WebURL)
 	 */
 	@Override
-	public WebContentFetchResult fetchHeader(IWebGrabbingTask task,WebURL webUrl) {
+	public WebContentFetchResult fetchHeader(IWebPageGrabbingTask task,WebURL webUrl) {
 		WebContentFetchResult fetchResult = new WebContentFetchResult();
 		HttpRequest request = null;
 		String toFetchURL = webUrl.getURL();

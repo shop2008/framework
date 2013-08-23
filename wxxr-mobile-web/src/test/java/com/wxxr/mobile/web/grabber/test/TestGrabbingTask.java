@@ -6,14 +6,14 @@ package com.wxxr.mobile.web.grabber.test;
 import java.util.regex.Pattern;
 
 import com.wxxr.mobile.web.grabber.api.IGrabberServiceContext;
-import com.wxxr.mobile.web.grabber.common.AbstractGrabbingTask;
+import com.wxxr.mobile.web.grabber.common.AbstractPageGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.WebURL;
 
 /**
  * @author neillin
  *
  */
-public class TestGrabbingTask extends AbstractGrabbingTask {
+public class TestGrabbingTask extends AbstractPageGrabbingTask {
 
 	private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g|png|tiff?|pdf))$");
 	private Integer seqNo;
@@ -33,7 +33,7 @@ public class TestGrabbingTask extends AbstractGrabbingTask {
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.common.AbstractGrabbingTask#init(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, java.lang.String, java.lang.Object)
+	 * @see com.wxxr.mobile.web.grabber.common.AbstractPageGrabbingTask#init(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, java.lang.String, java.lang.Object)
 	 */
 	@Override
 	public void init(IGrabberServiceContext context, String url,

@@ -2,8 +2,6 @@ package com.wxxr.mobile.web.grabber.model;
 
 import java.util.Map;
 
-import android.util.Log;
-
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
 import com.wxxr.mobile.core.rpc.http.util.EntityUtils;

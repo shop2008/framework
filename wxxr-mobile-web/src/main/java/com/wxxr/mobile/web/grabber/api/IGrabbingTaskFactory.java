@@ -8,6 +8,6 @@ package com.wxxr.mobile.web.grabber.api;
  *
  */
 public interface IGrabbingTaskFactory {
-	IWebGrabbingTask createNewTask();
-	void destroyTask(IWebGrabbingTask task);
+	IWebPageGrabbingTask createPageTask();
+	IWebSiteGrabbingTask createSiteTask();
 }

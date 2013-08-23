@@ -10,7 +10,7 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  * @author neillin
  *
  */
-public interface IWebGrabbingTask {
+public interface IWebPageGrabbingTask {
 	void init(IGrabberServiceContext context, String url,Object customData);
 	
 	WebURL getNextScheduledURL();
@@ -74,6 +74,9 @@ public interface IWebGrabbingTask {
 	int getMaxDownloadSize();
 	
 	IGrabberServiceContext getContext();
-
+	
+	Object getCustomData();
+	
+	WebURL getPageUrl();
 
 }

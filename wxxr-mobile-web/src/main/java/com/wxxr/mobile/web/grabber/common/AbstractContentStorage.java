@@ -14,9 +14,9 @@ import java.util.Properties;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.web.grabber.api.IWebContentStorage;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
 import com.wxxr.mobile.web.grabber.api.IWebLinkExractorRegistry;
 import com.wxxr.mobile.web.grabber.api.IWebLinkExtractor;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.ExtractedUrlAnchorPair;
 import com.wxxr.mobile.web.grabber.model.HtmlProcessingData;
 import com.wxxr.mobile.web.grabber.model.IWebContent;
@@ -32,45 +32,65 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 	private static final Trace log = Trace.register(AbstractContentStorage.class);
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
 	 */
 	@Override
-	public boolean isDownloaded(IWebGrabbingTask task, WebURL url) {
+	public boolean isDownloaded(IWebPageGrabbingTask task, WebURL url) {
 		File resFile = getResourceFile(task,url);
 		return resFile.exists();
 	}
 
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
 	 */
 	@Override
-	public IWebContent getContent(IWebGrabbingTask task, WebURL url) throws IOException {
+	public IWebContent getContent(IWebPageGrabbingTask task, WebURL url) throws IOException {
 		File resFile = getResourceFile(task,url);
 		String path = resFile.getCanonicalPath();
-		File propFile = new File(path+".properties");
-		InputStream fis = new FileInputStream(propFile);
+		File propFile = new File(path+".x");
+		File origFile = new File(path+".orig");
 		Properties p = new Properties();
-		p.load(fis);
-		fis.close();
-		fis = new FileInputStream(resFile);
-		Page page = new Page(p.getProperty("URL"));
-		page.setContentCharset(p.getProperty("Charset"));
-		page.setContentType(p.getProperty("ContentType"));
+		InputStream fis = null;
+		if(propFile.exists()){
+			fis = new FileInputStream(propFile);
+			p.load(fis);
+			fis.close();
+		}
+		if(origFile.exists()){
+			fis = new FileInputStream(origFile);
+		}else{
+			fis = new FileInputStream(resFile);
+		}
+		String s = p.getProperty("URL");
+		Page page = null;
+		if(s != null){
+			page = new Page(s);
+		}else{
+			page = new Page(url.getURL());
+		}
+		s = p.getProperty("Charset");
+		if(s != null){
+			page.setContentCharset(s);
+		}
+		s = p.getProperty("ContentType");
+		if(s != null){
+			page.setContentType(s);
+		}
 		page.setContentData(fis);
 		return page;
 	}
 
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#saveContent(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask, com.wxxr.mobile.web.grabber.model.IWebContent)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#saveContent(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask, com.wxxr.mobile.web.grabber.model.IWebContent)
 	 */
 	@Override
-	public void saveContent(IWebGrabbingTask task, IWebContent content,WebURL url) throws IOException {
+	public void saveContent(IWebPageGrabbingTask task, IWebContent content,WebURL url) throws IOException {
 		File resFile = getResourceFile(task,url);
 		String path = resFile.getCanonicalPath();
 		File tmpFile = new File(path+".tmp");
-		File propFile = new File(path+".properties");
+		File propFile = new File(path+".x");
 		if(!tmpFile.getParentFile().exists()){
 			tmpFile.getParentFile().mkdirs();
 		}
@@ -85,14 +105,16 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
             }
 			fos.close();
 			fos = null;
-			Properties p = new Properties();
-			p.setProperty("Charset", content.getContentCharset());
-			p.setProperty("ContentType", content.getContentType());
-			p.setProperty("URL", content.getWebURL());
-			fos = new FileOutputStream(propFile);
-			p.store(fos, null);
-			fos.close();
-			fos = null;
+			if(Util.isHtmlContent(content.getContentType())){
+				Properties p = new Properties();
+				p.setProperty("Charset", content.getContentCharset());
+				p.setProperty("ContentType", content.getContentType());
+				p.setProperty("URL", content.getWebURL());
+				fos = new FileOutputStream(propFile);
+				p.store(fos, null);
+				fos.close();
+				fos = null;
+			}
 			tmpFile.renameTo(resFile);
 		}finally{
 			if(fos != null){
@@ -105,19 +127,22 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 		
 	}	
 	
-	protected abstract File getResourceFile(IWebGrabbingTask task,WebURL url);
+	protected abstract File getResourceFile(IWebPageGrabbingTask task,WebURL url);
 
-	protected abstract File getContentRoot(IWebGrabbingTask task);
+	protected abstract File getContentRoot(IWebPageGrabbingTask task);
 	
-	protected abstract String getRelativePath(IWebGrabbingTask task,WebURL url);
+	protected abstract String getRelativePath(IWebPageGrabbingTask task,WebURL url);
 
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#makeContentReady(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#makeContentReady(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask)
 	 */
 	@Override
-	public void makeContentReady(IWebGrabbingTask task) throws IOException {
+	public void makeContentReady(IWebPageGrabbingTask task) throws IOException {
 		HtmlProcessingData data = task.getHtmlData();
+		if(data == null){		// duplicated grabbing task
+			return;
+		}
 		List<WebURL> outLinks = data.getOutgoingUrls();
 		List<WebURL> downloadedLinks = data.getDownloadedUrls();
 		boolean domUpdated = false;
@@ -152,7 +177,9 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			File resFile = getResourceFile(task,webUrl);
 			String path = resFile.getCanonicalPath();
 			File origFile = new File(path+".orig");
-			resFile.renameTo(origFile);
+			if(!origFile.exists()) {
+				resFile.renameTo(origFile);
+			}
 			FileOutputStream fos = null;
 			OutputStreamWriter sw = null;
 			try {
@@ -182,10 +209,10 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isContentReady(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isContentReady(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask)
 	 */
 	@Override
-	public boolean isContentReady(IWebGrabbingTask task) {
+	public boolean isContentReady(IWebPageGrabbingTask task) {
 		File readyFile = new File(getContentRoot(task),".ready");
 		return readyFile.exists();
 	}

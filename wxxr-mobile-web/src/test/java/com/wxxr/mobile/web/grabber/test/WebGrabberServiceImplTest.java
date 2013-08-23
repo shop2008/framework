@@ -7,7 +7,6 @@ import com.wxxr.mobile.core.log.spi.Log4jLoggerFactory;
 import com.wxxr.mobile.core.util.BasicLog4jConfigurator;
 import com.wxxr.mobile.web.grabber.api.IWebLinkExtractor;
 import com.wxxr.mobile.web.grabber.common.AbstractGrabberModule;
-import com.wxxr.mobile.web.grabber.model.URLCanonicalizer;
 import com.wxxr.mobile.web.grabber.module.HtmlParserModule;
 import com.wxxr.mobile.web.grabber.module.WebCrawlerModule;
 import com.wxxr.mobile.web.grabber.module.WebGrabberServiceImpl;
@@ -88,10 +87,14 @@ public class WebGrabberServiceImplTest {
 		grabber.stop();
 	}
 
-	public void testDoCrawl() {
-		grabber.doCrawl("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs.html", 100);
+	public void testGrabPage() {
+		grabber.grabWebPage("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs.html", 100);
 	}
 	
+	public void testGrabSite() {
+		grabber.grabWebSite("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs.html", "public.cmhelper.7500.com.cn/magnoliaPublic");
+	}
+
 	/**
 	 * 
 	 */
@@ -150,7 +153,8 @@ public class WebGrabberServiceImplTest {
 		logConfig.configureConsoleAppender("com.wxxr.mobile",Level.DEBUG);
 		WebGrabberServiceImplTest tester = new WebGrabberServiceImplTest();
 		tester.setUp();
-		tester.testDoCrawl();
+		tester.testGrabPage();
+		tester.testGrabSite();
 		tester.tearDown();
 	}
 

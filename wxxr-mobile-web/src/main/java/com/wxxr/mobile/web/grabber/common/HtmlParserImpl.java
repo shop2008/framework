@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import android.util.Log;
-
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.web.grabber.api.IHTMLParser;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.ExtractedUrlAnchorPair;
 import com.wxxr.mobile.web.grabber.model.HtmlProcessingData;
 import com.wxxr.mobile.web.grabber.model.IWebContent;
@@ -31,7 +28,7 @@ public class HtmlParserImpl implements IHTMLParser {
 	 * @see edu.uci.ics.crawler4j.parser.IWebParser#parse(edu.uci.ics.crawler4j.crawler.Page, java.lang.String)
 	 */
 	@Override
-	public HtmlProcessingData parse(IWebGrabbingTask task,IWebContent page, String contextURL) throws IOException {
+	public HtmlProcessingData parse(IWebPageGrabbingTask task,IWebContent page, String contextURL) throws IOException {
 
 		HtmlProcessingData parseData = null;
 		HtmlContentHandler contentHandler = new HtmlContentHandler(task.getContext());

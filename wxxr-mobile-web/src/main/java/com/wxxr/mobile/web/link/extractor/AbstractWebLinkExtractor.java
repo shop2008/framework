@@ -16,6 +16,7 @@ import com.wxxr.mobile.web.grabber.model.ExtractedUrlAnchorPair;
  */
 public abstract class AbstractWebLinkExtractor implements IWebLinkExtractor {
 
+	private boolean prefetchableLink = true;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.web.grabber.api.IWebLinkExtractor#extractLink(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, org.jsoup.nodes.Element)
 	 */
@@ -30,6 +31,7 @@ public abstract class AbstractWebLinkExtractor implements IWebLinkExtractor {
 				curUrl.setHref(href);
 				curUrl.setElement(elem);
 				curUrl.setAttrName(linkAttr);
+				curUrl.setPrefetchable(this.prefetchableLink);
 				return curUrl;
 			}
 		return null;
@@ -48,6 +50,20 @@ public abstract class AbstractWebLinkExtractor implements IWebLinkExtractor {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @return the prefetchableLink
+	 */
+	public boolean isPrefetchableLink() {
+		return prefetchableLink;
+	}
+
+	/**
+	 * @param prefetchableLink the prefetchableLink to set
+	 */
+	public void setPrefetchableLink(boolean prefetchableLink) {
+		this.prefetchableLink = prefetchableLink;
 	}
 
 }

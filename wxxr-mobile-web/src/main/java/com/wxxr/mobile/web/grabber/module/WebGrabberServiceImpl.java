@@ -4,7 +4,9 @@
 package com.wxxr.mobile.web.grabber.module;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,7 +23,8 @@ import com.wxxr.mobile.web.grabber.api.IGrabbingTaskFactory;
 import com.wxxr.mobile.web.grabber.api.IWebContentStorage;
 import com.wxxr.mobile.web.grabber.api.IWebCrawler;
 import com.wxxr.mobile.web.grabber.api.IWebGrabberService;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebSiteGrabbingTask;
 import com.wxxr.mobile.web.grabber.common.AbstractGrabberModule;
 import com.wxxr.mobile.web.grabber.model.WebURL;
 
@@ -78,11 +81,71 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 		}
 		super.stop();
 	}
+	
+	@Override
+	public boolean grabWebSite(String htmlUrl, Object customData) {
+		final IWebSiteGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createSiteTask();
+		task.init(context, htmlUrl,customData);
+		return doGrabSite(task, new ArrayList<String>());
+	}
+
+	/**
+	 * @param task
+	 */
+	protected boolean doGrabSite(final IWebSiteGrabbingTask task, List<String> grabbedSites) {
+		if(grabbedSites.contains(task.getPageUrl().getURL())){
+			return true;
+		}
+		if(log.isDebugEnabled()){
+			log.debug("Going to grab site :"+task.getPageUrl());
+		}
+		boolean done = true;
+		if(doGrabWebPage(task)){
+			grabbedSites.add(task.getPageUrl().getURL());
+			IWebSiteGrabbingTask nextTask = null;
+			while((nextTask = task.getNextPageGrabbingTask()) != null){
+				if(!doGrabSite(nextTask,grabbedSites)){
+					done = false;
+				}
+			}
+		}else{
+			done = false;
+		}
+		if(done){
+			try {
+				getService(IWebContentStorage.class).makeContentReady(task);
+				WebURL linkUrl = task.getLinkUrl();		// change link in parent page referring to local cached page
+				IWebSiteGrabbingTask parent = task.getParentTask();
+				if((parent != null)&&(linkUrl.getAnchor() != null)){
+					parent.getHtmlData().addDownloadedUrl(linkUrl);
+				}
+			} catch (IOException e) {
+				log.error("Failed to make content ready", e);
+				return false;
+			}
+		}
+		return done;
+	}
 
 	@Override
-	public boolean doCrawl(String htmlUrl, Object customData) {
-		final IWebGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createNewTask();
+	public boolean grabWebPage(String htmlUrl, Object customData) {
+		final IWebPageGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createPageTask();
 		task.init(context, htmlUrl,customData);
+		if(doGrabWebPage(task)){
+			try {
+				getService(IWebContentStorage.class).makeContentReady(task);
+			} catch (IOException e) {
+				log.error("Failed to make content ready", e);
+				return false;
+			}
+		}
+		return !task.hasErrors();
+	}
+
+	/**
+	 * @param task
+	 */
+	protected boolean doGrabWebPage(final IWebPageGrabbingTask task) {
 		LinkedList<WebURL> urls = new LinkedList<WebURL>();
 		while(true){
 			urls.clear();
@@ -131,14 +194,6 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 			}
 		}
 		task.finish(null);
-		if(!task.hasErrors()){
-			try {
-				getService(IWebContentStorage.class).makeContentReady(task);
-			} catch (IOException e) {
-				log.error("Failed to make content ready", e);
-				return false;
-			}
-		}
 		return !task.hasErrors();
 	}
 

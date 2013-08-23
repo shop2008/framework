@@ -8,5 +8,6 @@ package com.wxxr.mobile.web.grabber.api;
  *
  */
 public interface IWebGrabberService {
-	boolean doCrawl(String htmlUrl, Object customData);
+	boolean grabWebPage(String htmlUrl, Object customData);
+	boolean grabWebSite(String htmlUrl, Object customData);
 }

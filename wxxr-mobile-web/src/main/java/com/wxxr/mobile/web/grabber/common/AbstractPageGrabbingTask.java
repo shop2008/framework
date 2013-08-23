@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.web.grabber.api.IGrabberServiceContext;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.HtmlProcessingData;
 import com.wxxr.mobile.web.grabber.model.WebURL;
 
@@ -15,33 +15,33 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  * @author neillin
  *
  */
-public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
-	private static Trace log = Trace.register(AbstractGrabbingTask.class);
+public abstract class AbstractPageGrabbingTask implements IWebPageGrabbingTask {
+	private static Trace log = Trace.register(AbstractPageGrabbingTask.class);
 	private int maxDepthOfCrawling = 1,maxOutgoingLinksToFollow = 1000,maxDownloadSize = 8*1024*1024;
 	private boolean followRedirects = true,scanBinaryContent = true;
 	private IGrabberServiceContext context;
 	private Object customData;
-	private String pageUrl;
+	private WebURL pageUrl;
 	private LinkedList<WebURL> queue = new LinkedList<WebURL>();
 	private boolean hasError = false, finished = false;
 	private HtmlProcessingData htmlData;
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#init(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, java.lang.String, java.lang.Object)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#init(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, java.lang.String, java.lang.Object)
 	 */
 	@Override
 	public void init(IGrabberServiceContext context, String url,
 			Object customData) {
 		this.context = context;
-		this.pageUrl = url;
-		this.customData = customData;
 		WebURL webUrl = new WebURL();
-		webUrl.setURL(this.pageUrl);
+		webUrl.setURL(url);
 		webUrl.setDepth((short)0);
+		this.pageUrl = webUrl;
+		this.customData = customData;
 		scheduleURL(webUrl);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#getNextScheduledURL()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#getNextScheduledURL()
 	 */
 	@Override
 	public WebURL getNextScheduledURL() {
@@ -54,7 +54,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#scheduleURL(com.wxxr.mobile.web.grabber.api.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#scheduleURL(com.wxxr.mobile.web.grabber.api.WebURL)
 	 */
 	@Override
 	public void scheduleURL(WebURL url) {
@@ -66,7 +66,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#onContentFetchError(com.wxxr.mobile.web.grabber.api.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#onContentFetchError(com.wxxr.mobile.web.grabber.api.WebURL)
 	 */
 	@Override
 	public void onContentFetchError(WebURL webUrl,Throwable t) {
@@ -79,7 +79,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#onParseError(com.wxxr.mobile.web.grabber.api.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#onParseError(com.wxxr.mobile.web.grabber.api.WebURL)
 	 */
 	@Override
 	public void onParseError(WebURL webUrl,Throwable t) {
@@ -93,7 +93,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 
 	
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#onProcessingError(com.wxxr.mobile.web.grabber.model.WebURL, java.lang.Throwable)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#onProcessingError(com.wxxr.mobile.web.grabber.model.WebURL, java.lang.Throwable)
 	 */
 	@Override
 	public void onProcessingError(WebURL webUrl, Throwable t) {
@@ -106,7 +106,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#handlePageStatusCode(com.wxxr.mobile.web.grabber.api.WebURL, int, java.lang.String)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#handlePageStatusCode(com.wxxr.mobile.web.grabber.api.WebURL, int, java.lang.String)
 	 */
 	@Override
 	public void handlePageStatusCode(WebURL webUrl, int statusCode,
@@ -119,7 +119,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#finish(java.lang.Throwable)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#finish(java.lang.Throwable)
 	 */
 	@Override
 	public void finish(Throwable t) {
@@ -134,7 +134,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#isFinished()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#isFinished()
 	 */
 	@Override
 	public boolean isFinished() {
@@ -142,7 +142,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#hasErrors()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#hasErrors()
 	 */
 	@Override
 	public boolean hasErrors() {
@@ -150,7 +150,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#scanBinaryContent()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#scanBinaryContent()
 	 */
 	@Override
 	public boolean scanBinaryContent() {
@@ -158,7 +158,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#followRedirects()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#followRedirects()
 	 */
 	@Override
 	public boolean followRedirects() {
@@ -166,7 +166,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#getMaxDepthOfCrawling()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#getMaxDepthOfCrawling()
 	 */
 	@Override
 	public int getMaxDepthOfCrawling() {
@@ -174,7 +174,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#getMaxOutgoingLinksToFollow()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#getMaxOutgoingLinksToFollow()
 	 */
 	@Override
 	public int getMaxOutgoingLinksToFollow() {
@@ -212,7 +212,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	/**
 	 * @return the pageUrl
 	 */
-	public String getPageUrl() {
+	public WebURL getPageUrl() {
 		return pageUrl;
 	}
 
@@ -259,7 +259,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#setHtmlData(com.wxxr.mobile.web.grabber.model.HtmlProcessingData)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#setHtmlData(com.wxxr.mobile.web.grabber.model.HtmlProcessingData)
 	 */
 	@Override
 	public void setHtmlData(HtmlProcessingData data) {
@@ -270,7 +270,7 @@ public abstract class AbstractGrabbingTask implements IWebGrabbingTask {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebGrabbingTask#getHtmlData()
+	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#getHtmlData()
 	 */
 	@Override
 	public HtmlProcessingData getHtmlData() {

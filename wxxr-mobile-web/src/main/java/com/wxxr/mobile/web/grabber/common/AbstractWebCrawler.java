@@ -6,11 +6,13 @@ package com.wxxr.mobile.web.grabber.common;
 import org.apache.http.HttpStatus;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.web.grabber.api.IGrabbingTaskFactory;
 import com.wxxr.mobile.web.grabber.api.IHTMLParser;
 import com.wxxr.mobile.web.grabber.api.IWebContentFetcher;
 import com.wxxr.mobile.web.grabber.api.IWebContentStorage;
 import com.wxxr.mobile.web.grabber.api.IWebCrawler;
-import com.wxxr.mobile.web.grabber.api.IWebGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask;
+import com.wxxr.mobile.web.grabber.api.IWebSiteGrabbingTask;
 import com.wxxr.mobile.web.grabber.model.HtmlProcessingData;
 import com.wxxr.mobile.web.grabber.model.IWebContent;
 import com.wxxr.mobile.web.grabber.model.Page;
@@ -28,10 +30,10 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 	
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.web.grabber.api.IWebCrawler#processPage(com.wxxr.mobile.web.grabber.api.IWebGrabbingTask, com.wxxr.mobile.web.grabber.api.WebURL)
+	 * @see com.wxxr.mobile.web.grabber.api.IWebCrawler#processPage(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask, com.wxxr.mobile.web.grabber.api.WebURL)
 	 */
 	@Override
-	public void processPage(final IWebGrabbingTask task, WebURL curURL)
+	public void processPage(final IWebPageGrabbingTask task, WebURL curURL)
 			throws Exception {
 		if (curURL == null) {
 			return;
@@ -80,24 +82,27 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 				htmlProcessingData.addDownloadedUrl(curURL);
 				return;
 			}
-			try {
-				htmlProcessingData = parser.parse(task, page, curURL.getURL());
-			}catch(Throwable t){
-				task.onParseError(curURL,t);
-				return;
-			}
-			task.setHtmlData(htmlProcessingData);
-			int maxCrawlDepth = task.getMaxDepthOfCrawling();
-			for (WebURL webURL : htmlProcessingData.getOutgoingUrls()) {
-				webURL.setParentUrl(curURL.getURL());
-				if (!storage.isDownloaded(task,webURL)) {
+			if(curURL.getDepth() == 0){
+				try {
+					htmlProcessingData = parser.parse(task, page, curURL.getURL());
+				}catch(Throwable t){
+					task.onParseError(curURL,t);
+					return;
+				}
+				task.setHtmlData(htmlProcessingData);
+				int maxCrawlDepth = task.getMaxDepthOfCrawling();
+				for (WebURL webURL : htmlProcessingData.getOutgoingUrls()) {
+					webURL.setParentUrl(curURL.getURL());
 					webURL.setDepth((short) (curURL.getDepth() + 1));
-					if (maxCrawlDepth == -1 || curURL.getDepth() < maxCrawlDepth) {
-						if (task.shouldVisit(webURL)) {
+					if ((maxCrawlDepth == -1 || curURL.getDepth() < maxCrawlDepth)&&(webURL.getAnchor().isPrefetchable()&&task.shouldVisit(webURL))) {
 							task.scheduleURL(webURL);
-						}
 					}
 				}
+			}else if(task instanceof IWebSiteGrabbingTask){
+				IWebSiteGrabbingTask newTask = task.getContext().getService(IGrabbingTaskFactory.class).createSiteTask();
+				newTask.init(task.getContext(), curURL.getURL(), task.getCustomData());
+				newTask.setLinkUrl(curURL);
+				((IWebSiteGrabbingTask)task).schedulePageGrabbingTask(newTask);
 			}
 		}finally {
 			if(page != null){

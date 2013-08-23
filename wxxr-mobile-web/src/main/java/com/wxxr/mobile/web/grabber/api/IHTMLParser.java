@@ -8,6 +8,6 @@ import com.wxxr.mobile.web.grabber.model.IWebContent;
 
 public interface IHTMLParser {
 
-	HtmlProcessingData parse(IWebGrabbingTask task,IWebContent page, String contextURL) throws IOException ;
+	HtmlProcessingData parse(IWebPageGrabbingTask task,IWebContent page, String contextURL) throws IOException ;
 
 }

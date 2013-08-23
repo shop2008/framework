@@ -10,5 +10,5 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
  *
  */
 public interface IWebCrawler {
-	void processPage(IWebGrabbingTask task,WebURL curURL) throws Exception;
+	void processPage(IWebPageGrabbingTask task,WebURL curURL) throws Exception;
 }
