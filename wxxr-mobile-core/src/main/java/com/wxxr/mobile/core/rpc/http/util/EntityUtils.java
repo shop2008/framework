@@ -59,10 +59,7 @@ public final class EntityUtils {
         if (entity == null) {
             return;
         }
-        InputStream instream = entity.getContent();
-        if (instream != null) {
-            instream.close();
-        }
+        entity.consumeContent();
     }
 
     /**

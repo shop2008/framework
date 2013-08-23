@@ -76,6 +76,8 @@ public interface DataEntity {
      *          <code>null</code> if the content encoding is unknown
      */
     String getContentEncoding();
+    
+    void consumeContent() throws IOException;
 
 
 }

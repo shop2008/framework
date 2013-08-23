@@ -33,6 +33,10 @@ public class ByteArrayEntity extends AbstractHttpEntity implements Cloneable {
         return new ByteArrayInputStream(this.content);
     }
 
+    public void consumeContent() throws IOException{
+    	
+    }
+    
     public void writeTo(final OutputStream outstream) throws IOException {
         if (outstream == null) {
             throw new IllegalArgumentException("Output stream may not be null");

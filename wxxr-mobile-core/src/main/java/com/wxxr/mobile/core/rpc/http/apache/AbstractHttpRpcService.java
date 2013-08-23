@@ -29,6 +29,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ClientConnectionRequest;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRoute;
@@ -205,24 +206,40 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			        
 			    });
 				ThreadSafeClientConnManager tcm = new ThreadSafeClientConnManager(params,registry){
-
+					private AtomicInteger connInUsing = new AtomicInteger(0);
 					@Override
 					public void releaseConnection(ManagedClientConnection conn,
 							long validDuration, TimeUnit timeUnit) {
 						super.releaseConnection(conn, validDuration, timeUnit);
 						if(log.isDebugEnabled()){
-							log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit);
+							log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.connInUsing.decrementAndGet());
 						}
 					}
 
 					@Override
 					public ClientConnectionRequest requestConnection(
 							HttpRoute route, Object state) {
-						ClientConnectionRequest req = super.requestConnection(route, state);
+						final ClientConnectionRequest req = super.requestConnection(route, state);
 						if(log.isDebugEnabled()){
-							log.debug("Acquired connection for :"+route+", state :"+state);
+							log.debug("Acquired connection :["+req+"] for :"+route+", state :"+state);
 						}
-						return req;
+						return new ClientConnectionRequest() {
+							
+							@Override
+							public ManagedClientConnection getConnection(long timeout, TimeUnit tunit)
+									throws InterruptedException, ConnectionPoolTimeoutException {
+								ManagedClientConnection conn = req.getConnection(timeout, tunit);
+								if(log.isDebugEnabled()){
+									log.debug("Acquired connection :"+conn+" , connection in using :"+connInUsing.incrementAndGet());
+								}
+								return conn;
+							}
+							
+							@Override
+							public void abortRequest() {
+								req.abortRequest();
+							}
+						};
 					}
 					
 				};

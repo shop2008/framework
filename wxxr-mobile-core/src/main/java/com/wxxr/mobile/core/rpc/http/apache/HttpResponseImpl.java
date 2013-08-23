@@ -65,6 +65,11 @@ public class HttpResponseImpl implements HttpResponse {
 				Header h = entity.getContentEncoding();
 				return h != null ? h.getValue() : null;
 			}
+
+			@Override
+			public void consumeContent() throws IOException{
+				entity.consumeContent();
+			}
 		};
 	}
 
