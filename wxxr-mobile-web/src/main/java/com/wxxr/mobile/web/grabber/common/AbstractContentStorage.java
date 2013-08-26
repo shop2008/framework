@@ -9,7 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -30,14 +33,32 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
 public abstract class AbstractContentStorage implements IWebContentStorage {
 
 	private static final Trace log = Trace.register(AbstractContentStorage.class);
-	
+	private SimpleDateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz",Locale.ENGLISH);
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.web.grabber.api.IWebContentStorage#isProcessed(com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask, com.wxxr.mobile.web.grabber.model.WebURL)
 	 */
 	@Override
-	public boolean isDownloaded(IWebPageGrabbingTask task, WebURL url) {
-		File resFile = getResourceFile(task,url);
-		return resFile.exists();
+	public String getContentLastModified(IWebPageGrabbingTask task, WebURL url) {
+		try {
+			File resFile = getResourceFile(task,url);
+			String path = resFile.getCanonicalPath();
+			File origFile = new File(path+".orig");
+			String date = null;
+			if(resFile.exists()){
+				Date d = null;
+				if(origFile.exists()){
+					d = new Date(origFile.lastModified());
+				}else{
+					d = new Date(resFile.lastModified());
+				}
+				synchronized(this.httpDateFormat){
+					date = this.httpDateFormat.format(d);
+				}
+			}
+			return date;
+		}catch (Exception e) {
+			return null;
+		}
 	}
 
 	
@@ -78,6 +99,9 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			page.setContentType(s);
 		}
 		page.setContentData(fis);
+		synchronized(this.httpDateFormat){
+			page.setLastModifiedDate(this.httpDateFormat.format(new Date(resFile.lastModified())));
+		}
 		return page;
 	}
 
@@ -115,7 +139,26 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 				fos.close();
 				fos = null;
 			}
-			tmpFile.renameTo(resFile);
+			if(resFile.exists()){
+				if(!resFile.delete()){
+					log.warn("Failed to delete existing content file :"+resFile.getAbsolutePath());
+				}
+			}
+			if(!tmpFile.renameTo(resFile)){
+				log.warn("Failed to rename downloaded content file :"+tmpFile.getAbsolutePath()+" to regular file :"+resFile.getAbsolutePath());
+			}
+			String lastModified = content.getLastModifiedDate();
+			Date d = null;
+			if(lastModified != null){
+				synchronized(this.httpDateFormat){
+					try {
+						d = httpDateFormat.parse(lastModified);
+					}catch(Exception e){}
+				}
+			}
+			if(d != null){
+				resFile.setLastModified(d.getTime());
+			}
 		}finally{
 			if(fos != null){
 				try {

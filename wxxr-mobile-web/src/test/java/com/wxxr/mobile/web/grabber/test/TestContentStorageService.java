@@ -209,9 +209,17 @@ public class TestContentStorageService extends AbstractGrabberModule {
 			String s = this.siteMap.getProperty(domain);
 			if(s != null){
 				int idx = Integer.parseInt(s);
-				task.setSiteId(idx+1);
+				task.setSiteId(idx);
 			}else{
-				task.setSiteId(1000);
+				int idx = 1000;
+				s = this.siteMap.getProperty("domain_seqno");
+				if(s != null){
+					idx = Integer.parseInt(s);
+				}
+				task.setSiteId(idx);
+				this.siteMap.setProperty("domain_seqno",String.valueOf(idx+1));
+				this.siteMap.setProperty(domain,String.valueOf(idx));
+				saveSiteMap();
 			}
 		}
 		return new File(contentRoot,"sites/"+task.getSiteId());

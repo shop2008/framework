@@ -41,8 +41,9 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 		IWebContentStorage storage = getService(IWebContentStorage.class);
 		IHTMLParser parser = getService(IHTMLParser.class);
 		WebContentFetchResult fetchResult = null;
-		if(!storage.isDownloaded(task, curURL)){
-			fetchResult = getService(IWebContentFetcher.class).fetchHeader(task,curURL);
+		boolean hasNewDownloaded = false;
+		String date = storage.getContentLastModified(task, curURL);
+			fetchResult = getService(IWebContentFetcher.class).fetchHeader(task,curURL,date);
 			int statusCode = fetchResult.getStatusCode();
 			task.handlePageStatusCode(curURL, statusCode, CustomFetchStatus.getStatusDescription(statusCode));
 			if (statusCode != HttpStatus.SC_OK) {
@@ -64,15 +65,23 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 				} else if (fetchResult.getStatusCode() == CustomFetchStatus.PageTooBig) {
 					logger.info("Skipping a page which was bigger than max allowed size: " , curURL.getURL());
 				}
-				return;
+				if(statusCode != HttpStatus.SC_NOT_MODIFIED){
+					return;
+				}
 			}
+		if(statusCode != HttpStatus.SC_NOT_MODIFIED) {
 			Page page = new Page(curURL.getURL());
 			if (!fetchResult.fetchContent(page)) {
 				task.onContentFetchError(curURL,null);
 				return;
 			}
 			storage.saveContent(task, page,curURL);
+			hasNewDownloaded = true;
 			fetchResult.discardContentIfNotConsumed();
+		}else{
+			if(logger.isDebugEnabled()){
+				logger.debug("content of :["+curURL.getURL()+"] was downloaded and not modified since :["+date+"]");
+			}
 		}
 		IWebContent page = storage.getContent(task, curURL);
 		HtmlProcessingData htmlProcessingData = null;
@@ -80,6 +89,9 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 			if(!Util.isHtmlContent(page.getContentType())){
 				htmlProcessingData = task.getHtmlData();
 				htmlProcessingData.addDownloadedUrl(curURL);
+				if(hasNewDownloaded && (date == null)){
+					htmlProcessingData.setHasNewDownloadedLinks(true);
+				}
 				return;
 			}
 			if(curURL.getDepth() == 0){
@@ -90,6 +102,7 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 					return;
 				}
 				task.setHtmlData(htmlProcessingData);
+				htmlProcessingData.setHasNewDownloadedLinks(true);
 				int maxCrawlDepth = task.getMaxDepthOfCrawling();
 				for (WebURL webURL : htmlProcessingData.getOutgoingUrls()) {
 					webURL.setParentUrl(curURL.getURL());

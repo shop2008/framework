@@ -31,5 +31,11 @@ public interface IWebContent {
 	String getContentCharset();
 	
 	void close();
+	
+	/**
+	 * get last modified date of content in HTTP-date format : "EEE, dd MMM yyyy HH:mm:ss zzz"
+	 * @return
+	 */
+	String getLastModifiedDate();
 
 }

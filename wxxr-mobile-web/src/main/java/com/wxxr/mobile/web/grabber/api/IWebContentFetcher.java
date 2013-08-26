@@ -6,6 +6,6 @@ import com.wxxr.mobile.web.grabber.model.WebURL;
 
 public interface IWebContentFetcher {
 
-	WebContentFetchResult fetchHeader(IWebPageGrabbingTask task,WebURL webUrl);
+	WebContentFetchResult fetchHeader(IWebPageGrabbingTask task,WebURL webUrl,String lastModified);
 
 }

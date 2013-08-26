@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
+import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.util.EntityUtils;
 
 
@@ -61,6 +62,8 @@ public class Page implements IWebContent {
      * For example: "UTF-8"
      */
     protected String contentCharset;
+    
+    protected String lastModifiedDate;
     
     /**
      * Headers which were present in the response of the
@@ -112,6 +115,7 @@ public class Page implements IWebContent {
 		}else{
 			contentData = entity.getContent();
 		}
+		this.lastModifiedDate = this.fetchResponseHeaders.get(HttpHeaderNames.LAST_MODIFIED);
 	}
 	
 	/**
@@ -183,6 +187,18 @@ public class Page implements IWebContent {
 			}
 			this.contentData = null;
 		}
+	}
+
+	@Override
+	public String getLastModifiedDate() {
+		return this.lastModifiedDate;
+	}
+
+	/**
+	 * @param lastModifiedDate the lastModifiedDate to set
+	 */
+	public void setLastModifiedDate(String lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 }

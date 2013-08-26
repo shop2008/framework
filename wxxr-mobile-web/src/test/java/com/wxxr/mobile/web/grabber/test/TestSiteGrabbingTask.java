@@ -38,6 +38,7 @@ public class TestSiteGrabbingTask extends AbstractSiteGrabbingTask {
 			throw new IllegalArgumentException("Invalid domain name :"+customData);
 		}
 		this.domain = (String)customData;
+		setMaxDepthOfCrawling(1000);
 		super.init(context, url, customData);
 	}
 

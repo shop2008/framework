@@ -29,6 +29,8 @@ public class HtmlProcessingData {
 	private final String currentUrl;
 	private String charset;
 	
+	private boolean hasNewDownloadedLinks; // 新下载的外链资源，如果有，则应该更新html文件中对应的链接，指到本地下载的文件
+	
 	private List<WebURL> outgoingUrls;
 	
 	private List<WebURL> downloadedUrls;
@@ -114,5 +116,19 @@ public class HtmlProcessingData {
 	 */
 	public void setCharset(String charset) {
 		this.charset = charset;
+	}
+
+	/**
+	 * @return the hasNewDownloadedLinks
+	 */
+	public boolean hasNewDownloadedLinks() {
+		return hasNewDownloadedLinks;
+	}
+
+	/**
+	 * @param hasNewDownloadedLinks the hasNewDownloadedLinks to set
+	 */
+	public void setHasNewDownloadedLinks(boolean hasNewDownloadedLinks) {
+		this.hasNewDownloadedLinks = hasNewDownloadedLinks;
 	}
 }

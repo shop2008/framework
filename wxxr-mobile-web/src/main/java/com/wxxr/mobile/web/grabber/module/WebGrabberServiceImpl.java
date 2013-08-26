@@ -131,7 +131,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 	public boolean grabWebPage(String htmlUrl, Object customData) {
 		final IWebPageGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createPageTask();
 		task.init(context, htmlUrl,customData);
-		if(doGrabWebPage(task)){
+		if(doGrabWebPage(task)&&(task.getHtmlData().hasNewDownloadedLinks())){
 			try {
 				getService(IWebContentStorage.class).makeContentReady(task);
 			} catch (IOException e) {

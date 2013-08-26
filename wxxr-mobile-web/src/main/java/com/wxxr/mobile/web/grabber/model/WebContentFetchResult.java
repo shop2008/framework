@@ -55,8 +55,8 @@ public class WebContentFetchResult {
 
 	public boolean fetchContent(Page page) {
 		try {
-			page.load(entity);
 			page.setFetchResponseHeaders(responseHeaders);
+			page.load(entity);
 			return true;
 		} catch (Exception e) {
 			logger.info("Exception while fetching content for: " + page.getWebURL() + " [" + e.getMessage()

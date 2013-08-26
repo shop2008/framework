@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
+import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
@@ -59,7 +60,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 	 * @see edu.uci.ics.crawler4j.fetcher.IPageFetcher#fetchHeader(edu.uci.ics.crawler4j.url.WebURL)
 	 */
 	@Override
-	public WebContentFetchResult fetchHeader(IWebPageGrabbingTask task,WebURL webUrl) {
+	public WebContentFetchResult fetchHeader(IWebPageGrabbingTask task,WebURL webUrl,String lastModified) {
 		WebContentFetchResult fetchResult = new WebContentFetchResult();
 		HttpRequest request = null;
 		String toFetchURL = webUrl.getURL();
@@ -73,12 +74,13 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 				lastFetchTime = (new Date()).getTime();
 			}
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("Accept-Encoding", "gzip");
+			params.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip");
+			if(lastModified != null){
+				params.put(HttpHeaderNames.IF_MODIFIED_SINCE,lastModified);
+			}
 			params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.GET);
 			request = getHttpService().createRequest(toFetchURL, params);
 			HttpResponse response = request.invoke(this.httpRequestTimeout, TimeUnit.SECONDS);
-			fetchResult.setEntity((HttpEntity)response.getResponseEntity());
-			fetchResult.setResponseHeaders(response.getHeaders());
 			
 			int statusCode = response.getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
@@ -98,7 +100,8 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 				fetchResult.setStatusCode(response.getStatusCode());
 				return fetchResult;
 			}
-
+			fetchResult.setEntity((HttpEntity)response.getResponseEntity());
+			fetchResult.setResponseHeaders(response.getHeaders());
 			fetchResult.setFetchedUrl(toFetchURL);
 			String uri = request.getURI();
 			if (!uri.equals(toFetchURL)) {
