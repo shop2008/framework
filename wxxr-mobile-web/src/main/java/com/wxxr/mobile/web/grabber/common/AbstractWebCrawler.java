@@ -89,9 +89,9 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 			if(!Util.isHtmlContent(page.getContentType())){
 				htmlProcessingData = task.getHtmlData();
 				htmlProcessingData.addDownloadedUrl(curURL);
-				if(hasNewDownloaded && (date == null)){
-					htmlProcessingData.setHasNewDownloadedLinks(true);
-				}
+//				if(hasNewDownloaded && (date == null)){
+//					htmlProcessingData.setHasNewDownloadedLinks(true);
+//				}
 				return;
 			}
 			if(curURL.getDepth() == 0){
@@ -102,7 +102,9 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 					return;
 				}
 				task.setHtmlData(htmlProcessingData);
-				htmlProcessingData.setHasNewDownloadedLinks(true);
+//				if(hasNewDownloaded && (date == null)){
+//					htmlProcessingData.setNewHtml(true);
+//				}
 				int maxCrawlDepth = task.getMaxDepthOfCrawling();
 				for (WebURL webURL : htmlProcessingData.getOutgoingUrls()) {
 					webURL.setParentUrl(curURL.getURL());

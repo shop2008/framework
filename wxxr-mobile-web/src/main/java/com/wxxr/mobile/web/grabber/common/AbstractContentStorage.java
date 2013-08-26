@@ -220,9 +220,10 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			File resFile = getResourceFile(task,webUrl);
 			String path = resFile.getCanonicalPath();
 			File origFile = new File(path+".orig");
-			if(!origFile.exists()) {
-				resFile.renameTo(origFile);
+			if(origFile.exists()) {
+				origFile.delete();
 			}
+			resFile.renameTo(origFile);
 			FileOutputStream fos = null;
 			OutputStreamWriter sw = null;
 			try {

@@ -106,6 +106,9 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 			while((nextTask = task.getNextPageGrabbingTask()) != null){
 				if(!doGrabSite(nextTask,grabbedSites)){
 					done = false;
+//					if(nextTask.getHtmlData().isNewHtml()){
+//						task.getHtmlData().setHasNewDownloadedLinks(true);
+//					}
 				}
 			}
 		}else{
@@ -113,7 +116,9 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 		}
 		if(done){
 			try {
-				getService(IWebContentStorage.class).makeContentReady(task);
+//				if(task.getHtmlData().hasNewDownloadedLinks()||task.getHtmlData().isNewHtml()){
+					getService(IWebContentStorage.class).makeContentReady(task);
+//				}
 				WebURL linkUrl = task.getLinkUrl();		// change link in parent page referring to local cached page
 				IWebSiteGrabbingTask parent = task.getParentTask();
 				if((parent != null)&&(linkUrl.getAnchor() != null)){
@@ -131,7 +136,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 	public boolean grabWebPage(String htmlUrl, Object customData) {
 		final IWebPageGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createPageTask();
 		task.init(context, htmlUrl,customData);
-		if(doGrabWebPage(task)&&(task.getHtmlData().hasNewDownloadedLinks())){
+		if(doGrabWebPage(task)){
 			try {
 				getService(IWebContentStorage.class).makeContentReady(task);
 			} catch (IOException e) {
