@@ -69,7 +69,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	private IKernelContext appContext;
 
 	protected boolean disableTrustManager;
-	protected int connectionPoolSize;
+	protected int connectionPoolSize = 5;
 	protected int maxPooledPerRoute = 0;
 	protected long connectionTTL = -1;
 	private ExecutorService executor;

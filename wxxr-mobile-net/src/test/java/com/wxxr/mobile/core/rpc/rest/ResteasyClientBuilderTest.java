@@ -6,12 +6,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 
 import junit.framework.TestCase;
 
-import com.wxxr.mobile.android.app.IAndroidAppContext;
-import com.wxxr.mobile.android.http.AbstractHttpRpcService;
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.impl.ArticleVO;
 import com.wxxr.mobile.core.rpc.impl.IArticleResource;
 import com.wxxr.mobile.core.rpc.impl.MockApplication;
@@ -47,31 +46,8 @@ public class ResteasyClientBuilderTest extends TestCase {
 				
 			}
 
-			@Override
-			public String getMacIdentity() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationId() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationVersion() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationBuildNnumber() {
-				// TODO Auto-generated method stub
-				return null;
-			}
 		};
-		IAndroidAppContext context = app.getContext();
+		IKernelContext context = app.getContext();
 		service.startup(context);
 		context.registerService(ISiteSecurityService.class, new ISiteSecurityService() {
 			
@@ -80,13 +56,7 @@ public class ResteasyClientBuilderTest extends TestCase {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
-			@Override
-			public SSLContext getSslContext(String protocol) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
+						
 			@Override
 			public KeyStore getSiteKeyStore() {
 				// TODO Auto-generated method stub
@@ -100,15 +70,15 @@ public class ResteasyClientBuilderTest extends TestCase {
 			}
 		});
 		
-		ResteasyRestClientService builder = new ResteasyRestClientService();
-		builder.startup(context);
-		IArticleResource res = builder.getRestService(IArticleResource.class, "http://192.168.123.44:8480/mobilestock");
-		StockArticleQuery q = new StockArticleQuery();
-		q.setMarketCode("SH");
-		q.setStockId("601088");
-		q.setLimit(10);
-		q.setStart(0);
-		List<ArticleVO> result = res.getArticleByStock(q);
+//		ResteasyRestClientService builder = new ResteasyRestClientService();
+//		builder.startup(context);
+//		IArticleResource res = builder.getRestService(IArticleResource.class, "http://192.168.123.44:8480/mobilestock");
+//		StockArticleQuery q = new StockArticleQuery();
+//		q.setMarketCode("SH");
+//		q.setStockId("601088");
+//		q.setLimit(10);
+//		q.setStart(0);
+//		List<ArticleVO> result = res.getArticleByStock(q);
 //		assertNotNull(result);
 	}
 

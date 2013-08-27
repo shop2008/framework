@@ -12,7 +12,10 @@ import javax.net.ssl.SSLContext;
 
 import junit.framework.TestCase;
 
+import com.wxxr.mobile.android.app.IAndroidAppContext;
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
+import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpParamsBean;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
@@ -49,31 +52,8 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 				
 			}
 
-			@Override
-			public String getMacIdentity() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationId() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationVersion() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public String getApplicationBuildNnumber() {
-				// TODO Auto-generated method stub
-				return null;
-			}
 		};
-		IAndroidAppContext context = app.getContext();
+		IKernelContext context = app.getContext();
 		service.startup(context);
 		context.registerService(ISiteSecurityService.class, new ISiteSecurityService() {
 			
@@ -82,13 +62,7 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
-			@Override
-			public SSLContext getSslContext(String protocol) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
+						
 			@Override
 			public KeyStore getSiteKeyStore() {
 				// TODO Auto-generated method stub
