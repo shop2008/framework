@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.log4j.Logger;
 
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
@@ -78,6 +79,11 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 			if(lastModified != null){
 				params.put(HttpHeaderNames.IF_MODIFIED_SINCE,lastModified);
 			}
+			String userAgent = (String)task.getContext().getAttribute(HttpHeaderNames.USER_AGENT);
+			if(userAgent != null){
+				params.put(HttpHeaderNames.USER_AGENT, userAgent);
+			}
+
 			params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.GET);
 			request = getHttpService().createRequest(toFetchURL, params);
 			HttpResponse response = request.invoke(this.httpRequestTimeout, TimeUnit.SECONDS);

@@ -87,11 +87,11 @@ public class WebGrabberServiceImplTest {
 		grabber.stop();
 	}
 
-	public void testGrabPage() {
+	public void doGrabPage() {
 		grabber.grabWebPage("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs.html", 100);
 	}
 	
-	public void testGrabSite() {
+	public void doGrabSite() {
 		grabber.grabWebSite("http://public.cmhelper.7500.com.cn/magnoliaPublic/txzs/webs.html", "public.cmhelper.7500.com.cn/magnoliaPublic");
 	}
 
@@ -153,8 +153,8 @@ public class WebGrabberServiceImplTest {
 		logConfig.configureConsoleAppender("com.wxxr.mobile",Level.DEBUG);
 		WebGrabberServiceImplTest tester = new WebGrabberServiceImplTest();
 		tester.setUp();
-		tester.testGrabPage();
-		tester.testGrabSite();
+		tester.doGrabPage();
+		tester.doGrabSite();
 		tester.tearDown();
 	}
 
