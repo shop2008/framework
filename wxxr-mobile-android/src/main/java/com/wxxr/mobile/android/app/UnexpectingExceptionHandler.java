@@ -13,23 +13,14 @@ import com.wxxr.mobile.core.log.api.Trace;
  */
 public class UnexpectingExceptionHandler implements UncaughtExceptionHandler {
 	private static final Trace log = Trace.register(UnexpectingExceptionHandler.class);
-	private static UnexpectingExceptionHandler instance;
-	
-	static UnexpectingExceptionHandler install() {
-		if(instance == null){
-			instance = new UnexpectingExceptionHandler();
-		}
-		return instance;
-	}
-	
+		
 	private Thread uiThread;
 	private UncaughtExceptionHandler defaultHandler;
 
 	
-	private UnexpectingExceptionHandler(){
+	public UnexpectingExceptionHandler(){
 		this.uiThread = Thread.currentThread();
 		this.defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
 	
 	public Thread getUiThread() {
@@ -47,6 +38,13 @@ public class UnexpectingExceptionHandler implements UncaughtExceptionHandler {
 			log.error("Caught unexpecting exception on thread :"+t+", uiThread :"+uiThread,e);
 		}
 
+	}
+
+	/**
+	 * @return the defaultHandler
+	 */
+	public UncaughtExceptionHandler getDefaultHandler() {
+		return defaultHandler;
 	}
 
 }

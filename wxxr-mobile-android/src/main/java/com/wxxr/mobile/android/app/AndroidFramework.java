@@ -39,18 +39,25 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	
 	private ExecutorService executor;
 	private int maxThread = 10;
-	private UnexpectingExceptionHandler handler;
+	private UnexpectingExceptionHandler handler = new UnexpectingExceptionHandler(){
+		@Override
+		public void uncaughtException(Thread t, Throwable e) {
+			handleSysCrash(e);
+			super.uncaughtException(t, e);
+		}
+	};
 	private Map<String, String> info = new HashMap<String, String>();
 
 //	private Log4jConfigurator logConfig = new Log4jConfigurator();
 	public AndroidFramework() {
 		super();
-		handler = UnexpectingExceptionHandler.install();
+		Thread.setDefaultUncaughtExceptionHandler(this.handler);
 	}
 
 	public AndroidFramework(int maxThreads) {
 		this.maxThread = maxThreads;
-		UnexpectingExceptionHandler.install();
+		Thread.setDefaultUncaughtExceptionHandler(this.handler);
+
 	}
 
 	/* (non-Javadoc)
@@ -211,6 +218,9 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		this.maxThread = maxThread;
 	}
 
+	protected void handleSysCrash(Throwable t){
+		
+	}
 
 	
 	
