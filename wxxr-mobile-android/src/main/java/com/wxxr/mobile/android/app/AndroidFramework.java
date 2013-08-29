@@ -7,9 +7,8 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -36,9 +37,11 @@ import com.wxxr.mobile.core.util.StringUtils;
 public abstract class AndroidFramework<C extends IAndroidAppContext, M extends IKernelModule<C>> extends AbstractMicroKernel<C, M> implements IAndroidFramework<C,M>{
 
 	private static final Trace log = Trace.register(AndroidFramework.class);
-	
+	private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+
 	private ExecutorService executor;
 	private int maxThread = 10;
+	private String uniqueID;
 	private UnexpectingExceptionHandler handler = new UnexpectingExceptionHandler(){
 		@Override
 		public void uncaughtException(Thread t, Throwable e) {
@@ -217,11 +220,37 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	public void setMaxThread(int maxThread) {
 		this.maxThread = maxThread;
 	}
+	
+	public String getDeviceUUID() {
+	    if (uniqueID == null) {
+	        SharedPreferences sharedPrefs = getAndroidApplication().getSharedPreferences(
+	                PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+	        uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+	        if (uniqueID == null) {
+	            uniqueID = generateDeviceUUID();
+	            Editor editor = sharedPrefs.edit();
+	            editor.putString(PREF_UNIQUE_ID, uniqueID);
+	            editor.commit();
+	        }
+	    }
+	    return uniqueID;
+	}
 
 	protected void handleSysCrash(Throwable t){
 		
 	}
 
+	protected String generateDeviceUUID(){
+		final TelephonyManager tm = (TelephonyManager) getAndroidApplication().getSystemService(Context.TELEPHONY_SERVICE);
+
+	    final String tmDevice, tmSerial, androidId;
+	    tmDevice = "" + tm.getDeviceId();
+	    tmSerial = "" + tm.getSimSerialNumber();
+	    androidId = "" + android.provider.Settings.Secure.getString(getAndroidApplication().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+	    return deviceUuid.toString();
+	}
 	
 	
 

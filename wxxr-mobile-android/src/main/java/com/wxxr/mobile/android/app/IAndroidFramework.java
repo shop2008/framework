@@ -21,4 +21,5 @@ public interface IAndroidFramework<C extends IAndroidAppContext, M extends IKern
 	String getApplicationName();
 	String getDeviceId();
 	String getDeviceType();
+	String getDeviceUUID();
 }
