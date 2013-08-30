@@ -84,8 +84,8 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 	
 	@Override
 	public boolean grabWebSite(String htmlUrl, Object customData) {
-		final IWebSiteGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createSiteTask();
-		task.init(context, htmlUrl,customData);
+		final IWebSiteGrabbingTask task = getContext().getService(IGrabbingTaskFactory.class).createSiteTask();
+		task.init(getContext(), htmlUrl,customData);
 		return doGrabSite(task, new ArrayList<String>());
 	}
 
@@ -134,8 +134,8 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 
 	@Override
 	public boolean grabWebPage(String htmlUrl, Object customData) {
-		final IWebPageGrabbingTask task = context.getService(IGrabbingTaskFactory.class).createPageTask();
-		task.init(context, htmlUrl,customData);
+		final IWebPageGrabbingTask task = getContext().getService(IGrabbingTaskFactory.class).createPageTask();
+		task.init(getContext(), htmlUrl,customData);
 		if(doGrabWebPage(task)){
 			try {
 				getService(IWebContentStorage.class).makeContentReady(task);
@@ -175,7 +175,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 							@Override
 							public void run() {
 								try {
-									context.getService(IWebCrawler.class).processPage(task, url);
+									getContext().getService(IWebCrawler.class).processPage(task, url);
 								} catch (Throwable e) {
 									task.onProcessingError(url,e);
 								}finally {
