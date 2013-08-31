@@ -45,4 +45,68 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 		service.shutdown();
 	}
 
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#isDisableTrustManager()
+	 */
+	public boolean isDisableTrustManager() {
+		return service.isDisableTrustManager();
+	}
+
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#getConnectionPoolSize()
+	 */
+	public int getConnectionPoolSize() {
+		return service.getConnectionPoolSize();
+	}
+
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#getMaxPooledPerRoute()
+	 */
+	public int getMaxPooledPerRoute() {
+		return service.getMaxPooledPerRoute();
+	}
+
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#getConnectionTTL()
+	 */
+	public long getConnectionTTL() {
+		return service.getConnectionTTL();
+	}
+
+	/**
+	 * @param disableTrustManager
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#setDisableTrustManager(boolean)
+	 */
+	public void setDisableTrustManager(boolean disableTrustManager) {
+		service.setDisableTrustManager(disableTrustManager);
+	}
+
+	/**
+	 * @param connectionPoolSize
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#setConnectionPoolSize(int)
+	 */
+	public void setConnectionPoolSize(int connectionPoolSize) {
+		service.setConnectionPoolSize(connectionPoolSize);
+	}
+
+	/**
+	 * @param connectionTTL
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#setConnectionTTL(long)
+	 */
+	public void setConnectionTTL(long connectionTTL) {
+		service.setConnectionTTL(connectionTTL);
+	}
+
+	/**
+	 * @param maxPooledPerRoute
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#setMaxPooledPerRoute(int)
+	 */
+	public void setMaxPooledPerRoute(int maxPooledPerRoute) {
+		service.setMaxPooledPerRoute(maxPooledPerRoute);
+	}
+
 }

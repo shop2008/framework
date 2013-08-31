@@ -69,7 +69,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	private IKernelContext appContext;
 
 	protected boolean disableTrustManager;
-	protected int connectionPoolSize = 5;
+	protected int connectionPoolSize = 6;
 	protected int maxPooledPerRoute = 0;
 	protected long connectionTTL = -1;
 	private ExecutorService executor;
@@ -373,6 +373,13 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			this.httpClient.getConnectionManager().shutdown();
 			this.httpClient = null;
 		}
+	}
+
+	/**
+	 * @param maxPooledPerRoute the maxPooledPerRoute to set
+	 */
+	public void setMaxPooledPerRoute(int maxPooledPerRoute) {
+		this.maxPooledPerRoute = maxPooledPerRoute;
 	}
 
 }
