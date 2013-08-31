@@ -214,9 +214,9 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 				}
 			}
 		}
+		WebURL webUrl = new WebURL();
+		webUrl.setURL(data.getCurrentUrl());
 		if(domUpdated){
-			WebURL webUrl = new WebURL();
-			webUrl.setURL(data.getCurrentUrl());
 			File resFile = getResourceFile(task,webUrl);
 			String path = resFile.getCanonicalPath();
 			File origFile = new File(path+".orig");
@@ -249,6 +249,7 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 		if(!readyFile.exists()){
 			readyFile.createNewFile();
 		}
+		processContent(task,webUrl);
 	}
 
 
@@ -259,6 +260,10 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 	public boolean isContentReady(IWebPageGrabbingTask task) {
 		File readyFile = new File(getContentRoot(task),".ready");
 		return readyFile.exists();
+	}
+	
+	protected void processContent(IWebPageGrabbingTask task,WebURL webURL) throws IOException{
+		
 	}
 	
 }
