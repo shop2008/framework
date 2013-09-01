@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -57,7 +58,7 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 					}
 				}
 			}
-			if(start){
+			if(start &&(started.get() == false)){
 				Long time = moduleStatus.getStartTime();
 				if(time != null){
 					moduleStatus.setPendingTimeSpent(System.currentTimeMillis() - time.longValue());
@@ -104,12 +105,15 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 			this.moduleStatus.setStartTime(time);
 			this.moduleStatus.setStatus(MStatus.STARTING);
 			if(log.isDebugEnabled()){
-				log.debug("Going to start service in module %s ...",this);
+				log.debug("Going to start module %s ...",this);
 			}
 			try {
 				startService();
 				this.moduleStatus.setStatus(MStatus.STARTED);
 				this.moduleStatus.setStartTimeSpent(System.currentTimeMillis()-time);
+				if(log.isDebugEnabled()){
+					log.debug("Module : %s started !",this);
+				}
 			}catch(Throwable t){
 				log.error("Caught throwable when try to start service in module %s", this, t);
 				this.moduleStatus.setStatus(MStatus.FAILED);
@@ -239,6 +243,12 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 			}
 		}
 		return this.moduleStatus;
+	}
+	
+	protected void notifyKernelStarted() {
+		if(started.get() == false){
+			log.warn("Service was not started due to missing required services :"+StringUtils.join(this.pendingServices.iterator(), ','));
+		}
 	}
 
 	/* (non-Javadoc)

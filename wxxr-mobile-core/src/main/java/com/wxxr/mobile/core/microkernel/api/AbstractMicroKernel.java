@@ -273,6 +273,14 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 					l.kernelStarted();
 			}
 		}
+		synchronized(modules){
+			for (M m : this.modules) {
+				if(m instanceof AbstractModule){
+					((AbstractModule<?>)m).notifyKernelStarted();
+				}
+			}
+		}
+
 	}
 
 	protected void fireKernelStopping(){
