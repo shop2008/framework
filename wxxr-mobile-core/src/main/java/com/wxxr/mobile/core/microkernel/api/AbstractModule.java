@@ -247,7 +247,7 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 	
 	protected void notifyKernelStarted() {
 		if(started.get() == false){
-			log.warn("Service was not started due to missing required services :"+StringUtils.join(this.pendingServices.iterator(), ','));
+			log.warn(String.format("Service was not started in module : %s due to missing required services : %s ", this,StringUtils.join(this.pendingServices.iterator(), ',')));
 		}
 	}
 

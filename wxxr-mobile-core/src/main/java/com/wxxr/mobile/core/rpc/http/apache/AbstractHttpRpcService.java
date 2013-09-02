@@ -73,6 +73,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	protected int maxPooledPerRoute = 0;
 	protected long connectionTTL = -1;
 	private ExecutorService executor;
+	private boolean enablegzip = true;
 	private HttpContext localContext = new BasicHttpContext();
 	
 	private IHttpClientContext context = new IHttpClientContext() {
@@ -380,6 +381,20 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	 */
 	public void setMaxPooledPerRoute(int maxPooledPerRoute) {
 		this.maxPooledPerRoute = maxPooledPerRoute;
+	}
+
+	/**
+	 * @return the enablegzip
+	 */
+	public boolean isEnablegzip() {
+		return enablegzip;
+	}
+
+	/**
+	 * @param enablegzip the enablegzip to set
+	 */
+	public void setEnablegzip(boolean enablegzip) {
+		this.enablegzip = enablegzip;
 	}
 
 }
