@@ -75,7 +75,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 				lastFetchTime = (new Date()).getTime();
 			}
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip");
+//			params.put(HttpHeaderNames.ACCEPT_ENCODING, "gzip");
 			if(lastModified != null){
 				params.put(HttpHeaderNames.IF_MODIFIED_SINCE,lastModified);
 			}

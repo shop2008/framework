@@ -110,11 +110,11 @@ public class Page implements IWebContent {
 		if (charset != null) {
 			contentCharset = charset;	
 		}
-		if("gzip".equalsIgnoreCase(this.contentEncoding)){
-			contentData = new GZIPInputStream(entity.getContent());
-		}else{
+//		if("gzip".equalsIgnoreCase(this.contentEncoding)){
+//			contentData = new GZIPInputStream(entity.getContent());
+//		}else{
 			contentData = entity.getContent();
-		}
+//		}
 		this.lastModifiedDate = this.fetchResponseHeaders.get(HttpHeaderNames.LAST_MODIFIED);
 	}
 	
