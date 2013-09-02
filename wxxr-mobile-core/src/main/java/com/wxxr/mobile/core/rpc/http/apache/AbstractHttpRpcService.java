@@ -291,7 +291,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	public HttpRequest createRequest(String endpointUrl, Map<String, Object> params) {
 		HttpRequest request=new HttpRequestImpl(this.context, endpointUrl, params);
 		if(isEnablegzip()){
-			request.setHeader(HttpHeaderNames.CONTENT_ENCODING, "gzip");
+			request.setHeader(HttpHeaderNames.ACCEPT_ENCODING, "gzip");
 		}
 		return request;
 	}
