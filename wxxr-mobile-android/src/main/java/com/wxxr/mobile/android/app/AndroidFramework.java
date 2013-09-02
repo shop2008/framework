@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.android.app;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	@Override
 	public void start() {
 		ApplicationFactory.getInstance().setApplication(this);
-		collectDeviceInfo();
+//		collectDeviceInfo();
 		if(log.isInfoEnabled()){
 			log.info("UnexpectingExceptionHandler installed, ui thread :"+handler.getUiThread());
 		}
@@ -251,7 +252,13 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
 	    return deviceUuid.toString();
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.app.IAndroidFramework#getDataDir(java.lang.String, int)
+	 */
+	@Override
+	public File getDataDir(String name, int mode) {
+		return getAndroidApplication().getDir(name, mode);
+	}
 
 }
