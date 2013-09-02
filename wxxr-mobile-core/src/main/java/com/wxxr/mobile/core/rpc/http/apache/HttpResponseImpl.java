@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -57,7 +58,11 @@ public class HttpResponseImpl implements HttpResponse {
 
 			@Override
 			public InputStream getContent() throws IOException{
-				return entity.getContent();
+				if("gzip".equalsIgnoreCase(getContentEncoding())){
+					return new GZIPInputStream(entity.getContent());
+				}else{
+					return entity.getContent();
+				}
 			}
 
 			@Override

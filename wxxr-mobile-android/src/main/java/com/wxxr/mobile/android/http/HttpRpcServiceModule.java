@@ -113,4 +113,20 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 		service.setMaxPooledPerRoute(maxPooledPerRoute);
 	}
 
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#isEnablegzip()
+	 */
+	public boolean isEnablegzip() {
+		return service.isEnablegzip();
+	}
+
+	/**
+	 * @param enablegzip
+	 * @see com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService#setEnablegzip(boolean)
+	 */
+	public void setEnablegzip(boolean enablegzip) {
+		service.setEnablegzip(enablegzip);
+	}
+
 }

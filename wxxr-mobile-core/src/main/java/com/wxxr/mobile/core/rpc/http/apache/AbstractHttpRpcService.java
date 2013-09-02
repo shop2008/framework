@@ -52,6 +52,7 @@ import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
@@ -289,6 +290,9 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	@Override
 	public HttpRequest createRequest(String endpointUrl, Map<String, Object> params) {
 		HttpRequest request=new HttpRequestImpl(this.context, endpointUrl, params);
+		if(isEnablegzip()){
+			request.setHeader(HttpHeaderNames.CONTENT_ENCODING, "gzip");
+		}
 		return request;
 	}
 
