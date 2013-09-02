@@ -9,6 +9,7 @@ import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.http.apache.HttpRequestImpl;
+import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 
@@ -26,6 +27,9 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 			request.setHeader("deviceType", context.getApplication().getDeviceType());
 			request.setHeader("appName", context.getApplication().getApplicationName());
 			request.setHeader("appVer", context.getApplication().getApplicationVersion());
+			if(context.getAttribute(HttpHeaderNames.USER_AGENT) != null){
+				request.setHeader(HttpHeaderNames.USER_AGENT, (String)context.getAttribute(HttpHeaderNames.USER_AGENT));
+			}
 			return request;
 		}
 	};
