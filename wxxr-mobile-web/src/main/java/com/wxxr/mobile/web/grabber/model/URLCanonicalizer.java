@@ -17,6 +17,8 @@
 
 package com.wxxr.mobile.web.grabber.model;
 
+import java.beans.Encoder;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.apache.http.util.EncodingUtils;
 
 /**
  * See http://en.wikipedia.org/wiki/URL_normalization for a reference Note: some
@@ -58,8 +62,8 @@ public class URLCanonicalizer {
 			 * ".", and no segments equal to ".." that are preceded by a segment
 			 * not equal to "..".
 			 */
-			path = new URI(path).normalize().toString();
-
+			path = new URI(URLEncoder.encode(path,"UTF-8")).normalize().toString();
+			
 			/*
 			 * Convert '//' -> '/'
 			 */
@@ -115,6 +119,8 @@ public class URLCanonicalizer {
 		} catch (MalformedURLException ex) {
 			return null;
 		} catch (URISyntaxException ex) {
+			return null;
+		} catch (UnsupportedEncodingException e) {
 			return null;
 		}
 	}
