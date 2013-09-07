@@ -75,7 +75,7 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 	}
 
 	protected XStream createXStream(MediaType mediaType) {
-		System.out.println("XStreamProvider.createXStream()");
+//		System.out.println("XStreamProvider.createXStream()");
 		XStream xstream = null;
 		if (mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
 			if(xstreamJSON == null){
