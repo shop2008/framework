@@ -403,9 +403,8 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	}
 	public void reSetLocalContext(){
 	    if(log.isDebugEnabled()){
-            log.debug("Sending reSetLocalContext " +cookies.getCookies().toString());
+            log.debug(" cookies " +cookies.getCookies().toString());
         }
-	    localContext=new BasicHttpContext();
 	    cookies.clear();
 	}
 
