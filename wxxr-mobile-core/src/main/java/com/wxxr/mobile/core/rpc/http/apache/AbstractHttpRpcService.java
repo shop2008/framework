@@ -33,7 +33,6 @@ import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRoute;
-import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -41,6 +40,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -76,7 +76,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	private ExecutorService executor;
 	private boolean enablegzip = true;
 	private HttpContext localContext = new BasicHttpContext();
-	
+	private  BasicCookieStore  cookies=new BasicCookieStore();
 	private IHttpClientContext context = new IHttpClientContext() {
 
 		@Override
@@ -279,6 +279,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 //			authpref.add(AuthPolicy.BASIC);
 //			client.getParams().setParameter(AllClientPNames., authpref);
 			this.httpClient = client;
+			client.setCookieStore(cookies);
 		}
 		catch (Exception e)
 		{
@@ -399,6 +400,13 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	 */
 	public void setEnablegzip(boolean enablegzip) {
 		this.enablegzip = enablegzip;
+	}
+	public void reSetLocalContext(){
+	    if(log.isDebugEnabled()){
+            log.debug("Sending reSetLocalContext " +cookies.getCookies().toString());
+        }
+	    localContext=new BasicHttpContext();
+	    cookies.clear();
 	}
 
 }

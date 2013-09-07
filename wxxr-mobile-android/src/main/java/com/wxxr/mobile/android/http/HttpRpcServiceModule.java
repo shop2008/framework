@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.http;
 import java.util.Map;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
+import com.wxxr.mobile.core.api.ISecurityMoudel;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.http.apache.HttpRequestImpl;
@@ -17,7 +18,7 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
  * @author neillin
  *
  */
-public class HttpRpcServiceModule<T extends IAndroidAppContext> extends AbstractModule<T> {
+public class HttpRpcServiceModule<T extends IAndroidAppContext> extends AbstractModule<T> implements ISecurityMoudel {
 
 	private AbstractHttpRpcService service = new AbstractHttpRpcService() {
 		@Override
@@ -41,11 +42,13 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 
 	@Override
 	protected void startService() {
+	    context.registerService(ISecurityMoudel.class, this);
 		service.startup(context);
 	}
 
 	@Override
 	protected void stopService() {
+	    context.unregisterService(ISecurityMoudel.class, this);
 		service.shutdown();
 	}
 
@@ -128,5 +131,10 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 	public void setEnablegzip(boolean enablegzip) {
 		service.setEnablegzip(enablegzip);
 	}
+
+    @Override
+    public void logout() {
+        service.reSetLocalContext();
+    }
 
 }
