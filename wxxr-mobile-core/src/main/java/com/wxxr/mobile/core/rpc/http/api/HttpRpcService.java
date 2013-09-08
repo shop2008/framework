@@ -10,5 +10,5 @@ import com.wxxr.mobile.core.rpc.api.RpcService;
  *
  */
 public interface HttpRpcService extends RpcService<HttpRequest> {
-
+	void resetHttpClientContext();
 }

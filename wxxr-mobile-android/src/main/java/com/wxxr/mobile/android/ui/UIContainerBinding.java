@@ -9,7 +9,6 @@ import java.util.Properties;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.DataChangedEvent;
 import com.wxxr.mobile.core.ui.api.IUIComponent;

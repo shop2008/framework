@@ -3,9 +3,6 @@
  */
 package com.wxxr.mobile.android.app;
 
-import android.view.View;
-import android.view.ViewParent;
-
 import com.wxxr.mobile.core.api.ApplicationFactory;
 
 /**

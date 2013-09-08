@@ -401,7 +401,9 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	public void setEnablegzip(boolean enablegzip) {
 		this.enablegzip = enablegzip;
 	}
-	public void reSetLocalContext(){
+	
+	@Override
+	public void resetHttpClientContext(){
 	    if(log.isDebugEnabled()){
             log.debug(" cookies " +cookies.getCookies().toString());
         }

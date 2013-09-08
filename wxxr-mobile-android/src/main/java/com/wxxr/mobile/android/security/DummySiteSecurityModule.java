@@ -3,7 +3,6 @@ package com.wxxr.mobile.android.security;
 import java.security.KeyStore;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;

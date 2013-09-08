@@ -3,15 +3,13 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import com.wxxr.mobile.android.app.AppUtils;
-import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IUIBinder;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IBinding;
 
 /**
  * @author neillin

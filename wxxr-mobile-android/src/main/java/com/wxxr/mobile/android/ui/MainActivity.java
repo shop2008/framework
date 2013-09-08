@@ -3,11 +3,10 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import com.wxxr.mobile.android.app.AppUtils;
-import com.wxxr.mobile.core.ui.api.IUIBinder;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-
 import android.app.Activity;
+
+import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 
 /**
  * @author neillin
