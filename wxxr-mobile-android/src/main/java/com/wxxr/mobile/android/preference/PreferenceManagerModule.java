@@ -240,7 +240,49 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 			return null;
 		}
 		SharedPreferences pref = d.getPreference();
-		return pref.getString(name, null);
+		return getPreferenceValue(name, pref);
+	}
+	/**
+	 * 
+	 * for backward compatible
+	 * @param name
+	 * @param pref
+	 * @return
+	 */
+	protected String getPreferenceValue(String name, SharedPreferences pref) {
+		String val = null;
+		try {
+			val = pref.getString(name, null);
+			return val;
+		}catch(ClassCastException e){
+		}
+		
+		try {
+			int ival = pref.getInt(name, 0);
+			val = String.valueOf(ival);
+			pref.edit().putString(name, val).commit();
+			return val;
+		}catch(ClassCastException e){
+		}
+		
+		try {
+			long ival = pref.getLong(name, 0);
+			val = String.valueOf(ival);
+			pref.edit().putString(name, val).commit();
+			return val;
+		}catch(ClassCastException e){
+			
+		}
+		
+		try {
+			boolean ival = pref.getBoolean(name, false);
+			val = String.valueOf(ival);
+			pref.edit().putString(name, val).commit();
+			return val;
+		}catch(ClassCastException e){
+		}
+		
+		return null;
 	}
 	
 	@Override
@@ -260,7 +302,7 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 			return null;
 		}
 		SharedPreferences pref = d.getPreference();
-		String val = pref.getString(name, null);
+		String val = getPreferenceValue(name, pref);
 		if(val != null){
 			pref.edit().remove(name).commit();
 		}
@@ -275,7 +317,7 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 			return false;
 		}
 		SharedPreferences pref = d.getPreference();
-		return pref.getString(name, null) != null;
+		return getPreferenceValue(name, pref) != null;
 	}
 
 }
