@@ -232,5 +232,50 @@ public class PreferenceManagerModule<T extends IAndroidAppContext> extends Abstr
 			log.error("Failed to load preference pids from file", e);
 		}
 	}
+	
+	@Override
+	public String getPreference(String pid, String name) {
+		PreferenceDictionary d = this.prefs.get(pid);
+		if(d == null){
+			return null;
+		}
+		SharedPreferences pref = d.getPreference();
+		return pref.getString(name, null);
+	}
+	
+	@Override
+	public void updatePreference(String pid, String name, String value) {
+		PreferenceDictionary d = this.prefs.get(pid);
+		if(d == null){
+			throw new IllegalArgumentException("Preference of :"+pid+" not found !");
+		}
+		SharedPreferences pref = d.getPreference();
+		pref.edit().putString(name, value).commit();
+	}
+	
+	@Override
+	public String removePreference(String pid, String name) {
+		PreferenceDictionary d = this.prefs.get(pid);
+		if(d == null){
+			return null;
+		}
+		SharedPreferences pref = d.getPreference();
+		String val = pref.getString(name, null);
+		if(val != null){
+			pref.edit().remove(name).commit();
+		}
+		return val;
+	}
+	
+	
+	@Override
+	public boolean hasPreference(String pid, String name) {
+		PreferenceDictionary d = this.prefs.get(pid);
+		if(d == null){
+			return false;
+		}
+		SharedPreferences pref = d.getPreference();
+		return pref.getString(name, null) != null;
+	}
 
 }

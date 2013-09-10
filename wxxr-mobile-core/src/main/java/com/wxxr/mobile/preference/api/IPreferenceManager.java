@@ -57,5 +57,19 @@ public interface IPreferenceManager {
      * Remove a configuration listener.
      */
     void removeListener(IPreferenceChangedListener listener);
+    
+    /**
+     * return the value of specific pid and preference name, return null if the preference doesn't exist.
+     * @param pid
+     * @param name
+     * @return
+     */
+    String getPreference(String pid, String name);
+    
+    void updatePreference(String pid, String name, String value);
+    
+    String removePreference(String pid, String name);
+    
+    boolean hasPreference(String pid, String name);
 
 }

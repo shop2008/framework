@@ -96,17 +96,19 @@ public class PreferenceDictionary extends Dictionary<String, String> {
 	
 	public  SharedPreferences  getPreference(){
 		SharedPreferences pref = this.ctx.getSharedPreferences(pid);
-		synchronized(this){
-			if(this.listener == null){
-				this.listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-					
-					@Override
-					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-							String key) {
-						updatePrefChanged(PreferenceDictionary.this);
-					}
-				};
-				pref.registerOnSharedPreferenceChangeListener(listener);
+		if(pref != null){
+			synchronized(this){
+				if(this.listener == null){
+					this.listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+						
+						@Override
+						public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+								String key) {
+							updatePrefChanged(PreferenceDictionary.this);
+						}
+					};
+					pref.registerOnSharedPreferenceChangeListener(listener);
+				}
 			}
 		}
 		return pref;
