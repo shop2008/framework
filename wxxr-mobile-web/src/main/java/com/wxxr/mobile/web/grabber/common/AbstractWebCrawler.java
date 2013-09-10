@@ -82,6 +82,9 @@ public abstract class AbstractWebCrawler implements IWebCrawler {
 			if(logger.isDebugEnabled()){
 				logger.debug("content of :["+curURL.getURL()+"] was downloaded and not modified since :["+date+"]");
 			}
+			if(!task.proceedOnContentNotModified()){
+				return;
+			}
 		}
 		IWebContent page = storage.getContent(task, curURL);
 		HtmlProcessingData htmlProcessingData = null;

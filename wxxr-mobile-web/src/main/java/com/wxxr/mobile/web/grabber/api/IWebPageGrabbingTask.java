@@ -78,5 +78,7 @@ public interface IWebPageGrabbingTask {
 	Object getCustomData();
 	
 	WebURL getPageUrl();
+	
+	boolean proceedOnContentNotModified();
 
 }
