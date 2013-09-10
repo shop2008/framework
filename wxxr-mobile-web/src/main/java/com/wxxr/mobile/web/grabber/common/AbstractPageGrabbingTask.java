@@ -25,7 +25,7 @@ public abstract class AbstractPageGrabbingTask implements IWebPageGrabbingTask {
 	private LinkedList<WebURL> queue = new LinkedList<WebURL>();
 	private boolean hasError = false, finished = false;
 	private HtmlProcessingData htmlData;
-	private boolean proceedOnContentNotModified;
+	private boolean proceedOnContentNotModified = true;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.web.grabber.api.IWebPageGrabbingTask#init(com.wxxr.mobile.web.grabber.api.IGrabberServiceContext, java.lang.String, java.lang.Object)
 	 */
