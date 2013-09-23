@@ -117,9 +117,9 @@ public abstract class FileUtils {
         if (test == null)
             throw new IllegalArgumentException(type + " file should not be null");
         if (!test.isFile())
-            throw new IllegalArgumentException(type + " '" + test.getPath() + "' is not a file");
+            throw new IOException(type + " '" + test.getPath() + "' is not a file");
         if (!test.canRead())
-            throw new IllegalArgumentException(type + " file '" + test.getPath() + "' is not readable");
+            throw new IOException(type + " file '" + test.getPath() + "' is not readable");
     }
 
     public static String readFile(File input) throws IOException {
