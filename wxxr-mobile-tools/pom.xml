@@ -19,7 +19,23 @@
             <artifactId>wxxr-mobile-core</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile</groupId>
+            <artifactId>wxxr-mobile-ui</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile</groupId>
+            <artifactId>wxxr-mobile-db</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.14</version>
+        </dependency>
         <!-- 
+        
         <dependency>
             <groupId>com.googlecode.jannocessor</groupId>
             <artifactId>jannocessor-model-api</artifactId>

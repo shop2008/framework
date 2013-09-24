@@ -1,0 +1,8 @@
+bin
+*.log
+target
+classes
+*.bak
+build
+.settings
+gen
