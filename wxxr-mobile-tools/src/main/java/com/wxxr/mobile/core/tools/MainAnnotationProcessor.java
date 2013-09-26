@@ -95,6 +95,8 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 				for (Method method : methods) {
 					if(method.getDeclaringClass() != Object.class){
 						log.info("Found processor method : {}, annotaions : {}",method, StringUtils.join(method.getDeclaredAnnotations()));
+					}else{
+						continue;
 					}
 					Generator ann = method.getAnnotation(Generator.class);
 					if(ann != null) {
