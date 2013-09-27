@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">wxxr-stock-trading-android</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="stock_app_title">短线放大镜</string>
+    
+    
+    
+    <!-- left slidingMenu title -->
+	<string name="t_home">首页</string>
+	<string name="t_dsphb">大赛排行榜</string>
+	<string name="t_hqzx">行情中心</string>
+	<string name="t_zqb">赚钱榜</string>
+	<string name="t_gsb">高手榜</string>
+	<string name="t_jrrg">今日热股榜</string>
+	<string name="t_help">帮助中心</string>
+	<string name="t_myrz">我的认证</string>
+	<string name="t_myzh">我的账户</string>
+	<string name="t_jyjl">交易记录</string>
+	<string name="t_seting">设置</string>
+	
 </resources>
