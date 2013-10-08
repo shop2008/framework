@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@id/rg_game_rank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@id/bt_t_rank"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/widget_bar_bg"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="T日排行" />
+
+        <RadioButton
+            android:id="@id/bt_t_plus_rank"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/widget_bar_bg"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="T+1日排行 " />
+
+        <RadioButton
+            android:id="@id/bt_week_rank"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/widget_bar_bg"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="周赛排名" />
+
+        <RadioButton
+            android:id="@id/bt_operation_ticket"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/widget_bar_bg"
+            android:button="@null"
+            android:checked="false"
+            android:gravity="center"
+            android:text="实操券" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include layout="@layout/layout_loading" />
+
+        <com.wxxr.stock.trading.ui.widget.PullToRefreshListView
+            android:id="@id/lv_kind_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" >
+        </com.wxxr.stock.trading.ui.widget.PullToRefreshListView>
+    </FrameLayout>
+
+</LinearLayout>

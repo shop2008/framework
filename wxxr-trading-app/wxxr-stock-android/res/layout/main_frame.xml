@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@id/main_frame"
+    android:orientation="vertical" >
+    <fragment 
+        class="com.wxxr.stock.trading.fragment.TitleFragment"
+        android:id="@id/titile_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height"
+        />
+
+    <LinearLayout 
+        android:id="@id/content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>

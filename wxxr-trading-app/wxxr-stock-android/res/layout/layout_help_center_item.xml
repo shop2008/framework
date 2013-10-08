@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:id="@id/ll_help_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:layout_marginRight="20dip"
+        >
+
+        <TextView
+            android:id="@id/tv_help_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="积分交易盘疑问"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@id/tv_help_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_help_title"
+            android:text="什么时候发积分？怎么获取积分交易盘积分？怎么申请积分交易盘？" />
+    </LinearLayout>
+	
+    <ImageView 
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:src="@drawable/ic_launcher"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        
+        />
+</RelativeLayout>

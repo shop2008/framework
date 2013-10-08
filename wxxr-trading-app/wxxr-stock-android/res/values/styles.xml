@@ -27,4 +27,34 @@
 	    <item name="android:textColor">#AEAEAE</item>
 	    <item name="android:textSize">18sp</item>
 	</style>
+	
+	<!-- 标题栏背景样式-->
+	<style name="style_title_bar_bg">
+	    <item name="android:background">#0000ff</item>
+	</style>
+    
+    <!-- 标题栏样式 -->
+    <style name="style_title_bar">
+        <item name="android:layout_width" >match_parent</item>
+        <item name="android:layout_height">@dimen/title_bar_height</item>
+    </style>
+    
+    <!-- 标题栏左侧按钮样式   -->
+    <style name="style_ib_left">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/ic_title_bar_left_navi</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+    
+    <!-- 标题栏标题文本样式 -->
+    <style name="style_title_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+    </style>
 </resources>

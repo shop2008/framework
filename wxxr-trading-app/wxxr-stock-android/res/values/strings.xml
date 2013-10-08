@@ -3,7 +3,9 @@
 
     <string name="stock_app_title">短线放大镜</string>
     
-    
+    <string name="app_name">财经频道</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
     
     <!-- left slidingMenu title -->
 	<string name="t_home">首页</string>

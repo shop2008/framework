@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@id/tv_empty_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="还没有买入"
+            android:visibility="gone" />
+
+        <com.wxxr.stock.trading.ui.widget.HomeRefreshListView
+            android:id="@id/lv_buy_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" >
+        </com.wxxr.stock.trading.ui.widget.HomeRefreshListView>
+    </FrameLayout>
+
+    <include layout="@layout/layout_loading" />
+
+</RelativeLayout>

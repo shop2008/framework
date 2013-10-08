@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+     >
+    <include 
+        layout="@layout/header"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:background="#FFFFFF"
+        >
+
+        <android.support.v4.view.ViewPager
+            android:id="@id/vp_home_ad"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/ad_banner_height" 
+            android:focusable="true"
+            android:clickable="true"
+            />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:focusable="false"
+            android:layout_height="@dimen/ad_banner_title_height"
+            android:layout_gravity="top"
+            android:background="#33000000" >
+
+            <TextView
+                android:id="@id/tv_home_ad_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
+
+                <View
+                    android:id="@id/ad_dot_0"
+                    android:layout_width="5dip"
+                    android:layout_height="5dip"
+                    android:layout_marginLeft="2dip"
+                    android:layout_marginRight="2dip"
+                    android:background="@drawable/dot_focused" />
+
+                <View
+                    android:id="@id/ad_dot_1"
+                    android:layout_width="5dip"
+                    android:layout_height="5dip"
+                    android:layout_marginLeft="2dip"
+                    android:layout_marginRight="2dip"
+                    android:background="@drawable/dot_normal" />
+
+                <View
+                    android:id="@id/ad_dot_2"
+                    android:layout_width="5dip"
+                    android:layout_height="5dip"
+                    android:layout_marginLeft="2dip"
+                    android:layout_marginRight="2dip"
+                    android:background="@drawable/dot_normal" />
+
+                <View
+                    android:id="@id/ad_dot_3"
+                    android:layout_width="5dip"
+                    android:layout_height="5dip"
+                    android:layout_marginLeft="2dip"
+                    android:layout_marginRight="2dip"
+                    android:background="@drawable/dot_normal" />
+            </LinearLayout>
+            
+            
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:background="#FFFFFF"
+        >
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ff0000"
+            android:gravity="center"
+            android:text="股票" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00ff00"
+            android:gravity="center"
+            android:text="额度" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#0000ff"
+            android:gravity="center"
+            android:text="盈亏" />
+    </LinearLayout>
+
+    <Button
+        android:id="@id/bt_create_buy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:text="创建买入"
+         />
+    
+</LinearLayout>
