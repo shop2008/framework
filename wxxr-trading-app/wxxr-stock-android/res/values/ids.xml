@@ -80,5 +80,6 @@
     <item name="rl_title_bar" type="id" />
     <item name="iv_back" type="id" />
     <item name="tv_title_text" type="id" />
-    <item name="ib_back" type="id" /> 
+    <item name="ib_back" type="id" />
+    <item name="iv_title_details" type="id" /> 
 </resources>
