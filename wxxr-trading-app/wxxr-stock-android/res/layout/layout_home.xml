@@ -19,7 +19,6 @@
             android:id="@id/lv_buy_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:headerDividersEnabled="false"
             android:scrollbars="none" >
         </com.wxxr.stock.trading.ui.widget.HomeRefreshListView>
     </FrameLayout>

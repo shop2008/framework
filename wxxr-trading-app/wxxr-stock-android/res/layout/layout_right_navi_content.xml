@@ -46,9 +46,9 @@
         android:id="@id/lv_right_navi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
         android:divider="@drawable/divider_horizontal"
         />
-    
     
 	 <View 
 	     android:layout_width="match_parent"

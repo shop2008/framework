@@ -81,5 +81,11 @@
     <item name="iv_back" type="id" />
     <item name="tv_title_text" type="id" />
     <item name="ib_back" type="id" />
-    <item name="iv_title_details" type="id" /> 
+    <item name="iv_title_details" type="id" />
+    <item name="rl_create_buy" type="id" />
+    <item name="ic_create_buy" type="id" />
+    <item name="btn_select_stock" type="id" />
+    <item name="tv_dialog_title_create_buy" type="id" />
+    <item name="btn_free_buy" type="id" />
+    <item name="btn_dialog_cancel" type="id" /> 
 </resources>
