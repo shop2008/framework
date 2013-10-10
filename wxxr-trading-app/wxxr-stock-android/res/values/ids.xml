@@ -87,5 +87,11 @@
     <item name="btn_select_stock" type="id" />
     <item name="tv_dialog_title_create_buy" type="id" />
     <item name="btn_free_buy" type="id" />
-    <item name="btn_dialog_cancel" type="id" /> 
+    <item name="btn_dialog_cancel" type="id" />
+    <item name="elv_earn_money_rank" type="id" />
+    <item name="refresh_view_earn_money_rank" type="id" />
+    <item name="tv_earn_money_item" type="id" />
+    <item name="iv_earn_money_item" type="id" />
+    <item name="iv_child_earn_money" type="id" />
+    <item name="iv_child_earn_money_item" type="id" /> 
 </resources>

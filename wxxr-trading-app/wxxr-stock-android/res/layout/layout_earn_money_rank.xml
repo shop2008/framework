@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:layout_height="match_parent" >
 
-</LinearLayout>
+
+    <com.wxxr.stock.trading.ui.widget.PullToRefreshView
+        android:id="@id/refresh_view_earn_money_rank"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ExpandableListView
+            android:id="@id/elv_earn_money_rank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:cacheColorHint="@android:color/transparent" >
+        </ExpandableListView>
+    </com.wxxr.stock.trading.ui.widget.PullToRefreshView>
+
+    <include layout="@layout/layout_loading" />
+</RelativeLayout>
