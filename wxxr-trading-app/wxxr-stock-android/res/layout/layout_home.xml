@@ -24,5 +24,4 @@
     </FrameLayout>
 
     <include layout="@layout/layout_loading" />
-
 </RelativeLayout>

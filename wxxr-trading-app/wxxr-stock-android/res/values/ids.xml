@@ -93,5 +93,15 @@
     <item name="tv_earn_money_item" type="id" />
     <item name="iv_earn_money_item" type="id" />
     <item name="iv_child_earn_money" type="id" />
-    <item name="iv_child_earn_money_item" type="id" /> 
+    <item name="iv_child_earn_money_item" type="id" />
+    <item name="head_lastUpdate" type="id" />
+    <item name="head_title" type="id" />
+    <item name="head_progressBar" type="id" />
+    <item name="head_arrow" type="id" />
+    <item name="header_contentLayout" type="id" />
+    <item name="footer_load_text" type="id" />
+    <item name="footer_lastUpdate" type="id" />
+    <item name="footer_load_progress" type="id" />
+    <item name="footer_load_image" type="id" />
+    <item name="footer_contentLayout" type="id" /> 
 </resources>
