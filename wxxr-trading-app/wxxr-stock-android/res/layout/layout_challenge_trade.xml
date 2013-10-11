@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!-- 申购金额 -->
+
+        <TextView
+            android:id="@+id/tv_subscribe_amount"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/text_field_back"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="10dip"
+            android:text="@string/tv_subscribe_amount_text"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/ib_reset_subscribe_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_subscribe_amount"
+            android:layout_alignRight="@id/tv_subscribe_amount"
+            android:layout_alignTop="@id/tv_subscribe_amount"
+            android:background="@drawable/recharge_back" 
+            android:src="@drawable/recharge_arrow"
+            />
+
+        
+    </RelativeLayout>
+
+    <!-- 余额创建 -->
+
+    <RadioGroup
+        android:id="@+id/rg_balance_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_negative_8"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_stop_loss"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="@string/bt_negative_8_text" />
+
+        <RadioButton
+            android:id="@+id/rb_negative_12"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_stop_loss"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/bt_negative_12_text" />
+
+        <RadioButton
+            android:id="@+id/rb_negative_5"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_stop_loss"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/bt_negative_5_text" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_creat_trade_explain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="@string/tv_creat_trade_explain"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:background="@color/yellow"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_composite_cost_label"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_composite_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00元"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_assure_cost_label"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_assure_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0元"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 提交申请 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/bt_commit_creat_trade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_commit_apply_text" />
+    </LinearLayout>
+
+    <!-- 是否阅读并同意交易规则 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_agree_or_not"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:button="@null"
+            android:checked="true"
+            android:background="@drawable/bg_cb_read_rule_or_not"
+            />
+
+        <TextView
+            android:layout_marginLeft="5dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_have_read_rule_text"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_trade_rule_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_trade_rule_text"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_right_quotes" />
+    </LinearLayout>
+
+</LinearLayout>

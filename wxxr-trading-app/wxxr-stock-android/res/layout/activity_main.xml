@@ -5,7 +5,7 @@
     android:id="@id/main_frame"
     android:orientation="vertical" >
     <fragment 
-        class="com.wxxr.stock.trading.fragment.TitleFragment"
+        class="com.wxxr.stock.trading.ui.fragment.TitleFragment"
         android:id="@id/titile_fragment"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height"

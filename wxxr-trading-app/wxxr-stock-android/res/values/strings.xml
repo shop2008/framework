@@ -20,4 +20,22 @@
 	<string name="t_jyjl">交易记录</string>
 	<string name="t_seting">设置</string>
 	
+	<!-- 创建交易盘 -->
+	<string name="tab_challenge_trade_text">挑战交易盘</string>
+	<string name="tab_join_trade_text">参赛交易盘</string>
+	<string name="tv_subscribe_amount_text">申购金额</string>
+	<string name="bt_negative_8_text">余额创建\n-8%止损</string>
+	<string name="bt_negative_12_text">余额创建\n-12%止损</string>
+	<string name="bt_negative_5_text">余额创建\n-5%止损</string>
+	<string name="tv_creat_trade_explain">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
+	<string name="tv_composite_cost_label">交易综合费应支付:</string>
+	<string name="tv_assure_cost_label">风险保证金应冻结:</string>
+	<string name="bt_commit_apply_text">提交申请</string>
+	<string name="tv_have_read_rule_text">我已阅读并同意《</string>
+	<string name="tv_trade_rule_text">交易规则</string>
+	<string name="tv_right_quotes">》</string>
+	<string name="trade_unit">万</string>
+	<string name="tv_subscribe_amount_10w">申购金额:10万</string>
+	<string name="tv_stop_loss_percent_5">中止止损:  5%</string>
+	<string name="tv_stop_loss_explain_text">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
 </resources>
