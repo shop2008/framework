@@ -56,18 +56,43 @@
             android:text="实操券" />
     </RadioGroup>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <include layout="@layout/layout_loading" />
-
-        <com.wxxr.stock.trading.ui.widget.PullToRefreshListView
+        <com.wxxr.stock.trading.ui.widget.PullToRefreshView
+            android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:orientation="vertical"
+        	android:id="@id/refresh_game_rank"
+            >
+        <LinearLayout 
+            android:id="@id/ll_game_rank_interval_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:visibility="gone"
+            >
+            
+            <TextView 
+                android:id="@id/tv_game_rank_time_inteval"
+                android:layout_width="wrap_content"
+           		 android:layout_height="wrap_content"
+           		 android:textColor="@android:color/white"
+           		 android:text="2013年10月07日-2013年10月11日"
+           		 android:textSize="20sp"
+                />
+            
+        </LinearLayout>
+        <ListView
             android:id="@id/lv_kind_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none" >
-        </com.wxxr.stock.trading.ui.widget.PullToRefreshListView>
-    </FrameLayout>
+        </ListView>
+		</com.wxxr.stock.trading.ui.widget.PullToRefreshView>
+    </RelativeLayout>
 
 </LinearLayout>
