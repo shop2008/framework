@@ -6,8 +6,8 @@
 
     <!-- 左侧导航图片和文本之间的距离 -->
     <dimen name="left_navi_dis_of_views">5dp</dimen>
-    <dimen name="slidingmenu_offset">120dp</dimen>
-    <dimen name="shadow_width">15dp</dimen>
+    <dimen name="slidingmenu_offset">80dp</dimen>
+    <dimen name="shadow_width">8dp</dimen>
     
     <!-- 标题栏高度 -->
     <dimen name="title_bar_height">60dp</dimen>
@@ -15,7 +15,7 @@
     <dimen name="title_text_size">30sp</dimen>
     
     <!-- 首页-广告位高度 -->
-    <dimen name="ad_banner_height">100dp</dimen>
+    <dimen name="ad_banner_height">120dp</dimen>
     <!-- 广告位标题高度 -->
-    <dimen name="ad_banner_title_height">20dp</dimen>
+    <dimen name="ad_banner_title_height">30dp</dimen>
 </resources>

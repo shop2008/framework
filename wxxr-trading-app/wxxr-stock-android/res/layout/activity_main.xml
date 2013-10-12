@@ -8,7 +8,7 @@
         class="com.wxxr.stock.trading.ui.fragment.TitleFragment"
         android:id="@id/titile_fragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_bar_height"
+        android:layout_height="wrap_content"
         />
 
     <LinearLayout 

@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:background="@color/slideMenu_l_r_background">
     <ListView 
  		android:id="@id/lv_left_navi"
- 		android:layout_width="match_parent"
- 		android:layout_height="match_parent"
- 		android:cacheColorHint="#00000000"
- 		android:divider="@drawable/divider_horizontal"
+ 		android:layout_width="fill_parent"
+ 		android:layout_height="fill_parent"
+		android:fadingEdge="none"
+		android:cacheColorHint="#00000000"
+		android:divider="@null"
+		android:scrollbars="none"
+ 		
         />
     
-    <View 
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_horizontal"
-        />
+    
 </LinearLayout>
