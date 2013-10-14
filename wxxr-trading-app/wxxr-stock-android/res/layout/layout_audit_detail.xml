@@ -2,10 +2,307 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    
-   
-    
+    android:orientation="vertical" 
+    android:background="@color/qsxq">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fadingEdge="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+	    	<LinearLayout
+	    	    android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:layout_marginTop="12dp"
+		        android:layout_marginLeft="8dp"
+		        android:layout_marginRight="16dp"
+		        android:layout_marginBottom="12dp"
+		        android:paddingBottom="18dp"
+		        android:orientation="vertical"
+		        android:background="@drawable/qsxq_item_bj">
+	
+	    		<TextView
+	    		    android:id="@+id/textView1"
+	    		    android:layout_width="wrap_content"
+	    		    android:layout_height="wrap_content"
+	    		    android:text="盈亏结算" 
+	    		    style="@style/qsxqTextTitleStyle"
+	    		    android:layout_marginTop="10dp"/>
+	
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="0dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="实盘额度" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="1万" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp"
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp" >
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        style="@style/qsxqTextTitleStyle_item_tv"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="实盘盈亏率" />
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        style="@style/qsxqTextTitleStyle_item_tv"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="9.96%" />
+	    		</RelativeLayout>
+	
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="实盘收益" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="996.00元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>	        
+	    	</LinearLayout>
+			<LinearLayout
+	    	    android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:layout_marginLeft="8dp"
+		        android:layout_marginRight="16dp"
+		        android:paddingBottom="18dp"
+		        android:orientation="vertical"
+		        android:background="@drawable/qsxq_item_bj">
+	
+	    		<TextView
+	    		    android:id="@+id/textView1"
+	    		    android:layout_width="wrap_content"
+	    		    android:layout_height="wrap_content"
+	    		    android:text="收益分配" 
+	    		    style="@style/qsxqTextTitleStyle"
+	    		    android:layout_marginTop="10dp"/>
+				<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="补偿交易综合费" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="39.90元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="账户管理费" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="-192.22元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="玩家实得收益" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="764.88元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>	        
+	    	</LinearLayout>
+			<LinearLayout
+	    	    android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:layout_marginTop="12dp"
+		        android:layout_marginLeft="8dp"
+		        android:layout_marginBottom="8dp"
+		        android:layout_marginRight="16dp"
+		        android:paddingBottom="18dp"
+		        android:orientation="vertical"
+		        android:background="@drawable/qsxq_item_bj">
+	
+	    		<TextView
+	    		    android:id="@+id/textView1"
+	    		    android:layout_width="wrap_content"
+	    		    android:layout_height="wrap_content"
+	    		    android:text="风险保证金清算" 
+					style="@style/qsxqTextTitleStyle"
+	    		    android:layout_marginTop="10dp"/>
+				<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="终止止损" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="-5.00%" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="冻结资金" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="500.00元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="扣减数量" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="0.00元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="解冻数量" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="500.00元" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>	        
+	    	</LinearLayout>    		            
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
