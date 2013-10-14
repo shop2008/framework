@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.ValidationException;
 public class StringValueConvertor implements IValueConvertor<String> {
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#valueOf(java.lang.String, com.wxxr.mobile.core.ui.api.IUIManagementContext)
+	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#valueOf(java.lang.String, com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	public String valueOf(String input, IValueConvertorContext context)
 			throws ValidationException {
@@ -22,7 +22,7 @@ public class StringValueConvertor implements IValueConvertor<String> {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#format(java.lang.Object, com.wxxr.mobile.core.ui.api.IUIManagementContext)
+	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#format(java.lang.Object, com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	public String format(String value, IValueConvertorContext context) {
 		return value;

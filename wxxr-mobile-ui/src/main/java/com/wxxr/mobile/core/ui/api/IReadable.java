@@ -9,5 +9,4 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface IReadable {
 	Object getValue();
-	String getStringValue();
 }

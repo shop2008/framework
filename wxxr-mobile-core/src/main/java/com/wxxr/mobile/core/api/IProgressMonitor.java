@@ -83,9 +83,9 @@ public interface IProgressMonitor {
 	 *
 	 * @param work a non-negative number of work units just completed
 	 */
-	void updateProgress(int work);
+	void updateProgress(int work, String message);
 	
 	
-	void taskFailed(Throwable cause);
+	void taskFailed(Throwable cause, String message);
 	
 }

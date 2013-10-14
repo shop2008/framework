@@ -3,13 +3,18 @@
  */
 package com.wxxr.mobile.core.ui.api;
 
+
 /**
  * @author neillin
  *
  */
-public interface IBinding {
-	void notifyDataChanged(DataChangedEvent event);
-	void activate();
+public interface IBinding<M extends IUIComponent> 
+{
+	void notifyDataChanged(ValueChangedEvent event);
+	void activate(M model);
 	void deactivate();
 	void destroy();
+	void init(IWorkbenchRTContext ctx);
+//	IUIComponent getValueModel();
+	Object getUIControl();
 }

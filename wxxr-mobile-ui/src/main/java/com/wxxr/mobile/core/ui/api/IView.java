@@ -9,18 +9,14 @@ import java.util.List;
  * @author neillin
  *
  */
-public interface IView extends IUIContainer {
+public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	String getName();
-	
-	IDataField getDataField(String name);
-	
-	List<IDataField> getDataFields();
-	
+		
 	boolean isActive();
 	
-	void activate();
+	void show();
 	
-	void deactivate();
+	void hide();
 	
 	List<UIError> getErrors();
 }

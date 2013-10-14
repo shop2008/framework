@@ -18,10 +18,12 @@ public interface IUIComponent extends IAdaptable,Cloneable {
 	boolean hasAttribute(AttributeKey<?> key);
 	 Set<AttributeKey<?>> getAttributeKeys();
 	 
-	IUIContainer getParent();
+	IUIContainer<?> getParent();
 	boolean isSubsidiaryOf(IUIComponent component);
 	
-	void init(IUIManagementContext ctx);
+	void init(IWorkbenchRTContext ctx);
 	void destroy();
 	boolean isInitialized();
+	
+	void invokeCommand(String cmdName, InputEvent event);
 }

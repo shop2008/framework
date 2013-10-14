@@ -12,33 +12,40 @@ import java.util.Map.Entry;
 import android.app.Application;
 import android.content.Intent;
 
-import com.wxxr.mobile.android.app.IAndroidAppContext;
-import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
-import com.wxxr.mobile.core.ui.api.IPageNavigator;
+import com.wxxr.mobile.core.ui.api.IPageDescriptor;
+import com.wxxr.mobile.core.ui.api.IUIContainer;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.TargetUISystem;
 
 /**
  * @author neillin
  *
  */
-public abstract class AndroidPageNavigator<T extends IAndroidAppContext> extends AbstractModule<T> implements
-		IAndroidPageNavigator {
+public class AndroidPageNavigator implements IAndroidPageNavigator {
 
 	private static final int PAGE_ACTIVITY_CREATE = 1;
 	private static final int PAGE_ACTIVITY_SHOW = 2;
 	private static final int PAGE_ACTIVITY_HIDE = 3;
 	private static final int PAGE_ACTIVITY_DESTROY = 4;
-	private Map<String, BindableActivity> activeActivities = new HashMap<String, BindableActivity>();
+	private Map<String, IBindableActivity> activeActivities = new HashMap<String, IBindableActivity>();
 	private Map<String, List<IPageCallback>> callbacks = new HashMap<String, List<IPageCallback>>();
 	private String currentPageId;
+	private final IWorkbenchRTContext context;
+	
+	public AndroidPageNavigator(IWorkbenchRTContext ctx){
+		this.context = ctx;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#showPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
 	public void showPage(IPage page,Map<String, String> params,IPageCallback cb) {
-		Application app = context.getApplication().getAndroidApplication();
+		Application app = AppUtils.getFramework().getAndroidApplication();
 		String pageId = page.getName();
 		Class<?> activityClass = getActivityClass(pageId);
 		Intent intent = new Intent(app, activityClass);
@@ -66,17 +73,27 @@ public abstract class AndroidPageNavigator<T extends IAndroidAppContext> extends
 		app.startActivity(intent);
 	}
 
-	protected abstract Class<?> getActivityClass(String pageName);
+	protected Class<?> getActivityClass(String pageName) {
+		IPageDescriptor desc = getManager().getPageDescriptor(pageName);
+		IAndroidBindingDescriptor bdesc = (IAndroidBindingDescriptor)desc.getBindingDescriptor(TargetUISystem.ANDROID);
+		return bdesc.getTargetClass();
+	}
 	
-	protected abstract Map<String, String> getPageShowParams(String pageName);
+	protected Map<String, String> getPageShowParams(String pageName){
+		return null;
+	}
+	
+	protected IWorkbenchManager getManager(){
+		return this.context.getWorkbenchManager();
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#hidePage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
 	public void hidePage(IPage page) {
-		BindableActivity activity = this.activeActivities.get(page.getName());
+		IBindableActivity activity = this.activeActivities.get(page.getName());
 		if(activity != null){
-			activity.finish();
+			activity.getActivity().finish();
 		}
 	}
 
@@ -85,28 +102,13 @@ public abstract class AndroidPageNavigator<T extends IAndroidAppContext> extends
 	 */
 	@Override
 	public IPage getCurrentActivePage() {
-		return this.currentPageId != null ? context.getService(IWorkbenchManager.class).getWorkbench().getPage(currentPageId): null;
+		return this.currentPageId != null ? getManager().getWorkbench().getPage(currentPageId): null;
 	}
 
-	@Override
-	protected void initServiceDependency() {
-		
-	}
 
-	@Override
-	protected void startService() {
-		context.registerService(IPageNavigator.class, this);
-	}
-
-	@Override
-	protected void stopService() {
-		context.unregisterService(IPageNavigator.class, this);
-	}
-
-	protected void notifyPageCallbacks(String pageId, int activity){
-		List<IPageCallback> cbs = this.callbacks.get(pageId);
+	protected void notifyPageCallbacks(IPage page, int activity){
+		List<IPageCallback> cbs = this.callbacks.get(page.getName());
 		if(cbs != null){
-			IPage page = context.getService(IWorkbenchManager.class).getWorkbench().getPage(currentPageId);
 			for (IPageCallback cb : cbs) {
 				switch(activity){
 				case PAGE_ACTIVITY_CREATE:
@@ -125,34 +127,102 @@ public abstract class AndroidPageNavigator<T extends IAndroidAppContext> extends
 			}
 		}
 	}
+	
+	protected void removePageCallback(String pageId,IPageCallback cb) {
+		List<IPageCallback> cbs = this.callbacks.get(pageId);
+		if(cbs != null){
+			cbs.remove(cb);
+		}
+	}
 	@Override
-	public void onPageCreate(String pageId, BindableActivity activity) {
-		this.activeActivities.put(pageId, activity);
-		notifyPageCallbacks(pageId,PAGE_ACTIVITY_CREATE);
+	public void onPageCreate(IPage page, IBindableActivity activity) {
+		this.activeActivities.put(page.getName(), activity);
+		notifyPageCallbacks(page,PAGE_ACTIVITY_CREATE);
 	}
 
 	@Override
-	public void onPageShow(String pageId) {
-		this.currentPageId = pageId;
-		notifyPageCallbacks(pageId,PAGE_ACTIVITY_SHOW);
+	public void onPageShow(IPage page) {
+		this.currentPageId = page.getName();
+		notifyPageCallbacks(page,PAGE_ACTIVITY_SHOW);
 	}
 
 	@Override
-	public void onPageHide(String pageId) {
-		notifyPageCallbacks(pageId,PAGE_ACTIVITY_HIDE);
+	public void onPageHide(IPage page) {
+		notifyPageCallbacks(page,PAGE_ACTIVITY_HIDE);
 
 	}
 
 	@Override
-	public void onPageDetroy(String pageId) {
-		this.activeActivities.remove(pageId);
-		notifyPageCallbacks(pageId,PAGE_ACTIVITY_DESTROY);
+	public void onPageDetroy(IPage page) {
+		this.activeActivities.remove(page.getName());
+		notifyPageCallbacks(page,PAGE_ACTIVITY_DESTROY);
 	}
 
 	@Override
-	public BindableActivity getOnShowActivity() {
+	public IBindableActivity getOnShowActivity() {
 		return this.currentPageId != null ? this.activeActivities.get(currentPageId) : null;
 	}
 
+	@Override
+	public void showView(final IView view) {
+		IPage page = getPage(view);
+		IBindableActivity activity = this.activeActivities.get(page.getName());
+		if(activity != null){
+			activity.showView(view.getName());
+		}else{
+			 IPageCallback cb = new IPageCallback() {
+				
+				@Override
+				public void onShow(IPage page) {
+					final IBindableActivity act = activeActivities.get(page.getName());
+					removePageCallback(page.getName(), this);
+					AppUtils.getFramework().runOnUIThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							act.showView(view.getName());							
+						}
+					});
+					
+				}
+				
+				@Override
+				public void onHide(IPage page) {
+					
+				}
+				
+				@Override
+				public void onDestroy(IPage page) {
+					
+				}
+				
+				@Override
+				public void onCreate(IPage page) {
+					
+				}
+			};
+			showPage(page, null, cb);
+		}
+	}
+
+	@Override
+	public void hideView(IView view) {
+		IPage page = getPage(view);
+		IBindableActivity activity = this.activeActivities.get(page.getName());
+		if(activity != null){
+			activity.hideView(view.getName());
+		}		
+	}
+
+	protected IPage getPage(IView view) {
+		IUIContainer<?> v = view ; 
+		while(v != null){
+			if(v instanceof IPage){
+				return (IPage)v;
+			}
+			v = v.getParent();
+		}
+		return null;
+	}
 
 }

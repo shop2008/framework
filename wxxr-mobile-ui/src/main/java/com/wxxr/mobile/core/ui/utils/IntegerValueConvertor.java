@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.ValidationException;
 public class IntegerValueConvertor implements IValueConvertor<Integer> {
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#valueOf(java.lang.String, com.wxxr.mobile.core.ui.api.IUIManagementContext)
+	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#valueOf(java.lang.String, com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	public Integer valueOf(String input, IValueConvertorContext context)
 			throws ValidationException {
@@ -29,7 +29,7 @@ public class IntegerValueConvertor implements IValueConvertor<Integer> {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#format(java.lang.Object, com.wxxr.mobile.core.ui.api.IUIManagementContext)
+	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#format(java.lang.Object, com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	public String format(Integer value, IValueConvertorContext context) {
 		if(value == null){

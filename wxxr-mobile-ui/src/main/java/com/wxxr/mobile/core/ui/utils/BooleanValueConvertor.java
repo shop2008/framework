@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.ValidationException;
 public class BooleanValueConvertor implements IValueConvertor<Boolean> {
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#validate(java.lang.String, com.wxxr.mobile.core.ui.api.IUIManagementContext)
+	 * @see com.wxxr.mobile.core.ui.api.IValueConvertor#validate(java.lang.String, com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	public Boolean valueOf(String input, IValueConvertorContext context)
 			throws ValidationException {

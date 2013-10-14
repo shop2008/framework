@@ -3,56 +3,62 @@
  */
 package com.wxxr.mobile.android.ui;
 
+import static com.wxxr.mobile.android.ui.BindingUtils.getBindingDescriptor;
+import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
+import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IPage;
+import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 
 /**
  * @author neillin
  *
  */
-public abstract class BindableActivity extends Activity {
+public abstract class BindableActivity extends Activity implements IBindableActivity{
 
 	private static final Trace log = Trace.register(BindableActivity.class);
 	
-	private IBinding binding;
-	private View layoutView;
+	private IBinding<IView> androidViewBinding;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		this.layoutView = setupContentView();
+		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
+			
+			@Override
+			public Context getUIContext() {
+				return BindableActivity.this;
+			}
+			
+			@Override
+			public View getBindingControl() {
+				return null;
+			}
+		}, getBindingDescriptor(getBindingPageId()));
+		setContentView((View)this.androidViewBinding.getUIControl());
 		super.onCreate(savedInstanceState);
-//		IUIBinder<BindableActivity> binder = AppUtils.getService(IWorkbenchManager.class).getUIBinder(BindableActivity.class);
-//		this.binding = binder.doBinding(this);
-//		AppUtils.getService(IAndroidPageNavigator.class).onPageCreate(((UIBinding)this.binding).getPage().getName(), this);
-	}
-	
-	
-	protected View setupContentView() {
-		setContentView(getActivityLayoutId());
-		return findViewById(android.R.id.content);
+		getNavigator().onPageCreate(getBindingPage(), this);
 	}
 
-	protected abstract int getActivityLayoutId();
-
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
 	 */
 	@Override
 	protected void onStart() {
-		if(this.binding != null){
-			this.binding.activate();
-		}
+		this.androidViewBinding.activate(getBindingPage());
 		super.onStart();
-		AppUtils.getService(IAndroidPageNavigator.class).onPageShow(((UIBinding)this.binding).getPage().getName());
-
+		getNavigator().onPageShow(getBindingPage());
 	}
 
 
@@ -62,12 +68,11 @@ public abstract class BindableActivity extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if(this.binding != null){
-			this.binding.deactivate();
-		}
-		AppUtils.getService(IAndroidPageNavigator.class).onPageHide(((UIBinding)this.binding).getPage().getName());
+		this.androidViewBinding.deactivate();
+		getNavigator().onPageHide(getBindingPage());
 	}
 
+	
 
 
 	/* (non-Javadoc)
@@ -75,16 +80,31 @@ public abstract class BindableActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
-		if(this.binding != null){
-			this.binding.destroy();
-			this.binding = null;
-		}
+		this.androidViewBinding.destroy();
 		super.onDestroy();
-		AppUtils.getService(IAndroidPageNavigator.class).onPageDetroy(((UIBinding)this.binding).getPage().getName());
+		getNavigator().onPageDetroy(getBindingPage());
 	}
 	
-	public View getLayoutView() {
-		return this.layoutView;
+	public void showView(String viewName){
+		
+	}
+	
+	public void hideView(String viewName){
+		
+	}
+	
+	protected abstract String getBindingPageId();
+
+	@Override
+	public IPage getBindingPage() {
+		return AppUtils.getService(IWorkbenchManager.class).getWorkbench().getPage(getBindingPageId());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getActivity()
+	 */
+	@Override
+	public Activity getActivity() {
+		return this;
+	}
 }

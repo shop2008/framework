@@ -12,5 +12,7 @@ import java.util.Map;
 public interface IPageNavigator {
 	void showPage(IPage page,Map<String, String> params,IPageCallback callback);
 	void hidePage(IPage page);
+	void showView(IView view);
+	void hideView(IView view);
 	IPage getCurrentActivePage();
 }

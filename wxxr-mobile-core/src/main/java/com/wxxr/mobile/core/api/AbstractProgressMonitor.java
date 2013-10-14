@@ -42,7 +42,7 @@ public abstract class AbstractProgressMonitor implements IProgressMonitor {
 	 * @see com.wxxr.mobile.core.api.IProgressMonitor#taskFailed(java.lang.Throwable)
 	 */
 	@Override
-	public void taskFailed(Throwable arg0) {
+	public void taskFailed(Throwable arg0, String message) {
 
 	}
 
@@ -50,7 +50,7 @@ public abstract class AbstractProgressMonitor implements IProgressMonitor {
 	 * @see com.wxxr.mobile.core.api.IProgressMonitor#updateProgress(int)
 	 */
 	@Override
-	public void updateProgress(int arg0) {
+	public void updateProgress(int arg0,String message) {
 
 	}
 

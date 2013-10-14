@@ -9,5 +9,5 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface IValueConvertorContext {
 	String getFormat();
-	IUIManagementContext getManagementContext();
+	IWorkbenchRTContext getManagementContext();
 }

@@ -9,18 +9,23 @@ import java.util.List;
  * @author neillin
  *
  */
-public interface IUIContainer extends IUIComponent,Iterable<IUIComponent> {
+public interface IUIContainer<C extends IUIComponent> extends IUIComponent,Iterable<IUIComponent> {
 	
 	int getChildrenCount();
 	
-	IUIComponent getChild(int idx);
+	C getChild(int idx);
 	
-	void notifyDataChanged(DataChangedEvent event);
+	String[] getChildIds();
+		
+	C getChild(String name);
 	
-	IUIComponent getChild(String name);
+	<T extends C> List<T> getChildren(Class<T> clazz);
 	
-	<T> List<T> getChildren(Class<T> clazz);
-	
-	<T> T getChild(String name, Class<T> clazz);
+	<T extends C> T getChild(String name, Class<T> clazz);
 
+	IUIContainer<C> addChild(IUIComponent child);
+	
+	IUIContainer<C> removeChild(IUIComponent child);
+	
+	IUIContainer<C> removeChild(String name);
 }

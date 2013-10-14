@@ -23,6 +23,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 
 import com.wxxr.mobile.core.api.ApplicationFactory;
@@ -43,6 +44,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	private ExecutorService executor;
 	private int maxThread = 10;
 	private String uniqueID;
+	private Handler uiThreadHandler;
 	private UnexpectingExceptionHandler handler = new UnexpectingExceptionHandler(){
 		@Override
 		public void uncaughtException(Thread t, Throwable e) {
@@ -55,7 +57,9 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 //	private Log4jConfigurator logConfig = new Log4jConfigurator();
 	public AndroidFramework() {
 		super();
+		this.uiThreadHandler = new Handler();
 		Thread.setDefaultUncaughtExceptionHandler(this.handler);
+		ApplicationFactory.getInstance().setApplication(this);
 	}
 
 	public AndroidFramework(int maxThreads) {
@@ -77,7 +81,6 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	 */
 	@Override
 	public void start() {
-		ApplicationFactory.getInstance().setApplication(this);
 //		collectDeviceInfo();
 		if(log.isInfoEnabled()){
 			log.info("UnexpectingExceptionHandler installed, ui thread :"+handler.getUiThread());
@@ -259,6 +262,40 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	@Override
 	public File getDataDir(String name, int mode) {
 		return getAndroidApplication().getDir(name, mode);
+	}
+	
+	protected Runnable safeRunnable(final Runnable task){
+		return new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					task.run();
+				}catch(RuntimeException t){
+					log.error("Caught runtime exception in ui thread", t);
+					if(isInDebugMode()){
+						throw t;
+					}
+				}
+				
+			}
+		};
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.api.IApplication#runOnUIThread(java.lang.Runnable, long, java.util.concurrent.TimeUnit)
+	 */
+	@Override
+	public void runOnUIThread(Runnable task, long delay, TimeUnit unit) {
+		this.uiThreadHandler.postDelayed(safeRunnable(task), TimeUnit.MILLISECONDS.convert(delay, unit));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.api.IApplication#runOnUIThread(java.lang.Runnable)
+	 */
+	@Override
+	public void runOnUIThread(Runnable task) {
+		this.uiThreadHandler.post(safeRunnable(task));
 	}
 
 }

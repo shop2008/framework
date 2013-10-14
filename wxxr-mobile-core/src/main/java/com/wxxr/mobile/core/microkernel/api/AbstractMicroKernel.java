@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.api.IProgressMonitor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.ICancellable;
 
@@ -34,6 +35,7 @@ import com.wxxr.mobile.core.util.ICancellable;
  */
 public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IKernelModule<C>> implements IMicroKernel<C,M>{
 	private static Trace log = Trace.register(AbstractMicroKernel.class);
+	protected ThreadLocal<IProgressMonitor> monitorHolder = new ThreadLocal<IProgressMonitor>();
 	
 	protected class AbstractContext implements IKernelContext {
 
@@ -59,7 +61,16 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			if(log.isInfoEnabled()){
 				log.info("Register service :%s, handler : %s",interfaceClazz.getCanonicalName(),handler);
 			}
-			registerLocalService(interfaceClazz, handler);
+			if(!interfaceClazz.isInterface()){
+				throw new IllegalArgumentException("pass in interface class is not a interface :"+interfaceClazz.getCanonicalName());
+			}
+			List<Class<?>> exportingServices = getExportingInterfaces(interfaceClazz);
+			if(exportingServices.isEmpty()){
+				exportingServices.add(interfaceClazz);
+			}
+			for (Class<?> clazz : exportingServices) {
+				registerLocalService(clazz, handler);
+			}
 		}
 
 		@Override
@@ -90,7 +101,13 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			if(log.isInfoEnabled()){
 				log.info("Unregister service :%s, handler : %s",interfaceClazz.getCanonicalName(),handler);
 			}
-			unregisterLocalService(interfaceClazz, handler);
+			List<Class<?>> exportingServices = getExportingInterfaces(interfaceClazz);
+			if(exportingServices.isEmpty()){
+				exportingServices.add(interfaceClazz);
+			}
+			for (Class<?> clazz : exportingServices) {
+				unregisterLocalService(clazz, handler);
+			}
 		}
 
 		@Override
@@ -143,7 +160,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	private LinkedList<M> modules = new LinkedList<M>();
 
-	private LinkedList<M> createdModules = new LinkedList<M>();
+//	private LinkedList<M> createdModules = new LinkedList<M>();
 
 	private boolean started = false;
 
@@ -155,16 +172,56 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	private LinkedList<IKernelServiceListener> serviceListeners = new LinkedList<IKernelServiceListener>();
 	private LinkedList<IModuleListener> moduleListeners = new LinkedList<IModuleListener>();
 	
-	private Timer timer = new Timer("MicroKernel Timer Thread");
+	private Timer timer;
+
+	public void start(IProgressMonitor monitor){
+		monitor.setTaskName("Startup Kernel");
+		this.monitorHolder.set(monitor);
+		try {
+			start();
+			monitor.done(this);
+		}catch(Throwable t){
+			log.fatal("Failed to start kernel", t);
+			monitor.taskFailed(t,"Failed to start kernel");
+		}finally{
+			this.monitorHolder.set(null);
+		}
+	}
+	
+	public void stop(IProgressMonitor monitor){
+		monitor.setTaskName("Shutdown Kernel");
+		this.monitorHolder.set(monitor);
+		try {
+			stop();
+			monitor.done(this);
+		}catch(Throwable t){
+			log.fatal("Failed to stop kernel", t);
+			monitor.taskFailed(t,"Failed to stop kernel");
+		}finally{
+			this.monitorHolder.set(null);
+		}
+		
+	}
 
 
 	@SuppressWarnings("unchecked")
 	public void start() throws Exception{
+		IProgressMonitor monitor = this.monitorHolder.get();
 		fireKernelStarting();
 		initModules();
-		for (Object mod : getAllModules()) {
-			startModule(((M)mod));
+		IKernelModule<C>[] mods = getAllModules();
+		if(monitor != null){
+			monitor.beginTask(mods.length);
 		}
+		int cnt = 1;
+		for (IKernelModule<C> mod : mods) {
+			if(monitor != null){
+				monitor.updateProgress(cnt, "Start module :["+mod.getModuleName()+"] ...");
+			}
+			startModule(((M)mod));
+			cnt++;
+		}
+		timer = new Timer("MicroKernel Timer Thread");
 		this.started = true;
 		fireKernelStarted();
 	}
@@ -172,15 +229,28 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	@SuppressWarnings("unchecked")
 	public void stop(){
+		IProgressMonitor monitor = this.monitorHolder.get();
 		fireKernelStopping();
-		destroyModules();
-		for (Object mod : getAllModules()) {
+//		destroyModules();
+		IKernelModule<C>[] mods = getAllModules();
+		if(monitor != null){
+			monitor.beginTask(mods.length);
+		}
+		int cnt = 1;
+		for (IKernelModule<C> mod : getAllModules()) {
+			if(monitor != null){
+				monitor.updateProgress(cnt, "stop module :["+mod.getModuleName()+"] ...");
+			}
 			stopModule(((M)mod));
+			cnt++;
+		}
+		if(timer != null){
+			timer.purge();
+			timer.cancel();
+			timer = null;
 		}
 		this.started = false;
 		fireKernelStopped();
-		timer.purge();
-		timer.cancel();
 	}
 
 
@@ -332,12 +402,43 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		return handlers.getService();
 	}
 
-	protected <T> void registerLocalService(Class<T> interfaceClazz, T handler) {
-		if(getServiceFuture(interfaceClazz).addService(handler)){
-			fireServiceRegistered(interfaceClazz, handler);
+	protected <T> void registerLocalService(Class<T> interfaceClazz, Object handler) {
+		if(getServiceFuture(interfaceClazz).addService(interfaceClazz.cast(handler))){
+			fireServiceRegistered(interfaceClazz, interfaceClazz.cast(handler));
 		}
 	}
 
+	protected List<Class<?>> getExportingInterfaces(Class<?> clazz){
+		ArrayList<Class<?>> list = new ArrayList<Class<?>>();
+		getExportingInterfaces(clazz, list);
+		return list;
+	}
+	
+	protected boolean isValidServiceInterface(Class<?> clazz){
+		if(!clazz.isInterface()){
+			return false;
+		}
+		String pkgName = clazz.getCanonicalName();
+		if(pkgName.startsWith("java.")||pkgName.startsWith("javax.")||pkgName.startsWith("sun.")||pkgName.startsWith("com.sun.")){
+			return false;
+		}
+		return true;
+	}
+	
+	protected void getExportingInterfaces(Class<?> clazz,List<Class<?>> list){
+		if(!isValidServiceInterface(clazz)){
+			return;
+		}
+		Class<?>[] interfaces = clazz.getInterfaces();
+		if(interfaces != null){
+			for (Class<?> class1 : interfaces) {
+				getExportingInterfaces(class1,list);
+			}
+		}
+		list.add(clazz);
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	protected <T> ServiceFuture<T> getServiceFuture(Class<T> interfaceClazz) {
 		ServiceFuture<T> handlers = null;
@@ -351,9 +452,9 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		return handlers;
 	}
 
-	protected <T> void unregisterLocalService(Class<T> interfaceClazz, T handler) {
-		if(getServiceFuture(interfaceClazz).removeService(handler)){
-			fireServiceUnregistered(interfaceClazz, handler);
+	protected <T> void unregisterLocalService(Class<T> interfaceClazz, Object handler) {
+		if(getServiceFuture(interfaceClazz).removeService(interfaceClazz.cast(handler))){
+			fireServiceUnregistered(interfaceClazz, interfaceClazz.cast(handler));
 		}
 	}
 	
@@ -446,16 +547,16 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	abstract protected C getContext();
 
 
-	protected void destroyModules() {
-		for (M mod : this.createdModules) {
-			try {
-				unregisterKernelModule(mod);
-			}catch(Exception e){
-				log.warn("Failed to unregister module :"+mod, e);
-			}
-		}
-		this.createdModules.clear();
-	}
+//	protected void destroyModules() {
+//		for (M mod : this.createdModules) {
+//			try {
+//				unregisterKernelModule(mod);
+//			}catch(Exception e){
+//				log.warn("Failed to unregister module :"+mod, e);
+//			}
+//		}
+//		this.createdModules.clear();
+//	}
 
 //	protected void initModules() throws Exception {
 //		if(moduleConfigure == null){
@@ -493,7 +594,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	protected abstract void initModules();
 	
-	public Object[] getAllModules() {
+	public IKernelModule<C>[] getAllModules() {
 		synchronized(modules){
 			if(modules.isEmpty()){
 				return new IKernelModule[0];

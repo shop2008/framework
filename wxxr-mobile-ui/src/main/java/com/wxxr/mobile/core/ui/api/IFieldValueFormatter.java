@@ -8,6 +8,6 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IFieldValueFormatter {
-	String format(Object input,IUIManagementContext context);
+	String format(Object input,IWorkbenchRTContext context);
 
 }
