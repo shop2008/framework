@@ -20,11 +20,15 @@
 	<string name="t_jyjl">交易记录</string>
 	<string name="t_seting">设置</string>
 	
+	<string name="tv_default_text">--</string>
+	<string name="loading_text">正在加载数据，请稍候...</string>
 	<!-- 首页 -->
 	<string name="tv_home_max_stock_label">最大持股</string>
 	<string name="tv_home_amount_label">额度</string>
 	<string name="tv_home_profit_loss">盈亏</string>
 	
+	<!-- 设置 -->
+	<string name="tv_title_setting">设置</string>
 	<!-- 创建交易盘 -->
 	<string name="tab_challenge_trade_text">挑战交易盘</string>
 	<string name="tab_join_trade_text">参赛交易盘</string>
@@ -40,6 +44,7 @@
 	<string name="tv_trade_rule_text">交易规则</string>
 	<string name="tv_right_quotes">》</string>
 	<string name="trade_unit">万</string>
+	
 	<string name="tv_subscribe_amount_10w">申购金额:10万</string>
 	<string name="tv_stop_loss_percent_5">中止止损:  5%</string>
 	<string name="tv_stop_loss_explain_text">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
@@ -55,4 +60,14 @@
 	<string name="tv_deal_record_name_code">名称代码</string>
 	<string name="tv_deal_record_direction">方向</string>
 	<string name="tv_deal_record_price_amount">价量</string>
+	<!-- 我的账户 -->
+	<string name="tv_title_user_account">我的帐户</string>
+	<string name="tv_balance_label">余额</string>
+	<string name="tv_freeze_label">冻结</string>
+	<string name="tv_usable_label">可用</string>
+	<string name="tv_extract_cash">提取</string>
+	<string name="tv_income_detail">收支明细</string>
+	<string name="tv_title_income_detail">收支明细</string>
+	<!-- 创建买入 -->
+	<string name="tv_title_create_trade">创建</string>
 </resources>

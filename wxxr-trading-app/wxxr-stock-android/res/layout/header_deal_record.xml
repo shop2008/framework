@@ -107,5 +107,6 @@
         android:id="@+id/vp_deal_record"
         android:layout_width="match_parent"
         android:layout_height="120dip"
+        android:scrollbars="none"
         />
 </LinearLayout>
