@@ -107,5 +107,7 @@
     <item name="ll_game_rank_interval_label" type="id" />
     <item name="tv_game_rank_time_inteval" type="id" />
     <item name="refresh_game_rank" type="id" />
-    <item name="home_refresh_view" type="id" /> 
+    <item name="home_refresh_view" type="id" />
+    <item name="iv_title_other" type="id" />
+    <item name="ib_title_other" type="id" /> 
 </resources>

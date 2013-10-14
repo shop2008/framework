@@ -99,7 +99,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_btn_horizontal"
                 android:gravity="center"
-                android:text="股票"
+                android:text="@string/tv_home_max_stock_label"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
@@ -114,7 +114,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_btn_horizontal"
                 android:gravity="center"
-                android:text="额度"
+                android:text="@string/tv_home_amount_label"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
@@ -129,7 +129,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_btn_horizontal"
                 android:gravity="center"
-                android:text="盈亏"
+                android:text="@string/tv_home_profit_loss"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </LinearLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include 
+        layout="@layout/layout_loading"
+        />
+    <ListView
+        android:id="@+id/lv_deal_record"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:scrollbars="none" >
+    </ListView>
+
+    
+    <LinearLayout
+        android:id="@+id/deal_record_label"
+        android:layout_width="match_parent"
+        android:layout_height="30dip"
+        android:background="@drawable/bg_btn_bottom"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="@string/tv_deal_record_time"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="@string/tv_deal_record_name_code"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="@string/tv_deal_record_price_amount"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="@string/tv_deal_record_direction"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+</FrameLayout>

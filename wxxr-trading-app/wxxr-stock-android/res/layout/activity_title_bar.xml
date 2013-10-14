@@ -3,14 +3,14 @@
   		xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@id/rl_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dip"
-        android:background="@drawable/bg_activity_top_title"
+        android:layout_height="50dip"
+        android:background="@color/gray"
         >
 
         <ImageButton
             android:id="@id/ib_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_iv_back"
@@ -27,7 +27,7 @@
            />
         
         <ImageButton 
-            android:id="@id/iv_title_details"
+            android:id="@id/ib_title_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

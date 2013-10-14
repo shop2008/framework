@@ -20,6 +20,11 @@
 	<string name="t_jyjl">交易记录</string>
 	<string name="t_seting">设置</string>
 	
+	<!-- 首页 -->
+	<string name="tv_home_max_stock_label">最大持股</string>
+	<string name="tv_home_amount_label">额度</string>
+	<string name="tv_home_profit_loss">盈亏</string>
+	
 	<!-- 创建交易盘 -->
 	<string name="tab_challenge_trade_text">挑战交易盘</string>
 	<string name="tab_join_trade_text">参赛交易盘</string>
@@ -38,4 +43,16 @@
 	<string name="tv_subscribe_amount_10w">申购金额:10万</string>
 	<string name="tv_stop_loss_percent_5">中止止损:  5%</string>
 	<string name="tv_stop_loss_explain_text">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
+	
+	
+	<!-- 操作详情 -->
+	<string name="tab_deal_record_text">成交记录</string>
+	<string name="tab_audit_detial_text">清算详情</string>
+	<string name="tv_apply_found_label">申请资金</string>
+	<string name="tv_profit_loss_rate_label">总盈亏率</string>
+	<string name="tv_profit_loss_amount_label">盈亏总额</string>
+	<string name="tv_deal_record_time">时间</string>
+	<string name="tv_deal_record_name_code">名称代码</string>
+	<string name="tv_deal_record_direction">方向</string>
+	<string name="tv_deal_record_price_amount">价量</string>
 </resources>
