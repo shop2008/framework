@@ -11,9 +11,10 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>            2.2.1
-                    </platform.version>
+        <platform.version>2.2.1</platform.version>
         <wxxr.tools.version>1.0.0</wxxr.tools.version>
+        <framework.version>1.0.0</framework.version>
+        <android.sdk.path>/Users/neillin/android-sdks</android.sdk.path>
     </properties>
 
 	<dependencies>
@@ -23,6 +24,47 @@
 			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>r6</version>
+        </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-core</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-net</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-xml</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-ui</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-android</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>com.wxxr.mobile</groupId>
+              <artifactId>wxxr-mobile-web</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>3.8.2</version>
+                <scope>test</scope>
+            </dependency>
 	</dependencies>
 
 	<build>
@@ -32,6 +74,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
 				<executions>
 					<execution>
 						<!-- use the copy resources instead of resources, which adds it to 
