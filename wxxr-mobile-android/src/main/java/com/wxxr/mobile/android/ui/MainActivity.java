@@ -72,5 +72,6 @@ public abstract class MainActivity extends Activity {
 	
 	protected void showHomePage(){
 		AppUtils.getService(IWorkbenchManager.class).getWorkbench().showHomePage();
+		this.finish();
 	}
 }
