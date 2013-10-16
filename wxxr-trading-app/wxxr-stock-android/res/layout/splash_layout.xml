@@ -24,13 +24,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/loading_progressBar"
-        android:layout_marginTop="17dp"
-        android:text="系统加载中..."
-        android:gravity="center_horizontal" 
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:paddingTop="8dp"
-        android:textColor="@color/white"
-        android:singleLine="true"/>
+        android:layout_marginTop="17dp"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:text="系统加载中..."
+        android:textColor="@color/white" />
 
 </RelativeLayout>
