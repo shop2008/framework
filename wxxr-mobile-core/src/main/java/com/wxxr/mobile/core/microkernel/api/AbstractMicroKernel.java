@@ -22,6 +22,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.event.api.ApplicationShutdownEvent;
+import com.wxxr.mobile.core.event.api.ApplicationStartedEvent;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.ICancellable;
 
@@ -350,10 +353,19 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 				}
 			}
 		}
+		
+		IEventRouter router = getService(IEventRouter.class);
+		if(router != null){
+			router.routeEvent(new ApplicationStartedEvent());
+		}
 
 	}
 
 	protected void fireKernelStopping(){
+		IEventRouter router = getService(IEventRouter.class);
+		if(router != null){
+			router.routeEvent(new ApplicationShutdownEvent());
+		}
 		IModuleListener[] list = null;
 		synchronized(this.moduleListeners){
 			list = this.moduleListeners.toArray(new IModuleListener[this.moduleListeners.size()]);
