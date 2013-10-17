@@ -74,6 +74,6 @@ public class BindableBeanModelTest extends BindableBeanModel {
 				}
 			}
 		}
-		assertEquals(1, gens.size());
+		assertEquals(2, gens.size());
 	}
 }
