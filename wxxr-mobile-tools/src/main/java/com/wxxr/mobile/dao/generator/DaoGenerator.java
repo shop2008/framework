@@ -24,8 +24,14 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.lang.model.element.Element;
+
+import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
+import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -36,7 +42,7 @@ import freemarker.template.Template;
  * 
  * @author Markus
  */
-public class DaoGenerator {
+public class DaoGenerator extends AbstractCodeGenerator {
 
     private Pattern patternKeepIncludes;
     private Pattern patternKeepFields;
@@ -206,5 +212,11 @@ public class DaoGenerator {
         File file = new File(packagePath, javaClassName + ".java");
         return file;
     }
+
+	@Override
+	protected void doCodeGeneration(Set<? extends Element> elements, ICodeGenerationContext context) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

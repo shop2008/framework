@@ -104,7 +104,14 @@ public class TemplateHelper {
 		buf.setCharAt(0,Character.toUpperCase(content.charAt(0)));
 		return buf.toString();	
 	}
-	
+	public String uncapitalize(String content){
+		if((content == null)||(content.length() == 0)){
+			return content;
+		}
+		StringBuffer buf = new StringBuffer(content);
+		buf.setCharAt(0,Character.toLowerCase(content.charAt(0)));
+		return buf.toString();	
+	}
 	
 	public void setAttributes(Map<String, ? extends Object> attributes) {
 		for (Entry<String, ? extends Object> entry : attributes.entrySet()) {
@@ -127,5 +134,43 @@ public class TemplateHelper {
 		logger.debug(msg);
 		return "";
 	}
+	public String toCursorType(String type){
+		if (type==null) {
+			return "String";
+		}
+		if (type.equals("Boolean")||type.equals("Byte")||type.equals("Short")) {
+			return "Short";
+		}else if (type.equals("Int")) {
+			return "Int";
+		}else if(type.equals("Long")){
+			return "Long";
+		}else if(type.equals("Float")){
+			return "Float";
+		}else if(type.equals("Double")){
+			return "Double";
+		}else if(type.equals("ByteArray")){
+			return "Blob";
+		}else if(type.equals("Date")){
+			return "Long";
+		}else{
+			return "String";
+		}
 
+	}
+	public String toBindType(String type){
+		if (type==null) {
+			return "String";
+		}
+		if (type.equals("Boolean")||type.equals("Byte")||type.equals("Short")||type.equals("Int")||type.equals("Long")) {
+			return "Long";
+		}else if(type.equals("Float")||type.equals("Double")){
+			return "Double";
+		}else if(type.equals("ByteArray")){
+			return "Blob";
+		}else if(type.equals("Date")){
+			return "Long";
+		}else{
+			return "String";
+		}
+	}
 }

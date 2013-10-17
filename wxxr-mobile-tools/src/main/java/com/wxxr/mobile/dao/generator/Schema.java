@@ -168,7 +168,7 @@ public class Schema {
         return useActiveEntitiesByDefault;
     }
 
-    void init2ndPass() {
+    public void init2ndPass() {
         if (defaultJavaPackageDao == null) {
             defaultJavaPackageDao = defaultJavaPackage;
         }
@@ -180,7 +180,7 @@ public class Schema {
         }
     }
 
-    void init3ndPass() {
+    public void init3ndPass() {
         for (Entity entity : entities) {
             entity.init3ndPass();
         }

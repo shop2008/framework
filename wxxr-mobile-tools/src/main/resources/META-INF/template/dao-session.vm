@@ -1,0 +1,67 @@
+package ${schema.defaultJavaPackageDao};
+
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.Map;
+
+import com.wxxr.mobile.dao.AbstractDao;
+import com.wxxr.mobile.dao.AbstractDaoSession;
+import com.wxxr.mobile.dao.identityscope.IdentityScopeType;
+import com.wxxr.mobile.dao.internal.DaoConfig;
+
+#foreach($_entity in $schema.entities)
+import ${_entity.javaPackage}.${_entity.className};
+#end
+
+#foreach($_entity in $schema.entities)
+import ${_entity.javaPackageDao}.${_entity.classNameDao};
+#end
+
+
+/**
+ * {@inheritDoc}
+ * 
+ * @see com.wxxr.mobile.dao.AbstractDaoSession
+ */
+public class DaoSession extends AbstractDaoSession {
+
+#foreach($_entity in $schema.entities)
+    private final DaoConfig ${helper.uncapitalize(${_entity.classNameDao})}Config;
+#end     
+
+
+#foreach($_entity in $schema.entities)
+    private final ${_entity.classNameDao} ${helper.uncapitalize(${_entity.classNameDao})};
+#end       
+
+    public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
+            daoConfigMap) {
+        super(db);
+#foreach($_entity in $schema.entities)
+    ${helper.uncapitalize(${_entity.classNameDao})}Config = daoConfigMap.get(${_entity.classNameDao}.class).clone();
+	${helper.uncapitalize(${_entity.classNameDao})}Config.initIdentityScope(type);
+#end 
+   
+#foreach($_entity in $schema.entities)
+        ${helper.uncapitalize(${_entity.classNameDao})} = new ${_entity.classNameDao}(${helper.uncapitalize(${_entity.classNameDao})}Config, this);
+#end        
+
+#foreach($_entity in $schema.entities)
+		registerDao(${_entity.className}.class,${helper.uncapitalize(${_entity.classNameDao})});
+#end  
+     
+    }
+    
+    public void clear() {
+#foreach($_entity in $schema.entities)
+        ${helper.uncapitalize(${_entity.classNameDao})}Config.getIdentityScope().clear();
+#end    
+    }
+
+#foreach($_entity in $schema.entities)
+    public ${_entity.classNameDao} get${helper.capitalize(${_entity.classNameDao})}() {
+        return ${helper.uncapitalize(${_entity.classNameDao})};
+    }
+
+#end        
+}

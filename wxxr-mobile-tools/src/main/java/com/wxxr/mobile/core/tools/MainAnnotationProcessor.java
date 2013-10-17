@@ -112,8 +112,7 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 							} catch (Exception e) {
 								log.error("Failed to create code generator for annotation : {}",annClazz.getCanonicalName());
 							}
-						}
-						
+						}						
 					}
 				}
 			}
