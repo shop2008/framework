@@ -15,7 +15,7 @@ import com.wxxr.mobile.stock.client.R;
  * @author neillin
  *
  */
-public class SplashActivity extends MainActivity {
+public class SplashPage extends MainActivity {
 
 	private ProgressBar progressBar;
 	private TextView textView;

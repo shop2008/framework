@@ -8,8 +8,8 @@
     
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="9dp"
-        android:minHeight="9dp"
+        android:layout_height="7dp"
+        android:minHeight="7dp"
         android:padding="2dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -26,8 +26,8 @@
 	        android:layout_height="wrap_content"
 	        android:background="@drawable/progressbar_bj_style"
 	        android:progressDrawable="@drawable/progressbar_progress_style"
-	        android:maxHeight="5dp"
-	        android:minHeight="5dip" />
+	        android:maxHeight="3dp"
+	        android:minHeight="3dp" />
     </LinearLayout>    
     
 
