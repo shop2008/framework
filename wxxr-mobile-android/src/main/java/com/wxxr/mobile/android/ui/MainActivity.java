@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 public abstract class MainActivity extends Activity {
 
 	private int minStartupTime = 5;
+	private long confirmTime = 500;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
 	 */
@@ -65,7 +66,7 @@ public abstract class MainActivity extends Activity {
 			public void done(Object result) {
 				updateProgressDone();
 				try {
-					Thread.sleep(1000L);
+					Thread.sleep(confirmTime);
 				} catch (InterruptedException e) {
 				}
 				showHomePage();
@@ -111,5 +112,19 @@ public abstract class MainActivity extends Activity {
 	 */
 	protected void setMinStartupTime(int minStartupTime) {
 		this.minStartupTime = minStartupTime;
+	}
+
+	/**
+	 * @return the confirmTime
+	 */
+	protected long getConfirmTime() {
+		return confirmTime;
+	}
+
+	/**
+	 * @param confirmTime the confirmTime to set
+	 */
+	protected void setConfirmTime(long confirmTime) {
+		this.confirmTime = confirmTime;
 	}
 }
