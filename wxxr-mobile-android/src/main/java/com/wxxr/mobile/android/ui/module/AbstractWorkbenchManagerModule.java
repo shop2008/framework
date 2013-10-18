@@ -31,7 +31,7 @@ import com.wxxr.mobile.core.ui.common.WorkbenchBase;
  */
 public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContext> extends AbstractModule<T> {
 
-	private final IWorkbenchRTContext uiContext = new IWorkbenchRTContext() {
+	protected final IWorkbenchRTContext uiContext = new IWorkbenchRTContext() {
 		
 		public IKernelContext getKernelContext() {
 			return context;
@@ -49,7 +49,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		}
 	};
 
-	private AbstractAndroidWorkbenchManager manager = new AbstractAndroidWorkbenchManager() {
+	protected final AbstractAndroidWorkbenchManager manager = new AbstractAndroidWorkbenchManager() {
 
 		@Override
 		protected IViewBinder createViewBinder() {
@@ -63,13 +63,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 
 		@Override
 		protected IWorkbench createWorkbench() {
-			return new WorkbenchBase(uiContext) {
-				
-				@Override
-				public String[] getPageIds() {
-					return manager.getAllRegisteredPageIds();
-				}
-			};
+			return doCreateWorkbench();
 		}
 	};
 
@@ -111,6 +105,19 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 	protected void notifyKernelStarted() {
 		super.notifyKernelStarted();
 		manager.notifyUIInitEvent();
+	}
+
+	/**
+	 * @return
+	 */
+	protected IWorkbench doCreateWorkbench() {
+		return new WorkbenchBase(uiContext) {
+			
+			@Override
+			public String[] getPageIds() {
+				return manager.getAllRegisteredPageIds();
+			}
+		};
 	}
 
 
