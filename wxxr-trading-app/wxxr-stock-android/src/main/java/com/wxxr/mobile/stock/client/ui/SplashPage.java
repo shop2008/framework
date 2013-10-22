@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.ui;
 
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 

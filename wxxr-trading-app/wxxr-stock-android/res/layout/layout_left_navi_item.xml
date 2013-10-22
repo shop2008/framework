@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
@@ -14,6 +15,7 @@
 		        android:id="@id/iv_left_navi_item"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        bind:field="menuIcon"
 		        />
 		    
 	    <TextView 
@@ -21,6 +23,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        style="@style/slideMenuStyle"
+	        bind:field="menuLabel"
 	        />        
     </LinearLayout>
     <include layout="@layout/lines"/>
