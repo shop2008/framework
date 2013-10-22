@@ -10,6 +10,7 @@ import java.util.Set;
 import android.view.View;
 
 import com.wxxr.mobile.android.ui.IAndroidBinding;
+import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IDataField;
@@ -28,13 +29,15 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	private View pComponent;	// physical component
 	private IUIComponent field;	// Logic view component
 	private IWorkbenchRTContext bContext;
+	private IAndroidBindingContext context;
 	private Map<String, String> bindingAttrs;
 	private String fieldName;
 	
-	public BasicFieldBinding(View view, String fieldName,Map<String,String> attrSet){
-		this.pComponent = view;
+	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
+		this.pComponent = ctx.getBindingControl();
 		this.fieldName = fieldName;
 		this.bindingAttrs = attrSet;
+		this.context = ctx;
 	}
 	
 	protected Map<String, String> getBindingAttrs(boolean createIfNotExisting){
@@ -167,6 +170,34 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	@Override
 	public Object getUIControl() {
 		return pComponent;
+	}
+
+	/**
+	 * @return the bContext
+	 */
+	protected IWorkbenchRTContext getWorkbenchContext() {
+		return bContext;
+	}
+
+	/**
+	 * @return the bindingAttrs
+	 */
+	protected Map<String, String> getBindingAttrs() {
+		return bindingAttrs;
+	}
+
+	/**
+	 * @return the fieldName
+	 */
+	protected String getFieldName() {
+		return fieldName;
+	}
+
+	/**
+	 * @return the context
+	 */
+	protected IAndroidBindingContext getAndroidBindingContext() {
+		return context;
 	}
 
 

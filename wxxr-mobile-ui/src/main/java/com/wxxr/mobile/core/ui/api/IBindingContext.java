@@ -8,4 +8,5 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IBindingContext {
+	IWorkbenchManager getWorkbenchManager();
 }

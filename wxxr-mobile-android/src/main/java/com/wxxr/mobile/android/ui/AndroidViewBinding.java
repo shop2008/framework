@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -30,7 +32,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-public class AndroidViewBinding implements IBinding<IView>{
+public class AndroidViewBinding implements IAndroidBinding<IView>{
 
 	private static final Trace log = Trace.register(AndroidViewBinding.class);
 	
@@ -49,7 +51,7 @@ public class AndroidViewBinding implements IBinding<IView>{
 		public void createNActivateBinding(IView vmodel){
 			IUIComponent field = vmodel.getChild(fieldName);
 			if(binding == null){
-				IFieldBinderManager mgr = runtimeContext.getWorkbenchManager().getFieldBinderManager();
+				IFieldBinderManager mgr = bindingContext.getWorkbenchManager().getFieldBinderManager();
 				IFieldBinder binder = mgr.getFieldBinder(field.getClass(),view.getClass());
 				binding = binder.createBinding(new IAndroidBindingContext() {
 					
@@ -61,6 +63,11 @@ public class AndroidViewBinding implements IBinding<IView>{
 					@Override
 					public View getBindingControl() {
 						return view;
+					}
+
+					@Override
+					public IWorkbenchManager getWorkbenchManager() {
+						return bindingContext.getWorkbenchManager();
 					}
 				}, fieldName, params);
 				binding.init(runtimeContext);
@@ -129,11 +136,14 @@ public class AndroidViewBinding implements IBinding<IView>{
 		public void onViewCreated(final View view, Context context,
 				AttributeSet attrSet) {
 //			IFieldBinderManager mgr = runtimeContext.getWorkbenchManager().getFieldBinderManager(Context.class);
-			IEventBinderManager eventBinderMgr = runtimeContext.getWorkbenchManager().getEventBinderManager();
+			IEventBinderManager eventBinderMgr = bindingContext.getWorkbenchManager().getEventBinderManager();
 //			@SuppressWarnings("unchecked")
 //			IFieldBinder<Context,View> binder = (IFieldBinder<Context,View>)mgr.getFieldBinder(view.getClass());
 			String val = StringUtils.trimToNull(attrSet.getAttributeValue(IAndroidBinding.BINDING_NAMESPACE, IAndroidBinding.BINDING_FIELD_NAME));
 			if(val != null){
+				if(log.isDebugEnabled()){
+					log.debug("Found field binding :"+val+" of view :"+view);
+				}
 				HashMap<String, String> params = new HashMap<String, String>();
 				HashMap<String, String> events = new HashMap<String, String>();
 				int cnt = attrSet.getAttributeCount();
@@ -144,6 +154,10 @@ public class AndroidViewBinding implements IBinding<IView>{
 						if(name.startsWith("on_")&&(name.length() > 4)){
 							String event = name.substring(3);
 							events.put(event, value);
+							if(log.isDebugEnabled()){
+								log.debug("Found event binding :"+event+" of view :"+view);
+							}
+
 						}else{
 							params.put(name, value);
 						}
@@ -166,10 +180,22 @@ public class AndroidViewBinding implements IBinding<IView>{
 								public View getBindingControl() {
 									return view;
 								}
+
+								@Override
+								public IWorkbenchManager getWorkbenchManager() {
+									return bindingContext.getWorkbenchManager();
+								}
 							}, val, cmdName, params);
 							bindings.add(eBinding);
 						}
 					}
+				}
+			}else{
+				Map<String, String> map = parse(attrSet);
+				if(map != null){
+					view.setTag(BING_ATTRS_TAG_ID, map);
+				}else{
+					view.setTag(BING_ATTRS_TAG_ID, Collections.EMPTY_MAP);
 				}
 			}
 			
@@ -177,6 +203,24 @@ public class AndroidViewBinding implements IBinding<IView>{
 
 	};
 	
+    public Map<String, String> parse(AttributeSet attributeSet) {
+	Map<String, String> bindingAttributes = null;
+
+	for (int i = 0; i < attributeSet.getAttributeCount(); i++) {
+	    String attributeName = attributeSet.getAttributeName(i);
+	    String attributeValue = attributeSet.getAttributeValue(BINDING_NAMESPACE, attributeName);
+
+	    if (attributeValue != null){
+	    	if(bindingAttributes == null){
+	    		bindingAttributes = new HashMap<String, String>();
+	    	}
+	    	bindingAttributes.put(attributeName, attributeValue);
+	    }
+	}
+
+	return bindingAttributes;
+    }
+
 	
 	public AndroidViewBinding(IBindingContext ctx,int layoutResId){
 		this.layoutResourceId = layoutResId;
@@ -186,6 +230,9 @@ public class AndroidViewBinding implements IBinding<IView>{
 
 	
 	protected View initView() {
+		if(log.isDebugEnabled()){
+			log.debug("Going to inflater layout :"+this.layoutResourceId);
+		}
 		LayoutInflater inflater = ((LayoutInflater)this.bindingContext.getUIContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(this.bindingContext.getUIContext());
 		inflater.setFactory(new BindableViewFactory(this.callback,inflater));
 		return inflater.inflate(this.layoutResourceId,null);

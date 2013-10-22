@@ -32,15 +32,6 @@ public class BindableViewFactory implements Factory {
 		try {
 			View view = this.inflater.createView(getViewNameFromLayoutTag(name), null, attrs);
 			this.callback.onViewCreated(view, context, attrs);
-//			IFieldBinderManager mgr = this.bindingContext.getServiceContext().getService(IFieldBinderManager.class);
-//			IAndroidFieldBinder factory = mgr.getBindingStrategy(view.getClass());
-//			String val = StringUtils.trimToNull(attrs.getAttributeValue(IAndroidBinding.BINDING_NAMESPACE, IAndroidBinding.BINDING_FIELD_NAME));
-//			if(val != null){
-//				IUIComponent valModel = this.bindingContext.getValueModel(val);
-//				if(valModel != null){
-//					factory.createBinding(bindingContext, view, valModel);
-//				}
-//			}
 			return view;
 	    } catch (InflateException e) {
             throw e;

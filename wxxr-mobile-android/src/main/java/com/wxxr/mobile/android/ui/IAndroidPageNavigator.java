@@ -11,6 +11,8 @@ import com.wxxr.mobile.core.ui.api.IPageNavigator;
  *
  */
 public interface IAndroidPageNavigator extends IPageNavigator {
+	String PARAM_KEY_INTENT_FLAG = "INTENT_FLAG";
+	
 	void onPageCreate(IPage page, IBindableActivity activity);
 	void onPageShow(IPage page);
 	void onPageHide(IPage page);

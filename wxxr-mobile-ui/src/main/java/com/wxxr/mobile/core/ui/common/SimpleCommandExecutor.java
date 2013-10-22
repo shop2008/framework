@@ -8,7 +8,7 @@ import java.util.Map;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.ICommandHandler;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
@@ -28,12 +28,11 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 		this.context = ctx;
 	}
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.ICommandHandler, java.lang.Object[])
+	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.IUICommandHandler, java.lang.Object[])
 	 */
-	public void executeCommand(String cmdName,IView view,ICommandHandler cmdHandler, InputEvent event) {
+	public void executeCommand(String cmdName,IView view,IUICommandHandler cmdHandler, InputEvent event) {
 		String result = cmdHandler.execute(event);
-		IUICommand command = view.getChild(cmdName, IUICommand.class);
-		INavigationDescriptor[] navs = command != null ? command.getNavigations() : null;
+		INavigationDescriptor[] navs = cmdHandler.getNavigations();
 		INavigationDescriptor nextNavigation = getNextNavigation(result, cmdHandler,navs);
 		if(nextNavigation != null){
 			String toPage = StringUtils.trimToNull(nextNavigation.getToPage());
@@ -70,7 +69,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 		return null;
 	}
 
-	public INavigationDescriptor getNextNavigation(String status,ICommandHandler command,INavigationDescriptor[] navigationInfos) {
+	public INavigationDescriptor getNextNavigation(String status,IUICommandHandler command,INavigationDescriptor[] navigationInfos) {
 		if((status == null)||(navigationInfos == null)||(navigationInfos.length == 0)){
 			return null;
 		}

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IEvaluationContext;
-import com.wxxr.mobile.core.ui.api.ICommandHandler;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -25,11 +25,11 @@ import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
  * @author neillin
  *
  */
-public class ViewBase extends UIContainer<IUIComponent> implements IView {
+public abstract class ViewBase extends UIContainer<IUIComponent> implements IView {
 
 	private IBinding<IView> binding;
 	private List<IValueEvaluator> elvaluators;
-	private Map<String, ICommandHandler> commands;
+	private Map<String, IUICommandHandler> commands;
 	private boolean active = false;
 	private IEvaluationContext evalContext = new IEvaluationContext() {
 
@@ -135,19 +135,17 @@ public class ViewBase extends UIContainer<IUIComponent> implements IView {
 		return this;
 	}
 	
-	protected ViewBase addUICommand(String cmdName,ICommandHandler command){
+	protected ViewBase addUICommand(String cmdName,IUICommandHandler command){
 		if(this.commands == null){
-			this.commands = new HashMap<String, ICommandHandler>();
+			this.commands = new HashMap<String, IUICommandHandler>();
 		}
-		if(!this.commands.containsValue(command)){
-			this.commands.put(cmdName, command);
-		}
+		this.commands.put(cmdName, command);
 		return this;
 	}
 	
-	protected ViewBase removeUICommand(String cmdName,ICommandHandler command){
+	protected ViewBase removeUICommand(String cmdName,IUICommandHandler command){
 		if(this.commands != null){
-			ICommandHandler cmd = this.commands.get(cmdName);
+			IUICommandHandler cmd = this.commands.get(cmdName);
 			if(cmd == command){
 				this.commands.remove(cmdName);
 			}
@@ -160,9 +158,8 @@ public class ViewBase extends UIContainer<IUIComponent> implements IView {
 		return this.commands != null && this.commands.containsKey(cmdName);
 	}
 	
-	protected void init() {
-		
-	}
+	protected abstract void init();
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.AbstractUIComponent#invokeCommand(java.lang.String, java.lang.Object[])
 	 */

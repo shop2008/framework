@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 
 /**
  * @author neillin
@@ -82,6 +84,11 @@ public abstract class BindableFragment extends Fragment {
 			@Override
 			public View getBindingControl() {
 				return null;
+			}
+			
+			@Override
+			public IWorkbenchManager getWorkbenchManager() {
+				return AppUtils.getService(IWorkbenchManager.class);
 			}
 		}, getBindingDescriptor(getViewId()));
 		return (View)this.androidViewBinding.getUIControl();

@@ -19,7 +19,8 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
  */
 public abstract class AbstractPageDescriptor extends AbstractViewDescriptor implements
 		IPageDescriptor {
-	private Map<String, IViewGroupDescriptor> vgDescriptors = new HashMap<String, IViewGroupDescriptor>();
+	
+	private Map<String, IViewGroupDescriptor> vgDescriptors;// = new HashMap<String, IViewGroupDescriptor>();
 	
 	public AbstractPageDescriptor(){
 		setSingleton(true);
@@ -28,6 +29,9 @@ public abstract class AbstractPageDescriptor extends AbstractViewDescriptor impl
 	 * @see com.wxxr.mobile.core.ui.api.IPageDescriptor#createViewGroup(java.lang.String)
 	 */
 	public IViewGroupDescriptor createViewGroup(String name) {
+		if(this.vgDescriptors == null){
+			this.vgDescriptors = new HashMap<String, IViewGroupDescriptor>();
+		}
 		IViewGroupDescriptor vg = this.vgDescriptors.get(name);
 		if(vg == null){
 			BaseViewGroupDescriptor bvg = new BaseViewGroupDescriptor();
@@ -42,21 +46,21 @@ public abstract class AbstractPageDescriptor extends AbstractViewDescriptor impl
 	 * @see com.wxxr.mobile.core.ui.api.IPageDescriptor#removeViewGroup(java.lang.String)
 	 */
 	public IViewGroupDescriptor removeViewGroup(String name) {
-		return this.vgDescriptors.remove(name);
+		return this.vgDescriptors != null ? this.vgDescriptors.remove(name) : null;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPageDescriptor#getAllViewGroupNames()
 	 */
 	public String[] getAllViewGroupNames() {
-		return this.vgDescriptors.keySet().toArray(new String[this.vgDescriptors.size()]);
+		return this.vgDescriptors != null ? this.vgDescriptors.keySet().toArray(new String[this.vgDescriptors.size()]) : new String[0];
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPageDescriptor#getViewGroup(java.lang.String)
 	 */
 	public IViewGroupDescriptor getViewGroup(String name) {
-		return this.vgDescriptors.get(name);
+		return  this.vgDescriptors != null ? this.vgDescriptors.get(name) : null;
 	}
 
 	/* (non-Javadoc)

@@ -9,7 +9,9 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface InputEvent {
 	String EVENT_TYPE_CLICK = "Click";
+	String EVENT_TYPE_ITEM_CLICK = "ItemClick";
 	String EVENT_TYPE_LONGCLICK = "LongClick";
+	String EVENT_TYPE_ITEM_LONGCLICK = "ItemLongClick";
 	String EVENT_TYPE_SELECTION_CHANGED = "SelectionChanged";
 	String EVENT_TYPE_TEXT_CHANGED = "TextChanged";
 	String EVENT_TYPE_SWIPE_LEFT = "SwipeLeft";
@@ -19,6 +21,8 @@ public interface InputEvent {
 	
 	String getEventType();
 	IUIComponent getEventSource();
+	InputEvent addProperty(String key, Object value);
+	InputEvent removeProperty(String key);
 	String[] getPropertyKeys();
 	Object getProperty(String key);
 	boolean hasProperty(String key);

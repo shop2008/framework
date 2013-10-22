@@ -5,100 +5,39 @@ import com.wxxr.mobile.core.ui.api.AttributeKey;
 
 public interface AttributeKeys {
 			
-	AttributeKey<Boolean> enabled = new AttributeKey<Boolean>() {
-
-		public Class<Boolean> getValueType() {
-			return Boolean.class;
-		}
-
-		public String getName() {
-			return "enabled";
-		}
-
-	};
+	AttributeKey<Boolean> enabled = new AttributeKey<Boolean>(Boolean.class,"enabled");
 	
-	AttributeKey<Integer> backgroundColor = new AttributeKey<Integer>() {
-
-		public Class<Integer> getValueType() {
-			return Integer.class;
-		}
-
-		public String getName() {
-			return "backgroundColor";
-		}
-	};
+	AttributeKey<Integer> backgroundColor = new AttributeKey<Integer>(Integer.class,"backgroundColor");
 	
-	AttributeKey<Integer> foregroundColor = new AttributeKey<Integer>() {
-
-		public Class<Integer> getValueType() {
-			return Integer.class;
-		}
-
-		public String getName() {
-			return "foregroundColor";
-		}
-	};
+	AttributeKey<Integer> foregroundColor = new AttributeKey<Integer>(Integer.class,"foregroundColor");
 
 
-	AttributeKey<Integer> backgroundImageRid = new AttributeKey<Integer>() {
-
-		public Class<Integer> getValueType() {
-			return Integer.class;
-		}
-
-		public String getName() {
-			return "backgroundImageRid";
-		}
-	};
+	AttributeKey<String> backgroundImageURI = new AttributeKey<String>(String.class,"backgroundImageURI");
 	
-	AttributeKey<String> backgroundImageURL = new AttributeKey<String>() {
+	AttributeKey<String> menuCategory = new AttributeKey<String>(String.class,"menuCategory");
+	
+	AttributeKey<String> title = new AttributeKey<String>(String.class,"title");
 
-		public Class<String> getValueType() {
-			return String.class;
-		}
+	AttributeKey<String> imageURI = new AttributeKey<String>(String.class,"imageURI");
+	
+	
+	AttributeKey<String> icon = new AttributeKey<String>(String.class,"icon");
 
-		public String getName() {
-			return "backgroundImageURL";
-		}
-	};
+
+	AttributeKey<String> label = new AttributeKey<String>(String.class,"label");
+	
+	AttributeKey<String> text = new AttributeKey<String>(String.class,"text");
 
 
 	
-	AttributeKey<Boolean> visible = new AttributeKey<Boolean>() {
-
-		public Class<Boolean> getValueType() {
-			return Boolean.class;
-		}
-
-		public String getName() {
-			return "visible";
-		}
-
-	};
+	AttributeKey<Boolean> visible = new AttributeKey<Boolean>(Boolean.class,"visible");
 	
-	AttributeKey<String> name = new AttributeKey<String>() {
+	AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
 
-		public Class<String> getValueType() {
-			return String.class;
-		}
-
-		public String getName() {
-			return "name";
-		}
-
-	};
 	
-	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>() {
-
-		public Class<Boolean> getValueType() {
-			return Boolean.class;
-		}
-
-		public String getName() {
-			return "takeSpaceWhenInvisible";
-		}
-
-	};
+	AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
+	
+	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
 	AttributeKey<?>[] keys = new AttributeKey<?>[] {
 			enabled,
@@ -106,9 +45,15 @@ public interface AttributeKeys {
 			takeSpaceWhenInvisible,
 			backgroundColor,
 			foregroundColor,
-			backgroundImageRid,
-			backgroundImageURL,
-			name
+			backgroundImageURI,
+			imageURI,
+			name,
+			text,
+			imageURI,
+			title,
+			label,
+			selected,
+			menuCategory
 	};
 
 

@@ -15,5 +15,5 @@ public interface IUICommandExecutor {
 	 * @param command : command handler
 	 * @param args : arguments
 	 */
-	void executeCommand(String cmdName,IView view,ICommandHandler command, InputEvent event);
+	void executeCommand(String cmdName,IView view,IUICommandHandler command, InputEvent event);
 }

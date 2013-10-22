@@ -12,4 +12,5 @@ public interface IDataField<T> extends IUIComponent{
 	UIError getUIError();
 	T getValue();
 	AttributeKey<T> getValueKey();
+	void setValue(T val);
 }

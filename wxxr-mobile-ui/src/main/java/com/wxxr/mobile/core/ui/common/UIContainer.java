@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,21 +27,25 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 		if(clazz == IUIContainer.class){
 			return clazz.cast(this);
 		}
+		if(clazz.isAssignableFrom(getClass())){
+			return clazz.cast(this);
+		}
 		return super.getAdaptor(clazz);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@SuppressWarnings("unchecked")
 	public Iterator<IUIComponent> iterator() {
-		return this.container.iterator();
+		return this.container != null ? this.container.iterator() : Collections.EMPTY_LIST.iterator();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IUIContainer#getChildrenCount()
 	 */
 	public int getChildrenCount() {
-		return this.container.getChildrenCount();
+		return this.container != null ? this.container.getChildrenCount() : 0;
 	}
 
 	/* (non-Javadoc)
@@ -48,43 +53,80 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	 */
 	@SuppressWarnings("unchecked")
 	public C getChild(int idx) {
-		return (C)this.container.getChild(idx);
+		return this.container != null ? (C)this.container.getChild(idx) : null;
 	}
 
 	
 	protected UIContainer<C> add(IUIComponent child){
+		createContainerIfNotExisting();
 		this.container.add(child);
 		return this;
 	}
+
+	/**
+	 * 
+	 */
+	protected void createContainerIfNotExisting() {
+		if(this.container == null){
+			this.container = new GenericContainer<IUIComponent>() {
+				
+				@Override
+				protected void handleRemoved(IUIComponent child) {
+					((UIComponent)child).setParent(null);
+				}
+				
+				@Override
+				protected void handleDestroy(IUIComponent ui) {
+					ui.destroy();
+				}
+				
+				@SuppressWarnings("unchecked")
+				@Override
+				protected void handleAdded(IUIComponent child) {
+					((UIComponent)child).setParent((IUIContainer<IUIComponent>)UIContainer.this);
+				}
+				
+				@Override
+				protected String getObjectId(IUIComponent child) {
+					return child.getName();
+				}
+			};
+		}
+	}
 	
 	protected UIContainer<C> remove(IUIComponent child){
-		this.container.remove(child);
+		if(this.container != null){
+			this.container.remove(child);
+		}
 		return this;
 	}
 	 
 	@SuppressWarnings("unchecked")
 	public C getChild(String name){
-		return (C)this.container.getChild(name);
+		return this.container != null ? (C)this.container.getChild(name) : null;
 	}
 
 
 	
 	protected UIContainer<C> addFirst(IUIComponent child){
+		createContainerIfNotExisting();
 		this.container.addFirst(child);
 		return this;
 	}
 
 	protected UIContainer<C> addLast(IUIComponent child){
+		createContainerIfNotExisting();
 		this.container.addLast(child);
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends C> List<T> getChildren(Class<T> clazz) {
-		return this.container.getChildren(clazz);
+		return this.container != null ? this.container.getChildren(clazz) : Collections.EMPTY_LIST;
 	}
 
 	public <T extends C> T getChild(String name, Class<T> clazz) {
-		return this.container.getChild(name, clazz);
+		return this.container != null ? this.container.getChild(name, clazz) : null;
 	}
 	
 	public void destroy(){
@@ -102,33 +144,11 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	 */
 	@Override
 	public void init(IWorkbenchRTContext ctx) {
-		this.container = new GenericContainer<IUIComponent>() {
-			
-			@Override
-			protected void handleRemoved(IUIComponent child) {
-				((UIComponent)child).setParent(null);
-			}
-			
-			@Override
-			protected void handleDestroy(IUIComponent ui) {
-				ui.destroy();
-			}
-			
-			@Override
-			protected void handleAdded(IUIComponent child) {
-				((UIComponent)child).setParent(UIContainer.this);
-			}
-			
-			@Override
-			protected String getObjectId(IUIComponent child) {
-				return child.getName();
-			}
-		};
 		super.init(ctx);
 	}
 
 	public String[] getChildIds() {
-		List<String> list = this.container.getChildrenNames();
+		List<String> list = this.container != null ? this.container.getChildrenNames() : null;
 		return list != null && list.size() > 0 ? list.toArray(new String[list.size()]) : null;
 	}
 
@@ -143,7 +163,8 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	}
 
 	public IUIContainer<C> removeChild(String name) {
-		this.container.remove(name);
+		if(this.container != null)
+			this.container.remove(name);
 		return this;
 	}
 

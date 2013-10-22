@@ -8,5 +8,4 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IUICommand extends IUIComponent{
-	INavigationDescriptor[] getNavigations();
 }

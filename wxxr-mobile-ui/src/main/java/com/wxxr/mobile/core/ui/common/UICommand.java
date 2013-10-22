@@ -1,34 +1,28 @@
+/**
+ * 
+ */
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.LinkedList;
 
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
-import com.wxxr.mobile.core.ui.api.ICommandHandler;
+import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 
-public abstract class UICommand implements ICommandHandler{
-	private LinkedList<INavigationDescriptor> navs;
-	
-	public INavigationDescriptor[] getNavigations() {
-		return this.navs != null && this.navs.isEmpty() == false ? 
-				this.navs.toArray(new INavigationDescriptor[this.navs.size()]) :
-				new INavigationDescriptor[0];
-	}
-	
-	protected UICommand addNavigation(INavigationDescriptor nav){
-		if(this.navs == null){
-			this.navs = new LinkedList<INavigationDescriptor>();
+/**
+ * @author neillin
+ *
+ */
+public class UICommand extends UIComponent implements IUICommand{
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#invokeCommand(java.lang.String, com.wxxr.mobile.core.ui.api.InputEvent)
+	 */
+	@Override
+	public void invokeCommand(String cmdName, InputEvent event) {
+		if(cmdName == null){
+			cmdName = getName();
 		}
-		if(!this.navs.contains(nav)){
-			this.navs.addLast(nav);
-		}
-		return this;
-	}
-	
-	protected UICommand removeNavigation(INavigationDescriptor nav){
-		if(this.navs != null){
-			this.navs.remove(nav);
-		}
-		return this;
+		super.invokeCommand(cmdName, event);
 	}
 
 }

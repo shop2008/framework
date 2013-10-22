@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.IViewGroup;
  * @author neillin
  *
  */
-public class PageBase extends ViewBase implements IPage {
+public abstract class PageBase extends ViewBase implements IPage {
 
 	
 

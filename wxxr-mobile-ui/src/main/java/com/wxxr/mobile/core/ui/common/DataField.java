@@ -255,5 +255,11 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	public void setDomainModel(IDomainValueModel domainModel) {
 		this.domainModel = domainModel;
 	}
+
+
+	@Override
+	public void setValue(T val) {
+		setAttribute(valueKey, val);
+	}
 	
 }

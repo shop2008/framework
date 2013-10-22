@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
 /**
  * @author neillin
@@ -32,7 +33,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected final void onCreate(Bundle savedInstanceState) {
 		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
 			
 			@Override
@@ -44,45 +45,66 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 			public View getBindingControl() {
 				return null;
 			}
+
+			@Override
+			public IWorkbenchManager getWorkbenchManager() {
+				return AppUtils.getService(IWorkbenchManager.class);
+			}
 		}, getBindingDescriptor(getBindingPageId()));
 		setContentView((View)this.androidViewBinding.getUIControl());
 		super.onCreate(savedInstanceState);
 		getNavigator().onPageCreate(getBindingPage(), this);
+		onContentViewCreated(savedInstanceState);
 	}
 
+	protected void onContentViewCreated(Bundle savedInstanceState){
+		
+	}
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
 	 */
 	@Override
-	protected void onStart() {
+	protected final void onStart() {
 		this.androidViewBinding.activate(getBindingPage());
 		super.onStart();
 		getNavigator().onPageShow(getBindingPage());
+		onActivityStarted();
 	}
 
+	protected void onActivityStarted(){
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStop()
 	 */
 	@Override
-	protected void onStop() {
+	protected final void onStop() {
 		super.onStop();
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
+		onActivityStopped();
 	}
 
-	
+	protected void onActivityStopped() {
+		
+	}
 
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
-	protected void onDestroy() {
+	protected final void onDestroy() {
 		this.androidViewBinding.destroy();
 		super.onDestroy();
 		getNavigator().onPageDetroy(getBindingPage());
+		onActivityDestroied();
+	}
+	
+	protected void onActivityDestroied(){
+		
 	}
 	
 	public void showView(String viewName){
@@ -106,5 +128,15 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 	@Override
 	public Activity getActivity() {
 		return this;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#setContentView(int)
+	 */
+	@Override
+	public void setContentView(int layoutResID) {
+		// TODO Auto-generated method stub
+		super.setContentView(layoutResID);
 	}
 }

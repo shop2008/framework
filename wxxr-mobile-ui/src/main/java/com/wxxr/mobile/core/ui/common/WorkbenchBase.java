@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -26,6 +27,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	
 	private String activePageId;
 	private Map<String, IPage> pages = new HashMap<String, IPage>();
+	private Map<String, IView> views = new HashMap<String, IView>();
 	
 		
 	public WorkbenchBase(IWorkbenchRTContext ctx) {
@@ -49,6 +51,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 			IPageDescriptor desc = uiContext.getWorkbenchManager().getPageDescriptor(pageId);
 			if(desc != null){
 				page = (IPage)desc.createPresentationModel(uiContext);
+				page.init(uiContext);
 				this.pages.put(pageId, page);
 			}
 		}
@@ -71,9 +74,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 					updater.updateModel(params);
 				}
 			}
-			IPageNavigator nav = this.uiContext.getKernelContext().getService(IPageNavigator.class);
+			IPageNavigator nav = this.uiContext.getWorkbenchManager().getPageNavigator();
 			nav.showPage(page,params,callback);
-			this.activePageId = nav.getCurrentActivePage().getName();
+			this.activePageId = nav.getCurrentActivePage() != null ? nav.getCurrentActivePage().getName() : null;
 		}
 	}
 

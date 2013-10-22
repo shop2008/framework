@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
@@ -32,6 +33,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	private static final int PAGE_ACTIVITY_SHOW = 2;
 	private static final int PAGE_ACTIVITY_HIDE = 3;
 	private static final int PAGE_ACTIVITY_DESTROY = 4;
+	
 	private Map<String, IBindableActivity> activeActivities = new HashMap<String, IBindableActivity>();
 	private Map<String, List<IPageCallback>> callbacks = new HashMap<String, List<IPageCallback>>();
 	private String currentPageId;
@@ -40,24 +42,48 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	public AndroidPageNavigator(IWorkbenchRTContext ctx){
 		this.context = ctx;
 	}
+	
+	protected Activity getCurrentActivity(){
+		if(currentPageId != null){
+			IBindableActivity activity = this.activeActivities.get(currentPageId);
+			if(activity != null){
+				return activity.getActivity();
+			}
+		}
+		return null;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#showPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
 	public void showPage(IPage page,Map<String, String> params,IPageCallback cb) {
 		Application app = AppUtils.getFramework().getAndroidApplication();
+		Activity activity = getCurrentActivity();
 		String pageId = page.getName();
 		Class<?> activityClass = getActivityClass(pageId);
-		Intent intent = new Intent(app, activityClass);
-		Map<String, String> map = getPageShowParams(pageId);
-		if(map != null){
-			for (Entry<String, String> entry : map.entrySet()) {
-				intent.putExtra(entry.getKey(), entry.getValue());
-			}
+		Intent intent;
+		if(activity != null) {
+			intent = new Intent(activity, activityClass);
+		}else{
+			intent = new Intent(app, activityClass);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
+		initShowPageIntent(page,intent);
+//		Map<String, String> map = getPageShowParams(pageId);
+//		if(map != null){
+//			for (Entry<String, String> entry : map.entrySet()) {
+//				intent.putExtra(entry.getKey(), entry.getValue());
+//			}
+//		}
 		if(params != null){
 			for (Entry<String, String> entry : params.entrySet()) {
-				intent.putExtra(entry.getKey(), entry.getValue());
+				String key = entry.getKey();
+				String val = entry.getValue();
+				if(PARAM_KEY_INTENT_FLAG.equals(key)){
+					intent.addFlags(Integer.parseInt(val));
+				}else{
+					intent.putExtra(key, entry.getValue());
+				}
 			}
 		}
 		if(cb != null){
@@ -79,8 +105,8 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		return bdesc.getTargetClass();
 	}
 	
-	protected Map<String, String> getPageShowParams(String pageName){
-		return null;
+	protected void initShowPageIntent(IPage page, Intent intent){
+
 	}
 	
 	protected IWorkbenchManager getManager(){

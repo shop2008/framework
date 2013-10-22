@@ -10,9 +10,9 @@ import java.util.Map;
  *
  */
 public interface IWorkbench {
-	String HOME_PAGE_ID = "home";
-	String MESSAGE_BOX_ID = "messageBox";
-	String MESSAGE_BOX_MESSAGE_ID = "message";
+	public final static String HOME_PAGE_ID = "home";
+	public final static String MESSAGE_BOX_ID = "messageBox";
+	public final static String MESSAGE_BOX_MESSAGE_ID = "message";
 	
 	String[] getPageIds();
 	String getActivePageId();

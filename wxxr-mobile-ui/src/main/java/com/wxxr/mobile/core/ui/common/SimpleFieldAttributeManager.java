@@ -26,16 +26,7 @@ public class SimpleFieldAttributeManager implements IFieldAttributeManager {
 	 */
 	public <T> IFieldAttributeManager registerAttribute(final String name,
 			final Class<T> valueType) {
-		this.attrKeys.put(name, new AttributeKey<T>() {
-
-			public Class<T> getValueType() {
-				return valueType;
-			}
-
-			public String getName() {
-				return name;
-			}
-		});
+		this.attrKeys.put(name, new AttributeKey<T>(valueType,name));
 		return this;
 	}
 

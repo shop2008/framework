@@ -24,7 +24,7 @@ public abstract class UIComponent implements IUIComponent {
 	
 	private String name;
 	private Map<AttributeKey<?>, Object> attrs;
-	private IUIContainer<?> parent;
+	private IUIContainer<IUIComponent> parent;
 	private IWorkbenchRTContext ctx;
 	
 	/* (non-Javadoc)
@@ -48,7 +48,7 @@ public abstract class UIComponent implements IUIComponent {
 	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#getAttribute(com.wxxr.mobile.core.ui.api.AttributeKey)
 	 */
 	public <T> T getAttribute(AttributeKey<T> key) {
-		Object val = this.attrs == null ? attrs.get(key) : null;
+		Object val = this.attrs != null ? attrs.get(key) : null;
 		return val != null ? key.getValueType().cast(val) : null;
 	}
 
@@ -66,7 +66,7 @@ public abstract class UIComponent implements IUIComponent {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#getParent()
 	 */
-	public IUIContainer<?> getParent() {
+	public IUIContainer<IUIComponent> getParent() {
 		return this.parent;
 	}
 
@@ -93,7 +93,7 @@ public abstract class UIComponent implements IUIComponent {
 	/**
 	 * @param parent the parent to set
 	 */
-	public UIComponent setParent(IUIContainer<?> parent) {
+	public UIComponent setParent(IUIContainer<IUIComponent> parent) {
 		this.parent = parent;
 		return this;
 	}

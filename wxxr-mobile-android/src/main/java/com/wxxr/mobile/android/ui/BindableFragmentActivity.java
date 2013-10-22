@@ -45,6 +45,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			public View getBindingControl() {
 				return null;
 			}
+			@Override
+			public IWorkbenchManager getWorkbenchManager() {
+				return AppUtils.getService(IWorkbenchManager.class);
+			}
 		}, getBindingDescriptor(getBindingPageId()));
 		setContentView((View)this.androidViewBinding.getUIControl());
 		super.onCreate(savedInstanceState);

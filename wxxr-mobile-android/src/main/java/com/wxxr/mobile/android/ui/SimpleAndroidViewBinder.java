@@ -3,8 +3,6 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import android.content.Context;
-
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
