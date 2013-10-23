@@ -17,7 +17,8 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 public class BaseViewGroupDescriptor implements IViewGroupDescriptor {
 	private LinkedList<String> viewIds;
 	private String id;
-	private IViewGroup vg;
+	private LazyLoadViewGroup vg;
+	private boolean dynamic;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IViewGroupDescriptor#addView(java.lang.String)
 	 */
@@ -54,6 +55,7 @@ public class BaseViewGroupDescriptor implements IViewGroupDescriptor {
 	public IViewGroup createViewGroup(IWorkbenchRTContext ctx) {
 		if(this.vg == null){
 			this.vg = new LazyLoadViewGroup(getId(),getViewIds());
+			vg.setDynamic(isDynamic());
 			vg.init(ctx);
 		}
 		return vg;
@@ -71,6 +73,21 @@ public class BaseViewGroupDescriptor implements IViewGroupDescriptor {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the dynamic
+	 */
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	/**
+	 * @param dynamic the dynamic to set
+	 */
+	public IViewGroupDescriptor setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
+		return this;
 	}
 
 }

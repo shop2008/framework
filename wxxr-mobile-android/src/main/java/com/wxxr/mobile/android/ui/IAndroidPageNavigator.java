@@ -17,5 +17,9 @@ public interface IAndroidPageNavigator extends IPageNavigator {
 	void onPageShow(IPage page);
 	void onPageHide(IPage page);
 	void onPageDetroy(IPage page);
+	
 	IBindableActivity getOnShowActivity();
+	
+	IBindableActivity getPageActivity(IPage page);
+	
 }

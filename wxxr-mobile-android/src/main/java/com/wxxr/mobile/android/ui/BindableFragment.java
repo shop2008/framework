@@ -27,8 +27,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 public abstract class BindableFragment extends Fragment {
 	
 	private IBinding<IView> androidViewBinding;
-	
-
+	private BindableFragmentActivity fragActivity;
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
 	 */
@@ -49,8 +48,10 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onAttach ...");
 		}
-
 		super.onAttach(activity);
+		if(activity instanceof BindableFragmentActivity){
+			this.fragActivity = (BindableFragmentActivity)activity;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -127,8 +128,10 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onDetach ...");
 		}
-
 		super.onDetach();
+		if(this.fragActivity != null){
+			this.fragActivity.removeFragment(getViewId());
+		}
 	}
 
 	/* (non-Javadoc)
@@ -226,8 +229,6 @@ public abstract class BindableFragment extends Fragment {
 	}
 	
 	protected abstract String getViewId();
-	
-	protected abstract int getLayoutId();
 	
 	protected abstract Trace getLogger();
 

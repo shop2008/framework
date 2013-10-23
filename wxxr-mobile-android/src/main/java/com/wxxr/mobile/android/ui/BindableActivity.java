@@ -10,12 +10,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -27,7 +29,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 
 	private static final Trace log = Trace.register(BindableActivity.class);
 	
-	private IBinding<IView> androidViewBinding;
+	private IViewBinding androidViewBinding;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -57,9 +59,6 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		onContentViewCreated(savedInstanceState);
 	}
 
-	protected void onContentViewCreated(Bundle savedInstanceState){
-		
-	}
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
@@ -72,9 +71,6 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		onActivityStarted();
 	}
 
-	protected void onActivityStarted(){
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStop()
@@ -85,10 +81,6 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
 		onActivityStopped();
-	}
-
-	protected void onActivityStopped() {
-		
 	}
 
 
@@ -103,18 +95,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		onActivityDestroied();
 	}
 	
-	protected void onActivityDestroied(){
 		
-	}
-	
-	public void showView(String viewName){
-		
-	}
-	
-	public void hideView(String viewName){
-		
-	}
-	
 	protected abstract String getBindingPageId();
 
 	@Override
@@ -132,11 +113,29 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 
 
 	/* (non-Javadoc)
-	 * @see android.app.Activity#setContentView(int)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getViewBinding()
 	 */
 	@Override
-	public void setContentView(int layoutResID) {
-		// TODO Auto-generated method stub
-		super.setContentView(layoutResID);
+	public IViewBinding getViewBinding() {
+		return this.androidViewBinding;
 	}
+	
+	protected void onContentViewCreated(Bundle savedInstanceState){
+		
+	}
+
+	
+	protected void onActivityStarted(){
+		
+	}
+
+	
+	protected void onActivityDestroied(){
+		
+	}
+
+	protected void onActivityStopped() {
+		
+	}
+
 }

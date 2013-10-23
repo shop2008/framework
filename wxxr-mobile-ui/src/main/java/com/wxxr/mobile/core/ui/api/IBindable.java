@@ -10,4 +10,5 @@ package com.wxxr.mobile.core.ui.api;
 public interface IBindable<M extends IUIComponent> {
 	void doBinding(IBinding<M> binding);
 	boolean doUnbinding(IBinding<M> binding);
+	IBinding<M> getBinding();
 }

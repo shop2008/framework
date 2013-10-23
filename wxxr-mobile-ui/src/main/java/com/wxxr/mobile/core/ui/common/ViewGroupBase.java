@@ -34,10 +34,25 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 	}
 
 	public String getActiveViewId() {
-		return this.viewStack.isEmpty() ?  null : this.viewStack.peek();
+		String viewId = this.viewStack.isEmpty() ?  null : this.viewStack.peek();
+		if(viewId == null){
+			String[] ids = getViewIds();
+			if((ids != null)&&(ids.length > 0)){
+				viewId = ids[0];
+			}
+		}
+		return viewId;
 	}
 
+	public boolean isViewOnShow(String name){
+		String viewId = this.viewStack.isEmpty() ?  null : this.viewStack.peek();
+		return name.equals(viewId);
+	}
+	
 	public void activateView(String name) {
+		if(isViewOnShow(name)){
+			return;
+		}
 		IView view = getView(name);
 		if(view != null){
 			if(this.viewStack.isEmpty()){
@@ -64,9 +79,9 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 		}else{
 			this.viewStack.remove(name);
 		}
-		if(this.viewStack.isEmpty()){
-			setAttribute(AttributeKeys.visible, false);
-		}
+//		if(this.viewStack.isEmpty()){
+//			setAttribute(AttributeKeys.visible, false);
+//		}
 	}
 
 	public IView getView(String name) {

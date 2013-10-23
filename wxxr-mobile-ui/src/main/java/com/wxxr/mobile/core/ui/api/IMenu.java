@@ -14,4 +14,7 @@ public interface IMenu extends IUIComponent{
 	IUICommand getCommand(String cmd);
 	IMenu addCommand(String cmdId);
 	IMenu removeCommand(String cmdId);
+	void show();
+	void hide();
+	boolean isOnShow();
 }

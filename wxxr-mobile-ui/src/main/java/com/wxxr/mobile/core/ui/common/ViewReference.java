@@ -256,7 +256,9 @@ public class ViewReference implements IViewReference {
 	public void invokeCommand(String cmdName, InputEvent event) {
 		getDelegate().invokeCommand(cmdName, event);
 	}
-	
-	
 
+	@Override
+	public IBinding<IView> getBinding() {
+		return getDelegate().getBinding();
+	}	
 }

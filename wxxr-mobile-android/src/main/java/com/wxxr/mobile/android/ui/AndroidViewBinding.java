@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
@@ -21,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.IEventBinder;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
+import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
@@ -32,7 +34,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-public class AndroidViewBinding implements IAndroidBinding<IView>{
+public class AndroidViewBinding implements IAndroidViewBinding{
 
 	private static final Trace log = Trace.register(AndroidViewBinding.class);
 	
@@ -125,13 +127,16 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 	private final int layoutResourceId;
 	private final IAndroidBindingContext bindingContext;
 	private List<IBinding<IView>> bindings = new ArrayList<IBinding<IView>>();
+	private Map<String,IBinding<IView>> fieldBindings = new HashMap<String,IBinding<IView>>();
 //	private Map<String, FieldBindingCreator> bindingCreators = new HashMap<String, FieldBindingCreator>();
 //	private Map<String, IBinding> bindings = new HashMap<String, IBinding>();
 	private View layoutView;
-//	private IUIComponent model;
+	private Map<String, IMenuHandler> menuHandlers;
+	private List<IMenuAdaptor> menuAdaptors;
+	private IView model;
 	private IWorkbenchRTContext runtimeContext;
 	private IViewCreationCallback callback = new IViewCreationCallback() {
-				
+
 		@Override
 		public void onViewCreated(final View view, Context context,
 				AttributeSet attrSet) {
@@ -139,7 +144,8 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 			IEventBinderManager eventBinderMgr = bindingContext.getWorkbenchManager().getEventBinderManager();
 //			@SuppressWarnings("unchecked")
 //			IFieldBinder<Context,View> binder = (IFieldBinder<Context,View>)mgr.getFieldBinder(view.getClass());
-			String val = StringUtils.trimToNull(attrSet.getAttributeValue(IAndroidBinding.BINDING_NAMESPACE, IAndroidBinding.BINDING_FIELD_NAME));
+			Map<String, String> map = parse(attrSet);
+			String val = map != null ? map.get(IAndroidBinding.BINDING_FIELD_NAME) : null;
 			if(val != null){
 				if(log.isDebugEnabled()){
 					log.debug("Found field binding :"+val+" of view :"+view);
@@ -163,7 +169,9 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 						}
 					}
 				}
-				bindings.add(new FieldBindingCreator(view, val, params));
+				FieldBindingCreator binding = new FieldBindingCreator(view, val, params);
+				bindings.add(binding);
+				fieldBindings.put(val, binding);
 				if(events.size() > 0){
 					for (String evtType : events.keySet()) {
 						String cmdName = events.get(evtType);
@@ -191,14 +199,30 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 					}
 				}
 			}else{
-				Map<String, String> map = parse(attrSet);
 				if(map != null){
 					view.setTag(BING_ATTRS_TAG_ID, map);
 				}else{
 					view.setTag(BING_ATTRS_TAG_ID, Collections.EMPTY_MAP);
 				}
 			}
-			
+			if(map != null){
+				String menuAdaptorClass = map.get("menuAdaptor");
+				if(menuAdaptorClass != null){
+					if(menuAdaptorClass.charAt(0) == '.'){
+						menuAdaptorClass = AppUtils.getFramework().getApplicationId()+menuAdaptorClass;
+					}
+					try {
+						IMenuAdaptor adaptor = (IMenuAdaptor)Class.forName(menuAdaptorClass).newInstance();
+						adaptor.init(bindingContext, view);
+						if(menuAdaptors == null){
+							menuAdaptors = new ArrayList<IMenuAdaptor>();
+						}
+						menuAdaptors.add(adaptor);
+					} catch (Throwable e) {
+						log.error("Failed to create menu adptor from :"+menuAdaptorClass, e);
+					}
+				}
+			}
 		}
 
 	};
@@ -208,7 +232,7 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 
 	for (int i = 0; i < attributeSet.getAttributeCount(); i++) {
 	    String attributeName = attributeSet.getAttributeName(i);
-	    String attributeValue = attributeSet.getAttributeValue(BINDING_NAMESPACE, attributeName);
+	    String attributeValue = StringUtils.trimToNull(attributeSet.getAttributeValue(BINDING_NAMESPACE, attributeName));
 
 	    if (attributeValue != null){
 	    	if(bindingAttributes == null){
@@ -265,6 +289,13 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 	
 	@Override
 	public void destroy() {
+		if(this.menuAdaptors != null){
+			for (IMenuAdaptor adaptor : this.menuAdaptors) {
+				adaptor.destroy();
+			}
+			this.menuAdaptors.clear();
+			this.menuAdaptors = null;
+		}
 		for (IBinding<IView> b : bindings) {
 			b.destroy();
 		}
@@ -276,13 +307,15 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 		for (IBinding<IView> b : bindings) {
 			b.deactivate();
 		}
-//		this.model = null;
+		this.model.doUnbinding(this);
+		this.model = null;
 
 	}
 	
 	@Override
 	public void activate(IView model) {
-//		this.model = model;
+		this.model = model;
+		model.doBinding(this);
 		for (IBinding<IView> b : bindings) {
 			b.activate(model);
 		}
@@ -293,5 +326,36 @@ public class AndroidViewBinding implements IAndroidBinding<IView>{
 	public Object getUIControl() {
 		return this.layoutView;
 	}
+
+
+	@Override
+	public IBinding<IView> getFieldBinding(String fieldName) {
+		return this.fieldBindings.get(fieldName);
+	}
 	
+	public void registerMenuHandler(String menuId, IMenuHandler handler){
+		if(this.menuHandlers == null){
+			this.menuHandlers = new HashMap<String, IMenuHandler>();
+		}
+		this.menuHandlers.put(menuId, handler);
+	}
+	
+	public void unregisterMenuHandlr(String menuId,IMenuHandler handler){
+		IMenuHandler h = getMenuHandler(menuId);
+		if(h == handler){
+			this.menuHandlers.remove(menuId);
+		}
+	}
+	
+	public IMenuHandler getMenuHandler(String menuId){
+		IMenuHandler handler = null;
+		if(this.menuAdaptors != null){
+			for (IMenuAdaptor adapter : this.menuAdaptors) {
+				if((handler = adapter.getMenuHandler(menuId)) != null){
+					return handler;
+				}
+			}
+		}
+		return this.menuHandlers != null ? this.menuHandlers.get(menuId) : null;
+	}
 }

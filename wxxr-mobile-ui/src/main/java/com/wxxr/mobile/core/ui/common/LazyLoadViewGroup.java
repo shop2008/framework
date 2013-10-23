@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
  */
 public class LazyLoadViewGroup extends ViewGroupBase {
 	private final String[] viewIds;
+	private boolean dynamic;
 	
 	public LazyLoadViewGroup(String grpId, String[] vids){
 		this.viewIds = vids;
@@ -31,13 +32,14 @@ public class LazyLoadViewGroup extends ViewGroupBase {
 	 */
 	@Override
 	public IView getView(String name) {
-		if(!hasView(name)){
+		if((this.dynamic == false)&&(!hasView(name))){
 			return null;
 		}
 		IView v = super.getView(name);
 		if(v == null){
 			IViewDescriptor vDesc = getUIContext().getWorkbenchManager().getViewDescriptor(name);
 			v = vDesc.createPresentationModel(getUIContext());
+			v.init(getUIContext());
 			addChild(v);
 		}
 		return v;
@@ -54,6 +56,20 @@ public class LazyLoadViewGroup extends ViewGroupBase {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @return the dynamic
+	 */
+	protected boolean isDynamic() {
+		return dynamic;
+	}
+
+	/**
+	 * @param dynamic the dynamic to set
+	 */
+	protected void setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
 	}
 
 }

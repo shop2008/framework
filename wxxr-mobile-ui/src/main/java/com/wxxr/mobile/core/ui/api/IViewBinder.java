@@ -9,5 +9,5 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IViewBinder {
-	IBinding<IView> createBinding(IBindingContext context,IBindingDescriptor descriptor);
+	IViewBinding createBinding(IBindingContext context,IBindingDescriptor descriptor);
 }

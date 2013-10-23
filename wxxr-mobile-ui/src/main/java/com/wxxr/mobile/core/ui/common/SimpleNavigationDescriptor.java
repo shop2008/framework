@@ -62,32 +62,36 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(String result) {
+	public SimpleNavigationDescriptor setResult(String result) {
 		this.result = result;
+		return this;
 	}
 
 
 	/**
 	 * @param message the message to set
 	 */
-	public void setMessage(String message) {
+	public SimpleNavigationDescriptor setMessage(String message) {
 		this.message = message;
+		return this;
 	}
 
 
 	/**
 	 * @param toView the toView to set
 	 */
-	public void setToView(String toView) {
+	public SimpleNavigationDescriptor setToView(String toView) {
 		this.toView = toView;
+		return this;
 	}
 
 
 	/**
 	 * @param toPage the toPage to set
 	 */
-	public void setToPage(String toPage) {
+	public SimpleNavigationDescriptor setToPage(String toPage) {
 		this.toPage = toPage;
+		return this;
 	}
 	
 	public SimpleNavigationDescriptor addParameter(String name, String value){

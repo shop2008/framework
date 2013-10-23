@@ -3,11 +3,10 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
-import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
 /**
@@ -22,7 +21,7 @@ public class SimpleAndroidViewBinder implements IViewBinder {
 	}
 	
 	@Override
-	public IBinding<IView> createBinding(IBindingContext context,
+	public IViewBinding createBinding(IBindingContext context,
 			IBindingDescriptor descriptor) {
 		AndroidViewBinding androidViewBinding = new AndroidViewBinding(context,((IAndroidBindingDescriptor)descriptor).getBindingLayoutId());
 		androidViewBinding.init(this.context);

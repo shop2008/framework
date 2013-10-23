@@ -172,4 +172,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IBindable#getBinding()
+	 */
+	@Override
+	public IBinding<IView> getBinding() {
+		return this.binding;
+	}
+
 }

@@ -12,13 +12,22 @@ import java.util.Map.Entry;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewDescriptor;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
@@ -28,7 +37,8 @@ import com.wxxr.mobile.core.ui.api.TargetUISystem;
  *
  */
 public class AndroidPageNavigator implements IAndroidPageNavigator {
-
+	private static final Trace log = Trace.register(AndroidPageNavigator.class);
+	
 	private static final int PAGE_ACTIVITY_CREATE = 1;
 	private static final int PAGE_ACTIVITY_SHOW = 2;
 	private static final int PAGE_ACTIVITY_HIDE = 3;
@@ -194,19 +204,18 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		IPage page = getPage(view);
 		IBindableActivity activity = this.activeActivities.get(page.getName());
 		if(activity != null){
-			activity.showView(view.getName());
+			hideOrShowView(view, true);
 		}else{
 			 IPageCallback cb = new IPageCallback() {
 				
 				@Override
 				public void onShow(IPage page) {
-					final IBindableActivity act = activeActivities.get(page.getName());
 					removePageCallback(page.getName(), this);
 					AppUtils.getFramework().runOnUIThread(new Runnable() {
 						
 						@Override
 						public void run() {
-							act.showView(view.getName());							
+							hideOrShowView(view, true);							
 						}
 					});
 					
@@ -233,12 +242,62 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 
 	@Override
 	public void hideView(IView view) {
+		hideOrShowView(view,false);		
+	}
+
+	/**
+	 * @param view
+	 */
+	protected void hideOrShowView(IView view, boolean show) {
 		IPage page = getPage(view);
+		final IViewGroup vg = (IViewGroup)view.getParent();
 		IBindableActivity activity = this.activeActivities.get(page.getName());
 		if(activity != null){
-			activity.hideView(view.getName());
-		}		
+			IViewDescriptor vDesc = context.getWorkbenchManager().getViewDescriptor(view.getName());
+			IAndroidBindingDescriptor bDesc = (IAndroidBindingDescriptor)vDesc.getBindingDescriptor(TargetUISystem.ANDROID);
+			IBinding<IUIComponent> binding = activity.getViewBinding().getFieldBinding(vg.getName());
+			if(binding == null){
+				log.warn("Cannot found binding for view :"+view.getName());
+				return;
+			}
+			ViewGroup vgControl = (ViewGroup)binding.getUIControl();
+			if(bDesc.getBindingType() == AndroidBindingType.VIEW){
+			}else if(bDesc.getBindingType() == AndroidBindingType.FRAGMENT){
+				if(activity.getActivity() instanceof BindableFragmentActivity){
+					if(show){
+						showFragement((BindableFragmentActivity)activity.getActivity(),vgControl,view.getName(),bDesc,true);
+					}else{
+						hideFragement((BindableFragmentActivity)activity.getActivity(),view.getName());
+					}
+				}
+			}
+		}
 	}
+	
+	private void hideFragement(BindableFragmentActivity activity,String viewId) {
+		BindableFragment fragment = activity.getFragment(viewId);
+		if(fragment != null){
+			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+			transaction.hide(fragment);
+			transaction.commit();
+		}
+	}
+
+	private void showFragement(BindableFragmentActivity activity,ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack) {
+		FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+		try {
+			BindableFragment fragment = (BindableFragment)bDesc.getTargetClass().newInstance();
+			transaction.replace(vgControl.getId(),fragment);
+			if(add2Backstack){
+				transaction.addToBackStack(null);
+			}
+			transaction.commit();
+			activity.addFragment(fragment);
+		}catch(Throwable t){
+			throw new RuntimeException("Failed to show framment for view :"+viewId, t);
+		}
+	}
+
 
 	protected IPage getPage(IView view) {
 		IUIContainer<?> v = view ; 
@@ -249,6 +308,11 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			v = v.getParent();
 		}
 		return null;
+	}
+
+	@Override
+	public IBindableActivity getPageActivity(IPage page) {
+		return this.activeActivities.get(page.getName());
 	}
 
 }

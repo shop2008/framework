@@ -7,7 +7,13 @@ import java.util.LinkedList;
 
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IMenuHandler;
+import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IUIContainer;
+import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 
 /**
@@ -73,7 +79,8 @@ public class MenuBase extends UIComponent implements IMenu {
 					
 					@Override
 					public Object getItemId(Object item) {
-						return (long)((IUICommand)item).getName().hashCode();
+						
+						return item != null ? (long)((IUICommand)item).getName().hashCode() : 0L;
 					}
 					
 					@Override
@@ -107,5 +114,74 @@ public class MenuBase extends UIComponent implements IMenu {
 			handleItemClick((IUICommand)this.provider.getItem(position),event);
 		}
 		super.invokeCommand(cmdName, event);
+	}
+	
+	protected IView getView(IUIContainer<IUIComponent> p) {
+		if(p instanceof IView){
+			return (IView)p;
+		}else if(p != null){
+			return getView(getParent());
+		}else{
+			return null;
+		}
+	}
+	
+	protected IPage getPage(IUIContainer<IUIComponent> p) {
+		if(p instanceof IPage){
+			return (IPage)p;
+		}else if(p != null){
+			return getPage(getParent());
+		}else{
+			return null;
+		}
+	}
+
+
+	@Override
+	public void show() {
+		showOrHideMenu(true);
+	}
+
+	/**
+	 * 
+	 */
+	protected void showOrHideMenu(boolean show) {
+		IMenuHandler handler = getMenuHandler();
+		if(handler != null){
+			if(show){
+				handler.showMenu();
+			}else{
+				handler.hideMenu();
+			}
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	protected IMenuHandler getMenuHandler() {
+		IView v = getView(getParent());
+		IViewBinding binding = v != null ? (IViewBinding)v.getBinding() : null;
+		IMenuHandler handler = binding != null ? binding.getMenuHandler(getName()) : null;
+		if(handler == null){
+			IPage p = getPage(getParent());
+			binding = p != null ? (IViewBinding)p.getBinding() : null;
+			handler = binding != null ? binding.getMenuHandler(getName()) : null;
+		}
+		return handler;
+	}
+
+	@Override
+	public void hide() {
+		showOrHideMenu(false);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IMenu#isOnShow()
+	 */
+	@Override
+	public boolean isOnShow() {
+		IMenuHandler handler = getMenuHandler();
+		return handler != null ? handler.isMenuOnShow() : false;
 	}
 }

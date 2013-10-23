@@ -56,7 +56,7 @@ public abstract class UIComponent implements IUIComponent {
 	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#hasAttribute(com.wxxr.mobile.core.ui.api.AttributeKey)
 	 */
 	public boolean hasAttribute(AttributeKey<?> key) {
-		return this.attrs == null ? attrs.containsKey(key) : false;
+		return this.attrs != null ? attrs.containsKey(key) : false;
 	}
 
 	@SuppressWarnings("unchecked")

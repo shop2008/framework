@@ -23,7 +23,7 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 				new INavigationDescriptor[0];
 	}
 	
-	protected AbstractUICommandHandler addNavigation(INavigationDescriptor nav){
+	public AbstractUICommandHandler addNavigation(INavigationDescriptor nav){
 		if(this.navs == null){
 			this.navs = new LinkedList<INavigationDescriptor>();
 		}
@@ -33,7 +33,7 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 		return this;
 	}
 	
-	protected AbstractUICommandHandler removeNavigation(INavigationDescriptor nav){
+	public AbstractUICommandHandler removeNavigation(INavigationDescriptor nav){
 		if(this.navs != null){
 			this.navs.remove(nav);
 		}
