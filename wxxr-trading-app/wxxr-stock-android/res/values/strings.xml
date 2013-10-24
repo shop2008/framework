@@ -70,6 +70,18 @@
 	<string name="tv_title_income_detail">收支明细</string>
 	<!-- 创建买入 -->
 	<string name="tv_title_create_trade">创建</string>
+    <!-- 搜索股票 -->
+    <string name="tv_title_stock_search">搜索股票</string>
+    
+    <!-- 快速买入 -->
+    <string name="bt_hang_order_text">挂单</string>
+    <string name="bt_market_price_text">市价</string>
+    <string name="tv_buy_amount">买入金额：</string>
+    <string name="tv_join_game_explain">与积分交易盘一起每天只能创建一个，可参加炒股大赛赚实盘积分。</string>
+    <string name="label_buy_amount">买入数量:</string>
+    <string name="btn_buy_order_text">买入下单</string>
+    <string name="tv_stop_loss">中止止损:</string>
+    <string name="tv_titile_quik_buy_in">快速买入</string>
 	
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">

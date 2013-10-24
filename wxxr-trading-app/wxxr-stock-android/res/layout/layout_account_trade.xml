@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wxxr.stock.trading.ui.widget.PullToRefreshView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/refresh_account_trade"
+    android:orientation="vertical" >
+
+    <com.wxxr.stock.trading.ui.widget.PinnedHeaderListView
+        android:id="@+id/phlv_account_trade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:scrollingCache="false"
+        android:fadingEdge="none"
+        android:drawSelectorOnTop="false"
+        >
+    </com.wxxr.stock.trading.ui.widget.PinnedHeaderListView>
+
+</com.wxxr.stock.trading.ui.widget.PullToRefreshView>

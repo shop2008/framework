@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" 
+        >
+
+        <TextView
+            android:id="@+id/tv_stock_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="罗牛山"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_stock_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="000735"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" 
+        >
+
+        <TextView
+            android:id="@+id/tv_stock_new_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7.69"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_stock_new_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-8.67%"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" 
+        >
+
+        <TextView
+            android:id="@+id/tv_stock_cost_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8.01元"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_stock_cost_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6200股"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" 
+        >
+
+        <TextView
+            android:id="@+id/tv_stock_float_loss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-1984.00元"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_stock_float_loss_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-3.99%"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</LinearLayout>

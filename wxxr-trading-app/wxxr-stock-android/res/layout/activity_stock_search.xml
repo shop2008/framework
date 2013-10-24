@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/light_gray"
+    >
+    
+
+    <include 
+        layout="@layout/activity_title_bar"
+        />
+    
+   <com.wxxr.stock.trading.ui.widget.StockSearchView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/ssv_stock_search"
+       >
+       
+       <ListView 
+           android:id="@+id/lv_stock_list"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginTop="65dip"
+           android:cacheColorHint="#00000000"
+           >
+           
+       </ListView>
+       
+   </com.wxxr.stock.trading.ui.widget.StockSearchView>
+</LinearLayout>
