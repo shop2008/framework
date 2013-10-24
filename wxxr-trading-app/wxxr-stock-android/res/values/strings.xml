@@ -129,6 +129,19 @@
 	<!-- 实盘积分明细 -->
 	<string name="tv_title_actual_panel_integral">实盘积分明细</string>
 	<string name="tv_integral_balance_label">当前实盘积分余额:</string>
+	
+	<!-- 登录界面 -->
+	<string name="tv_title_login">登录</string>
+	<string name="tv_quick_register">快速注册</string>
+	<string name="tv_find_psw_back">找回密码</string>
+	<string name="btn_login_text">登录</string>
+	<string name="tv_title_quick_reg">快速注册</string>
+	<string name="hint_mobile_number">手机号</string>
+	<string name="hint_psw">密码</string>
+	<string name="tv_quick_reg_des">注册好的账户密码将直接以短信的方式发送到您的手机上</string>
+	<string name="btn_quick_reg_text">点击发送密码到手机</string>
+	<string name="tv_register_rules">注册条款</string>
+	<string name="tv_title_psw_find_back">找回密码</string>
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">
         <item>Mercury</item>
