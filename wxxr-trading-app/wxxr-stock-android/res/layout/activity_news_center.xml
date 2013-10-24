@@ -9,6 +9,8 @@
         layout="@layout/activity_title_bar"
         />
     
+    
+    
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
