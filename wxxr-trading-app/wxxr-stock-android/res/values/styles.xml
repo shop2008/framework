@@ -85,5 +85,22 @@
 	<style name="qsxqTextTitleStyle_item_tv">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">14sp</item>
-    </style>    
+    </style> 
+    
+	<style name="create_buy_radion_button">
+	    <item name="android:background">@drawable/bg_btn_stop_loss</item>
+	    <item name="android:paddingLeft">20dp</item>
+	    <item name="android:paddingTop">8dp</item>
+	    <item name="android:paddingRight">8dp</item>
+	    <item name="android:paddingBottom">8dp</item>
+	    <item name="android:button">@null</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:textSize">14sp</item>
+	</style>
+	
+	<style name="red_button_style">
+	    <item name="android:background">@drawable/buy_btn_up</item>
+	    <item name="android:textColor">#FFFFFF</item>
+	    <item name="android:textSize">16sp</item>
+	</style>
 </resources>

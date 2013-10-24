@@ -27,7 +27,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="交易信息推送"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <CheckBox
                 android:id="@id/cb_news_push_switch"
@@ -60,7 +60,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="给短线放大镜打分"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 />
 
             <ImageView
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="新手指引" />
 
             <ImageView
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="联系我们" />
 
             <ImageView

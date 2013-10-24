@@ -24,16 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@android:color/white"
-            android:textSize="30sp"
+            android:text="设置"
+            android:textSize="18sp"
            />
         
-        <ImageButton 
-            android:id="@id/ib_title_other"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_launcher"
-            android:visibility="gone"
-            />
     </RelativeLayout>

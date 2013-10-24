@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   android:background="@drawable/title_bar_bj"
+	    android:paddingLeft="8dp"
+	    android:paddingRight="8dp"
+	    >
+		<ImageView
+	        android:id="@id/back_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/list_button" /> 
+	    <TextView 
+	        android:id="@id/tv_title_content"
+	        style="@style/style_title_text"
+	        android:text="设置头像"
+	        />
+	</RelativeLayout>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/white"
+	    android:orientation="vertical"
+	    android:layout_margin="8dp"
+	    
+	    >
+	    <TextView 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="从系统头像中选择"
+	        android:padding="8dp"/>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+
+	    <GridView
+	        android:id="@+id/gridView1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:numColumns="3" >
+	    </GridView>
+	</LinearLayout>
+    <Button android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="确定"/>
+
+</LinearLayout>

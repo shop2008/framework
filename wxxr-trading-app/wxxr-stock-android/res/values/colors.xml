@@ -8,6 +8,8 @@
     <color name="red">#ff0032</color>
     <color name="blue">#2c00ff</color>
     <color name="qsxq">#404040</color>
+    <color name="green">#3C7F00</color>
+    <color name="page_background_color">#0e0e0e</color>
     <color name="light_gray">#6D6D6D</color>
     <color name="light_black">#ff202020</color>
 </resources>

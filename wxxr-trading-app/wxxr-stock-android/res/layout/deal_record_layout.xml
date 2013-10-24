@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <include 
-        layout="@layout/layout_loading"
+        layout="@layout/loading_layout"
         />
     <ListView
         android:id="@+id/lv_deal_record"

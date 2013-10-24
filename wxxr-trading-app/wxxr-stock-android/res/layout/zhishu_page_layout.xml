@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   android:background="@drawable/title_bar_bj"
+	    android:paddingLeft="8dp"
+	    android:paddingRight="8dp"
+	    >
+		<ImageView
+	        android:id="@id/back_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/list_button" /> 
+	    <TextView 
+	        android:id="@id/tv_title_content"
+	        style="@style/style_title_text"
+	        android:text="指数界面"
+	        />
+	</RelativeLayout>
+
+	<ScrollView
+	    android:id="@+id/scrollView1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical" >
+			<Gallery
+			    android:id="@+id/gallery1"
+			    android:layout_width="match_parent"
+			    android:layout_height="180dp" />
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical" >
+				 <LinearLayout
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content">
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="昨收："
+				             android:textColor="@color/white"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/white"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="今开："
+				             android:textColor="@color/green"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				 </LinearLayout>
+			    <View android:layout_width="fill_parent"
+			        android:layout_height="0.5dp"
+			        android:background="#999999"/>
+			    
+			    <LinearLayout
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content">
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="最高："
+				             android:textColor="@color/red"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/red"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="最低："
+				             android:textColor="@color/green"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/green"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				 </LinearLayout>
+			    <View android:layout_width="fill_parent"
+			        android:layout_height="0.5dp"
+			        android:background="#999999"/>
+			    
+			    <LinearLayout
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content">
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="成交量："
+				             android:textColor="@color/white"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/white"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="成交额："
+				             android:textColor="@color/white"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/white"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				 </LinearLayout>
+			    <View android:layout_width="fill_parent"
+			        android:layout_height="0.5dp"
+			        android:background="#999999"/>
+			    
+			    <LinearLayout
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content">
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="量比："
+				             android:textColor="@color/white"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/white"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="深市平盘："
+				             android:textColor="@color/white"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/white"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				 </LinearLayout>
+			    <View android:layout_width="fill_parent"
+			        android:layout_height="0.5dp"
+			        android:background="#999999"/>
+			    
+			    <LinearLayout
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content">
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="深市上涨："
+				             android:textColor="@color/red"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/red"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				     <RelativeLayout 
+				         android:layout_width="fill_parent"
+				         android:layout_height="wrap_content"
+				         android:layout_weight="1"
+				         android:padding="8dp">
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="深市下跌："
+				             android:textColor="@color/green"
+				             android:layout_alignParentLeft="true"/>
+				         <TextView android:layout_width="wrap_content"
+				             android:layout_height="wrap_content"
+				             android:text="--"
+				             android:textColor="@color/green"
+				             android:layout_alignParentRight="true"/>
+				     </RelativeLayout>
+				 </LinearLayout>
+			    <View android:layout_width="fill_parent"
+			        android:layout_height="0.5dp"
+			        android:background="#999999"/>
+			</LinearLayout>	        
+	    </LinearLayout>
+	</ScrollView>
+
+	
+</LinearLayout>

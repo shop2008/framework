@@ -19,5 +19,5 @@
         </ExpandableListView>
     </com.wxxr.stock.trading.ui.widget.PullToRefreshView>
 
-    <include layout="@layout/layout_loading" />
+    <include layout="@layout/loading_layout" />
 </RelativeLayout>
