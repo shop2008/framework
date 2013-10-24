@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 余额明细 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/gray"
+    >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_bar_bj"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/list_button" />
+
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/tv_title_draw_cash" />
+    </RelativeLayout>
+
+    <LinearLayout
+        
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:layout_marginTop="5dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_avaliable_cash_label"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_aval_cash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10000.00元"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dip"
+        android:orientation="vertical" 
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/et_stock_input"
+        >
+
+        <EditText
+            android:id="@+id/et_draw_cash_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/hint_draw_cash_amount_alert" />
+    </LinearLayout>
+
+    
+    <TextView 
+        android:layout_marginTop="5dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_remit_bank_card_label"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_account_name"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:id="@+id/tv_account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="张XX"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+    </LinearLayout>
+    
+     <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_account_bank"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:id="@+id/tv_account_bank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="工商银行"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+    </LinearLayout>
+    
+      <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_account_bank_addr"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:id="@+id/tv_account_bank_addr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="北京"
+            android:textColor="@color/white"
+        	android:textSize="15sp"
+            />
+    </LinearLayout>
+    
+      
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="5dip"
+        android:background="@drawable/text_back"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        >
+        <Button 
+            android:layout_margin="2dip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_commit_text"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:background="@drawable/blue_btn_back"
+            />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_agree_or_not"
+            android:layout_width="30dip"
+            android:layout_height="30dip" 
+            android:button="@null"
+            android:checked="true"
+            android:background="@drawable/bg_cb_read_rule_or_not"
+            />
+
+        <TextView
+            android:layout_marginLeft="5dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_have_read_rule_text"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_trade_rule_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_draw_cash_notice"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_right_quotes" />
+    </LinearLayout>
+</LinearLayout>

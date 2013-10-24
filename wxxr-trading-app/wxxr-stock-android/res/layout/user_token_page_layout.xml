@@ -2,198 +2,291 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/qsxq"
-    >
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	   android:background="@drawable/title_bar_bj"
-	    android:paddingLeft="8dp"
-	    android:paddingRight="8dp"
-	    >
-		<ImageView
-	        android:id="@+id/back_btn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:src="@drawable/list_button" /> 
-	    <TextView 
-	        android:id="@id/tv_title_content"
-	        style="@style/style_title_text"
-	        android:text="我的认证"
-	        />
-	</RelativeLayout>    
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_bar_bj"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/list_button" />
+
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="我的认证" />
+    </RelativeLayout>
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:fadingEdge="none" >
+        android:fadingEdge="none"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
-	    	<LinearLayout
-	    	    android:layout_width="fill_parent"
-		        android:layout_height="wrap_content" 
-		        android:layout_marginTop="12dp"
-		        android:layout_marginLeft="8dp"
-		        android:layout_marginRight="16dp"
-		        android:layout_marginBottom="12dp"
-		        android:paddingBottom="18dp"
-		        android:orientation="vertical"
-		        android:background="@drawable/qsxq_item_bj">
-	
-	    		<TextView
-	    		    android:id="@+id/textView1"
-	    		    android:layout_width="wrap_content"
-	    		    android:layout_height="wrap_content"
-	    		    android:text="手机认证" 
-	    		    style="@style/qsxqTextTitleStyle"
-	    		    android:layout_marginTop="10dp"/>
-	
-	    		<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp" 
-	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="0dp">
-	
-	    		    <TextView
-	    		        android:id="@+id/textView2"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentLeft="true"
-	    		        android:text="认证状态" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	
-	    		    <TextView
-	    		        android:id="@+id/textView3"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentRight="true"
-	    		        android:text="已认证" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	    		</RelativeLayout>
-	
-	    		<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp"
-	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp" >
-	
-	    		    <TextView
-	    		        android:id="@+id/textView2"
-	    		        style="@style/qsxqTextTitleStyle_item_tv"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentLeft="true"
-	    		        android:text="认证手机号" />
-	
-	    		    <TextView
-	    		        android:id="@+id/textView3"
-	    		        style="@style/qsxqTextTitleStyle_item_tv"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentRight="true"
-	    		        android:text="15101098765" />
-	    		</RelativeLayout>
-	
-	    		<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp" 
-	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
-	
-	    		    <TextView
-	    		        android:id="@+id/textView2"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_centerHorizontal="true"
-	    		        android:text="手机号用于登录" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	
-<!-- 	    		    <TextView -->
-<!-- 	    		        android:id="@+id/textView3" -->
-<!-- 	    		        android:layout_width="wrap_content" -->
-<!-- 	    		        android:layout_height="wrap_content" -->
-<!-- 	    		        android:layout_alignParentRight="true" -->
-<!-- 	    		        android:text="996.00元"  -->
-<!-- 	    		        style="@style/qsxqTextTitleStyle_item_tv"/> -->
-	    		</RelativeLayout>	        
-	    	</LinearLayout>
-			<LinearLayout
-	    	    android:layout_width="fill_parent"
-		        android:layout_height="wrap_content" 
-		        android:layout_marginLeft="8dp"
-		        android:layout_marginRight="16dp"
-		        android:paddingBottom="18dp"
-		        android:orientation="vertical"
-		        android:background="@drawable/qsxq_item_bj">
-	
-	    		<TextView
-	    		    android:id="@+id/textView1"
-	    		    android:layout_width="wrap_content"
-	    		    android:layout_height="wrap_content"
-	    		    android:text="提现认证 "
-	    		    style="@style/qsxqTextTitleStyle"
-	    		    android:layout_marginTop="10dp"/>
-				<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp" 
-	    		    android:layout_marginRight="26dp">
-	
-	    		    <TextView
-	    		        android:id="@+id/textView2"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentLeft="true"
-	    		        android:text="认证状态" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	
-	    		    <TextView
-	    		        android:id="@+id/textView3"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_alignParentRight="true"
-	    		        android:text="未认证" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	    		</RelativeLayout>
-	    		<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp" 
-	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
-	
-	    		    <Button 
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:text="立即认证"
-	    		        android:layout_centerHorizontal="true"/>
-	    		</RelativeLayout>
-	    		<RelativeLayout
-	    		    android:layout_width="fill_parent"
-	    		    android:layout_height="wrap_content"
-	    		    android:layout_marginLeft="30dp" 
-	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
-	
-	    		    <TextView
-	    		        android:id="@+id/textView2"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="wrap_content"
-	    		        android:layout_centerHorizontal="true"
-	    		        android:text="认证后可把实盘受益提现" 
-	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
-	    		</RelativeLayout>	        
-	    	</LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/qsxq_item_bj"
+                android:orientation="vertical"
+                android:paddingBottom="18dp" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    style="@style/qsxqTextTitleStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/tv_mobile_auth" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="26dp"
+                    android:layout_marginTop="0dp" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/qsxqTextTitleStyle_item_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/tv_auth_state_label" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/qsxqTextTitleStyle_item_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/tv_mobile_authed_label" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="26dp"
+                    android:layout_marginTop="8dp" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/qsxqTextTitleStyle_item_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/tv_mobile_authed_number" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/qsxqTextTitleStyle_item_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="15101098765" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="26dp"
+                    android:layout_marginTop="8dp" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/qsxqTextTitleStyle_item_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/tv_mobile_auth_des" />
+
+                    <!-- <TextView -->
+                    <!-- android:id="@+id/textView3" -->
+                    <!-- android:layout_width="wrap_content" -->
+                    <!-- android:layout_height="wrap_content" -->
+                    <!-- android:layout_alignParentRight="true" -->
+                    <!-- android:text="996.00元" -->
+                    <!-- style="@style/qsxqTextTitleStyle_item_tv"/> -->
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/qsxq_item_bj"
+                android:orientation="vertical"
+                android:paddingBottom="18dp" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    style="@style/qsxqTextTitleStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/tv_title_cash_auth" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:id="@+id/ll_not_auth"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="26dp" >
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:text="@string/tv_auth_state_label" />
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="未认证" />
+                        </RelativeLayout>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dip"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/red_btn_back"
+                            android:text="@string/btn_now_auth_text"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            style="@style/qsxqTextTitleStyle_item_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dip"
+                            android:text="@string/tv_cash_no_auth_des" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_authed"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                            android:layout_marginRight="26dp"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tv_account_name" />
+
+                            <TextView
+                                android:id="@+id/tv_account_name"
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="张XX" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tv_account_bank" />
+
+                            <TextView
+                                android:id="@+id/tv_account_name"
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="工商银行" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tv_account_number" />
+
+                            <TextView
+                                android:id="@+id/tv_account_name"
+                                style="@style/qsxqTextTitleStyle_item_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="xxxxxxxxxxx" />
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dip"
+                            android:layout_gravity="left"
+                            android:background="@drawable/red_btn_back"
+                            android:text="@string/btn_switch_bank_text"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        
+                        <TextView 
+                            android:id="@+id/textView2"
+                            style="@style/qsxqTextTitleStyle_item_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dip"
+                            android:text="@string/tv_cash_authed_des"
+                            />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

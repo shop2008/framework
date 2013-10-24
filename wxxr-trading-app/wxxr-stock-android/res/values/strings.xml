@@ -82,7 +82,53 @@
     <string name="btn_buy_order_text">买入下单</string>
     <string name="tv_stop_loss">中止止损:</string>
     <string name="tv_titile_quik_buy_in">快速买入</string>
+    
+    <!-- 提现认证 -->
+    <string name="tv_title_cash_auth">提现认证</string>
+    <string name="hint_account_name">户名（一经认证，不可修改）</string>
+    <string name="hint_account_bank">开户行（如工商银行、北京银行）</string>
+    <string name="hint_account_bank_addr">开户行所在地（如北京市、广东省番禺市）</string>
+    <string name="hint_account_number">银行卡号</string>
+    <string name="btn_cash_auth_text">认证</string>
 	
+    <!-- 更换银行卡 -->
+    <string name="tv_title_switch_bank_card">更换银行卡</string>
+    <string name="tv_account_name_label">户名:</string>
+    <string name="hint_switch_account_bank">开户行</string>
+    <string name="hint_switch_account_bank_addr">开户行所在地</string>
+    <string name="hint_switch_account_number">银行卡号</string>
+    <string name="btn_commit_text">提交</string>
+    
+    <!-- 我的认证 -->
+    <string name="tv_auth_state_label">认证状态</string>
+    <!-- 手机认证 -->
+    <string name="tv_mobile_auth">手机认证</string>
+    <string name="tv_mobile_authed_label">已认证</string>
+    <string name="tv_mobile_authed_number">认证手机号</string>
+    <string name="tv_mobile_auth_des">手机号用于登录</string>
+    <!-- 提现认证 -->
+    <string name="tv_cash_auth">提现认证</string>
+    <string name="tv_cash_no_auth_des">经认证后可把实盘收益提现</string>
+    <string name="tv_cash_authed_des">银行卡用于提取收益</string>
+    <string name="tv_account_name">户名:</string>
+    <string name="tv_account_bank">银行：</string>
+    <string name="tv_account_number">卡号：</string>
+    <string name="tv_account_bank_addr">所在地:</string>
+    <string name="btn_switch_bank_text">更换银行卡</string>
+    <string name="btn_now_auth_text">立即认证</string>
+    
+    <!-- 提取现金 -->
+    <string name="tv_title_draw_cash">提取现金</string>
+    <string name="tv_avaliable_cash_label">可用现金余额:</string>
+    <string name="hint_draw_cash_amount_alert">提现金量：需为100的整数倍</string>
+	<string name="tv_remit_bank_card_label">汇入认证银行卡：</string>
+	<string name="tv_draw_cash_notice">提取现金重要须知</string>
+	<!-- 余额明细 -->
+	<string name="tv_title_balance_detail">余额明细</string>
+	
+	<!-- 实盘积分明细 -->
+	<string name="tv_title_actual_panel_integral">实盘积分明细</string>
+	<string name="tv_integral_balance_label">当前实盘积分余额:</string>
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">
         <item>Mercury</item>
