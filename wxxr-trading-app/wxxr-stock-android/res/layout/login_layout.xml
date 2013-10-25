@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
-                android:layout_marginRight="60dip"
+                android:layout_marginRight="70dip"
                 android:inputType="number"
                 android:hint="@string/hint_mobile_number"
                 android:layout_toRightOf="@id/iv_phone"
@@ -66,7 +66,9 @@
                 android:layout_centerVertical="true"
                 android:text="@string/tv_quick_register"
                 android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:textSize="15sp" 
+                android:layout_marginRight="10dip"
+                />
         </RelativeLayout>
 
         <View
@@ -94,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
-                android:layout_marginRight="60dip"
+                android:layout_marginRight="70dip"
                 android:layout_toRightOf="@id/iv_phone"
                 android:inputType="textPassword"
                 android:hint="@string/hint_psw"
@@ -107,6 +109,7 @@
                 android:layout_centerVertical="true"
                 android:text="@string/tv_find_psw_back"
                 android:textColor="@color/black"
+                android:layout_marginRight="10dip"
                 android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>

@@ -160,6 +160,7 @@
                                 android:layout_width="0dip"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                android:enabled="false"
                                 android:background="@drawable/bg_left_btn"
                                 android:text="@string/bt_hang_order_text"
                                 android:textColor="@color/white" />
@@ -184,5 +185,4 @@
             </ScrollView>
         </LinearLayout>
     </TabHost>
-
 </LinearLayout>
