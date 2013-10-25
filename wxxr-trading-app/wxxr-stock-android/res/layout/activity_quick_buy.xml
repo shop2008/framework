@@ -104,9 +104,9 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="2dip"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="2dip"
                         android:orientation="horizontal" >
 
                         <RelativeLayout
@@ -123,16 +123,29 @@
                                 android:text="10.13"
                                 android:textColor="@color/white" />
 
-                            <ImageView
-                                android:id="@+id/imageview1"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignBottom="@id/textview1"
                                 android:layout_alignRight="@id/textview1"
                                 android:layout_alignTop="@id/textview1"
-                                android:src="@drawable/refresh" 
-                                android:background="@drawable/btn_refresh_back"
-                                />
+                                android:background="@drawable/btn_refresh_back" >
+
+                                <ImageView
+                                    android:id="@+id/imageview1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/refresh" />
+
+                                <ProgressBar
+                                    android:id="@+id/pb_refresh"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:visibility="gone" />
+                            </FrameLayout>
                         </RelativeLayout>
 
                         <LinearLayout
@@ -171,4 +184,5 @@
             </ScrollView>
         </LinearLayout>
     </TabHost>
+
 </LinearLayout>

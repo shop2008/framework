@@ -2,24 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-   android:background="@drawable/title_bar_bj"
+    android:background="@drawable/title_bar_bj"
     android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    >
-	<ImageView
+    android:paddingRight="8dp" >
+
+    <ImageView
         android:id="@id/ib_toggle_left_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/list_button" /> 
-    
+        android:src="@drawable/list_button" />
 
-    
-    <TextView 
+    <TextView
         android:id="@id/tv_title_content"
-        style="@style/style_title_text"
-        />
+        style="@style/style_title_text" />
 
     <ImageView
         android:id="@id/ib_toggle_right_menu"
