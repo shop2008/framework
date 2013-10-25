@@ -3,6 +3,227 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   android:background="@drawable/title_bar_bj"
+	    android:paddingLeft="8dp"
+	    android:paddingRight="8dp"
+	    >
+		<ImageView
+	        android:id="@id/back_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/list_button" /> 
+	    <TextView 
+	        android:id="@id/tv_title_content"
+	        style="@style/style_title_text"
+	        android:text="个人主页"
+	        />
+	    <ImageView
+	        android:id="@id/back_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/list_button" /> 
+	</RelativeLayout>
+	<ScrollView 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:scrollbars="none"
+	    android:fadingEdge="none">
+	    <LinearLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+			<LinearLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="180dp"
+			    android:orientation="vertical"
+			    android:padding="8dp"
+			    android:background="@drawable/c">
+		
+				<RelativeLayout
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_marginTop="20dp" >
+		
+				    <ImageView
+				        android:id="@+id/imageView1"
+				        android:layout_width="80dp"
+				        android:layout_height="80dp"
+				        android:layout_alignParentLeft="true"
+				        android:layout_centerVertical="true"
+				        android:src="@drawable/default_user_icons" />
+		
+				    <TextView
+				        android:id="@+id/textView1"
+				       	android:paddingLeft="10dp"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_centerVertical="true"
+				        android:layout_toRightOf="@+id/imageView1"
+				        android:text="用户昵称" />
+		
+				    <Button
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_alignBottom="@+id/imageView1"
+				        android:layout_alignParentRight="true"
+				        android:text="个性化" />
+		
+				</RelativeLayout>
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/gray"
+				    android:padding="8dp"
+				    android:layout_marginTop="8dp">
+				    <LinearLayout 
+				        android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:orientation="vertical"
+				        android:gravity="center">
+				        <TextView 
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:text="累计实盘积分"/>
+				        <TextView 
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:text="15000"
+				            android:textColor="@color/red"/>
+				    </LinearLayout>
+				    <View android:layout_width="0.5dp"
+				        android:layout_height="fill_parent"
+				        android:background="@color/white"/>
+				    <LinearLayout 
+				        android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:orientation="vertical"
+				        android:gravity="center">
+				        <TextView 
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:text="累计总收益"/>
+				        <TextView 
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:text="14511.00元"
+				            android:textColor="@color/red"/>
+				    </LinearLayout>
+				</LinearLayout>
+				
+			</LinearLayout>
+		
+			<LinearLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+			    
+				<RelativeLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/gray" 
+				    android:padding="8dp">
+					<TextView 
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_alignParentLeft="true"
+					    android:text="挑战交易盘"/>
+					<TextView 
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_alignParentRight="true"
+					    android:text="已分享23笔"/>
+				</RelativeLayout>
+				
+				<LinearLayout android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				   android:padding="8dp">
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="股票"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="额度"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="盈亏"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="日期"/>
+				</LinearLayout>
+				<ListView android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/listview1">
+				    
+				</ListView>
+				<TextView android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:text="查看更多"
+				    android:gravity="center"/>
+			</LinearLayout>
+			<LinearLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+			    
+				<RelativeLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/gray" 
+				    android:padding="8dp">
+					<TextView 
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_alignParentLeft="true"
+					    android:text="参赛交易盘"/>
+					<TextView 
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_alignParentRight="true"
+					    android:text="已分享10笔"/>
+				</RelativeLayout>
+				
+				<LinearLayout android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				   android:padding="8dp">
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="股票"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="额度"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="盈亏"/>
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:text="日期"/>
+				</LinearLayout>
+				<ListView android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/listview1">
+				    
+				</ListView>
+				<TextView android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:text="查看更多"
+				    android:gravity="center"/>
+			</LinearLayout>
+	    </LinearLayout>
+	</ScrollView>    
 </LinearLayout>

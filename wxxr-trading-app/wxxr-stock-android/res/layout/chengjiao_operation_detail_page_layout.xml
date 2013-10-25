@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	   android:background="@drawable/title_bar_bj"
+	    android:paddingLeft="8dp"
+	    android:paddingRight="8dp"
+	    >
+		<ImageView
+	        android:id="@id/back_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/list_button" /> 
+	    <TextView 
+	        android:id="@id/tv_title_content"
+	        style="@style/style_title_text"
+	        android:text="成交明细"
+	        />
+	</RelativeLayout>
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_margin="8dp"
+	    android:background="@color/white">
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="股票名称："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="股票代码："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="成交方向："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="成交时间："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="成交价格："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="成交数量："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="成交金额："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="佣金："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="印花税："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="印花税："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	    <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="@color/gray"/>
+	    <RelativeLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="8dp">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:text="过户费："
+	            android:textColor="@color/gray"
+	            />
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:layout_alignParentRight="true"
+	            android:textColor="@color/gray"/>
+	    </RelativeLayout>
+	</LinearLayout>
+</LinearLayout>
