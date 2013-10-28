@@ -701,7 +701,7 @@ public class SliderLayout extends ViewGroup {
         }
         lp = (LayoutParams) contentView.getLayoutParams();
         int leftMargin = lp.leftMargin+contentViewOffset;
-        Log.w("SliderLayout","left margin :"+leftMargin);
+//        Log.w("SliderLayout","left margin :"+leftMargin);
         contentView.layout(leftMargin, lp.topMargin,
 	    		  leftMargin + contentView.getMeasuredWidth(),
 	    		  lp.topMargin + contentView.getMeasuredHeight());

@@ -26,19 +26,16 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initFieldBinders(IFieldBinderManager mgr) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void initEventBinders(IEventBinderManager mgr) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
-		// TODO Auto-generated method stub
 		
 	}
 

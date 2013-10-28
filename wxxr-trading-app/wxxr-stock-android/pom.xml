@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r6</version>
+            <version>r8</version>
         </dependency>
             <dependency>
                 <groupId>com.wxxr.mobile</groupId>
@@ -55,6 +55,11 @@
                 <version>${framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-tools</artifactId>
+                <version>${wxxr.tools.version}</version>
+            </dependency>
+            <dependency>
               <groupId>com.wxxr.mobile</groupId>
               <artifactId>wxxr-mobile-web</artifactId>
                 <version>${framework.version}</version>
@@ -71,6 +76,19 @@
 		<finalName>${project.artifactId}</finalName>
 
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
+                    <annotationProcessors>
+                            <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
+                    </annotationProcessors>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -97,13 +115,13 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.wxxr.mobile</groupId>
-				<artifactId>wxxr-mobile-tools</artifactId>
-				<version>${wxxr.tools.version}</version>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>3.7.0</version>
 				<extensions>true</extensions>
 				<configuration>
                     <sdk>
-                        <platform>8</platform>
+                        <platform>17</platform>
                     </sdk>
 					<manifest>
 						<debuggable>true</debuggable>

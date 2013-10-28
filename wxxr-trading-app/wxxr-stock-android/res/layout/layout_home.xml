@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@id/home_refresh_view"
+        >
+		<ScrollView 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:scrollbars="none" 
+            android:fadingEdge="none">
+		    <LinearLayout 
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF" >
+
+            <android.support.v4.view.ViewPager
+                android:id="@id/vp_home_ad"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/ad_banner_height"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/ad_banner_title_height"
+                android:layout_gravity="top"
+                android:background="#33000000"
+                android:focusable="false" >
+
+                <TextView
+                    android:id="@id/tv_home_ad_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal" >
+
+                    <View
+                        android:id="@id/ad_dot_0"
+                        android:layout_width="5dip"
+                        android:layout_height="5dip"
+                        android:layout_marginLeft="2dip"
+                        android:layout_marginRight="2dip"
+                        android:background="@drawable/dot_focused" />
+
+                    <View
+                        android:id="@id/ad_dot_1"
+                        android:layout_width="5dip"
+                        android:layout_height="5dip"
+                        android:layout_marginLeft="2dip"
+                        android:layout_marginRight="2dip"
+                        android:background="@drawable/dot_normal" />
+
+                    <View
+                        android:id="@id/ad_dot_2"
+                        android:layout_width="5dip"
+                        android:layout_height="5dip"
+                        android:layout_marginLeft="2dip"
+                        android:layout_marginRight="2dip"
+                        android:background="@drawable/dot_normal" />
+
+                    <View
+                        android:id="@id/ad_dot_3"
+                        android:layout_width="5dip"
+                        android:layout_height="5dip"
+                        android:layout_marginLeft="2dip"
+                        android:layout_marginRight="2dip"
+                        android:background="@drawable/dot_normal" />
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:background="@drawable/bg_btn_bottom"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="30dip"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/tv_home_max_stock_label"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="30dip"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/tv_home_amount_label"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="30dip"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/tv_home_profit_loss"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@id/rl_create_buy"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="@android:color/black"
+            android:clickable="true"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@id/ic_create_buy"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_create_buy" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dip"
+                android:layout_toRightOf="@id/ic_create_buy"
+                android:text="创建买入"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <!-- com.wxxr.stock.trading.ui.widget.ZListView
+            android:id="@id/lv_buy_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" 
+            android:fadingEdge="none">
+        </com.wxxr.stock.trading.ui.widget.ZListView -->		        		        
+		    </LinearLayout>
+		</ScrollView>
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+    <include layout="@layout/layout_loading" />
+
+</RelativeLayout>

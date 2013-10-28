@@ -1,8 +1,12 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.view;
+package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.mobile.android.ui.AndroidBindingType;
+import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
@@ -13,27 +17,23 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
  * @author neillin
  *
  */
-public class LeftMenuViewModel extends ViewBase implements IModelUpdater {
-
-	private String menuIcon;
-	private String menuLabel;
-	private DataField<String> menuIconField;
-	private DataField<String> menuLabelField;
+@View(name="mainMenuItemView")
+@AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.layout_left_navi_item")
+public abstract class MenuItemView extends ViewBase implements IModelUpdater{
 	
-	@Override
-	protected void init() {
-		setName("leftMenu");
-		menuIconField = new DataField<String>();
-		menuIconField.setName("menuIcon");
-		menuIconField.setValueKey(AttributeKeys.imageURI);
-		add(menuIconField);
-		
-		menuLabelField = new DataField<String>();
-		menuLabelField.setName("menuLabel");
-		menuLabelField.setValueKey(AttributeKeys.text);
-		add(menuLabelField);
-	}
+	@Field(valueKey="imageURI")
+	String menuIcon = "testIcon";
+	
+	@Field(valueKey="text")
+	String menuLabel;
+	
+	DataField<String> menuIconField;
+	
+	DataField<String> menuLabelField;
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IModelUpdater#updateModel(java.lang.Object)
+	 */
 	@Override
 	public void updateModel(Object val) {
 		if(val instanceof IUICommand){
@@ -49,6 +49,7 @@ public class LeftMenuViewModel extends ViewBase implements IModelUpdater {
 				setAttribute(AttributeKeys.enabled, cmd.getAttribute(AttributeKeys.enabled));
 			}
 		}
+		
 	}
 
 	/**
@@ -56,13 +57,6 @@ public class LeftMenuViewModel extends ViewBase implements IModelUpdater {
 	 */
 	protected String getMenuIcon() {
 		return menuIcon;
-	}
-
-	/**
-	 * @return the menuLabel
-	 */
-	protected String getMenuLabel() {
-		return menuLabel;
 	}
 
 	/**
@@ -74,12 +68,18 @@ public class LeftMenuViewModel extends ViewBase implements IModelUpdater {
 	}
 
 	/**
+	 * @return the menuLabel
+	 */
+	protected String getMenuLabel() {
+		return menuLabel;
+	}
+
+	/**
 	 * @param menuLabel the menuLabel to set
 	 */
 	protected void setMenuLabel(String menuLabel) {
 		this.menuLabel = menuLabel;
 		this.menuLabelField.setValue(menuLabel);
 	}
-	
 
 }
