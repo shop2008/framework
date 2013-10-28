@@ -10,6 +10,8 @@ public class AbstractClassModel {
 	private String name;
 	private String pkgName;
 	private List<String> imports;
+	private String superClass;
+	private List<String> interfaces;
 	/**
 	 * @return the name
 	 */
@@ -28,6 +30,11 @@ public class AbstractClassModel {
 	public List<String> getImports() {
 		return imports == null ? Collections.EMPTY_LIST : imports;
 	}
+	
+	public String getClassName() {
+		return this.pkgName+"."+name;
+	}
+
 	/**
 	 * @param name the name to set
 	 */
@@ -40,16 +47,19 @@ public class AbstractClassModel {
 	public void setPkgName(String pkgName) {
 		this.pkgName = pkgName;
 	}
-	/**
-	 * @param imports the imports to set
-	 */
-	public void setImports(List<String> imports) {
-		this.imports = imports;
-	}
 	
-	public void addImport(String stmt){
+	public String addImport(String stmt){
 		if(StringUtils.isBlank(stmt)){
-			return;
+			return null;
+		}
+		String generic = null;
+		int sIdx = stmt.indexOf('<');
+		if(sIdx > 0){
+			generic = StringUtils.trimToNull(stmt.substring(sIdx+1));
+			if(generic.endsWith(">")){
+				generic = generic.substring(0,generic.length()-1);
+			}
+			stmt = stmt.substring(0,sIdx);
 		}
 		int idx = stmt.lastIndexOf('.');
 		if(idx > 0){
@@ -62,6 +72,56 @@ public class AbstractClassModel {
 					imports.add(stmt);
 				}
 			}
+			stmt = stmt.substring(idx+1);
+		}
+		if(generic != null){
+			String[] tokens = StringUtils.split(generic, ',');
+			StringBuffer buf = new StringBuffer(stmt).append('<');
+			int cnt = 0;
+			for (String token : tokens) {
+				token = addImport(token);
+				if(cnt > 0){
+					buf.append(',');
+				}
+				buf.append(token);
+				cnt++;
+			}
+			stmt = buf.append('>').toString();
+		}
+		return stmt;
+	}
+	/**
+	 * @return the superClass
+	 */
+	public String getSuperClass() {
+		return superClass;
+	}
+	/**
+	 * @return the interfaces
+	 */
+	public List<String> getInterfaces() {
+		return interfaces;
+	}
+	
+	public String getJoinInterfaces() {
+		return this.interfaces != null && this.interfaces.size() > 0 ? StringUtils.join(this.interfaces.iterator(), ',') : null;
+	}
+	/**
+	 * @param superClass the superClass to set
+	 */
+	public void setSuperClass(String superClass) {
+		this.superClass = addImport(superClass);;
+	}
+	/**
+	 * @param interfaces the interfaces to set
+	 */
+	public void addInterface(String clazz) {
+		clazz = addImport(clazz);
+		if(this.interfaces == null){
+			this.interfaces = new ArrayList<String>();
+		}
+		if(!this.interfaces.contains(clazz)){
+			this.interfaces.add(clazz);
 		}
 	}
 	

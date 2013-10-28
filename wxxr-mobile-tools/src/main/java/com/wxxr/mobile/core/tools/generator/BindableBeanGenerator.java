@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.core.tools.generator;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -11,12 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
 import org.slf4j.Logger;

@@ -18,6 +18,18 @@ public abstract class PageBase extends ViewBase implements IPage {
 
 	
 
+	public PageBase() {
+		super();
+	}
+
+
+
+	public PageBase(String name) {
+		super(name);
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.IAdaptable#getAdaptor(java.lang.Class)
 	 */

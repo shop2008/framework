@@ -3,9 +3,8 @@
  */
 package com.wxxr.mobile.core.tools;
 
-import javax.annotation.processing.SupportedOptions;
-
 import com.wxxr.mobile.core.annotation.BindableBean;
+import com.wxxr.mobile.core.annotation.Entity;
 import com.wxxr.mobile.core.annotation.Generator;
 import com.wxxr.mobile.core.tools.generator.BindableBeanGenerator;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;

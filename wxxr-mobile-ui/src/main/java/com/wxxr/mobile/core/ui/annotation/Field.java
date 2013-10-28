@@ -21,4 +21,5 @@ public @interface Field {
 	String enableWhen() default "";
 	String visibleWhen() default "";
 	Attribute[] attributes() default {};
+	String valueKey();
 }

@@ -3,28 +3,53 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
  *
  */
 public class LazyLoadViewGroup extends ViewGroupBase {
-	private final String[] viewIds;
+	private LinkedList<String> viewIds;
 	private boolean dynamic;
 	
+	public LazyLoadViewGroup() {
+		super();
+	}
+
+	public LazyLoadViewGroup(String name) {
+		super(name);
+	}
+
 	public LazyLoadViewGroup(String grpId, String[] vids){
-		this.viewIds = vids;
+		if((vids != null)&&(vids.length > 0)){
+			this.viewIds = new LinkedList<String>(Arrays.asList(vids));
+		}
 		setName(grpId);
 	}
 
+	public void addViewId(String viewId){
+		if(StringUtils.isBlank(viewId)){
+			throw new IllegalArgumentException("Invalid view id : NULL");
+		}
+		if(this.viewIds == null){
+			this.viewIds = new LinkedList<String>();
+		}
+		if(!this.viewIds.contains(viewId)){
+			this.viewIds.add(viewId);
+		}
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.ViewGroupBase#getViewIds()
 	 */
 	@Override
 	public String[] getViewIds() {
-		return this.viewIds;
+		return this.viewIds != null ? this.viewIds.toArray(new String[0]) : null;
 	}
 
 	/* (non-Javadoc)
@@ -50,6 +75,9 @@ public class LazyLoadViewGroup extends ViewGroupBase {
 	 */
 	@Override
 	public boolean hasView(String name) {
+		if(this.viewIds == null){
+			return false;
+		}
 		for (String vid : this.viewIds) {
 			if(vid.equals(name)){
 				return true;

@@ -9,6 +9,7 @@ package com.wxxr.mobile.android.ui;
  */
 public enum AndroidBindingType {
 	ACTIVITY,
+	FRAGMENT_ACTIVITY,
 	FRAGMENT,
 	VIEW
 }

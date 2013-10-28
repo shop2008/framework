@@ -27,6 +27,12 @@ public abstract class UIComponent implements IUIComponent {
 	private IUIContainer<IUIComponent> parent;
 	private IWorkbenchRTContext ctx;
 	
+	public UIComponent(){
+	}
+	
+	public UIComponent(String name){
+		this.name = name;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.IAdaptable#getAdaptor(java.lang.Class)
 	 */

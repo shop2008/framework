@@ -147,8 +147,8 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			Map<String, String> map = parse(attrSet);
 			String val = map != null ? map.get(IAndroidBinding.BINDING_FIELD_NAME) : null;
 			if(val != null){
-				if(log.isDebugEnabled()){
-					log.debug("Found field binding :"+val+" of view :"+view);
+				if(log.isTraceEnabled()){
+					log.trace("Found field binding :"+val+" of view :"+view);
 				}
 				HashMap<String, String> params = new HashMap<String, String>();
 				HashMap<String, String> events = new HashMap<String, String>();
@@ -160,8 +160,8 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						if(name.startsWith("on_")&&(name.length() > 4)){
 							String event = name.substring(3);
 							events.put(event, value);
-							if(log.isDebugEnabled()){
-								log.debug("Found event binding :"+event+" of view :"+view);
+							if(log.isTraceEnabled()){
+								log.trace("Found event binding :"+event+" of view :"+view);
 							}
 
 						}else{

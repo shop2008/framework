@@ -135,6 +135,11 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 			protected String getObjectId(IViewDescriptor child) {
 				return child.getViewId();
 			}
+
+			@Override
+			protected void handleInit(IViewDescriptor ui,
+					IWorkbenchRTContext ctx) {
+			}
 		};
 	}
 	

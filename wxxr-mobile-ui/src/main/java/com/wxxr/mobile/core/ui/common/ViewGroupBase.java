@@ -21,6 +21,14 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 
 	private Stack<String> viewStack = new Stack<String>();
 
+	public ViewGroupBase() {
+		super();
+	}
+
+	public ViewGroupBase(String name) {
+		super(name);
+	}
+
 	public String[] getViewIds() {
 		List<String> ids = null;
 		List<IView> pages = getChildren(IView.class);

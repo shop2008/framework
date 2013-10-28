@@ -28,6 +28,10 @@ public class MenuBase extends UIComponent implements IMenu {
 	public MenuBase(){
 	}
 	
+	public MenuBase(String name){
+		super(name);
+	}
+	
 	public MenuBase(String[] cmdIds){
 		if(cmdIds != null){
 			for (String id : cmdIds) {

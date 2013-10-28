@@ -18,11 +18,11 @@ import java.lang.annotation.Target;
 @Documented
 @PresentationModel
 public @interface Command {
-	String commandName();
+	String commandName() default "";
 	String description() default "";
 	Class<?> validationGroup() default Void.class;
 	String enableWhen() default "";
 	String visibleWhen() default "";
 	Navigation[] navigations() default {};
-	Attribute[] attributes() default {};
+	UIItem[] uiItems() default {};
 }

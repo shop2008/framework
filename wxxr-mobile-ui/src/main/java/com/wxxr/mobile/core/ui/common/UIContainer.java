@@ -20,6 +20,14 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 
 	private GenericContainer<IUIComponent> container;
 	
+	public UIContainer() {
+		super();
+	}
+
+	public UIContainer(String name) {
+		super(name);
+	}
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.IAdaptable#getAdaptor(java.lang.Class)
 	 */
@@ -60,6 +68,9 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	protected UIContainer<C> add(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.add(child);
+		if(getUIContext() != null){
+			child.init(getUIContext());
+		}
 		return this;
 	}
 
@@ -90,6 +101,12 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 				protected String getObjectId(IUIComponent child) {
 					return child.getName();
 				}
+
+				@Override
+				protected void handleInit(IUIComponent ui,
+						IWorkbenchRTContext ctx) {
+					ui.init(ctx);
+				}
 			};
 		}
 	}
@@ -111,12 +128,18 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	protected UIContainer<C> addFirst(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.addFirst(child);
+		if(getUIContext() != null){
+			child.init(getUIContext());
+		}
 		return this;
 	}
 
 	protected UIContainer<C> addLast(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.addLast(child);
+		if(getUIContext() != null){
+			child.init(getUIContext());
+		}
 		return this;
 	}
 
@@ -145,6 +168,9 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	@Override
 	public void init(IWorkbenchRTContext ctx) {
 		super.init(ctx);
+		if(this.container != null){
+			this.container.init(ctx);
+		}
 	}
 
 	public String[] getChildIds() {

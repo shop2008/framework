@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
  */
 public class DataField<T> extends UIComponent implements IDataField<T> {
 
+
 	private AttributeKey<T> valueKey;
 	private T localValue;
 	private IDomainValueModel domainModel;
@@ -116,6 +117,17 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 //			}
 //		}));
 //	}
+	
+	public DataField() {
+		super();
+	}
+
+
+	public DataField(String name) {
+		super(name);
+	}
+
+
 	/**
 	 * @return
 	 */

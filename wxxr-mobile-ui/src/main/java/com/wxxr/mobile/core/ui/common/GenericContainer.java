@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+
 /**
  * @author neillin
  *
@@ -174,6 +176,17 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		}
 	}
 
+	public void init(IWorkbenchRTContext ctx){
+		if(this.children != null){
+			for (T ui : this.children) {
+				handleInit(ui,ctx);
+			}
+		}
+		
+	}
+	
+	protected abstract void handleInit(T ui,IWorkbenchRTContext ctx);
+	
 	/**
 	 * @param ui
 	 */

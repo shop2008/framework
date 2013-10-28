@@ -46,6 +46,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		init();
 	}
 	
+	public ViewBase(String name) {
+		super(name);
+		init();
+	}
+
 	public boolean isActive() {
 		return this.active;
 	}
@@ -170,6 +175,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}else{
 			super.invokeCommand(cmdName, event);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> IDataField<T> getField(String name){
+		return getChild(name, IDataField.class);
 	}
 
 	/* (non-Javadoc)

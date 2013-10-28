@@ -14,12 +14,14 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.TYPE})
+@Target({ElementType.FIELD})
 @Documented
 @PresentationModel
-public @interface View {
+public @interface Menu {
 	String name() default "";
 	String description() default "";
-	AttributeKey[] attrTypes() default {};
+	String enableWhen() default "";
+	String visibleWhen() default "";
+	String[] items();
 	Attribute[] attributes() default {};
 }
