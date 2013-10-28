@@ -22,6 +22,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import com.sun.source.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
+@SuppressWarnings("restriction")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class MainAnnotationProcessor extends AbstractProcessor {
 	private static final Logger log = LoggerFactory.getLogger(MainAnnotationProcessor.class);
@@ -42,6 +44,7 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 	private Set<String> options = new HashSet<String>();
 	private Properties props = new Properties();
 	private VelocityTemplateRenderer renderer;
+	private Trees trees;
 	/* (non-Javadoc)
 	 * @see javax.annotation.processing.AbstractProcessor#process(java.util.Set, javax.annotation.processing.RoundEnvironment)
 	 */
@@ -73,6 +76,7 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		log.info("Initializing Main Annotation processor ...");
+		this.trees = Trees.instance(processingEnv);
 		ServiceLoader<IProcessorConfigure> loader = ServiceLoader.load(IProcessorConfigure.class,getClass().getClassLoader());
 		for (IProcessorConfigure config : loader) {	
 			log.info("Found processor configure : {}",config);
@@ -172,6 +176,10 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 		@Override
 		public ITemplateRenderer getTemplateRenderer() {
 			return getVelocityRenderer();
+		}
+		@Override
+		public Trees getTrees() {
+			return trees;
 		}
 		
 		

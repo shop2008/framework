@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>com.wxxr.mobile</groupId>
+            <artifactId>wxxr-mobile-android</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile</groupId>
             <artifactId>wxxr-mobile-db</artifactId>
             <version>1.0.0</version>
         </dependency>
