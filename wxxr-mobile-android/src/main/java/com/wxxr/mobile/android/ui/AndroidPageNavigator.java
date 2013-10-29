@@ -20,6 +20,7 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
+import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
@@ -255,7 +256,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		if(activity != null){
 			IViewDescriptor vDesc = context.getWorkbenchManager().getViewDescriptor(view.getName());
 			IAndroidBindingDescriptor bDesc = (IAndroidBindingDescriptor)vDesc.getBindingDescriptor(TargetUISystem.ANDROID);
-			IBinding<IUIComponent> binding = activity.getViewBinding().getFieldBinding(vg.getName());
+			IFieldBinding binding = activity.getViewBinding().getFieldBinding(vg.getName());
 			if(binding == null){
 				log.warn("Cannot found binding for view :"+view.getName());
 				return;

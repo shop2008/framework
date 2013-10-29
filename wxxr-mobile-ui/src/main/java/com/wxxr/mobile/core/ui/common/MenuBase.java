@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
 import java.util.LinkedList;
 
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
@@ -10,8 +11,6 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IUICommand;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
-import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -120,25 +119,6 @@ public class MenuBase extends UIComponent implements IMenu {
 		super.invokeCommand(cmdName, event);
 	}
 	
-	protected IView getView(IUIContainer<IUIComponent> p) {
-		if(p instanceof IView){
-			return (IView)p;
-		}else if(p != null){
-			return getView(getParent());
-		}else{
-			return null;
-		}
-	}
-	
-	protected IPage getPage(IUIContainer<IUIComponent> p) {
-		if(p instanceof IPage){
-			return (IPage)p;
-		}else if(p != null){
-			return getPage(getParent());
-		}else{
-			return null;
-		}
-	}
 
 
 	@Override

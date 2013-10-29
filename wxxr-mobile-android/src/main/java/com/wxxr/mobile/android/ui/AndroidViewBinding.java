@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.IEventBinder;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
+import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -38,11 +39,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 
 	private static final Trace log = Trace.register(AndroidViewBinding.class);
 	
-	private class FieldBindingCreator implements IBinding<IView>{
+	private class FieldBindingCreator implements IFieldBinding{
 		private final View view;
 		private final String fieldName;
 		private final Map<String, String> params;
-		private IBinding<IUIComponent> binding;
+		private IFieldBinding binding;
 		
 		FieldBindingCreator(View v, String name, Map<String, String> map){
 			this.view = v;
@@ -74,7 +75,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 				}, fieldName, params);
 				binding.init(runtimeContext);
 			}
-			binding.activate(field);
+			binding.activate(vmodel);
 			
 		}
 
@@ -113,6 +114,13 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			return view;
 		}
 
+		@Override
+		public void updateModel() {
+			if(this.binding != null){
+				this.binding.updateModel();
+			}
+		}
+
 //		@Override
 //		public IUIComponent getValueModel() {
 //			return this.binding != null ? this.binding.getValueModel() : null;
@@ -127,7 +135,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	private final int layoutResourceId;
 	private final IAndroidBindingContext bindingContext;
 	private List<IBinding<IView>> bindings = new ArrayList<IBinding<IView>>();
-	private Map<String,IBinding<IView>> fieldBindings = new HashMap<String,IBinding<IView>>();
+	private Map<String,IFieldBinding> fieldBindings = new HashMap<String,IFieldBinding>();
 //	private Map<String, FieldBindingCreator> bindingCreators = new HashMap<String, FieldBindingCreator>();
 //	private Map<String, IBinding> bindings = new HashMap<String, IBinding>();
 	private View layoutView;
@@ -329,7 +337,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 
 
 	@Override
-	public IBinding<IView> getFieldBinding(String fieldName) {
+	public IFieldBinding getFieldBinding(String fieldName) {
 		return this.fieldBindings.get(fieldName);
 	}
 	

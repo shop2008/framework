@@ -9,6 +9,7 @@ import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
+import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -31,7 +32,7 @@ public class AdapterViewFieldBinder implements IFieldBinder {
 	}
 
 	@Override
-	public IBinding<IUIComponent> createBinding(IBindingContext context,String fieldName,
+	public IFieldBinding createBinding(IBindingContext context,String fieldName,
 			Map<String, String> attrs) {
 		return new AdapterViewFieldBinding((IAndroidBindingContext)context, fieldName, attrs);
 	}

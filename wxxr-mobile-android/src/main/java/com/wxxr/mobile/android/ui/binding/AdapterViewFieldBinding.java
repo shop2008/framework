@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IView;
 
 /**
  * @author neillin
@@ -28,7 +29,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#activate(com.wxxr.mobile.core.ui.api.IUIComponent)
 	 */
 	@Override
-	public void activate(IUIComponent model) {
+	public void activate(IView model) {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
 		IListDataProvider provider = model.getAdaptor(IListDataProvider.class);

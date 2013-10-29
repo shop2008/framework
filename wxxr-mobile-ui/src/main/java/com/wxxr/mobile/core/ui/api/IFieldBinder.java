@@ -14,7 +14,7 @@ import java.util.Map;
  *
  */
 public interface IFieldBinder {
-	IBinding<IUIComponent> createBinding(IBindingContext context, String fieldName,Map<String, String> attrs);
+	IFieldBinding createBinding(IBindingContext context, String fieldName,Map<String, String> attrs);
 	void init(IWorkbenchRTContext mngCtx);
 	void destory();
 }

@@ -9,13 +9,14 @@ import java.util.Set;
 
 import android.view.View;
 
-import com.wxxr.mobile.android.ui.IAndroidBinding;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
+import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
@@ -24,10 +25,10 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
  * @author neillin
  *
  */
-public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
+public class BasicFieldBinding implements IFieldBinding {
 	
 	private View pComponent;	// physical component
-	private IUIComponent field;	// Logic view component
+	private IView viewModel;	// Logic view component
 	private IWorkbenchRTContext bContext;
 	private IAndroidBindingContext context;
 	private Map<String, String> bindingAttrs;
@@ -51,6 +52,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 * @see com.wxxr.mobile.android.ui.IAndroidBinding#updateUI()
 	 */
 	protected void updateUI(boolean recursive) {
+		IUIComponent field = this.viewModel.getChild(getFieldName());
 		Set<AttributeKey<?>> keys = field.getAttributeKeys();
 		if((keys != null)&&(keys.size() > 0)){
 			for (AttributeKey<?> attrKey : keys) {
@@ -74,7 +76,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 		if(updaters != null){
 			for (IAttributeUpdater<View> updater : updaters) {
 				if(updater.acceptable(pComponent)){
-					updater.updateControl(this.pComponent, attrKey, field,val);
+					updater.updateControl(this.pComponent, attrKey, this.viewModel.getChild(getFieldName()),val);
 					break;
 				}
 			}
@@ -84,7 +86,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	
 	
 	protected boolean isVisible() {
-		Boolean bool = field.getAttribute(AttributeKeys.visible);
+		Boolean bool = this.viewModel.getChild(getFieldName()).getAttribute(AttributeKeys.visible);
 		return bool != null ? bool.booleanValue() : false;
 	}
 
@@ -92,7 +94,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 * 
 	 */
 	protected void setUIEnabled() {
-		Boolean bool = field.getAttribute(AttributeKeys.enabled);
+		Boolean bool = this.viewModel.getChild(getFieldName()).getAttribute(AttributeKeys.enabled);
 		boolean val = bool != null ? bool.booleanValue() : false;
 		this.pComponent.setEnabled(val);
 	}
@@ -111,8 +113,8 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 * @see com.wxxr.mobile.android.ui.IAndroidBinding#activate()
 	 */
 	@Override
-	public void activate(IUIComponent model) {
-		this.field = model;
+	public void activate(IView model) {
+		this.viewModel = model;
 //		if(this.field != null){
 //			this.field.doBinding(this);
 //		}
@@ -124,9 +126,9 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 */
 	@Override
 	public void deactivate() {
-		if(this.field != null){
+		if(this.viewModel != null){
 //			this.field.doUnbinding(this);
-			this.field = null;
+			this.viewModel = null;
 		}
 	}
 
@@ -136,7 +138,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	@Override
 	public void destroy() {
 		this.pComponent = null;
-		this.field = null;
+		this.viewModel = null;
 		this.bContext = null;
 		this.bindingAttrs = null;
 	}
@@ -152,7 +154,7 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 * @return the field
 	 */
 	protected IUIComponent getField() {
-		return field;
+		return this.viewModel != null ? this.viewModel.getChild(getFieldName()) : null;
 	}
 
 	@Override
@@ -198,6 +200,27 @@ public class BasicFieldBinding implements IAndroidBinding<IUIComponent> {
 	 */
 	protected IAndroidBindingContext getAndroidBindingContext() {
 		return context;
+	}
+
+
+	@Override
+	public void updateModel() {
+		IUIComponent field = getField();
+		if(field instanceof IDataField){
+			AttributeKey<?> attrKey =((IDataField<?>)field).getValueKey();
+			IFieldAttributeManager attrMgr = bContext.getWorkbenchManager().getFieldAttributeManager();
+			@SuppressWarnings("unchecked")
+			IAttributeUpdater<View>[] updaters = (IAttributeUpdater<View>[])attrMgr.getAttributeUpdaters(attrKey.getName());
+			if(updaters != null){
+				for (IAttributeUpdater<View> updater : updaters) {
+					if(updater.acceptable(pComponent)){
+						updater.updateModel(this.pComponent, attrKey, field);
+						break;
+					}
+				}
+			}
+		}
+		
 	}
 
 

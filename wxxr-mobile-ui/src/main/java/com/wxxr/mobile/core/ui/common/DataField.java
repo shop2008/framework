@@ -3,12 +3,17 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
+import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWritable;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.UIError;
 import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
@@ -19,6 +24,7 @@ import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
  */
 public class DataField<T> extends UIComponent implements IDataField<T> {
 
+	public final static String UPDATE_VALUE_COMMAND_NAME = "_updateValue";
 
 	private AttributeKey<T> valueKey;
 	private T localValue;
@@ -272,6 +278,21 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	@Override
 	public void setValue(T val) {
 		setAttribute(valueKey, val);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#invokeCommand(java.lang.String, com.wxxr.mobile.core.ui.api.InputEvent)
+	 */
+	@Override
+	public void invokeCommand(String cmdName, InputEvent event) {
+		if(UPDATE_VALUE_COMMAND_NAME.equals(cmdName)){
+			IFieldBinding binding = getFieldBinding(this);
+			if(binding != null){
+				binding.updateModel();
+			}
+		}
+		super.invokeCommand(cmdName, event);
 	}
 	
 }
