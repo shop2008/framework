@@ -171,6 +171,6 @@
 		</ScrollView>
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-    <include layout="@layout/layout_loading" />
+    <include layout="@layout/loading_layout" />
 
 </RelativeLayout>
