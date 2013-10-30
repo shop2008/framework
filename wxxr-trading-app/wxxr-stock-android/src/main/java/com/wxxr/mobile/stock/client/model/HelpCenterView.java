@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
  *
  */
 @View(name="helpCenter")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.layout_help_center")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase {
 
 }

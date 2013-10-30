@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
  *
  */
 @View(name="championShip")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.layout_challenge_trade")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.challenge_trade_page_layout")
 public abstract class ChampionShipView extends ViewBase {
 
 }

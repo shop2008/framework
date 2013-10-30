@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
  *
  */
 @View(name="infoCenter")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.layout_price_center")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.price_center_page_layout")
 public abstract class InfoCenterView extends ViewBase {
 
 }

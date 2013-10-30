@@ -24,7 +24,7 @@ public class SplashPage extends MainActivity {
 	 */
 	@Override
 	protected void setupContentView() {
-		setContentView(R.layout.splash_layout);
+		setContentView(R.layout.splash_page_layout);
 		this.progressBar = (ProgressBar)findViewById(R.id.loading_progressBar);
 		this.textView = (TextView)findViewById(R.id.loading_Info);
 		setMinStartupTime(3);
