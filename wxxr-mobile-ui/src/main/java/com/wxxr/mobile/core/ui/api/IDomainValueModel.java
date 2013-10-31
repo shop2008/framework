@@ -13,6 +13,6 @@ public interface IDomainValueModel {
 	boolean removeListener(IDomainValueChangedListener listener);
 	
 	Object getValue();
-	void updateValue(Object value) throws ValidationException;	
+	ValidationError[] updateValue(Object value);	
 	boolean isUpdatable();
 }

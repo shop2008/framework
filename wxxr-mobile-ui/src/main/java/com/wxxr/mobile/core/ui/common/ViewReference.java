@@ -16,7 +16,7 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IViewReference;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.UIError;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 
 
 /**
@@ -131,7 +131,7 @@ public class ViewReference implements IViewReference {
 	 * @return
 	 * @see com.wxxr.mobile.core.ui.api.IView#getErrors()
 	 */
-	public List<UIError> getErrors() {
+	public List<ValidationError> getErrors() {
 		return getDelegate().getErrors();
 	}
 

@@ -7,10 +7,10 @@ package com.wxxr.mobile.core.ui.api;
  * @author neillin
  *
  */
-public class UIError {
+public class ValidationError {
 	private final String errorCode, errorMessage,fieldId;
 	
-	public UIError(String errCode, String errMsg, String fieldId){
+	public ValidationError(String errCode, String errMsg, String fieldId){
 		this.errorCode = errCode;
 		this.errorMessage = errMsg;
 		this.fieldId = fieldId;
@@ -42,7 +42,7 @@ public class UIError {
 	 */
 	@Override
 	public String toString() {
-		return "UIError [errorCode=" + errorCode + ", errorMessage="
+		return "ValidationError [errorCode=" + errorCode + ", errorMessage="
 				+ errorMessage + ", fieldId=" + fieldId + "]";
 	}
 	

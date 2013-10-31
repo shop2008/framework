@@ -5,16 +5,14 @@ package com.wxxr.mobile.core.ui.common;
 
 import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.UIError;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
 
@@ -29,20 +27,6 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	private AttributeKey<T> valueKey;
 	private T localValue;
 	private IDomainValueModel domainModel;
-//	= new AttributeKey<T>() {
-//
-//		public Class<T> getValueType() {
-//			return valueType;
-//		}
-//
-//		public IValueConvertor<T> getValueConvertor() {
-//			return getConvertor();
-//		}
-//
-//		public String getName() {
-//			return "value";
-//		}
-//	};
 	
 	private boolean readOnly = false;
 	private IValueConvertor<T> convertor;
@@ -63,66 +47,22 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 		
 		public void setValue(Object value) {
 			localValue = getValueKey().getValueType().cast(value);
+			removeAttribute(AttributeKeys.validationErrors);
 			if(domainModel != null){
 				// call domain model binding to update domain model
-				try {
-					domainModel.updateValue(value);
-				} catch (ValidationException e) {
-					uiError = new UIError(e.getErrorCode(), e.getMessage(), getName());
+					ValidationError[] errs = domainModel.updateValue(value);
+				if((errs != null)&&(errs.length > 0)){
+					setAttribute(AttributeKeys.validationErrors, errs);
 				}
 			}
-//			stringValue = value;
-//			doValidate();
 		}
 		
-		public UIError getValidationError() {
-			return uiError;
+		public ValidationError[] getValidationErrors() {
+			return getAttribute(AttributeKeys.validationErrors);
 		}
 		
 	};
-	
-	private UIError uiError;
-	
-	
-//	public boolean isFieldRequired() {
-//		Boolean val = getAttribute(AttributeKeys.required);
-//		return val != null ? val.booleanValue() : false;
-//	}
-
-	
-//	protected void doValidate() {
-//		String val = stringValue;
-//		if(isFieldRequired()&&(val == null)){
-//			uiError = new UIError(ErrorCodes.FIELD_REQUIRED, "input_required_value", getName());
-//			setAttribute(value, (T)null);
-//			return;
-//		}else if(val != null){
-//			try {
-//				setValue(val);
-//			} catch (ValidationException e) {
-//				uiError = new UIError(ErrorCodes.FIELD_REQUIRED, e.getMessage(), getName());
-//				setAttribute(value, (T)null);
-//				return;
-//			}
-//		}else{
-//			setAttribute(value, (T)null);
-//		}
-//		uiError = null;
-//	}
-	
-
-//	protected void setValue(String val) throws ValidationException {
-//		setAttribute(value, getConvertor().valueOf(val, new IValueConvertorContext() {
-//			
-//			public IWorkbenchRTContext getManagementContext() {
-//				return getUIContext();
-//			}
-//			
-//			public String getFormat() {
-//				return getValueFormat();
-//			}
-//		}));
-//	}
+		
 	
 	public DataField() {
 		super();
@@ -208,8 +148,8 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	}
 
 
-	public UIError getUIError() {
-		return this.uiError;
+	public ValidationError[] getValidationErrors() {
+		return getAttribute(AttributeKeys.validationErrors);
 	}
 
 

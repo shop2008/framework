@@ -17,7 +17,7 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.UIError;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 
 
@@ -65,15 +65,17 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		this.active = false;
 	}
 
-	public List<UIError> getErrors() {
-		List<UIError> errors = null;
+	public List<ValidationError> getErrors() {
+		List<ValidationError> errors = null;
 		for (IDataField<?> fld : getChildren(IDataField.class)) {
-			UIError err = fld.getUIError();
-			if(err != null){
-				if(errors == null){
-					errors = new ArrayList<UIError>();
+			ValidationError[] errs = fld.getValidationErrors();
+			if(errs != null){
+				for (ValidationError err : errs) {
+					if(errors == null){
+						errors = new ArrayList<ValidationError>();
+					}
+					errors.add(err);
 				}
-				errors.add(err);
 			}
 		}
 		return errors;

@@ -9,7 +9,7 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IDataField<T> extends IUIComponent{
-	UIError getUIError();
+	ValidationError[] getValidationErrors();
 	T getValue();
 	AttributeKey<T> getValueKey();
 	void setValue(T val);

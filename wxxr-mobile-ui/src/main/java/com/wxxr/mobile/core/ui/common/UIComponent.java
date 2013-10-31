@@ -116,6 +116,12 @@ public abstract class UIComponent implements IUIComponent {
 		return this;
 	}
 		
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T removeAttribute(AttributeKey<T> key){
+		return this.attrs != null ? (T)this.attrs.remove(key) : null;
+	}
+	
 	protected void fireDataChangedEvent(AttributeKey<?> ... keys){
 		fireDataChangedEvent(new ValueChangedEventImpl(this, keys));
 	}

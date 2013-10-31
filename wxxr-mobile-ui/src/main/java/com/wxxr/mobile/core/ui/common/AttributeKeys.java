@@ -1,6 +1,7 @@
 package com.wxxr.mobile.core.ui.common;
 
 import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 
 
 public interface AttributeKeys {
@@ -28,6 +29,7 @@ public interface AttributeKeys {
 	
 	AttributeKey<String> text = new AttributeKey<String>(String.class,"text");
 
+	AttributeKey<ValidationError[]> validationErrors = new AttributeKey<ValidationError[]>(ValidationError[].class,"validationErrors");
 
 	
 	AttributeKey<Boolean> visible = new AttributeKey<Boolean>(Boolean.class,"visible");

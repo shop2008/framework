@@ -9,5 +9,5 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface IWritable {
 	void setValue(Object value);
-	UIError getValidationError();
+	ValidationError[] getValidationErrors();
 }

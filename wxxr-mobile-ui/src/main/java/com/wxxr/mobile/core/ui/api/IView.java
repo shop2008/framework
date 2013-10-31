@@ -18,5 +18,5 @@ public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	
 	void hide();
 	
-	List<UIError> getErrors();
+	List<ValidationError> getErrors();
 }
