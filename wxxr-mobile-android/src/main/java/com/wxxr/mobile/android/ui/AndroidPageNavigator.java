@@ -107,7 +107,11 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 				cbs.add(cb);
 			}
 		}
-		app.startActivity(intent);
+		if(activity != null) {
+			activity.startActivity(intent);
+		} else {
+			app.startActivity(intent);
+		}
 	}
 
 	protected Class<?> getActivityClass(String pageName) {
