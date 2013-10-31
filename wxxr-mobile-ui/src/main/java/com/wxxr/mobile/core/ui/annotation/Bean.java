@@ -17,10 +17,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Documented
 @PresentationModel
-public @interface Field {
-	String enableWhen() default "";
-	String visibleWhen() default "";
-	Attribute[] attributes() default {};
-	String valueKey();
-	String binding()default "";
+public @interface Bean {
+	BindingType type() default BindingType.Pojo;
+	String express() default "";
+	boolean nullable() default false;
+	
+	public enum BindingType {
+		Service,
+		Pojo
+	}
 }
