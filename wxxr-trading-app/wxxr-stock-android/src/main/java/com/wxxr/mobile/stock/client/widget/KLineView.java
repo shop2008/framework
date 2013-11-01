@@ -8,7 +8,6 @@ import java.util.List;
 import com.wxxr.mobile.stock.client.biz.Kline;
 import com.wxxr.mobile.stock.client.biz.Stock;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,85 +20,87 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder.Callback;
 
+
 /**
- * KÏß×Ô¶¨Òå¿Ø¼ş
+ * Kçº¿è‡ªå®šä¹‰æ§ä»¶
  * @author renwenjie
+ *
  */
 public class KLineView extends SurfaceView implements Callback {
 
 	private SurfaceHolder holder;
 	private RenderThread thread;
 
-	//private Stock stock;
+	private Stock stock;
 
 	/**
-	 * ÊÖÖ¸´¥Ãşµãºá×ø±ê
+	 * æ‰‹æŒ‡è§¦æ‘¸ç‚¹æ¨ªåæ ‡
 	 */
 	private float touchX ;
 	
 	/**
-	 * °×ÏßÆğÊ¼µã×ø±ê
+	 * ç™½çº¿èµ·å§‹ç‚¹åæ ‡
 	 */
 	private float whiteStartX;
 	
 	
 	/**
-	 * ÓÃÓÚ¸ñÊ½»¯Êı¾İ
+	 * ç”¨äºæ ¼å¼åŒ–æ•°æ®
 	 */
 	private static DecimalFormat df;
 	/**
-	 * »­±Ê¹¤¾ß
+	 * ç”»ç¬”å·¥å…·
 	 */
 	private Paint mPaint;
 
 	/**
-	 * kÏßÀàĞÍ 0--±íÊ¾ÈÕk, 1--±íÊ¾ÖÜk, 2--±íÊ¾ÔÂk, ÆäÖµÍ¨¹ıÅäÖÃÎÄ¼ş´«µİ
+	 * kçº¿ç±»å‹ 0--è¡¨ç¤ºæ—¥k, 1--è¡¨ç¤ºå‘¨k, 2--è¡¨ç¤ºæœˆk, å…¶å€¼é€šè¿‡é…ç½®æ–‡ä»¶ä¼ é€’
 	 */
 	private int klineType;
 	/**
-	 * ÆğÊ¼µã×İ¶È±È(×Ô¶¨ÒåµÄ)£¨µã×ø±ê/»­°å¸ß£©
+	 * èµ·å§‹ç‚¹çºµåº¦æ¯”(è‡ªå®šä¹‰çš„)ï¼ˆç‚¹åæ ‡/ç”»æ¿é«˜ï¼‰
 	 */
 	private final float hBi = (float) 152 / 220;
 
 	/**
-	 * ÓÒÉÏ½Ç×İ¶È±È(×Ô¶¨ÒåµÄ)£¨µã×ø±ê/»­°å¸ß£©
+	 * å³ä¸Šè§’çºµåº¦æ¯”(è‡ªå®šä¹‰çš„)ï¼ˆç‚¹åæ ‡/ç”»æ¿é«˜ï¼‰
 	 */
 	private final float tBi = (float) 20 / 220;
 
 	/**
-	 * Öù×´Í¼ÉÏ±ßÔµ×İ¶È±È(×Ô¶¨ÒåµÄ)£¨µã×ø±ê/»­°å¸ß£©
+	 * æŸ±çŠ¶å›¾ä¸Šè¾¹ç¼˜çºµåº¦æ¯”(è‡ªå®šä¹‰çš„)ï¼ˆç‚¹åæ ‡/ç”»æ¿é«˜ï¼‰
 	 */
 	private final float zztBi = (float) 168 / 220;
 
 	/**
-	 * Öù×´Í¼ÏÂµ×±ß×İ¶È±È(×Ô¶¨ÒåµÄ)£¨µã×ø±ê/»­°å¸ß£©
+	 * æŸ±çŠ¶å›¾ä¸‹åº•è¾¹çºµåº¦æ¯”(è‡ªå®šä¹‰çš„)ï¼ˆç‚¹åæ ‡/ç”»æ¿é«˜ï¼‰
 	 */
 	private final float zzbBi = (float) 213 / 220;
 
-	/** »­²¼µÄ¿í */
+	/** ç”»å¸ƒçš„å®½ */
 	public float cWidth;
-	/** »­²¼µÄ¸ß */
+	/** ç”»å¸ƒçš„é«˜ */
 	public float cHeight;
-	/** ·ÖÊ±±í×óÏÂ½ÇXµã */
+	/** åˆ†æ—¶è¡¨å·¦ä¸‹è§’Xç‚¹ */
 	public float mStartX;
-	/** ·ÖÊ±±í×óÏÂ½ÇYµã */
+	/** åˆ†æ—¶è¡¨å·¦ä¸‹è§’Yç‚¹ */
 	public float mStartY;
-	/** ·ÖÊ±±íÓÒÉÏ½ÇXµã */
+	/** åˆ†æ—¶è¡¨å³ä¸Šè§’Xç‚¹ */
 	public float mEndX;
-	/** ·ÖÊ±±íÓÒÉÏ½ÇYµã */
+	/** åˆ†æ—¶è¡¨å³ä¸Šè§’Yç‚¹ */
 	public float mEndY;
-	/** Öù×´Í¼¶¥±ßYµã */
+	/** æŸ±çŠ¶å›¾é¡¶è¾¹Yç‚¹ */
 	public float zzTopY;
-	/** Öù×´Í¼µ×±ßYµã */
+	/** æŸ±çŠ¶å›¾åº•è¾¹Yç‚¹ */
 	public float zzBottomY;
-	/** ·ÖÊ±Ïß±íµÄ¿í */
+	/** åˆ†æ—¶çº¿è¡¨çš„å®½ */
 	public float fenshiWidth;
-	/** ·ÖÊ±Ïß±íµÄ¸ß */
+	/** åˆ†æ—¶çº¿è¡¨çš„é«˜ */
 	public float fenshiHeight;
 
 	private boolean isRender = false;
 	/**
-	 * ÆğÊ¼µã¿í¶È±È(×Ô¶¨ÒåµÄ)(µã×ø±ê/»­°å¿í)
+	 * èµ·å§‹ç‚¹å®½åº¦æ¯”(è‡ªå®šä¹‰çš„)(ç‚¹åæ ‡/ç”»æ¿å®½)
 	 */
 	private float wBi;
 
@@ -109,29 +110,27 @@ public class KLineView extends SurfaceView implements Callback {
 	private int size;
 
 	/**
-	 * ÒªÇóÀ¯ÖòÏÔÊ¾µÄÊıÁ¿
+	 * è¦æ±‚èœ¡çƒ›æ˜¾ç¤ºçš„æ•°é‡
 	 */
 	private int count = 50;
 
 	/**
-	 * ×î¸ß³É½»¼Û
+	 * æœ€é«˜æˆäº¤ä»·
 	 */
 	private double maxPrice = 0;
 
 	/**
-	 * ×îµÍ³É½»¼Û
+	 * æœ€ä½æˆäº¤ä»·
 	 */
 	private double minPrice = 20000;
 
 	/**
-	 * ³É½»Á¿×î´óÖµ
+	 * æˆäº¤é‡æœ€å¤§å€¼
 	 */
 	private double maxSecuvolume = 0;
 
-	//private List<Kline> klines;
+	private List<Kline> klines;
 	public float w;
-	public List<Kline> klines;
-	private Stock stock;
 
 	public KLineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -157,11 +156,11 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	public void setKlines(List<Kline> data) {
-		//klines = data;
+		klines = data;
 	}
 	
 	public void setStock(Stock stock) {
-		//this.stock = stock;
+		this.stock = stock;
 	}
 	
 	
@@ -197,7 +196,7 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 	
 	/**
-	 * äÖÈ¾Ïß³Ì---ÓÃÓÚÊµÊ±äÖÈ¾
+	 * æ¸²æŸ“çº¿ç¨‹---ç”¨äºå®æ—¶æ¸²æŸ“
 	 * @author renwenjie
 	 *
 	 */
@@ -220,12 +219,12 @@ public class KLineView extends SurfaceView implements Callback {
 			try {
 				c = mHolder.lockCanvas(null);
 				/**
-				 *  Ö¸¶¨±³¾°
+				 *  æŒ‡å®šèƒŒæ™¯
 				 */
 				if (c != null) {
 					c.drawColor(Color.BLACK);
 					/**
-					 * »­Í¼
+					 * ç”»å›¾
 					 */
 					doDraw(c, klineType);
 				}
@@ -248,7 +247,7 @@ public class KLineView extends SurfaceView implements Callback {
 
 
 		public void requestExitAndWait() {
-			// °ÑÕâ¸öÏß³Ì±ê¼ÇÎªÍê³É£¬²¢ºÏ²¢µ½Ö÷³ÌĞòÏß³Ì
+			// æŠŠè¿™ä¸ªçº¿ç¨‹æ ‡è®°ä¸ºå®Œæˆï¼Œå¹¶åˆå¹¶åˆ°ä¸»ç¨‹åºçº¿ç¨‹
 			try {
 				join();
 			} catch (InterruptedException ex) {
@@ -274,7 +273,7 @@ public class KLineView extends SurfaceView implements Callback {
 	private void setData2() {
 		if (klines != null && klines.size() > 0) {
 			size = klines.size();
-			count = size <= 50 ? size : 50;// È±Ê¡×î¶àÈ¡50¸öÀ¯ÖòÍ¼
+			count = size <= 50 ? size : 50;// ç¼ºçœæœ€å¤šå–50ä¸ªèœ¡çƒ›å›¾
 
 			double temp;
 			for (int i = 0; i < count; i++) {
@@ -292,7 +291,7 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 	
 	/**
-	 * Ë¢ĞÂ½çÃæ
+	 * åˆ·æ–°ç•Œé¢
 	 */
 	public void notifyDataSetChanged() {
 		if (thread != null)
@@ -300,7 +299,7 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	public void drawKline(Canvas canvas) {
-		// ÔÚ±³¾°±í¸ñÉÏ»­Êı¾İ
+		// åœ¨èƒŒæ™¯è¡¨æ ¼ä¸Šç”»æ•°æ®
 		
 		
 		if (klines == null) {
@@ -311,13 +310,13 @@ public class KLineView extends SurfaceView implements Callback {
 		}
 
 		setData2();
-		/** »­¸÷ÏîÖ¸±ê´ÓÕâÀï¿ªÊ¼************************************************ */
+		/** ç”»å„é¡¹æŒ‡æ ‡ä»è¿™é‡Œå¼€å§‹************************************************ */
 
-		/** Çå¿Õ»­±ÊÑùÊ½ */
+		/** æ¸…ç©ºç”»ç¬”æ ·å¼ */
 		mPaint.setPathEffect(null);
 		canvas.save();
 
-		/** ÉèÖÃ±í¸ñ×ó±ßµÄ¹ÉÆ±¼Û¸ñÎÄ×Ö */
+		/** è®¾ç½®è¡¨æ ¼å·¦è¾¹çš„è‚¡ç¥¨ä»·æ ¼æ–‡å­— */
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
@@ -330,7 +329,7 @@ public class KLineView extends SurfaceView implements Callback {
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		mPaint.setColor(Color.WHITE);
 
-		/** ¼ÆËã×ó±ß7¸öÖµ */
+		/** è®¡ç®—å·¦è¾¹7ä¸ªå€¼ */
 		double price1 = maxPrice;
 		double price2 = (maxPrice - minPrice) * 5 / 6 + minPrice;
 		double price3 = (maxPrice - minPrice) * 2 / 3 + minPrice;
@@ -352,7 +351,7 @@ public class KLineView extends SurfaceView implements Callback {
 				+ (fenshiHeight / 6) * 5, mPaint);
 		canvas.drawText(formatDouble(price7), mStartX - 3, mStartY - 1, mPaint);
 
-		/** ÉèÖÃ±í¸ñµ×±ßÊ±¼äÎÄ×Ö */
+		/** è®¾ç½®è¡¨æ ¼åº•è¾¹æ—¶é—´æ–‡å­— */
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
@@ -370,7 +369,7 @@ public class KLineView extends SurfaceView implements Callback {
 		canvas.drawText(klines.get(count - 1).date, mEndX - 31, zzTopY - 1,
 				mPaint);
 
-		/** »­³É½»Á¿Öù×´Í¼µÄÖµ */
+		/** ç”»æˆäº¤é‡æŸ±çŠ¶å›¾çš„å€¼ */
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
@@ -380,18 +379,18 @@ public class KLineView extends SurfaceView implements Callback {
 		} else {
 			mPaint.setTextSize(4);
 		}
-		/** ³É½»Á¿£¨Íò£© */
+		/** æˆäº¤é‡ï¼ˆä¸‡ï¼‰ */
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		canvas.drawText(formatNum(maxSecuvolume / 100), mStartX - 3,
 				zzTopY + 10, mPaint);
 		canvas.drawText(formatNum(maxSecuvolume / 200), mStartX - 3, zzTopY
 				+ (zzBottomY - zzTopY) / 2 + 8, mPaint);
-		/** µ¥Î»£¨ÊÖ£© */
-		canvas.drawText("µ¥Î»:ÊÖ", mStartX - 3, zzBottomY + 4, mPaint);
+		/** å•ä½ï¼ˆæ‰‹ï¼‰ */
+		canvas.drawText("å•ä½:æ‰‹", mStartX - 3, zzBottomY + 4, mPaint);
 
-		/** À¯ÖòÍ¼»­·¨ */
-		/** Çå¿Õ»­±ÊÑùÊ½ */
-		mPaint.setPathEffect(null);// ¹ìµÀĞ§¹û
+		/** èœ¡çƒ›å›¾ç”»æ³• */
+		/** æ¸…ç©ºç”»ç¬”æ ·å¼ */
+		mPaint.setPathEffect(null);// è½¨é“æ•ˆæœ
 		canvas.save();
 		float left = mStartX, top, right, bottom;
 		float startX, startY, stopY;
@@ -401,7 +400,7 @@ public class KLineView extends SurfaceView implements Callback {
 
 		
 		/**
-		 * »­Ã¿¸öÖù×´Í¼µÄ°×Ïß
+		 * ç”»æ¯ä¸ªæŸ±çŠ¶å›¾çš„ç™½çº¿
 		 */
 		drawWhiteLine(canvas, mStartX, mEndX, mEndY, zzBottomY, count, w);
 	
@@ -431,14 +430,14 @@ public class KLineView extends SurfaceView implements Callback {
 
 			int a = (int) top;
 			int b = (int) bottom;
-			// »­À¯Öò
+			// ç”»èœ¡çƒ›
 			if (open == newprice || a == b) {
 				canvas.drawLine(left, top, right, bottom, mPaint);
 			} else {
 				canvas.drawRect(left, top, right, bottom, mPaint);
 			}
 
-			// »­Öù×´Í¼
+			// ç”»æŸ±çŠ¶å›¾
 			if (secuvolume != 0) {
 				
 				top = (float) (zzBottomY - secuvolume * (zzBottomY - zzTopY)
@@ -450,11 +449,11 @@ public class KLineView extends SurfaceView implements Callback {
 				}
 				
 				/**
-				 * Öù×´Í¼¸ß¶È
+				 * æŸ±çŠ¶å›¾é«˜åº¦
 				 */
 				float absDisY = zzBottomY - top;
 				/**
-				 * µ×²¿±ß¿ò¸ß¶È
+				 * åº•éƒ¨è¾¹æ¡†é«˜åº¦
 				 */
 				float absDisF = zzBottomY - zzTopY;
 				
@@ -469,7 +468,7 @@ public class KLineView extends SurfaceView implements Callback {
 					/ (maxPrice - minPrice));
 			stopY = (float) (mStartY - (low - minPrice) * fenshiHeight
 					/ (maxPrice - minPrice));
-			// »­ÖĞÏß
+			// ç”»ä¸­çº¿
 			canvas.drawLine(startX, startY, startX, stopY, mPaint);
 
 			left += w * 3;
@@ -489,12 +488,12 @@ public class KLineView extends SurfaceView implements Callback {
 		}
 	}
 
-	/*public void setKlineData(ArrayList<Kline> data) {
+	public void setKlineData(ArrayList<Kline> data) {
 
-	}*/
+	}
 
 	public void drawBgProgram(Canvas canvas) {
-		/** ÉèÖÃĞéÏßÑùÊ½ */
+		/** è®¾ç½®è™šçº¿æ ·å¼ */
 		mPaint.setColor(Color.RED);
 		mPaint.setStyle(Paint.Style.STROKE);
 		// mPaint.setColor(Color.DKGRAY);
@@ -505,43 +504,43 @@ public class KLineView extends SurfaceView implements Callback {
 		mPaint.setPathEffect(effects);
 		// canvas.drawPath(path, mPaint);
 
-		/** ºáĞéÏß */
+		/** æ¨ªè™šçº¿ */
 
 		// if (!Tools.isPortrait(context))
 		// {
-		// ·ÖÊ±µÄ
+		// åˆ†æ—¶çš„
 		for (int i = 0; i < 7; i++) {
 			canvas.drawLine(mStartX, mStartY - i * (fenshiHeight / 6), mEndX,
 					mStartY - i * (fenshiHeight / 6), mPaint);
 		}
-		// Öù×´Í¼µÄÒ»ÌõºáĞéÏß
+		// æŸ±çŠ¶å›¾çš„ä¸€æ¡æ¨ªè™šçº¿
 		canvas.drawLine(mStartX, zzTopY + (zzBottomY - zzTopY) / 2, mEndX,
 				zzTopY + (zzBottomY - zzTopY) / 2, mPaint);
 
-		/** ×İĞéÏß */
+		/** çºµè™šçº¿ */
 		for (int j = 1; j < 4; j++) {
 			float x = mStartX + j * (fenshiWidth / 4);
-			// ·ÖÊ±µÄ
+			// åˆ†æ—¶çš„
 			canvas.drawLine(x, mStartY + 6, x, mEndY - 6, mPaint);
-			// Öù×´Í¼µÄ
+			// æŸ±çŠ¶å›¾çš„
 			canvas.drawLine(x, zzTopY, x, zzBottomY, mPaint);
 		}
 		// }
 
-		/** Çå¿Õ»­±ÊÑùÊ½ */
+		/** æ¸…ç©ºç”»ç¬”æ ·å¼ */
 		mPaint.setPathEffect(null);
 
-		/** ÍâÎ§±ß¿ò */
+		/** å¤–å›´è¾¹æ¡† */
 		// mPaint.setColor(Color.DKGRAY);
 		mPaint.setColor(Color.RED);
-		canvas.drawLine(mStartX, mEndY - 6, mEndX, mEndY - 6, mPaint);// ·ÖÊ±ÉÏ·½ºáÏß
-		canvas.drawLine(mStartX, mStartY + 6, mEndX, mStartY + 6, mPaint);// ·ÖÊ±ÏÂ·½ºáÏß
-		canvas.drawLine(mStartX, mStartY + 6, mStartX, mEndY - 6, mPaint);// ·ÖÊ±×ó×İÏß
-		canvas.drawLine(mEndX, mStartY + 6, mEndX, mEndY - 6, mPaint);// ·ÖÊ±ÓÒ×İÏß
-		canvas.drawLine(mStartX, zzTopY, mEndX, zzTopY, mPaint);// Öù×´Í¼ÉÏ·½ºáÏß
-		canvas.drawLine(mStartX, zzBottomY, mEndX, zzBottomY, mPaint);// Öù×´Í¼µ×±ßºáÏß
-		canvas.drawLine(mStartX, zzBottomY, mStartX, zzTopY, mPaint);// Öù×´Í¼×ó×İÏß
-		canvas.drawLine(mEndX, zzBottomY, mEndX, zzTopY, mPaint);// Öù×´Í¼ÓÒ×İÏß
+		canvas.drawLine(mStartX, mEndY - 6, mEndX, mEndY - 6, mPaint);// åˆ†æ—¶ä¸Šæ–¹æ¨ªçº¿
+		canvas.drawLine(mStartX, mStartY + 6, mEndX, mStartY + 6, mPaint);// åˆ†æ—¶ä¸‹æ–¹æ¨ªçº¿
+		canvas.drawLine(mStartX, mStartY + 6, mStartX, mEndY - 6, mPaint);// åˆ†æ—¶å·¦çºµçº¿
+		canvas.drawLine(mEndX, mStartY + 6, mEndX, mEndY - 6, mPaint);// åˆ†æ—¶å³çºµçº¿
+		canvas.drawLine(mStartX, zzTopY, mEndX, zzTopY, mPaint);// æŸ±çŠ¶å›¾ä¸Šæ–¹æ¨ªçº¿
+		canvas.drawLine(mStartX, zzBottomY, mEndX, zzBottomY, mPaint);// æŸ±çŠ¶å›¾åº•è¾¹æ¨ªçº¿
+		canvas.drawLine(mStartX, zzBottomY, mStartX, zzTopY, mPaint);// æŸ±çŠ¶å›¾å·¦çºµçº¿
+		canvas.drawLine(mEndX, zzBottomY, mEndX, zzTopY, mPaint);// æŸ±çŠ¶å›¾å³çºµçº¿
 		canvas.save();
 	}
 
@@ -555,31 +554,31 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	private String formatNum(double value) {
-		// ³É½»Á¿×İ×ø±êĞ¡ÓÚ1Íò£¬Ö±½ÓÏÔÊ¾£¬Èç9453£»
-		// ´óÓÚ1Íò£¬¼ÓÍò£¬±£Áô1Î»Ğ¡Êı£¬Èç1140.5Íò£»
-		// ´óÓÚ1ÒÚ£¬¼ÓÒÚ£¬±£Áô1Î»Ğ¡Êı£¬Èç1.5ÒÚ¡£
-		if (value >= 100000000000d) {// ´óÓÚµÈÓÚ1Ç§ÒÚ
-			return round(value / 100000000, 1) + "ÒÚ";// 6,666ÒÚ
-		} else if (value >= 100000000) {// ´óÓÚµÈÓÚ1ÒÚ
-			return round((value / 100000000), 1) + "ÒÚ";// 666.6ÒÚ
-		} else if (value > 10000000 && value < 100000000) {// ´óÓÚ1Ç§ÍòĞ¡ÓÚ1ÒÚ
-			return round(value / 10000, 1) + "Íò";// 6666Íò
-		} else if (value >= 10000) {// ´óÓÚµÈÓÚÒ»Íò
-			return round((value / 10000), 1) + "Íò";// 666.6Íò
-		} else {// Ğ¡ÓÚÒ»Íò
+		// æˆäº¤é‡çºµåæ ‡å°äº1ä¸‡ï¼Œç›´æ¥æ˜¾ç¤ºï¼Œå¦‚9453ï¼›
+		// å¤§äº1ä¸‡ï¼ŒåŠ ä¸‡ï¼Œä¿ç•™1ä½å°æ•°ï¼Œå¦‚1140.5ä¸‡ï¼›
+		// å¤§äº1äº¿ï¼ŒåŠ äº¿ï¼Œä¿ç•™1ä½å°æ•°ï¼Œå¦‚1.5äº¿ã€‚
+		if (value >= 100000000000d) {// å¤§äºç­‰äº1åƒäº¿
+			return round(value / 100000000, 1) + "äº¿";// 6,666äº¿
+		} else if (value >= 100000000) {// å¤§äºç­‰äº1äº¿
+			return round((value / 100000000), 1) + "äº¿";// 666.6äº¿
+		} else if (value > 10000000 && value < 100000000) {// å¤§äº1åƒä¸‡å°äº1äº¿
+			return round(value / 10000, 1) + "ä¸‡";// 6666ä¸‡
+		} else if (value >= 10000) {// å¤§äºç­‰äºä¸€ä¸‡
+			return round((value / 10000), 1) + "ä¸‡";// 666.6ä¸‡
+		} else {// å°äºä¸€ä¸‡
 			return String.valueOf(round(value, 1));// 6,666
 		}
 	}
 	
 	
 	/**
-	 * FIXME Ìá¹©Ğ¡ÊıÎ»ËÄÉáÎåÈë´¦Àí¡£Èç¹û²»ÊÇ¿ÆÑ§¼ÆËã£¬ÈÎºÎÉÌÒµ¼ÆËã¶¼Ó¦¸ÃÊ¹ÓÃBigDecimal¶ø²»ÊÇdouble£¬ÒòÎªdoubleÀàĞÍ²»¾«È·¡£
+	 * FIXME æä¾›å°æ•°ä½å››èˆäº”å…¥å¤„ç†ã€‚å¦‚æœä¸æ˜¯ç§‘å­¦è®¡ç®—ï¼Œä»»ä½•å•†ä¸šè®¡ç®—éƒ½åº”è¯¥ä½¿ç”¨BigDecimalè€Œä¸æ˜¯doubleï¼Œå› ä¸ºdoubleç±»å‹ä¸ç²¾ç¡®ã€‚
 	 * 
 	 * @param v
-	 *            ĞèÒªËÄÉáÎåÈëµÄÊı×Ö
+	 *            éœ€è¦å››èˆäº”å…¥çš„æ•°å­—
 	 * @param scale
-	 *            Ğ¡Êıµãºó¡°×î¶à¡±±£Áô¼¸Î»
-	 * @return ËÄÉáÎåÈëºóµÄ½á¹û
+	 *            å°æ•°ç‚¹åâ€œæœ€å¤šâ€ä¿ç•™å‡ ä½
+	 * @return å››èˆäº”å…¥åçš„ç»“æœ
 	 */
 	private double round(double v, int scale) {
 		if (scale < 0) {
@@ -592,12 +591,12 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	/**
-	 * FIXME ¡°#¡±ÊÇ¿ÉÒÔÎª¿Õ£¬¡°0¡±ÊÇ²»¹»Ìí0Õ¼Î»£¬¡°£¬¡±ÊÇ·Ö¸ô·û;ÀıÈç¡°#£¬##0.0#¡±
+	 * FIXME â€œ#â€æ˜¯å¯ä»¥ä¸ºç©ºï¼Œâ€œ0â€æ˜¯ä¸å¤Ÿæ·»0å ä½ï¼Œâ€œï¼Œâ€æ˜¯åˆ†éš”ç¬¦;ä¾‹å¦‚â€œ#ï¼Œ##0.0#â€
 	 * 
 	 * @param v
-	 *            ĞèÒª¸ñÊ½»¯µÄÊı×Ö
+	 *            éœ€è¦æ ¼å¼åŒ–çš„æ•°å­—
 	 * @param scale
-	 *            Ğ¡Êıµãºó¡°ÖÁÉÙ¡±±£Áô¼¸Î»
+	 *            å°æ•°ç‚¹åâ€œè‡³å°‘â€ä¿ç•™å‡ ä½
 	 * @return
 	 */
 	public String formatDouble(double v, int scale) {
@@ -609,7 +608,7 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	/**
-	 * FIXME Ğ¡Êı×ª»¯Îª°Ù·ÖÊı,±£Áô2Î»Ğ¡Êı(ÓĞËÄÉáÎåÈë)
+	 * FIXME å°æ•°è½¬åŒ–ä¸ºç™¾åˆ†æ•°,ä¿ç•™2ä½å°æ•°(æœ‰å››èˆäº”å…¥)
 	 * 
 	 * @param -0.12345
 	 * @return -12.35%
