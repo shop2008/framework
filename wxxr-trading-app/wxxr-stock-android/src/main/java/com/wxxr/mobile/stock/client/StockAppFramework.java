@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
+import com.wxxr.mobile.stock.client.module.ArticleManagerModule;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 
 /**
@@ -84,6 +85,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(m);
 		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
 		registerKernelModule(new WorkbenchManagerModule());
+		registerKernelModule(new ArticleManagerModule());//
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
