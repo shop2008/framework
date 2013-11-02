@@ -177,9 +177,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						}
 					}
 				}
-				FieldBindingCreator binding = new FieldBindingCreator(view, val, params);
-				bindings.add(binding);
-				fieldBindings.put(val, binding);
+				if(!"*".equals(val)){
+					FieldBindingCreator binding = new FieldBindingCreator(view, val, params);
+					bindings.add(binding);
+					fieldBindings.put(val, binding);
+				}
 				if(events.size() > 0){
 					for (String evtType : events.keySet()) {
 						String cmdName = events.get(evtType);
