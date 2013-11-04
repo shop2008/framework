@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.android.ui.binding.AdapterViewFieldBinder;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
-import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
@@ -21,8 +20,9 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 import com.wxxr.mobile.stock.client.IStockAppContext;
+import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
-import com.wxxr.mobile.stock.client.widget.ImageSwiperAdapterViewFileBinder;
+import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 
 /**
  * @author neillin
@@ -32,12 +32,13 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initFieldBinders(IFieldBinderManager mgr) {
-		//mgr.registerFieldBinder(UIComponent.class,View.class, new ImageSwiperAdapterViewFileBinder());
+		mgr.registerFieldBinder(UIComponent.class,PageSwiperView.class, new AdapterViewFieldBinder());
 	}
 
 	@Override
 	protected void initEventBinders(IEventBinderManager mgr) {
-		
+		mgr.registerFieldBinder("TopRefresh", new RefreshEventBinder());
+		mgr.registerFieldBinder("BottomRefresh", new RefreshEventBinder());
 	}
 
 	@Override

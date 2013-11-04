@@ -1,33 +1,33 @@
 package com.wxxr.mobile.stock.client.widget;
 
 
-import com.wxxr.mobile.stock.client.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 
-public class ImageSwiperLayout extends RelativeLayout {
+import com.wxxr.mobile.stock.client.R;
+
+public class PageSwiperView extends RelativeLayout {
 
 	private LinearLayout paginationLayout; //分页布局
-	private ImageView[] paginationImgView; //分页图片
+	private View[] paginationImgView; //分页图片
 	private Context mContext;
 	private ImageSwiperViewGroup swiperViewGroup;
 	private int mViewCount = 0;
 	private int mCurSel = 0;
 	
-	private static final String TAG = "ImageSwiperLayout";
-    private ImageSwiperAdapter mAdapter;
-	public ImageSwiperLayout(Context context) {
+	private static final String TAG = "PageSwiperView";
+    private ListAdapter mAdapter;
+	public PageSwiperView(Context context) {
 		super(context);
 		this.mContext = context;
 		init();
 	}
-	public ImageSwiperLayout(Context context, AttributeSet attrs) {
+	public PageSwiperView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext = context;
 		init();
@@ -70,13 +70,14 @@ public class ImageSwiperLayout extends RelativeLayout {
 			this.addView(paginationLayout,params);
 		}		
 	}
-	public void setAdapter(ImageSwiperAdapter dapter){
+	public void setAdapter(ListAdapter dapter){
 		this.mAdapter = dapter;
 		bindImageList();
 	}
-	public ImageSwiperAdapter getAdapter(){
+	public ListAdapter getAdapter(){
 		return mAdapter;
 	}
+	
 	private void bindImageList(){
 		if(getAdapter()==null)
 			return;
@@ -88,12 +89,12 @@ public class ImageSwiperLayout extends RelativeLayout {
 		}
 		mViewCount = getAdapter().getCount();
 		if(mViewCount>0){
-			paginationImgView = new ImageView[mViewCount];
+			paginationImgView = new View[mViewCount];
 			for(int i=0; i<mViewCount;i++){
 				View image = getAdapter().getView(i, null, null);
 				if(image!=null){
 					swiperViewGroup.addView(image);
-					paginationImgView[i] = new ImageView(mContext);
+					paginationImgView[i] = new View(mContext);
 					paginationImgView[i].setBackgroundResource(R.drawable.guide_round);
 					paginationImgView[i].setTag(i);
 					if(i==0){

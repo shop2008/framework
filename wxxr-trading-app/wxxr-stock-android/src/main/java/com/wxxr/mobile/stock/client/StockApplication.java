@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.client;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Level;
 
 import android.app.Application;
@@ -33,8 +35,7 @@ public class StockApplication extends Application
 			logConfig.configureFileAppender("/",Level.WARN);
 			logConfig.configureLogCatAppender("/", Level.WARN);
 		}
-//		this.application.start();
-		
+		this.framework.startLater(1,TimeUnit.SECONDS);	
 	}
 
 

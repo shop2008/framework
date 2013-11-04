@@ -22,7 +22,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 public abstract class MenuItemView extends ViewBase implements IModelUpdater{
 	
 	@Field(valueKey="imageURI")
-	String menuIcon = "testIcon";
+	String menuIcon;
 	
 	@Field(valueKey="text")
 	String menuLabel;
