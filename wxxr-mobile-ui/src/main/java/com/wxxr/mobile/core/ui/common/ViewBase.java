@@ -41,7 +41,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		
 		protected synchronized ValueChangedEvent[] getPendingEvents() {
 			ValueChangedEvent[] evts = null;
-			if(pendingEvents != null){
+			if((pendingEvents != null)&&(pendingEvents.size() > 0)){
 				ValueChangedEvent last = this.pendingEvents.getLast();
 				ValueChangedEvent first = this.pendingEvents.getFirst();
 				if(((System.currentTimeMillis() - first.getTimestamp()) > 2000L)||((System.currentTimeMillis() - last.getTimestamp()) > 500L)){
