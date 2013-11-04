@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
-    xmlns:bind="http://wxxr.com.cn/binding"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     >
     <LinearLayout
         android:layout_width="fill_parent"
@@ -17,7 +19,6 @@
 		        android:layout_height="wrap_content"
 		        bind:field="menuIcon"
 		        />
-		    
 	    <TextView 
 	        android:id="@id/tv_left_navi_item"
 	        android:layout_width="wrap_content"

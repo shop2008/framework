@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         bind:field="contents"
+        android:background="@color/white"
         />
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
@@ -31,7 +32,7 @@
         android:divider="@null"
         android:scrollbars="none"
         android:fadingEdge="none"
-        android:background="@color/slideMenu_l_r_background"
+        android:background="@drawable/left_menu_bj"
         bind:field="leftMenu"
         bind:itemViewId="mainMenuItemView"
         android:cacheColorHint="#00000000"
