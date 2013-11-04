@@ -41,6 +41,8 @@ public interface AttributeKeys {
 	
 	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
+	AttributeKey<Object> options = new AttributeKey<Object>(Object.class,"options");
+
 	AttributeKey<?>[] keys = new AttributeKey<?>[] {
 			enabled,
 			visible,
@@ -55,7 +57,8 @@ public interface AttributeKeys {
 			title,
 			label,
 			selected,
-			menuCategory
+			menuCategory,
+			options
 	};
 
 
