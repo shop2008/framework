@@ -6,17 +6,23 @@ package com.wxxr.mobile.stock.client.module;
 import java.util.HashMap;
 
 import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
+import com.wxxr.mobile.android.ui.binding.AdapterViewFieldBinder;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
+import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
+import com.wxxr.mobile.stock.client.widget.ImageSwiperAdapterViewFileBinder;
 
 /**
  * @author neillin
@@ -26,7 +32,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initFieldBinders(IFieldBinderManager mgr) {
-		
+		//mgr.registerFieldBinder(UIComponent.class,View.class, new ImageSwiperAdapterViewFileBinder());
 	}
 
 	@Override
@@ -36,7 +42,6 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
-		
 	}
 
 	@Override
@@ -67,5 +72,4 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 			}
 		};
 	}
-
 }
