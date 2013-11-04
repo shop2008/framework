@@ -18,6 +18,8 @@ import com.wxxr.mobile.core.ui.api.IView;
  */
 public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public static final String LIST_ITEM_VIEW_ID = "itemViewId";
+	public static final String LIST_FOOTER_VIEW_ID = "footerViewId";
+	public static final String LIST_HEADER_VIEW_ID = "headererViewId";
 	private GenericListAdapter listAdapter;
 	
 	public AdapterViewFieldBinding(IAndroidBindingContext ctx, String fieldName,
@@ -32,7 +34,9 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public void activate(IView model) {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
-		IListDataProvider provider = model.getAdaptor(IListDataProvider.class);
+		String footerViewId = getBindingAttrs().get(LIST_FOOTER_VIEW_ID);
+		String headerViewId = getBindingAttrs().get(LIST_HEADER_VIEW_ID);
+		IListDataProvider provider = model.getChild(getFieldName()).getAdaptor(IListDataProvider.class);
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(), getAndroidBindingContext().getUIContext(), provider, itemViewId);		
 		((AbsListView)getUIControl()).setAdapter(listAdapter);
 	}

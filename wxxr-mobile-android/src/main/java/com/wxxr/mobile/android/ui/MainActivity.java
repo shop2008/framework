@@ -81,12 +81,13 @@ public abstract class MainActivity extends Activity {
 				showProgressBar(totalWork);
 			}
 		};
-		 new Thread(){
-				@Override
-				public void run() {
-						AppUtils.getFramework().start(monitor);
-				}
-		}.start();
+//		 new Thread(){
+//				@Override
+//				public void run() {
+//						AppUtils.getFramework().start(monitor);
+//				}
+//		}.start();
+		AppUtils.getFramework().attachStartMonitor(monitor);
 	}
 
 	protected abstract void setupContentView();

@@ -30,13 +30,18 @@ public class GenericListAdapter extends BaseAdapter {
 	private final IListDataProvider provider;
 	private final IWorkbenchRTContext context;
 	private final Context uiContext;
-	private final String itemViewId;
+	private final String itemViewId,headerViewId, footerViewId;
 	
-	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId){
+	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId,String headerViewId,String footerViewId){
+		if((ctx == null)||(uiCtx == null)||(prov == null)||(viewId == null)){
+			throw new IllegalArgumentException("All arguments cannot be NULL");
+		}
 		this.context = ctx;
 		this.provider = prov;
 		this.itemViewId = viewId;
 		this.uiContext = uiCtx;
+		this.footerViewId = footerViewId;
+		this.headerViewId = headerViewId;
 	}
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getCount()
@@ -63,39 +68,48 @@ public class GenericListAdapter extends BaseAdapter {
 		return (Long)this.provider.getItemId(obj);
 	}
 
+	protected View createUI(IViewDescriptor v){
+		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
+		IBinding<IView> binding = null;
+		IViewBinder vBinder = this.context.getWorkbenchManager().getViewBinder();
+		binding = vBinder.createBinding(new IAndroidBindingContext() {
+			
+			@Override
+			public Context getUIContext() {
+				return uiContext;
+			}
+			
+			@Override
+			public View getBindingControl() {
+				return null;
+			}
+			@Override
+			public IWorkbenchManager getWorkbenchManager() {
+				return context.getWorkbenchManager();
+			}
+		}, bDesc);
+		binding.init(context);
+		View view = (View)binding.getUIControl();
+		view.setTag(binding);
+		return view;
+
+	}
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = null;
 		IViewDescriptor v = this.context.getWorkbenchManager().getViewDescriptor(itemViewId);
-		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
-		IBinding<IView> binding = null;
+		boolean existing = false;
+		View view = null;
 		if(convertView == null){
-			IViewBinder vBinder = this.context.getWorkbenchManager().getViewBinder();
-			binding = vBinder.createBinding(new IAndroidBindingContext() {
-				
-				@Override
-				public Context getUIContext() {
-					return uiContext;
-				}
-				
-				@Override
-				public View getBindingControl() {
-					return null;
-				}
-				@Override
-				public IWorkbenchManager getWorkbenchManager() {
-					return context.getWorkbenchManager();
-				}
-			}, bDesc);
-			binding.init(context);
-			view = (View)binding.getUIControl();
-			view.setTag(binding);
+			view = createUI(v);
 		}else{
 			view = convertView;
-			binding = (IBinding<IView>)view.getTag();
+			existing = true;
+		}
+		IBinding<IView> binding = (IBinding<IView>)view.getTag();
+		if(existing){
 			binding.deactivate();
 		}
 		IView vModel = v.createPresentationModel(context);
@@ -103,6 +117,7 @@ public class GenericListAdapter extends BaseAdapter {
 		binding.activate(vModel);
 		return view;
 	}
+	
 	
 	public void destroy() {
 		
