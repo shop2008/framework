@@ -675,8 +675,11 @@ public class SliderLayout extends ViewGroup {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
-
-            if ((child.getVisibility() != GONE)&&isDrawerView(child)){
+            
+//            if ((child.getVisibility() != GONE)&&isDrawerView(child)){
+//                return child;
+//            }
+            if (isDrawerView(child)&&isDrawerVisible(child)){
                 return child;
             }
             

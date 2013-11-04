@@ -38,4 +38,20 @@
         android:cacheColorHint="#00000000"
         bind:on_ItemClick="handleItemClick"
         />
+    <ListView
+        android:id="@+id/right_drawer"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:background="@color/slideMenu_l_r_background"
+        bind:field="rightMenu"
+        bind:itemViewId="mainMenuItemView"
+        android:cacheColorHint="#00000000"
+        bind:on_ItemClick="handleItemClick"
+        />
 </com.wxxr.mobile.stock.client.widget.SliderLayout>

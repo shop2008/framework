@@ -70,5 +70,39 @@ public abstract class HomePage extends PageBase {
 		}
 		return null;
 	}
+	@Menu(items={"ahome","apage1","apage2","apage3","apage4"})
+	private IMenu rightMenu;
 	
+	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation",
+			uiItems={
+				@UIItem(id="ahome",label="我的认证",icon="resourceId:drawable/rz"),
+				@UIItem(id="apage1",label="我的账户",icon="resourceId:drawable/myzh"),
+				@UIItem(id="apage2",label="交易记录",icon="resourceId:drawable/jyjl"),
+				@UIItem(id="apage3",label="设置",icon="resourceId:drawable/seting"),
+				@UIItem(id="apage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
+			},
+			navigations={
+				@Navigation(on="ahome",showPage="myAuthPage",params={
+						@Parameter(name="p1",value="v1"),
+						@Parameter(name="p2",value="v2")
+				}),
+				@Navigation(on="apage1",showPage="myAuthPage"),
+				@Navigation(on="apage2",showPage="myAuthPage"),
+				@Navigation(on="apage3",showPage="myAuthPage"),
+				@Navigation(on="apage4",showPage="myAuthPage")
+			}
+	)
+	String menuClicked1(InputEvent event){
+		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
+			String name = ((IUICommand)event.getProperty("ItemClicked")).getName();
+			if(log.isDebugEnabled()){
+				log.debug("Menu item :"+name+" was clicked !");
+			}
+			if(rightMenu.isOnShow()){
+				rightMenu.hide();
+			}
+			return name;
+		}
+		return null;
+	}
 }
