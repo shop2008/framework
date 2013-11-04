@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -27,20 +28,79 @@ import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
  */
 public abstract class ViewBase extends UIContainer<IUIComponent> implements IView {
 
+	private class EventQueue implements Runnable{
+		private LinkedList<ValueChangedEvent> pendingEvents;
+		private volatile Thread thread;
+		
+		protected synchronized void addPendingEvent(ValueChangedEvent evt) {
+			if(pendingEvents == null){
+				this.pendingEvents = new LinkedList<ValueChangedEvent>();
+			}
+			pendingEvents.add(evt);
+		}
+		
+		protected synchronized ValueChangedEvent[] getPendingEvents() {
+			ValueChangedEvent[] evts = null;
+			if(pendingEvents != null){
+				ValueChangedEvent last = this.pendingEvents.getLast();
+				ValueChangedEvent first = this.pendingEvents.getFirst();
+				if(((System.currentTimeMillis() - first.getTimestamp()) > 2000L)||((System.currentTimeMillis() - last.getTimestamp()) > 500L)){
+					evts = this.pendingEvents.toArray(new ValueChangedEvent[0]);
+					this.pendingEvents.clear();
+				}
+			}
+			return evts;
+		}
+
+
+		@Override
+		public void run() {
+			this.thread = Thread.currentThread();
+			while(this.thread != null){
+				ValueChangedEvent[] evts = getPendingEvents();
+				if(evts != null){
+					if(binding != null){
+						binding.notifyDataChanged(evts);
+					}
+				}else{
+					try {
+						Thread.sleep(60L);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+			if((this.pendingEvents != null)&&(this.pendingEvents.size() > 0)){
+				if(binding != null){
+					binding.notifyDataChanged(this.pendingEvents.toArray(new ValueChangedEvent[0]));
+				}
+				this.pendingEvents.clear();
+				this.pendingEvents = null;
+			}
+		}
+		
+		public synchronized void start() {
+			new Thread(this).start();
+		}
+		
+		public synchronized void stop() {
+			if(this.thread != null){
+				Thread t = this.thread;
+				this.thread = null;
+				if(t.isAlive()){
+					t.interrupt();
+					try {
+						t.join(1000L);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		}
+	}
+	
 	private IBinding<IView> binding;
-	private List<IValueEvaluator> elvaluators;
 	private Map<String, IUICommandHandler> commands;
 	private boolean active = false;
-	private IEvaluationContext evalContext = new IEvaluationContext() {
-
-		public IUIComponent getField(String name) {
-			return getChild(name);
-		}
-
-		public Object getBean(String name) {
-			return getUIContext().getDomainModel(name);
-		}
-	};
+	private EventQueue eventQueue;
 	
 	public ViewBase() {
 		init();
@@ -85,18 +145,31 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doBinding(com.wxxr.mobile.core.ui.api.IBinding)
 	 */
 	public void doBinding(IBinding<IView> binding) {
+		onShow(binding);
 		this.binding = binding;
 	}
 
+	protected void onShow(IBinding<IView> binding){
+		
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)
 	 */
 	public boolean doUnbinding(IBinding<IView> binding) {
 		if(this.binding == binding){
 			this.binding = null;
+			onHide(binding);
+			if(this.eventQueue != null){
+				this.eventQueue.stop();
+				this.eventQueue = null;
+			}
 			return true;
 		}
 		return false;
+	}
+	
+	protected void onHide(IBinding<IView> binding) {
+		
 	}
 
 	/* (non-Javadoc)
@@ -105,41 +178,18 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	@Override
 	protected void fireDataChangedEvent(ValueChangedEvent event) {
 		if(this.binding != null){
-			this.binding.notifyDataChanged(event);
+			if(this.eventQueue == null){
+				this.eventQueue = new EventQueue();
+				this.eventQueue.start();
+			}
+			this.eventQueue.addPendingEvent(event);
 		}
 		super.fireDataChangedEvent(event);
-		invokeValueEvaluators(event);
+		onValueChanged(event);
 	}
 	
-	protected void invokeValueEvaluators(final ValueChangedEvent event){
-		if(this.elvaluators != null){
-			getUIContext().getKernelContext().invokeLater(new Runnable() {				
-				public void run() {
-					for (IValueEvaluator eval : elvaluators) {
-						if(eval.valueEffectedBy(event)){
-							eval.doEvaluate(evalContext);
-						}
-					}
-				}
-			}, 10, TimeUnit.MILLISECONDS);
-		}
-	}
-	
-	protected ViewBase registerValueEvaluator(IValueEvaluator eval) {
-		if(this.elvaluators == null){
-			this.elvaluators = new ArrayList<IValueEvaluator>();
-		}
-		if(!this.elvaluators.contains(eval)){
-			this.elvaluators.add(eval);
-		}
-		return this;
-	}
-	
-	protected ViewBase unregisterValueEvaluator(IValueEvaluator eval) {
-		if(this.elvaluators != null){
-			this.elvaluators.remove(eval);
-		}
-		return this;
+	protected void onValueChanged(ValueChangedEvent event){
+		
 	}
 	
 	protected ViewBase addUICommand(String cmdName,IUICommandHandler command){

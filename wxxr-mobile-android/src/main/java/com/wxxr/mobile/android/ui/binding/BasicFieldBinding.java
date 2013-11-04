@@ -163,9 +163,12 @@ public class BasicFieldBinding implements IFieldBinding {
 	}
 
 	@Override
-	public void notifyDataChanged(ValueChangedEvent event) {
-		if(event.getComponent() == getField()){
-			updateUI(true);
+	public void notifyDataChanged(ValueChangedEvent... events) {
+		for (ValueChangedEvent event : events) {
+			if(event.getComponent() == getField()){
+				updateUI(true);
+				break;
+			}
 		}
 	}
 

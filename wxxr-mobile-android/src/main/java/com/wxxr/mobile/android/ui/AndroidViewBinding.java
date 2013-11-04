@@ -80,9 +80,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		}
 
 		@Override
-		public void notifyDataChanged(ValueChangedEvent event) {
+		public void notifyDataChanged(ValueChangedEvent... events) {
 			if(this.binding != null){
-				this.binding.notifyDataChanged(event);
+				this.binding.notifyDataChanged(events);
 			}
 			
 		}
@@ -273,10 +273,16 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	}
 		
 	@Override
-	public void notifyDataChanged(ValueChangedEvent event) {
-		for (IBinding<IView> b : bindings) {
-			b.notifyDataChanged(event);
-		}
+	public void notifyDataChanged(final ValueChangedEvent... events) {
+		AppUtils.runOnUIThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				for (IBinding<IView> b : bindings) {
+					b.notifyDataChanged(events);
+				}
+			}
+		});
 	}
 	
 	@Override

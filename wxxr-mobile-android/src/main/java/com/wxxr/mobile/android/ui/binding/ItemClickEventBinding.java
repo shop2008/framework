@@ -5,12 +5,10 @@ package com.wxxr.mobile.android.ui.binding;
 
 
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -35,7 +33,7 @@ public class ItemClickEventBinding implements IBinding<IView>,OnItemClickListene
 	}
 	
 	@Override
-	public void notifyDataChanged(ValueChangedEvent event) {
+	public void notifyDataChanged(ValueChangedEvent... events) {
 	}
 
 	@Override

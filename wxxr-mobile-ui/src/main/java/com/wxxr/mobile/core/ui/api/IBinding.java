@@ -10,7 +10,7 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface IBinding<M extends IUIComponent> 
 {
-	void notifyDataChanged(ValueChangedEvent event);
+	void notifyDataChanged(ValueChangedEvent... events);
 	void activate(M model);
 	void deactivate();
 	void destroy();
