@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.core.ui.api.IDataChangedListener;
+import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.stock.client.biz.Kline;
 import com.wxxr.mobile.stock.client.biz.Stock;
 
@@ -26,10 +28,9 @@ import android.view.SurfaceHolder.Callback;
  * @author renwenjie
  *
  */
-public class KLineView extends SurfaceView implements Callback {
+public class KLineView extends SurfaceView implements Callback,IDataChangedListener {
 
 	private SurfaceHolder holder;
-	private RenderThread thread;
 
 	private Stock stock;
 
@@ -128,8 +129,12 @@ public class KLineView extends SurfaceView implements Callback {
 	 * 成交量最大值
 	 */
 	private double maxSecuvolume = 0;
+	
+	private IObservableListDataProvider dataProvider;
 
-	private List<Kline> klines;
+	private SurfaceHolder mHolder;
+
+//	private List<Kline> dataProvider;
 	public float w;
 
 	public KLineView(Context context, AttributeSet attrs) {
@@ -155,9 +160,6 @@ public class KLineView extends SurfaceView implements Callback {
 		isRender = true;
 	}
 
-	public void setKlines(List<Kline> data) {
-		klines = data;
-	}
 	
 	public void setStock(Stock stock) {
 		this.stock = stock;
@@ -173,20 +175,12 @@ public class KLineView extends SurfaceView implements Callback {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		if (thread == null) {
-			thread = new RenderThread(holder);
-		}
-		thread.start();
+		this.mHolder = holder;
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		
-		isRender = false;
-		if (thread != null) {
-			thread.requestExitAndWait();
-			thread = null;
-		}
+		this.mHolder = null;
 	}
 	
 	@Override
@@ -195,63 +189,33 @@ public class KLineView extends SurfaceView implements Callback {
 		return true;
 	}
 	
-	/**
-	 * 渲染线程---用于实时渲染
-	 * @author renwenjie
-	 *
-	 */
-	private class RenderThread extends Thread {
-		private SurfaceHolder mHolder;
 
-		public RenderThread(SurfaceHolder holder) {
-			mHolder = holder;
-		}
-
-		@Override
-		public void run() {
-			while (isRender) {
-				updateCanvas();
-			}
-		}
-
-		public void updateCanvas() {
-			Canvas c = null;
-			try {
-				c = mHolder.lockCanvas(null);
+	public void updateCanvas() {
+		Canvas c = null;
+		try {
+			c = mHolder.lockCanvas(null);
+			/**
+			 *  指定背景
+			 */
+			if (c != null) {
+				c.drawColor(Color.BLACK);
 				/**
-				 *  指定背景
+				 * 画图
 				 */
-				if (c != null) {
-					c.drawColor(Color.BLACK);
-					/**
-					 * 画图
-					 */
-					doDraw(c, klineType);
-				}
-			} finally {
-				if (c != null)
-					mHolder.unlockCanvasAndPost(c);
+				doDraw(c, klineType);
 			}
+		} finally {
+			if (c != null)
+				mHolder.unlockCanvasAndPost(c);
 		}
+	}
 
-		private void doDraw(Canvas c, int klineType) {
+	private void doDraw(Canvas c, int klineType) {
 
-			setData(c);
-			drawBgProgram(c);
-			if (klines != null) {
-				drawKline(c);
-			}
-
-		}
-
-
-
-		public void requestExitAndWait() {
-			// 把这个线程标记为完成，并合并到主程序线程
-			try {
-				join();
-			} catch (InterruptedException ex) {
-			}
+		setData(c);
+		drawBgProgram(c);
+		if (dataProvider != null) {
+			drawKline(c);
 		}
 
 	}
@@ -271,19 +235,19 @@ public class KLineView extends SurfaceView implements Callback {
 	}
 
 	private void setData2() {
-		if (klines != null && klines.size() > 0) {
-			size = klines.size();
+		if (dataProvider != null && dataProvider.getItemCounts() > 0) {
+			size = dataProvider.getItemCounts();
 			count = size <= 50 ? size : 50;// 缺省最多取50个蜡烛图
 
 			double temp;
 			for (int i = 0; i < count; i++) {
-				temp = Double.parseDouble(klines.get(i).high);
+				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).high);
 				if (maxPrice < temp)
 					maxPrice = temp;
-				temp = Double.parseDouble(klines.get(i).low);
+				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).low);
 				if (minPrice > temp)
 					minPrice = temp;
-				temp = Double.parseDouble(klines.get(i).secuvolume);
+				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).secuvolume);
 				if (maxSecuvolume < temp)
 					maxSecuvolume = temp;
 			}
@@ -294,18 +258,17 @@ public class KLineView extends SurfaceView implements Callback {
 	 * 刷新界面
 	 */
 	public void notifyDataSetChanged() {
-		if (thread != null)
-			thread.updateCanvas();
+			updateCanvas();
 	}
 
 	public void drawKline(Canvas canvas) {
 		// 在背景表格上画数据
 		
 		
-		if (klines == null) {
+		if (dataProvider == null) {
 			return;
 		}
-		if (klines.size() == 0) {
+		if (dataProvider.getItemCounts() == 0) {
 			return;
 		}
 
@@ -363,10 +326,10 @@ public class KLineView extends SurfaceView implements Callback {
 		}
 		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(Color.WHITE);
-		canvas.drawText(klines.get(0).date, mStartX + 31, zzTopY - 1, mPaint);
-		canvas.drawText(klines.get(count / 2).date, mStartX + fenshiWidth / 2,
+		canvas.drawText(((Kline)dataProvider.getItem(0)).date, mStartX + 31, zzTopY - 1, mPaint);
+		canvas.drawText(((Kline)dataProvider.getItem(count / 2)).date, mStartX + fenshiWidth / 2,
 				zzTopY - 1, mPaint);
-		canvas.drawText(klines.get(count - 1).date, mEndX - 31, zzTopY - 1,
+		canvas.drawText(((Kline)dataProvider.getItem(count - 1)).date, mEndX - 31, zzTopY - 1,
 				mPaint);
 
 		/** 画成交量柱状图的值 */
@@ -406,11 +369,11 @@ public class KLineView extends SurfaceView implements Callback {
 	
 		for (int i = 0; i < count; i++) {
 
-			double open = Double.parseDouble(klines.get(i).open);
-			double high = Double.parseDouble(klines.get(i).high);
-			double low = Double.parseDouble(klines.get(i).low);
-			double newprice = Double.parseDouble(klines.get(i).newprice);
-			double secuvolume = Double.parseDouble(klines.get(i).secuvolume);
+			double open = Double.parseDouble(((Kline)dataProvider.getItem(i)).open);
+			double high = Double.parseDouble(((Kline)dataProvider.getItem(i)).high);
+			double low = Double.parseDouble(((Kline)dataProvider.getItem(i)).low);
+			double newprice = Double.parseDouble(((Kline)dataProvider.getItem(i)).newprice);
+			double secuvolume = Double.parseDouble(((Kline)dataProvider.getItem(i)).secuvolume);
 
 			if (open > newprice) {
 				mPaint.setColor(Color.parseColor("#3C7F00"));
@@ -628,6 +591,36 @@ public class KLineView extends SurfaceView implements Callback {
 			tmp = tmp + "0";
 		}
 		return tmp + "%";
+	}
+
+	/**
+	 * @return the dataProvider
+	 */
+	public IObservableListDataProvider getDataProvider() {
+		return dataProvider;
+	}
+
+	/**
+	 * @param dataProvider the dataProvider to set
+	 */
+	public void setDataProvider(IObservableListDataProvider dataProvider) {
+		IObservableListDataProvider oldProv = this.dataProvider;
+		this.dataProvider = dataProvider;
+		if(this.dataProvider != null){
+			this.dataProvider.registerDataChangedListener(this);
+		}else if(oldProv != null){
+			oldProv.unregisterDataChangedListener(this);
+		}
+	}
+
+	@Override
+	public void dataItemChanged() {
+		updateCanvas();
+	}
+
+	@Override
+	public void dataSetChanged() {
+		updateCanvas();
 	}
 
 }
