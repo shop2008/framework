@@ -12,7 +12,7 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="200dp"
 	    bind:imageItemViewId="ImageSwiperItemView"
-	    bind:file="imageSwiper"
+	    bind:field="articles"
 	    android:background="@color/black">
 	    
 	</com.wxxr.mobile.stock.client.widget.ImageSwiperLayout>
