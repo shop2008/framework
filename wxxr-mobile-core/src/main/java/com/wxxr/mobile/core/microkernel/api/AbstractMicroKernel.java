@@ -27,6 +27,7 @@ import com.wxxr.mobile.core.event.api.ApplicationStartedEvent;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.ICancellable;
+import com.wxxr.mobile.core.util.StringUtils;
 
 
 /**
@@ -38,7 +39,8 @@ import com.wxxr.mobile.core.util.ICancellable;
  */
 public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IKernelModule<C>> implements IMicroKernel<C,M>{
 	private static Trace log = Trace.register(AbstractMicroKernel.class);
-	protected ThreadLocal<IProgressMonitor> monitorHolder = new ThreadLocal<IProgressMonitor>();
+	protected IProgressMonitor[] startMonitorHolder = new IProgressMonitor[1];
+	protected IProgressMonitor[] stopMonitorHolder = new IProgressMonitor[1];
 	
 	protected class AbstractContext implements IKernelContext {
 
@@ -86,7 +88,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		public boolean removeKernelServiceListener(IKernelServiceListener listener){
 			return removeLocalKernelServiceListener(listener);
 		}
-
 
 
 		@Override
@@ -165,7 +166,9 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 //	private LinkedList<M> createdModules = new LinkedList<M>();
 
-	private boolean started = false;
+//	private boolean started = false;
+	
+	private MStatus status = MStatus.INIT;
 
 	private Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
@@ -177,83 +180,173 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	
 	private Timer timer;
 
-	public void start(IProgressMonitor monitor){
+	public void attachStartMonitor(IProgressMonitor monitor){
 		monitor.setTaskName("Startup Kernel");
-		this.monitorHolder.set(monitor);
-		try {
-			start();
-			monitor.done(this);
-		}catch(Throwable t){
-			log.fatal("Failed to start kernel", t);
-			monitor.taskFailed(t,"Failed to start kernel");
-		}finally{
-			this.monitorHolder.set(null);
+		switch(this.status){
+		case FAILED:
+		case STARTED:
+		case STOPED:
+		case STOPPING:
+				monitor.done(null);
+				break;
+		case INIT:
+		case START_PENDING:
+			synchronized(this.startMonitorHolder){
+				this.startMonitorHolder[0] = monitor;
+				this.startMonitorHolder.notifyAll();
+			}
+			break;
+		case STARTING:
+			synchronized(this.startMonitorHolder){
+				this.startMonitorHolder[0] = monitor;
+				if(getAllModules() != null){
+					monitor.beginTask(getAllModules().length);
+				}
+			}
 		}
 	}
 	
-	public void stop(IProgressMonitor monitor){
+	public void attachStopMonitor(IProgressMonitor monitor){
 		monitor.setTaskName("Shutdown Kernel");
-		this.monitorHolder.set(monitor);
-		try {
-			stop();
-			monitor.done(this);
-		}catch(Throwable t){
-			log.fatal("Failed to stop kernel", t);
-			monitor.taskFailed(t,"Failed to stop kernel");
-		}finally{
-			this.monitorHolder.set(null);
+		switch(this.status){
+		case STOPED:
+				monitor.done(null);
+				break;
+		case STOPPING:
+			synchronized(this.stopMonitorHolder){
+				this.stopMonitorHolder[0] = monitor;
+				if(getAllModules() != null){
+					monitor.beginTask(getAllModules().length);
+				}
+			}
+			break;
+		default:
+			synchronized(this.stopMonitorHolder){
+				this.stopMonitorHolder[0] = monitor;
+				this.stopMonitorHolder.notifyAll();
+			}
+			break;
 		}
-		
+	}
+
+	protected IProgressMonitor getStartMonitor() {
+		synchronized(this.startMonitorHolder){
+			return this.startMonitorHolder[0];
+		}
+	}
+	
+	protected IProgressMonitor getStopMonitor() {
+		synchronized(this.stopMonitorHolder){
+			return this.stopMonitorHolder[0];
+		}
 	}
 
 
 	@SuppressWarnings("unchecked")
 	public void start() throws Exception{
-		IProgressMonitor monitor = this.monitorHolder.get();
-		fireKernelStarting();
-		initModules();
-		IKernelModule<C>[] mods = getAllModules();
-		if(monitor != null){
-			monitor.beginTask(mods.length);
-		}
-		int cnt = 1;
-		for (IKernelModule<C> mod : mods) {
-			if(monitor != null){
-				monitor.updateProgress(cnt, "Start module :["+mod.getModuleName()+"] ...");
+		IProgressMonitor monitor = null;
+		setStatus(MStatus.STARTING);
+		try {
+			fireKernelStarting();
+			initModules();
+			IKernelModule<C>[] mods = getAllModules();
+			if((monitor = getStartMonitor()) != null){
+				monitor.beginTask(mods.length);
 			}
-			startModule(((M)mod));
-			cnt++;
+			int cnt = 1;
+			for (IKernelModule<C> mod : mods) {
+				if((monitor = getStartMonitor()) != null){
+					monitor.updateProgress(cnt, "启动模块 :["+getModuleName(mod)+"] ...");
+				}
+				startModule(((M)mod));
+				cnt++;
+			}
+			timer = new Timer("MicroKernel Timer Thread");
+			setStatus(MStatus.STARTED);
+			fireKernelStarted();
+			if((monitor = getStartMonitor()) != null){
+				monitor.done(this);
+			}
+		}catch(Exception e){
+			setStatus(MStatus.FAILED);
+			if((monitor = getStartMonitor()) != null){
+				monitor.taskFailed(e,"Failed to start kernel");
+			}
+			throw e;
+		}catch(Error e){
+			setStatus(MStatus.FAILED);
+			if((monitor = getStartMonitor()) != null){
+				monitor.taskFailed(e,"Failed to start kernel");
+			}
+			throw e;
 		}
-		timer = new Timer("MicroKernel Timer Thread");
-		this.started = true;
-		fireKernelStarted();
+	}
+
+	/**
+	 * @param mod
+	 * @return
+	 */
+	protected String getModuleName(IKernelModule<C> mod) {
+		String name = mod.getModuleName();
+		if(StringUtils.isBlank(name)){
+			return mod.getClass().getSimpleName();
+		}else{
+			return name;
+		}
 	}
 
 
 	@SuppressWarnings("unchecked")
 	public void stop(){
-		IProgressMonitor monitor = this.monitorHolder.get();
-		fireKernelStopping();
-//		destroyModules();
-		IKernelModule<C>[] mods = getAllModules();
-		if(monitor != null){
-			monitor.beginTask(mods.length);
-		}
-		int cnt = 1;
-		for (IKernelModule<C> mod : getAllModules()) {
-			if(monitor != null){
-				monitor.updateProgress(cnt, "stop module :["+mod.getModuleName()+"] ...");
+		IProgressMonitor monitor = null;
+		setStatus(MStatus.STOPPING);
+		try {
+			fireKernelStopping();
+	//		destroyModules();
+			IKernelModule<C>[] mods = getAllModules();
+			if((monitor = getStartMonitor()) != null){
+				monitor.beginTask(mods.length);
 			}
-			stopModule(((M)mod));
-			cnt++;
+			int cnt = 1;
+			for (IKernelModule<C> mod : getAllModules()) {
+				if((monitor = getStartMonitor()) != null){
+					monitor.updateProgress(cnt, "停止模块 :["+getModuleName(mod)+"] ...");
+				}
+				stopModule(((M)mod));
+				cnt++;
+			}
+			if(timer != null){
+				timer.purge();
+				timer.cancel();
+				timer = null;
+			}
+		}catch(Throwable t){
+			log.error("Failed to stop kernel", t);
 		}
-		if(timer != null){
-			timer.purge();
-			timer.cancel();
-			timer = null;
-		}
-		this.started = false;
+		setStatus(MStatus.STOPED);
 		fireKernelStopped();
+		if((monitor = getStartMonitor()) != null){
+			monitor.done(this);
+		}
+	}
+
+	public void startLater(final int maxDelayTime, final TimeUnit unit) {
+		new Thread("Kernel start Thread"){
+			public void run() {
+				synchronized(startMonitorHolder){
+					try {
+						startMonitorHolder.wait(TimeUnit.MILLISECONDS.convert(maxDelayTime, unit));
+					} catch (InterruptedException e) {
+						log.fatal("Kernel start thread was interrupted, abort kernel starting !");
+					}
+					try {
+						AbstractMicroKernel.this.start();
+					} catch (Throwable e) {
+						log.fatal("Failed to start kernel :",e);
+					}
+				}
+			}
+		}.start();
 	}
 
 
@@ -509,7 +602,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			}
 		}
 		if(added){
-			if(this.started){
+			if(isStarted()){
 				startModule(module);
 			}
 			fireModuleRegistered(module);
@@ -535,7 +628,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			removed = this.modules.remove(module);
 		}
 		if(removed){
-			if(this.started){
+			if(isStarted()){
 				stopModule(module);
 			}   
 			fireModuleUnregistered(module);
@@ -689,6 +782,14 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	@Override
 	public ICancellable invokeLater(Runnable task, long delay, TimeUnit unit) {
 		return getContext().invokeLater(task, delay, unit);
+	}
+	
+	public synchronized boolean isStarted() {
+		return this.status == MStatus.STARTED;
+	}
+	
+	protected synchronized void setStatus(MStatus stat) {
+		this.status  = stat;
 	}
 	
 }
