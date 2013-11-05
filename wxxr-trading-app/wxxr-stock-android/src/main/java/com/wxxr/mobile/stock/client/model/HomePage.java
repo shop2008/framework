@@ -72,7 +72,7 @@ public abstract class HomePage extends PageBase {
 	@Menu(items={"ahome","apage1","apage2","apage3","apage4"})
 	private IMenu rightMenu;
 	
-	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation",
+	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation1",
 			uiItems={
 				@UIItem(id="ahome",label="我的认证",icon="resourceId:drawable/rz"),
 				@UIItem(id="apage1",label="我的账户",icon="resourceId:drawable/myzh"),
