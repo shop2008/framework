@@ -1,20 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tlist="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" 
-    android:background="@color/white"
+    android:background="@color/page_background_color"
     android:orientation="vertical"
     >
 
-	<com.wxxr.mobile.stock.client.widget.ImageSwiperLayout 
+	<com.wxxr.mobile.stock.client.widget.PageSwiperView 
 	    android:layout_width="fill_parent"
-	    android:layout_height="200dp"
-	    bind:imageItemViewId="ImageSwiperItemView"
+	    android:layout_height="150dp"
+	    bind:itemViewId="ImageSwiperItemView"
 	    bind:field="articles"
-	    android:background="@color/black">
+	    android:background="@color/gray">
 	    
-	</com.wxxr.mobile.stock.client.widget.ImageSwiperLayout>
+	</com.wxxr.mobile.stock.client.widget.PageSwiperView>
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:id="@+id/textView1"
+		    android:layout_width="fill_parent"
+		    android:layout_height="30dp"
+		    android:text="最大持股" 
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:textSize="14sp"
+		    android:background="@drawable/bg_btn_horizontal"/>
+		<View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+		<TextView
+		    android:id="@+id/textView2"
+		    android:layout_width="fill_parent"
+		    android:layout_height="30dp"
+		    android:text="额度" 
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:textSize="14sp"
+		    android:background="@drawable/bg_btn_horizontal"/>
+		<View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+		<TextView
+		    android:id="@+id/textView3"
+		    android:layout_width="fill_parent"
+		    android:layout_height="30dp"
+		    android:text="盈亏" 
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:textSize="14sp"
+		    android:background="@drawable/bg_btn_horizontal"/>
+	    
+	</LinearLayout>
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:gravity="center" 
+	    bind:on_Click="createBuyClick"
+	    android:padding="10dp">
+			<ImageView
+                android:id="@id/ic_create_buy"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:src="@drawable/ic_create_buy" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
+                android:layout_toRightOf="@id/ic_create_buy"
+                android:text="创建买入"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />		
+	</LinearLayout>
+
+	<com.wxxr.mobile.stock.client.widget.TListView
+	    android:id="@+id/t_listView1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    tlist:tHeaderTitle="T日">
+	</com.wxxr.mobile.stock.client.widget.TListView>
 	
+	<com.wxxr.mobile.stock.client.widget.TListView
+	    android:id="@+id/t_listView2"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    tlist:tHeaderTitle="T+1日">
+            
+	</com.wxxr.mobile.stock.client.widget.TListView>
 </LinearLayout>
