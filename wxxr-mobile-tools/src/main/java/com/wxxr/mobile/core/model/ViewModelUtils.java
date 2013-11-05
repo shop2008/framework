@@ -31,9 +31,18 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
+import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -104,6 +113,92 @@ public abstract class ViewModelUtils {
 		m.setJavaStatement(javaStatement);
 		return m;
 	}
+	
+	public static MethodModel createOnCreateMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("callOnCreateMethods");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onCreateMethods", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+	
+	public static MethodModel createOnDestroyMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onDestroy");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onDestroy", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+	
+	public static MethodModel createOnShowMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onShow");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onShow", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+	public static MethodModel createOnHideMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onHide");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onHide", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+	
+	public static MethodModel createOnDataChangedMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onDataChanged");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		model.addImport(ValueChangedEvent.class.getCanonicalName());
+		m.setParameterTypes(new String[]{ ValueChangedEvent.class.getCanonicalName()});
+		m.setParameterNames(new String[]{ "event" });
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onDataChanged", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
 
 	public static MethodModel createInitMenusMethod(ICodeGenerationContext context,ViewModelClass model, List<MenuModel> menus){
 		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
@@ -164,7 +259,7 @@ public abstract class ViewModelUtils {
 		Bean bean = elem.getAnnotation(Bean.class);
 		if(field != null){
 			if(isFieldAnnotationApplyable(context, elem)){
-				model.addField(createDataFieldModel(context,elem,field));
+				model.addField(createDataFieldModel(context,model,elem,field));
 			}else{
 				log.error("@Field annotation is applyable on member field with type of IDataField !!!");
 			}
@@ -193,7 +288,7 @@ public abstract class ViewModelUtils {
 		return updateBasicFieldModel(context, new FieldModel(), elem);
 	}
 
-	public static DataFieldModel createDataFieldModel(ICodeGenerationContext context,Element elem,Field field){
+	public static DataFieldModel createDataFieldModel(ICodeGenerationContext context,ViewModelClass vModel,Element elem,Field field){
 		DataFieldModel model = new DataFieldModel();
 		String s = null;
 		if((s = StringUtils.trimToNull(field.enableWhen())) != null){
@@ -202,7 +297,17 @@ public abstract class ViewModelUtils {
 		if((s = StringUtils.trimToNull(field.visibleWhen())) != null){
 			model.setVisibleWhenExpress(s);
 		}
-		model.setValueKey(field.valueKey());
+		String key = field.valueKey();
+		if(key.indexOf('.') < 0){
+			vModel.addImport(AttributeKeys.class.getCanonicalName());
+			key = "AttributeKeys."+key;
+		}else if(key.charAt(0) == '.'){
+			key = vModel.getApplicationId()+key;
+			int idx = key.lastIndexOf('.');
+			String subKey = key.substring(idx);
+			key = vModel.addImport(key.substring(0, idx))+subKey;
+		}
+		model.setValueKey(key);
 		Attribute[] attrs = field.attributes();
 		if(attrs != null){
 			for (Attribute attr : attrs) {
@@ -349,7 +454,34 @@ public abstract class ViewModelUtils {
 			}
 			m.setThrownTypes(pVars);
 		}
+		if((elem.getAnnotation(OnCreate.class) != null)&&(((m.getParameterTypes() == null))||(m.getParameterTypes().length == 0))){
+			m.setPhase(LifeCyclePhase.OnCreate);
+		}else if((elem.getAnnotation(OnShow.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].startsWith(IBinding.class.getCanonicalName())))){
+			model.addImport(IBinding.class.getCanonicalName());
+			model.addImport(IView.class.getCanonicalName());
+			m.setPhase(LifeCyclePhase.OnShow);
+		}else if((elem.getAnnotation(OnHide.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].startsWith(IBinding.class.getCanonicalName())))){
+			model.addImport(IBinding.class.getCanonicalName());
+			model.addImport(IView.class.getCanonicalName());
+			m.setPhase(LifeCyclePhase.OnHide);
+		}else if((elem.getAnnotation(OnDestroy.class) != null)&&(((m.getParameterTypes() == null))||(m.getParameterTypes().length == 0))){
+			m.setPhase(LifeCyclePhase.OnDestroy);
+		}else if((elem.getAnnotation(OnDataChanged.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].startsWith(ValueChangedEvent.class.getCanonicalName())))){
+			model.addImport(ValueChangedEvent.class.getCanonicalName());
+			m.setPhase(LifeCyclePhase.OnDataChanged);
+		}
 		model.addMethod(m);
+		processCommandAnnotation(model, elem, m);
+//		model.addField(elem.getSimpleName().toString(), elem.asType().toString());
+	}
+
+	/**
+	 * @param model
+	 * @param elem
+	 * @param m
+	 */
+	protected static void processCommandAnnotation(ViewModelClass model,
+			Element elem, MethodModel m) {
 		Command ann = elem.getAnnotation(Command.class);
 		if(ann != null){
 			UICommandModel cmdModel = new UICommandModel();
@@ -417,7 +549,6 @@ public abstract class ViewModelUtils {
 				}
 			}
 		}
-//		model.addField(elem.getSimpleName().toString(), elem.asType().toString());
 	}
 
 	public static String getElementText(ICodeGenerationContext context, Element elem){

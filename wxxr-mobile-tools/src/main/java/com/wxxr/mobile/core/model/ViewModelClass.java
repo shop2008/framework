@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +91,45 @@ public class ViewModelClass extends AbstractClassModel {
 		return traceRequired;
 	}
 	
+	public List<MethodModel> getOnCreateMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnCreate);
+	}
+
+	public List<MethodModel> getOnHideMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnHide);
+	}
+	
+	public List<MethodModel> getOnShowMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnShow);
+	}
+	
+	public List<MethodModel> getOnDestroyedMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnDestroy);
+	}
+	
+	public List<MethodModel> getOnDataChangedMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnDataChanged);
+	}
+	
+	/**
+	 * @return
+	 */
+	protected List<MethodModel> getLifeCycleMethods(LifeCyclePhase phase) {
+		List<MethodModel> meths = getMethods();
+		if((meths == null)||(meths.size() == 0)){
+			return null;
+		}
+		LinkedList<MethodModel> result = new LinkedList<MethodModel>();
+		for (MethodModel m : meths) {
+			if(m.getPhase() == phase){
+				result.add(m);
+			}
+		}
+		return result.isEmpty() ? null : result;
+	}
+	
+
+	
 	public void addCommandModel(UICommandModel cmd){
 		if(this.commandModels == null){
 			this.commandModels = new HashMap<String, UICommandModel>();
@@ -159,6 +199,36 @@ public class ViewModelClass extends AbstractClassModel {
 			MethodModel m = ViewModelUtils.createInitViewGroupsMethod(context, this, vGroups);
 			addMethod(m);
 		}
+		List<MethodModel> createMethods = getOnCreateMethods();
+		if((createMethods != null)&&(createMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnCreateMethod(context, this, createMethods);
+			addMethod(m);
+		}
+
+		List<MethodModel> destroyMethods = getOnDestroyedMethods();
+		if((destroyMethods != null)&&(destroyMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnDestroyMethod(context, this, destroyMethods);
+			addMethod(m);
+		}
+
+		List<MethodModel> onShowMethods = getOnShowMethods();
+		if((onShowMethods != null)&&(onShowMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnShowMethod(context, this, onShowMethods);
+			addMethod(m);
+		}
+
+		List<MethodModel> onHideMethods = getOnHideMethods();
+		if((onHideMethods != null)&&(onHideMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnHideMethod(context, this, onHideMethods);
+			addMethod(m);
+		}
+
+		List<MethodModel> onDataChangedMethods = getOnDataChangedMethods();
+		if((onDataChangedMethods != null)&&(onDataChangedMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnDataChangedMethod(context, this, onDataChangedMethods);
+			addMethod(m);
+		}
+
 		addMethod(ViewModelUtils.createInitMethod(context,this));
 	}
 

@@ -18,6 +18,7 @@ public class MethodModel implements JavaModel{
 	private String modifiers;
 	private boolean varArgs;
 	private String javaStatement;
+	private LifeCyclePhase phase;
 	
 	/**
 	 * @return the methodName
@@ -211,5 +212,17 @@ public class MethodModel implements JavaModel{
 	 */
 	public void setJavaStatement(String javaStatement) {
 		this.javaStatement = javaStatement;
+	}
+	/**
+	 * @return the phase
+	 */
+	public LifeCyclePhase getPhase() {
+		return phase;
+	}
+	/**
+	 * @param phase the phase to set
+	 */
+	public void setPhase(LifeCyclePhase phase) {
+		this.phase = phase;
 	}
 }

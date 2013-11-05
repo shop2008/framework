@@ -18,16 +18,69 @@
 
 #macro(initDataFields $model $dataFields)
     private void initDataFields() {
-#set( $keys = ${model.addImport("com.wxxr.mobile.core.ui.common.AttributeKeys")})
 #set( $DType = ${model.addImport("com.wxxr.mobile.core.ui.common.DataField")})
-#foreach($fld in $model.dataFields) 
+#foreach($fld in $dataFields) 
         this.${fld.name}Field = new ${DType}<${fld.simpleType}>("${fld.name}");
-        this.${fld.name}Field.setValueKey(${keys}.${fld.valueKey});
+        this.${fld.name}Field.setValueKey(${fld.valueKey});
         this.${fld.name}Field.setValue(this.${fld.name});
         add(this.${fld.name}Field);        
 #end
     }
 #end
+
+#macro(onCreateMethods $model $methods)
+    private void callOnCreateMethods() {
+#foreach($meth in $methods) 
+        ${meth.name}();       
+#end
+    }
+#end
+
+#macro(onShow $model $methods)
+    @Override
+    protected void onShow(IBinding<IView> binding) {
+#foreach($meth in $methods) 
+#if(${meth.parameterTypes})
+        ${meth.name}(binding); 
+#else      
+        ${meth.name}();
+#end
+#end
+    }
+#end
+
+#macro(onHide $model $methods)
+    @Override
+    protected void onHide(IBinding<IView> binding) {
+#foreach($meth in $methods) 
+#if(${meth.parameterTypes})
+        ${meth.name}(binding); 
+#else      
+        ${meth.name}();
+#end
+#end
+    }
+#end
+
+#macro(onDestroy $model $methods)
+    @Override
+    protected void onDestroy() {
+#foreach($meth in $methods) 
+        ${meth.name}();       
+#end
+    }
+#end
+
+#macro(onDataChanged $model $methods)
+    @Override
+    protected void onDataChanged(ValueChangedEvent event) {
+#foreach($meth in $methods) 
+        ${meth.name}(event);       
+#end
+    }
+#end
+
+
 
 #macro(initMenus $model $menus)
     private void initMenus() {
@@ -46,7 +99,11 @@
 #macro(initCommands $model $commands)
     private void initCommands(){
  #set( $HType = ${model.addImport("com.wxxr.mobile.core.ui.common.AbstractUICommandHandler")})
-        $HType handler = null;
+ #set( $CMDType = ${model.addImport("com.wxxr.mobile.core.ui.common.UICommand")})
+ #set( $NavType = ${model.addImport("com.wxxr.mobile.core.ui.common.SimpleNavigationDescriptor")})
+    $NavType navDesc = null;
+    $CMDType item = null;
+    $HType handler = null;
 #foreach($cmd in $model.commands)
 #if(${cmd.className})
     handler = new ${model.addImport(${cmd.className})}();
@@ -59,8 +116,6 @@
     };
 #end
 #if(${cmd.navigations})
-#set( $NavType = ${model.addImport("com.wxxr.mobile.core.ui.common.SimpleNavigationDescriptor")})
-    $NavType navDesc = null;
 #foreach($nav in $cmd.navigations)
     navDesc = new SimpleNavigationDescriptor().setResult("${nav.result}");
 #if(${nav.toPage})
@@ -82,9 +137,7 @@
 #end
     addUICommand("${cmd.commandName}", handler);
 #if(${cmd.menuItems})
-#set( $CMDType = ${model.addImport("com.wxxr.mobile.core.ui.common.UICommand")})
 #set( $keys = ${model.addImport("com.wxxr.mobile.core.ui.common.AttributeKeys")})
-    $CMDType item = null;
 #foreach($m in $cmd.menuItems)
     item = new UICommand("$m.id");
     item.setCommandName("$cmd.commandName");
@@ -101,7 +154,7 @@
 
 #macro(init $model )
     @Override
-    protected void init() {
+    protected void onCreate() {
 #if(${model.commands})
        initCommands();
 #end
@@ -114,6 +167,10 @@
 #if(${model.viewGroups})
        initViewGroups();
 #end
+#if(${model.onCreateMethods})
+       callOnCreateMethods();
+#end
+
     }
 #end
    
