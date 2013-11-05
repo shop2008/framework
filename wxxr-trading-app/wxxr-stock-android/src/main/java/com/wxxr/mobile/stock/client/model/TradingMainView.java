@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.module.IArticleManagerModule;
 
 /**
  * @author neillin
@@ -32,7 +33,7 @@ public abstract class TradingMainView extends ViewBase {
 	 */
 	@Override
 	protected void onShow(IBinding<IView> binding) {
-		this.articles = new ArrayList<Article>();
+		articles = getUIContext().getKernelContext().getService(IArticleManagerModule.class).getNewArticles(0, 4, 15);
 	}
 	
 }
