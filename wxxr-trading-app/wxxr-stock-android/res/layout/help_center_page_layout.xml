@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-   
-    <include 
-        layout="@layout/loading_layout"
-        />
     
-    <com.wxxr.stock.trading.ui.widget.HelpCenterListView
+    <com.wxxr.mobile.stock.client.widget.RefreshListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@id/lv_help_center_detail"
         android:scrollbars="none"
+        bind:itemViewId="helpCenterItemView"
+	    bind:field="helps"
         >
-    </com.wxxr.stock.trading.ui.widget.HelpCenterListView>
-
+    </com.wxxr.mobile.stock.client.widget.RefreshListView>
 </FrameLayout>

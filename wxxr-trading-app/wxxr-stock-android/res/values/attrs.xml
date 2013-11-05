@@ -25,4 +25,14 @@
         <attr name="selectorEnabled" format="boolean" />
         <attr name="selectorDrawable" format="reference" />
     </declare-styleable>
+    
+    <declare-styleable name="ImageSwiper">
+        <attr name="swiperTitleTextColor" format="color"></attr> <!-- 标题颜色 -->
+        <attr name="swiperTitleBackgroundColor" format="color"></attr> <!-- 标题背景颜色 -->
+        <attr name="swiperTitleFontSize" format="float"></attr>
+    </declare-styleable>
+    <declare-styleable name="TListView">
+        <attr name="tHeaderTitle" format="string"></attr>
+    </declare-styleable>
+    
 </resources>
