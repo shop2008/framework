@@ -25,12 +25,12 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 	
 	DataField<String> swiperImageField;
 	
-	DataField<String> swiperImageLabelField;
+	DataField<String> swiperTitleField;
 	
 	@Command(description="",commandName="linkItemClick")
 	String linkItemClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(arg0, arg1, arg2)
+//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(arg0, null, null);
 		}
 		return null;
 	}
@@ -41,7 +41,7 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 
 	protected void setSwiperImage(String swiperImage) {
 		this.swiperImage = swiperImage;
-		this.swiperImageLabelField.setValue(swiperImage);
+		this.swiperTitleField.setValue(swiperImage);
 	}
 
 	protected String getSwiperTitle() {
@@ -50,7 +50,7 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 
 	protected void setSwiperTitle(String swiperTitle) {
 		this.swiperTitle = swiperTitle;
-		this.swiperImageLabelField.setValue(swiperTitle);
+		this.swiperTitleField.setValue(swiperTitle);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 			this.swiperImage = article.getImageUrl();
 			this.swiperImageField.setValue(this.swiperImage);
 			this.swiperTitle = article.getTitle();
-			this.swiperImageLabelField.setValue(this.swiperTitle);
+			this.swiperTitleField.setValue(this.swiperTitle);
 			this.articleUrl = article.getArticleUrl();
 		}
 	}
