@@ -103,12 +103,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private EventQueue eventQueue;
 	
 	public ViewBase() {
-		init();
+		onCreate();
 	}
 	
 	public ViewBase(String name) {
 		super(name);
-		init();
+		onCreate();
 	}
 
 	public boolean isActive() {
@@ -185,10 +185,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.eventQueue.addPendingEvent(event);
 		}
 		super.fireDataChangedEvent(event);
-		onValueChanged(event);
+		onDataChanged(event);
 	}
 	
-	protected void onValueChanged(ValueChangedEvent event){
+	protected void onDataChanged(ValueChangedEvent event){
 		
 	}
 	
@@ -215,7 +215,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return this.commands != null && this.commands.containsKey(cmdName);
 	}
 	
-	protected abstract void init();
+	protected abstract void onCreate();
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.AbstractUIComponent#invokeCommand(java.lang.String, java.lang.Object[])

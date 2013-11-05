@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
@@ -233,6 +234,21 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 			}
 		}
 		super.invokeCommand(cmdName, event);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#init(com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
+	 */
+	@Override
+	public void init(IWorkbenchRTContext ctx) {
+		if(valueType == null){
+			throw new IllegalStateException("Value type of data field was not setup correctly !");
+		}
+		if(valueKey == null){
+			valueKey = new AttributeKey<T>(valueType, "value");
+		}
+		super.init(ctx);
 	}
 	
 }
