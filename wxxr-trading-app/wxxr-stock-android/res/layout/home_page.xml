@@ -24,7 +24,7 @@
          with the content view. -->
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="200dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
@@ -40,7 +40,7 @@
         />
     <ListView
         android:id="@+id/right_drawer"
-        android:layout_width="200dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:choiceMode="singleChoice"
@@ -51,6 +51,7 @@
         android:background="@color/slideMenu_l_r_background"
         bind:field="rightMenu"
         bind:itemViewId="mainMenuItemView"
+        bind:headerViewId="headerMenuItemView"
         android:cacheColorHint="#00000000"
         bind:on_ItemClick="handleItemClick"
         />
