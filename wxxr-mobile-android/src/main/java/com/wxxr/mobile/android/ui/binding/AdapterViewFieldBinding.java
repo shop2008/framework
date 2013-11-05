@@ -68,8 +68,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
 				getAndroidBindingContext().getUIContext(), provider,
 				itemViewId, headerViewId, footerViewId);
-		setupAdapter(listAdapter);
-
 		if (headerViewId != null
 				&& ((ListView) getUIControl()).getHeaderViewsCount() == 0) {
 			IViewDescriptor v = getWorkbenchContext().getWorkbenchManager()
