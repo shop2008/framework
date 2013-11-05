@@ -26,7 +26,6 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 
 /**
  * @author neillin
- *
  */
 @View(name="home")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")

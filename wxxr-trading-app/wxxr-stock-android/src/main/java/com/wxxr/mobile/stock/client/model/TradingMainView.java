@@ -24,8 +24,8 @@ import com.wxxr.mobile.stock.client.module.IArticleManagerModule;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.layout_home")
 public abstract class TradingMainView extends ViewBase {
 	
-	@Field(valueKey="options")
-	List<Article> articles;
+	//@Field(valueKey="options")
+	//List<Article> articles;
 
 	
 	/* (non-Javadoc)
@@ -33,7 +33,7 @@ public abstract class TradingMainView extends ViewBase {
 	 */
 	@Override
 	protected void onShow(IBinding<IView> binding) {
-		articles = getUIContext().getKernelContext().getService(IArticleManagerModule.class).getNewArticles(0, 4, 15);
+		//articles = getUIContext().getKernelContext().getService(IArticleManagerModule.class).getNewArticles(0, 4, 15);
 	}
 	
 }

@@ -142,6 +142,23 @@
 	<string name="btn_quick_reg_text">点击发送密码到手机</string>
 	<string name="tv_register_rules">注册条款</string>
 	<string name="tv_title_psw_find_back">找回密码</string>
+	
+	
+	<!-- 个人主页 -->
+	<string name="tv_title_personal_page">个人主页</string>
+	<string name="tv_total_real_integral">累计实盘积分</string>
+	<string name="tv_total_profit">累计总收益</string>
+	<string name="label_challenge_trade_panel">挑战交易盘</string>
+	<string name="label_join_trade_panel">参赛交易盘</string>
+	<string name="label_stock">股票</string>
+	<string name="label_amount">额度</string>
+	<string name="label_profit_loss">盈亏</string>
+	<string name="label_date">日期</string>
+	<string name="shared_text">已分享</string>
+	<string name="shared_unit">笔</string>
+	<string name="view_more_text">查看更多</string>
+	<string name="user_nick_name">用户昵称</string>
+	<string name="user_personal_setting">个性化</string>
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">
         <item>Mercury</item>
