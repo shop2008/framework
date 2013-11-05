@@ -84,18 +84,4 @@
                 android:textSize="16sp" />		
 	</LinearLayout>
 
-	<com.wxxr.mobile.stock.client.widget.TListView
-	    android:id="@+id/t_listView1"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    tlist:tHeaderTitle="T日">
-	</com.wxxr.mobile.stock.client.widget.TListView>
-	
-	<com.wxxr.mobile.stock.client.widget.TListView
-	    android:id="@+id/t_listView2"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    tlist:tHeaderTitle="T+1日">
-            
-	</com.wxxr.mobile.stock.client.widget.TListView>
 </LinearLayout>
