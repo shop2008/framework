@@ -8,13 +8,16 @@
     <TextView
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:singleLine="true"
         android:text="文章标题" 
-        android:padding="8dp"
+        android:background="@drawable/swiper_title_background"
+        android:gravity="center_vertical"
         android:textColor="@color/white"
-        android:background="@color/black"
-        bind:field="swiperTitle"/>
+        android:textSize="14sp"
+        bind:field="swiperTitle"
+        android:paddingLeft="8dp"
+        />
 
     <ImageView
         android:id="@+id/imageView1"
