@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
-import org.apache.log4j.spi.LoggerFactory;
 
+@SuppressWarnings("restriction")
 public class TypeUtils {
 
 	private Logger logger = Logger.getLogger("TYPES");

@@ -13,4 +13,5 @@ import javax.lang.model.element.Element;
  */
 public interface ICodeGenerator {
 	void process(Set<? extends Element> elements,ICodeGenerationContext context);
+	void finishProcessing(ICodeGenerationContext context);
 }

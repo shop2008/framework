@@ -3,8 +3,8 @@
  */
 package com.wxxr.mobile.core.tools.generator;
 
-import static com.wxxr.mobile.core.tools.generator.ViewModelUtils.addField;
-import static com.wxxr.mobile.core.tools.generator.ViewModelUtils.addMethod;
+import static com.wxxr.mobile.core.model.ViewModelUtils.addField;
+import static com.wxxr.mobile.core.model.ViewModelUtils.addMethod;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -30,6 +30,10 @@ import com.wxxr.mobile.android.ui.BindableActivity;
 import com.wxxr.mobile.android.ui.BindableFragment;
 import com.wxxr.mobile.android.ui.BindableFragmentActivity;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.model.PModeProviderClass;
+import com.wxxr.mobile.core.model.TargetUIClass;
+import com.wxxr.mobile.core.model.ViewDescriptorClass;
+import com.wxxr.mobile.core.model.ViewModelClass;
 import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -48,31 +52,6 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(UIViewModelGenerator.class);
 	
-//	protected List<String> readImports(Filer filer,String pkg, String className){
-//		LinkedList<String> result = null;
-//		try {
-//			FileObject fileObject = filer.getResource(StandardLocation.SOURCE_PATH, pkg, className+".java");
-//			log.info("Got source file :"+fileObject+" uri :"+fileObject.toUri());
-//			InputStream reader = fileObject.openInputStream();
-//			BufferedReader brd = new BufferedReader(new InputStreamReader(reader));
-//			String s = null;
-//			while((s = brd.readLine()) != null){
-//				s = StringUtils.trimToNull(s);
-//				if((s != null)&& s.startsWith("import ")){
-//					s = StringUtils.trimToNull(s.substring(7,s.length()-1));
-//					if(result == null){
-//						result = new LinkedList<String>();
-//					}
-//					result.add(s);
-//				}
-//			}
-//			brd.close();
-//			reader.close();
-//		} catch (Throwable e) {
-//			log.error("Failed to read imports from java source file :"+pkg+"."+className, e);
-//		}
-//		return result;		
-//	}
 	private PModeProviderClass provider;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.tools.AbstractCodeGenerator#doCodeGeneration(java.util.Set, com.wxxr.mobile.core.tools.ICodeGenerationContext)
@@ -81,10 +60,13 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 	protected void doCodeGeneration(Set<? extends Element> elements,
 			ICodeGenerationContext context) {
 		log.info("Generate code for elements : {}",elements);
+		log.info("Processor in end round : {}",context.getRoundEnvironment().processingOver());
 		Filer filer = context.getProcessingEnvironment().getFiler();
+		int cnt = 0;
 		for (Element element : elements) {
 			View ann = element.getAnnotation(View.class);
 			if(ann != null){
+				cnt++;
 				String pkg = null; //
 				TypeElement typeElem = (TypeElement)element;
 //				UIViewModelSourceScanner scanner = new UIViewModelSourceScanner();
@@ -159,7 +141,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						}
 					}
 				}
-				model.prepare();
+				model.prepare(context);
 				Map<String, Object> attributes = new HashMap<String, Object>();
 				attributes.put("model", model);
 
@@ -256,7 +238,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				}
 			}
 		}
-//		if(context.getRoundEnvironment().processingOver()){
+		if((cnt == 0)&&(this.provider != null)){
 			HashMap<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("model", this.provider);
 			try {
@@ -266,12 +248,20 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				Writer w = file.openWriter();
 				w.write(text);
 				w.close();
+				this.provider = null;
 			} catch (Throwable e) {
 				log.error("Failed to generate UI class for :"+this.provider.getPkgName()+"."+this.provider.getName(),e);
 			}
 			
-//		}
+		}
 
+	}
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.tools.AbstractCodeGenerator#finishProcessing(com.wxxr.mobile.core.tools.ICodeGenerationContext)
+	 */
+	@Override
+	public void finishProcessing(ICodeGenerationContext context) {
+		log.info("Finish view model generation !");
 	}
 
 }

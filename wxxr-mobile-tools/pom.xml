@@ -5,7 +5,7 @@
 	<groupId>com.wxxr.mobile</groupId>
 	<artifactId>wxxr-mobile-tools</artifactId>
 	<version>1.0.0</version>
-    <packaging>maven-plugin</packaging>
+    <packaging>jar</packaging>
 	<name>wxxr-mobile-tools</name>
 	
     <properties>
@@ -42,10 +42,11 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.14</version>
         </dependency>
+   <!-- 
         <dependency>
             <groupId>emma</groupId>
             <artifactId>emma</artifactId>
-            <version>2.0.5312</version> <!-- do not upgrade to unstable version 2.1.5320 -->
+            <version>2.0.5312</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -157,7 +158,6 @@
             <artifactId>android-screenshot-celebrity</artifactId>
             <version>1.9</version>
         </dependency>
-        <!-- 
         
         <dependency>
             <groupId>com.googlecode.jannocessor</groupId>
@@ -217,15 +217,4 @@
             <scope>test</scope>
         </dependency>
 	</dependencies>
-	<build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>${maven-plugin-plugin.version}</version>
-        <configuration>
-          <goalPrefix>wxxr</goalPrefix>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

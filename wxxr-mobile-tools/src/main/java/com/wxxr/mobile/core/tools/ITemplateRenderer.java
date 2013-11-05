@@ -5,12 +5,12 @@ import java.util.Map;
 public interface ITemplateRenderer {
 
 	String renderMacro(String macro, Map<String, Object> attributes,
-			String[] params) throws Exception;
+			String[] params) throws RuntimeException;
 
 	String render(String template, Map<String, Object> attributes)
-			throws Exception;
+			throws RuntimeException;
 
 	String renderFromFile(String templateFilename,
-			Map<String, Object> attributes) throws Exception;
+			Map<String, Object> attributes) throws RuntimeException;
 
 }

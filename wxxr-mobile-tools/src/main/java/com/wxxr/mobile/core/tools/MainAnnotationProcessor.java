@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -45,13 +46,14 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 	private Properties props = new Properties();
 	private VelocityTemplateRenderer renderer;
 	private Trees trees;
+	private LinkedList<ICodeGenerator> processors = new LinkedList<ICodeGenerator>();
 	/* (non-Javadoc)
 	 * @see javax.annotation.processing.AbstractProcessor#process(java.util.Set, javax.annotation.processing.RoundEnvironment)
 	 */
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations,
 			RoundEnvironment roundEnv) {
-		log.info("processing annations :"+annotations);
+		log.info("processing annations :"+annotations+", processor :"+this+", is last round :"+roundEnv.processingOver());
 		GenContext ctx = null;
 		if(!this.supportingAnnotations.isEmpty()){
 			for (Entry<Class<? extends Annotation>, ICodeGenerator> entry : this.supportingAnnotations.entrySet()) {
@@ -64,7 +66,25 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 						ctx = new GenContext(roundEnv);
 					}
 					gen.process(elems, ctx);
+					if(!processors.contains(gen)){
+						processors.add(gen);
+					}
 				}
+			}
+		}
+		if(roundEnv.processingOver()){
+			for (ICodeGenerator gen : processors) {
+				if(ctx == null){
+					ctx = new GenContext(roundEnv);
+				}
+				gen.finishProcessing(ctx);
+			}
+		}else if(annotations.isEmpty()){
+			for (ICodeGenerator gen : processors) {
+				if(ctx == null){
+					ctx = new GenContext(roundEnv);
+				}
+				gen.process(Collections.EMPTY_SET,ctx);
 			}
 		}
 		return false;

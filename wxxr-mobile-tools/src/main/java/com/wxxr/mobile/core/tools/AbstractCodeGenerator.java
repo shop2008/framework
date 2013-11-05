@@ -25,4 +25,13 @@ public abstract class AbstractCodeGenerator implements ICodeGenerator {
 	
 	protected abstract void doCodeGeneration(Set<? extends Element> elements,
 			ICodeGenerationContext context);
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.tools.ICodeGenerator#finishProcessing(com.wxxr.mobile.core.tools.ICodeGenerationContext)
+	 */
+	@Override
+	public void finishProcessing(ICodeGenerationContext context) {
+		
+	}
 }

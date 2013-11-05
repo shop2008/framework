@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.wxxr.mobile.core.annotation.Generator;
+import com.wxxr.mobile.core.model.BindableBeanModel;
 import com.wxxr.mobile.core.tools.ICodeGenerator;
 import com.wxxr.mobile.core.tools.TemplateHelper;
 import com.wxxr.mobile.core.tools.TestProcessorConfigure;
@@ -74,6 +75,6 @@ public class BindableBeanModelTest extends BindableBeanModel {
 				}
 			}
 		}
-		assertEquals(2, gens.size());
+		assertEquals(3, gens.size());
 	}
 }

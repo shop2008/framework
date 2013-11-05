@@ -21,7 +21,6 @@ package com.wxxr.mobile.core.tools;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -31,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -45,7 +45,7 @@ public class VelocityTemplateRenderer implements ITemplateRenderer,
 		RuntimeConstants, LogChute {
 
 	private static final String RESOURCE_LOADER_CLASS = "file.resource.loader.class";
-//	private static final String[] VM_LIBRARY_FILES = { "/META-INF/template/_global_macros_.vm",
+	private static final String[] VM_LIBRARY_FILES = { "/META-INF/template/_viewmodel_macros.vm"
 //		"/META-INF/template/annotation_attribute.vm", "/META-INF/template/annotation.vm", "/META-INF/template/class.vm",
 //		"/META-INF/template/constructor.vm", "/META-INF/template/enum_constant.vm", "/META-INF/template/enum.vm",
 //		"/META-INF/template/exception_parameter.vm", "/META-INF/template/executable_body.vm", "/META-INF/template/field.vm",
@@ -53,9 +53,10 @@ public class VelocityTemplateRenderer implements ITemplateRenderer,
 //		"/META-INF/template/metadata.vm", "/META-INF/template/method.vm", "/META-INF/template/nested_annotation.vm",
 //		"/META-INF/template/nested_class.vm", "/META-INF/template/nested_enum.vm", "/META-INF/template/nested_interface.vm",
 //		"/META-INF/template/package.vm", "/META-INF/template/parameter.vm", "/META-INF/template/static_init.vm",
-//		"/META-INF/template/type_parameter.vm", "/META-INF/template/type_variable.vm", "/META-INF/template/type.vm", "/META-INF/template/variable.vm" };
+//		"/META-INF/template/type_parameter.vm", "/META-INF/template/type_variable.vm", "/META-INF/template/type.vm", "/META-INF/template/variable.vm" 
+		};
 
-	private Logger logger = LoggerFactory.getLogger("RENDERER");
+	private Logger logger = LoggerFactory.getLogger(VelocityTemplateRenderer.class);
 
 	private final VelocityEngine engine;
 
@@ -92,8 +93,8 @@ public class VelocityTemplateRenderer implements ITemplateRenderer,
 						ClasspathResourceLoader.class.getCanonicalName());
 //			}
 
-//			velocityConfig.setProperty(VM_LIBRARY,
-//					StringUtils.join(VM_LIBRARY_FILES, ","));
+			velocityConfig.setProperty(VM_LIBRARY,
+					StringUtils.join(VM_LIBRARY_FILES, ","));
 
 			velocityConfig.setProperty(VM_MAX_DEPTH, "1000");
 			velocityConfig.setProperty(VM_PERM_ALLOW_INLINE_REPLACE_GLOBAL,
@@ -155,11 +156,11 @@ public class VelocityTemplateRenderer implements ITemplateRenderer,
 
 	@Override
 	public String renderFromFile(String templateFilename,
-			Map<String, Object> attributes) throws IOException {
+			Map<String, Object> attributes)  {
 		checkWasConfigured();
 		customize(false);
 
-//		try {
+		try {
 			logger.info("Retrieving template: {}", templateFilename);
 
 			VelocityContext context = createContext(attributes);
@@ -180,11 +181,11 @@ public class VelocityTemplateRenderer implements ITemplateRenderer,
 			String renderedText = writer.toString();
 
 			return postProcess(renderedText, typeUtils);
-//		} catch (Exception e) {
-//			String report = String.format("Rendering of template '%s' failed",
-//					templateFilename);
-//			throw new JannocessorException(report, e);
-//		}
+		} catch (Exception e) {
+			String report = String.format("Rendering of template '%s' failed",
+					templateFilename);
+			throw new RuntimeException(report, e);
+		}
 	}
 
 	@Override
