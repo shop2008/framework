@@ -5,10 +5,17 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -19,7 +26,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
  */
 @View(name="headerMenuItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.layout_right_navi_content")
-public abstract class HeaderMenuItemView extends ViewBase implements IModelUpdater{
+public abstract class HeaderMenuItemView extends ViewBase {
 
 	@Field(valueKey="imageURI")
 	String headIcon;
@@ -45,31 +52,36 @@ public abstract class HeaderMenuItemView extends ViewBase implements IModelUpdat
 	DataField<String> unreadNewsField;
 	DataField<String> integralBalanceField;
 	DataField<String> accountBalanceField;
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IModelUpdater#updateModel(java.lang.Object)
-	 */
-	@Override
-	public void updateModel(Object val) {
-		if(val instanceof IUICommand){
-			IUICommand cmd = (IUICommand)val;
-			String value = cmd.getAttribute(AttributeKeys.name);
-			setNickName(value);
-			value = cmd.getAttribute(AttributeKeys.title);
-			setUserNum(value);
-			if(cmd.hasAttribute(AttributeKeys.visible)){
-				setAttribute(AttributeKeys.visible, cmd.getAttribute(AttributeKeys.visible));
-			}
-			if(cmd.hasAttribute(AttributeKeys.enabled)){
-				setAttribute(AttributeKeys.enabled, cmd.getAttribute(AttributeKeys.enabled));
-			}
-		}
+
+	@Command()
+	private void handleClickImage(InputEvent event){
 		
 	}
-
 	public String getHeadIcon() {
 		return headIcon;
 	}
+	
+	@OnDataChanged
+	private void updateHeaderStatus(ValueChangedEvent event){
+		if(event.getComponent() == this.userNumField){
+		if(this.userNum == null){
+			this.headIconField.setAttribute(AttributeKeys.visible, false);
+		}else{
+			this.headIconField.setAttribute(AttributeKeys.visible, true);
+			
+		}
+		}
+	}
 
+	@OnShow
+	private void updateHeaderStatus(IBinding<IView> binding){
+		if(this.userNum == null){
+			this.headIconField.setAttribute(AttributeKeys.visible, false);
+		}else{
+			this.headIconField.setAttribute(AttributeKeys.visible, true);
+			
+		}
+	}
 	public void setHeadIcon(String headIcon) {
 		this.headIcon = headIcon;
 		this.headIconField.setValue(headIcon);

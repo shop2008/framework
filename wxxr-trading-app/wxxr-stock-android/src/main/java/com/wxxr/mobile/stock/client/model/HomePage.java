@@ -11,9 +11,12 @@ import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.jmx.annotation.ServiceMBean;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -22,7 +25,9 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.UICommand;
 
 /**
  * @author neillin
@@ -31,6 +36,10 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;
+	
+	@Bean(type=BindingType.Service)
+//	private IUsrManager usrMgr;
+	
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
 	
@@ -75,7 +84,7 @@ public abstract class HomePage extends PageBase {
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation1",
 			uiItems={
 				@UIItem(id="ahome",label="我的认证",icon="resourceId:drawable/rz"),
-				@UIItem(id="apage1",label="我的账户",icon="resourceId:drawable/myzh"),
+				@UIItem(id="apage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${usrMgr.userRegistered}"),
 				@UIItem(id="apage2",label="交易记录",icon="resourceId:drawable/jyjl"),
 				@UIItem(id="apage3",label="设置",icon="resourceId:drawable/seting"),
 				@UIItem(id="apage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
@@ -103,5 +112,10 @@ public abstract class HomePage extends PageBase {
 			return name;
 		}
 		return null;
+	}
+	
+	@OnShow
+	private void menuShow() {
+		((UICommand)rightMenu.getCommand("ahome")).setAttribute(AttributeKeys.visible, false);
 	}
 }
