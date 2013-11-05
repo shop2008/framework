@@ -18,7 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/default_user_icons" />
+            android:src="@drawable/default_user_icons" 
+            bind:field="*"
+            bind:on_Click="handleClickImage"
+            />
 
         <TextView
             android:id="@id/tv_nick_name"

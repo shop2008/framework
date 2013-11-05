@@ -53,9 +53,10 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	DataField<String> integralBalanceField;
 	DataField<String> accountBalanceField;
 
-	@Command()
-	private void handleClickImage(InputEvent event){
+	@Command(commandName="handleClickImage")
+	private String handleClickImage(InputEvent event){
 		
+		return null;
 	}
 	public String getHeadIcon() {
 		return headIcon;
