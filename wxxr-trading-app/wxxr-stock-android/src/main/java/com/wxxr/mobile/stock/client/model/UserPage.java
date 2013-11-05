@@ -84,13 +84,13 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	protected void onShow(IBinding<IView> binding) {
 		super.onShow(binding);
 		/*初始化数据*/
-		entity = new UserInfoEntity();
-		entity.setuIcon("resourceId:drawable/home");
-		entity.setuNickName("王三");
-		entity.setuIntegrals("150000");
-		entity.setuProfits("10000");
-		entity.setuChallengeShared("23");
-		entity.setuJoinShared("20");
+//		entity = new UserInfoEntity();
+//		entity.setuIcon("resourceId:drawable/home");
+//		entity.setuNickName("王三");
+//		entity.setuIntegrals("150000");
+//		entity.setuProfits("10000");
+//		entity.setuChallengeShared("23");
+//		entity.setuJoinShared("20");
 		
 	}
 	
