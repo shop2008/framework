@@ -1,5 +1,7 @@
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.List;
+
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
@@ -41,7 +43,8 @@ public interface AttributeKeys {
 	
 	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
-	AttributeKey<Object> options = new AttributeKey<Object>(Object.class,"options");
+	@SuppressWarnings("rawtypes")
+	AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
 	AttributeKey<?>[] keys = new AttributeKey<?>[] {
 			enabled,
