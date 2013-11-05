@@ -88,7 +88,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			binding.activate(vModel);
 			((ListView) getUIControl()).addFooterView(view);
 		}
-		((AbsListView) getUIControl()).setAdapter(listAdapter);
+		setupAdapter(listAdapter);
 	}
 
 	protected View createUI(IViewDescriptor v) {
