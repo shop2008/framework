@@ -59,10 +59,6 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 */
 	@Field(valueKey="text")
 	String join_shared_num_what;
-
-	
-	@Field(valueKey="entity")
-	UserInfoEntity entity;
 	
 	/*@Field(valueKey="options")
 	List<TradeRecordEntity> challengeTrades;
