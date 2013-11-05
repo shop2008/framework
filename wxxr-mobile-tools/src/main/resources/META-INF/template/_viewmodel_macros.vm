@@ -21,7 +21,10 @@
 #set( $DType = ${model.addImport("com.wxxr.mobile.core.ui.common.DataField")})
 #foreach($fld in $dataFields) 
         this.${fld.name}Field = new ${DType}<${fld.simpleType}>("${fld.name}");
+        this.${fld.name}Field.setValueType(${fld.simpleType}.class);
+#if(${fld.valueKey})
         this.${fld.name}Field.setValueKey(${fld.valueKey});
+#end
         this.${fld.name}Field.setValue(this.${fld.name});
         add(this.${fld.name}Field);        
 #end

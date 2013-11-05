@@ -298,16 +298,18 @@ public abstract class ViewModelUtils {
 			model.setVisibleWhenExpress(s);
 		}
 		String key = field.valueKey();
-		if(key.indexOf('.') < 0){
-			vModel.addImport(AttributeKeys.class.getCanonicalName());
-			key = "AttributeKeys."+key;
-		}else if(key.charAt(0) == '.'){
-			key = vModel.getApplicationId()+key;
-			int idx = key.lastIndexOf('.');
-			String subKey = key.substring(idx);
-			key = vModel.addImport(key.substring(0, idx))+subKey;
+		if(StringUtils.isNotBlank(key)){
+			if(key.indexOf('.') < 0){
+				vModel.addImport(AttributeKeys.class.getCanonicalName());
+				key = "AttributeKeys."+key;
+			}else if(key.charAt(0) == '.'){
+				key = vModel.getApplicationId()+key;
+				int idx = key.lastIndexOf('.');
+				String subKey = key.substring(idx);
+				key = vModel.addImport(key.substring(0, idx))+subKey;
+			}
+			model.setValueKey(key);
 		}
-		model.setValueKey(key);
 		Attribute[] attrs = field.attributes();
 		if(attrs != null){
 			for (Attribute attr : attrs) {
