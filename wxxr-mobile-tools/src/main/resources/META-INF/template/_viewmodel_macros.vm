@@ -107,7 +107,7 @@
     $NavType navDesc = null;
     $CMDType item = null;
     $HType handler = null;
-#foreach($cmd in $model.commands)
+#foreach($cmd in $commands)
 #if(${cmd.className})
     handler = new ${model.addImport(${cmd.className})}();
 #else
@@ -132,21 +132,21 @@
 #end
 #if(${nav.params})
 #foreach($p in $nav.params)
-    navDesc.addParameter("$p.name","$p.value");
+    navDesc.addParameter("${p.name}","${p.value}");
 #end
 #end
     handler.addNavigation(navDesc);
 #end
 #end
-    addUICommand("${cmd.commandName}", handler);
+    addUICommand("${cmd.name}", handler);
 #if(${cmd.menuItems})
 #set( $keys = ${model.addImport("com.wxxr.mobile.core.ui.common.AttributeKeys")})
 #foreach($m in $cmd.menuItems)
-    item = new UICommand("$m.id");
-    item.setCommandName("$cmd.commandName");
-    item.setAttribute(${keys}.title,"$m.label");
+    item = new UICommand("${m.name}");
+    item.setCommandName("${cmd.name}");
+    item.setAttribute(${keys}.title,"${m.label}");
 #if($m.icon)
-    item.setAttribute(${keys}.icon,"$m.icon");
+    item.setAttribute(${keys}.icon,"${m.icon}");
 #end
     add(item);
 #end
