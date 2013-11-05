@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.widget.AbsListView;
+import android.widget.ListAdapter;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IDataField;
@@ -54,7 +55,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			provider = createAdaptorFromValue(comp.getAttribute(AttributeKeys.options));
 		}
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(), getAndroidBindingContext().getUIContext(), provider, itemViewId,headerViewId,footerViewId);		
-		((AbsListView)getUIControl()).setAdapter(listAdapter);
+		setupAdapter(listAdapter);
+	}
+
+	protected void setupAdapter(ListAdapter adapter) {
+		((AbsListView)getUIControl()).setAdapter(adapter);
 	}
 
 	/**
@@ -112,7 +117,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	@Override
 	public void deactivate() {
 		if(this.listAdapter != null){
-			((AbsListView)getUIControl()).setAdapter(null);
+			setupAdapter(null);
 			this.listAdapter.destroy();
 			this.listAdapter = null;
 		}
