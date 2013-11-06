@@ -81,6 +81,4 @@ public class TradingAccount {
 	public void setType(int type) {
 		this.type = type;
 	}
-	
-
 }

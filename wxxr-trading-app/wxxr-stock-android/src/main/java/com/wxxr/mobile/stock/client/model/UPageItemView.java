@@ -5,9 +5,11 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.TradeRecordEntity;
+import com.wxxr.mobile.stock.client.R;
+import com.wxxr.mobile.stock.client.bean.TradingAccount;
 
 
 /**
@@ -57,13 +59,13 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof TradeRecordEntity) {
-			TradeRecordEntity entity = (TradeRecordEntity) value;
-			setStockName(entity.getStockName());
-			setStockCode(entity.getStockCode());
-			setChallengeAmount(entity.getTradeAmount());
-			setProfitLoss(entity.getTradeProfit());
-			setTradeDate(entity.getTradeDate());
+		if (value instanceof TradingAccount) {
+			TradingAccount account = (TradingAccount) value;
+			setStockName(account.getStockName());
+			setStockCode(account.getStockCode());
+			setChallengeAmount(String.valueOf(account.getInitCredit()));
+			setProfitLoss(String.valueOf(account.getIncome()));
+			setTradeDate(account.getCreateDate());
 		}
 	}
 	
@@ -80,11 +82,19 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	protected void setChallengeAmount(String challengeAmount) {
 		this.challenge_amount = challengeAmount;
 		this.challenge_amountField.setValue(challengeAmount);
+		
 	}
 	
 	protected void setProfitLoss(String profitLoss) {
 		this.profit_loss_amount = profitLoss;
-		this.profit_loss_amountField.setValue(profitLoss);
+		if (Float.parseFloat(profitLoss) > 0) {
+			this.profit_loss_amountField.setValue("+"+profitLoss);
+			this.profit_loss_amountField.setAttribute(AttributeKeys.foregroundColor, R.color.red);
+		} else {
+			this.profit_loss_amountField.setValue("-"+profitLoss);
+			this.profit_loss_amountField.setAttribute(AttributeKeys.foregroundColor, R.color.green);
+		}
+		
 	}
 	
 	protected void setTradeDate(String tradeDate) {

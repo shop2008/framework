@@ -4,33 +4,23 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.widget.Toast;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.android.ui.binding.GenericListAdapter;
 import com.wxxr.mobile.core.api.ApplicationFactory;
-import com.wxxr.mobile.core.api.IApplication;
-import com.wxxr.mobile.core.api.IProgressMonitor;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
-import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.AttributeKey;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
-import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.TradeRecordEntity;
-import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.R;
+import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.bean.User;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * 个人主页
@@ -56,7 +46,7 @@ public abstract class UserPage extends PageBase {
 	 * 累计实盘积分
 	 */
 	@Field(valueKey="text")
-	String total_real_integral;
+	String total_real_score;
 	
 	/**
 	 * 累计总收益
@@ -76,124 +66,67 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey="text")
 	String join_shared_num_what;
 	
-	@Field
-	UserInfoEntity entity;
-
 	@Field(valueKey="options")
-	List<TradeRecordEntity> join_entities;
+	List<TradingAccount> joinTradeInfos;
 	
 	@Field(valueKey="options")
-	List<TradeRecordEntity> challenge_entities;
+	List<TradingAccount> challengeTradeInfos;
 
 	
 	DataField<String> user_iconField;
 	
 	DataField<String> user_nick_nameField;
 	
-	DataField<String> total_real_integralField;
+	DataField<String> total_real_scoreField;
 	
 	DataField<String> total_profitField;
 	
 	DataField<String> challenge_shared_num_whatField;
 	
 	DataField<String> join_shared_num_whatField;
-	DataField<List> challenge_entitiesField;
-	DataField<List> join_entitiesField;
+	DataField<List> challengeTradeInfosField;
+	DataField<List> joinTradeInfosField;
 	
-	@OnCreate
-	protected void initData() {
-		entity = new UserInfoEntity();
-		entity.setuIcon("resourceId:drawable/home");
-		entity.setuNickName("李四");
-		entity.setuChallengeShared("20");
-		entity.setuJoinShared("23");
-		entity.setuIntegrals("15000.00");
-		entity.setuProfits("20000.00");
-		
-		
-		List<TradeRecordEntity> tradeRecordEntities = new ArrayList<TradeRecordEntity>();
-		
-		TradeRecordEntity tradeRecordEntity1 = new TradeRecordEntity();
-		tradeRecordEntity1.setStockName("工商银行");
-		tradeRecordEntity1.setStockCode("006003");
-		tradeRecordEntity1.setTradeAmount("7万");
-		tradeRecordEntity1.setTradeDate("2013-11-05");
-		tradeRecordEntity1.setTradeProfit("+6000.00");
-		tradeRecordEntity1.setTradeType("challenge");
-		
-		tradeRecordEntities.add(tradeRecordEntity1);
-		
-		TradeRecordEntity tradeRecordEntity2 = new TradeRecordEntity();
-		tradeRecordEntity2.setStockName("北京银行");
-		tradeRecordEntity2.setStockCode("006002");
-		tradeRecordEntity2.setTradeAmount("10万");
-		tradeRecordEntity2.setTradeDate("2013-11-06");
-		tradeRecordEntity2.setTradeProfit("+5000.00");
-		tradeRecordEntity2.setTradeType("challenge");
-		
-		tradeRecordEntities.add(tradeRecordEntity2);
-		
-		
-		TradeRecordEntity tradeRecordEntity5 = new TradeRecordEntity();
-		tradeRecordEntity5.setStockName("北京银行");
-		tradeRecordEntity5.setStockCode("006002");
-		tradeRecordEntity5.setTradeAmount("10万");
-		tradeRecordEntity5.setTradeDate("2013-11-06");
-		tradeRecordEntity5.setTradeProfit("+5000.00");
-		tradeRecordEntity5.setTradeType("challenge");
-		
-		tradeRecordEntities.add(tradeRecordEntity5);
-		
-		TradeRecordEntity tradeRecordEntity3 = new TradeRecordEntity();
-		tradeRecordEntity3.setStockName("交通银行");
-		tradeRecordEntity3.setStockCode("006000");
-		tradeRecordEntity3.setTradeAmount("20万");
-		tradeRecordEntity3.setTradeDate("2013-11-06");
-		tradeRecordEntity3.setTradeProfit("+9000.00");
-		tradeRecordEntity3.setTradeType("join");
-		
-		tradeRecordEntities.add(tradeRecordEntity3);
-		
-		
-		entity.setRecords(tradeRecordEntities);
-		List<TradeRecordEntity> entities = entity.getRecords();
-		join_entities = new ArrayList<TradeRecordEntity>();
-		challenge_entities = new ArrayList<TradeRecordEntity>();
-		for(TradeRecordEntity entity : entities) {
-			if (entity.getTradeType().equals("challenge")) {
-				challenge_entities.add(entity);
-				challenge_entitiesField.setValue(challenge_entities);
-			} else if(entity.getTradeType().equals("join")){
-				join_entities.add(entity);
-				join_entitiesField.setValue(join_entities);
-			}
-		}
-		
-		
-		
-	}
-	
-	
-	
+	@Field
+	User user;
 	@OnShow
-	protected void showView() {
-		setUserIcon(entity.getuIcon());
-		setUserNickName(entity.getuNickName());
-		setTotalProfit(entity.getuProfits());
-		setTotoalIntegral(entity.getuIntegrals());
-		setChallengeSharedNum(entity.getuChallengeShared());
-		setJoinSharedNum(entity.getuJoinShared());
+	protected void initData() {
+		user = getUIContext().getKernelContext().getService(IUserManagementService.class).fetchUserInfo();
+	
+		if (user != null) {
+			List<TradingAccount> tradeInfos = user.getTradeInfos();
+			joinTradeInfos = new ArrayList<TradingAccount>();
+			challengeTradeInfos = new ArrayList<TradingAccount>();
+			for (TradingAccount tradeInfo : tradeInfos) {
+				switch (tradeInfo.getType()) {
+				case 0:
+					/*参赛交易盘*/
+					joinTradeInfos.add(tradeInfo);
+					break;
+				case 1:
+					challengeTradeInfos.add(tradeInfo);
+					break;
+				default:
+					break;
+				}
+			}
+			joinTradeInfosField.setValue(joinTradeInfos);
+			challengeTradeInfosField.setValue(challengeTradeInfos);
+			showView();
+		}
 	}
 	
-
-	/*@OnDataChanged
-	protected void dataUpdate(ValueChangedEvent event) {
-		if (event.getComponent() == this.user_iconField) {
-			this.user_iconField.setAttribute(AttributeKeys.text, entity.getuIcon());
-		} else if(event.getComponent() == this.user_nick_nameField) {
-			this.user_nick_nameField.setAttribute(AttributeKeys.text, entity.getuNickName());
-		}
-	}*/
+	
+	
+	
+	protected void showView() {
+		setUserIcon(user.getUserPic());
+		setUserNickName(user.getNickName());
+		setTotalProfit(user.getTotoalProfit());
+		setTotoalScore(user.getTotoalScore());
+		setChallengeSharedNum(user.getChallengeShared());
+		setJoinSharedNum(user.getJoinShared());
+	}
 
 	/**
 	 * 标题栏-"返回"按钮事件处理
@@ -278,14 +211,26 @@ public abstract class UserPage extends PageBase {
 		this.user_nick_nameField.setValue(uNickName);
 	}
 	
-	protected void setTotoalIntegral(String totalIntegral) {
-		this.total_real_integral = totalIntegral;
-		this.total_real_integralField.setValue(totalIntegral);
+	protected void setTotoalScore(String totalScore) {
+		this.total_real_score = totalScore;
+		this.total_real_scoreField.setValue(totalScore);
+		
+		if (Float.parseFloat(totalScore) > 0) {
+			this.total_real_scoreField.setAttribute(AttributeKeys.foregroundColor, R.color.red);
+		} else {
+			this.total_real_scoreField.setAttribute(AttributeKeys.foregroundColor, R.color.green);
+		}
 	}
 	
 	protected void setTotalProfit(String totalProfit) {
 		this.total_profit = totalProfit;
+		
 		this.total_profitField.setValue(totalProfit);
+		if (Float.parseFloat(totalProfit) > 0) {
+			this.total_profitField.setAttribute(AttributeKeys.foregroundColor, R.color.red);
+		} else {
+			this.total_profitField.setAttribute(AttributeKeys.foregroundColor, R.color.green);
+		}
 	}
 	
 	

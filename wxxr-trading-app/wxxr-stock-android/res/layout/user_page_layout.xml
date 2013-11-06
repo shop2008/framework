@@ -114,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/tv_default_text"
                             android:textColor="@color/red"
-                            bind:field="total_real_integral" />
+                            bind:field="total_real_score" />
                     </LinearLayout>
 
                     <View
@@ -246,7 +246,7 @@
                 <com.wxxr.mobile.stock.client.widget.NoScrollListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    bind:field="challenge_entities"
+                    bind:field="challengeTradeInfos"
                     bind:itemViewId="upage_item_view"
                     bind:on_ItemClick="challenge_item_click" />
 
@@ -362,7 +362,7 @@
                 <com.wxxr.mobile.stock.client.widget.NoScrollListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    bind:field="join_entities"
+                    bind:field="joinTradeInfos"
                     bind:itemViewId="upage_item_view"
                     bind:on_ItemClick="join_item_click" />
 
