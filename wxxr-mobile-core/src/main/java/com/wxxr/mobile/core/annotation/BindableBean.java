@@ -18,5 +18,6 @@ import java.lang.annotation.Target;
 @Documented
 @ModelAnnotation
 public @interface BindableBean {
-	String pkg();
+	String pkg() default "";
+	String className() default "";
 }
