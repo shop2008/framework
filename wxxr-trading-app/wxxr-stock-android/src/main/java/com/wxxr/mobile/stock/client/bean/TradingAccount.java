@@ -3,14 +3,19 @@
  */
 package com.wxxr.mobile.stock.client.bean;
 
+
 /**
+ * 交易盘
  * @author wangxuyang
  *
  */
 public class TradingAccount {
 	private Long id;
+	private int type;//交易盘类型  0-模拟盘；1-实盘
 	private String stockCode;//最大持股代码
 	private String stockName;//最大持股名称
+	private String createDate;//申请日期
+	private String endDate;//截止日期
 	private float initCredit;//额度（申请资金）
 	private float income;//总收益
 	private boolean isJieSuan;//是否已结算
@@ -56,6 +61,24 @@ public class TradingAccount {
 	}
 	public void setJieSuan(boolean isJieSuan) {
 		this.isJieSuan = isJieSuan;
+	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
 	}
 	
 
