@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
@@ -27,7 +28,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @View(name="headerMenuItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.layout_right_navi_content")
 public abstract class HeaderMenuItemView extends ViewBase {
-
+	private static Trace log;
 	@Field(valueKey="imageURI")
 	String headIcon;
 	
@@ -55,9 +56,28 @@ public abstract class HeaderMenuItemView extends ViewBase {
 
 	@Command(commandName="handleClickImage")
 	private String handleClickImage(InputEvent event){
-		
+		log.info("User click on user image !");
 		return null;
 	}
+	
+	@Command
+	private String handleClickBalance(InputEvent event){
+		log.info("User click on Account balance !");
+		return null;
+	}
+	@Command
+	private String handleClickUnread(InputEvent event){
+		log.info("User click on Unread acticles !");
+		return null;
+	}
+
+	@Command
+	private String handleClickCash(InputEvent event){
+		log.info("User click on cash icon !");
+		return null;
+	}
+
+	
 	public String getHeadIcon() {
 		return headIcon;
 	}

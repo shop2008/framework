@@ -81,6 +81,11 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 				public Object getItem(int i) {
 					return data.get(i);
 				}
+
+				@Override
+				public boolean isItemEnabled(Object arg0) {
+					return true;
+				}
 			};
 		}else if((val != null)&& val.getClass().isArray()){
 			final Object[] data = (Object[])val;
@@ -99,6 +104,11 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 				@Override
 				public Object getItem(int i) {
 					return data[i];
+				}
+
+				@Override
+				public boolean isItemEnabled(Object arg0) {
+					return true;
 				}
 			};
 		}
@@ -166,6 +176,11 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 			this.listener.dataSetChanged();
 		}
 		super.updateUI(recursive);
+	}
+
+	@Override
+	public boolean isItemEnabled(Object arg0) {
+		return listAdapter.isItemEnabled(arg0);
 	}
 
 }
