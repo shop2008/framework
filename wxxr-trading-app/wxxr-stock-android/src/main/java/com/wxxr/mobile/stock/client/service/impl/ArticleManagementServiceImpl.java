@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.module;
+package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +10,16 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 
 /**
+ * 文章管理模块
  * @author wangxuyang
  *
  */
-public class ArticleManagerModule extends AbstractModule<IStockAppContext>
-		implements IArticleManagerModule {
-	private static final Trace log = Trace.register(ArticleManagerModule.class);
+public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContext>
+		implements IArticleManagementService {
+	private static final Trace log = Trace.register(ArticleManagementServiceImpl.class);
 	
 	//=================interface method =====================================
 	@Override
@@ -58,14 +60,14 @@ public class ArticleManagerModule extends AbstractModule<IStockAppContext>
 	
 	@Override
 	protected void startService() {
-		context.registerService(IArticleManagerModule.class, this);
+		context.registerService(IArticleManagementService.class, this);
 
 	}
 
 	
 	@Override
 	protected void stopService() {
-		context.unregisterService(IArticleManagerModule.class, this);
+		context.unregisterService(IArticleManagementService.class, this);
 	}
 	
 	

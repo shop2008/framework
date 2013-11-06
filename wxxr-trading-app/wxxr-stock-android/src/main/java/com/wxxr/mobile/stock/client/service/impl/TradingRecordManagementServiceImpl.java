@@ -1,44 +1,22 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.module;
+package com.wxxr.mobile.stock.client.service.impl;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
-import com.wxxr.mobile.stock.client.StockAppBizException;
+import com.wxxr.mobile.stock.client.service.ITradingRecordManagementService;
 
 /**
  * @author wangxuyang
  * 
  */
-public class UserManagerModule extends AbstractModule<IStockAppContext>	implements IUserManagerModule {
-	private static final Trace log = Trace.register(UserManagerModule.class);
-
+public class TradingRecordManagementServiceImpl extends AbstractModule<IStockAppContext>
+		implements ITradingRecordManagementService{
+	private static final Trace log = Trace.register(TradingRecordManagementServiceImpl.class);
 	// =================interface method =====================================
-	@Override
-	public void login(String userId, String password) throws StockAppBizException {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void register(String userId, String password) throws StockAppBizException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void logout(String userId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resetPassword(String userId, String oldPassword,String newPassword) throws StockAppBizException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	// =================private method =======================================
 
@@ -71,7 +49,5 @@ public class UserManagerModule extends AbstractModule<IStockAppContext>	implemen
 		// TODO Auto-generated method stub
 
 	}
-
-	
 
 }

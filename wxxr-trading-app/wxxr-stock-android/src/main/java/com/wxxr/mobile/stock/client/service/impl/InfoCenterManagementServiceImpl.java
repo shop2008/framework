@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.module;
+package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.List;
 
@@ -9,15 +9,16 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.Stock;
+import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
 
 /**
  * @author wangxuyang
  * 
  */
-public class InfoCenterManagerModule extends AbstractModule<IStockAppContext>
-		implements IInfoCenterManagerModule {
+public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppContext>
+		implements IInfoCenterManagementService {
 
-	private static final Trace log = Trace.register(InfoCenterManagerModule.class);
+	private static final Trace log = Trace.register(InfoCenterManagementServiceImpl.class);
 	//====================interface methods =====================
 	@Override
 	public List<Stock> searchStock(String keyword) {
@@ -35,14 +36,14 @@ public class InfoCenterManagerModule extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void startService() {
-		context.registerService(IInfoCenterManagerModule.class, this);
+		context.registerService(IInfoCenterManagementService.class, this);
 
 	}
 
 
 	@Override
 	protected void stopService() {
-		context.unregisterService(IInfoCenterManagerModule.class, this);
+		context.unregisterService(IInfoCenterManagementService.class, this);
 	}
 
 }

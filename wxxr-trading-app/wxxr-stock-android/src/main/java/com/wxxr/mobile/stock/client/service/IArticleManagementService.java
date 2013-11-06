@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.module;
+package com.wxxr.mobile.stock.client.service;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import com.wxxr.mobile.stock.client.bean.Article;
  * @author wangxuyang
  *
  */
-public interface IArticleManagerModule {
+public interface IArticleManagementService {
 	/**
 	 * 查询文章列表
 	 * @param start-起始位置 

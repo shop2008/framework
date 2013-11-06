@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.module;
+package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,9 @@ import java.util.List;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
+import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 
 /**
  * 交易管理模块
@@ -17,10 +19,10 @@ import com.wxxr.mobile.stock.client.bean.TradingAccount;
  * @author wangxuyang
  * 
  */
-public class TradingManagerModule extends AbstractModule<IStockAppContext>
-		implements ITradingManagerModule {
+public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext>
+		implements ITradingManagementService {
 
-	private static final Trace log = Trace.register(TradingManagerModule.class);
+	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 
 	// =================interface method =====================================
 	public List<TradingAccount> getTradingAccountList(int type) {
@@ -37,13 +39,26 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 		return null;
 	}
 
+	@Override
+	public TradingAccount getTradingAccount(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long createTradingAccount(String type, String credit, String stops,
+			String fee1, String freezing) throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	// =================private method =======================================
 	private List<TradingAccount> mockData(int type) {
 		List<TradingAccount> list = new ArrayList<TradingAccount>();
 		TradingAccount t0ta = null;
 		switch (type) {
 		case 0:
-			//====mock T日实盘，未结算，盈利
+			// ====mock T日实盘，未结算，盈利
 			t0ta = new TradingAccount();
 			t0ta.setId(1l);
 			t0ta.setInitCredit(100000);
@@ -53,7 +68,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			t0ta.setType(1);// 实盘
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
-			//====mock T日实盘，未结算，亏损
+			// ====mock T日实盘，未结算，亏损
 			t0ta = new TradingAccount();
 			t0ta.setId(1l);
 			t0ta.setInitCredit(100000);
@@ -75,7 +90,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			list.add(t0ta);
 			break;
 		case 1:
-			//===== mock T+1日模拟盘，已结算
+			// ===== mock T+1日模拟盘，已结算
 			t0ta = new TradingAccount();
 			t0ta.setId(2l);
 			t0ta.setInitCredit(100000);
@@ -85,7 +100,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			t0ta.setType(0);// 模拟盘
 			t0ta.setStatus(1);// 结算
 			list.add(t0ta);
-			//==== mock T+1日实盘、未结算，盈利
+			// ==== mock T+1日实盘、未结算，盈利
 			t0ta = new TradingAccount();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
@@ -95,7 +110,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			t0ta.setType(1);// 实盘
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
-			//==== mock T+1日实盘、未结算，亏损
+			// ==== mock T+1日实盘、未结算，亏损
 			t0ta = new TradingAccount();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
@@ -105,7 +120,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			t0ta.setType(1);// 实盘
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
-			//==== mock T+1日实盘、未结算，平盘
+			// ==== mock T+1日实盘、未结算，平盘
 			t0ta = new TradingAccount();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
@@ -115,7 +130,7 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 			t0ta.setType(1);// 实盘
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
-			//==== mock T+1日实盘、已结算，亏损
+			// ==== mock T+1日实盘、已结算，亏损
 			t0ta = new TradingAccount();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
@@ -141,12 +156,12 @@ public class TradingManagerModule extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void startService() {
-		context.registerService(ITradingManagerModule.class, this);
+		context.registerService(ITradingManagementService.class, this);
 	}
 
 	@Override
 	protected void stopService() {
-		context.unregisterService(ITradingManagerModule.class, this);
+		context.unregisterService(ITradingManagementService.class, this);
 	}
 
 }
