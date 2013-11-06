@@ -27,6 +27,8 @@ import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.client.module.ArticleManagerModule;
+import com.wxxr.mobile.stock.client.module.InfoCenterManagerModule;
+import com.wxxr.mobile.stock.client.module.TradingManagerModule;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 
 /**
@@ -86,6 +88,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
 		registerKernelModule(new WorkbenchManagerModule());
 		registerKernelModule(new ArticleManagerModule());//
+		registerKernelModule(new InfoCenterManagerModule());
+		registerKernelModule(new TradingManagerModule());
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
