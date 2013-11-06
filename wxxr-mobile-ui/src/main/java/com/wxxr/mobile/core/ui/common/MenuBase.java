@@ -4,8 +4,10 @@
 package com.wxxr.mobile.core.ui.common;
 
 import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
+
 import java.util.LinkedList;
 
+import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
@@ -34,7 +36,9 @@ public class MenuBase extends UIComponent implements IMenu {
 	public MenuBase(String[] cmdIds){
 		if(cmdIds != null){
 			for (String id : cmdIds) {
-				this.commandIds.add(id);
+//				Boolean bool = getCommand(id).getAttribute(AttributeKeys.visible);
+//				if(bool.booleanValue())
+					this.commandIds.add(id);
 			}
 		}
 	}
@@ -60,7 +64,9 @@ public class MenuBase extends UIComponent implements IMenu {
 	@Override
 	public IMenu addCommand(String cmdId) {
 		if(!this.commandIds.contains(cmdId)){
-			this.commandIds.add(cmdId);
+//			Boolean bool = getCommand(cmdId).getAttribute(AttributeKeys.visible);
+//			if(bool.booleanValue())
+				this.commandIds.add(cmdId);
 		}
 		return this;
 	}
