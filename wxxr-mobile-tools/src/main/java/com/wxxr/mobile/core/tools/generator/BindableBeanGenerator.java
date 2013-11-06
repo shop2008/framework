@@ -28,6 +28,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
+@SuppressWarnings("restriction")
 public class BindableBeanGenerator extends AbstractCodeGenerator {
 	
 	private static final String TEMPATE_NAME = "/META-INF/template/BindableBean.vm";
@@ -44,7 +45,8 @@ public class BindableBeanGenerator extends AbstractCodeGenerator {
 		for (Element element : elements) {
 			BindableBean ann = element.getAnnotation(BindableBean.class);
 			if(ann != null){
-				String pkg = ann.pkg();
+				String pkg = StringUtils.trimToNull(ann.pkg());
+				String className = StringUtils.trimToNull(ann.className());
 				TypeElement typeElem = (TypeElement)element;
 				String elementFQN = typeElem.getQualifiedName().toString();
 				int idx = elementFQN.lastIndexOf('.');
@@ -52,15 +54,21 @@ public class BindableBeanGenerator extends AbstractCodeGenerator {
 				String defaultName = elementFQN;
 				if(idx > 0){
 					defaultPkg = elementFQN.substring(0,idx);
+					if(defaultPkg.endsWith(".model")){
+						defaultPkg = defaultPkg.substring(0,defaultPkg.length()-5)+"bean";
+					}
 					defaultName = elementFQN.substring(idx+1);
 				}
 
-				if(StringUtils.isBlank(pkg)){
+				if(pkg == null){
 					pkg = defaultPkg;
+				}
+				if(className == null){
+					className = defaultName;
 				}
 				BindableBeanModel model = new BindableBeanModel();
 				model.setPkgName(pkg);
-				model.setName(defaultName);
+				model.setName(className);
 				List<? extends Element> children = typeElem.getEnclosedElements();
 				if(children != null){
 					for (Element child : children) {

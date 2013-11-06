@@ -279,7 +279,7 @@ public class PropertyChangeSupport implements IBindableBean {
 		if (ObjectUtils.isEquals(oldValue, newValue)) {
 			return;
 		}
-		firePropertyChange(propertyName, oldValue,newValue);
+		firePropertyChange(new PropertyChangeEvent(source,propertyName,oldValue,newValue));
 	}
 
 

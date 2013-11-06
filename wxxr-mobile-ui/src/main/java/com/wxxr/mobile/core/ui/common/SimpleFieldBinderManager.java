@@ -53,8 +53,16 @@ public class SimpleFieldBinderManager implements
 	@Override
 	public <M extends IUIComponent> IFieldBinder getFieldBinder(
 			Class<M> pmodelClass, Class<?> controlClass) {
-		ControlFieldBinders binders = getFieldBinders(controlClass);
-		return binders != null ? binders.getFieldBinder(pmodelClass) : null;
+		Class<?> klass = controlClass;
+		while(klass != Object.class){
+			ControlFieldBinders binders = this.factories.get(klass);
+			if((binders != null)&&(binders.getFieldBinder(pmodelClass) != null)){
+				return binders.getFieldBinder(pmodelClass);
+			}else{
+				klass = klass.getSuperclass();
+			}
+		}
+		return null;
 	}
 
 	@Override
