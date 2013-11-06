@@ -47,6 +47,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
+		
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 			public void showHomePage() {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put(IAndroidPageNavigator.PARAM_KEY_INTENT_FLAG, String.valueOf(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-				super.showPage("user_page",map,null);
+				super.showPage(HOME_PAGE_ID,map,null);
 			}
 		};
 	}
