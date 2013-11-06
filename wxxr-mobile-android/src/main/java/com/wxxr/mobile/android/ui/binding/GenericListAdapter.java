@@ -75,8 +75,7 @@ public class GenericListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public long getItemId(int position) {
-		Object obj = getItem(position);
-		return (Long)this.provider.getItemId(obj);
+		return position;
 	}
 
 	protected View createUI(IViewDescriptor v){
