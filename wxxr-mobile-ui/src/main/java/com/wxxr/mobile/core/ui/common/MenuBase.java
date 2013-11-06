@@ -4,10 +4,8 @@
 package com.wxxr.mobile.core.ui.common;
 
 import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
-
 import java.util.LinkedList;
 
-import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
@@ -36,9 +34,7 @@ public class MenuBase extends UIComponent implements IMenu {
 	public MenuBase(String[] cmdIds){
 		if(cmdIds != null){
 			for (String id : cmdIds) {
-//				Boolean bool = getCommand(id).getAttribute(AttributeKeys.visible);
-//				if(bool.booleanValue())
-					this.commandIds.add(id);
+				this.commandIds.add(id);
 			}
 		}
 	}
@@ -64,9 +60,7 @@ public class MenuBase extends UIComponent implements IMenu {
 	@Override
 	public IMenu addCommand(String cmdId) {
 		if(!this.commandIds.contains(cmdId)){
-//			Boolean bool = getCommand(cmdId).getAttribute(AttributeKeys.visible);
-//			if(bool.booleanValue())
-				this.commandIds.add(cmdId);
+			this.commandIds.add(cmdId);
 		}
 		return this;
 	}
@@ -86,6 +80,7 @@ public class MenuBase extends UIComponent implements IMenu {
 			if(this.provider == null){
 				this.provider = new IListDataProvider() {
 					
+					private LinkedList<String> items = new LinkedList<String>();
 					@Override
 					public Object getItemId(Object item) {
 						
@@ -94,12 +89,26 @@ public class MenuBase extends UIComponent implements IMenu {
 					
 					@Override
 					public int getItemCounts() {
-						return commandIds.size();
+						items.clear();
+						for (String id : commandIds) {
+							IUICommand cmd = getCommand(id);
+							if((cmd != null)&&((cmd.getAttribute(AttributeKeys.visible) == null)||(cmd.getAttribute(AttributeKeys.visible) == true))){
+								items.add(id);
+							}
+						}
+						return items.size();
 					}
 					
 					@Override
 					public Object getItem(int i) {
-						return getCommand(commandIds.get(i));
+						return getCommand(items.get(i));
+					}
+
+					@Override
+					public boolean isItemEnabled(Object item) {
+						IUICommand cmd = (IUICommand)item;
+						Boolean enabled = cmd.getAttribute(AttributeKeys.enabled);
+						return (enabled == null)||(enabled.booleanValue() == true);
 					}
 				};
 			}

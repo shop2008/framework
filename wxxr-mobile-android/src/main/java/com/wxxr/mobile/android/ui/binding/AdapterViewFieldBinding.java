@@ -150,6 +150,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 				public Object getItem(int i) {
 					return data.get(i);
 				}
+
+				@Override
+				public boolean isItemEnabled(Object item) {
+					return true;
+				}
 			};
 		} else if ((val != null) && val.getClass().isArray()) {
 			final Object[] data = (Object[]) val;
@@ -168,6 +173,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 				@Override
 				public Object getItem(int i) {
 					return data[i];
+				}
+
+				@Override
+				public boolean isItemEnabled(Object item) {
+					return true;
 				}
 			};
 		}

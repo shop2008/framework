@@ -3,12 +3,15 @@
  */
 package com.wxxr.mobile.android.ui.binding;
 
-import com.wxxr.mobile.android.app.AppUtils;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
@@ -17,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,9 +32,11 @@ import android.widget.BaseAdapter;
 public class GenericListAdapter extends BaseAdapter {
 
 	private final IListDataProvider provider;
+	private final IObservableListDataProvider observable;
 	private final IWorkbenchRTContext context;
 	private final Context uiContext;
 	private final String itemViewId,headerViewId, footerViewId;
+	private List<ObserverDataChangedListerWrapper> listeners;
 	
 	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId,String headerViewId,String footerViewId){
 		if((ctx == null)||(uiCtx == null)||(prov == null)||(viewId == null)){
@@ -42,6 +48,11 @@ public class GenericListAdapter extends BaseAdapter {
 		this.uiContext = uiCtx;
 		this.footerViewId = footerViewId;
 		this.headerViewId = headerViewId;
+		if(prov instanceof IObservableListDataProvider){
+			this.observable = (IObservableListDataProvider)prov;
+		}else{
+			this.observable = null;
+		}
 	}
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getCount()
@@ -121,6 +132,61 @@ public class GenericListAdapter extends BaseAdapter {
 	
 	public void destroy() {
 		
+	}
+	
+	protected ObserverDataChangedListerWrapper findWrapper(DataSetObserver observer){
+		if(this.listeners != null){
+			for (ObserverDataChangedListerWrapper l : this.listeners) {
+				if(l.getObserver() == observer){
+					return l;
+				}
+			}
+		}
+		return null;
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#registerDataSetObserver(android.database.DataSetObserver)
+	 */
+	@Override
+	public void registerDataSetObserver(DataSetObserver observer) {
+		super.registerDataSetObserver(observer);
+		if(observable != null){
+			ObserverDataChangedListerWrapper l = findWrapper(observer);
+			if(l == null){
+				if(listeners == null){
+					this.listeners = new ArrayList<ObserverDataChangedListerWrapper>();
+				}
+				l = new ObserverDataChangedListerWrapper(observer);
+				this.listeners.add(l);
+				observable.registerDataChangedListener(l);
+			}
+		}
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#unregisterDataSetObserver(android.database.DataSetObserver)
+	 */
+	@Override
+	public void unregisterDataSetObserver(DataSetObserver observer) {
+		ObserverDataChangedListerWrapper l = findWrapper(observer);
+		if((l != null)&&(observable != null)){
+			this.listeners.remove(l);
+			this.observable.unregisterDataChangedListener(l);
+		}
+		super.unregisterDataSetObserver(observer);
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#areAllItemsEnabled()
+	 */
+	@Override
+	public boolean areAllItemsEnabled() {
+		return false;
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#isEnabled(int)
+	 */
+	@Override
+	public boolean isEnabled(int position) {
+		return this.provider.isItemEnabled(this.provider.getItem(position));
 	}
 
 }

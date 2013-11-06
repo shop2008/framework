@@ -12,4 +12,5 @@ public interface IListDataProvider {
 	int getItemCounts();
 	Object getItem(int i);
 	Object getItemId(Object item);
+	boolean isItemEnabled(Object item);
 }
