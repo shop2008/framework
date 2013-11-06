@@ -30,6 +30,7 @@ import com.wxxr.mobile.stock.client.module.ArticleManagerModule;
 import com.wxxr.mobile.stock.client.module.InfoCenterManagerModule;
 import com.wxxr.mobile.stock.client.module.TradingManagerModule;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
+import com.wxxr.mobile.stock.client.service.impl.UserManagementServiceImpl;
 
 /**
  * @author neillin
@@ -88,8 +89,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
 		registerKernelModule(new WorkbenchManagerModule());
 		registerKernelModule(new ArticleManagerModule());//
-		registerKernelModule(new InfoCenterManagerModule());
-		registerKernelModule(new TradingManagerModule());
+		registerKernelModule(new UserManagementServiceImpl());
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()

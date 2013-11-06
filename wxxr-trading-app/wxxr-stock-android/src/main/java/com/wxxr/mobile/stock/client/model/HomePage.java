@@ -3,20 +3,17 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.List;
-import java.util.Map;
-
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
-import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.jmx.annotation.ServiceMBean;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -28,6 +25,8 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.ui.common.UICommand;
+import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * @author neillin
@@ -38,7 +37,10 @@ public abstract class HomePage extends PageBase {
 	static Trace log;
 	
 	@Bean(type=BindingType.Service)
-//	private IUsrManager usrMgr;
+	IUserManagementService usrMgr;
+	
+	@Bean(type=BindingType.Pojo)
+	UserInfoEntity userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
@@ -114,8 +116,20 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 	
-	@OnShow
-	private void menuShow() {
-		((UICommand)rightMenu.getCommand("ahome")).setAttribute(AttributeKeys.visible, false);
+	@OnCreate
+	void injectServices() {
+		this.usrMgr = AppUtils.getService(IUserManagementService.class);
+	}
+	
+	@OnMenuShow
+	protected void updateRightMenu(String menuId) {
+		log.info("Menu :"+menuId+" is shown !");
+		this.userInfo = this.usrMgr.getMyInfo();
+		
+		if(this.userInfo == null){
+			((UICommand)rightMenu.getCommand("ahome")).setAttribute(AttributeKeys.visible, false);
+			((UICommand)rightMenu.getCommand("apage1")).setAttribute(AttributeKeys.visible, false);
+			((UICommand)rightMenu.getCommand("apage2")).setAttribute(AttributeKeys.visible, false);
+		}
 	}
 }

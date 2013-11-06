@@ -3,23 +3,22 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IUICommand;
-import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * @author neillin
@@ -29,6 +28,18 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.layout_right_navi_content")
 public abstract class HeaderMenuItemView extends ViewBase {
 	private static Trace log;
+	
+	@Bean(type=BindingType.Service)
+	IUserManagementService usrMgr;
+
+	@Bean(type=BindingType.Pojo)
+	UserInfoEntity userInfo;
+	
+	@Field(valueKey="visible")
+	boolean userRegistered;
+	
+	DataField<Boolean> userRegisteredField;
+	
 	@Field(valueKey="imageURI")
 	String headIcon;
 	
@@ -55,101 +66,54 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	DataField<String> accountBalanceField;
 
 	@Command(commandName="handleClickImage")
-	private String handleClickImage(InputEvent event){
+	String handleClickImage(InputEvent event){
 		log.info("User click on user image !");
 		return null;
 	}
 	
 	@Command
-	private String handleClickBalance(InputEvent event){
+	String handleClickBalance(InputEvent event){
 		log.info("User click on Account balance !");
 		return null;
 	}
 	@Command
-	private String handleClickUnread(InputEvent event){
+	String handleClickUnread(InputEvent event){
 		log.info("User click on Unread acticles !");
 		return null;
 	}
 
 	@Command
-	private String handleClickCash(InputEvent event){
+	String handleClickCash(InputEvent event){
 		log.info("User click on cash icon !");
 		return null;
 	}
 
-	
-	public String getHeadIcon() {
-		return headIcon;
+	@OnCreate
+	void injectServices() {
+		this.usrMgr = AppUtils.getService(IUserManagementService.class);
 	}
 	
-	@OnDataChanged
-	private void updateHeaderStatus(ValueChangedEvent event){
-		if(event.getComponent() == this.userNumField){
-		if(this.userNum == null){
-			this.headIconField.setAttribute(AttributeKeys.visible, false);
-		}else{
-			this.headIconField.setAttribute(AttributeKeys.visible, true);
-			
-		}
-		}
-	}
-
 	@OnShow
-	private void updateHeaderStatus(IBinding<IView> binding){
-		if(this.userNum == null){
-			this.headIconField.setAttribute(AttributeKeys.visible, false);
+	private void updateRightMenu() {
+		this.userInfo = this.usrMgr.getMyInfo();
+		
+		if(this.userInfo == null){
+			this.userRegistered = false;
+			this.userRegisteredField.setValue(false);
+			this.nickName = "登录账号";
+			this.nickNameField.setValue(this.nickName);
+			this.userNum = "赶快登录赚实盘积分吧";
+			this.userNumField.setValue(this.userNum);
 		}else{
-			this.headIconField.setAttribute(AttributeKeys.visible, true);
-			
+			this.userRegistered = true;
+			this.userRegisteredField.setValue(true);
+			this.nickName = userInfo.getNickName();
+			this.nickNameField.setValue(this.nickName);
+			this.userNum = userInfo.getPhoneNumber();
+			this.userNumField.setValue(this.userNum);
 		}
 	}
-	public void setHeadIcon(String headIcon) {
-		this.headIcon = headIcon;
-		this.headIconField.setValue(headIcon);
-	}
+
 	
-	public String getNickName() {
-		return nickName;
-	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-		this.nickNameField.setValue(nickName);
-	}
-
-	public String getUserNum() {
-		return userNum;
-	}
-
-	public void setUserNum(String userNum) {
-		this.userNum = userNum;
-		this.userNumField.setValue(userNum);
-	}
-
-	public String getUnreadNews() {
-		return unreadNews;
-	}
-
-	public void setUnreadNews(String unreadNews) {
-		this.unreadNews = unreadNews;
-		this.unreadNewsField.setValue(unreadNews);
-	}
-
-	public String getIntegralBalance() {
-		return integralBalance;
-	}
-
-	public void setIntegralBalance(String integralBalance) {
-		this.integralBalance = integralBalance;
-		this.integralBalanceField.setValue(integralBalance);
-	}
-
-	public String getAccountBalance() {
-		return accountBalance;
-	}
-
-	public void setAccountBalance(String accountBalance) {
-		this.accountBalance = accountBalance;
-		this.accountBalanceField.setValue(accountBalance);
-	}
 }
