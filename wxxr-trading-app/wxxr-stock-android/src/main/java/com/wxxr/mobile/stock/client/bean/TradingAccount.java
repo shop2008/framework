@@ -18,7 +18,7 @@ public class TradingAccount {
 	private String endDate;//截止日期
 	private float initCredit;//额度（申请资金）
 	private float income;//总收益
-	private boolean isJieSuan;//是否已结算
+	private int status;//状态 0-未结算 ； 1-已结算
 	private float available;//可用资金
 	public Long getId() {
 		return id;
@@ -56,11 +56,12 @@ public class TradingAccount {
 	public void setAvailable(float available) {
 		this.available = available;
 	}
-	public boolean isJieSuan() {
-		return isJieSuan;
+	
+	public int getStatus() {
+		return status;
 	}
-	public void setJieSuan(boolean isJieSuan) {
-		this.isJieSuan = isJieSuan;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	public String getCreateDate() {
 		return createDate;
