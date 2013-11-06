@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 
@@ -68,29 +69,32 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
 				getAndroidBindingContext().getUIContext(), provider,
 				itemViewId, headerViewId, footerViewId);
-		if (headerViewId != null
-				&& ((ListView) getUIControl()).getHeaderViewsCount() == 0) {
-			IViewDescriptor v = getWorkbenchContext().getWorkbenchManager()
-					.getViewDescriptor(headerViewId);
-			View view = createUI(v);
-			@SuppressWarnings("unchecked")
-			IBinding<IView> binding = (IBinding<IView>) view.getTag();
-			IView vModel = v.createPresentationModel(getWorkbenchContext());
-			vModel.init(getWorkbenchContext());
-			binding.activate(vModel);
-			((ListView) getUIControl()).addHeaderView(view);
-		}
-		if (footerViewId != null
-				&& ((ListView) getUIControl()).getFooterViewsCount() == 0) {
-			IViewDescriptor v = getWorkbenchContext().getWorkbenchManager()
-					.getViewDescriptor(footerViewId);
-			View view = createUI(v);
-			@SuppressWarnings("unchecked")
-			IBinding<IView> binding = (IBinding<IView>) view.getTag();
-			IView vModel = v.createPresentationModel(getWorkbenchContext());
-			vModel.init(getWorkbenchContext());
-			binding.activate(vModel);
-			((ListView) getUIControl()).addFooterView(view);
+		Object list = getUIControl();
+		if (list instanceof ListView) {
+			IWorkbenchRTContext c = getWorkbenchContext();
+			IWorkbenchManager mgr = c.getWorkbenchManager();
+			if (headerViewId != null
+					&& ((ListView) list).getHeaderViewsCount() == 0) {
+				IViewDescriptor v = mgr.getViewDescriptor(headerViewId);
+				View view = createUI(v);
+				@SuppressWarnings("unchecked")
+				IBinding<IView> binding = (IBinding<IView>) view.getTag();
+				IView vModel = v.createPresentationModel(c);
+				vModel.init(c);
+				binding.activate(vModel);
+				((ListView) getUIControl()).addHeaderView(view);
+			}
+			if (footerViewId != null
+					&& ((ListView) list).getFooterViewsCount() == 0) {
+				IViewDescriptor v = mgr.getViewDescriptor(footerViewId);
+				View view = createUI(v);
+				@SuppressWarnings("unchecked")
+				IBinding<IView> binding = (IBinding<IView>) view.getTag();
+				IView vModel = v.createPresentationModel(c);
+				vModel.init(c);
+				binding.activate(vModel);
+				((ListView) getUIControl()).addFooterView(view);
+			}
 		}
 		setupAdapter(listAdapter);
 	}
