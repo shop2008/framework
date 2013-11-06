@@ -13,10 +13,14 @@ import java.util.concurrent.TimeUnit;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IEvaluationContext;
+import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IMenuCallback;
+import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
@@ -101,6 +105,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private Map<String, IUICommandHandler> commands;
 	private boolean active = false;
 	private EventQueue eventQueue;
+	private IMenuCallback menuCallback;
 	
 	public ViewBase() {
 		onCreate();
@@ -146,12 +151,45 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 */
 	public void doBinding(IBinding<IView> binding) {
 		onShow(binding);
+		List<IMenu> menus = getChildren(IMenu.class);
+		if((menus != null)&&(menus.size() > 0)){
+			for (IMenu iMenu : menus) {
+				IMenuHandler handler = ((IViewBinding)binding).getMenuHandler(iMenu.getName());
+				if(handler == null){
+					continue;
+				}
+				if(this.menuCallback == null){
+					this.menuCallback = new IMenuCallback() {
+						
+						@Override
+						public void onShow(String menuName) {
+							onMenuShow(menuName);
+						}
+						
+						@Override
+						public void onHide(String menuName) {
+							onMenuHide(menuName);
+						}
+					};
+				}
+				handler.setMenuCallback(this.menuCallback);
+			}
+		}
 		this.binding = binding;
 	}
 
 	protected void onShow(IBinding<IView> binding){
 		
 	}
+	
+	protected void onMenuShow(String menuId){
+		
+	}
+	
+	protected void onMenuHide(String menuId){
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)
 	 */
@@ -159,6 +197,16 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		if(this.binding == binding){
 			this.binding = null;
 			onHide(binding);
+			List<IMenu> menus = getChildren(IMenu.class);
+			if((menus != null)&&(menus.size() > 0)){
+				for (IMenu iMenu : menus) {
+					IMenuHandler handler = ((IViewBinding)binding).getMenuHandler(iMenu.getName());
+					if(handler != null){
+						handler.setMenuCallback(null);
+					}
+				}
+			}
+			this.menuCallback = null;
 			if(this.eventQueue != null){
 				this.eventQueue.stop();
 				this.eventQueue = null;

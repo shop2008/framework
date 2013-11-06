@@ -11,4 +11,5 @@ public interface IMenuHandler {
 	void showMenu();
 	void hideMenu();
 	boolean isMenuOnShow();
+	void setMenuCallback(IMenuCallback cb);
 }
