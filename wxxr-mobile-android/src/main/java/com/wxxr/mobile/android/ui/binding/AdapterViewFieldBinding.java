@@ -73,8 +73,10 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			IViewDescriptor v = getWorkbenchContext().getWorkbenchManager()
 					.getViewDescriptor(headerViewId);
 			View view = createUI(v);
+			@SuppressWarnings("unchecked")
 			IBinding<IView> binding = (IBinding<IView>) view.getTag();
 			IView vModel = v.createPresentationModel(getWorkbenchContext());
+			vModel.init(getWorkbenchContext());
 			binding.activate(vModel);
 			((ListView) getUIControl()).addHeaderView(view);
 		}
@@ -83,8 +85,10 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			IViewDescriptor v = getWorkbenchContext().getWorkbenchManager()
 					.getViewDescriptor(footerViewId);
 			View view = createUI(v);
+			@SuppressWarnings("unchecked")
 			IBinding<IView> binding = (IBinding<IView>) view.getTag();
 			IView vModel = v.createPresentationModel(getWorkbenchContext());
+			vModel.init(getWorkbenchContext());
 			binding.activate(vModel);
 			((ListView) getUIControl()).addFooterView(view);
 		}
