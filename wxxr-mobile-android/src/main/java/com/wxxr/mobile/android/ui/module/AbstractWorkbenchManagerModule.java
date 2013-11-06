@@ -22,6 +22,7 @@ import com.wxxr.mobile.android.ui.updater.BackgroupImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.EnabledAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.ImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
+import com.wxxr.mobile.android.ui.updater.TextColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.VisibleAttributeUpdater;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -35,7 +36,6 @@ import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.ViewGroupBase;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
@@ -133,6 +133,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerAttributeUpdater("enabled", new EnabledAttributeUpdater());
 		mgr.registerAttributeUpdater("visible", new VisibleAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new TextAttributeUpdater());
+		mgr.registerAttributeUpdater("textColor", new TextColorAttributeUpdater());
 	}
 	
 	/* (non-Javadoc)
