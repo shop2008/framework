@@ -268,7 +268,7 @@ public abstract class ViewModelUtils {
 		}else if(vg != null){
 			model.addField(createViewGroupModel(context,elem,vg));
 		}else if(bean != null){
-			model.addField(createViewGroupModel(context,elem,vg));
+			model.addField(createBeanFieldModel(context,elem,bean));
 		}else{
 			model.addField(createSimpleFieldModel(context,elem));
 		}
