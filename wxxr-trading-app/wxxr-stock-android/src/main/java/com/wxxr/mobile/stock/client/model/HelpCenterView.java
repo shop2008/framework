@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.bean.Article;
-import com.wxxr.mobile.stock.client.module.IArticleManagerModule;
+import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 
 /**
  * @author neillin
@@ -29,7 +29,7 @@ public abstract class HelpCenterView extends ViewBase {
 	
 	@OnShow	
 	protected void updateHelpArticles() {
-		helpArticles = getUIContext().getKernelContext().getService(IArticleManagerModule.class).getNewArticles(0, 4, 19);
+		helpArticles = getUIContext().getKernelContext().getService(IArticleManagementService.class).getNewArticles(0, 4, 19);
 		helpArticlesField.setValue(helpArticles);
 	}
 }

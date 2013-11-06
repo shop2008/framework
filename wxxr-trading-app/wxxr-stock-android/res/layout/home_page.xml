@@ -48,7 +48,7 @@
         android:divider="@null"
         android:scrollbars="none"
         android:fadingEdge="none"
-        android:background="@color/slideMenu_l_r_background"
+        android:background="@drawable/right_menu_bj"
         bind:field="rightMenu"
         bind:itemViewId="mainMenuItemView"
         bind:headerViewId="headerMenuItemView"

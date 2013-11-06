@@ -15,6 +15,7 @@ import com.wxxr.mobile.stock.client.bean.Article;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.image_swiper_view_item")
 public abstract class ImageSwiperItemView extends ViewBase implements IModelUpdater {
 	
+
 	@Field(valueKey="imageURI")
 	String swiperImage;
 	
@@ -27,10 +28,10 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 	
 	DataField<String> swiperTitleField;
 	
-	@Command(description="",commandName="linkItemClick")
+	@Command
 	String linkItemClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(arg0, null, null);
+//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(, null, null);
 		}
 		return null;
 	}
