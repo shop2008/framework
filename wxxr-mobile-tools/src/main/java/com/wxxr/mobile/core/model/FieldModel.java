@@ -32,6 +32,31 @@ public class FieldModel implements MemberModel{
 		return new TypeModel(getType()).getSimpleTypeName(classModel);
 	}
 	
+	public String getSimpleBoxedType() {
+		String type = new TypeModel(getType()).getType();
+		if(type.indexOf('.') > 0){
+			return getSimpleType();
+		}
+		if("int".equals(type)){
+			return "Integer";
+		}else if("boolean".equals(type)){
+			return "Boolean";
+		}else if("char".equals(type)){
+			return "Character";
+		}else if("byte".equals(type)){
+			return "Byte";
+		}else if("long".equals(type)){
+			return "Long";
+		}else if("double".equals(type)){
+			return "Double";
+		}else if("float".equals(type)){
+			return "Float";
+		}else if("short".equals(type)){
+			return "Short";
+		}
+		return null;
+	}
+	
 	/**
 	 * @param name the name to set
 	 */

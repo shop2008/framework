@@ -231,12 +231,31 @@ public abstract class ViewModelUtils {
 		m.setJavaStatement(javaStatement);
 		return m;
 	}
+	
+	public static boolean isPrimitiveType(TypeMirror type){
+		TypeKind kind = type.getKind();
+		return (kind == TypeKind.BOOLEAN)||
+				(kind == TypeKind.BYTE)||
+				(kind == TypeKind.CHAR)||
+				(kind == TypeKind.DOUBLE)||
+				(kind == TypeKind.FLOAT)||
+				(kind == TypeKind.INT)||
+				(kind == TypeKind.SHORT)||
+				(kind == TypeKind.LONG);
+	}
 
 	public static FieldModel createDataFieldField(ICodeGenerationContext context,ViewModelClass model, DataFieldModel field){
 		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
 		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
 		log.info("Field Type "+field.getType()+", field name :"+field.getName());
-		TypeModel typeMode = new TypeModel(DataField.class.getCanonicalName(), new TypeModel[]{ new TypeModel(new TypeModel(field.getType()).getType())});
+		String valType = new TypeModel(field.getType()).getType();
+		if(valType.indexOf('.')<0){
+			TypeKind kind = TypeKind.valueOf(valType.toUpperCase());
+			if(kind != null){
+				valType = typeUtil.boxedClass(typeUtil.getPrimitiveType(kind)).toString();
+			}
+		}
+		TypeModel typeMode = new TypeModel(DataField.class.getCanonicalName(), new TypeModel[]{ new TypeModel(valType)});
 //		TypeMirror parameterizedType = elemUtil.getTypeElement(field.getType()).asType();
 //		TypeElement elem = elemUtil.getTypeElement(DataField.class.getCanonicalName());
 //		String fieldType = typeUtil.getDeclaredType(elem, parameterizedType).toString();
