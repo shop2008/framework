@@ -23,18 +23,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	 */
 	@Override
 	public UserInfoEntity getMyInfo() {
-		if(entity == null){
-			context.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					UserInfoEntity info = new UserInfoEntity();
-					info.setNickName("江泽明");
-					info.setPhoneNumber("13812232123");
-					entity = info;
-				}
-			}, 10, TimeUnit.SECONDS);
-		}
+//		if(entity == null){
+//			context.invokeLater(new Runnable() {
+//				
+//				@Override
+//				public void run() {
+//					UserInfoEntity info = new UserInfoEntity();
+//					info.setNickName("江泽明");
+//					info.setPhoneNumber("13812232123");
+//					entity = info;
+//				}
+//			}, 10, TimeUnit.SECONDS);
+//		}
 		return entity;
 	}
 

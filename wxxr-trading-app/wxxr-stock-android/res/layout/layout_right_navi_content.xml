@@ -11,6 +11,8 @@
         android:id="@id/rl_personal_sample_info"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        bind:field="*"
+        bind:on_Click="handleClickImage"
         android:layout_marginTop="8dp" >
 
         <ImageView
@@ -19,9 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:src="@drawable/default_user_icons" 
-            bind:field="*"
-            bind:on_Click="handleClickImage"
-            />
+             />
 
         <TextView
             android:id="@id/tv_nick_name"
@@ -51,6 +51,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        bind:field="userRegistered"
         android:orientation="vertical" >
 
         <View
@@ -76,6 +77,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
+                bind:field="*"
+                bind:on_Click="handleClickUnread"
                 android:padding="8dp" >
 
                 <ImageView
@@ -115,6 +118,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
+	            bind:field="*"
+	            bind:on_Click="handleClickBalance"
                 android:padding="8dp" >
 
                 <ImageView
@@ -143,6 +148,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="vertical"
+                bind:field="*"
+                bind:on_Click="handleClickCash"
                 android:padding="8dp" >
 
                 <ImageView

@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -121,9 +122,9 @@ public abstract class HomePage extends PageBase {
 		this.usrMgr = AppUtils.getService(IUserManagementService.class);
 	}
 	
-	@OnMenuShow
-	protected void updateRightMenu(String menuId) {
-		log.info("Menu :"+menuId+" is shown !");
+	@OnShow
+	protected void updateRightMenu() {
+//		log.info("Menu :"+menuId+" is shown !");
 		this.userInfo = this.usrMgr.getMyInfo();
 		
 		if(this.userInfo == null){
