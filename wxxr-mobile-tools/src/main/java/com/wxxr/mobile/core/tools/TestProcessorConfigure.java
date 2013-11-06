@@ -4,12 +4,12 @@
 package com.wxxr.mobile.core.tools;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
-import com.wxxr.mobile.core.annotation.Entity;
-import com.wxxr.mobile.core.annotation.Generator;
+import com.wxxr.mobile.core.tools.annotation.Generator;
 import com.wxxr.mobile.core.tools.generator.BindableBeanGenerator;
+import com.wxxr.mobile.core.tools.generator.DaoGenerator;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.tools.generator.DaoGenerator;
+import com.wxxr.mobile.dao.annotation.Entity;
 
 /**
  * @author neillin

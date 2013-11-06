@@ -1,6 +1,6 @@
 package com.wxxr.mobile.core.tools.generator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -13,12 +13,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.wxxr.mobile.core.annotation.Generator;
 import com.wxxr.mobile.core.model.BindableBeanModel;
 import com.wxxr.mobile.core.tools.ICodeGenerator;
-import com.wxxr.mobile.core.tools.TemplateHelper;
 import com.wxxr.mobile.core.tools.TestProcessorConfigure;
 import com.wxxr.mobile.core.tools.VelocityTemplateRenderer;
+import com.wxxr.mobile.core.tools.annotation.Generator;
 import com.wxxr.mobile.core.util.StringUtils;
 
 public class BindableBeanModelTest extends BindableBeanModel {

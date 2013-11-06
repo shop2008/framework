@@ -20,12 +20,12 @@ import javax.tools.JavaFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wxxr.mobile.core.annotation.Column;
-import com.wxxr.mobile.core.annotation.Id;
-import com.wxxr.mobile.core.annotation.Table;
 import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.dao.annotation.Column;
+import com.wxxr.mobile.dao.annotation.Id;
+import com.wxxr.mobile.dao.annotation.Table;
 import com.wxxr.mobile.dao.generator.Entity;
 import com.wxxr.mobile.dao.generator.Property.PropertyBuilder;
 import com.wxxr.mobile.dao.generator.Schema;
@@ -46,7 +46,7 @@ public class DaoGenerator extends AbstractCodeGenerator {
 		log.info("Generate code for elements : {}", elements);
 		loadSchema();
 		for (Element element : elements) {
-			com.wxxr.mobile.core.annotation.Entity ann = element.getAnnotation(com.wxxr.mobile.core.annotation.Entity.class);
+			com.wxxr.mobile.dao.annotation.Entity ann = element.getAnnotation(com.wxxr.mobile.dao.annotation.Entity.class);
 			if (ann != null) {
 				TypeElement entityE = (TypeElement) element;
 				generateEntity(entityE, context);

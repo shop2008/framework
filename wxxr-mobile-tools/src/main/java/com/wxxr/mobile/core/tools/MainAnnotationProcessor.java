@@ -23,12 +23,12 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import com.sun.source.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wxxr.mobile.core.annotation.Generator;
+import com.sun.source.util.Trees;
+import com.wxxr.mobile.core.tools.annotation.Generator;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
