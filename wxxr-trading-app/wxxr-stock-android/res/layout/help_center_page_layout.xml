@@ -11,7 +11,7 @@
         android:id="@id/lv_help_center_detail"
         android:scrollbars="none"
         bind:itemViewId="helpCenterItemView"
-	    bind:field="helps"
+	    bind:field="helpArticles"
         >
     </com.wxxr.mobile.stock.client.widget.RefreshListView>
 </FrameLayout>

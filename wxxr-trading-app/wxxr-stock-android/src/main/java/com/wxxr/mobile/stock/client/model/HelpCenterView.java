@@ -3,12 +3,17 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.List;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.module.IArticleManagerModule;
 
 /**
  * @author neillin
@@ -17,14 +22,14 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @View(name="helpCenter")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase {
-
+	@Field(valueKey="options")
+	List<Article> helpArticles;
 	
+	DataField<List> helpArticlesField;
 	
-	@Override
-	protected void onShow(IBinding<IView> binding) {
-		// TODO Auto-generated method stub
-		super.onShow(binding);
+	@OnShow	
+	protected void updateHelpArticles() {
+		helpArticles = getUIContext().getKernelContext().getService(IArticleManagerModule.class).getNewArticles(0, 4, 19);
+		helpArticlesField.setValue(helpArticles);
 	}
-	
-	
 }
