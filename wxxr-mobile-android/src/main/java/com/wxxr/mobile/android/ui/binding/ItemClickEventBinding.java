@@ -83,7 +83,14 @@ public class ItemClickEventBinding implements IBinding<IView>,OnItemClickListene
 		SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_ITEM_CLICK,this.pModel);
 		Object list = getUIControl();
 		if (list instanceof ListView) {
-			position -= ((ListView) list).getHeaderViewsCount();
+			ListView l = ((ListView) list);
+			if(position < l.getHeaderViewsCount()) {
+				return;
+			} else if(position >= l.getCount() - l.getHeaderViewsCount()) {
+				return;
+			} else {
+				position -= l.getHeaderViewsCount();
+			}
 		}
 		event.addProperty("position", position);
 		IUIComponent field = this.pModel.getChild(this.fieldName);
