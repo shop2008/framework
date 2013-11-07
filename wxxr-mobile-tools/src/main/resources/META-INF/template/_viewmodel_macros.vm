@@ -65,6 +65,32 @@
     }
 #end
 
+#macro(onMenuShow $model $methods)
+    @Override
+    protected void onMenuShow(String menuId) {
+#foreach($meth in $methods) 
+#if(${meth.parameterTypes})
+        ${meth.name}(menuId); 
+#else      
+        ${meth.name}();
+#end
+#end
+    }
+#end
+
+#macro(onMenuHide $model $methods)
+    @Override
+    protected void onMenuHide(String menuId) {
+#foreach($meth in $methods) 
+#if(${meth.parameterTypes})
+        ${meth.name}(menuId); 
+#else      
+        ${meth.name}();
+#end
+#end
+    }
+#end
+
 #macro(onDestroy $model $methods)
     @Override
     protected void onDestroy() {

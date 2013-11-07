@@ -35,6 +35,8 @@ import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnMenuHide;
+import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -162,6 +164,40 @@ public abstract class ViewModelUtils {
 		m.setJavaStatement(javaStatement);
 		return m;
 	}
+	
+	public static MethodModel createOnMenuShowMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onMenuShow");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onMenuShow", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+	
+	public static MethodModel createOnMenuHideMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onMenuId");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onMenuHide", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+
 
 	public static MethodModel createOnHideMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
 		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
@@ -490,6 +526,10 @@ public abstract class ViewModelUtils {
 		}else if((elem.getAnnotation(OnDataChanged.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].startsWith(ValueChangedEvent.class.getCanonicalName())))){
 			model.addImport(ValueChangedEvent.class.getCanonicalName());
 			m.setPhase(LifeCyclePhase.OnDataChanged);
+		}else if((elem.getAnnotation(OnMenuShow.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].equals(String.class.getCanonicalName())))){
+			m.setPhase(LifeCyclePhase.OnMenuShow);
+		}else if((elem.getAnnotation(OnMenuHide.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].equals(String.class.getCanonicalName())))){
+			m.setPhase(LifeCyclePhase.OnMenuHide);
 		}
 		model.addMethod(m);
 		processCommandAnnotation(model, elem, m);

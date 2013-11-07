@@ -20,7 +20,7 @@ public class ViewModelClass extends AbstractClassModel {
 
 	private Map<String,UICommandModel> commandModels;
 	private Map<String, ExpressionModel> expressions;
-	boolean traceRequired;
+	boolean traceRequired,toolbarRequired;
 	private String applicationId;
 	private String id;
 	private boolean isPage;
@@ -107,8 +107,16 @@ public class ViewModelClass extends AbstractClassModel {
 		return getLifeCycleMethods(LifeCyclePhase.OnDestroy);
 	}
 	
+	public List<MethodModel> getOnMenuShowMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnMenuShow);
+	}
+	
 	public List<MethodModel> getOnDataChangedMethods() {
 		return getLifeCycleMethods(LifeCyclePhase.OnDataChanged);
+	}
+
+	public List<MethodModel> getOnMenuHideMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnMenuHide);
 	}
 	
 	/**
@@ -229,6 +237,18 @@ public class ViewModelClass extends AbstractClassModel {
 			addMethod(m);
 		}
 
+		List<MethodModel> onMenuShowMethods = getOnMenuShowMethods();
+		if((onMenuShowMethods != null)&&(onMenuShowMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnMenuShowMethod(context, this, onMenuShowMethods);
+			addMethod(m);
+		}
+
+		List<MethodModel> onMenuHideMethods = getOnMenuHideMethods();
+		if((onMenuHideMethods != null)&&(onMenuHideMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnMenuHideMethod(context, this, onMenuHideMethods);
+			addMethod(m);
+		}
+
 		addMethod(ViewModelUtils.createInitMethod(context,this));
 	}
 
@@ -263,6 +283,20 @@ public class ViewModelClass extends AbstractClassModel {
 			return;
 		}
 		super.addField(field);
+	}
+
+	/**
+	 * @return the toolbarRequired
+	 */
+	public boolean isToolbarRequired() {
+		return toolbarRequired;
+	}
+
+	/**
+	 * @param toolbarRequired the toolbarRequired to set
+	 */
+	public void setToolbarRequired(boolean toolbarRequired) {
+		this.toolbarRequired = toolbarRequired;
 	}
 
 }
