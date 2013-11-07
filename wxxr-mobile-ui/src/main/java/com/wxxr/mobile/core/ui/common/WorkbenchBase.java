@@ -25,7 +25,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	
 	private final IWorkbenchRTContext uiContext;
 	
-	private String activePageId;
+//	private String activePageId;
 	private Map<String, IPage> pages = new HashMap<String, IPage>();
 	private Map<String, IView> views = new HashMap<String, IView>();
 	
@@ -39,7 +39,8 @@ public abstract class WorkbenchBase implements IWorkbench {
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getActivePageId()
 	 */
 	public String getActivePageId() {
-		return this.activePageId;
+		IPage page = uiContext.getWorkbenchManager().getPageNavigator().getCurrentActivePage();
+		return page != null ? page.getName() : null;
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +63,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showPage(java.lang.String)
 	 */
 	public void showPage(String pageId,Map<String, String> params,IPageCallback callback) {
-		if(pageId.equals(activePageId)){
+		if(pageId.equals(getActivePageId())){
 			return;
 		}
 		IPage page = getPage(pageId);
@@ -76,7 +77,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 			}
 			IPageNavigator nav = this.uiContext.getWorkbenchManager().getPageNavigator();
 			nav.showPage(page,params,callback);
-			this.activePageId = nav.getCurrentActivePage() != null ? nav.getCurrentActivePage().getName() : null;
+//			this.activePageId = nav.getCurrentActivePage() != null ? nav.getCurrentActivePage().getName() : null;
 		}
 	}
 
@@ -95,7 +96,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 		if(page != null){
 			IPageNavigator nav = this.uiContext.getKernelContext().getService(IPageNavigator.class);
 			nav.hidePage(page);
-			this.activePageId = nav.getCurrentActivePage().getName();
+//			this.activePageId = nav.getCurrentActivePage().getName();
 		}
 		
 	}

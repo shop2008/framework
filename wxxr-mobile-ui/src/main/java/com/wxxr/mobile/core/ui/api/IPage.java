@@ -16,6 +16,6 @@ public interface IPage extends IView {
 	List<IViewGroup> getAllViewGroups();
 	IView getView(String viewId);
 	IViewGroup createViewGroup(String grpName);
-	void showView(String viewId);
+	void showView(String viewId,boolean backable);
 	void hideView(String viewId);
 }

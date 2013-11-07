@@ -19,4 +19,7 @@ public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	void hide();
 	
 	List<ValidationError> getErrors();
+	
+	void show(boolean backable);
+
 }

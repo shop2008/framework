@@ -260,5 +260,13 @@ public class ViewReference implements IViewReference {
 	@Override
 	public IBinding<IView> getBinding() {
 		return getDelegate().getBinding();
+	}
+
+	/**
+	 * @param backable
+	 * @see com.wxxr.mobile.core.ui.api.IView#show(boolean)
+	 */
+	public void show(boolean backable) {
+		delegate.show(backable);
 	}	
 }

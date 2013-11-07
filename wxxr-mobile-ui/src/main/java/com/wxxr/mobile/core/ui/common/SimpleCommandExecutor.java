@@ -43,14 +43,19 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			}else if(toView != null){
 				IPage page = getPage(view);
 				IView v = page.getView(toView);
+				boolean add2backstack = true;
 				Map<String, String> params = nextNavigation.getParameters();
 				if((params != null)&&(params.size() > 0)){
 					IModelUpdater updater = v.getAdaptor(IModelUpdater.class);
 					if(updater != null){
 						updater.updateModel(params);
 					}
+					String val = params.get("add2BackStack");
+					if("false".equalsIgnoreCase(val)){
+						add2backstack = false;
+					}
 				}
-				page.showView(toView);
+				page.showView(toView,add2backstack);
 			}else if(message != null){
 				context.getWorkbenchManager().getWorkbench().showMessageBox(message, nextNavigation.getParameters());
 			}

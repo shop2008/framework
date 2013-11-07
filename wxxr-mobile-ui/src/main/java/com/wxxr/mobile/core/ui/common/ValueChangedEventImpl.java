@@ -59,5 +59,13 @@ public class ValueChangedEventImpl implements ValueChangedEvent {
 	public List<AttributeKey<?>> getChangedAttributes() {
 		return this.keys;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ValueChangedEventImpl [source=" + source + ", timestamp="
+				+ timestamp + ", keys=" + keys + "]";
+	}
 
 }

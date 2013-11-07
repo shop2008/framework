@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.IViewGroup;
 public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 
 	private Stack<String> viewStack = new Stack<String>();
+	private String defaultViewId;
 
 	public ViewGroupBase() {
 		super();
@@ -43,12 +44,12 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 
 	public String getActiveViewId() {
 		String viewId = this.viewStack.isEmpty() ?  null : this.viewStack.peek();
-		if(viewId == null){
-			String[] ids = getViewIds();
-			if((ids != null)&&(ids.length > 0)){
-				viewId = ids[0];
-			}
-		}
+//		if(viewId == null){
+//			String[] ids = getViewIds();
+//			if((ids != null)&&(ids.length > 0)){
+//				viewId = ids[0];
+//			}
+//		}
 		return viewId;
 	}
 
@@ -57,12 +58,12 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 		return name.equals(viewId);
 	}
 	
-	public void activateView(String name) {
-		if(isViewOnShow(name)){
-			return;
-		}
+	public void activateView(String name,boolean backable) {
 		IView view = getView(name);
 		if(view != null){
+			if(isViewOnShow(name)&&view.isActive()){
+				return;
+			}
 			if(this.viewStack.isEmpty()){
 				setAttribute(AttributeKeys.visible, true);
 			}
@@ -98,6 +99,20 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 
 	public boolean hasView(String name) {
 		return getView(name) != null;
+	}
+
+	/**
+	 * @return the defaultViewId
+	 */
+	public String getDefaultViewId() {
+		return defaultViewId;
+	}
+
+	/**
+	 * @param defaultViewId the defaultViewId to set
+	 */
+	public void setDefaultViewId(String defaultViewId) {
+		this.defaultViewId = defaultViewId;
 	}
 
 }

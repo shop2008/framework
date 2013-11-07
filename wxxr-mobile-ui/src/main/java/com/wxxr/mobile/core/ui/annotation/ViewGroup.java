@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 @PresentationModel
 public @interface ViewGroup {
 	String[] viewIds();
+	String defaultViewId() default "";
 	boolean dynamic() default false;
 	String enableWhen() default "";
 	String visibleWhen() default "";

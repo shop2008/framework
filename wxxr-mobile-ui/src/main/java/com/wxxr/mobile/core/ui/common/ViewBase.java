@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IEvaluationContext;
@@ -24,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.util.StringUtils;
 
 
 /**
@@ -31,7 +33,8 @@ import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
  *
  */
 public abstract class ViewBase extends UIContainer<IUIComponent> implements IView {
-
+	private static final Trace log = Trace.register(ViewBase.class);
+	
 	private class EventQueue implements Runnable{
 		private LinkedList<ValueChangedEvent> pendingEvents;
 		private volatile Thread thread;
@@ -61,16 +64,23 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		public void run() {
 			this.thread = Thread.currentThread();
 			while(this.thread != null){
-				ValueChangedEvent[] evts = getPendingEvents();
-				if(evts != null){
-					if(binding != null){
-						binding.notifyDataChanged(evts);
+				try {
+					ValueChangedEvent[] evts = getPendingEvents();
+					if(evts != null){
+						if(binding != null){
+							if(log.isDebugEnabled()){
+								log.debug("fire data changed events :"+StringUtils.join(evts));
+							}
+							binding.notifyDataChanged(evts);
+						}
+					}else{
+						try {
+							Thread.sleep(60L);
+						} catch (InterruptedException e) {
+						}
 					}
-				}else{
-					try {
-						Thread.sleep(60L);
-					} catch (InterruptedException e) {
-					}
+				}catch(Throwable t){
+					log.error("Caught exception at event loop of viewbase", t);
 				}
 			}
 			if((this.pendingEvents != null)&&(this.pendingEvents.size() > 0)){
@@ -103,7 +113,6 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	
 	private IBinding<IView> binding;
 	private Map<String, IUICommandHandler> commands;
-	private boolean active = false;
 	private EventQueue eventQueue;
 	private IMenuCallback menuCallback;
 	
@@ -117,17 +126,19 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 
 	public boolean isActive() {
-		return this.active;
+		return this.binding != null;
 	}
-
-	public void show() {
-		getUIContext().getWorkbenchManager().getPageNavigator().showView(this);
-		this.active = true;
+	
+	public void show(){
+		this.show(true);
+	}
+	
+	public void show(boolean backable) {
+		getUIContext().getWorkbenchManager().getPageNavigator().showView(this,backable);
 	}
 
 	public void hide() {
 		getUIContext().getWorkbenchManager().getPageNavigator().hideView(this);
-		this.active = false;
 	}
 
 	public List<ValidationError> getErrors() {

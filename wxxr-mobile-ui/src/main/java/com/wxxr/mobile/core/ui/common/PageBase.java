@@ -59,10 +59,10 @@ public abstract class PageBase extends ViewBase implements IPage {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IPage#showView(java.lang.String)
 	 */
-	public void showView(String viewName) {
+	public void showView(String viewName,boolean backable) {
 		for (IViewGroup grp : getAllViewGroups()) {
 			if(grp.hasView(viewName)){
-				grp.activateView(viewName);
+				grp.activateView(viewName,backable);
 				break;
 			}
 		}
