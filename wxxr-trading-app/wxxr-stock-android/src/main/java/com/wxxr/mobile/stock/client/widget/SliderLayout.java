@@ -621,10 +621,11 @@ public class SliderLayout extends ViewGroup {
                     heightMode = MeasureSpec.EXACTLY;
                     heightSize = 300;
                 }
-            } else {
-                throw new IllegalArgumentException(
-                        "SliderLayout must be measured with MeasureSpec.EXACTLY.");
             }
+//            else {
+//                throw new IllegalArgumentException(
+//                        "SliderLayout must be measured with MeasureSpec.EXACTLY.");
+//            }
         }
 
         setMeasuredDimension(widthSize, heightSize);
