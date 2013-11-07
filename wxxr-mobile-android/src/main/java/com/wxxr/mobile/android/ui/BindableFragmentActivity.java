@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -116,11 +117,15 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(log.isDebugEnabled()){
 			log.debug("Starting activity ...");
 		}
+		IPage page = getBindingPage();
+		this.androidViewBinding.activate(page);
 		if(this.toolbarViewBingding != null){
 			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
+			if(this.rootView instanceof IAppToolbar){
+				((IAppToolbar)this.rootView).setCurrentPage(page);
+			}
 			this.toolbarViewBingding.activate(this.rootView);
 		}
-		this.androidViewBinding.activate(getBindingPage());
 		super.onStart();
 		getNavigator().onPageShow(getBindingPage());
 		onActivityStarted();
@@ -139,10 +144,13 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Stopping activity ...");
 		}
 		super.onStop();
-		this.androidViewBinding.deactivate();
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();
 		}
+		if(this.rootView instanceof IAppToolbar){
+			((IAppToolbar)this.rootView).setCurrentPage(null);
+		}
+		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
 		onActivityStopped();
 		if(log.isDebugEnabled()){
