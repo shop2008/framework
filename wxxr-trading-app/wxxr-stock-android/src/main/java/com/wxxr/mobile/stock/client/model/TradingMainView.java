@@ -6,11 +6,11 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -26,8 +26,8 @@ import com.wxxr.mobile.stock.client.service.ITradingManagementService;
  */
 @View(name="tradingMain")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.home_view_layout")
-public abstract class TradingMainView extends ViewBase implements IModelUpdater {
-	
+public abstract class TradingMainView extends ViewBase{
+	private static final Trace log = Trace.register(TradingMainView.class);
 	//文章
 	@Field(valueKey="options")
 	List<Article> articles;
@@ -87,18 +87,14 @@ public abstract class TradingMainView extends ViewBase implements IModelUpdater 
 	 * 创建买入页跳转
 	 * 
 	 * */
-	@Command(description="",commandName="createBuyClick")
+	@Command
 	String createBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			if(getUIContext()!=null){
+				log.info("createBuyClick: click me");
+			}
 //			getUIContext().getWorkbenchManager().getPageNavigator().showPage(arg0, null, null);
 		}
 		return null;
-	}
-	
-	@Override
-	public void updateModel(Object val) {
-		if(val!=null){
-			
-		}
 	}
 }
