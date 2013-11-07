@@ -6,33 +6,36 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp" >
 
-    <ImageView
+    <ImageButton
         android:id="@id/ib_toggle_left_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:background="@null"
         android:src="@drawable/list_button" />
 
     <TextView
         android:id="@id/tv_title_content"
         style="@style/style_title_text" />
 
-    <ImageView
+    <ImageButton
         android:id="@id/ib_toggle_right_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:background="@null"
         android:src="@drawable/message_button" />
 
-    <ImageView
+    <ImageButton
         android:id="@id/ib_toggle_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/ib_toggle_right_menu"
+        android:background="@null"
         android:src="@drawable/finds" />
 
 </RelativeLayout>

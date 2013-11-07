@@ -26,6 +26,8 @@
 	<string name="tv_home_max_stock_label">最大持股</string>
 	<string name="tv_home_amount_label">额度</string>
 	<string name="tv_home_profit_loss">盈亏</string>
+	<!-- Action Bar -->
+	<string name="refresh_ok_title">交易数据更新成功</string>
 	
 	<!-- 设置 -->
 	<string name="tv_title_setting">设置</string>
