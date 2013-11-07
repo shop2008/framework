@@ -114,7 +114,7 @@ public class AbstractClassModel {
 	 * @param superClass the superClass to set
 	 */
 	public void setSuperClass(String superClass) {
-		this.superClass = addImport(superClass);;
+		this.superClass = addImport(superClass);
 	}
 	/**
 	 * @param interfaces the interfaces to set
