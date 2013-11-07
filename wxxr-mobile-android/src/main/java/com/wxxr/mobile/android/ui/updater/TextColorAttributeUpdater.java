@@ -25,9 +25,8 @@ public class TextColorAttributeUpdater implements IAttributeUpdater<View> {
 			return;
 		}
 		TextView tv = (TextView)control;
-		Integer color = (Integer)value;
 		if((val != null)&&(attrType == AttributeKeys.textColor)){
-			tv.setTextColor(color);
+			tv.setTextColor(val);
 		}
 	}
 
