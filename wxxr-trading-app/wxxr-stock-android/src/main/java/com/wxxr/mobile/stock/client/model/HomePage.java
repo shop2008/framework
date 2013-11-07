@@ -46,8 +46,65 @@ public abstract class HomePage extends PageBase {
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
 	
+	@Menu(items={"left","right","search"})
+	private IMenu toolbar;
+	
 	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","helpCenter"})
 	private IViewGroup contents;
+	
+	
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="left",label="首页",icon="resourceId:drawable/home")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
+			if(log.isDebugEnabled()){
+				log.debug("Toolbar item :left was clicked !");
+			}
+			if(leftMenu.isOnShow()){
+				leftMenu.hide();
+			}else{
+				leftMenu.show();
+			}
+		}
+		return null;
+	}
+	
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="right",label="赚钱榜",icon="resourceId:drawable/zpb")
+			}
+	)
+	String toolbarClickedRight(InputEvent event){
+		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
+			if(log.isDebugEnabled()){
+				log.debug("Toolbar item :right was clicked !");
+			}
+			if(rightMenu.isOnShow()){
+				rightMenu.hide();
+			}else{
+				rightMenu.show();
+			}
+		}
+		return null;
+	}
+	
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="search",label="行情中心",icon="resourceId:drawable/hqzx")
+			}
+	)
+	String toolbarClickedSearch(InputEvent event){
+		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
+			if(log.isDebugEnabled()){
+				log.debug("Toolbar item :search was clicked !");
+			}
+		}
+		return null;
+	}
+	
 	
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation",
 			uiItems={

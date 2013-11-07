@@ -3,17 +3,24 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:id="@+id/title_bar_layout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    bind:field="title" >
+    android:layout_height="fill_parent">
 
     <com.wxxr.mobile.stock.client.widget.Rotate3DViewSwitcher
         android:id="@+id/view_switch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
 
         <include layout="@layout/layout_title_bar" />
 
         <include layout="@layout/layout_refresh_ok_title_bar" />
     </com.wxxr.mobile.stock.client.widget.Rotate3DViewSwitcher>
+
+    <FrameLayout
+        android:id="@+id/contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/view_switch" >
+    </FrameLayout>
 
 </com.wxxr.mobile.stock.client.widget.TitleBarLayout>
