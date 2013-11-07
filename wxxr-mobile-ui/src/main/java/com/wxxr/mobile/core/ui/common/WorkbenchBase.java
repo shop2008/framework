@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -119,6 +120,20 @@ public abstract class WorkbenchBase implements IWorkbench {
 		params = params != null ? new HashMap<String, String>(params) : new HashMap<String, String>();
 		params.put(MESSAGE_BOX_MESSAGE_ID, message);
 		showPage(MESSAGE_BOX_ID, params, null);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#createNInitializedView(java.lang.String)
+	 */
+	@Override
+	public IView createNInitializedView(String viewId) {
+		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
+		if(desc != null){
+			IView view = desc.createPresentationModel(getUIContext());
+			view.init(getUIContext());
+			return view;
+		}
+		return null;
 	}	
 
 }

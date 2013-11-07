@@ -22,4 +22,5 @@ public interface IWorkbench {
 	void showHomePage();
 	void hidePage(String pageId);
 	void showMessageBox(String message, Map<String, String> params);
+	IView createNInitializedView(String viewId);
 }

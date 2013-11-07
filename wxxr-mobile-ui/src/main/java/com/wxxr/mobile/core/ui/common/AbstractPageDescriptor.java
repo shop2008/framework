@@ -32,5 +32,13 @@ public abstract class AbstractPageDescriptor extends AbstractViewDescriptor impl
 	public void setHasToolbar(boolean hasToolbar) {
 		this.hasToolbar = hasToolbar;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPageDescriptor#withToolbar()
+	 */
+	@Override
+	public boolean withToolbar() {
+		return isHasToolbar();
+	}
 	
 }
