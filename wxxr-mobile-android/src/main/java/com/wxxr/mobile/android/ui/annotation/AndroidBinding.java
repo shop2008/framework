@@ -23,5 +23,4 @@ public @interface AndroidBinding {
 	String layoutId();
 	String description() default "";
 	String superClassName() default "";
-	boolean withToolbar() default false;
 }

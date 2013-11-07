@@ -13,6 +13,7 @@ public interface IWorkbench {
 	public final static String HOME_PAGE_ID = "home";
 	public final static String MESSAGE_BOX_ID = "messageBox";
 	public final static String MESSAGE_BOX_MESSAGE_ID = "message";
+	public final static String TOOL_BAR_VIEW_ID = "toolbarView";
 	
 	String[] getPageIds();
 	String getActivePageId();

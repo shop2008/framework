@@ -22,4 +22,5 @@ public @interface View {
 	String description() default "";
 	AttributeKey[] attrTypes() default {};
 	Attribute[] attributes() default {};
+	boolean withToolbar() default false;
 }
