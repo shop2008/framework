@@ -161,9 +161,9 @@ public class LRUMap<K,V> {
 	 * @param map
 	 */
 	protected void checkExpiration() {
-		if(log.isDebugEnabled()){
-		    log.debug("Check for expiration of all memebers of LRUMap ");
-		}
+//		if(log.isDebugEnabled()){
+//		    log.debug("Check for expiration of all memebers of LRUMap ");
+//		}
 		long currentTime = System.currentTimeMillis();
 		Lock lock = readWriteLock.readLock();
 		try {
