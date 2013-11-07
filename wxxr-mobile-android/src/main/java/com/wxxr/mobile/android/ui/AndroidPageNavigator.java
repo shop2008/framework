@@ -316,7 +316,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			if(add2Backstack){
 				transaction.addToBackStack(null);
 			}
-			transaction.commit();
+			transaction.commitAllowingStateLoss();
 			activity.addFragment(fragment);
 		}catch(Throwable t){
 			throw new RuntimeException("Failed to show framment for view :"+viewId, t);
