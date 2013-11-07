@@ -38,11 +38,12 @@ public interface AttributeKeys {
 	
 	AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
 
-	
-	AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
+	AttributeKey<Integer> textColor = new AttributeKey<Integer>(Integer.class,"textColor");
 	
 	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
+	AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
+	
 	@SuppressWarnings("rawtypes")
 	AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
@@ -61,7 +62,8 @@ public interface AttributeKeys {
 			label,
 			selected,
 			menuCategory,
-			options
+			options,
+			textColor
 	};
 
 
