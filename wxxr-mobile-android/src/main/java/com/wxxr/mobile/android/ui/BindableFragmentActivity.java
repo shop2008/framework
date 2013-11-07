@@ -38,6 +38,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 */
 	@Override
 	protected final void onCreate(Bundle savedInstanceState) {
+		if(log.isDebugEnabled()){
+			log.debug("creating activity ...");
+		}
 		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
 			
 			@Override
@@ -58,6 +61,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		super.onCreate(savedInstanceState);
 		getNavigator().onPageCreate(getBindingPage(), this);
 		onContentViewCreated(savedInstanceState);
+		if(log.isDebugEnabled()){
+			log.debug("Activity created !");
+		}
 	}
 
 	
@@ -66,10 +72,16 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 */
 	@Override
 	protected final void onStart() {
+		if(log.isDebugEnabled()){
+			log.debug("Starting activity ...");
+		}
 		this.androidViewBinding.activate(getBindingPage());
 		super.onStart();
 		getNavigator().onPageShow(getBindingPage());
 		onActivityStarted();
+		if(log.isDebugEnabled()){
+			log.debug("Activity started !");
+		}
 	}
 
 
@@ -78,10 +90,16 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 */
 	@Override
 	protected final void onStop() {
+		if(log.isDebugEnabled()){
+			log.debug("Stopping activity ...");
+		}
 		super.onStop();
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
 		onActivityStopped();
+		if(log.isDebugEnabled()){
+			log.debug("Activity stopped !");
+		}
 	}
 
 	
@@ -92,10 +110,16 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 */
 	@Override
 	protected final void onDestroy() {
+		if(log.isDebugEnabled()){
+			log.debug("Destroying activity ...");
+		}
 		this.androidViewBinding.destroy();
 		super.onDestroy();
 		getNavigator().onPageDetroy(getBindingPage());
 		onActivityDestroied();
+		if(log.isDebugEnabled()){
+			log.debug("Activity destroyed !");
+		}
 	}
 	
 
@@ -154,6 +178,30 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 	protected void onActivityStopped() {
 		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		if(log.isDebugEnabled()){
+			log.debug("Pausing activity ...");
+		}
+		super.onPause();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		if(log.isDebugEnabled()){
+			log.debug("Resuming activity ...");
+		}
+		super.onResume();
 	}
 
 

@@ -177,24 +177,39 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 	@Override
 	public void onPageCreate(IPage page, IBindableActivity activity) {
+		if(log.isInfoEnabled()){
+			log.info("Page :"+page.getName()+" is created !");
+		}
 		this.activeActivities.put(page.getName(), activity);
 		notifyPageCallbacks(page,PAGE_ACTIVITY_CREATE);
 	}
 
 	@Override
 	public void onPageShow(IPage page) {
+		if(log.isInfoEnabled()){
+			log.info("Page :"+page.getName()+" is on show !");
+		}
 		this.currentPageId = page.getName();
 		notifyPageCallbacks(page,PAGE_ACTIVITY_SHOW);
 	}
 
 	@Override
 	public void onPageHide(IPage page) {
+		if(log.isInfoEnabled()){
+			log.info("Page :"+page.getName()+" is hidden !");
+		}
+		if(page.getName().equals(currentPageId)){
+			this.currentPageId = null;
+		}
 		notifyPageCallbacks(page,PAGE_ACTIVITY_HIDE);
 
 	}
 
 	@Override
 	public void onPageDetroy(IPage page) {
+		if(log.isInfoEnabled()){
+			log.info("Page :"+page.getName()+" is destroyed !");
+		}
 		this.activeActivities.remove(page.getName());
 		notifyPageCallbacks(page,PAGE_ACTIVITY_DESTROY);
 	}

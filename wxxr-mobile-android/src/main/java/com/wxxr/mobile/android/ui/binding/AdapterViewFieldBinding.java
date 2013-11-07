@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 
 /**
@@ -205,6 +206,17 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter = null;
 		}
 		super.deactivate();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#notifyDataChanged(com.wxxr.mobile.core.ui.api.ValueChangedEvent[])
+	 */
+	@Override
+	public void notifyDataChanged(ValueChangedEvent... events) {
+		if(this.listAdapter != null){
+			this.listAdapter.notifyDataSetChanged();
+		}
+		super.notifyDataChanged(events);
 	}
 
 }

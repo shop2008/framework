@@ -7,6 +7,7 @@ import android.app.Activity;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 
 /**
@@ -14,7 +15,8 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
  *
  */
 public abstract class MainActivity extends Activity {
-
+	private static final Trace log = Trace.getLogger(MainActivity.class);
+	
 	private int minStartupTime = 5;
 	private long confirmTime = 500;
 	/* (non-Javadoc)
@@ -23,6 +25,9 @@ public abstract class MainActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		if(log.isInfoEnabled()){
+			log.info("Starting android application ...");
+		}
 		setupContentView();
 		startupKernel();
 	}
@@ -64,10 +69,22 @@ public abstract class MainActivity extends Activity {
 			
 			@Override
 			public void done(Object result) {
-				updateProgressDone();
-				try {
-					Thread.sleep(confirmTime);
-				} catch (InterruptedException e) {
+				if(this.startTime == 0){
+					showProgressBar(50);
+					for(int i =  1; i <= 50 ; i++){
+						updateProgress(i, "");
+						try {
+							Thread.sleep(10L);
+						} catch (InterruptedException e) {
+						}
+					}
+					updateProgressDone();
+				}else{
+					updateProgressDone();
+					try {
+						Thread.sleep(confirmTime);
+					} catch (InterruptedException e) {
+					}
 				}
 				showHomePage();
 			}
@@ -87,7 +104,16 @@ public abstract class MainActivity extends Activity {
 //						AppUtils.getFramework().start(monitor);
 //				}
 //		}.start();
-		AppUtils.getFramework().attachStartMonitor(monitor);
+		if(AppUtils.getFramework().isStarted()){
+			if(log.isInfoEnabled()){
+				log.info("Kernel is started, going to show home page");
+			}
+			monitor.done(null);
+			showHomePage();
+			return;
+		}else{
+			AppUtils.getFramework().attachStartMonitor(monitor);
+		}
 	}
 
 	protected abstract void setupContentView();

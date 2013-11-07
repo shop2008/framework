@@ -123,6 +123,7 @@ public class GenericListAdapter extends BaseAdapter {
 			binding.deactivate();
 		}
 		IView vModel = v.createPresentationModel(context);
+		vModel.init(context);
 		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
 		binding.activate(vModel);
 		return view;
