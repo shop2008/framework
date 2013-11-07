@@ -8,6 +8,7 @@
 #foreach($vid in $vg.viewIds)
         vg.addViewId("$vid");
 #end
+        vg.setDefaultViewId("${vg.defaultViewId}");
 #end
         this.${vg.name} = vg;
         add(this.${vg.name});

@@ -445,6 +445,11 @@ public abstract class ViewModelUtils {
 				model.addAttribute(attr.name(), attr.value());
 			}
 		}
+		String defaultId = StringUtils.trimToNull(vg.defaultViewId());
+		if(defaultId == null){
+			defaultId = model.getViewIds()[0];
+		}
+		model.setDefaultViewId(defaultId);
 		updateBasicFieldModel(context, model, elem);
 		return model;
 	}

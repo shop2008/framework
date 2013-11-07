@@ -19,6 +19,7 @@ public class ViewGroupModel extends FieldModel{
 	private String visibleWhenExpress;
 	private Map<String,Parameter> attributes;
 	private String id;
+	private String defaultViewId;
 	
 	/**
 	 * @return the viewIds
@@ -99,6 +100,18 @@ public class ViewGroupModel extends FieldModel{
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+	/**
+	 * @return the defaultViewId
+	 */
+	public String getDefaultViewId() {
+		return defaultViewId;
+	}
+	/**
+	 * @param defaultViewId the defaultViewId to set
+	 */
+	public void setDefaultViewId(String defaultViewId) {
+		this.defaultViewId = defaultViewId;
 	}
 	
 }
