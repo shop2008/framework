@@ -57,12 +57,12 @@ public class TitleBarLayout extends RelativeLayout implements OnClickListener {
 		mLeftNavButton = (ImageButton) findViewById(R.id.ib_toggle_left_menu);
 		mRightNavButton = (ImageButton) findViewById(R.id.ib_toggle_right_menu);
 		mSearchNavButton = (ImageButton) findViewById(R.id.ib_toggle_search);
-
 		mUpdateTime = (TextView) findViewById(R.id.time);
-
 		mSwitcher = (Rotate3DViewSwitcher) findViewById(R.id.view_switch);
-//		mSwitcher.setDisplayedChild(0);
-//		handler.sendEmptyMessageDelayed(0, 1000);
+		
+		mLeftNavButton.setOnClickListener(this);
+		mRightNavButton.setOnClickListener(this);
+		mSearchNavButton.setOnClickListener(this);
 	}
 
 	public void initActionBar(TitleBarType titleType, String title,
