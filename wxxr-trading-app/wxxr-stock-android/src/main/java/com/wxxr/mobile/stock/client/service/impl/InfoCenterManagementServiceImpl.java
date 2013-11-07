@@ -9,6 +9,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.Stock;
+import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfo;
 import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
 
 /**
@@ -25,7 +26,12 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	@Override
+	public List<StockBasicMarketInfo> getStockMarketInfos(int start, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	// ====================module life cycle methods ==================
 	@Override
 	protected void initServiceDependency() {
@@ -45,5 +51,6 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 	protected void stopService() {
 		context.unregisterService(IInfoCenterManagementService.class, this);
 	}
+
 
 }
