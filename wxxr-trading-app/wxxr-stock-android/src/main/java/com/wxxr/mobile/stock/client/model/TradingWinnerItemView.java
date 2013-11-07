@@ -9,6 +9,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 
@@ -34,11 +35,11 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	}
 	
 	@Command(description="点击文本事件")
-	String handleTextClick(){
+	String handleTextClick(InputEvent event){
 		return null;
 	}
 	@Command(description="点击图片事件")
-	String handleImageClick(){
+	String handleImageClick(InputEvent event){
 		return null;
 	}
 }
