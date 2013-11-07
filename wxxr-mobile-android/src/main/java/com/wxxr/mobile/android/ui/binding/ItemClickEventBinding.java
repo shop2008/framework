@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.ui.binding;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.wxxr.mobile.core.ui.api.IBinding;
@@ -80,6 +81,10 @@ public class ItemClickEventBinding implements IBinding<IView>,OnItemClickListene
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_ITEM_CLICK,this.pModel);
+		Object list = getUIControl();
+		if (list instanceof ListView) {
+			position -= ((ListView) list).getHeaderViewsCount();
+		}
 		event.addProperty("position", position);
 		IUIComponent field = this.pModel.getChild(this.fieldName);
 		if(field != null){
