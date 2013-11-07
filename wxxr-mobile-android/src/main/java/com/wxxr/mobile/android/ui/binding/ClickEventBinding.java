@@ -77,11 +77,12 @@ public class ClickEventBinding implements IBinding<IView>,OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK,this.pModel);
 		IUIComponent field = this.pModel.getChild(this.fieldName);
 		if(field != null){
+			SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK,field);
 			field.invokeCommand(commandName, event);
 		}else{
+			SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK,this.pModel);
 			this.pModel.invokeCommand(commandName, event);
 		}
 	}
