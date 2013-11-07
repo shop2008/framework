@@ -47,10 +47,9 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 			stockCodeField.setValue(stockCode);
 			stockPrice = String.valueOf(stock.getCurrentPrice());
 			stockPriceField.setValue(stockPrice);
-			stockDeltaPercent ="";
+			stockDeltaPercent =String.format("%.2f", (stock.getCurrentPrice()-stock.getTodayInitPrice())/stock.getCurrentPrice()*100)+"%";
 			stockDeltaPercentField.setValue(stockDeltaPercent);
-		}
-		
+		}		
 	}
 	/**
 	 * 事件处理-单击一条股票

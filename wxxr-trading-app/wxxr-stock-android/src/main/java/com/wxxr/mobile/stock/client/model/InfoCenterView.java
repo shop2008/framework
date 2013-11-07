@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -58,9 +59,32 @@ public abstract class InfoCenterView extends ViewBase {
 	@OnShow
 	protected void updateInfo() {
 		//TODO set sh
+		shPrice = "2012.03";
+		shPriceField.setValue(shPrice);
 		
+		shDelta = "2.02";
+		shDeltaField.setValue(shDelta);
+		
+		shDeltaPer ="1.01%";
+		shDeltaPerField.setValue(shDeltaPer);
 		//TODO set sz
+		szPrice = "8012.03";
+		shPriceField.setValue(szPrice);
+		
+		shDelta = "8.02";
+		shDeltaField.setValue(szDelta);
+		
+		szDeltaPer ="1.21%";
+		szDeltaPerField.setValue(szDeltaPer);
 		//TODO set stock list
+		stockInfos = new ArrayList<StockBasicMarketInfo>();
+		StockBasicMarketInfo st = new StockBasicMarketInfo();
+		st.setCode("600521");
+		st.setName("华海药业");
+		st.setCurrentPrice(11.88f);
+		st.setTodayInitPrice(12.31f);
+		stockInfos.add(st);
+		stockInfosField.setValue(stockInfos);
 	}
 
 	/**

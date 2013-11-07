@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-23.2" 
-                        bind:field="shdDelta"/>
+                        bind:field="shDelta"/>
 
                     <TextView
                         android:id="@id/tv_szzs_up_down_rate"
@@ -223,12 +223,12 @@
 
     </LinearLayout>
 
-    <ListView
+    <com.wxxr.mobile.stock.client.widget.RefreshListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         bind:itemViewId="infoCenterItemView"
 	    bind:field="stockInfos">
-    </ListView>
+    </com.wxxr.mobile.stock.client.widget.RefreshListView>
 
 </LinearLayout>
