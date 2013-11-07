@@ -167,7 +167,9 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onResume ...");
 		}
-
+		if(this.androidViewBinding != null){
+			this.androidViewBinding.refresh();
+		}
 		super.onResume();
 	}
 

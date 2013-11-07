@@ -95,6 +95,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				model.setApplicationId(pkg);
 				model.setPkgName(pkg+".view");
 				model.setName(defaultName+"Model");
+				model.setToolbarRequired(ann.withToolbar());
 				if(StringUtils.isNotBlank(ann.name())){
 					model.setId(StringUtils.trimToNull(ann.name()));
 				}else{

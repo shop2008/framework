@@ -121,6 +121,13 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			}
 		}
 
+		@Override
+		public void refresh() {
+			if(this.binding != null){
+				this.binding.refresh();
+			}
+		}
+
 //		@Override
 //		public IUIComponent getValueModel() {
 //			return this.binding != null ? this.binding.getValueModel() : null;
@@ -264,8 +271,8 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 
 	
 	protected View initView() {
-		if(log.isDebugEnabled()){
-			log.debug("Going to inflater layout :"+this.layoutResourceId);
+		if(log.isTraceEnabled()){
+			log.trace("Going to inflater layout :"+this.layoutResourceId);
 		}
 		LayoutInflater inflater = ((LayoutInflater)this.bindingContext.getUIContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(this.bindingContext.getUIContext());
 		inflater.setFactory(new BindableViewFactory(this.callback,inflater));
@@ -373,5 +380,13 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			}
 		}
 		return this.menuHandlers != null ? this.menuHandlers.get(menuId) : null;
+	}
+
+
+	@Override
+	public void refresh() {
+		for (IBinding<IView> b : bindings) {
+			b.refresh();
+		}
 	}
 }

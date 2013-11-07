@@ -201,6 +201,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(log.isDebugEnabled()){
 			log.debug("Resuming activity ...");
 		}
+		if(this.androidViewBinding != null){
+			this.androidViewBinding.refresh();
+		}
 		super.onResume();
 	}
 

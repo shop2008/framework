@@ -138,4 +138,16 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		
 	}
 
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		if(this.androidViewBinding != null){
+			this.androidViewBinding.refresh();
+		}
+		super.onResume();
+	}
+
 }

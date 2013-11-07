@@ -13,8 +13,24 @@ import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 public abstract class AbstractPageDescriptor extends AbstractViewDescriptor implements
 		IPageDescriptor {
 	
+	private boolean hasToolbar;
+	
 	public AbstractPageDescriptor(){
 		setSingleton(true);
+	}
+
+	/**
+	 * @return the hasToolbar
+	 */
+	public boolean isHasToolbar() {
+		return hasToolbar;
+	}
+
+	/**
+	 * @param hasToolbar the hasToolbar to set
+	 */
+	public void setHasToolbar(boolean hasToolbar) {
+		this.hasToolbar = hasToolbar;
 	}
 	
 }

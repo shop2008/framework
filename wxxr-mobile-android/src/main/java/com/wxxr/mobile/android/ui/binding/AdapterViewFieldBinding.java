@@ -219,4 +219,15 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		super.notifyDataChanged(events);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#refresh()
+	 */
+	@Override
+	public void refresh() {
+		if(this.listAdapter != null){
+			this.listAdapter.notifyDataSetChanged();
+		}
+		super.refresh();
+	}
+
 }

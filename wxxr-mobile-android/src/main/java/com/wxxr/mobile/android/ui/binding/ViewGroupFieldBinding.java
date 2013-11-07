@@ -30,9 +30,14 @@ public class ViewGroupFieldBinding extends BasicFieldBinding {
 		if(vg.hasAttribute(AttributeKeys.visible)&&(vg.getAttribute(AttributeKeys.visible) == false)){
 			return;
 		}
+		boolean backable =true;
 		String activeViewId = vg.getActiveViewId();
+		if(activeViewId == null){
+			activeViewId = vg.getDefaultViewId();
+			backable = false;
+		}
 		if(activeViewId != null){
-			vg.activateView(activeViewId);
+			vg.activateView(activeViewId,backable);
 		}
 	}
 

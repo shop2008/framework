@@ -226,5 +226,10 @@ public class BasicFieldBinding implements IFieldBinding {
 		
 	}
 
+	@Override
+	public void refresh() {
+		updateUI(true);
+	}
+
 
 }
