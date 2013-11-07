@@ -220,11 +220,11 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 
 	@Override
-	public void showView(final IView view) {
+	public void showView(final IView view, final boolean add2BackStack) {
 		IPage page = getPage(view);
 		IBindableActivity activity = this.activeActivities.get(page.getName());
 		if(activity != null){
-			hideOrShowView(view, true);
+			hideOrShowView(view,add2BackStack, true);
 		}else{
 			 IPageCallback cb = new IPageCallback() {
 				
@@ -235,7 +235,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 						
 						@Override
 						public void run() {
-							hideOrShowView(view, true);							
+							hideOrShowView(view, add2BackStack,true);							
 						}
 					});
 					
@@ -262,13 +262,13 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 
 	@Override
 	public void hideView(IView view) {
-		hideOrShowView(view,false);		
+		hideOrShowView(view,false,false);		
 	}
 
 	/**
 	 * @param view
 	 */
-	protected void hideOrShowView(IView view, boolean show) {
+	protected void hideOrShowView(IView view,boolean add2BackStack, boolean show) {
 		IPage page = getPage(view);
 		final IViewGroup vg = (IViewGroup)view.getParent();
 		IBindableActivity activity = this.activeActivities.get(page.getName());

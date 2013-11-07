@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.android.ui;
 
+import java.util.concurrent.TimeUnit;
+
 import android.app.Activity;
 
 import com.wxxr.mobile.android.app.AppUtils;
@@ -71,22 +73,46 @@ public abstract class MainActivity extends Activity {
 			public void done(Object result) {
 				if(this.startTime == 0){
 					showProgressBar(50);
-					for(int i =  1; i <= 50 ; i++){
-						updateProgress(i, "");
-						try {
-							Thread.sleep(10L);
-						} catch (InterruptedException e) {
+					AppUtils.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							final int[] work = new int[]{1};
+							final Runnable[] task = new Runnable[1];
+							task[0] = new Runnable() {
+								
+								@Override
+								public void run() {
+									updateProgress(work[0], "");
+									work[0]++;
+									if(work[0] < 50){
+										AppUtils.runOnUIThread(task[0], 10, TimeUnit.MILLISECONDS);
+									}else{
+										AppUtils.runOnUIThread(new Runnable() {
+											
+											@Override
+											public void run() {
+												updateProgressDone();
+												showHomePage();
+											}	
+										});
+									}
+								}
+							};
+							AppUtils.runOnUIThread(task[0], 10, TimeUnit.MILLISECONDS);
 						}
-					}
-					updateProgressDone();
+					}, 1, TimeUnit.MILLISECONDS);
 				}else{
 					updateProgressDone();
-					try {
-						Thread.sleep(confirmTime);
-					} catch (InterruptedException e) {
-					}
+					AppUtils.runOnUIThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							showHomePage();
+						}
+					}, confirmTime, TimeUnit.MILLISECONDS);
 				}
-				showHomePage();
+				
 			}
 			
 			@Override
@@ -109,7 +135,6 @@ public abstract class MainActivity extends Activity {
 				log.info("Kernel is started, going to show home page");
 			}
 			monitor.done(null);
-			showHomePage();
 			return;
 		}else{
 			AppUtils.getFramework().attachStartMonitor(monitor);

@@ -13,4 +13,5 @@ public interface IAndroidBindingDescriptor extends IBindingDescriptor {
 	Class<?> getTargetClass();
 	int getBindingLayoutId();
 	AndroidBindingType getBindingType();
+	boolean hasToolbar();
 }
