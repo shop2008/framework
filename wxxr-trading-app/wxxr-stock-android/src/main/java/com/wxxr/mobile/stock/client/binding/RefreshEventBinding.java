@@ -97,4 +97,9 @@ public class RefreshEventBinding implements IBinding<IView> {
 		return this.control;
 	}
 
+	@Override
+	public void refresh() {
+		
+	}
+
 }
