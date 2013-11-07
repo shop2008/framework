@@ -66,8 +66,14 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	DataField<String> accountBalanceField;
 
 	@Command(commandName="handleClickImage")
-	String handleClickImage(InputEvent event){
+	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");
+		getUIContext()
+				.getWorkbenchManager()
+				.getPageNavigator()
+				.showPage(
+						getUIContext().getWorkbenchManager().getWorkbench()
+								.getPage("user_page"), null, null);
 		return null;
 	}
 	
