@@ -1,16 +1,16 @@
 package com.wxxr.mobile.stock.client.model;
 
-import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 
-public abstract class AbstractToolbarView extends ViewBase {
+public abstract class AbstractToolbarView extends ViewBase implements IAppToolbar{
 
+	private IPage activePage;
+	
 	public AbstractToolbarView() {
 		super();
 	}
@@ -28,19 +28,10 @@ public abstract class AbstractToolbarView extends ViewBase {
 	}
 
 	protected IMenu getToolbarMenu() {		
-		IPage page = getActivePage();
+		IPage page = getCurrentPage();
 		return page != null ? page.getChild("toolbar", IMenu.class) : null;
 	}
 
-	protected IPage getActivePage() {
-		IWorkbenchManager mgr = AppUtils.getService(IWorkbenchManager.class);
-		String activePageId = mgr.getWorkbench().getActivePageId();
-		if(activePageId != null){
-			return mgr.getWorkbench().getPage(activePageId);
-		}
-		return null;
-		
-	}
 
 
 	protected IUICommand getMenuItem(String name) {
@@ -49,6 +40,22 @@ public abstract class AbstractToolbarView extends ViewBase {
 			 return menu.getCommand(name);
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IAppToolbar#getCurrentPage()
+	 */
+	@Override
+	public IPage getCurrentPage() {
+		return this.activePage;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IAppToolbar#setCurrentPage(com.wxxr.mobile.core.ui.api.IPage)
+	 */
+	@Override
+	public void setCurrentPage(IPage page) {
+		this.activePage = page;
 	}
 
 }
