@@ -9,13 +9,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wxxr.mobile.core.util.DateUtil;
 import com.wxxr.mobile.stock.client.R;
 
-public class TitleBarLayout extends LinearLayout implements OnClickListener {
+public class TitleBarLayout extends RelativeLayout implements OnClickListener {
 
 	public interface OnActionClickListener {
 		public void onActionClick(ActionClickType type);
@@ -61,7 +61,8 @@ public class TitleBarLayout extends LinearLayout implements OnClickListener {
 		mUpdateTime = (TextView) findViewById(R.id.time);
 
 		mSwitcher = (Rotate3DViewSwitcher) findViewById(R.id.view_switch);
-		mSwitcher.setDisplayedChild(0);
+//		mSwitcher.setDisplayedChild(0);
+//		handler.sendEmptyMessageDelayed(0, 1000);
 	}
 
 	public void initActionBar(TitleBarType titleType, String title,
