@@ -59,9 +59,11 @@ public class TListView extends ListView {
 	@Override
 	public void setAdapter(ListAdapter adapter) {
 		if(adapter==null || (adapter.getCount()==0 && view!=null)){
-			removeHeaderView(view);
+			view.setVisibility(GONE);
 			super.setAdapter(null);
 			return;
+		}else{
+			view.setVisibility(VISIBLE);
 		}
 		super.setAdapter(adapter);
 	}
