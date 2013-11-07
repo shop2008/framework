@@ -21,6 +21,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
@@ -72,6 +73,10 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		Activity activity = getCurrentActivity();
 		String pageId = page.getName();
 		Class<?> activityClass = getActivityClass(pageId);
+		IModelUpdater updater = page.getAdaptor(IModelUpdater.class);
+		if(updater != null){
+			updater.updateModel(params);
+		}
 		Intent intent;
 		if(activity != null) {
 			intent = new Intent(activity, activityClass);
