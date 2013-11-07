@@ -130,7 +130,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
 		if(desc != null){
 			IView view = desc.createPresentationModel(getUIContext());
-			view.init(getUIContext());
+			if(!view.isInitialized()){
+				view.init(getUIContext());
+			}
 			return view;
 		}
 		return null;
