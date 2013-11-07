@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.R;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 
 /**
@@ -89,10 +90,10 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 		this.profit_loss_amount = profitLoss;
 		if (Float.parseFloat(profitLoss) > 0) {
 			this.profit_loss_amountField.setValue("+"+profitLoss);
-			this.profit_loss_amountField.setAttribute(AttributeKeys.foregroundColor, R.color.red);
+			this.profit_loss_amountField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_RED);
 		} else {
-			this.profit_loss_amountField.setValue("-"+profitLoss);
-			this.profit_loss_amountField.setAttribute(AttributeKeys.foregroundColor, R.color.green);
+			this.profit_loss_amountField.setValue(profitLoss);
+			this.profit_loss_amountField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_GREEN);
 		}
 		
 	}

@@ -52,7 +52,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="180dp"
-                android:background="@drawable/c"
+               	bind:field="userHomeBack"
                 android:orientation="vertical"
                 android:padding="8dp" >
 
@@ -68,7 +68,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/default_user_icons"
-                        bind:field="user_icon" />
+                        bind:field="userIcon" />
 
                     <TextView
                         android:id="@+id/textView1"
@@ -78,7 +78,7 @@
                         android:layout_toRightOf="@+id/imageView1"
                         android:paddingLeft="10dp"
                         android:text="@string/tv_default_text"
-                        bind:field="user_nick_name" />
+                        bind:field="userNickName" />
 
                     <Button
                         android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/tv_default_text"
                             android:textColor="@color/red"
-                            bind:field="total_real_score" />
+                            bind:field="totalScore" />
                     </LinearLayout>
 
                     <View
@@ -139,14 +139,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/tv_default_text"
                             android:textColor="@color/red"
-                            bind:field="total_profit" />
+                            bind:field="totalProfit" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical" >
 
                 <RelativeLayout
@@ -177,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/tv_default_text"
                             android:textColor="@color/red"
-                            bind:field="challenge_shared_num_what" />
+                            bind:field="challengeSharedNum" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -194,69 +194,85 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_stock" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_stock" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_amount" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_amount" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_profit_loss" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_profit_loss" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
-                    
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_date" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_date" />
                 </LinearLayout>
 
-                <com.wxxr.mobile.stock.client.widget.NoScrollListView
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:field="challengeTradeInfos"
-                    bind:itemViewId="upage_item_view"
-                    bind:on_ItemClick="challenge_item_click" />
+                    android:layout_height="match_parent" >
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/view_more_text"
-                    bind:field="*"
-                    bind:on_Click="challenge_view_more" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        bind:field="cSharedVisiable" >
+
+                        <com.wxxr.mobile.stock.client.widget.NoScrollListView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            bind:field="challengeTradeInfos"
+                            bind:itemViewId="upage_item_view"
+                            bind:on_ItemClick="challenge_item_click" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/view_more_text"
+                            bind:field="*"
+                            bind:on_Click="challenge_view_more" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="18sp"
+                        android:text="@string/user_no_shared_text"
+                        bind:field="cNoSharedVisiable" />
+                </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -292,7 +308,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/tv_default_text"
                             android:textColor="@color/red"
-                            bind:field="join_shared_num_what" />
+                            bind:field="joinSharedNum" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -303,76 +319,94 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content" >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_stock" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_stock" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_amount" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_amount" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_profit_loss" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_profit_loss" />
 
-                    <View 
+                    <View
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
-                        android:background="@color/white"
-                        />
-                    
+                        android:background="@color/white" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_date" 
                         android:background="@drawable/bg_text_label"
-                        />
+                        android:gravity="center"
+                        android:text="@string/label_date" />
                 </LinearLayout>
 
-                <com.wxxr.mobile.stock.client.widget.NoScrollListView
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:field="joinTradeInfos"
-                    bind:itemViewId="upage_item_view"
-                    bind:on_ItemClick="join_item_click" />
+                    android:layout_height="match_parent" >
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/view_more_text"
-                    bind:field="*"
-                    bind:on_Click="join_view_more" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" 
+                        android:visibility="gone"
+                       	bind:field="jSharedVisiable"
+                        >
+
+                        <com.wxxr.mobile.stock.client.widget.NoScrollListView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            bind:field="joinTradeInfos"
+                            bind:itemViewId="upage_item_view"
+                            bind:on_ItemClick="join_item_click" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/view_more_text"
+                            bind:field="*"
+                            bind:on_Click="join_view_more" />
+                    </LinearLayout>
+                    
+                    
+                    <TextView 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_no_shared_text"
+                        android:layout_gravity="center"
+                        bind:field="jNoSharedVisiable"
+                        android:textSize="18sp"
+                        />
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
