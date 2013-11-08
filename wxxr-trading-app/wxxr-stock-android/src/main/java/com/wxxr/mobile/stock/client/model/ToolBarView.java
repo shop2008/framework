@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
 
 /**
  * @author neillin
@@ -21,7 +22,7 @@ import com.wxxr.mobile.core.ui.common.DataField;
  */
 @View(name="toolbarView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.layout_animation_tool_bar_view")
-public abstract class ToolBarView extends AbstractToolbarView {
+public abstract class ToolBarView extends StockAppToolbar {
 
 	@Field(valueKey="imageURI")
 	String leftIcon;
@@ -37,6 +38,11 @@ public abstract class ToolBarView extends AbstractToolbarView {
 	String rightIcon;
 
 	DataField<String> searchIconField;
+	
+	@Field(valueKey="text")
+	String message;
+	
+	DataField<String> messageField;
 
 	@Command
 	String handleClick(InputEvent event){
