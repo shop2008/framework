@@ -43,6 +43,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	private IViewBinding toolbarViewBingding;
 	private View contentRoot;
 	private IView rootView;
+	private IPage page;
+	private IAppToolbar toolbar;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -52,25 +54,35 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(log.isDebugEnabled()){
 			log.debug("creating activity ...");
 		}
-		this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
-			
-			@Override
-			public Context getUIContext() {
-				return BindableFragmentActivity.this;
+		this.page = getBindingPage();
+		IPageDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getPageDescriptor(page.getName());
+		if(descriptor.withToolbar()){
+			this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
+				
+				@Override
+				public Context getUIContext() {
+					return BindableFragmentActivity.this;
+				}
+				
+				@Override
+				public View getBindingControl() {
+					return null;
+				}
+	
+				@Override
+				public IWorkbenchManager getWorkbenchManager() {
+					return AppUtils.getService(IWorkbenchManager.class);
+				}
+			}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
+			this.contentRoot = (View)toolbarViewBingding.getUIControl();
+			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
+			if(this.rootView instanceof IAppToolbar){
+				this.toolbar = (IAppToolbar)this.rootView;
+				page.onToolbarCreated(toolbar);
 			}
-			
-			@Override
-			public View getBindingControl() {
-				return null;
-			}
-
-			@Override
-			public IWorkbenchManager getWorkbenchManager() {
-				return AppUtils.getService(IWorkbenchManager.class);
-			}
-		}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
-		this.contentRoot = (View)toolbarViewBingding.getUIControl();
-			
+		}else{
+			this.contentRoot = null;
+		}
 		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
 			
 			@Override
@@ -87,20 +99,15 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				return AppUtils.getService(IWorkbenchManager.class);
 			}
 		}, getBindingDescriptor(getBindingPageId()));
+		
 		if(this.contentRoot != null){
-			IPageDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getPageDescriptor(IWorkbench.TOOL_BAR_VIEW_ID);
-
-			if(true) {//((AbstractPageDescriptor)descriptor).isHasToolbar()) {
 				ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
 				vg.addView((View)this.androidViewBinding.getUIControl());
 				setContentView(this.contentRoot);
-			} else {
-				setContentView((View)this.androidViewBinding.getUIControl());
-			}
 		}else{
 			setContentView((View)this.androidViewBinding.getUIControl());
 		}
-		getNavigator().onPageCreate(getBindingPage(), this);
+		getNavigator().onPageCreate(page, this);
 		onContentViewCreated(savedInstanceState);
 		super.onCreate(savedInstanceState);
 		if(log.isDebugEnabled()){
@@ -119,15 +126,14 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		IPage page = getBindingPage();
 		this.androidViewBinding.activate(page);
-		if(this.toolbarViewBingding != null){
-			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
-			if(this.rootView instanceof IAppToolbar){
-				((IAppToolbar)this.rootView).setCurrentPage(page);
-			}
+		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
 			this.toolbarViewBingding.activate(this.rootView);
+			if(this.toolbar != null){
+				page.onToolbarShow();
+			}
 		}
 		super.onStart();
-		getNavigator().onPageShow(getBindingPage());
+		getNavigator().onPageShow(page);
 		onActivityStarted();
 		if(log.isDebugEnabled()){
 			log.debug("Activity started !");
@@ -147,8 +153,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();
 		}
-		if(this.rootView instanceof IAppToolbar){
-			((IAppToolbar)this.rootView).setCurrentPage(null);
+		if(this.toolbar != null){
+			this.page.onToolbarHide();
 		}
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
@@ -171,6 +177,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.destroy();
+			if(this.toolbar != null){
+				this.page.onToolbarDestroy();
+			}
+			this.toolbar = null;
 			this.toolbarViewBingding = null;
 		}
 		this.androidViewBinding.destroy();
@@ -265,6 +275,18 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.androidViewBinding.refresh();
 		}
 		super.onResume();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getToolbar()
+	 */
+	@Override
+	public IAppToolbar getToolbar() {
+		if(this.rootView instanceof IAppToolbar){
+			return (IAppToolbar)this.rootView;
+		}
+		return null;
 	}
 
 
