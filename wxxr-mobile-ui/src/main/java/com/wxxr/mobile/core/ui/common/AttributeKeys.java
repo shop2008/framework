@@ -44,7 +44,7 @@ public abstract class AttributeKeys {
 
 	public static final AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
 	
-	AttributeKey<String> webUrl = new AttributeKey<String>(String.class, "webUrl");
+	public static final AttributeKey<String> webUrl = new AttributeKey<String>(String.class, "webUrl");
 	
 	@SuppressWarnings("rawtypes")
 	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
