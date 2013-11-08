@@ -44,6 +44,8 @@ public abstract class AttributeKeys {
 
 	public static final AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
 	
+	AttributeKey<String> webUrl = new AttributeKey<String>(String.class, "webUrl");
+	
 	@SuppressWarnings("rawtypes")
 	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
@@ -63,7 +65,8 @@ public abstract class AttributeKeys {
 			selected,
 			menuCategory,
 			options,
-			textColor
+			textColor,
+			webUrl
 	};
 
 	public static AttributeKey<?> getByName(String name){
