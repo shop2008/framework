@@ -18,9 +18,16 @@ public class MegagameRank{
 	private int gainRates;
 	private String userId;//用户id
 	private long acctID;
+	private int rankSeq;
 	
 	
 	
+	public int getRankSeq() {
+		return rankSeq;
+	}
+	public void setRankSeq(int rankSeq) {
+		this.rankSeq = rankSeq;
+	}
 	public long getAcctID() {
 		return acctID;
 	}
