@@ -44,6 +44,7 @@ public class AttributeKey<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		AttributeKey other = (AttributeKey) obj;
 		if (name == null) {
 			if (other.name != null)
@@ -59,6 +60,48 @@ public class AttributeKey<T> {
 	@Override
 	public String toString() {
 		return name+"/"+clazz.getSimpleName();
+	}
+
+	public T valueof(String value){
+		Object val = getValueByType(clazz, value);
+		return clazz.cast(val);
+	}
+	
+	public IUIComponent updateAttributeWithString(IUIComponent component, String value){
+		component.setAttribute(this, valueof(value));
+		return component;
+	}
+	
+	
+	public IUIComponent updateAttributetWithObject(IUIComponent component, Object value){
+		T val = clazz.cast(value);
+		component.setAttribute(this, val);
+		return component;
+	}
+
+	/**
+	 * @param valType
+	 * @param value
+	 */
+	protected Object getValueByType(Class<?> valType, String value) {
+		if(Byte.class == valType){
+			return Byte.valueOf(value);
+		}else if(Short.class == valType){
+			return Short.valueOf(value);
+		}else if(Integer.class == valType){
+			return Integer.valueOf(value);
+		}else if(Long.class == valType){
+			return Long.valueOf(value);
+		}else if(Float.class == valType){
+			return Float.valueOf(value);
+		}else if(Double.class == valType){
+			return Double.valueOf(value);
+		}else if(Boolean.class == valType){
+			return Boolean.valueOf(value);
+		}else if(String.class == valType){
+			return value;
+		}
+		throw new IllegalArgumentException("Cannot convert string value :["+value+"] to type of :"+valType);
 	}
 
 	

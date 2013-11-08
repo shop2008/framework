@@ -6,48 +6,48 @@ import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
 
-public interface AttributeKeys {
+public abstract class AttributeKeys {
 			
-	AttributeKey<Boolean> enabled = new AttributeKey<Boolean>(Boolean.class,"enabled");
+	public static final AttributeKey<Boolean> enabled = new AttributeKey<Boolean>(Boolean.class,"enabled");
 	
-	AttributeKey<Integer> backgroundColor = new AttributeKey<Integer>(Integer.class,"backgroundColor");
+	public static final AttributeKey<Integer> backgroundColor = new AttributeKey<Integer>(Integer.class,"backgroundColor");
 	
-	AttributeKey<Integer> foregroundColor = new AttributeKey<Integer>(Integer.class,"foregroundColor");
+	public static final AttributeKey<Integer> foregroundColor = new AttributeKey<Integer>(Integer.class,"foregroundColor");
 
 
-	AttributeKey<String> backgroundImageURI = new AttributeKey<String>(String.class,"backgroundImageURI");
+	public static final AttributeKey<String> backgroundImageURI = new AttributeKey<String>(String.class,"backgroundImageURI");
 	
-	AttributeKey<String> menuCategory = new AttributeKey<String>(String.class,"menuCategory");
+	public static final AttributeKey<String> menuCategory = new AttributeKey<String>(String.class,"menuCategory");
 	
-	AttributeKey<String> title = new AttributeKey<String>(String.class,"title");
+	public static final AttributeKey<String> title = new AttributeKey<String>(String.class,"title");
 
-	AttributeKey<String> imageURI = new AttributeKey<String>(String.class,"imageURI");
+	public static final AttributeKey<String> imageURI = new AttributeKey<String>(String.class,"imageURI");
 	
 	
-	AttributeKey<String> icon = new AttributeKey<String>(String.class,"icon");
+	public static final AttributeKey<String> icon = new AttributeKey<String>(String.class,"icon");
 
 
-	AttributeKey<String> label = new AttributeKey<String>(String.class,"label");
+	public static final AttributeKey<String> label = new AttributeKey<String>(String.class,"label");
 	
-	AttributeKey<String> text = new AttributeKey<String>(String.class,"text");
+	public static final AttributeKey<String> text = new AttributeKey<String>(String.class,"text");
 
-	AttributeKey<ValidationError[]> validationErrors = new AttributeKey<ValidationError[]>(ValidationError[].class,"validationErrors");
+	public static final AttributeKey<ValidationError[]> validationErrors = new AttributeKey<ValidationError[]>(ValidationError[].class,"validationErrors");
 
 	
-	AttributeKey<Boolean> visible = new AttributeKey<Boolean>(Boolean.class,"visible");
+	public static final AttributeKey<Boolean> visible = new AttributeKey<Boolean>(Boolean.class,"visible");
 	
-	AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
+	public static final AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
 
-	AttributeKey<Integer> textColor = new AttributeKey<Integer>(Integer.class,"textColor");
+	public static final AttributeKey<Integer> textColor = new AttributeKey<Integer>(Integer.class,"textColor");
 	
-	AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
+	public static final AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
-	AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
+	public static final AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
 	
 	@SuppressWarnings("rawtypes")
-	AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
+	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
-	AttributeKey<?>[] keys = new AttributeKey<?>[] {
+	public static final AttributeKey<?>[] keys = new AttributeKey<?>[] {
 			enabled,
 			visible,
 			takeSpaceWhenInvisible,
@@ -66,5 +66,12 @@ public interface AttributeKeys {
 			textColor
 	};
 
-
+	public static AttributeKey<?> getByName(String name){
+		for (AttributeKey<?> key : keys) {
+			if(key.getName().equals(name)){
+				return key;
+			}
+		}
+		return null;
+	}
 }
