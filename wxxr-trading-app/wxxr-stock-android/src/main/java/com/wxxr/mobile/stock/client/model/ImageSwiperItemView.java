@@ -1,11 +1,15 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -28,13 +32,19 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 	
 	DataField<String> swiperTitleField;
 	
+	
 	@Command
 	String linkItemClick(InputEvent event){
+		Map<String, String> tmap = new HashMap<String, String>();
+		tmap.put("webUrl", articleUrl);
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(, null, null);
+			IPage page = getUIContext().getWorkbenchManager().getWorkbench().getPage("webPage");
+			getUIContext().getWorkbenchManager().getPageNavigator().showPage(page, tmap, null);
 		}
 		return null;
 	}
+	
+	
 
 	protected String getSwiperImage() {
 		return swiperImage;

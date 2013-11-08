@@ -3,6 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:orientation="horizontal">
 
+            <RadioButton
+                android:id="@+id/radio0"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="挑战交易盘" 
+                android:padding="8dp"
+                android:textSize="15sp"/>
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="参赛交易盘" 
+                android:gravity="center"
+                android:button="@null"
+                android:textSize="15sp"
+                android:padding="8dp"/>
+        </RadioGroup>
+    </LinearLayout>
 </LinearLayout>
