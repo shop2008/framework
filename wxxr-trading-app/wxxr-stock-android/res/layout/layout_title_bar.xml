@@ -16,7 +16,7 @@
         android:background="@null"
         android:src="@drawable/list_button"
         bind:field="leftIcon"
-        bind:On_Click="handleClick" />
+        bind:on_Click="handleClick" />
 
     <TextView
         android:id="@id/tv_title_content"
@@ -31,7 +31,7 @@
         android:background="@null"
         android:src="@drawable/message_button"
         bind:field="rightIcon"
-        bind:On_Click="handleClick" />
+        bind:on_Click="handleClick" />
 
     <ImageButton
         android:id="@id/ib_toggle_search"
@@ -43,6 +43,6 @@
         android:background="@null"
         android:src="@drawable/finds"
         bind:field="searchIcon"
-        bind:On_Click="handleClick" />
+        bind:on_Click="handleClick" />
 
 </RelativeLayout>
