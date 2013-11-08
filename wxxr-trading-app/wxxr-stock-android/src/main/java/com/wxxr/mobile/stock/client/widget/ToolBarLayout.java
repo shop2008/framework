@@ -1,10 +1,6 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import java.util.Date;
-
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,10 +8,9 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.wxxr.mobile.core.util.DateUtil;
 import com.wxxr.mobile.stock.client.R;
 
-public class TitleBarLayout extends RelativeLayout implements OnClickListener {
+public class ToolBarLayout extends RelativeLayout implements OnClickListener {
 
 	public interface OnActionClickListener {
 		public void onActionClick(ActionClickType type);
@@ -35,18 +30,15 @@ public class TitleBarLayout extends RelativeLayout implements OnClickListener {
 	private ImageButton mRightNavButton;
 	private ImageButton mSearchNavButton;
 
-	private TextView mUpdateTime;
-	private Rotate3DViewSwitcher mSwitcher;
-
 	private OnActionClickListener mActionClickListener;
 
-	public TitleBarLayout(Context context) {
+	public ToolBarLayout(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		this.mContext = context;
 	}
 
-	public TitleBarLayout(Context context, AttributeSet attrs) {
+	public ToolBarLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 		this.mContext = context;
@@ -57,8 +49,8 @@ public class TitleBarLayout extends RelativeLayout implements OnClickListener {
 		mLeftNavButton = (ImageButton) findViewById(R.id.ib_toggle_left_menu);
 		mRightNavButton = (ImageButton) findViewById(R.id.ib_toggle_right_menu);
 		mSearchNavButton = (ImageButton) findViewById(R.id.ib_toggle_search);
-		mUpdateTime = (TextView) findViewById(R.id.time);
-		mSwitcher = (Rotate3DViewSwitcher) findViewById(R.id.view_switch);
+//		mUpdateTime = (TextView) findViewById(R.id.time);
+//		mSwitcher = (Rotate3DViewSwitcher) findViewById(R.id.view_switch);
 		
 		mLeftNavButton.setOnClickListener(this);
 		mRightNavButton.setOnClickListener(this);
@@ -89,24 +81,6 @@ public class TitleBarLayout extends RelativeLayout implements OnClickListener {
 		mTitle.setText(title);
 		mActionClickListener = l;
 	}
-
-	public void refreshComplete() {
-		mUpdateTime.setText("最后更新：" + DateUtil.formatDate(new Date()));
-		mSwitcher.setRorateUp();
-		mSwitcher.showNext();
-		handler.sendEmptyMessageDelayed(0, 1500);
-	}
-
-	Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			super.handleMessage(msg);
-			mSwitcher.setRorateUp();
-			mSwitcher.setDisplayedChild(0);
-		}
-	};
 
 	@Override
 	public void onClick(View v) {

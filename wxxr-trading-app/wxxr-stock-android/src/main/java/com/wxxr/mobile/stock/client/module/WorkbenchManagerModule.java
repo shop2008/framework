@@ -6,11 +6,8 @@ package com.wxxr.mobile.stock.client.module;
 import java.util.HashMap;
 
 import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
-import com.wxxr.mobile.android.ui.binding.AdapterViewFieldBinder;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
@@ -23,6 +20,7 @@ import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
+import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
@@ -47,7 +45,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
-		
+		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 	}
 
 	@Override

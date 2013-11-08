@@ -3,6 +3,10 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -21,18 +25,21 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.ui.common.UICommand;
+import com.wxxr.mobile.stock.client.IStockAppToolbar;
 import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * @author neillin
  */
-@View(name="home")
+@View(name="home",withToolbar=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;
@@ -59,7 +66,6 @@ public abstract class HomePage extends PageBase {
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
-		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :left was clicked !");
 			}
@@ -68,7 +74,6 @@ public abstract class HomePage extends PageBase {
 			}else{
 				leftMenu.show();
 			}
-		}
 		return null;
 	}
 	
@@ -78,7 +83,6 @@ public abstract class HomePage extends PageBase {
 			}
 	)
 	String toolbarClickedRight(InputEvent event){
-		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :right was clicked !");
 			}
@@ -87,7 +91,6 @@ public abstract class HomePage extends PageBase {
 			}else{
 				rightMenu.show();
 			}
-		}
 		return null;
 	}
 	
@@ -96,12 +99,16 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="search",label="行情中心",icon="resourceId:drawable/hqzx")
 			}
 	)
-	String toolbarClickedSearch(InputEvent event){
-		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
-			if(log.isDebugEnabled()){
-				log.debug("Toolbar item :search was clicked !");
-			}
+	String toolbarClickedSearch(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("Toolbar item :search was clicked !");
 		}
+//		getUIContext()
+//				.getWorkbenchManager()
+//				.getPageNavigator()
+//				.showPage(
+//						getUIContext().getWorkbenchManager().getWorkbench()
+//								.getPage("stockSearchPage"), null, null);
 		return null;
 	}
 	
@@ -189,5 +196,23 @@ public abstract class HomePage extends PageBase {
 			((UICommand)rightMenu.getCommand("apage1")).setAttribute(AttributeKeys.visible, false);
 			((UICommand)rightMenu.getCommand("apage2")).setAttribute(AttributeKeys.visible, false);
 		}
+	}
+	
+	@OnShow
+	void testNotification(){
+		final Runnable[] tasks = new Runnable[1];
+		final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
+		tasks[0] = new Runnable() {
+			
+			@Override
+			public void run() {
+				IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
+				if(tool != null){
+					tool.showNotification("当前时间 :"+fmt.format(new Date()), null);
+				}
+				AppUtils.runOnUIThread(tasks[0], 4, TimeUnit.SECONDS);
+			}
+		};
+		AppUtils.runOnUIThread(tasks[0], 4, TimeUnit.SECONDS);
 	}
 }

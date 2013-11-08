@@ -1,16 +1,27 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.graphics.Camera;
 import android.graphics.Matrix;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.util.DateUtil;
+import com.wxxr.mobile.stock.client.R;
 
 public class Rotate3DViewSwitcher extends ViewSwitcher {
 
+	private static Trace log = Trace.getLogger(Rotate3DViewSwitcher.class);
 	private float mHeight;
 	private Context mContext;
 	// mInUp,mOutUp分别构成向下翻页的进出动画
@@ -21,6 +32,9 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 	private Rotate3dAnimation mInDown;
 	private Rotate3dAnimation mOutDown;
 
+//	private TextView mUpdateTime;
+//	private Rotate3DViewSwitcher mSwitcher;
+	private boolean mShowing;
 	public Rotate3DViewSwitcher(Context context) {
 		this(context, null);
 		// TODO Auto-generated constructor stub
@@ -48,6 +62,40 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 		setOutAnimation(mOutUp);
 	}
 
+	public void setText(String message) {
+		showNotification(message);
+	}
+	
+	public void refreshComplete() {
+		showNotification("最后更新：" + DateUtil.formatDate(new Date()));
+	}
+
+	private void showNotification(String message) {
+		if(mShowing)
+			return;
+		mShowing = true;
+		if(log.isDebugEnabled()) {
+			log.debug("show notification :["+message+"]");
+		}
+		TextView msgTv = (TextView) findViewById(R.id.time);
+		msgTv.setText(message);
+		setRorateUp();
+		showNext();
+		handler.sendEmptyMessageDelayed(0, 1500);
+	}
+
+	Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			setRorateUp();
+			setDisplayedChild(0);
+			mShowing = false;
+		}
+	};
+	
 	private Rotate3dAnimation createAnim(float start, float end,
 			boolean turnIn, boolean turnUp) {
 		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
