@@ -19,6 +19,11 @@ public class User {
 	 * 密码
 	 */
 	private String password;
+	
+	/**
+	 * 用户主页背景
+	 */
+	private String homeBack;
 
 	/**
 	 * 用户形象照
@@ -66,6 +71,17 @@ public class User {
 	private String joinShared;
 
 	private List<TradingAccount> tradeInfos;
+
+	
+	
+
+	public String getHomeBack() {
+		return homeBack;
+	}
+
+	public void setHomeBack(String homeBack) {
+		this.homeBack = homeBack;
+	}
 
 	public String getUsername() {
 		return username;
