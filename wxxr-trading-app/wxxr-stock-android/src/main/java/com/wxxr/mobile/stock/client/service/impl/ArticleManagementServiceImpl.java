@@ -37,7 +37,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		String[] articleUrls = {"http://www.google.com.hk/","http://www.baidu.com","http://www.sina.com","http://www.163.com"};
 		String[] imageUrls = {"http://www.google.com.hk/logos/doodles/2013/raymond-loewys-120th-birthday-ca-fr-us-nl-uk-ie-6388231276855296-hp.jpg",
 				"http://www.baidu.com/img/bdlogo.gif","http://ui.sina.com/assets/img/www/worldmap.jpg",
-				"http://www.163.com/#f=toplogo"};
+				"http://image.gxq.com.cn/upload/ad/2013/11/07/bd7bae043de331091b93d9394eec0298.jpg"};
 		for (int i = 0; i < 4; i++) {
 			Article article = new Article();
 			article.setId(String.format("%s", i));
