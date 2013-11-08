@@ -268,5 +268,16 @@ public class ViewReference implements IViewReference {
 	 */
 	public void show(boolean backable) {
 		delegate.show(backable);
+	}
+
+	/**
+	 * @param key
+	 * @param val
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#setAttribute(com.wxxr.mobile.core.ui.api.AttributeKey, java.lang.Object)
+	 */
+	public <T> IUIComponent setAttribute(AttributeKey<T> key, T val) {
+		 delegate.setAttribute(key, val);
+		 return this;
 	}	
 }

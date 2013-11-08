@@ -17,6 +17,8 @@ public interface IUIComponent extends IAdaptable,Cloneable {
 	<T> T getAttribute(AttributeKey<T> key);
 	boolean hasAttribute(AttributeKey<?> key);
 	 Set<AttributeKey<?>> getAttributeKeys();
+	 <T> IUIComponent setAttribute(AttributeKey<T> key, T val);
+	 
 	 
 	IUIContainer<?> getParent();
 	boolean isSubsidiaryOf(IUIComponent component);
