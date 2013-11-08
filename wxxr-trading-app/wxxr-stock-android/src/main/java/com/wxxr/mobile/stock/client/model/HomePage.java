@@ -141,6 +141,11 @@ public abstract class HomePage extends PageBase {
 			if(leftMenu.isOnShow()){
 				leftMenu.hide();
 			}
+			String title = ((UICommand)rightMenu.getCommand(name)).getAttribute(AttributeKeys.title);
+			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
+			if(tool != null){
+				tool.setUpdateTitle(title, null);
+			}
 			return name;
 		}
 		return null;
@@ -200,6 +205,13 @@ public abstract class HomePage extends PageBase {
 	
 	@OnShow
 	void testNotification(){
+		if(rightMenu!=null) {
+			String title = ((UICommand)rightMenu.getCommand("home")).getAttribute(AttributeKeys.title);
+			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
+			if(tool != null){
+				tool.setUpdateTitle(title, null);
+			}
+		}
 		final Runnable[] tasks = new Runnable[1];
 		final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 		tasks[0] = new Runnable() {
@@ -210,9 +222,9 @@ public abstract class HomePage extends PageBase {
 				if(tool != null){
 					tool.showNotification("当前时间 :"+fmt.format(new Date()), null);
 				}
-				AppUtils.runOnUIThread(tasks[0], 4, TimeUnit.SECONDS);
+				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
 			}
 		};
-		AppUtils.runOnUIThread(tasks[0], 4, TimeUnit.SECONDS);
+		AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
 	}
 }

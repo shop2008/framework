@@ -20,7 +20,8 @@
 
     <TextView
         android:id="@id/tv_title_content"
-        style="@style/style_title_text" />
+        style="@style/style_title_text" 
+        bind:field="title"/>
 
     <ImageButton
         android:id="@id/ib_toggle_right_menu"

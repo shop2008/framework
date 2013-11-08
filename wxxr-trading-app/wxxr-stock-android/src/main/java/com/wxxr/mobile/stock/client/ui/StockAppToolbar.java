@@ -16,7 +16,8 @@ import com.wxxr.mobile.stock.client.IStockAppToolbar;
  */
 public abstract class StockAppToolbar extends AbstractToolbarView implements IStockAppToolbar {
 	public static final String MESSAGE_FIELD_NAME = "message";
-
+	public static final String TITLE_FIELD_NAME = "title";
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.client.IStockAppToolbar#showNotification(java.lang.String, java.util.Map)
 	 */
@@ -35,5 +36,19 @@ public abstract class StockAppToolbar extends AbstractToolbarView implements ISt
 			}
 		}
 	}
-
+	@Override
+	public void setUpdateTitle(String message, Map<String, String> parameters) {
+		IDataField<String> field = getField(TITLE_FIELD_NAME);
+		if(field != null){
+			field.setValue(message);
+			if(parameters != null){
+				for (String key : parameters.keySet()) {
+					AttributeKey<?> attrKey = getUIContext().getWorkbenchManager().getFieldAttributeManager().getAttributeKey(key);
+					if(attrKey != null){
+						attrKey.updateAttributeWithString(field, parameters.get(key));
+					}
+				}
+			}
+		}
+	}
 }

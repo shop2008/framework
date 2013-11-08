@@ -43,6 +43,11 @@ public abstract class ToolBarView extends StockAppToolbar {
 	String message;
 	
 	DataField<String> messageField;
+	
+	@Field(valueKey="text")
+	String title;
+	
+	DataField<String> titleField;
 
 	@Command
 	String handleClick(InputEvent event){

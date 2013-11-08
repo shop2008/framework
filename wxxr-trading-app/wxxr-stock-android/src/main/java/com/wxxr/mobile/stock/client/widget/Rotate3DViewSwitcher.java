@@ -62,6 +62,11 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 		setOutAnimation(mOutUp);
 	}
 
+	public void setTitle(String title) {
+		TextView titleTv = (TextView) findViewById(R.id.tv_title_content);
+		titleTv.setText(title);
+	}
+	
 	public void setText(String message) {
 		showNotification(message);
 	}
