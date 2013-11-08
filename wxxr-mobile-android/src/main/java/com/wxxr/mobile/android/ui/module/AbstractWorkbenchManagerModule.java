@@ -24,6 +24,7 @@ import com.wxxr.mobile.android.ui.updater.ImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.VisibleAttributeUpdater;
+import com.wxxr.mobile.android.ui.updater.WebUrlAttributeUpdater;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -134,6 +135,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerAttributeUpdater("visible", new VisibleAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new TextAttributeUpdater());
 		mgr.registerAttributeUpdater("textColor", new TextColorAttributeUpdater());
+		mgr.registerAttributeUpdater("webUrl", new WebUrlAttributeUpdater());
 	}
 	
 	/* (non-Javadoc)
