@@ -78,7 +78,9 @@
                         android:layout_toRightOf="@+id/imageView1"
                         android:paddingLeft="10dp"
                         android:text="@string/tv_default_text"
-                        bind:field="userNickName" />
+                        bind:field="userNickName" 
+                        bind:on_Click="setNickName"
+                        />
 
                     <Button
                         android:layout_width="wrap_content"

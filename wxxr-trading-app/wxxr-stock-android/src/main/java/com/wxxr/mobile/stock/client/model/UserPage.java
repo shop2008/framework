@@ -14,6 +14,8 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -33,7 +35,7 @@ import com.wxxr.mobile.stock.client.utils.ColorUtils;
  */
 @View(name = "user_page")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
-public abstract class UserPage extends PageBase {
+public abstract class UserPage extends PageBase implements IModelUpdater {
 
 	/**
 	 * 用户形象照
@@ -89,6 +91,12 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "visible")
 	boolean jNoSharedVisiable;
 
+	@Field
+	String alteredUserIcon = null;
+
+	@Field
+	String alteredUserHome = null;
+
 	@Field(valueKey = "backgroundImageURI")
 	String userHomeBack;
 
@@ -117,9 +125,9 @@ public abstract class UserPage extends PageBase {
 
 	@OnShow
 	protected void initData() {
+
 		user = getUIContext().getKernelContext()
 				.getService(IUserManagementService.class).fetchUserInfo();
-
 		if (user != null) {
 			List<TradingAccount> tradeInfos = user.getTradeInfos();
 			joinTradeInfos = new ArrayList<TradingAccount>();
@@ -141,6 +149,7 @@ public abstract class UserPage extends PageBase {
 			challengeTradeInfosField.setValue(challengeTradeInfos);
 			showView();
 		}
+
 	}
 
 	protected void showView() {
@@ -160,8 +169,8 @@ public abstract class UserPage extends PageBase {
 	 */
 	private void setUserHomeBack(String homeBack) {
 		if (TextUtils.isEmpty(homeBack)) {
-			this.userHomeBack = "resourceId:drawable/bg_default";
-			this.userHomeBackField.setValue("resourceId:drawable/bg_default");
+			this.userHomeBack = "resourceId:drawable/back1";
+			this.userHomeBackField.setValue("resourceId:drawable/back1");
 		} else {
 			this.userHomeBack = homeBack;
 			this.userHomeBackField.setValue(homeBack);
@@ -204,20 +213,62 @@ public abstract class UserPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "personal_setting", description = "To Personal_setting UI")
+	@Command(commandName = "personal_setting", 
+			description = "To Personal_setting UI")
 	String personal_setting(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
+
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("curUserIcon", userIconField.getValue());
-			map.put("curUserHomeBack", userHomeBackField.getValue());
+			map.put("curUserIcon", this.userIcon);
+			map.put("curUserHomeBack", this.userHomeBack);
 			getUIContext()
 					.getWorkbenchManager()
 					.getPageNavigator()
 					.showPage(
 							getUIContext().getWorkbenchManager().getWorkbench()
-									.getPage("user_self_define"), map, null);
+									.getPage("user_self_define"), map,
+							new IPageCallback() {
+
+								@Override
+								public void onShow(IPage page) {
+
+								}
+
+								@Override
+								public void onHide(IPage page) {
+
+									/* 处理回调 */
+									alteredUserIcon = page
+											.getAttribute(AttributeKeys.text);
+									if (alteredUserIcon != null) {
+										
+										userIcon = alteredUserIcon;
+										userIconField.setValue(alteredUserIcon);
+									}
+
+									alteredUserHome = page
+											.getAttribute(AttributeKeys.name);
+
+									if (alteredUserHome != null) {
+										
+										userHomeBack = alteredUserHome;
+										userHomeBackField.setValue(alteredUserHome);
+									}
+								}
+
+								@Override
+								public void onDestroy(IPage page) {
+									// TODO Auto-generated method stub
+
+								}
+
+								@Override
+								public void onCreate(IPage page) {
+									// TODO Auto-generated method stub
+
+								}
+							});
 		}
 		return null;
 	}
@@ -227,28 +278,28 @@ public abstract class UserPage extends PageBase {
 		@Override
 		public void onCreate(IPage page) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onShow(IPage page) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onHide(IPage page) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onDestroy(IPage page) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
-	
+
 	/**
 	 * 挑战交易盘-"查看更多"事件处理
 	 * 
@@ -264,8 +315,12 @@ public abstract class UserPage extends PageBase {
 		}
 		return null;
 	}
-
+	
+	
+	
+	
 	/**
+	 * 
 	 * 参赛交易盘-"查看更多"事件处理
 	 * 
 	 * @param event
@@ -298,8 +353,8 @@ public abstract class UserPage extends PageBase {
 			this.totalScoreField.setAttribute(AttributeKeys.textColor,
 					ColorUtils.STOCK_RED);
 		} else {
-			this.totalScoreField.setAttribute(
-					AttributeKeys.foregroundColor, ColorUtils.STOCK_GREEN);
+			this.totalScoreField.setAttribute(AttributeKeys.textColor,
+					ColorUtils.STOCK_GREEN);
 		}
 	}
 
@@ -373,5 +428,24 @@ public abstract class UserPage extends PageBase {
 			System.out.println((Integer) event.getProperty("position"));
 		}
 		return null;
+	}
+
+	
+	/**
+	 * 设置昵称
+	 * @param event
+	 * @return
+	 */
+	@Command(commandName="setNickName")
+	String setNickName(InputEvent event) {
+		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			getUIContext().getWorkbenchManager().getWorkbench().showPage("user_nick_set", null, null);
+		}
+		return null;
+	}
+	
+	@Override
+	public void updateModel(Object value) {
+
 	}
 }

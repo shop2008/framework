@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  	xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:orientation="vertical" >
 
 	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	   android:background="@drawable/title_bar_bj"
-	    android:paddingLeft="8dp"
-	    android:paddingRight="8dp"
-	    >
-		<ImageView
-	        android:id="@+id/back_btn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:src="@drawable/list_button" /> 
-	    <TextView 
-	        android:id="@id/tv_title_content"
-	        style="@style/style_title_text"
-	        android:text="我的账户"
-	        />
-	</RelativeLayout>    
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_bar_bj"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/tv_title_personal_page" />
+
+        <ImageButton
+            android:id="@id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
+
+
+    </RelativeLayout> 
     
     
     <TableLayout
@@ -76,7 +82,9 @@
                 android:textColor="@color/black"
                 android:layout_weight="1"
                 android:text="@string/tv_default_text"
-                android:gravity="center" />
+                android:gravity="center" 
+                bind:field="userBalance"
+                />
 
             <TextView
                 android:id="@+id/tv_freeze_text"
@@ -85,7 +93,9 @@
                 android:textColor="@color/black"
                 android:layout_weight="1"
                 android:text="@string/tv_default_text"
-                android:gravity="center" />
+                android:gravity="center" 
+                bind:field="userFreeze"
+                />
 
             <TextView
                 android:id="@+id/tv_usable_text"
@@ -94,7 +104,9 @@
                 android:textColor="@color/black"
                 android:layout_weight="1"
                 android:text="@string/tv_default_text"
-                android:gravity="center" />
+                android:gravity="center" 
+                bind:field="userAvalible"
+                />
         </TableRow>
     </TableLayout>
 
@@ -111,6 +123,8 @@
             android:layout_height="wrap_content" 
             android:clickable="true"
             android:background="@drawable/bg_rl_user_account"
+            bind:field="*"
+            bind:on_Click="drawCash"
             >
 
             <TextView
@@ -141,6 +155,8 @@
             android:layout_height="wrap_content" 
             android:clickable="true"
             android:background="@drawable/bg_rl_user_account"
+            bind:field="*"
+            bind:on_Click="incomeDetail"
             >
 
             <TextView

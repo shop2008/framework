@@ -46,6 +46,43 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+                <activity
+            android:name=".ui.UserSelfDefinePage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        
+        <activity
+            android:name=".ui.UserPicSetPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        
+        
+        <activity
+            android:name=".ui.UserHomeBackSetPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        
+        <activity
+            android:name=".ui.UserNickSetPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        
+        <activity
+            android:name=".ui.MyAccountPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        
+        <activity
+            android:name=".ui.AppSetPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
         </application>
 
      

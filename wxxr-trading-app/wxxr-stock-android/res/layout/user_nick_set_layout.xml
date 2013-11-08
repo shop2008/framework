@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_bar_bj"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/title_set_nick" />
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
+    </RelativeLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/et_stock_input"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        >
+        
+        <EditText 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            bind:field="newNickName"
+            />
+        
+    </LinearLayout>
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="@color/white"
+        android:text="@string/nick_set_instruction"
+        />
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        >
+        <Button 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/btn_done_text"
+            bind:field="*"
+            bind:on_Click="done"
+            />
+        
+    </LinearLayout>
+</LinearLayout>

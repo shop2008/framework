@@ -110,6 +110,7 @@
     <string name="tv_mobile_auth_des">手机号用于登录</string>
     <!-- 提现认证 -->
     <string name="tv_cash_auth">提现认证</string>
+    <string name="tv_not_auth">未认证</string>
     <string name="tv_cash_no_auth_des">经认证后可把实盘收益提现</string>
     <string name="tv_cash_authed_des">银行卡用于提取收益</string>
     <string name="tv_account_name">户名:</string>
@@ -172,6 +173,16 @@
 	<string name="select_from_system_pics_text">从系统头像中选择</string>
 	<string name="select_from_system_back_text">从系统背景中选择</string>
 	<string name="title_user_homeback_set">背景设置</string>
+	
+	<!-- 设置昵称 -->
+	<string name="title_set_nick">设置昵称</string>
+	<string name="nick_set_instruction">交易操作需要您设置一个昵称，创建的昵称一经确定，不可更改!</string>
+	
+	<!-- 我的认证 -->
+	<string name="title_my_auth">我的认证</string>
+	
+	
+	
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">
         <item>Mercury</item>

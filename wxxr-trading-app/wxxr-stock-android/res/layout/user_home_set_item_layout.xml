@@ -12,11 +12,10 @@
         android:orientation="vertical" >
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="97dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_launcher"
-            bind:field="userIcon" />
+            bind:field="userHomeBack" />
 
         <CheckBox
             android:layout_width="wrap_content"

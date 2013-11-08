@@ -46,13 +46,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		User user = new User();
 	
 		user.setNickName("王五");
-		user.setUserPic("resourceId:drawable/zpb");
+		user.setUserPic("resourceId:drawable/head1");
 		user.setBalance("1000");
 		user.setScore("20");
 		user.setUsername("李四");
 		user.setTotoalProfit("20000.00");
 		user.setTotoalScore("12000.00");
-		user.setChallengeShared("20");
+		user.setChallengeShared("0");
 		user.setJoinShared("19");
 		
 		List<TradingAccount> tradeInfos = new ArrayList<TradingAccount>();

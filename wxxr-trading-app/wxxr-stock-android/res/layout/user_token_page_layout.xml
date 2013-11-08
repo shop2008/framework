@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/qsxq"
@@ -12,18 +13,21 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
-        <ImageView
-            android:id="@+id/back_btn"
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/title_my_auth" />
+
+        <ImageButton
+            android:id="@id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/list_button" />
-
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="我的认证" />
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
     </RelativeLayout>
 
     <ScrollView
@@ -50,7 +54,6 @@
                 android:paddingBottom="18dp" >
 
                 <TextView
-                    android:id="@+id/textView1"
                     style="@style/qsxqTextTitleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,7 +68,6 @@
                     android:layout_marginTop="0dp" >
 
                     <TextView
-                        android:id="@+id/textView2"
                         style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,7 +91,6 @@
                     android:layout_marginTop="8dp" >
 
                     <TextView
-                        android:id="@+id/textView2"
                         style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -97,12 +98,11 @@
                         android:text="@string/tv_mobile_authed_number" />
 
                     <TextView
-                        android:id="@+id/textView3"
                         style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="15101098765" />
+                        bind:field="authMobileNum" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -156,7 +156,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:visibility="gone" >
+                        android:visibility="visible" 
+                        bind:field="notAuthBodyVisible"
+                        >
 
                         <RelativeLayout
                             android:layout_width="fill_parent"
@@ -165,7 +167,6 @@
                             android:layout_marginRight="26dp" >
 
                             <TextView
-                                android:id="@+id/textView2"
                                 style="@style/qsxqTextTitleStyle_item_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -173,12 +174,12 @@
                                 android:text="@string/tv_auth_state_label" />
 
                             <TextView
-                                android:id="@+id/textView3"
                                 style="@style/qsxqTextTitleStyle_item_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:text="未认证" />
+                                android:text="@string/tv_not_auth"
+                                />
                         </RelativeLayout>
 
                         <Button
@@ -188,10 +189,12 @@
                             android:background="@drawable/red_btn_back"
                             android:text="@string/btn_now_auth_text"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
+                            android:textSize="15sp" 
+                            bind:field="*"
+                            bind:on_Click="bankAuth"
+                            />
 
                         <TextView
-                            android:id="@+id/textView2"
                             style="@style/qsxqTextTitleStyle_item_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -205,9 +208,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="30dp"
-                            android:layout_marginRight="26dp"
-                        android:orientation="vertical" >
-
+                        android:layout_marginRight="26dp"
+                        android:orientation="vertical" 
+                        bind:field="authedBodyVisible"
+                        android:visibility="gone"
+                        >
+							
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -224,7 +230,8 @@
                                 style="@style/qsxqTextTitleStyle_item_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="张XX" />
+                                bind:field="accountName"
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -243,7 +250,8 @@
                                 style="@style/qsxqTextTitleStyle_item_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="工商银行" />
+								bind:field="bankName"                                
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -262,7 +270,8 @@
                                 style="@style/qsxqTextTitleStyle_item_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="xxxxxxxxxxx" />
+								bind:field="bankNum"                                
+                                />
                         </LinearLayout>
 
                         <Button
@@ -272,17 +281,19 @@
                             android:background="@drawable/red_btn_back"
                             android:text="@string/btn_switch_bank_text"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
-                        
-                        <TextView 
+                            android:textSize="15sp" 
+                            bind:field="*"
+                            bind:on_Click="switchBankCard"
+                            />
+
+                        <TextView
                             android:id="@+id/textView2"
                             style="@style/qsxqTextTitleStyle_item_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dip"
-                            android:text="@string/tv_cash_authed_des"
-                            />
+                            android:text="@string/tv_cash_authed_des" />
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
