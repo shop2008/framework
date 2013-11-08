@@ -18,4 +18,8 @@ public interface IPage extends IView {
 	IViewGroup createViewGroup(String grpName);
 	void showView(String viewId,boolean backable);
 	void hideView(String viewId);
+	void onToolbarCreated(IAppToolbar toolbar);
+	void onToolbarShow();
+	void onToolbarHide();
+	void onToolbarDestroy();
 }

@@ -53,8 +53,15 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 	 * @see com.wxxr.mobile.core.ui.api.IAppToolbar#setCurrentPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
-	public void setCurrentPage(IPage page) {
+	public void attachPage(IPage page) {
 		this.activePage = page;
+	}
+
+	@Override
+	public void dettachPage(IPage page) {
+		if(this.activePage == page){
+			this.activePage = null;
+		}
 	}
 
 	/* (non-Javadoc)

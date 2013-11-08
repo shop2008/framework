@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.List;
 
+import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
@@ -16,7 +17,7 @@ import com.wxxr.mobile.core.ui.api.IViewGroup;
  */
 public abstract class PageBase extends ViewBase implements IPage {
 
-	
+	private IAppToolbar toolbar;
 
 	public PageBase() {
 		super();
@@ -100,5 +101,49 @@ public abstract class PageBase extends ViewBase implements IPage {
 		return vg;
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPage#onToolbarCreated(com.wxxr.mobile.core.ui.api.IAppToolbar)
+	 */
+	@Override
+	public void onToolbarCreated(IAppToolbar toolbar) {
+		this.toolbar = toolbar;
+		this.toolbar.attachPage(this);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPage#onToolbarShow()
+	 */
+	@Override
+	public void onToolbarShow() {		
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPage#onToolbarHide()
+	 */
+	@Override
+	public void onToolbarHide() {
+	}
+
+
+	protected IAppToolbar getAppToolbar() {
+		return this.toolbar;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPage#onToolbarDestroy()
+	 */
+	@Override
+	public void onToolbarDestroy() {
+		if(this.toolbar != null){
+			this.toolbar.dettachPage(this);
+			this.toolbar = null;
+		}
+	}
 	
 }

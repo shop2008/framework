@@ -278,16 +278,4 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getToolbar()
-	 */
-	@Override
-	public IAppToolbar getToolbar() {
-		if(this.rootView instanceof IAppToolbar){
-			return (IAppToolbar)this.rootView;
-		}
-		return null;
-	}
-
-
 }
