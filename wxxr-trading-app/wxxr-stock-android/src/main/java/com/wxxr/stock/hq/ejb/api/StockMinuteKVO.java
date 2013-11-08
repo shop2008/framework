@@ -10,7 +10,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "StockMinuteK")
-public class StockMinuteKVO extends AuditableLKeyObject {
+public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
     private static final long serialVersionUID = 1L;
     @XmlElement(name = "date")
     private String date; //

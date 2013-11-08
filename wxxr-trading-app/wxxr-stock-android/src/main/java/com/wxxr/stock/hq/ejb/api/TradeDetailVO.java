@@ -2,8 +2,7 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 /**
  * ������ϸ
  * @author zhengjincheng
@@ -20,7 +19,7 @@ public class TradeDetailVO implements Serializable {
 	Long buyvol=0L;//���̳ɽ���
 	Long sellvol=0L;//���̳ɽ���
 
-    @XmlElement
+    
 	public Long getBuyvol() {
 		return buyvol;
 	}
@@ -28,49 +27,49 @@ public class TradeDetailVO implements Serializable {
 	public void setBuyvol(Long buyvol) {
 		this.buyvol = buyvol;
 	}
-    @XmlElement
+   
 	public Long getSellvol() {
 		return sellvol;
 	}
 	public void setSellvol(Long sellvol) {
 		this.sellvol = sellvol;
 	}
-	@XmlElement
+	
 	public String getMarketCode() {
 		return marketCode;
 	}
 	public void setMarketCode(String marketCode) {
 		this.marketCode = marketCode;
 	}
-	@XmlElement
+	
 	public String getHqTime() {
 		return HqTime;
 	}
 	public void setHqTime(String hqTime) {
 		HqTime = hqTime;
 	}
-	@XmlElement
+	
 	public String getHqDate() {
 		return HqDate;
 	}
 	public void setHqDate(String hqDate) {
 		HqDate = hqDate;
 	}
-	@XmlElement
+	
 	public int getJyfx() {
 		return jyfx;
 	}
 	public void setJyfx(int jyfx) {
 		this.jyfx = jyfx;
 	}
-	@XmlElement
+	
 	public Long getPrice() {
 		return price;
 	}
 	public void setPrice(Long price) {
 		this.price = price;
 	}
-	@XmlElement
+	
 	public String getQuotationCode() {
 		return quotationCode;
 	}
