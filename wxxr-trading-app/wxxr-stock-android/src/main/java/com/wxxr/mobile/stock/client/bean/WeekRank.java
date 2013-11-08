@@ -1,7 +1,7 @@
 package com.wxxr.mobile.stock.client.bean;
 
 
-public class WeekRankVO{
+public class WeekRank{
 
 
 	private String nickName;//昵称
