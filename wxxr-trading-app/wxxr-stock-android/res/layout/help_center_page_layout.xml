@@ -3,15 +3,21 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
     
     <com.wxxr.mobile.stock.client.widget.RefreshListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@id/lv_help_center_detail"
-        android:scrollbars="none"
         bind:itemViewId="helpCenterItemView"
 	    bind:field="helpArticles"
+	    android:choiceMode="singleChoice"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:cacheColorHint="#00000000"
         >
     </com.wxxr.mobile.stock.client.widget.RefreshListView>
 </FrameLayout>

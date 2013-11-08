@@ -34,7 +34,7 @@ public abstract class TradingWinnerView extends ViewBase{
 	@OnShow	
 	protected void updateEarnRankList() {
 		earnRankList = new ArrayList<EarnRankItem>();
-		for(int i=0;i<10;i++){
+		for(int i=0;i<5;i++){
 			EarnRankItem items = new EarnRankItem();
 			items.setTitle("动视暴雪第三季度财报：净利润同比下滑75%-----------"+i);
 			items.setImgUrl("http://hqpiczs.dfcfw.com/EM_Quote2010PictureProducter/picture/0000011R.png");

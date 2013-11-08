@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
-	
-	<include layout="@layout/layout_title_bar"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:background="@color/page_background_color">
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -38,7 +38,13 @@
 	<ListView
 	    android:id="@+id/listView1"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    bind:itemViewId="ChampionShipItemView"
+	    bind:field="ChampionShip"
+	    android:choiceMode="singleChoice"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:cacheColorHint="#00000000" >
 	</ListView>
 
 </LinearLayout>

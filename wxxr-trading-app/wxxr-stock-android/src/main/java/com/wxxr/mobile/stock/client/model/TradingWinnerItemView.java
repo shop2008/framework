@@ -47,8 +47,8 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 			this.textField.setValue(this.text);
 			this.imageUrl = data.getImgUrl();
 			this.imageUrlField.setValue(this.imageUrl);
-			this.imageUrlField.setAttribute(AttributeKeys.visible, false);
-			this.isClose = false;
+			this.imageUrlField.setAttribute(AttributeKeys.visible, true);
+			this.isClose = true;
 			this.isCloseField.setValue(this.isClose);
 		}
 		postion++;
