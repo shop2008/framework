@@ -161,6 +161,17 @@
 	<string name="view_more_text">查看更多</string>
 	<string name="user_nick_name">用户昵称</string>
 	<string name="user_personal_setting">个性化</string>
+	<string name="user_no_shared_text">未分享成功操作</string>
+	<string name="title_my_account">我的账号</string>
+	<string name="label_define_pic">个性头像</string>
+	<string name="label_user_home_back">主页背景</string>
+	
+	<!-- 头像设置 -->
+	<string name="title_user_pic_set">头像设置</string>
+	<string name="btn_done_text">确定</string>
+	<string name="select_from_system_pics_text">从系统头像中选择</string>
+	<string name="select_from_system_back_text">从系统背景中选择</string>
+	<string name="title_user_homeback_set">背景设置</string>
 	<!-- Test string for slider layout -->
 	<string-array name="planets_array">
         <item>Mercury</item>
