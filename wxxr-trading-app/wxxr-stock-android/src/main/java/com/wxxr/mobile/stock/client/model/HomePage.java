@@ -62,13 +62,14 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="首页",icon="resourceId:drawable/home")
+				@UIItem(id="left",label="左菜单",icon="resourceId:drawable/list_button")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :left was clicked !");
 			}
+			rightMenu.hide();
 			if(leftMenu.isOnShow()){
 				leftMenu.hide();
 			}else{
@@ -79,13 +80,14 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="right",label="赚钱榜",icon="resourceId:drawable/zpb")
+				@UIItem(id="right",label="右菜单",icon="resourceId:drawable/message_button")
 			}
 	)
 	String toolbarClickedRight(InputEvent event){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :right was clicked !");
 			}
+			leftMenu.hide();
 			if(rightMenu.isOnShow()){
 				rightMenu.hide();
 			}else{
@@ -96,7 +98,7 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="search",label="行情中心",icon="resourceId:drawable/hqzx")
+				@UIItem(id="search",label="搜索",icon="resourceId:drawable/finds")
 			}
 	)
 	String toolbarClickedSearch(InputEvent event) {

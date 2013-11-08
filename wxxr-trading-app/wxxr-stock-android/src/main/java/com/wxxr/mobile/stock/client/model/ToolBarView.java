@@ -52,6 +52,13 @@ public abstract class ToolBarView extends StockAppToolbar {
 	@Command
 	String handleClick(InputEvent event){
 		String name = event.getEventSource().getName();
+		if("leftIcon".equals(name)){
+			name = "left";
+		} else if("rightIcon".equals(name)){
+			name = "right";
+		} else if("searchIcon".equals(name)){
+			name = "search";
+		}
 		IUICommand cmd = getMenuItem(name);
 		if(cmd != null){
 			cmd.invokeCommand(null, event);
