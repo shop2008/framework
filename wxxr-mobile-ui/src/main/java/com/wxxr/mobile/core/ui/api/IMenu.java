@@ -8,7 +8,7 @@ package com.wxxr.mobile.core.ui.api;
  * @author neillin
  *
  */
-public interface IMenu extends IUIComponent{
+public interface IMenu extends IUICommand{
 	String getName();
 	String[] getCommandIds();
 	IUICommand getCommand(String cmd);
