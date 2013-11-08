@@ -16,7 +16,7 @@ public class MegagameRank{
 	private Long totalGain;//总盈亏2
 	private String gainRate;//总盈亏率1
 	private int gainRates;
-	private String uesrId;//用户id
+	private String userId;//用户id
 	private long acctID;
 	
 	
@@ -28,11 +28,11 @@ public class MegagameRank{
 		this.acctID = acctID;
 	}
 	
-	public String getUesrId() {
-		return uesrId;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUesrId(String uesrId) {
-		this.uesrId = uesrId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	
