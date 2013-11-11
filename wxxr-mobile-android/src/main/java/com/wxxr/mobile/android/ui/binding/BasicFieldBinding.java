@@ -58,10 +58,10 @@ public class BasicFieldBinding implements IFieldBinding {
 			for (AttributeKey<?> attrKey : keys) {
 				updateControl(attrKey,field.getAttribute(attrKey));
 			}
-			if(field instanceof IDataField<?>){
-				AttributeKey<?> attrKey = ((IDataField<?>)field).getValueKey();
-				updateControl(attrKey,((IDataField<?>)field).getValue());
-			}
+//			if(field instanceof IDataField<?>){
+//				AttributeKey<?> attrKey = ((IDataField<?>)field).getValueKey();
+//				updateControl(attrKey,((IDataField<?>)field).getValue());
+//			}
 		}
 	}
 

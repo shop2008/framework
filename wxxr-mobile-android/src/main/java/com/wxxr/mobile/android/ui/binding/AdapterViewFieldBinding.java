@@ -69,7 +69,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		}
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
 				getAndroidBindingContext().getUIContext(), provider,
-				itemViewId, headerViewId, footerViewId);
+				itemViewId);
 		Object list = getUIControl();
 		if (list instanceof ListView) {
 			IWorkbenchRTContext c = getWorkbenchContext();

@@ -35,10 +35,10 @@ public class GenericListAdapter extends BaseAdapter {
 	private final IObservableListDataProvider observable;
 	private final IWorkbenchRTContext context;
 	private final Context uiContext;
-	private final String itemViewId,headerViewId, footerViewId;
+	private final String itemViewId;
 	private List<ObserverDataChangedListerWrapper> listeners;
 	
-	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId,String headerViewId,String footerViewId){
+	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId){
 		if((ctx == null)||(uiCtx == null)||(prov == null)||(viewId == null)){
 			throw new IllegalArgumentException("All arguments cannot be NULL");
 		}
@@ -46,8 +46,6 @@ public class GenericListAdapter extends BaseAdapter {
 		this.provider = prov;
 		this.itemViewId = viewId;
 		this.uiContext = uiCtx;
-		this.footerViewId = footerViewId;
-		this.headerViewId = headerViewId;
 		if(prov instanceof IObservableListDataProvider){
 			this.observable = (IObservableListDataProvider)prov;
 		}else{
