@@ -50,6 +50,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 		public void setValue(Object value) {
 			localValue = getValueKey().getValueType().cast(value);
 			removeAttribute(AttributeKeys.validationErrors);
+			setAttribute(valueKey, localValue);
 			if(domainModel != null){
 				// call domain model binding to update domain model
 					ValidationError[] errs = domainModel.updateValue(value);
