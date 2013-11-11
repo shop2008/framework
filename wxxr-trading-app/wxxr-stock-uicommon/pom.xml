@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wxxr.mobile</groupId>
-	<artifactId>wxxr-mobile-stock-backend</artifactId>
+	<artifactId>wxxr-stock-uicommon</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
-	<name>wxxr-mobile-stock-backend</name>
+	<name>wxxr-stock-uicommon</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
