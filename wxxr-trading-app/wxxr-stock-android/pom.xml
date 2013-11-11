@@ -69,6 +69,12 @@
               <artifactId>wxxr-mobile-web</artifactId>
                 <version>${framework.version}</version>
             </dependency>
+            <!-- 后端服务 -->
+             <dependency>
+              <groupId>com.wxxr.mobile</groupId>
+              <artifactId>wxxr-mobile-stock-backend</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
