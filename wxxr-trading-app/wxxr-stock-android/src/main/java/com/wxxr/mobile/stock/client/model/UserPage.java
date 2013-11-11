@@ -6,13 +6,16 @@ import java.util.List;
 
 import android.text.TextUtils;
 
+import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.api.ApplicationFactory;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -186,8 +189,8 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	@Command(commandName = "back", description = "Back To Last UI")
 	String back(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench()
-					.hidePage("user_page");
+			getUIContext().getWorkbenchManager().getPageNavigator()
+					.hidePage(this);
 		}
 		return null;
 	}
@@ -203,6 +206,7 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 
 			System.out.println("-----manage-----");
+
 		}
 		return null;
 	}
@@ -213,11 +217,26 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "personal_setting", 
-			description = "To Personal_setting UI")
-	String personal_setting(InputEvent event) {
+	@Command(
+			commandName = "personalSet", 
+			description = "To Personal_setting UI", 
+		
+			navigations = { 
+					@Navigation(
+							on = "", 
+							showPage = "userSelfDefine",
+							params = { 
+									@Parameter(name = "curUserIcon", value = "$user.userIcon"),
+									@Parameter(name = "curUserHomeBack", value = "$user.userHomeBack")
+									}
+							) 
+					}
+			)
+	String personalSet(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			
+			//System.out.println("123");
 
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("curUserIcon", this.userIcon);
@@ -227,7 +246,7 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 					.getPageNavigator()
 					.showPage(
 							getUIContext().getWorkbenchManager().getWorkbench()
-									.getPage("user_self_define"), map,
+									.getPage("userSelfDefine"), map,
 							new IPageCallback() {
 
 								@Override
@@ -238,11 +257,11 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 								@Override
 								public void onHide(IPage page) {
 
-									/* 处理回调 */
+									// 处理回调 
 									alteredUserIcon = page
 											.getAttribute(AttributeKeys.text);
 									if (alteredUserIcon != null) {
-										
+
 										userIcon = alteredUserIcon;
 										userIconField.setValue(alteredUserIcon);
 									}
@@ -251,9 +270,10 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 											.getAttribute(AttributeKeys.name);
 
 									if (alteredUserHome != null) {
-										
+
 										userHomeBack = alteredUserHome;
-										userHomeBackField.setValue(alteredUserHome);
+										userHomeBackField
+												.setValue(alteredUserHome);
 									}
 								}
 
@@ -306,8 +326,8 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "challenge_view_more", description = "To Challenge View More")
-	String challenge_view_more(InputEvent event) {
+	@Command(commandName = "challengeViewMore", description = "To Challenge View More")
+	String challengeViewMore(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			System.out.println("-----challenge_view_more-----");
@@ -315,10 +335,7 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		}
 		return null;
 	}
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
@@ -326,8 +343,8 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "join_view_more", description = "To Join View More")
-	String join_view_more(InputEvent event) {
+	@Command(commandName = "joinViewMore", description = "To Join View More")
+	String joinViewMore(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			System.out.println("-----join_view_more-----");
@@ -410,16 +427,16 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 
 	}
 
-	@Command(commandName = "join_item_click")
-	String join_item_click(InputEvent event) {
+	@Command(commandName = "joinItemClick")
+	String joinItemClick(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			System.out.println((Integer) event.getProperty("position"));
 		}
 		return null;
 	}
 
-	@Command(commandName = "challenge_item_click")
-	String challenge_item_click(InputEvent event) {
+	@Command(commandName = "challengeItemClick")
+	String challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 
@@ -430,20 +447,21 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		return null;
 	}
 
-	
 	/**
 	 * 设置昵称
+	 * 
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName="setNickName")
+	@Command(commandName = "setNickName")
 	String setNickName(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench().showPage("user_nick_set", null, null);
+			getUIContext().getWorkbenchManager().getWorkbench()
+					.showPage("user_nick_set", null, null);
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void updateModel(Object value) {
 

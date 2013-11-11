@@ -32,7 +32,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
  * 我的账号界面
  * @author renwenjie
  */
-@View(name="user_self_define")
+@View(name="userSelfDefine")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_define_page_layout")
 public abstract class UserSelfDefinePage extends PageBase implements IModelUpdater {
 

@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:versionCode="1" 
-    android:versionName="1.0.0" 
-    package="com.wxxr.mobile.stock.client">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.wxxr.mobile.stock.client"
+    android:versionCode="1"
+    android:versionName="1.0.0" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16"/>
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
 
-     <application 
-         android:name=".StockApplication" 
-         android:debuggable="true" 
-         android:icon="@drawable/icon" 
-         android:label="@string/app_name" 
-         android:theme="@android:style/Theme.NoTitleBar">
-        <activity android:label="@string/app_name" android:name=".ui.SplashPage">
+    <application
+        android:name=".StockApplication"
+        android:debuggable="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:name=".ui.SplashPage"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -25,17 +29,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.MyAuthPage"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
         
-        <activity
-            android:name=".ui.UserPage"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.WebPage"
             android:configChanges="keyboardHidden|orientation"
@@ -46,51 +40,76 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-                <activity
+
+        <activity
+            android:name=".ui.UserPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.UserSelfDefinePage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.UserPicSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        
-        
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.UserHomeBackSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.UserNickSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.MyAccountPage"
+            android:name=".ui.UserAccountPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserAuthPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserLoginPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ui.WithDrawCashPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         
+        <activity
+            android:name=".ui.UserFindPswPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserRegPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        </application>
+            android:screenOrientation="portrait" />
+    </application>
 
-     
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>
