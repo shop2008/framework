@@ -19,6 +19,7 @@ import com.wxxr.mobile.android.ui.binding.SimpleFieldBinder;
 import com.wxxr.mobile.android.ui.binding.ViewGroupFieldBinder;
 import com.wxxr.mobile.android.ui.updater.BackgroundColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.BackgroupImageURIAttributeUpdater;
+import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.EnabledAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.ImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
@@ -136,6 +137,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerAttributeUpdater("text", new TextAttributeUpdater());
 		mgr.registerAttributeUpdater("textColor", new TextColorAttributeUpdater());
 		mgr.registerAttributeUpdater("webUrl", new WebUrlAttributeUpdater());
+		mgr.registerAttributeUpdater("checked", new CheckBoxAttributeUpdater());
 	}
 	
 	/* (non-Javadoc)

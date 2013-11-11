@@ -52,6 +52,8 @@ public abstract class AttributeKeys {
 	@SuppressWarnings("rawtypes")
 	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
+	
+	public static final AttributeKey<Boolean> checked = new AttributeKey<Boolean>(Boolean.class, "checked");
 	public static final AttributeKey<?>[] keys = new AttributeKey<?>[] {
 			enabled,
 			visible,
@@ -69,7 +71,8 @@ public abstract class AttributeKeys {
 			menuCategory,
 			options,
 			textColor,
-			webUrl
+			webUrl,
+			checked
 	};
 
 	public static AttributeKey<?> getByName(String name){
