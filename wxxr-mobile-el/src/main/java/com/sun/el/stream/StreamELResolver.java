@@ -42,18 +42,13 @@
 
 package com.sun.el.stream;
 
-import java.beans.FeatureDescriptor;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.wxxr.javax.el.ELContext;
-import com.wxxr.javax.el.ELException;
 import com.wxxr.javax.el.ELResolver;
-import com.wxxr.javax.el.LambdaExpression;
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /*
  * This ELResolver intercepts method calls to a Collections, to provide

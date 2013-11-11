@@ -40,20 +40,18 @@
 
 package com.sun.el.util;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-
 
 import com.sun.el.lang.ELSupport;
 import com.wxxr.javax.el.ELException;
 import com.wxxr.javax.el.MethodNotFoundException;
 import com.wxxr.javax.el.PropertyNotFoundException;
+import com.wxxr.mobile.core.util.IntrospectionException;
+import com.wxxr.mobile.core.util.JavaBeanIntrospector;
+import com.wxxr.mobile.core.util.PropertyDescriptor;
 
 /**
  * Utilities for Managing Serialization and Reflection
@@ -229,14 +227,14 @@ public class ReflectionUtil {
         String name = ELSupport.coerceToString(property);
         PropertyDescriptor p = null;
         try {
-            PropertyDescriptor[] desc = Introspector.getBeanInfo(
+            PropertyDescriptor[] desc = JavaBeanIntrospector.getBeanInfo(
                     base.getClass()).getPropertyDescriptors();
             for (int i = 0; i < desc.length; i++) {
                 if (desc[i].getName().equals(name)) {
                     return desc[i];
                 }
             }
-        } catch (IntrospectionException ie) {
+        } catch (Throwable ie) {
             throw new ELException(ie);
         }
         throw new PropertyNotFoundException(MessageFactory.get(

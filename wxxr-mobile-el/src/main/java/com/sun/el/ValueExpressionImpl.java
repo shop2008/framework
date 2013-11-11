@@ -324,7 +324,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
 				@Override
 				public void visit(AstIdentifier node) {
 					String name = node.getImage();
-					if((!names.contains(name))&&(varMapper.resolveVariable(name) == null)){
+					if((!names.contains(name))&&((varMapper == null)||(varMapper.resolveVariable(name) == null))){
 						names.add(name);
 					}
 					super.visit(node);

@@ -59,7 +59,8 @@
 package com.wxxr.javax.el;
 
 import java.util.Iterator;
-import java.beans.FeatureDescriptor;
+
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /**
  * Enables customization of variable, property, method call, and type

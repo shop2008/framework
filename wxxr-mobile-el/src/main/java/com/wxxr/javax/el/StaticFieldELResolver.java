@@ -40,13 +40,13 @@
 
 package com.wxxr.javax.el;
 
-import java.util.Iterator;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Constructor;
+import java.util.Iterator;
 
-import java.beans.FeatureDescriptor;
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /**
  * <p>An {@link ELResolver} for resolving static fields, enum constants and 

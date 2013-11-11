@@ -58,21 +58,22 @@
 
 package com.wxxr.javax.el;
 
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.ref.SoftReference;
-import java.lang.ref.ReferenceQueue;
-import java.beans.FeatureDescriptor;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.beans.IntrospectionException;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.wxxr.mobile.core.util.BeanInfo;
+import com.wxxr.mobile.core.util.FeatureDescriptor;
+import com.wxxr.mobile.core.util.IntrospectionException;
+import com.wxxr.mobile.core.util.JavaBeanIntrospector;
+import com.wxxr.mobile.core.util.PropertyDescriptor;
 
 /**
  * Defines property resolution behavior on objects using the JavaBeans
@@ -220,9 +221,9 @@ public class BeanELResolver extends ELResolver {
         public BeanProperties(Class<?> baseClass) {
             PropertyDescriptor[] descriptors;
             try {
-                BeanInfo info = Introspector.getBeanInfo(baseClass);
+                BeanInfo info = JavaBeanIntrospector.getBeanInfo(baseClass);
                 descriptors = info.getPropertyDescriptors();
-            } catch (IntrospectionException ie) {
+            } catch (Throwable ie) {
                 throw new ELException(ie);
             }
             for (PropertyDescriptor pd: descriptors) {
@@ -632,7 +633,7 @@ public class BeanELResolver extends ELResolver {
 
         BeanInfo info = null;
         try {
-            info = Introspector.getBeanInfo(base.getClass());
+            info = JavaBeanIntrospector.getBeanInfo(base.getClass());
         } catch (Exception ex) {
         }
         if (info == null) {

@@ -17,12 +17,9 @@ import java.util.TreeMap;
  *
  */
 public class JavaBeanIntrospector {
-	private static final String ADD_PREFIX = "add";
-	private static final String REMOVE_PREFIX = "remove";
 	private static final String GET_PREFIX = "get";
 	private static final String SET_PREFIX = "set";
 	private static final String IS_PREFIX = "is";
-	private static final String BEANINFO_SUFFIX = "BeanInfo";
 
 	/*
 	 * Internal method to return *public* methods within a class.
@@ -158,6 +155,32 @@ public class JavaBeanIntrospector {
 	 */
 
 	private PropertyDescriptor[] getTargetPropertyInfo() {
+		
+		// Check if the bean has its own BeanInfo that will provide
+		// explicit information.
+	        PropertyDescriptor[] explicitProperties = null;
+
+		if (superBeanInfo != null) {
+		    // We have no explicit BeanInfo properties.  Check with our parent.
+		    PropertyDescriptor supers[] = superBeanInfo.getPropertyDescriptors();
+		    for (int i = 0 ; i < supers.length; i++) {
+			addPropertyDescriptor(supers[i]);
+		    }
+//		    int ix = superBeanInfo.getDefaultPropertyIndex();
+//		    if (ix >= 0 && ix < supers.length) {
+//			defaultPropertyName = supers[ix].getName();
+//		    }
+		}
+
+		for (int i = 0; i < additionalBeanInfo.length; i++) {
+		    PropertyDescriptor additional[] = additionalBeanInfo[i].getPropertyDescriptors();
+		    if (additional != null) {
+		        for (int j = 0 ; j < additional.length; j++) {
+			    addPropertyDescriptor(additional[j]);
+		        }
+		    }
+		}
+
 
 		// Apply some reflection to the current class.
 
@@ -270,9 +293,9 @@ public class JavaBeanIntrospector {
 //						beanClass.getName());
 //			}
 //		}
-		if(stopClass == null){
-			stopClass = Object.class;
-		}
+//		if(stopClass == null){
+//			stopClass = Object.class;
+//		}
 		Class superClass = beanClass.getSuperclass();
 		if (superClass != stopClass) {
 			superBeanInfo = new JavaBeanIntrospector(superClass, stopClass).getBeanInfo();

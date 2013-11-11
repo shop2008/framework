@@ -58,9 +58,9 @@
 
 package com.wxxr.javax.el;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.beans.FeatureDescriptor;
+
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /**
  * Maintains an ordered composite list of child <code>ELResolver</code>s.

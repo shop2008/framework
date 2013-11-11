@@ -58,13 +58,14 @@
 
 package com.wxxr.javax.el;
 
-import java.beans.FeatureDescriptor;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /**
  * Defines property resolution behavior on instances of {@link java.util.Map}.

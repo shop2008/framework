@@ -59,9 +59,9 @@
 package com.wxxr.javax.el;
 
 import java.lang.reflect.Array;
-import java.util.List;
 import java.util.Iterator;
-import java.beans.FeatureDescriptor;
+
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 /**
  * Defines property resolution behavior on arrays.

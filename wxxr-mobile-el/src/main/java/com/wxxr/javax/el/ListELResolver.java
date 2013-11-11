@@ -58,11 +58,12 @@
 
 package com.wxxr.javax.el;
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.Collections;
 import java.util.ArrayList;
-import java.beans.FeatureDescriptor;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import com.wxxr.mobile.core.util.FeatureDescriptor;
 
 
 /**

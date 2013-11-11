@@ -40,6 +40,7 @@
 
 package com.sun.el.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
@@ -94,7 +95,7 @@ public final class MessageFactory {
     static {
     	bundle = new Properties();
     	try {
-			bundle.load(new StringReader(messages));
+			bundle.load(new ByteArrayInputStream(messages.getBytes()));
 		} catch (IOException e) {
 			log.warn("Failed to load in message", e);
 		}

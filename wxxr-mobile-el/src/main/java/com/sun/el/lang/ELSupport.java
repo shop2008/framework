@@ -40,16 +40,15 @@
 
 package com.sun.el.lang;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 
 import com.sun.el.util.MessageFactory;
-import com.wxxr.javax.el.ELContext;
 import com.wxxr.javax.el.ELException;
 import com.wxxr.javax.el.PropertyNotFoundException;
+import com.wxxr.mobile.core.api.PropertyEditor;
+import com.wxxr.mobile.core.api.PropertyEditorManager;
 
 /**
  * A helper class that implements the EL Specification
