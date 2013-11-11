@@ -3,78 +3,85 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" 
-    android:padding="4dp">
+    android:orientation="vertical" 
+    android:background="@drawable/listview_selected_item1"
+    >
     
-    
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical">
-        
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="4dp"
-            android:gravity="center"
-            android:text="--"
-            bind:field="rankSeq"
-			android:textColor="@color/white"
-            android:background="@color/blue"/>
-
+  <LinearLayout android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:padding="4dp"
+      >
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
+	        android:gravity="center_vertical">
+	        
+	        <TextView
+	            android:layout_width="30dp"
+	            android:layout_height="30dp"
+	            android:layout_marginLeft="4dp"
+	            android:gravity="center"
+	            android:text="--"
+	            bind:field="rankSeq"
+				android:textColor="@color/white"
+	            android:background="@drawable/rank"/>
+	
+		    <TextView 
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="--"
+		        android:textSize="14sp"
+		        bind:field="nickName"
+		        android:layout_marginLeft="8dp"
+		        android:textColor="@color/white"
+		        />
+	        
+	    </LinearLayout>
+	    
+	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="match_parent"
+	        android:gravity="center_vertical"
+	        android:orientation="vertical"
+	        android:layout_weight="1">
+	     <TextView
+	         android:id="@+id/textView1"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:text="--" 
+	         android:textColor="@color/white"
+	         android:gravity="center"
+	         bind:field="maxStockMarket"
+	         android:textSize="14sp"/>
+	
+	     <TextView
+	         android:id="@+id/textView2"
+	         android:layout_width="fill_parent"
+	         android:layout_height="wrap_content"
+	         android:gravity="center"
+	         android:text="--" 
+	          bind:field="maxStockCode"
+	         android:textColor="@color/white"
+	         android:textSize="12sp"
+	         />            
+	        
+	    </LinearLayout>
 	    <TextView 
 	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1"
 	        android:text="--"
+	        bind:field="gainRate"
+	        android:textColor="#BA2514"
 	        android:textSize="14sp"
-	        bind:field="nickName"
-	        android:layout_marginLeft="8dp"
-	        android:textColor="@color/white"
+	        android:gravity="center"
 	        />
-        
-    </LinearLayout>
-    
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:layout_weight="1">
-     <TextView
-         android:id="@+id/textView1"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:text="--" 
-         android:textColor="@color/white"
-         android:gravity="center"
-         bind:field="maxStockMarket"
-         android:textSize="14sp"/>
-
-     <TextView
-         android:id="@+id/textView2"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:gravity="center"
-         android:text="--" 
-          bind:field="maxStockCode"
-         android:textColor="@color/white"
-         android:textSize="12sp"
-         />            
-        
-    </LinearLayout>
-    <TextView 
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="--"
-        bind:field="gainRate"
-        android:textColor="#BA2514"
-        android:textSize="14sp"
-        android:gravity="center"
-        />
-
+      
+  </LinearLayout>  
+	<View android:layout_width="fill_parent"
+	    android:layout_height="0.5dp"
+	    android:background="#303030"/>
     
 </LinearLayout>

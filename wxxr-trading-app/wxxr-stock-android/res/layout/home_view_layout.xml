@@ -96,6 +96,7 @@
 			    android:layout_height="wrap_content"
 			    tlist:tHeaderTitle="T日"
 			    bind:field="tradingT"
+			    style="@style/mListView"
 			    bind:itemViewId="TradingBuyInfoItemView"
 			    >
 			</com.wxxr.mobile.stock.client.widget.TListView>
@@ -106,6 +107,7 @@
 			    android:layout_height="wrap_content"
 			    tlist:tHeaderTitle="T+1日"
 			    bind:field="tradingT1"
+			    style="@style/mListView"
 			    bind:itemViewId="TradingBuyInfoItemView">
 		            
 			</com.wxxr.mobile.stock.client.widget.TListView>                 

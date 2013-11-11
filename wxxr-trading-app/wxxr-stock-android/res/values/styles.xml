@@ -104,4 +104,13 @@
 	    <item name="android:textSize">16sp</item>
 	</style>
 	
+	
+	<style name="mListView">
+	    <item name="android:choiceMode">singleChoice</item>
+		<item name="android:dividerHeight">0dp</item>
+		<item name="android:divider">@null</item>
+		<item name="android:scrollbars">none</item>
+		<item name="android:fadingEdge">none</item>
+		<item name="android:cacheColorHint">#00000000</item>
+	</style>
 </resources>
