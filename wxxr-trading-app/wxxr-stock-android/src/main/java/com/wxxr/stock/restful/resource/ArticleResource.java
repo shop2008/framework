@@ -5,7 +5,7 @@ import java.util.List;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
-import com.wxxr.mobile.core.rpc.impl.ArticleVO;
+import com.wxxr.stock.article.ejb.api.ArticleVO;
 import com.wxxr.stock.restful.json.NewsQueryBO;
 @Path("/rest/article")
 public interface ArticleResource  {
