@@ -188,17 +188,36 @@ public class JavaBeanIntrospector {
 
 			try {
 
-				if (argCount == 0) {
-					if (name.startsWith(GET_PREFIX)) {
-						// Simple getter
-						pd = new PropertyDescriptor(decapitalize(name.substring(3)),
-								method, null);
-					} else if (resultType == boolean.class && name.startsWith(IS_PREFIX)) {
-						// Boolean getter
-						pd = new PropertyDescriptor(decapitalize(name.substring(2)),
-								method, null);
-					}
-				}
+
+	            if (argCount == 0) {
+		        if (name.startsWith(GET_PREFIX)) {
+		            // Simple getter
+	                    pd = new PropertyDescriptor(decapitalize(name.substring(3)),
+						method, null);
+	                } else if (resultType == boolean.class && name.startsWith(IS_PREFIX)) {
+		            // Boolean getter
+	                    pd = new PropertyDescriptor(decapitalize(name.substring(2)),
+						method, null);
+		        }
+	            } else if (argCount == 1) {
+		        if (argTypes[0] == int.class && name.startsWith(GET_PREFIX)) {
+		            pd = new IndexedPropertyDescriptor(
+						decapitalize(name.substring(3)),
+						null, null,
+						method,	null);
+		        } else if (resultType == void.class && name.startsWith(SET_PREFIX)) {
+		            // Simple setter
+	                    pd = new PropertyDescriptor(decapitalize(name.substring(3)),
+						null, method);
+		        }
+	            } else if (argCount == 2) {
+			    if (argTypes[0] == int.class && name.startsWith(SET_PREFIX)) {
+	                    pd = new IndexedPropertyDescriptor(
+						decapitalize(name.substring(3)),
+						null, null,
+						null, method);
+			}
+		    }
 			} catch (IntrospectionException ex) {
 				// This happens if a PropertyDescriptor or IndexedPropertyDescriptor
 				// constructor fins that the method violates details of the deisgn
