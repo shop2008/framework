@@ -6,7 +6,7 @@
 	<groupId>com.wxxr.mobile.stock</groupId>
 	<artifactId>wxxr-stock-android</artifactId>
 	<version>1.0.0</version>
-	<packaging>apk</packaging>
+	<packaging>jar</packaging>
 	<name>wxxr-stock-android - Application</name>
 	
     <properties>
@@ -42,6 +42,11 @@
             <dependency>
                 <groupId>com.wxxr.mobile</groupId>
                 <artifactId>wxxr-mobile-xml</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-db</artifactId>
                 <version>${framework.version}</version>
             </dependency>
             <dependency>
@@ -83,20 +88,38 @@
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
-                    <generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
+                    <generatedSourcesDirectory>target/generated</generatedSourcesDirectory>
                     <annotationProcessors>
                             <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
                     </annotationProcessors>
                 </configuration>
             </plugin>
+            <plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>build-helper-maven-plugin</artifactId>
+		        <version>1.8</version>
+		        <executions>
+		          <execution>
+		            <id>add-source</id>
+		            <phase>generate-sources</phase>
+		            <goals>
+		              <goal>add-source</goal>
+		            </goals>
+		            <configuration>
+		              <sources>
+		                <source>gen</source>
+		              </sources>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+           <!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
 				<executions>
 					<execution>
-						<!-- use the copy resources instead of resources, which adds it to 
-							the eclipse buildpath -->
 						<phase>initialize</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -144,6 +167,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 		</plugins>
 	</build>
 
