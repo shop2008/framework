@@ -10,15 +10,22 @@ public class WeekRank{
 	private String gainRate;//总盈亏率2
 	private int gainRates;
 	private String dates;//周期时间
-	private String uesrId;//用户id
+	private String userId;//用户id
 	
+	private int rankSeq;//
 	
-	
-	public String getUesrId() {
-		return uesrId;
+	public int getRankSeq() {
+		return rankSeq;
 	}
-	public void setUesrId(String uesrId) {
-		this.uesrId = uesrId;
+	public void setRankSeq(int rankSeq) {
+		this.rankSeq = rankSeq;
+	}
+	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getNickName() {
 		return nickName;

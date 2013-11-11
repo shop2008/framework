@@ -10,7 +10,10 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.StockAppBizException;
+import com.wxxr.mobile.stock.client.bean.MegagameRank;
+import com.wxxr.mobile.stock.client.bean.RegularTicket;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.bean.WeekRank;
 import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 
 /**
@@ -51,7 +54,30 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public List<MegagameRank> getTMegagameRank() throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public List<MegagameRank> getT1MegagameRank() throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RegularTicket> getRegularTicketRank()
+			throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<WeekRank> getWeekRank() throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	// =================private method =======================================
 	private List<TradingAccount> mockData(int type) {
 		List<TradingAccount> list = new ArrayList<TradingAccount>();
@@ -163,5 +189,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	protected void stopService() {
 		context.unregisterService(ITradingManagementService.class, this);
 	}
+
+
 
 }
