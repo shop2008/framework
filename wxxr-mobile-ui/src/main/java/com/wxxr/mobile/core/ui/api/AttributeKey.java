@@ -74,8 +74,12 @@ public class AttributeKey<T> {
 	
 	
 	public IUIComponent updateAttributetWithObject(IUIComponent component, Object value){
-		T val = clazz.cast(value);
-		component.setAttribute(this, val);
+		if(value instanceof String){
+			updateAttributeWithString(component, (String)value);
+		}else{
+			T val = clazz.cast(value);
+			component.setAttribute(this, val);
+		}
 		return component;
 	}
 
