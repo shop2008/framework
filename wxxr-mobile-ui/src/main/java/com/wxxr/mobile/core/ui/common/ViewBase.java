@@ -340,6 +340,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 */
 	@Override
 	protected void fireDataChangedEvent(ValueChangedEvent event) {
+		if(log.isTraceEnabled()){
+			log.trace("processing event :", event);
+		}
 		onDataChanged(event);
 		if(this.evaluators != null){
 			for (IValueEvaluator<?> eval : this.evaluators) {

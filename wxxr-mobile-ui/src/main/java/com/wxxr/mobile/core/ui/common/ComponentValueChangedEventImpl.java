@@ -4,6 +4,7 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.wxxr.mobile.core.ui.api.AttributeKey;
@@ -18,7 +19,7 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 public class ComponentValueChangedEventImpl implements ComponentValueChangedEvent {
 
 	private final IUIComponent source;
-	private Long timestamp = System.currentTimeMillis();
+	private long timestamp = System.currentTimeMillis();
 	private List<AttributeKey<?>> keys;
 	
 	public ComponentValueChangedEventImpl(IUIComponent src,AttributeKey<?>...keys){
@@ -65,7 +66,7 @@ public class ComponentValueChangedEventImpl implements ComponentValueChangedEven
 	@Override
 	public String toString() {
 		return "ComponentValueChangedEventImpl [source=" + source + ", timestamp="
-				+ timestamp + ", keys=" + keys + "]";
+				+ new Date(timestamp) + ", keys=" + keys + "]";
 	}
 	@Override
 	public String getSourceName() {

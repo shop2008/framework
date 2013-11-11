@@ -4,6 +4,7 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
@@ -16,7 +17,7 @@ public class DomainValueChangedEventImpl implements DomainValueChangedEvent {
 
 	private final Object source;
 	private final String beanName;
-	private Long timestamp = System.currentTimeMillis();
+	private long timestamp = System.currentTimeMillis();
 	private List<String> changedProperties;
 	
 	public DomainValueChangedEventImpl(Object bean, String beanName, String ... properties){
@@ -64,6 +65,15 @@ public class DomainValueChangedEventImpl implements DomainValueChangedEvent {
 	@Override
 	public List<String> getChangedProperties() {
 		return this.changedProperties;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DomainValueChangedEventImpl [source=" + source + ", beanName="
+				+ beanName + ", timestamp=" + new Date(timestamp)
+				+ ", changedProperties=" + changedProperties + "]";
 	}
 
 }
