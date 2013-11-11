@@ -51,32 +51,26 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	public Long createTradingAccount(String type, String credit, String stops,
 			String fee1, String freezing) throws StockAppBizException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public List<MegagameRank> getTMegagameRank() throws StockAppBizException {
-		// TODO Auto-generated method stub
-		return null;
+		return mockRankData("T");
 	}
 
 	@Override
 	public List<MegagameRank> getT1MegagameRank() throws StockAppBizException {
-		// TODO Auto-generated method stub
-		return null;
+		return mockRankData("T+1");
 	}
 
 	@Override
-	public List<RegularTicket> getRegularTicketRank()
-			throws StockAppBizException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RegularTicket> getRegularTicketRank() throws StockAppBizException {
+		return mockRegularTicketRank();
 	}
 
 	@Override
 	public List<WeekRank> getWeekRank() throws StockAppBizException {
-		// TODO Auto-generated method stub
-		return null;
+		return mockWeekRank();
 	}
 	// =================private method =======================================
 	private List<TradingAccount> mockData(int type) {
@@ -172,7 +166,49 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		return list;
 	}
-
+	public List<MegagameRank> mockRankData(String t) throws StockAppBizException {
+		List<MegagameRank> list = new ArrayList<MegagameRank>();
+		for (int i = 0; i < 10; i++) {
+			MegagameRank mr = new MegagameRank();
+			mr.setAcctID(1);
+			mr.setNickName("模拟用户"+i);
+			mr.setGainRate("3%");
+			
+			if (t.equals("T")) {
+				mr.setMaxStockCode("600521");
+				mr.setMaxStockMarket("华海药业");
+			}else{
+				mr.setMaxStockCode("600175");
+				mr.setMaxStockMarket("美都控股");
+			}
+			
+			list.add(mr);
+		}
+		return list;
+	}
+	public List<RegularTicket> mockRegularTicketRank() throws StockAppBizException {
+		List<RegularTicket> list = new ArrayList<RegularTicket>();
+		for (int i = 0; i < 10; i++) {
+			RegularTicket mr = new RegularTicket();
+			mr.setNickName("模拟用户"+i);
+			mr.setRegular(1000*(10-i));
+			mr.setGainCount(6-i%5);
+			list.add(mr);
+		}
+		return list;
+	}
+	public List<WeekRank> mockWeekRank() throws StockAppBizException {
+		List<WeekRank> list = new ArrayList<WeekRank>();
+		for (int i = 0; i < 10; i++) {
+			WeekRank mr = new WeekRank();
+			mr.setDates("2013年11月04日-2013年11月08日");
+			mr.setGainCount(6-i%5);
+			mr.setNickName("模拟用户"+i);
+			mr.setGainRate(String.format("%s", 15-i)+"%");
+			list.add(mr);
+		}
+		return list;
+	}
 	// =================module life cycle methods=============================
 
 	@Override
