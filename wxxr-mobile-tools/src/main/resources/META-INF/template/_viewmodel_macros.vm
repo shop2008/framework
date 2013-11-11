@@ -27,6 +27,9 @@
         this.${fld.name}Field.setValueKey(${fld.valueKey});
 #end
         this.${fld.name}Field.setValue(this.${fld.name});
+#if(${fld.binding})
+        this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType}>(getELManager(true), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class));
+#end
         add(this.${fld.name}Field);        
 #end
     }
@@ -40,9 +43,65 @@
     }
 #end
 
+#macro(initAttributeUpdaters $model $expressions)
+    private void initFieldAttributes() {
+#foreach($expr in $expressions)
+#if(${expr.elexpress})
+        ELAttributeValueEvaluator v_${expr.field.name}Updater = new ELAttributeValueEvaluator(getELManager(true), "${expr.expression}", "${expr.attributeKey}", getChild("${expr.field.name}"));
+        addValueEvaluator(v_${expr.field.name}Updater);
+#else
+        AttributeKeys.updateAttribute("${expr.attributeKey}",getChild("${expr.field.name}"), "${expr.expression}");
+#end
+#end
+    }
+#end
+
+#macro(injectServices $model $bindings)
+    private void injectServices() {
+#set( $AppUtilType = ${model.addImport("com.wxxr.mobile.android.app.AppUtils")})
+#foreach($srv in $bindings) 
+        this.${srv.field.name} = ${AppUtilType}.getService(${srv.field.simpleType}.class);  
+#end
+    }
+#end
+
+#macro(initBeanUpdaters $model $bindings)
+    private void initBeanUpdaters() {
+#foreach($binding in $bindings) 
+        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getELManager(true), "${binding.expression}", ${binding.field.simpleBoxedType}.class); 
+#end
+    }
+#end
+
+#macro(updateBindingBeans $model $bindings)
+    private void updateBindingBeans() {
+#foreach($binding in $bindings) 
+        ${binding.field.simpleType} v_${binding.field.name} = this.${binding.field.name}Updater.doEvaluate();
+        if(!ModelUtils.isEquals(this.${binding.field.name}, v_${binding.field.name})){
+            this.${binding.field.name} = v_${binding.field.name};
+            if(this.userInfo != null){
+                regsiterBean("${binding.field.name}", this.${binding.field.name});
+            }else{
+                unregisterBean("${binding.field.name}");
+            }
+            if(this.${binding.field.name} instanceof IBindableBean){
+                ((IBindableBean)this.${binding.field.name}).addPropertyChangeListener(new BeanPropertyChangedListener("${binding.field.name}"));
+            }
+            DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, "${binding.field.name}");
+            fireDataChangedEvent(evt);
+        }
+        
+#end
+    }
+#end
+
+
 #macro(onShow $model $methods)
     @Override
     protected void onShow(IBinding<IView> binding) {
+#if(${model.beanBindings})
+    updateBindingBeans();
+#end
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(binding); 
@@ -185,6 +244,13 @@
 #macro(init $model )
     @Override
     protected void onCreate() {
+#if(${model.serviceBindings})
+       injectServices();
+#end
+#if(${model.beanBindings})
+    initBeanUpdaters();
+#end
+
 #if(${model.commands})
        initCommands();
 #end
@@ -199,6 +265,9 @@
 #end
 #if(${model.onCreateMethods})
        callOnCreateMethods();
+#end
+#if(${model.expressions})
+       initFieldAttributes();
 #end
 
     }

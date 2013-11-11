@@ -2,7 +2,10 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.List;
 
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
 
@@ -76,5 +79,10 @@ public abstract class AttributeKeys {
 			}
 		}
 		return null;
+	}
+	
+	public static void updateAttribute(String key, IUIComponent component, Object val){
+		AttributeKey<?> attrKey = KUtils.getService(IWorkbenchManager.class).getFieldAttributeManager().getAttributeKey(key);
+		attrKey.updateAttributetWithObject(component,val);
 	}
 }

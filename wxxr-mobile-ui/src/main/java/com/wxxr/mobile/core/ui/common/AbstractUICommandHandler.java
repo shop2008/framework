@@ -7,7 +7,6 @@ import java.util.LinkedList;
 
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
-import com.wxxr.mobile.core.ui.api.InputEvent;
 
 /**
  * @author neillin

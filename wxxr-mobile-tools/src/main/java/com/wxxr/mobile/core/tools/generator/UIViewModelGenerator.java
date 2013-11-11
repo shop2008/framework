@@ -3,8 +3,8 @@
  */
 package com.wxxr.mobile.core.tools.generator;
 
-import static com.wxxr.mobile.core.model.ViewModelUtils.addField;
-import static com.wxxr.mobile.core.model.ViewModelUtils.addMethod;
+import static com.wxxr.mobile.tools.model.ViewModelUtils.addField;
+import static com.wxxr.mobile.tools.model.ViewModelUtils.addMethod;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -30,16 +30,16 @@ import com.wxxr.mobile.android.ui.BindableActivity;
 import com.wxxr.mobile.android.ui.BindableFragment;
 import com.wxxr.mobile.android.ui.BindableFragmentActivity;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.model.PModeProviderClass;
-import com.wxxr.mobile.core.model.TargetUIClass;
-import com.wxxr.mobile.core.model.ViewDescriptorClass;
-import com.wxxr.mobile.core.model.ViewModelClass;
 import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.tools.model.PModeProviderClass;
+import com.wxxr.mobile.tools.model.TargetUIClass;
+import com.wxxr.mobile.tools.model.ViewDescriptorClass;
+import com.wxxr.mobile.tools.model.ViewModelClass;
 
 /**
  * @author neillin
@@ -91,7 +91,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 					provider.setPkgName(pkg+".view");
 					provider.setName("DeclarativePModelProvider");
 				}
-				ViewModelClass model = new ViewModelClass();
+				ViewModelClass model = new ViewModelClass(context);
 				model.setApplicationId(pkg);
 				model.setPkgName(pkg+".view");
 				model.setName(defaultName+"Model");

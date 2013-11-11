@@ -7,8 +7,10 @@ package com.wxxr.mobile.core.ui.api;
  * @author neillin
  *
  */
-public class ValidationException extends Exception {
+public class ValidationException extends RuntimeException {
 
+	private static final long serialVersionUID = 1815627271659979265L;
+	
 	private String errorCode;
 	/**
 	 * 

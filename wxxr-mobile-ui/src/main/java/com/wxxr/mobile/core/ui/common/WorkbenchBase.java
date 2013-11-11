@@ -28,7 +28,6 @@ public abstract class WorkbenchBase implements IWorkbench {
 	
 //	private String activePageId;
 	private Map<String, IPage> pages = new HashMap<String, IPage>();
-	private Map<String, IView> views = new HashMap<String, IView>();
 	
 		
 	public WorkbenchBase(IWorkbenchRTContext ctx) {
@@ -64,6 +63,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showPage(java.lang.String)
 	 */
 	public void showPage(String pageId,Map<String, String> params,IPageCallback callback) {
+		if(log.isTraceEnabled()){
+			log.trace("Going to show page :"+pageId);
+		}
 		if(pageId.equals(getActivePageId())){
 			return;
 		}

@@ -123,7 +123,7 @@ public abstract class UIComponent implements IUIComponent {
 	}
 	
 	protected void fireDataChangedEvent(AttributeKey<?> ... keys){
-		fireDataChangedEvent(new ValueChangedEventImpl(this, keys));
+		fireDataChangedEvent(new ComponentValueChangedEventImpl(this, keys));
 	}
 	
 	protected void fireDataChangedEvent(ValueChangedEvent evt){

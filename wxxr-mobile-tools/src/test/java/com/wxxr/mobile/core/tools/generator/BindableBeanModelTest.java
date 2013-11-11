@@ -13,12 +13,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.wxxr.mobile.core.model.BindableBeanModel;
 import com.wxxr.mobile.core.tools.ICodeGenerator;
 import com.wxxr.mobile.core.tools.TestProcessorConfigure;
 import com.wxxr.mobile.core.tools.VelocityTemplateRenderer;
 import com.wxxr.mobile.core.tools.annotation.Generator;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.tools.model.BindableBeanModel;
 
 public class BindableBeanModelTest extends BindableBeanModel {
 

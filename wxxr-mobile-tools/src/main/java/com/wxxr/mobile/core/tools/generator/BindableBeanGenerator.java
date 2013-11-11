@@ -19,10 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
-import com.wxxr.mobile.core.model.BindableBeanModel;
 import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.tools.model.BindableBeanModel;
 
 /**
  * @author neillin

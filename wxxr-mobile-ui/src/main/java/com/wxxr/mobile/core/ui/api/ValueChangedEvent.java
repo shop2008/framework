@@ -3,8 +3,6 @@
  */
 package com.wxxr.mobile.core.ui.api;
 
-import java.util.List;
-
 import com.wxxr.mobile.core.event.api.IEventObject;
 
 /**
@@ -12,6 +10,5 @@ import com.wxxr.mobile.core.event.api.IEventObject;
  *
  */
 public interface ValueChangedEvent extends IEventObject {
-	IUIComponent getComponent();
-	List<AttributeKey<?>> getChangedAttributes();
+	String getSourceName();
 }

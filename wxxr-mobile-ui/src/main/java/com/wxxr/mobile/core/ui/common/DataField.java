@@ -9,12 +9,13 @@ import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
-import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
 
 /**
@@ -27,7 +28,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 
 	private AttributeKey<T> valueKey;
 	private T localValue;
-	private IDomainValueModel domainModel;
+	private IDomainValueModel<T> domainModel;
 	
 	private boolean readOnly = false;
 	private IValueConvertor<T> convertor;
@@ -203,7 +204,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	/**
 	 * @return the domainModel
 	 */
-	public IDomainValueModel getDomainModel() {
+	public IDomainValueModel<T> getDomainModel() {
 		return domainModel;
 	}
 
@@ -211,7 +212,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	/**
 	 * @param domainModel the domainModel to set
 	 */
-	public void setDomainModel(IDomainValueModel domainModel) {
+	public void setDomainModel(IDomainValueModel<T> domainModel) {
 		this.domainModel = domainModel;
 	}
 
@@ -249,6 +250,31 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 			valueKey = new AttributeKey<T>(valueType, "value");
 		}
 		super.init(ctx);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#setParent(com.wxxr.mobile.core.ui.api.IUIContainer)
+	 */
+	@Override
+	public UIComponent setParent(IUIContainer<IUIComponent> parent) {
+		super.setParent(parent);
+		if((parent instanceof ViewBase)&&(this.domainModel != null)){
+			((ViewBase)parent).registerDomainModel(this.domainModel);
+		}
+		return this;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#destroy()
+	 */
+	@Override
+	public void destroy() {
+		if((getParent() instanceof ViewBase)&&(this.domainModel != null)){
+			((ViewBase)getParent()).unregisterDomainModel(this.domainModel);
+		}
+		super.destroy();
 	}
 	
 }

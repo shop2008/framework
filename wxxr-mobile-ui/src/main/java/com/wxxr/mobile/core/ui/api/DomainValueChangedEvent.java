@@ -3,12 +3,13 @@
  */
 package com.wxxr.mobile.core.ui.api;
 
-import com.wxxr.mobile.core.event.api.IEventObject;
+import java.util.List;
+
 
 /**
  * @author neillin
  *
  */
-public interface DomainValueChangedEvent extends IEventObject {
-	IDomainValueModel getModel();
+public interface DomainValueChangedEvent extends ValueChangedEvent {
+	List<String> getChangedProperties();
 }
