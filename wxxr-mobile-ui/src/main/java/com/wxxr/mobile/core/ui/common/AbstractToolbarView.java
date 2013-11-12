@@ -34,11 +34,18 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 
 
 	protected IUICommand getMenuItem(String name) {
+		IUICommand cmd = null;
 		IMenu menu = getToolbarMenu();
 		if(menu != null){
-			 return menu.getCommand(name);
+			 cmd = menu.getCommand(name);
 		}
-		return null;
+		if(cmd == null){
+			cmd = new UICommand(name);
+			cmd.setAttribute(AttributeKeys.visible, false);
+			cmd.setAttribute(AttributeKeys.takeSpaceWhenInvisible, true);
+			cmd.init(getUIContext());
+		}
+		return cmd;
 	}
 
 	/* (non-Javadoc)
