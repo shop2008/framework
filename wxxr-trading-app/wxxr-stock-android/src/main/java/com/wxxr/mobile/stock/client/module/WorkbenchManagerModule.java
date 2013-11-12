@@ -73,7 +73,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 			 */
 			@Override
 			public void showHomePage() {
-				HashMap<String, String> map = new HashMap<String, String>();
+				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(IAndroidPageNavigator.PARAM_KEY_INTENT_FLAG, String.valueOf(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 				super.showPage(HOME_PAGE_ID,map,null);
 			}

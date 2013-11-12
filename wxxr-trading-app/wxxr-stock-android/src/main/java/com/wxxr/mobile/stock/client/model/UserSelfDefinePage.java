@@ -81,7 +81,7 @@ public abstract class UserSelfDefinePage extends PageBase implements IModelUpdat
 	@Command(commandName="setPic")
 	String setPic(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("curUserPic", this.userIconField.getValue());
 			getUIContext().getWorkbenchManager().getWorkbench().showPage("user_pic_set", map, new IPageCallback() {
 				
@@ -132,7 +132,7 @@ public abstract class UserSelfDefinePage extends PageBase implements IModelUpdat
 	String setHomeBack(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("curHomeBack", this.userHomeBackField.getValue());
 			getUIContext().getWorkbenchManager().getWorkbench().showPage("user_home_set", map, new IPageCallback() {
 				

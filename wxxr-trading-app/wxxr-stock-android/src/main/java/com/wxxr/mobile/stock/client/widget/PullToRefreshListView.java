@@ -6,7 +6,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -97,13 +96,17 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         // init header height
         ViewTreeObserver observer = mHeaderView.getViewTreeObserver();
         if (null != observer) {
-            observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     mHeaderViewHeight = mHeaderViewContent.getHeight();
                     ViewTreeObserver observer = getViewTreeObserver();
                     if (null != observer) {
-                        observer.removeOnGlobalLayoutListener(this);
+//                    	if(Build.VERSION.SDK_INT>=16){  
+//                    		observer.removeOnGlobalLayoutListener(this);  
+//                        }else{  
+                        	observer.removeGlobalOnLayoutListener(this);  
+//                        }
                     }
                 }
             });

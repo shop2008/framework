@@ -102,7 +102,11 @@ public class PullToRefreshScrollView extends ScrollView implements OnScrollListe
                     mHeaderViewHeight = mHeaderViewContent.getHeight();
                     ViewTreeObserver observer = getViewTreeObserver();
                     if (null != observer) {
-                        observer.removeOnGlobalLayoutListener(this);
+//                    	if(Build.VERSION.SDK_INT>=16){  
+//                    		observer.removeOnGlobalLayoutListener(this);  
+//                        }else{  
+                        	observer.removeGlobalOnLayoutListener(this);  
+//                        }
                     }
                 }
             });

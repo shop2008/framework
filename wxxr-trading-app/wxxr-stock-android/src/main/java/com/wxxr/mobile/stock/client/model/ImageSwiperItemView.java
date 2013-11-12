@@ -35,7 +35,7 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 	
 	@Command
 	String linkItemClick(InputEvent event){
-		Map<String, String> tmap = new HashMap<String, String>();
+		Map<String, Object> tmap = new HashMap<String, Object>();
 		tmap.put("webUrl", articleUrl);
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			IPage page = getUIContext().getWorkbenchManager().getWorkbench().getPage("webPage");

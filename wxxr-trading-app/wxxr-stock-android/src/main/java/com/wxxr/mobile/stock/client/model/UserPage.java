@@ -238,7 +238,7 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 			
 			//System.out.println("123");
 
-			HashMap<String, String> map = new HashMap<String, String>();
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("curUserIcon", this.userIcon);
 			map.put("curUserHomeBack", this.userHomeBack);
 			getUIContext()
