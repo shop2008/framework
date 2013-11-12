@@ -99,18 +99,20 @@ public abstract class HomePage extends PageBase {
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
 				@UIItem(id="search",label="搜索",icon="resourceId:drawable/finds")
-			}
+			}, 
+	navigations={
+			@Navigation(on="search",showPage="stockSearchPage")}
 	)
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
-//		getUIContext()
-//				.getWorkbenchManager()
-//				.getPageNavigator()
-//				.showPage(
-//						getUIContext().getWorkbenchManager().getWorkbench()
-//								.getPage("stockSearchPage"), null, null);
+		getUIContext()
+				.getWorkbenchManager()
+				.getPageNavigator()
+				.showPage(
+						getUIContext().getWorkbenchManager().getWorkbench()
+								.getPage("stockSearchPage"), null, null);
 		return null;
 	}
 	
