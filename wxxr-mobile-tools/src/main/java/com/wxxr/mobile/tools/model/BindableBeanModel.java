@@ -54,12 +54,7 @@ public class BindableBeanModel extends AbstractClassModel {
 			fld.setName(name);
 			this.fields.put(name, fld);
 		}
-		int idx = className.lastIndexOf('.');
-		String simpleName = className;
-		if(idx >0){
-			simpleName = className.substring(idx+1);
-		}
-		fld.setType(simpleName);
+		fld.setType(new TypeModel(className).toSimpleName(this));
 		addImport(className);
 	}
 	

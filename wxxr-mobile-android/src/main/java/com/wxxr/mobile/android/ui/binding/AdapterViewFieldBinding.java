@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.android.ui.binding;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +59,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		IUIComponent comp = model.getChild(getFieldName());
 		IListDataProvider provider = comp.getAdaptor(IListDataProvider.class);
 		if (provider == null) {
-			if (comp instanceof IDataField) {
-				Object val = ((IDataField<?>) comp).getValue();
-				provider = createAdaptorFromValue(val);
-			}
-		}
-		if (provider == null) {
-			provider = createAdaptorFromValue(comp
-					.getAttribute(AttributeKeys.options));
+			provider = createAdaptorFromValue(comp);
 		}
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
 				getAndroidBindingContext().getUIContext(), provider,
@@ -133,64 +127,51 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	protected void setupAdapter(ListAdapter adapter) {
 		((AbsListView) getUIControl()).setAdapter(adapter);
 	}
+	
+	protected List<Object> getListData(IUIComponent comp){
+		if(comp.hasAttribute(AttributeKeys.options)){
+			return comp.getAttribute(AttributeKeys.options);
+		}
+		if (comp instanceof IDataField) {
+			Object val = ((IDataField<?>) comp).getValue();
+			if (val instanceof List){
+				return (List<Object>)val;
+			}else if((val != null)&&val.getClass().isArray()){
+				return Arrays.asList((Object[])val);
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * @param provider
 	 * @param val
 	 * @return
 	 */
-	protected IListDataProvider createAdaptorFromValue(Object val) {
-		IListDataProvider provider = null;
-		if (val instanceof List) {
-			final List data = (List) val;
-			provider = new IListDataProvider() {
+	protected IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
+		return new IListDataProvider() {
+			List<Object>  data = null;
+			@Override
+			public Object getItemId(Object item) {
+				return null;
+			}
 
-				@Override
-				public Object getItemId(Object item) {
-					return null;
-				}
+			@Override
+			public int getItemCounts() {
+				data = getListData(comp);
+				return data != null ? data.size() : 0;
+			}
 
-				@Override
-				public int getItemCounts() {
-					return data.size();
-				}
+			@Override
+			public Object getItem(int i) {
+				return data.get(i);
+			}
 
-				@Override
-				public Object getItem(int i) {
-					return data.get(i);
-				}
-
-				@Override
-				public boolean isItemEnabled(Object item) {
-					return true;
-				}
-			};
-		} else if ((val != null) && val.getClass().isArray()) {
-			final Object[] data = (Object[]) val;
-			provider = new IListDataProvider() {
-
-				@Override
-				public Object getItemId(Object item) {
-					return null;
-				}
-
-				@Override
-				public int getItemCounts() {
-					return data.length;
-				}
-
-				@Override
-				public Object getItem(int i) {
-					return data[i];
-				}
-
-				@Override
-				public boolean isItemEnabled(Object item) {
-					return true;
-				}
-			};
-		}
-		return provider;
+			@Override
+			public boolean isItemEnabled(Object item) {
+				return true;
+			}
+		};
 	}
 
 	/*
