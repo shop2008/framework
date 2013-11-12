@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
@@ -148,6 +150,25 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 			this.androidViewBinding.refresh();
 		}
 		super.onResume();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#createDialog(com.wxxr.mobile.core.ui.api.IView)
+	 */
+	@Override
+	public IDialog createDialog(IView view) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getToolbar()
+	 */
+	@Override
+	public IAppToolbar getToolbar() {
+		return null;
 	}
 
 }

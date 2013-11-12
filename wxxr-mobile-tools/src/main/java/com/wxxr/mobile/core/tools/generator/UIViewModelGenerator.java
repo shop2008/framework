@@ -185,7 +185,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						}else{
 							switch(binding.type()){
 							case ACTIVITY:
-								targetUI.setSuperClass(BindableActivity.class.getCanonicalName());
+								targetUI.setSuperClass(BindableFragmentActivity.class.getCanonicalName());
 								break;
 							case FRAGMENT:
 								targetUI.setSuperClass(BindableFragment.class.getCanonicalName());
