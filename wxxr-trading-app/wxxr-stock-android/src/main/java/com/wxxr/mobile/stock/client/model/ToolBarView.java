@@ -82,6 +82,10 @@ public abstract class ToolBarView extends StockAppToolbar {
 				IUICommand cmd  = menu.getCommand("left");
 				if(cmd != null){
 					this.leftIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+					this.leftIconField.setAttribute(AttributeKeys.visible,true);
+				}else{
+					this.leftIconField.setAttribute(AttributeKeys.visible,false);
+					this.leftIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
 				}
 			}
 		}else if("rightIcon".equals(name)){
@@ -90,6 +94,10 @@ public abstract class ToolBarView extends StockAppToolbar {
 				IUICommand cmd  = menu.getCommand("right");
 				if(cmd != null){
 					this.rightIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+					this.rightIconField.setAttribute(AttributeKeys.visible,true);
+				}else{
+					this.rightIconField.setAttribute(AttributeKeys.visible,false);
+					this.rightIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
 				}
 			}
 		}else if("searchIcon".equals(name)){
@@ -98,6 +106,10 @@ public abstract class ToolBarView extends StockAppToolbar {
 				IUICommand cmd  = menu.getCommand("search");
 				if(cmd != null){
 					this.searchIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+					this.searchIconField.setAttribute(AttributeKeys.visible,true);
+				}else{
+					this.searchIconField.setAttribute(AttributeKeys.visible,false);
+					this.searchIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
 				}
 			}
 		}
