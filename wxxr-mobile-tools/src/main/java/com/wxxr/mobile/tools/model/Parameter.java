@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.tools.model;
 
+import com.wxxr.mobile.core.ui.annotation.ValueType;
+
 /**
  * @author neillin
  *
@@ -10,6 +12,7 @@ package com.wxxr.mobile.tools.model;
 public class Parameter {
 	
 	private String name, value;
+	private ValueType type;
 
 	public Parameter(){
 	}
@@ -44,6 +47,20 @@ public class Parameter {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public ValueType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(ValueType type) {
+		this.type = type;
 	}
 	
 }

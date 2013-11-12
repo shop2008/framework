@@ -17,4 +17,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Parameter {
 	String name();
 	String value();
+	ValueType type() default ValueType.STRING;
 }
