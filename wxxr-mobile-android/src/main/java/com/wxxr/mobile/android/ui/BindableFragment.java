@@ -202,6 +202,8 @@ public abstract class BindableFragment extends Fragment {
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
 				toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
+			}else{
+				toolbar.setTitle("",null);
 			}
 		}
 		this.androidViewBinding.activate(getBindingView());

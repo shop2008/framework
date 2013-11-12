@@ -145,6 +145,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
 				toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
+			}else{
+				toolbar.setTitle("", null);
 			}
 		}
 		super.onStart();

@@ -34,6 +34,7 @@ public class ${model.name} extends AbstractPageDescriptor {
 	@Override
 	protected void init() {
 		setViewId("${model.viewModel.id}");
+		setViewDescription("${model.viewModel.description}");
 		setHasToolbar(${model.viewModel.toolbarRequired});
 		addBindingDescriptor(TargetUISystem.ANDROID, new IAndroidBindingDescriptor() {
 			

@@ -35,6 +35,7 @@ public class ViewModelClass extends AbstractClassModel {
 	private String applicationId;
 	private String id;
 	private boolean isPage;
+	private String description;
 //	private final ViewModelDomainResolver domainResolver;
 	private final ICodeGenerationContext context;
 	
@@ -390,6 +391,20 @@ public class ViewModelClass extends AbstractClassModel {
 	 */
 	public void setToolbarRequired(boolean toolbarRequired) {
 		this.toolbarRequired = toolbarRequired;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 //	/**
