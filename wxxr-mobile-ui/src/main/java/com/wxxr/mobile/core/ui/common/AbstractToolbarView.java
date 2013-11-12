@@ -39,12 +39,12 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 		if(menu != null){
 			 cmd = menu.getCommand(name);
 		}
-		if(cmd == null){
-			cmd = new UICommand(name);
-			cmd.setAttribute(AttributeKeys.visible, false);
-			cmd.setAttribute(AttributeKeys.takeSpaceWhenInvisible, true);
-			cmd.init(getUIContext());
-		}
+//		if(cmd == null){
+//			cmd = new UICommand(name);
+//			cmd.setAttribute(AttributeKeys.visible, false);
+//			cmd.setAttribute(AttributeKeys.takeSpaceWhenInvisible, true);
+//			cmd.init(getUIContext());
+//		}
 		return cmd;
 	}
 
