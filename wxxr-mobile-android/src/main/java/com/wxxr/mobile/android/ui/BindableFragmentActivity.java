@@ -10,8 +10,6 @@ import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.text.AbstractDocument;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,13 +20,15 @@ import android.view.ViewGroup;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
+import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
+import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-import com.wxxr.mobile.core.ui.common.AbstractPageDescriptor;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -80,9 +80,6 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			if(this.rootView instanceof IAppToolbar){
 				this.toolbar = (IAppToolbar)this.rootView;
 				page.onToolbarCreated(toolbar);
-			}
-			if(descriptor.getViewDescription() != null){
-				this.toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
 			}
 		}else{
 			this.contentRoot = null;
@@ -141,6 +138,13 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.toolbarViewBingding.activate(this.rootView);
 			if(this.toolbar != null){
 				page.onToolbarShow();
+			}
+		}
+		if(this.toolbar != null){
+			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingPage().getName());
+			String desc = descriptor.getViewDescription();
+			if(StringUtils.isNotBlank(desc)){
+				toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
 			}
 		}
 		super.onStart();
@@ -286,6 +290,27 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.androidViewBinding.refresh();
 		}
 		super.onResume();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IBindableActivity#showDialog(com.wxxr.mobile.core.ui.api.IView)
+	 */
+	@Override
+	public IDialog createDialog(final IView view) {
+		final GenericDialogFragment dialog = new GenericDialogFragment(view);
+		return new IDialog() {
+			
+			@Override
+			public void show() {
+				dialog.show(getSupportFragmentManager(), view.getName());
+			}
+			
+			@Override
+			public void dismiss() {
+				dialog.dismiss();
+			}
+		};
 	}
 
 

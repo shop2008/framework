@@ -14,6 +14,8 @@ public interface IWorkbench {
 	public final static String MESSAGE_BOX_ID = "messageBox";
 	public final static String MESSAGE_BOX_MESSAGE_ID = "message";
 	public final static String TOOL_BAR_VIEW_ID = "toolbarView";
+	public final static String PROGRESSMONITOR_DIALOG_ID = "progressMonitor";
+
 	
 	String[] getPageIds();
 	String getActivePageId();
@@ -23,4 +25,5 @@ public interface IWorkbench {
 	void hidePage(String pageId);
 	void showMessageBox(String message, Map<String, Object> params);
 	IView createNInitializedView(String viewId);
+	IDialog createDialog(String viewId, Map<String, Object> params);
 }

@@ -15,4 +15,5 @@ public interface IPageNavigator {
 	void showView(IView view, boolean add2BackStack);
 	void hideView(IView view);
 	IPage getCurrentActivePage();
+	IDialog createDialog(IView view);
 }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
@@ -136,6 +137,26 @@ public abstract class WorkbenchBase implements IWorkbench {
 				view.init(getUIContext());
 			}
 			return view;
+		}
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#createDialog(java.lang.String, java.util.Map)
+	 */
+	@Override
+	public IDialog createDialog(String viewId, Map<String, Object> params) {
+		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
+		if(desc != null){
+			IView view = desc.createPresentationModel(getUIContext());
+			IModelUpdater updater = view.getAdaptor(IModelUpdater.class);
+			if(updater != null){
+				updater.updateModel(params);
+			}
+			if(!view.isInitialized()){
+				view.init(getUIContext());
+			}
+			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view);
 		}
 		return null;
 	}	

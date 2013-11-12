@@ -16,9 +16,12 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -192,6 +195,14 @@ public abstract class BindableFragment extends Fragment {
 	public void onStart() {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onStart ...");
+		}
+		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
+		if(toolbar != null){
+			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingView().getName());
+			String desc = descriptor.getViewDescription();
+			if(StringUtils.isNotBlank(desc)){
+				toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
+			}
 		}
 		this.androidViewBinding.activate(getBindingView());
 		super.onStart();
