@@ -7,48 +7,42 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.MegagameRank;
+import com.wxxr.mobile.stock.client.bean.WeekRank;
 
-@View(name = "ChampionShipItemView")
-@AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_ship_page_layout_item")
-public abstract class ChampionShipItemView extends ViewBase implements
+@View(name = "ChampionWeekShipItemView")
+@AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_week_ship_page_layout_item")
+public abstract class ChampionWeekShipItemView extends ViewBase implements
 		IModelUpdater {
 
 	@Field(valueKey = "text")
-	String maxStockCode;
-	DataField<String> maxStockCodeField;
-
+	String rankSeq;
+	DataField<String> rankSeqField;
+	
 	@Field(valueKey = "text")
 	String nickName;
 	DataField<String> nickNameField;
+	
+	@Field(valueKey = "text")
+	String gainCount;
+	DataField<String> gainCountField;
 
 	@Field(valueKey = "text")
 	String gainRate;
 	DataField<String> gainRateField;
 
-	@Field(valueKey = "text")
-	String rankSeq;
-	DataField<String> rankSeqField;
-
-	@Field(valueKey = "text")
-	String maxStockMarket;
-	DataField<String> maxStockMarketField;
 
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof MegagameRank) {
-			MegagameRank msgRank = (MegagameRank) value;
+		if (value instanceof WeekRank) {
+			WeekRank msgRank = (WeekRank) value;
 			this.rankSeq = String.valueOf(msgRank.getRankSeq());
 			this.rankSeqField.setValue(this.rankSeq);
 
 			this.nickName = msgRank.getNickName();
 			this.nickNameField.setValue(this.nickName);
-
-			this.maxStockCode = msgRank.getMaxStockCode();
-			this.maxStockCodeField.setValue(this.maxStockCode);
-
-			this.maxStockMarket = msgRank.getMaxStockMarket();
-			this.maxStockMarketField.setValue(this.maxStockMarket);
+			
+			this.gainCount = msgRank.getGainCount()+"个正收益";
+			this.gainCountField.setValue(this.gainCount);
 
 			this.gainRate = msgRank.getGainRate();
 			this.gainRateField.setValue(this.gainRate);

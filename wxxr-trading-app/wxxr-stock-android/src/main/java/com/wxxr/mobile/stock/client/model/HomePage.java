@@ -224,9 +224,9 @@ public abstract class HomePage extends PageBase {
 				if(tool != null){
 					tool.showNotification("当前时间 :"+fmt.format(new Date()), null);
 				}
-				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
+				AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
 			}
 		};
-		AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
+		AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
 	}
 }

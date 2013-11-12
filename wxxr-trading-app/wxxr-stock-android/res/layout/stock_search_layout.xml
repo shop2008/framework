@@ -5,10 +5,6 @@
     android:orientation="vertical" 
     android:background="@color/light_gray"
     >
-    
-    <include 
-        layout="@layout/activity_title_bar"
-        />
    <com.wxxr.stock.trading.ui.widget.StockSearchView
        android:layout_width="match_parent"
        android:layout_height="match_parent"

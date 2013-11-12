@@ -1,57 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    xmlns:bind="http://wxxr.com.cn/binding"
-    android:background="@color/page_background_color">
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" 
-	    android:gravity="center"
-	    android:background="@drawable/dsphb_title_bj"
-	    android:padding="6dp">
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
 
-		<TextView
-		    android:id="@+id/textView2"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:text="T日排名" 
-		    android:layout_weight="1"
-		    android:textSize="15sp"
-		    android:gravity="center"
-		    android:textColor="@color/white"
-		    android:background="@drawable/dsphb_selected_bj"/>
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dsphb_title_bj"
+        android:orientation="horizontal"
+        android:padding="6dp" >
 
-		<TextView
-		    android:id="@+id/textView3"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:text="T+1日排名" 
-		    android:layout_weight="1"
-		    android:textSize="15sp"
-		    android:gravity="center"
-		    android:textColor="@color/white"/>
+        <RadioButton
+            android:id="@+id/textView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_champion_btn"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:text="T日排名"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="*"
+            bind:on_Click="handleTMegaClick" />
 
-		<TextView
-		    android:id="@+id/textView4"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:text="周赛排名" 
-		    android:layout_weight="1"
-		    android:textSize="15sp"
-		    android:gravity="center"
-		    android:textColor="@color/white"/>
-	</LinearLayout>
+        <RadioButton
+            android:id="@+id/textView2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_champion_btn"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:text="T+1日排名"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="*"
+            bind:on_Click="handleTMega1Click" />
 
-	<ListView
-	    android:id="@+id/listView1"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    bind:itemViewId="ChampionShipItemView"
-	    bind:field="ChampionShip"
-	    style="@style/mListView" >
-	</ListView>
+        <RadioButton
+            android:id="@+id/textView3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_champion_btn"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:text="周赛排名"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="*"
+            bind:on_Click="handleWeekClick" />
+
+        <RadioButton
+            android:id="@+id/textView4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_champion_btn"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:text="实盘券"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="*"
+            bind:on_Click="handleRegularTicketClick" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+            android:id="@+id/listView1"
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            bind:field="ChampionShip"
+            bind:itemViewId="ChampionShipItemView"
+            bind:on_TopRefresh="handleTMegaTopRefresh"
+            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+            android:id="@+id/listView2"
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            bind:field="ChampionT1Ship"
+            bind:itemViewId="ChampionShipItemView"
+            bind:on_TopRefresh="handleTMega1TopRefresh"
+            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+            android:id="@+id/listView3"
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            bind:field="ChampionWeekShip"
+            bind:itemViewId="ChampionWeekShipItemView"
+            bind:on_TopRefresh="handleWeekTopRefresh"
+            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+            android:id="@+id/listView4"
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            bind:field="ChampionRegularShip"
+            bind:itemViewId="ChampionRegularShipItemView"
+            bind:on_TopRefresh="handleRegularTicketTopRefresh"
+            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+    </FrameLayout>
 
 </LinearLayout>
