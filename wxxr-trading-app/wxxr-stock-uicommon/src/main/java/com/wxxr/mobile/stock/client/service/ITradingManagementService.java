@@ -9,6 +9,7 @@ import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.MegagameRank;
 import com.wxxr.mobile.stock.client.bean.RegularTicket;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfo;
 import com.wxxr.mobile.stock.client.bean.WeekRank;
 
 /**
@@ -92,4 +93,9 @@ public interface ITradingManagementService {
 	 * @throws StockAppBizException
 	 */
 	List<WeekRank> getWeekRank() throws StockAppBizException;
+	/**
+	 * 获取创建交易盘相关参数
+	 * @return
+	 */
+	UserCreateTradAccInfo getUserCreateTradAccInfo();
 }
