@@ -36,7 +36,7 @@ import com.wxxr.mobile.stock.client.utils.ColorUtils;
  * 
  * @author renwenjie
  */
-@View(name = "user_page")
+@View(name = "userPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
 public abstract class UserPage extends PageBase implements IModelUpdater {
 
@@ -223,7 +223,7 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		
 			navigations = { 
 					@Navigation(
-							on = "", 
+							on = "SUCCESS", 
 							showPage = "userSelfDefine",
 							params = { 
 									@Parameter(name = "curUserIcon", value = "$user.userIcon"),
@@ -234,90 +234,13 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 			)
 	String personalSet(InputEvent event) {
 
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+		/*if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
-			//System.out.println("123");
-
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("curUserIcon", this.userIcon);
 			map.put("curUserHomeBack", this.userHomeBack);
-			getUIContext()
-					.getWorkbenchManager()
-					.getPageNavigator()
-					.showPage(
-							getUIContext().getWorkbenchManager().getWorkbench()
-									.getPage("userSelfDefine"), map,
-							new IPageCallback() {
-
-								@Override
-								public void onShow(IPage page) {
-
-								}
-
-								@Override
-								public void onHide(IPage page) {
-
-									// 处理回调 
-									alteredUserIcon = page
-											.getAttribute(AttributeKeys.text);
-									if (alteredUserIcon != null) {
-
-										userIcon = alteredUserIcon;
-										userIconField.setValue(alteredUserIcon);
-									}
-
-									alteredUserHome = page
-											.getAttribute(AttributeKeys.name);
-
-									if (alteredUserHome != null) {
-
-										userHomeBack = alteredUserHome;
-										userHomeBackField
-												.setValue(alteredUserHome);
-									}
-								}
-
-								@Override
-								public void onDestroy(IPage page) {
-									// TODO Auto-generated method stub
-
-								}
-
-								@Override
-								public void onCreate(IPage page) {
-									// TODO Auto-generated method stub
-
-								}
-							});
-		}
-		return null;
-	}
-
-	class MyPageCallBack implements IPageCallback {
-
-		@Override
-		public void onCreate(IPage page) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onShow(IPage page) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onHide(IPage page) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onDestroy(IPage page) {
-			// TODO Auto-generated method stub
-
-		}
+		}*/
+		return "SUCCESS";
 	}
 
 	/**

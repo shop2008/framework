@@ -121,8 +121,12 @@ public abstract class UserSelfDefinePage extends PageBase implements IModelUpdat
 		Map<String, String> map = (Map<String, String>)value;
 		if (map != null) {
 			this.userIcon = map.get("curUserIcon");
+			System.out.println("-----+++++"+this.userIcon);
 			this.userIconField.setValue(map.get("curUserIcon"));
+			
 			this.userHomeBack = map.get("curUserHomeBack");
+			
+			System.out.println("-----+++++"+this.userHomeBack);
 			this.userHomeBackField.setValue(map.get("curUserHomeBack"));
 		}
 		

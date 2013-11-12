@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 
 @View(name = "userFindPswPage")
@@ -19,6 +20,8 @@ public abstract class UserFindPswPage extends PageBase {
 	
 	DataField<String> mobileNumField;
 	
+	@Field
+	IUserManagementService userService;
 	
 	/**
 	 * 处理后退
@@ -60,9 +63,13 @@ public abstract class UserFindPswPage extends PageBase {
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 发送密码到手机
+			
 		}
 		return null;
+	}
+	
+	protected void initData() {
+		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
 	}
 
 
