@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -383,6 +384,15 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	@Override
 	public IBindableActivity getPageActivity(IPage page) {
 		return this.activeActivities.get(page.getName());
+	}
+
+	@Override
+	public IDialog createDialog(IView view) {
+		IBindableActivity act = getOnShowActivity();
+		if(act != null){
+			return act.createDialog(view);
+		}
+		return null;
 	}
 
 }

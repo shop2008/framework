@@ -127,4 +127,38 @@ public class GenericDialogFragment extends DialogFragment {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.DialogFragment#onStart()
+	 */
+	@Override
+	public void onStart() {
+		if(this.binding != null){
+			this.binding.activate(view);
+		}
+		super.onStart();
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.DialogFragment#onStop()
+	 */
+	@Override
+	public void onStop() {
+		if(this.binding != null){
+			this.binding.deactivate();
+		}
+		super.onStop();
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.DialogFragment#onDestroyView()
+	 */
+	@Override
+	public void onDestroyView() {
+		if(this.binding != null){
+			this.binding.destroy();
+			this.binding = null;
+		}
+		super.onDestroyView();
+	}
+
 }
