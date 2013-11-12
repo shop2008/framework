@@ -48,6 +48,11 @@
 			<artifactId>wxxr-mobile-xml</artifactId>
 			<version>${framework.version}</version>
 		</dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-tools</artifactId>
+                <version>${wxxr.tools.version}</version>
+            </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -55,5 +60,24 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <generatedSourcesDirectory>target/generated</generatedSourcesDirectory>
+                    <annotationProcessors>
+                            <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
+                    </annotationProcessors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
 

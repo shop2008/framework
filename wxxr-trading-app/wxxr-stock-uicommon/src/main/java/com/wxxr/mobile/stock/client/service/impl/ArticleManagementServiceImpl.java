@@ -12,6 +12,8 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.client.model.MyArticles;
 import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 import com.wxxr.stock.article.ejb.api.ArticleVO;
 import com.wxxr.stock.restful.json.NewsQueryBO;
@@ -26,8 +28,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		implements IArticleManagementService {
 	private static final Trace log = Trace.register(ArticleManagementServiceImpl.class);
 	
-	private List<Article> homeArticles;
-	private List<Article> helpArticles;
+	private MyArticlesBean articles = new MyArticlesBean();
 	//=================interface method =====================================
 	@Override
 	public List<Article> getNewArticles(int start, int limit,  int type) {
@@ -47,22 +48,22 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 					log.error("Error when fetch home articles", e);
 				}	
 				if (query.getType().equals("15")) {
-					homeArticles = fromVO(list);
+					articles.setHomeArticles(fromVO(list));
 				}
 				if (query.getType().equals("19")) {
-					helpArticles = fromVO(list);
+					articles.setHelpArticles(fromVO(list));
 				}
 			}
 		}, 10, TimeUnit.SECONDS);
 		
-		switch (type) {
-		case 15:
-			return homeArticles;
-		case 19:
-			return helpArticles;
-		default:
-			break;
-		}
+//		switch (type) {
+//		case 15:
+//			return homeArticles;
+//		case 19:
+//			return helpArticles;
+//		default:
+//			break;
+//		}
 		return mockData();
 	}
 	
@@ -127,6 +128,12 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	protected void stopService() {
 		context.unregisterService(IArticleManagementService.class, this);
+	}
+
+
+	@Override
+	public MyArticlesBean getMyArticles() {
+		return this.articles;
 	}
 
 

@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.client.service;
 import java.util.List;
 
 import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
 
 /**
  * 文章管理模块
@@ -22,4 +23,6 @@ public interface IArticleManagementService {
 	 * @return
 	 */
 	List<Article> getNewArticles(int start,int limit,int type);
+	
+	MyArticlesBean getMyArticles();
 }
