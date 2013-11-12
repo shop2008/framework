@@ -146,7 +146,7 @@ public abstract class HomePage extends PageBase {
 			String title = ((UICommand)rightMenu.getCommand(name)).getAttribute(AttributeKeys.title);
 			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
 			if(tool != null){
-				tool.setUpdateTitle(title, null);
+				tool.setTitle(title, null);
 			}
 			return name;
 		}
@@ -211,7 +211,7 @@ public abstract class HomePage extends PageBase {
 			String title = ((UICommand)rightMenu.getCommand("home")).getAttribute(AttributeKeys.title);
 			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
 			if(tool != null){
-				tool.setUpdateTitle(title, null);
+				tool.setTitle(title, null);
 			}
 		}
 		final Runnable[] tasks = new Runnable[1];
