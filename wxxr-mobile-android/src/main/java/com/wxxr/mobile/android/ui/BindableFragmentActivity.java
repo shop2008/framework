@@ -36,6 +36,7 @@ import com.wxxr.mobile.core.ui.common.AbstractPageDescriptor;
  */
 public abstract class BindableFragmentActivity extends FragmentActivity implements IBindableActivity {
 
+
 	private static final Trace log = Trace.register(BindableFragmentActivity.class);
 	
 	private IViewBinding androidViewBinding;
@@ -80,6 +81,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				this.toolbar = (IAppToolbar)this.rootView;
 				page.onToolbarCreated(toolbar);
 			}
+			if(descriptor.getViewDescription() != null){
+				this.toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
+			}
 		}else{
 			this.contentRoot = null;
 		}
@@ -114,6 +118,13 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Activity created !");
 		}
 	}
+	
+
+	@Override
+	public IAppToolbar getToolbar() {
+		return this.toolbar;
+	}
+
 
 	
 	/* (non-Javadoc)
