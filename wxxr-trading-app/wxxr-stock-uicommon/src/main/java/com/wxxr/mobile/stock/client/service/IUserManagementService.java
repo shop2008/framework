@@ -15,4 +15,5 @@ public interface IUserManagementService {
 	User fetchUserInfo();
 	void register(String userId);
 	void login(String userId,String pwd);
+	void pushMessageSetting(boolean on);
 }

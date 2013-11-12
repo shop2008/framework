@@ -21,6 +21,21 @@ import com.wxxr.mobile.stock.client.service.IUserManagementService;
 public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> implements
 		IUserManagementService {
 	private static final Trace log = Trace.register(UserManagementServiceImpl.class);
+
+	@Override
+	protected void initServiceDependency() {
+	}
+
+	@Override
+	protected void startService() {
+		context.registerService(IUserManagementService.class, this);
+	}
+
+	@Override
+	protected void stopService() {
+		context.unregisterService(IUserManagementService.class, this);
+		
+	}
 	private UserInfoEntity entity;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.client.service.IUserManagementService#getMyInfo()
@@ -73,22 +88,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		return user;
 	}
 	@Override
-	protected void initServiceDependency() {
-		
-	}
-
-	@Override
-	protected void startService() {
-		context.registerService(IUserManagementService.class, this);
-	}
-
-	@Override
-	protected void stopService() {
-		context.unregisterService(IUserManagementService.class, this);
-		
-	}
-
-	@Override
 	public void register(String userId) {
 		log.info("userId:"+userId);
 		
@@ -98,6 +97,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	public void login(String userId, String pwd) {
 		log.info("userId:"+userId+",pwd:"+pwd);
 		
+	}
+
+	@Override
+	public void pushMessageSetting(boolean on) {
+		
+		
+	}
+
+	@Override
+	public boolean getPushMessageSetting() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
