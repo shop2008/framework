@@ -20,7 +20,7 @@ import com.wxxr.mobile.stock.client.bean.MegagameRank;
  * @author neillin
  *
  */
-@View(name="championShip")
+@View(name="championShip",withToolbar=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.champion_ship_page_layout")
 public abstract class ChampionShipView extends ViewBase {
 	private static final Trace log = Trace.register(TradingMainView.class);
