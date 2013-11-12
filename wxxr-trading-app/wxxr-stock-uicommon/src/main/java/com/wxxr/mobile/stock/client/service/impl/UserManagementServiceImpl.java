@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.client.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
@@ -19,7 +20,7 @@ import com.wxxr.mobile.stock.client.service.IUserManagementService;
  */
 public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> implements
 		IUserManagementService {
-
+	private static final Trace log = Trace.register(UserManagementServiceImpl.class);
 	private UserInfoEntity entity;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.client.service.IUserManagementService#getMyInfo()
@@ -84,6 +85,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	@Override
 	protected void stopService() {
 		context.unregisterService(IUserManagementService.class, this);
+		
+	}
+
+	@Override
+	public void register(String userId) {
+		log.info("userId:"+userId);
+		
+	}
+
+	@Override
+	public void login(String userId, String pwd) {
+		log.info("userId:"+userId+",pwd:"+pwd);
 		
 	}
 

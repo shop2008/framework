@@ -13,4 +13,6 @@ import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
 public interface IUserManagementService {
 	UserInfoEntity getMyInfo();
 	User fetchUserInfo();
+	void register(String userId);
+	void login(String userId,String pwd);
 }

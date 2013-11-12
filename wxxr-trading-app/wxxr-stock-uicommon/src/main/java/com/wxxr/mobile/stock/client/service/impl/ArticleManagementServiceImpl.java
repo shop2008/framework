@@ -36,7 +36,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
 		}
-		final NewsQueryBO query = new NewsQueryBO();
+		/*final NewsQueryBO query = new NewsQueryBO();
 		query.setLimit(limit);
 		query.setStart(start);
 		query.setType(String.valueOf(type));
@@ -61,10 +61,10 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		case 15:
 			return homeArticles;
 		case 19:
-			return getHelpArticles(start, limit);
+			return helpArticles;
 		default:
 			break;
-		}
+		}*/
 		return mockData();
 	}
 	
