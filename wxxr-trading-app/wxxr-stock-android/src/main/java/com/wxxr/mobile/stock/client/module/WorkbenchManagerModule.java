@@ -14,12 +14,14 @@ import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
+import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.KLineView;
@@ -41,6 +43,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	protected void initEventBinders(IEventBinderManager mgr) {
 		mgr.registerFieldBinder("TopRefresh", new RefreshEventBinder());
 		mgr.registerFieldBinder("BottomRefresh", new RefreshEventBinder());
+		mgr.registerFieldBinder(InputEvent.EVENT_TYPE_TEXT_CHANGED, new TextChangedEventBinder());
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 			public void showHomePage() {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put(IAndroidPageNavigator.PARAM_KEY_INTENT_FLAG, String.valueOf(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-				super.showPage(HOME_PAGE_ID,map,null);
+				super.showPage("userRegPage",map,null);
 			}
 		};
 	}
