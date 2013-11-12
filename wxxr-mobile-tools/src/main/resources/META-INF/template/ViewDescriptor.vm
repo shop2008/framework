@@ -34,7 +34,9 @@ public class ${model.name} extends AbstractViewDescriptor {
 	@Override
 	protected void init() {
 		setViewId("${model.viewModel.id}");
+#if(${model.viewModel.description})
 		setViewDescription("${model.viewModel.description}");
+#end
 		addBindingDescriptor(TargetUISystem.ANDROID, new IAndroidBindingDescriptor() {
 			
 			@Override
