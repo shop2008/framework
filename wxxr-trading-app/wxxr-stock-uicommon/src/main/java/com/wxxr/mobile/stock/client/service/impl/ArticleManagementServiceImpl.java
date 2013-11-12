@@ -5,8 +5,6 @@ package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -36,7 +34,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
 		}
-		/*final NewsQueryBO query = new NewsQueryBO();
+		final NewsQueryBO query = new NewsQueryBO();
 		query.setLimit(limit);
 		query.setStart(start);
 		query.setType(String.valueOf(type));
@@ -64,55 +62,32 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 			return helpArticles;
 		default:
 			break;
-		}*/
+		}
 		return mockData();
 	}
 	
 	
 	//=================private method =======================================
 	private Article fromVO(ArticleVO vo){
-		return null;
+		if (vo==null) {
+			return null;
+		}
+		Article article = new Article();
+		article.setTitle(vo.getTitle());
+		article.setAbstractInfo(vo.getAbstracts());
+		article.setArticleUrl(vo.getArticleUrl());
+		article.setImageUrl(vo.getThumbnails());
+		return article;
 	}
 	private List<Article> fromVO(List<ArticleVO> volist){
-		return null;
-	}
-	private List<Article> getHomeArticles(int start, int limit) {
-		final NewsQueryBO query = new NewsQueryBO();
-		query.setLimit(limit);
-		query.setStart(start);
-		query.setType("19");
-		context.invokeLater(new Runnable() {
-			public void run() {	
-				List<ArticleVO> list = null;
-				try {
-					list = context.getService(IRestProxyService.class).getRestService(ArticleResource.class).getNewArticle(query);
-				} catch (Exception e) {
-					log.error("Error when fetch home articles", e);
-				}
-				homeArticles = fromVO(list);
+		List<Article> list = null;
+		if (volist!=null&&volist.size()>0) {
+			list = new ArrayList<Article>();
+			for (ArticleVO article : volist) {
+				list.add(fromVO(article));
 			}
-		}, 10, TimeUnit.SECONDS);
-		return homeArticles;
-	}
-
-
-	private List<Article> getHelpArticles(int start, int limit) {
-		final NewsQueryBO query = new NewsQueryBO();
-		query.setLimit(limit);
-		query.setStart(start);
-		query.setType("15");
-		context.invokeLater(new Runnable() {
-			public void run() {	
-				List<ArticleVO> list = null;
-				try {
-					list = context.getService(IRestProxyService.class).getRestService(ArticleResource.class).getNewArticle(query);
-				} catch (Exception e) {
-					log.error("Error when fetch help articles", e);
-				}
-				helpArticles = fromVO(list);
-			}
-		}, 10, TimeUnit.SECONDS);
-		return helpArticles;
+		}
+		return list;
 	}
 	
 	private List<Article> mockData(){
