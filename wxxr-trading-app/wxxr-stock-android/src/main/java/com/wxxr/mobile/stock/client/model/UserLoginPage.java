@@ -2,17 +2,20 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 @View(name = "userLoginPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
-
+	static Trace log = Trace.register(UserLoginPage.class);
 	@Field(valueKey = "text")
 	String mobileNum;
 
@@ -31,16 +34,22 @@ public abstract class UserLoginPage extends PageBase {
 	/**
 	 * 处理登录
 	 * @param event
-	 * @return
+	 * @return null
 	 */
 	@Command(commandName = "login")
 	String login(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			/**手机号码*/
 			String mobileNum = mobileNumField.getValue();
+			/**密 码*/
 			String password = passwordField.getValue();
-			// TODO 处理登录
 			
+			if (log.isDebugEnabled()) {
+				log.debug("login:mobileNum"+mobileNum);
+				log.debug("login:password"+password);
+			}
+			getUIContext().getKernelContext().getService(IUserManagementService.class).login(mobileNum, password);
 		}
 		return null;
 	}
@@ -54,7 +63,8 @@ public abstract class UserLoginPage extends PageBase {
 	String back(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 处理后退事件
+			//处理后退事件
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -98,20 +108,21 @@ public abstract class UserLoginPage extends PageBase {
 	@Command(commandName="findPasswordBack")
 	String findPasswordBack(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 找回密码
+			getUIContext().getWorkbenchManager().getWorkbench().showPage("userFindPswPage", null, null);
 		}
 		return null;
 	}
 	
 	/**
-	 * 找回密码
+	 * 快速注册
 	 * @param event
 	 * @return
 	 */
+
 	@Command(commandName="quickRegister")
 	String quickRegister(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 快速注册
+			getUIContext().getWorkbenchManager().getWorkbench().showPage("userRegPage", null, null);
 		}
 		return null;
 	}

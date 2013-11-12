@@ -164,13 +164,13 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="apage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="ahome",showPage="myAuthPage",params={
+				@Navigation(on="ahome",showPage="userLoginPage",params={
 						@Parameter(name="p1",value="v1"),
 						@Parameter(name="p2",value="v2")
 				}),
-				@Navigation(on="apage1",showPage="myAuthPage"),
+				@Navigation(on="apage1",showPage="userAccountPage"),
 				@Navigation(on="apage2",showPage="myAuthPage"),
-				@Navigation(on="apage3",showPage="myAuthPage"),
+				@Navigation(on="apage3",showPage="appSetPage"),
 				@Navigation(on="apage4",showPage="myAuthPage")
 			}
 	)

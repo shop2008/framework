@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
@@ -9,14 +10,19 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.client.service.IUserManagementService;
 @View(name = "userRegPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
 public abstract class UserRegPage extends PageBase {
 
-	
+	static Trace log = Trace.register(UserRegPage.class);
 	@Field(valueKey = "text")
 	String mobileNum;
 	DataField<String> mobileNumField;
+	
+	
+	@Field
+	IUserManagementService userService;
 
 	/**
 	 * 是否阅读了《注册条款》
@@ -34,7 +40,7 @@ public abstract class UserRegPage extends PageBase {
 	String back(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 处理后退事件
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -64,7 +70,12 @@ public abstract class UserRegPage extends PageBase {
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			// TODO 将密码发送到手机
+			
+			//将密码发送到手机
+			if (log.isDebugEnabled()) {
+				log.debug("register:Send Message To Mobile");
+			}
+			getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
 			
 		}
 		return null;
@@ -80,14 +91,34 @@ public abstract class UserRegPage extends PageBase {
 	String registerRules(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			// TODO 转向《注册规则》详细界面
-			
+			getUIContext().getWorkbenchManager().getWorkbench().showPage("registerRulesPage", null, null);
+		}
+		return null;
+	}
+	
+	/**
+	 * 设置CheckBox是否选中
+	 * @param event InputEvent.EVENT_TYPE_CLICK
+	 * @return null
+	 */
+	@Command(commandName="setReadChecked")
+	String setReadChecked(InputEvent event) {
+		
+		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			if (this.readChecked == true) {
+				this.readChecked = false;
+				this.readCheckedField.setValue(false);
+			} else {
+				this.readChecked = true;
+				this.readCheckedField.setValue(true);
+			}
+			userService.setRegRulesReaded(this.readCheckedField.getValue());
 		}
 		return null;
 	}
 	@OnShow
 	protected void initData() {
-		this.readChecked = false;
-		this.readCheckedField.setValue(false);
+		
+		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
 	}
 }

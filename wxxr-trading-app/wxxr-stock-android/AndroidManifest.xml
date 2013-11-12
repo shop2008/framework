@@ -98,12 +98,29 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+        
+        <activity
+            android:name=".ui.UnBindCardDialog"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:theme="@style/dialog"
+            android:screenOrientation="portrait" />
         <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+                
+        <activity
+            android:name=".ui.RegisterRulesPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

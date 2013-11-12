@@ -111,4 +111,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		return false;
 	}
 
+	public void setRegRulesReaded(boolean isRead) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isBindCard() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

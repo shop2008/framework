@@ -30,7 +30,7 @@ public abstract class UserFindPswPage extends PageBase {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			//TODO 处理后退事件
-			
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}

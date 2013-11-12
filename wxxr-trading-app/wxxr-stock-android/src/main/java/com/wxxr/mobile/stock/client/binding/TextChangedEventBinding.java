@@ -42,6 +42,10 @@ public class TextChangedEventBinding implements IBinding<IView> {
 		
 		@Override
 		public void afterTextChanged(Editable s) {
+			
+			if (null == s) {
+				return;
+			}
 			String text = s.toString();
 			if (!TextUtils.isEmpty(text)) {
 				SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_TEXT_CHANGED,

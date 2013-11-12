@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
@@ -13,18 +14,22 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
-        <ImageView
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/tv_title_personal_page" />
+
+        <ImageButton
             android:id="@id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/list_button" />
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
 
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/tv_title_psw_find_back" />
     </RelativeLayout>
 
         <LinearLayout
@@ -50,14 +55,16 @@
                 android:src="@drawable/icon_psw" />
 
             <EditText
-                android:id="@+id/et_psw"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_toRightOf="@id/iv_phone"
                 android:hint="@string/hint_mobile_number"
                 android:inputType="number"
-                android:background="@null" />
+                android:background="@null" 
+                bind:field="mobileNum"
+                bind:on_TextChanged="mnTextChanged"
+                />
         </RelativeLayout>
 
     </LinearLayout>
@@ -90,6 +97,9 @@
             android:background="@drawable/red_btn_back"
             android:text="@string/btn_quick_reg_text"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp" 
+            bind:field="*"
+            bind:on_Click="sendMsg"
+            />
     </LinearLayout>
 </LinearLayout>
