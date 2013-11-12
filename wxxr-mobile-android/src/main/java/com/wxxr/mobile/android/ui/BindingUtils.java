@@ -34,4 +34,11 @@ public abstract class BindingUtils {
 		return bdescriptor;
 	}
 
+	public static String getMessage(String message){
+		if(RUtils.isResourceIdURI(message)){
+			int msgId = RUtils.getInstance().getResourceIdByURI(message);
+			message = AppUtils.getFramework().getAndroidApplication().getResources().getString(msgId);
+		}
+		return message;
+	}
 }
