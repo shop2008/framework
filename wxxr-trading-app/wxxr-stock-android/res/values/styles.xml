@@ -113,4 +113,19 @@
 		<item name="android:fadingEdge">none</item>
 		<item name="android:cacheColorHint">#00000000</item>
 	</style>
+	
+	<style name="dialog" parent="@android:style/Theme.Dialog">
+     <item name="android:windowIsFloating">true</item>
+     <item name="android:windowIsTranslucent">true</item>
+     <item name="android:windowNoTitle">true</item>
+     <item name="android:windowBackground">@android:color/transparent</item>
+     <item name="android:backgroundDimEnabled">true</item>
+     <item name="android:windowFullscreen">false</item>
+     <item name="android:minHeight">60dp</item>
+     <item name="android:minWidth">90dp</item>
+     <item name="android:maxHeight">80dp</item>
+     <item name="android:maxWidth">120dp</item>
+     
+ 	</style>
+	
 </resources>
