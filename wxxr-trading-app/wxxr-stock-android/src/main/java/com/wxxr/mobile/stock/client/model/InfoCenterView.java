@@ -21,7 +21,7 @@ import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfo;
  * @author neillin
  * 
  */
-@View(name = "infoCenter",withToolbar=true)
+@View(name = "infoCenter", description = "行情中心")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.price_center_page_layout")
 public abstract class InfoCenterView extends ViewBase {
 	//=====上证======

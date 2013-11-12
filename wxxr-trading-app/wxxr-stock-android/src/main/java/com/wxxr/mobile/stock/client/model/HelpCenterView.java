@@ -19,7 +19,7 @@ import com.wxxr.mobile.stock.client.service.IArticleManagementService;
  * @author neillin
  *
  */
-@View(name="helpCenter")
+@View(name="helpCenter", description="帮助中心")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase {
 	@Field(valueKey="options")

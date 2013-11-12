@@ -29,7 +29,7 @@ import com.wxxr.mobile.stock.client.service.ITradingManagementService;
  * @author neillin
  * 
  */
-@View(name="championShip",withToolbar=true)
+@View(name="championShip", description="大赛排行榜")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.champion_ship_page_layout")
 public abstract class ChampionShipView extends ViewBase {
 	private static final Trace log = Trace.register(TradingMainView.class);

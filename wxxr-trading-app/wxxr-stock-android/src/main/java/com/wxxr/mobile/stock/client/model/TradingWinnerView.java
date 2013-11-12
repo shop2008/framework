@@ -24,7 +24,7 @@ import com.wxxr.mobile.stock.client.service.IArticleManagementService;
  * @author neillin
  *
  */
-@View(name="tradingWinner")
+@View(name="tradingWinner", description="赚钱榜")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.earn_money_rank_layout")
 public abstract class TradingWinnerView extends ViewBase{
 	@Field(valueKey="options")

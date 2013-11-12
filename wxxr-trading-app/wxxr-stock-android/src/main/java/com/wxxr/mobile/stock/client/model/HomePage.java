@@ -39,7 +39,7 @@ import com.wxxr.mobile.stock.client.service.IUserManagementService;
 /**
  * @author neillin
  */
-@View(name="home",withToolbar=true)
+@View(name="home",withToolbar=true, description="短线放大镜")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;
@@ -143,11 +143,11 @@ public abstract class HomePage extends PageBase {
 			if(leftMenu.isOnShow()){
 				leftMenu.hide();
 			}
-			String title = ((UICommand)rightMenu.getCommand(name)).getAttribute(AttributeKeys.title);
-			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
-			if(tool != null){
-				tool.setTitle(title, null);
-			}
+//			String title = ((UICommand)rightMenu.getCommand(name)).getAttribute(AttributeKeys.title);
+//			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
+//			if(tool != null){
+//				tool.setTitle(title, null);
+//			}
 			return name;
 		}
 		return null;
@@ -155,26 +155,26 @@ public abstract class HomePage extends PageBase {
 	@Menu(items={"ahome","apage1","apage2","apage3","apage4"})
 	private IMenu rightMenu;
 	
-	@Command(description="Invoke when a menu item was clicked",commandName="doNavigation1",
+	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
-				@UIItem(id="ahome",label="我的认证",icon="resourceId:drawable/rz"),
-				@UIItem(id="apage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${usrMgr.userRegistered}"),
-				@UIItem(id="apage2",label="交易记录",icon="resourceId:drawable/jyjl"),
-				@UIItem(id="apage3",label="设置",icon="resourceId:drawable/seting"),
-				@UIItem(id="apage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
+				@UIItem(id="rhome",label="我的认证",icon="resourceId:drawable/rz"),
+				@UIItem(id="rpage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${usrMgr.userRegistered}"),
+				@UIItem(id="rpage2",label="交易记录",icon="resourceId:drawable/jyjl"),
+				@UIItem(id="rpage3",label="设置",icon="resourceId:drawable/seting"),
+				@UIItem(id="rpage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="ahome",showPage="userLoginPage",params={
+				@Navigation(on="rhome",showPage="userLoginPage",params={
 						@Parameter(name="p1",value="v1"),
 						@Parameter(name="p2",value="v2")
 				}),
-				@Navigation(on="apage1",showPage="userAccountPage"),
-				@Navigation(on="apage2",showPage="myAuthPage"),
-				@Navigation(on="apage3",showPage="appSetPage"),
-				@Navigation(on="apage4",showPage="myAuthPage")
+				@Navigation(on="rpage1",showPage="userAccountPage"),
+				@Navigation(on="rpage2",showPage="userAuthPage"),
+				@Navigation(on="rpage3",showPage="appSetPage"),
+				@Navigation(on="rpage4",showPage="myAuthPage")
 			}
 	)
-	String menuClicked1(InputEvent event){
+	String menuRightClicked(InputEvent event){
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			String name = ((IUICommand)event.getProperty("ItemClicked")).getName();
 			if(log.isDebugEnabled()){
@@ -199,21 +199,21 @@ public abstract class HomePage extends PageBase {
 		this.userInfo = this.usrMgr.getMyInfo();
 		
 		if(this.userInfo == null){
-			((UICommand)rightMenu.getCommand("ahome")).setAttribute(AttributeKeys.visible, false);
-			((UICommand)rightMenu.getCommand("apage1")).setAttribute(AttributeKeys.visible, false);
-			((UICommand)rightMenu.getCommand("apage2")).setAttribute(AttributeKeys.visible, false);
+			((UICommand)rightMenu.getCommand("rhome")).setAttribute(AttributeKeys.visible, false);
+			((UICommand)rightMenu.getCommand("rpage1")).setAttribute(AttributeKeys.visible, false);
+			((UICommand)rightMenu.getCommand("rpage2")).setAttribute(AttributeKeys.visible, false);
 		}
 	}
 	
 	@OnShow
 	void testNotification(){
-		if(rightMenu!=null) {
-			String title = ((UICommand)rightMenu.getCommand("home")).getAttribute(AttributeKeys.title);
-			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
-			if(tool != null){
-				tool.setTitle(title, null);
-			}
-		}
+//		if(rightMenu!=null) {
+//			String title = ((UICommand)rightMenu.getCommand("home")).getAttribute(AttributeKeys.title);
+//			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
+//			if(tool != null){
+//				tool.setTitle(title, null);
+//			}
+//		}
 		final Runnable[] tasks = new Runnable[1];
 		final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 		tasks[0] = new Runnable() {
