@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.Map;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -23,6 +25,7 @@ import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
 @View(name="toolbarView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.layout_animation_tool_bar_view")
 public abstract class ToolBarView extends StockAppToolbar {
+
 
 	@Field(valueKey="imageURI")
 	String leftIcon;
@@ -66,6 +69,11 @@ public abstract class ToolBarView extends StockAppToolbar {
 		return null;
 	}
 	
+	@Override
+	public void setTitle(String message, Map<String, String> parameters) {
+		this.titleField.setValue(message);
+	}
+
 	@Override
 	public IUIComponent getChild(String name) {
 		if("leftIcon".equals(name)){
