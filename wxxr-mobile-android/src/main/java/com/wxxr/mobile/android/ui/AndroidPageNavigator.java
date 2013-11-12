@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.android.ui;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,20 +13,17 @@ import java.util.Map.Entry;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
@@ -68,7 +66,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#showPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
-	public void showPage(IPage page,Map<String, String> params,IPageCallback cb) {
+	public void showPage(IPage page,Map<String, Object> params,IPageCallback cb) {
 		Application app = AppUtils.getFramework().getAndroidApplication();
 		Activity activity = getCurrentActivity();
 		String pageId = page.getName();
@@ -85,20 +83,14 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
 		initShowPageIntent(page,intent);
-//		Map<String, String> map = getPageShowParams(pageId);
-//		if(map != null){
-//			for (Entry<String, String> entry : map.entrySet()) {
-//				intent.putExtra(entry.getKey(), entry.getValue());
-//			}
-//		}
 		if(params != null){
-			for (Entry<String, String> entry : params.entrySet()) {
+			for (Entry<String, Object> entry : params.entrySet()) {
 				String key = entry.getKey();
-				String val = entry.getValue();
+				Object val = entry.getValue();
 				if(PARAM_KEY_INTENT_FLAG.equals(key)){
-					intent.addFlags(Integer.parseInt(val));
+					intent.addFlags(Integer.parseInt((String)val));
 				}else{
-					intent.putExtra(key, entry.getValue());
+					add2Intent(intent,key,val);
 				}
 			}
 		}
@@ -116,6 +108,59 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			activity.startActivity(intent);
 		} else {
 			app.startActivity(intent);
+		}
+	}
+	
+	protected void add2Intent(Intent intent, String key, Object val){
+		if(val.getClass().isArray()){
+			Class<?> componentType = val.getClass().getComponentType();
+			if(componentType == Byte.TYPE){
+				intent.putExtra(key, (byte[])val);
+			}else if(componentType == Character.TYPE){
+				intent.putExtra(key, (char[])val);
+			}else if(componentType == Short.TYPE){
+				intent.putExtra(key, (short[])val);
+			}else if(componentType == Integer.TYPE){
+				intent.putExtra(key, (int[])val);
+			}else if(componentType == Long.TYPE){
+				intent.putExtra(key, (long[])val);
+			}else if(componentType == Boolean.TYPE){
+				intent.putExtra(key, (boolean[])val);
+			}else if(componentType == Float.TYPE){
+				intent.putExtra(key, (float[])val);
+			}else if(componentType == Double.TYPE){
+				intent.putExtra(key, (double[])val);
+			}else if(Serializable.class.isAssignableFrom(componentType)){
+				intent.putExtra(key, (Serializable[])val);
+			}else if(Parcelable.class.isAssignableFrom(componentType)){
+				intent.putExtra(key, (Parcelable[])val);
+			}else{
+				throw new IllegalArgumentException("Invalid navigation parameter, key :"+key+", value :"+val);
+			}
+		}else{
+			if(val instanceof Byte){
+				intent.putExtra(key, ((Byte)val).byteValue());
+			}else if(val instanceof Short){
+				intent.putExtra(key, ((Short)val).shortValue());
+			}else if(val instanceof Integer){
+				intent.putExtra(key, ((Integer)val).intValue());
+			}else if(val instanceof Long){
+				intent.putExtra(key, ((Long)val).longValue());
+			}else if(val instanceof Float){
+				intent.putExtra(key, ((Float)val).floatValue());
+			}else if(val instanceof Double){
+				intent.putExtra(key, ((Double)val).doubleValue());
+			}else if(val instanceof String){
+				intent.putExtra(key, (String)val);
+			}else if(val instanceof Boolean){
+				intent.putExtra(key, ((Boolean)val).booleanValue());
+			}else if(val instanceof Serializable){
+				intent.putExtra(key, (Serializable)val);
+			}else if(val instanceof Parcelable){
+				intent.putExtra(key, (Parcelable)val);
+			}else{
+				throw new IllegalArgumentException("Invalid navigation parameter, key :"+key+", value :"+val);
+			}
 		}
 	}
 
