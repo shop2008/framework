@@ -70,6 +70,7 @@
     <string name="tv_title_create_trade">创建</string>
     <!-- 搜索股票 -->
     <string name="tv_title_stock_search">搜索股票</string>
+    <string name="search_hint">代码/拼音/首字母</string>
 
     <!-- 快速买入 -->
     <string name="bt_hang_order_text">挂单</string>

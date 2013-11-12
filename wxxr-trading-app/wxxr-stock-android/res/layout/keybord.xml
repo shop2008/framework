@@ -8,4 +8,5 @@
     android:focusableInTouchMode="true"
     android:keyBackground="@drawable/bg_keyboard_key"
     android:keyTextColor="@color/white"
-    />
+    android:keyTextSize="20sp"
+    android:labelTextSize="20sp" />

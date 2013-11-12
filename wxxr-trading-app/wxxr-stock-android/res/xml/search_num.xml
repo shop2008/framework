@@ -22,6 +22,7 @@
         <Key
             android:codes="-5"
             android:isRepeatable="true"
+            android:iconPreview="@drawable/del_pitch"
             android:keyEdgeFlags="right"
             android:keyIcon="@drawable/del" />
     </Row>

@@ -15,4 +15,6 @@
     
     <color name="defaultColor">#2b2b2b</color>
     <color name="selectedColor">#212121</color>
+    
+    <color name="input_txt_content">#cccccc</color>
 </resources>

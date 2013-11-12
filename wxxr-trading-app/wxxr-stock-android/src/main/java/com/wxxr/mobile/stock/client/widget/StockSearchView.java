@@ -64,7 +64,8 @@ public class StockSearchView extends RelativeLayout implements
 	 * 英文-股票键盘切换标记位
 	 */
 	private boolean isEng;
-
+	private boolean isupper;
+	
 	private ListView stock_result_list;
 	private OnTextChangedListener listener;
 
@@ -88,10 +89,11 @@ public class StockSearchView extends RelativeLayout implements
 	private void progressLogic(Context context) {
 		eng = new Keyboard(context, R.xml.eng);
 		search_num = new Keyboard(context, R.xml.search_num);
-		isEng = false;
+		isEng = true;
+		isupper = false;
 		keyboardView.setKeyboard(search_num);
 		keyboardView.setOnKeyboardActionListener(this);
-		keyboardView.setPreviewEnabled(false);
+		keyboardView.setPreviewEnabled(true);
 		editText.setOnTouchListener(this);
 		editText.addTextChangedListener(this);
 		editText.setInputType(InputType.TYPE_NULL);
@@ -109,8 +111,8 @@ public class StockSearchView extends RelativeLayout implements
 		editText = (EditText) editBox.findViewById(R.id.et_stock_search);
 
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT, dip2px(context, 60));
-		params.topMargin = dip2px(context, 5);
+				RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		params.topMargin = dip2px(context, 10);
 
 		// 项部显示
 		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -310,12 +312,19 @@ public class StockSearchView extends RelativeLayout implements
 	public boolean onTouch(View v, MotionEvent event) {
 
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-
-			if (keyboardView.getVisibility() != View.VISIBLE) {
-				keyboardView.setVisibility(View.VISIBLE);
-			} else {
-				keyboardView.setVisibility(View.GONE);
+			switch(v.getId()){
+		case R.id.et_stock_search:
+			keyboardView.setVisibility(View.VISIBLE);
+			break;
+		case R.id.lv_stock_list:
+			keyboardView.setVisibility(View.GONE);
+			break;
 			}
+//			if (keyboardView.getVisibility() != View.VISIBLE) {
+//				keyboardView.setVisibility(View.VISIBLE);
+//			} else {
+//				keyboardView.setVisibility(View.GONE);
+//			}
 		}
 		return false;
 	}

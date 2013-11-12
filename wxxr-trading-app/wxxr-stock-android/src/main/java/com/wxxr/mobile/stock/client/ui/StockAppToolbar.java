@@ -37,7 +37,7 @@ public abstract class StockAppToolbar extends AbstractToolbarView implements ISt
 		}
 	}
 	@Override
-	public void setUpdateTitle(String message, Map<String, String> parameters) {
+	public void setTitle(String message, Map<String, String> parameters) {
 		IDataField<String> field = getField(TITLE_FIELD_NAME);
 		if(field != null){
 			field.setValue(message);
