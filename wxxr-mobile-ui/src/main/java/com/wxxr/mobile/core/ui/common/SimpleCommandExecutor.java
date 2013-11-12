@@ -3,8 +3,10 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -30,7 +32,15 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.IUICommandHandler, java.lang.Object[])
 	 */
 	public void executeCommand(String cmdName,IView view,IUICommandHandler cmdHandler, InputEvent event) {
-		String result = cmdHandler.execute(event);
+		String result = null;
+		Object payload = null;
+		Object cmdResult = cmdHandler.execute(event);
+		if(cmdResult instanceof String){
+			result = (String)cmdResult;
+		}else if(cmdResult instanceof CommandResult){
+			result = ((CommandResult)cmdResult).getResult();
+			payload = ((CommandResult)cmdResult).getPayload();
+		}
 		INavigationDescriptor[] navs = cmdHandler.getNavigations();
 		INavigationDescriptor nextNavigation = getNextNavigation(result, cmdHandler,navs);
 		if(nextNavigation != null){
@@ -38,18 +48,19 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			String toView = StringUtils.trimToNull(nextNavigation.getToView());
 			String message = StringUtils.trimToNull(nextNavigation.getMessage());
 			if(toPage != null){
-				context.getWorkbenchManager().getWorkbench().showPage(toPage, nextNavigation.getParameters(), null);
+				Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
+				context.getWorkbenchManager().getWorkbench().showPage(toPage, params, null);
 			}else if(toView != null){
 				IPage page = getPage(view);
 				IView v = page.getView(toView);
 				boolean add2backstack = true;
-				Map<String, String> params = nextNavigation.getParameters();
+				Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
 				if((params != null)&&(params.size() > 0)){
 					IModelUpdater updater = v.getAdaptor(IModelUpdater.class);
 					if(updater != null){
 						updater.updateModel(params);
 					}
-					String val = params.get("add2BackStack");
+					String val = (String)params.get("add2BackStack");
 					if("false".equalsIgnoreCase(val)){
 						add2backstack = false;
 					}
@@ -59,7 +70,25 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 				context.getWorkbenchManager().getWorkbench().showMessageBox(message, nextNavigation.getParameters());
 			}
 		}
-
+	}
+	
+	/**
+	 * @param payload
+	 * @param nextNavigation
+	 * @return
+	 */
+	protected Map<String, Object> getNavigationParameters(Object payload,
+			INavigationDescriptor nextNavigation) {
+		Map<String, Object> params = nextNavigation.getParameters();
+		if(payload != null){
+			if((params != null)&&(params.size() > 0)){
+				params = new HashMap<String, Object>(params);
+			}else{
+				params = new HashMap<String, Object>();
+			}
+			params.put("result", payload);
+		}
+		return params;
 	}
 
 	protected IPage getPage(IView view) {

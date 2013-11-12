@@ -18,9 +18,9 @@ public interface IWorkbench {
 	String[] getPageIds();
 	String getActivePageId();
 	IPage getPage(String pageId);
-	void showPage(String pageId,Map<String, String> params,IPageCallback callback);
+	void showPage(String pageId,Map<String, Object> params,IPageCallback callback);
 	void showHomePage();
 	void hidePage(String pageId);
-	void showMessageBox(String message, Map<String, String> params);
+	void showMessageBox(String message, Map<String, Object> params);
 	IView createNInitializedView(String viewId);
 }

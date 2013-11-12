@@ -10,7 +10,7 @@ import java.util.Map;
  *
  */
 public interface IPageNavigator {
-	void showPage(IPage page,Map<String, String> params,IPageCallback callback);
+	void showPage(IPage page,Map<String, Object> params,IPageCallback callback);
 	void hidePage(IPage page);
 	void showView(IView view, boolean add2BackStack);
 	void hideView(IView view);

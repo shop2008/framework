@@ -62,7 +62,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showPage(java.lang.String)
 	 */
-	public void showPage(String pageId,Map<String, String> params,IPageCallback callback) {
+	public void showPage(String pageId,Map<String, Object> params,IPageCallback callback) {
 		if(log.isTraceEnabled()){
 			log.trace("Going to show page :"+pageId);
 		}
@@ -74,7 +74,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 			if((params != null)&&(params.isEmpty() == false)){
 				IModelUpdater updater = page.getAdaptor(IModelUpdater.class);
 				if(updater != null){
-					params = new HashMap<String, String>(params);
+					params = new HashMap<String, Object>(params);
 					updater.updateModel(params);
 				}
 			}
@@ -118,8 +118,8 @@ public abstract class WorkbenchBase implements IWorkbench {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showMessageBox(java.lang.String, java.util.Map)
 	 */
-	public void showMessageBox(String message, Map<String, String> params) {
-		params = params != null ? new HashMap<String, String>(params) : new HashMap<String, String>();
+	public void showMessageBox(String message, Map<String, Object> params) {
+		params = params != null ? new HashMap<String, Object>(params) : new HashMap<String, Object>();
 		params.put(MESSAGE_BOX_MESSAGE_ID, message);
 		showPage(MESSAGE_BOX_ID, params, null);
 	}

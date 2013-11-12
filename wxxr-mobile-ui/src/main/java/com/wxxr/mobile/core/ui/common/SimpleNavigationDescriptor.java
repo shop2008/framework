@@ -16,13 +16,13 @@ import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	
 	private String result,message,toView,toPage;
-	private Map<String, String> params;
+	private Map<String, Object> params;
 
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.INavigationDescriptor#getParameters()
 	 */
-	public Map<String, String> getParameters() {
+	public Map<String, Object> getParameters() {
 		return this.params != null ? Collections.unmodifiableMap(this.params) : null;
 	}
 
@@ -93,10 +93,81 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 		this.toPage = toPage;
 		return this;
 	}
+	public SimpleNavigationDescriptor addParameter(String name, byte value){
+		return addParameterObject(name, new Byte(value));
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, char value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, short value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, int value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, long value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, float value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, double value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, boolean value){
+		return addParameterObject(name,value);
+	}
 	
 	public SimpleNavigationDescriptor addParameter(String name, String value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, byte[] value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, char[] value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, short[] value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, int[] value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameter(String name, long[] value){
+		return addParameterObject(name,value);
+	}
+
+	public SimpleNavigationDescriptor addParameter(String name, float[] value){
+		return addParameterObject(name,value);
+	}
+
+	public SimpleNavigationDescriptor addParameter(String name, double[] value){
+		return addParameterObject(name,value);
+	}
+
+	public SimpleNavigationDescriptor addParameter(String name, boolean[] value){
+		return addParameterObject(name,value);
+	}
+
+	public SimpleNavigationDescriptor addParameter(String name, String[] value){
+		return addParameterObject(name,value);
+	}
+	
+	public SimpleNavigationDescriptor addParameterObject(String name, Object value){
 		if(this.params == null){
-			this.params = new HashMap<String, String>();
+			this.params = new HashMap<String, Object>();
 		}
 		this.params.put(name, value);
 		return this;

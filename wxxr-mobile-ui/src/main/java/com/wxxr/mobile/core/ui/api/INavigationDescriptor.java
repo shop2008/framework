@@ -14,5 +14,5 @@ public interface INavigationDescriptor {
 	String getMessage();
 	String getToView();
 	String getToPage();
-	Map<String, String> getParameters();
+	Map<String, Object> getParameters();
 }

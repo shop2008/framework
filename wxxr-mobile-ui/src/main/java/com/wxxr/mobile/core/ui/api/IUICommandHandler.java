@@ -8,6 +8,6 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IUICommandHandler {
-	String execute(InputEvent event);
+	Object execute(InputEvent event);
 	INavigationDescriptor[] getNavigations();
 }
