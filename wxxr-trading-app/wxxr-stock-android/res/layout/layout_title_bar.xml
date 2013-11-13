@@ -15,13 +15,15 @@
         android:layout_centerVertical="true"
         android:background="@null"
         android:src="@drawable/list_button"
+        android:visibility="invisible"
         bind:field="leftIcon"
         bind:on_Click="handleClick" />
 
     <TextView
         android:id="@id/tv_title_content"
-        style="@style/style_title_text" 
-        bind:field="title"/>
+        style="@style/style_title_text"
+        android:text="@string/stock_app_title"
+        bind:field="title" />
 
     <ImageButton
         android:id="@id/ib_toggle_right_menu"
@@ -31,6 +33,7 @@
         android:layout_centerVertical="true"
         android:background="@null"
         android:src="@drawable/message_button"
+        android:visibility="invisible"
         bind:field="rightIcon"
         bind:on_Click="handleClick" />
 
@@ -43,6 +46,7 @@
         android:layout_toLeftOf="@id/ib_toggle_right_menu"
         android:background="@null"
         android:src="@drawable/finds"
+        android:visibility="invisible"
         bind:field="searchIcon"
         bind:on_Click="handleClick" />
 

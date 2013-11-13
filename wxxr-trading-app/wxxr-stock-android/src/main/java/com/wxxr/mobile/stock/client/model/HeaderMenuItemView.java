@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -65,16 +66,19 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	DataField<String> integralBalanceField;
 	DataField<String> accountBalanceField;
 
-	@Command(commandName="handleClickImage")
+	@Command(commandName="handleClickImage",
+			navigations={
+			@Navigation(on="userLoginPage",showPage="userLoginPage")
+		})
 	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");
-		getUIContext()
-				.getWorkbenchManager()
-				.getPageNavigator()
-				.showPage(
-						getUIContext().getWorkbenchManager().getWorkbench()
-								.getPage("userLoginPage"), null, null);
-		return null;
+//		getUIContext()
+//				.getWorkbenchManager()
+//				.getPageNavigator()
+//				.showPage(
+//						getUIContext().getWorkbenchManager().getWorkbench()
+//								.getPage("userLoginPage"), null, null);
+		return "userLoginPage";
 	}
 	
 	@Command
