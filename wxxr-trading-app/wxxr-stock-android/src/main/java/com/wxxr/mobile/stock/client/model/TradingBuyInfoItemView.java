@@ -1,10 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -16,7 +12,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 @View(name="TradingBuyInfoItemView")
@@ -57,8 +53,8 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	
 	@Override
 	public void updateModel(Object data) {
-		if(data instanceof TradingAccount){
-			TradingAccount trading = (TradingAccount) data;
+		if(data instanceof TradingAccountBean){
+			TradingAccountBean trading = (TradingAccountBean) data;
 			this.stockName = trading.getStockName();
 			this.stockNameField.setValue(this.stockName);
 			this.stockCode = trading.getStockCode();
