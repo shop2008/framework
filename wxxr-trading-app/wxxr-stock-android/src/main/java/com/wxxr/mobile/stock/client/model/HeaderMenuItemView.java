@@ -73,7 +73,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 				.getPageNavigator()
 				.showPage(
 						getUIContext().getWorkbenchManager().getWorkbench()
-								.getPage("user_page"), null, null);
+								.getPage("userLoginPage"), null, null);
 		return null;
 	}
 	
