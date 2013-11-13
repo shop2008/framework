@@ -51,7 +51,7 @@ public abstract class StockSearchViewPage extends PageBase {
 				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
 			},
 			navigations={
-				@Navigation(on="home",showPage="home")
+				@Navigation(on="stockSearchPage",showPage="home")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
@@ -59,7 +59,7 @@ public abstract class StockSearchViewPage extends PageBase {
 			log.debug("Toolbar item :left was clicked !");
 		}
 //		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		return "home";
+		return "stockSearchPage";
 	}
 	
 	@OnShow
