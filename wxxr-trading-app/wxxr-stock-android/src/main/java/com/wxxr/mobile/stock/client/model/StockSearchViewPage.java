@@ -21,7 +21,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
-import com.wxxr.mobile.stock.client.bean.Stock;
+import com.wxxr.mobile.stock.client.bean.StockBean;
 import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
 
 /**
@@ -43,7 +43,7 @@ public abstract class StockSearchViewPage extends PageBase {
 	DataField<String> searchEditField;
 		
 	@Field(valueKey="options")
-	List<Stock> searchList;
+	List<StockBean> searchList;
 	DataField<List> searchListField;
 	
 	@Command(description="Invoke when a toolbar item was clicked",
@@ -64,7 +64,7 @@ public abstract class StockSearchViewPage extends PageBase {
 	
 	@OnShow
 	void initStockView() {
-		searchList = new ArrayList<Stock>();
+		searchList = new ArrayList<StockBean>();
 	}
 	
 	@Command
@@ -74,7 +74,7 @@ public abstract class StockSearchViewPage extends PageBase {
 			searchEditField.setValue(text);
 			if(StringUtils.isNotEmpty(text)) {
 				searchList.clear();
-				List<Stock> stock = getUIContext().getKernelContext()
+				List<StockBean> stock = getUIContext().getKernelContext()
 						.getService(IInfoCenterManagementService.class).searchStock("");
 				searchList.addAll(stock);
 //				Stock s;

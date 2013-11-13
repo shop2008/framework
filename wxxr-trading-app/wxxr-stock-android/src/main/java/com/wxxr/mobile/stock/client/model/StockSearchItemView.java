@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.Stock;
+import com.wxxr.mobile.stock.client.bean.StockBean;
 
 /**
  * 股票搜索 Item
@@ -34,8 +34,8 @@ public abstract class StockSearchItemView extends ViewBase implements IModelUpda
 	
 	@Override
 	public void updateModel(Object data) {
-		if (data instanceof Stock) {
-			Stock stock = (Stock) data;
+		if (data instanceof StockBean) {
+			StockBean stock = (StockBean) data;
 			stockName = stock.getName();
 			stockNameField.setValue(stockName);
 			stockCode = stock.getCode();

@@ -8,8 +8,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 
@@ -60,8 +59,8 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof TradingAccount) {
-			TradingAccount account = (TradingAccount) value;
+		if (value instanceof TradingAccountBean) {
+			TradingAccountBean account = (TradingAccountBean) value;
 			setStockName(account.getStockName());
 			setStockCode(account.getStockCode());
 			setChallengeAmount(String.valueOf(account.getInitCredit()));

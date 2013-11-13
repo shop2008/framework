@@ -8,13 +8,12 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.EarnRankItem;
+import com.wxxr.mobile.stock.client.bean.EarnRankItemBean;
 
 /**
  * @author wangxuyang
@@ -41,8 +40,8 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	@Override
 	public void updateModel(Object value) {
 		
-		if(value instanceof EarnRankItem){
-			EarnRankItem data = (EarnRankItem) value;
+		if(value instanceof EarnRankItemBean){
+			EarnRankItemBean data = (EarnRankItemBean) value;
 			this.text = data.getTitle();
 			this.textField.setValue(this.text);
 			this.imageUrl = data.getImgUrl();
