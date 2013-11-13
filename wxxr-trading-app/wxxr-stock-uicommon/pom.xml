@@ -70,7 +70,7 @@
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
-                    <generatedSourcesDirectory>src/main/java</generatedSourcesDirectory>
+                    <generatedSourcesDirectory>src/main/generated</generatedSourcesDirectory>
                     <annotationProcessors>
                             <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
                     </annotationProcessors>
