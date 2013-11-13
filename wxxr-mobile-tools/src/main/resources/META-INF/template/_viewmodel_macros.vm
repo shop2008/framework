@@ -132,6 +132,9 @@
 #macro(onMenuShow $model $methods)
     @Override
     protected void onMenuShow(String menuId) {
+#if(${model.beanBindings})
+    updateBindingBeans();
+#end
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(menuId); 
