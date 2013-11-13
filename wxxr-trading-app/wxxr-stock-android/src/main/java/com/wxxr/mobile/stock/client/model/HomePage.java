@@ -107,13 +107,13 @@ public abstract class HomePage extends PageBase {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
-		getUIContext()
-				.getWorkbenchManager()
-				.getPageNavigator()
-				.showPage(
-						getUIContext().getWorkbenchManager().getWorkbench()
-								.getPage("stockSearchPage"), null, null);
-		return null;
+//		getUIContext()
+//				.getWorkbenchManager()
+//				.getPageNavigator()
+//				.showPage(
+//						getUIContext().getWorkbenchManager().getWorkbench()
+//								.getPage("stockSearchPage"), null, null);
+		return "search";
 	}
 	
 	
