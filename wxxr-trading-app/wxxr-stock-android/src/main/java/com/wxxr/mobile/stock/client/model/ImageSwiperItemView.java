@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.bean.ArticleBean;
 
 @View(name="ImageSwiperItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.image_swiper_view_item")
@@ -66,8 +66,8 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 
 	@Override
 	public void updateModel(Object data) {
-		if(data instanceof Article){
-			Article article = (Article)data;
+		if(data instanceof ArticleBean){
+			ArticleBean article = (ArticleBean)data;
 			this.swiperImage = article.getImageUrl();
 			this.swiperImageField.setValue(this.swiperImage);
 			this.swiperTitle = article.getTitle();

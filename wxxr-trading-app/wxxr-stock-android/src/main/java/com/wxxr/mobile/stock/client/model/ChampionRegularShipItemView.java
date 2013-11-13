@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.RegularTicket;
+import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
 
 @View(name = "ChampionRegularShipItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_regular_ship_page_layout_item")
@@ -32,8 +32,8 @@ public abstract class ChampionRegularShipItemView extends ViewBase implements
 
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof RegularTicket) {
-			RegularTicket msgRank = (RegularTicket) value;
+		if (value instanceof RegularTicketBean) {
+			RegularTicketBean msgRank = (RegularTicketBean) value;
 			this.rankSeq = String.valueOf(msgRank.getRankSeq());
 			this.rankSeqField.setValue(this.rankSeq);
 

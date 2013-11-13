@@ -9,7 +9,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.bean.ArticleBean;
 
 @View(name = "helpCenterItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.help_center_page_layout_item")
@@ -33,8 +33,8 @@ public abstract class HelpCenterItemView extends ViewBase implements
 	
 	@Override
 	public void updateModel(Object data) {
-		if (data instanceof Article) {
-			Article article = (Article) data;
+		if (data instanceof ArticleBean) {
+			ArticleBean article = (ArticleBean) data;
 			this.title = article.getTitle();
 			this.titleField.setValue(this.title);
 			this.abstractInfo = article.getAbstractInfo();

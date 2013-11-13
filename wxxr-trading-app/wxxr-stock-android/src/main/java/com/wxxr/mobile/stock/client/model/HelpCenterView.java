@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.Article;
+import com.wxxr.mobile.stock.client.bean.ArticleBean;
 import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 
 /**
@@ -23,7 +23,7 @@ import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase {
 	@Field(valueKey="options")
-	List<Article> helpArticles;
+	List<ArticleBean> helpArticles;
 	
 	DataField<List> helpArticlesField;
 	

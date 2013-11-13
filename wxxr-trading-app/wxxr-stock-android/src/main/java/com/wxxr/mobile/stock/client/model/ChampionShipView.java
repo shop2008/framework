@@ -16,12 +16,11 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
-import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MegagameRank;
-import com.wxxr.mobile.stock.client.bean.RegularTicket;
-import com.wxxr.mobile.stock.client.bean.WeekRank;
+import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 
@@ -35,19 +34,19 @@ public abstract class ChampionShipView extends ViewBase {
 	private static final Trace log = Trace.register(TradingMainView.class);
 
 	@Field(valueKey = "options")
-	List<MegagameRank> ChampionShip;
+	List<MegagameRankBean> ChampionShip;
 	DataField<List> ChampionShipField;
 
 	@Field(valueKey = "options")
-	List<MegagameRank> ChampionT1Ship;
+	List<MegagameRankBean> ChampionT1Ship;
 	DataField<List> ChampionT1ShipField;
 
 	@Field(valueKey = "options")
-	List<WeekRank> ChampionWeekShip;
+	List<WeekRankBean> ChampionWeekShip;
 	DataField<List> ChampionWeekShipField;
 
 	@Field(valueKey = "options")
-	List<RegularTicket> ChampionRegularShip;
+	List<RegularTicketBean> ChampionRegularShip;
 	DataField<List> ChampionRegularShipField;
 
 	@OnShow
@@ -56,9 +55,9 @@ public abstract class ChampionShipView extends ViewBase {
 			ChampionShip = getUIContext().getKernelContext()
 					.getService(ITradingManagementService.class)
 					.getTMegagameRank();
-			ChampionT1Ship = new ArrayList<MegagameRank>();
-			ChampionWeekShip = new ArrayList<WeekRank>();
-			ChampionRegularShip = new ArrayList<RegularTicket>();
+			ChampionT1Ship = new ArrayList<MegagameRankBean>();
+			ChampionWeekShip = new ArrayList<WeekRankBean>();
+			ChampionRegularShip = new ArrayList<RegularTicketBean>();
 		} catch (StockAppBizException e) {
 
 		}
@@ -83,6 +82,10 @@ public abstract class ChampionShipView extends ViewBase {
 		handleTMegaClick(null);
 		if(cb!=null)
 			cb.refreshSuccess();
+//		IStockAppToolbar tool = ((IStockAppToolbar)((PageBase)getUIContext().getWorkbenchManager().getWorkbench().getPage("home")).getap;
+//		if(tool != null){
+//			tool.showNotification("当前时间 :"+fmt.format(new Date()), null);
+//		}
 		return null;
 		
 	}
@@ -133,7 +136,7 @@ public abstract class ChampionShipView extends ViewBase {
 	String handleTMegaClick(InputEvent event) {
 		if(ChampionShip.size() == 0) {
 			try {
-				List<MegagameRank> ship = getUIContext().getKernelContext()
+				List<MegagameRankBean> ship = getUIContext().getKernelContext()
 						.getService(ITradingManagementService.class)
 						.getTMegagameRank();
 				ChampionShip.addAll(ship);
@@ -154,7 +157,7 @@ public abstract class ChampionShipView extends ViewBase {
 	String handleTMega1Click(InputEvent event) {
 		if(ChampionT1Ship.size() == 0) {
 			try {
-				List<MegagameRank> ship = getUIContext().getKernelContext()
+				List<MegagameRankBean> ship = getUIContext().getKernelContext()
 						.getService(ITradingManagementService.class)
 						.getT1MegagameRank();
 				ChampionT1Ship.addAll(ship);
@@ -175,7 +178,7 @@ public abstract class ChampionShipView extends ViewBase {
 	String handleWeekClick(InputEvent event) {
 		if(ChampionWeekShip.size() == 0) {
 			try {
-				List<WeekRank> ship = getUIContext().getKernelContext()
+				List<WeekRankBean> ship = getUIContext().getKernelContext()
 						.getService(ITradingManagementService.class).getWeekRank();
 				ChampionWeekShip.addAll(ship);
 			} catch (StockAppBizException e) {
@@ -195,7 +198,7 @@ public abstract class ChampionShipView extends ViewBase {
 	String handleRegularTicketClick(InputEvent event) {
 		if(ChampionRegularShip.size() == 0)	 {
 			try {
-				List<RegularTicket> ship = getUIContext().getKernelContext()
+				List<RegularTicketBean> ship = getUIContext().getKernelContext()
 						.getService(ITradingManagementService.class)
 						.getRegularTicketRank();
 				ChampionRegularShip.addAll(ship);

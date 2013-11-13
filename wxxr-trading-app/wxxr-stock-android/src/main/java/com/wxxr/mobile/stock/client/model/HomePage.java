@@ -17,7 +17,6 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
-import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -25,15 +24,13 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.stock.client.IStockAppToolbar;
-import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.bean.UserBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
@@ -48,7 +45,7 @@ public abstract class HomePage extends PageBase {
 	IUserManagementService usrMgr;
 	
 	@Bean(type=BindingType.Pojo)
-	UserInfoEntity userInfo;
+	UserBean userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
@@ -198,7 +195,7 @@ public abstract class HomePage extends PageBase {
 	@OnShow
 	protected void updateRightMenu() {
 //		log.info("Menu :"+menuId+" is shown !");
-		this.userInfo = this.usrMgr.getMyInfo();
+		this.userInfo = this.usrMgr.fetchUserInfo();
 		
 		if(this.userInfo == null){
 			((UICommand)rightMenu.getCommand("rhome")).setAttribute(AttributeKeys.visible, false);
@@ -229,6 +226,6 @@ public abstract class HomePage extends PageBase {
 				AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
 			}
 		};
-		AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
+//		AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
 	}
 }

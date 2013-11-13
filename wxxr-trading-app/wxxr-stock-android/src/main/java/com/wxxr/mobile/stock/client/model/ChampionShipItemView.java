@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.MegagameRank;
+import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
 
 @View(name = "ChampionShipItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_ship_page_layout_item")
@@ -36,8 +36,8 @@ public abstract class ChampionShipItemView extends ViewBase implements
 
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof MegagameRank) {
-			MegagameRank msgRank = (MegagameRank) value;
+		if (value instanceof MegagameRankBean) {
+			MegagameRankBean msgRank = (MegagameRankBean) value;
 			this.rankSeq = String.valueOf(msgRank.getRankSeq());
 			this.rankSeqField.setValue(this.rankSeq);
 

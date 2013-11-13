@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.WeekRank;
+import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 
 @View(name = "ChampionWeekShipItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_week_ship_page_layout_item")
@@ -33,8 +33,8 @@ public abstract class ChampionWeekShipItemView extends ViewBase implements
 
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof WeekRank) {
-			WeekRank msgRank = (WeekRank) value;
+		if (value instanceof WeekRankBean) {
+			WeekRankBean msgRank = (WeekRankBean) value;
 			this.rankSeq = String.valueOf(msgRank.getRankSeq());
 			this.rankSeqField.setValue(this.rankSeq);
 
