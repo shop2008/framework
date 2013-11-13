@@ -3,7 +3,6 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.core.annotation.BindableBean;
 /**
  * 
- * @author chenchao
  *
  */
 @BindableBean

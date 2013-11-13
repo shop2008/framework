@@ -1,14 +1,18 @@
 package com.wxxr.stock.restful.json;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement(name = "newsquery")
 public class NewsQueryBO /*extends AuditableLKeyObject*/ {
-    private int start;
+	@XmlElement(name = "start")
+	private int start;
+	@XmlElement(name = "limit")
     private int limit;
+	@XmlElement(name = "type")
     private String type;
-    
+	@XmlElement(name = "uid")
     private int uid;
     
 	

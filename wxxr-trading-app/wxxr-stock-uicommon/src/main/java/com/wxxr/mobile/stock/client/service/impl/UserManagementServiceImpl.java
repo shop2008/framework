@@ -5,6 +5,9 @@ package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.security.auth.login.LoginException;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -15,6 +18,8 @@ import com.wxxr.mobile.stock.client.bean.TradingAccount;
 import com.wxxr.mobile.stock.client.bean.User;
 import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.security.impl.Connector;
+import com.wxxr.mobile.stock.security.impl.ConnectorContext;
 
 /**
  * @author neillin
@@ -30,6 +35,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	protected void startService() {
+		ConnectorContext conectorContext = new ConnectorContext(context);
+		Connector.createConnector(conectorContext);
 		context.registerService(IUserManagementService.class, this);
 	}
 
@@ -97,7 +104,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public void login(String userId, String pwd) {
-		log.info("userId:"+userId+",pwd:"+pwd);
+		final String userName = userId;
+		final String password = pwd;
+		context.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Connector.getInstance().login(userName, password);
+				} catch (LoginException e) {
+					log.warn("Login Failed", e);
+				}
+			}
+		}, 1, TimeUnit.SECONDS);
 		
 	}
 
@@ -109,7 +127,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public boolean getPushMessageSetting() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

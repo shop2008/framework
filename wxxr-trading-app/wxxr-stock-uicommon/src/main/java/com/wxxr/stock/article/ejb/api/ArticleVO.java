@@ -10,44 +10,45 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class ArticleVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@XmlElement(name = "id")
 	private String id; // 文章id
-
+	@XmlElement(name = "title")
 	private String title; // 文章题目
-
+	@XmlElement(name = "power")
 	private int power; // 权重
 	@XmlElement(name = "articleUrl")
 	private String articleUrl; // 文章URL(相对地址)
-
+	@XmlElement(name = "articleCreateDate")
 	private String articleCreateDate; // 创建时间
-
+	@XmlElement(name = "updateDate")
 	private Date updateDate;
-
+	@XmlElement(name = "source")
 	private String source;// 来源（来自于哪里）
-
+	@XmlElement(name = "abstracts")
 	private String abstracts; // 摘要（140字符以内）
-
+	@XmlElement(name = "thumbnails")
 	private String thumbnails; // 缩略图（url相对地址）
-
+	@XmlElement(name = "thumbnailsInfo")
 	private String thumbnailsInfo; // 缩略图信息（即Thumbnails为空时）才需要
-
+	@XmlElement(name = "tag")
 	private String tag; // Tag信息
-
+	@XmlElement(name = "cdurl")
 	private String cdurl; // 财道url
-
+	@XmlElement(name = "cdId")
 	private String cdId; // 财道文章
-
+	@XmlElement(name = "power")
 	private String content; // 文章内容
-
+	@XmlElement(name = "resultType")
 	private int resultType;
-
+	@XmlElement(name = "type")
 	private String type;
-
+	@XmlElement(name = "stock")
 	private String stock; // 股票及市场（值为"股票code,市场code"）
-
+	@XmlElement(name = "isAvailable")
 	private int isAvailable;// 有效标识（1：标识使用中，0：逻辑删除）
-
+	@XmlElement(name = "isNotice")
 	private int isNotice;// 提醒标识（1：未提示，0：已提醒）
-
+	@XmlElement(name = "userName")
 	private String userName; // 用户昵称（唯一）
 
 	public String getId() {

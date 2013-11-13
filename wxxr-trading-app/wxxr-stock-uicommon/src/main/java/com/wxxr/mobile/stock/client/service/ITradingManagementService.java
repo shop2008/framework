@@ -9,8 +9,8 @@ import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.MegagameRank;
 import com.wxxr.mobile.stock.client.bean.RegularTicket;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
-import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfo;
 import com.wxxr.mobile.stock.client.bean.WeekRank;
+import com.wxxr.mobile.stock.client.model.UserCreateTradAccInfo;
 
 /**
  * 交易管理模块
