@@ -154,7 +154,7 @@ public abstract class HomePage extends PageBase {
 		}
 		return null;
 	}
-	@Menu(items={"ahome","apage1","apage2","apage3","apage4"})
+	@Menu(items={"rhome","rpage1","rpage2","rpage3","rpage4"})
 	private IMenu rightMenu;
 	
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
