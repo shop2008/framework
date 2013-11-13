@@ -28,43 +28,8 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	private static final Trace log = Trace.register(ArticleManagementServiceImpl.class);
 	
 	private MyArticlesBean articles = new MyArticlesBean();
-	//=================interface method =====================================
-	@Override
-	public List<ArticleBean> getNewArticles(int start, int limit,  int type) {
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
-		}
-		final NewsQueryBO query = new NewsQueryBO();
-		query.setLimit(limit);
-		query.setStart(start);
-		query.setType(String.valueOf(type));
-		context.invokeLater(new Runnable() {
-			public void run() {	
-				List<ArticleVO> list = null;
-				try {
-					list = context.getService(IRestProxyService.class).getRestService(ArticleResource.class).getNewArticle(query);
-				} catch (Exception e) {
-					log.error("Error when fetch home articles", e);
-				}	
-				if (query.getType().equals("15")) {
-					articles.setHomeArticles(fromVO(list));
-				}
-				if (query.getType().equals("19")) {
-					articles.setHelpArticles(fromVO(list));
-				}
-			}
-		}, 10, TimeUnit.SECONDS);
-		
-//		switch (type) {
-//		case 15:
-//			return homeArticles;
-//		case 19:
-//			return helpArticles;
-//		default:
-//			break;
-//		}
-		return mockData();
-	}
+	
+
 	
 	
 	//=================private method =======================================
@@ -129,9 +94,32 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		context.unregisterService(IArticleManagementService.class, this);
 	}
 
-
+	//=================interface method =====================================
 	@Override
-	public MyArticlesBean getMyArticles() {
+	public MyArticlesBean getMyArticles(int start,int limit,int type) {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
+		}
+		final NewsQueryBO query = new NewsQueryBO();
+		query.setLimit(limit);
+		query.setStart(start);
+		query.setType(String.valueOf(type));
+		context.invokeLater(new Runnable() {
+			public void run() {	
+				List<ArticleVO> list = null;
+				try {
+					list = context.getService(IRestProxyService.class).getRestService(ArticleResource.class).getNewArticle(query);
+				} catch (Exception e) {
+					log.error("Error when fetch home articles", e);
+				}	
+				if (query.getType().equals("15")) {
+					articles.setHomeArticles(fromVO(list)==null?null:mockData());
+				}
+				if (query.getType().equals("19")) {
+					articles.setHelpArticles(fromVO(list)==null?null:mockData());
+				}
+			}
+		}, 10, TimeUnit.SECONDS);
 		return this.articles;
 	}
 

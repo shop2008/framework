@@ -14,6 +14,7 @@ import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
  *
  */
 public interface IArticleManagementService {
+	
 	/**
 	 * 查询文章列表
 	 * @param start-起始位置 
@@ -22,7 +23,5 @@ public interface IArticleManagementService {
 	 * 				15-代表首页文章 ；19-代表帮助中心
 	 * @return
 	 */
-	List<ArticleBean> getNewArticles(int start,int limit,int type);
-	
-	MyArticlesBean getMyArticles();
+	MyArticlesBean getMyArticles(int start,int limit,int type);
 }

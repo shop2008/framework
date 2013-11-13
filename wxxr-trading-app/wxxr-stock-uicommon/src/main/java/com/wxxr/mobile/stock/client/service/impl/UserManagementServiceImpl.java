@@ -31,7 +31,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	protected void initServiceDependency() {
-		//addRequiredService(IPreferenceManager.class);
 	}
 
 	@Override
