@@ -98,7 +98,7 @@
             android:text="@string/btn_quick_reg_text"
             android:textColor="@color/white"
             android:textSize="15sp" 
-            bind:field="*"
+            bind:field="registerBtn"
             bind:on_Click="sendMsg"
             />
     </LinearLayout>

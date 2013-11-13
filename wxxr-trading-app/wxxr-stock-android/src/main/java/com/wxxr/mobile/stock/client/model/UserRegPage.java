@@ -8,9 +8,11 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name = "userRegPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
 public abstract class UserRegPage extends PageBase {
@@ -20,6 +22,8 @@ public abstract class UserRegPage extends PageBase {
 	String mobileNum;
 	DataField<String> mobileNumField;
 	
+	@Field(valueKey="text")
+	String registerBtn;
 	
 	@Field
 	IUserManagementService userService;
@@ -31,6 +35,8 @@ public abstract class UserRegPage extends PageBase {
 	boolean readChecked;
 	
 	DataField<Boolean> readCheckedField;
+	
+	DataField<String> registerBtnField;
 	/**
 	 * 处理后退
 	 * @param event
@@ -105,14 +111,24 @@ public abstract class UserRegPage extends PageBase {
 	String setReadChecked(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			
+			System.out.println("-------------123");
 			if (this.readChecked == true) {
 				this.readChecked = false;
 				this.readCheckedField.setValue(false);
+				
+				this.registerBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_GRAY);
+				this.registerBtnField.setAttribute(AttributeKeys.enabled, false);
 			} else {
 				this.readChecked = true;
 				this.readCheckedField.setValue(true);
+				
+				this.registerBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_WHITE);
+				this.registerBtnField.setAttribute(AttributeKeys.enabled, true);
 			}
-			userService.setRegRulesReaded(this.readCheckedField.getValue());
+			//userService.setRegRulesReaded(this.readCheckedField.getValue());
+		
+			
 		}
 		return null;
 	}
