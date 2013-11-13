@@ -16,7 +16,7 @@
         <TextView
             android:id="@id/tv_title_content"
             style="@style/style_title_text"
-            android:text="@string/tv_title_personal_page" />
+            android:text="@string/tv_title_setting" />
 
         <ImageButton
             android:id="@id/back_btn"
