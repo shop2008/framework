@@ -3,6 +3,10 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
+import java.util.List;
+
+import com.wxxr.mobile.stock.client.bean.Score;
+import com.wxxr.mobile.stock.client.bean.ScoreInfoEntity;
 import com.wxxr.mobile.stock.client.bean.User;
 import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
 
@@ -50,5 +54,18 @@ public interface IUserManagementService {
 	boolean isBindCard();
 	
 	
+	/**
+	 * 绑定银行卡
+	 * @param accountName 户名
+	 * @param bankName 开户行
+	 * @param bankAddr 开户行地址
+	 * @param bankNum 银行账号
+	 * @return 
+	 * 		true 绑定成功
+	 *      false 绑定失败
+	 */
 	boolean bindBankCard(String accountName,String bankName,String bankAddr, String bankNum);
+
+	
+	ScoreInfoEntity fetchUserScoreInfo(String userId);
 }

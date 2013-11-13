@@ -9,6 +9,8 @@ import java.util.List;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.client.IStockAppContext;
+import com.wxxr.mobile.stock.client.bean.Score;
+import com.wxxr.mobile.stock.client.bean.ScoreInfoEntity;
 import com.wxxr.mobile.stock.client.bean.TradingAccount;
 import com.wxxr.mobile.stock.client.bean.User;
 import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
@@ -128,5 +130,26 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	public ScoreInfoEntity fetchUserScoreInfo(String userId) {
+		
+		ScoreInfoEntity entity = new ScoreInfoEntity();
+		
+		entity.setBalance("200");
+		
+		List<Score> scores = new ArrayList<Score>();
+		for(int i=0;i<9;i++) {
+			Score score = new Score();
+			score.setCatagory("推荐好友奖励");
+			score.setAmount("200");
+			score.setDate("2011-10-12");
+			scores.add(score);
+		}
+		
+		entity.setScores(scores);
+		return entity;
+	}
+
+	
 
 }
