@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfo;
+import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfoBean;
 
 /**
  * @author wangxuyang
@@ -39,8 +39,8 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	
 	@Override
 	public void updateModel(Object data) {
-		if (data instanceof StockBasicMarketInfo) {
-			StockBasicMarketInfo stock = (StockBasicMarketInfo) data;
+		if (data instanceof StockBasicMarketInfoBean) {
+			StockBasicMarketInfoBean stock = (StockBasicMarketInfoBean) data;
 			stockName = stock.getName();
 			stockNameField.setValue(stockName);
 			stockCode = stock.getCode();

@@ -33,10 +33,10 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 
-	@Bean(type=BindingType.Pojo)
+	@Bean(type=BindingType.Pojo, express="${usrMgr.fetchUserInfo}")
 	UserBean userInfo;
 	
-	@Field(valueKey="visible")
+	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
 	boolean userRegistered;
 	
 	DataField<Boolean> userRegisteredField;
@@ -44,10 +44,10 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="imageURI")
 	String headIcon;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${userInfo != null ? userInfo.nickName : '登录账号'}")
 	String nickName;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${userInfo != null ? userInfo.phoneNumber : '赶快登录赚实盘积分吧'}")
 	String userNum;
 	
 	@Field(valueKey="text")
@@ -68,17 +68,16 @@ public abstract class HeaderMenuItemView extends ViewBase {
 
 	@Command(commandName="handleClickImage",
 			navigations={
-			@Navigation(on="userLoginPage",showPage="userLoginPage")
+			@Navigation(on="userLoginPage",showPage="userLoginPage"),
+			@Navigation(on="userPage",showPage="userPage")
 		})
 	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");
-//		getUIContext()
-//				.getWorkbenchManager()
-//				.getPageNavigator()
-//				.showPage(
-//						getUIContext().getWorkbenchManager().getWorkbench()
-//								.getPage("userLoginPage"), null, null);
-		return "userLoginPage";
+		if(this.userInfo == null){
+			return "userPage";
+		} else {
+			return "userLoginPage";
+		}
 	}
 	
 	@Command
@@ -97,32 +96,32 @@ public abstract class HeaderMenuItemView extends ViewBase {
 		log.info("User click on cash icon !");
 		return null;
 	}
-
-	@OnCreate
-	void injectServices() {
-		this.usrMgr = AppUtils.getService(IUserManagementService.class);
-	}
-	
-	@OnShow
-	private void updateRightMenu() {
-		this.userInfo = this.usrMgr.fetchUserInfo();
-		
-		if(this.userInfo == null){
-			this.userRegistered = false;
-			this.userRegisteredField.setValue(false);
-			this.nickName = "登录账号";
-			this.nickNameField.setValue(this.nickName);
-			this.userNum = "赶快登录赚实盘积分吧";
-			this.userNumField.setValue(this.userNum);
-		}else{
-			this.userRegistered = true;
-			this.userRegisteredField.setValue(true);
-			this.nickName = userInfo.getNickName();
-			this.nickNameField.setValue(this.nickName);
-			this.userNum = userInfo.getPhoneNumber();
-			this.userNumField.setValue(this.userNum);
-		}
-	}
+//
+//	@OnCreate
+//	void injectServices() {
+//		this.usrMgr = AppUtils.getService(IUserManagementService.class);
+//	}
+//	
+//	@OnShow
+//	private void updateRightMenu() {
+//		this.userInfo = this.usrMgr.fetchUserInfo();
+//		
+//		if(this.userInfo == null){
+//			this.userRegistered = false;
+//			this.userRegisteredField.setValue(false);
+//			this.nickName = "登录账号";
+//			this.nickNameField.setValue(this.nickName);
+//			this.userNum = "赶快登录赚实盘积分吧";
+//			this.userNumField.setValue(this.userNum);
+//		}else{
+//			this.userRegistered = true;
+//			this.userRegisteredField.setValue(true);
+//			this.nickName = userInfo.getNickName();
+//			this.nickNameField.setValue(this.nickName);
+//			this.userNum = userInfo.getPhoneNumber();
+//			this.userNumField.setValue(this.userNum);
+//		}
+//	}
 
 	
 

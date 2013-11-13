@@ -15,7 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfo;
+import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfoBean;
 
 /**
  * @author neillin
@@ -52,7 +52,7 @@ public abstract class InfoCenterView extends ViewBase {
 
 	// 股票列表
 	@Field(valueKey = "options")
-	List<StockBasicMarketInfo> stockInfos;
+	List<StockBasicMarketInfoBean> stockInfos;
 	DataField<List> stockInfosField;
 
 	
@@ -77,8 +77,8 @@ public abstract class InfoCenterView extends ViewBase {
 		szDeltaPer ="1.21%";
 		szDeltaPerField.setValue(szDeltaPer);
 		//TODO set stock list
-		stockInfos = new ArrayList<StockBasicMarketInfo>();
-		StockBasicMarketInfo st = new StockBasicMarketInfo();
+		stockInfos = new ArrayList<StockBasicMarketInfoBean>();
+		StockBasicMarketInfoBean st = new StockBasicMarketInfoBean();
 		st.setCode("600521");
 		st.setName("华海药业");
 		st.setCurrentPrice(11.88f);

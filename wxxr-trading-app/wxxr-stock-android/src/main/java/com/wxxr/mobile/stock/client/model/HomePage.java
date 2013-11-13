@@ -3,11 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -17,24 +12,16 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnCreate;
-import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
-import com.wxxr.mobile.core.ui.common.UICommand;
-import com.wxxr.mobile.stock.client.IStockAppToolbar;
-import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.bean.UserBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
@@ -48,8 +35,8 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
-	@Bean(type=BindingType.Pojo,express="${usrMgr.myInfo}")
-	UserInfoEntity userInfo;
+	@Bean(type=BindingType.Pojo,express="${usrMgr.fetchUserInfo}")
+	UserBean userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
@@ -102,19 +89,13 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="search",label="搜索",icon="resourceId:drawable/finds")
 			}, 
 	navigations={
-			@Navigation(on="search",showPage="stockSearchPage")}
+			@Navigation(on="*",showPage="stockSearchPage")}
 	)
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
-		getUIContext()
-				.getWorkbenchManager()
-				.getPageNavigator()
-				.showPage(
-						getUIContext().getWorkbenchManager().getWorkbench()
-								.getPage("stockSearchPage"), null, null);
-		return null;
+		return "";
 	}
 	
 	
