@@ -9,11 +9,8 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.client.IStockAppContext;
-import com.wxxr.mobile.stock.client.bean.Stock;
-import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfo;
+import com.wxxr.mobile.stock.client.bean.StockBean;
 import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
-import com.wxxr.stock.hq.ejb.api.TaxisVO;
-import com.wxxr.stock.restful.resource.StockResource;
 
 /**
  * @author wangxuyang
@@ -25,13 +22,8 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 	private static final Trace log = Trace.register(InfoCenterManagementServiceImpl.class);
 	//====================interface methods =====================
 	@Override
-	public List<Stock> searchStock(String keyword) {
+	public List<StockBean> searchStock(String keyword) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<StockBasicMarketInfo> getStockMarketInfos(int start, int limit) {
-	
 		return null;
 	}
 	

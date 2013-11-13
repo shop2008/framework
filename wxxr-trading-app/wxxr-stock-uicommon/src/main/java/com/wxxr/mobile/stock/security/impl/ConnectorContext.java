@@ -9,9 +9,13 @@
 
 package com.wxxr.mobile.stock.security.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.security.IConnectorContext;
 import com.wxxr.mobile.stock.security.IExceptionHandler;
@@ -25,7 +29,7 @@ public class ConnectorContext implements IConnectorContext {
 	private IStockAppContext context;
 	private ILoginView loginView;
 	private IExceptionHandler handler;
-
+	private String serverURl;
 
 	public ConnectorContext(IStockAppContext context) {
 		if (context == null) {
@@ -45,7 +49,10 @@ public class ConnectorContext implements IConnectorContext {
 
 	@Override
 	public String getUrlPrefix() {
-		return null;
+		if (StringUtils.isBlank(serverURl)) {
+			serverURl = context.getService(IPreferenceManager.class).getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME, IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL);
+		}
+		return serverURl;
 	}
 
 	@Override
@@ -79,21 +86,20 @@ public class ConnectorContext implements IConnectorContext {
 	}
 
 	public InputStream getCientCert() {
-		// FileInputStream fis = new FileInputStream("./client.p12");
-		// return
-		// context.getApplication().getAndroidApplication().getResources().openRawResource(R.raw.client);
+		try {
+			return context.getApplication().getAndroidApplication().getAssets().open("client.p12");
+		} catch (IOException e) {
+			log.error("Error when opening server.cer", e);
+		}
 		return null;
 	}
 
 	public InputStream getServerCert() {
-		// try {
-		// FileInputStream fis = new FileInputStream("./server.cer");
-		// return fis;
-		// } catch (FileNotFoundException e) {
-		//
-		// }
-		// return
-		// context.getApplication().getAndroidApplication().getResources().openRawResource(R.raw.server);
+		try {
+			return context.getApplication().getAndroidApplication().getAssets().open("server.cer");
+		} catch (IOException e) {
+			log.error("Error when opening server.cer", e);
+		}
 		return null;
 	}
 

@@ -1,8 +1,11 @@
-package com.wxxr.mobile.stock.client.bean;
+package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
 
-public class AccountInfoEntity {
+import com.wxxr.mobile.core.annotation.BindableBean;
+
+@BindableBean(pkg="com.wxxr.mobile.stock.client.bean",className="AccountInfoBean")
+public class AccountInfo {
 
 	/**
 	 * 余额

@@ -3,20 +3,15 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
-import java.util.List;
-
-import com.wxxr.mobile.stock.client.bean.Score;
-import com.wxxr.mobile.stock.client.bean.ScoreInfoEntity;
-import com.wxxr.mobile.stock.client.bean.User;
-import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
+import com.wxxr.mobile.stock.client.bean.UserBean;
 
 /**
  * @author neillin
  *
  */
 public interface IUserManagementService {
-	UserInfoEntity getMyInfo();
-	User fetchUserInfo();
+	UserBean fetchUserInfo();
 	void register(String userId);
 	void login(String userId,String pwd);
 	
@@ -67,5 +62,5 @@ public interface IUserManagementService {
 	boolean bindBankCard(String accountName,String bankName,String bankAddr, String bankNum);
 
 	
-	ScoreInfoEntity fetchUserScoreInfo(String userId);
+	ScoreInfoBean fetchUserScoreInfo(String userId);
 }

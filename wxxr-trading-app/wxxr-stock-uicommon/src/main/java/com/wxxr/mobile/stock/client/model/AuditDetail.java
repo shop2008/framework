@@ -7,18 +7,18 @@ import com.wxxr.mobile.core.annotation.BindableBean;
  * @author chenchao
  *
  */
-@BindableBean
+@BindableBean(pkg="com.wxxr.mobile.stock.client.bean",className="AuditDetailBean")
 public class AuditDetail{
 	/**申请资金*/
 	private String fund;
 	/**总盈亏率*/
-	private float plRisk;
+	private String plRisk;
 	/**盈亏总额（交易盘，除去费用）*/
-	private float totalGain;
+	private String totalGain;
 	/**玩家实得收益--没有收益时不显示80%*/
-	private float userGain;
+	private String userGain;
 	/**补偿交易综合费--总收益<手续费，=总收益（优先补偿)*/
-	private float tradingCost;
+	private String tradingCost;
 	/**账户管理费--没有收益时不显示20%*/
 	private String accountPay;
 	/**止损比例*/

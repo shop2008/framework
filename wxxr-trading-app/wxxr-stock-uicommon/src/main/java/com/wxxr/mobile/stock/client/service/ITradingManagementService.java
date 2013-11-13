@@ -6,11 +6,11 @@ package com.wxxr.mobile.stock.client.service;
 import java.util.List;
 
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MegagameRank;
-import com.wxxr.mobile.stock.client.bean.RegularTicket;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
-import com.wxxr.mobile.stock.client.bean.WeekRank;
-import com.wxxr.mobile.stock.client.model.UserCreateTradAccInfo;
+import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 
 /**
  * 交易管理模块
@@ -27,7 +27,7 @@ public interface ITradingManagementService {
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<TradingAccount> getTradingAccountList(int type)
+	List<TradingAccountBean> getTradingAccountList(int type)
 			throws StockAppBizException;
 
 	/**
@@ -38,7 +38,7 @@ public interface ITradingManagementService {
 	 *            - 0表示T日交易盘，1表示T+1日交易盘
 	 * @return
 	 */
-	List<TradingAccount> getTradingAccountList(String userId, int type);
+	List<TradingAccountBean> getTradingAccountList(String userId, int type);
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public interface ITradingManagementService {
 	 *            - 交易盘ID
 	 * @return
 	 */
-	TradingAccount getTradingAccount(Long id);
+	TradingAccountBean getTradingAccount(Long id);
 
 	/**
 	 * 创建交易盘
@@ -74,28 +74,28 @@ public interface ITradingManagementService {
      * @return
      * @throws StockAppBizException
      */
-	List<MegagameRank> getTMegagameRank() throws StockAppBizException;
+	List<MegagameRankBean> getTMegagameRank() throws StockAppBizException;
 	/**
 	 * 获取T+1日排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<MegagameRank> getT1MegagameRank() throws StockAppBizException;
+	List<MegagameRankBean> getT1MegagameRank() throws StockAppBizException;
 	/**
 	 * 获取实盘券排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<RegularTicket> getRegularTicketRank() throws StockAppBizException;
+	List<RegularTicketBean> getRegularTicketRank() throws StockAppBizException;
 	/**
 	 * 获取周赛排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<WeekRank> getWeekRank() throws StockAppBizException;
+	List<WeekRankBean> getWeekRank() throws StockAppBizException;
 	/**
 	 * 获取创建交易盘相关参数
 	 * @return
 	 */
-	UserCreateTradAccInfo getUserCreateTradAccInfo();
+	UserCreateTradAccInfoBean getUserCreateTradAccInfo();
 }

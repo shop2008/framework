@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.annotation.BindableBean;
  * @author wangxuyang
  *
  */
-@BindableBean(pkg="com.wxxr.mobile.stock.client.bean",className="UserCreateTradAccInfo")
+@BindableBean(pkg="com.wxxr.mobile.stock.client.bean",className="UserCreateTradAccInfoBean")
 public class UserCreateTradAccInfo {
 	/**
 	 * 保证金比例

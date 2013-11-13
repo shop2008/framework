@@ -61,7 +61,7 @@
 		</dependency>
 	</dependencies>
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <!-- <finalName>${project.artifactId}</finalName> -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -70,7 +70,7 @@
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
-                    <generatedSourcesDirectory>target/generated</generatedSourcesDirectory>
+                    <generatedSourcesDirectory>src/main/java</generatedSourcesDirectory>
                     <annotationProcessors>
                             <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
                     </annotationProcessors>

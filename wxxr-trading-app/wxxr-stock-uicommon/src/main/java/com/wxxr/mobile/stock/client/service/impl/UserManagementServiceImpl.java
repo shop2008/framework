@@ -11,12 +11,12 @@ import javax.security.auth.login.LoginException;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.client.IStockAppContext;
-import com.wxxr.mobile.stock.client.bean.Score;
-import com.wxxr.mobile.stock.client.bean.ScoreInfoEntity;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
-import com.wxxr.mobile.stock.client.bean.User;
-import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
+import com.wxxr.mobile.stock.client.bean.ScoreBean;
+import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.UserBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 import com.wxxr.mobile.stock.security.impl.Connector;
 import com.wxxr.mobile.stock.security.impl.ConnectorContext;
@@ -31,6 +31,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(IPreferenceManager.class);
 	}
 
 	@Override
@@ -45,30 +46,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.unregisterService(IUserManagementService.class, this);
 		
 	}
-	private UserInfoEntity entity;
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.client.service.IUserManagementService#getMyInfo()
-	 */
+	
+	
 	@Override
-	public UserInfoEntity getMyInfo() {
-//		if(entity == null){
-//			context.invokeLater(new Runnable() {
-//				
-//				@Override
-//				public void run() {
-//					UserInfoEntity info = new UserInfoEntity();
-//					info.setNickName("江泽明");
-//					info.setPhoneNumber("13812232123");
-//					entity = info;
-//				}
-//			}, 10, TimeUnit.SECONDS);
-//		}
-		return entity;
-	}
-
-	@Override
-	public User fetchUserInfo() {
-		User user = new User();
+	public UserBean fetchUserInfo() {
+		UserBean user = new UserBean();
 	
 		user.setNickName("王五");
 		user.setUserPic("resourceId:drawable/head1");
@@ -80,9 +62,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		user.setChallengeShared("0");
 		user.setJoinShared("19");
 		
-		List<TradingAccount> tradeInfos = new ArrayList<TradingAccount>();
+		List<TradingAccountBean> tradeInfos = new ArrayList<TradingAccountBean>();
 		for(int i=0;i<5;i++) {
-			TradingAccount account = new TradingAccount();
+			TradingAccountBean account = new TradingAccountBean();
 			account.setIncome(i%2==0?2000.00f:-100.00f);
 			account.setCreateDate("2012-10-2");
 			account.setType(i%2==0? 1: 0);
@@ -148,15 +130,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		return false;
 	}
 
-	public ScoreInfoEntity fetchUserScoreInfo(String userId) {
+	public ScoreInfoBean fetchUserScoreInfo(String userId) {
 		
-		ScoreInfoEntity entity = new ScoreInfoEntity();
+		ScoreInfoBean entity = new ScoreInfoBean();
 		
 		entity.setBalance("200");
 		
-		List<Score> scores = new ArrayList<Score>();
+		List<ScoreBean> scores = new ArrayList<ScoreBean>();
 		for(int i=0;i<9;i++) {
-			Score score = new Score();
+			ScoreBean score = new ScoreBean();
 			score.setCatagory("推荐好友奖励");
 			score.setAmount("200");
 			score.setDate("2011-10-12");

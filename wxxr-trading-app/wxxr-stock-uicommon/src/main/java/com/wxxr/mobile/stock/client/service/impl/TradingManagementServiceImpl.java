@@ -12,11 +12,11 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MegagameRank;
-import com.wxxr.mobile.stock.client.bean.RegularTicket;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
-import com.wxxr.mobile.stock.client.bean.WeekRank;
-import com.wxxr.mobile.stock.client.model.UserCreateTradAccInfo;
+import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
@@ -54,7 +54,7 @@ public class TradingManagementServiceImpl extends
 	List<TradingAccInfoVO> t_list;
 	List<TradingAccInfoVO> t1_list;
 
-	public List<TradingAccount> getTradingAccountList(final int type) {
+	public List<TradingAccountBean> getTradingAccountList(final int type) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("getTradingAccountList[type: %s]", type));
 		}
@@ -73,13 +73,13 @@ public class TradingManagementServiceImpl extends
 		return mockData(type);
 	}
 
-	public List<TradingAccount> getTradingAccountList(String userId, int type) {
+	public List<TradingAccountBean> getTradingAccountList(String userId, int type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TradingAccount getTradingAccount(Long id) {
+	public TradingAccountBean getTradingAccount(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -91,34 +91,34 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	public List<MegagameRank> getTMegagameRank() throws StockAppBizException {
+	public List<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
 		return mockRankData("T");
 	}
 
 	@Override
-	public List<MegagameRank> getT1MegagameRank() throws StockAppBizException {
+	public List<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
 		return mockRankData("T+1");
 	}
 
 	@Override
-	public List<RegularTicket> getRegularTicketRank()
+	public List<RegularTicketBean> getRegularTicketRank()
 			throws StockAppBizException {
 		return mockRegularTicketRank();
 	}
 
 	@Override
-	public List<WeekRank> getWeekRank() throws StockAppBizException {
+	public List<WeekRankBean> getWeekRank() throws StockAppBizException {
 		return mockWeekRank();
 	}
 
 	// =================private method =======================================
-	private List<TradingAccount> mockData(int type) {
-		List<TradingAccount> list = new ArrayList<TradingAccount>();
-		TradingAccount t0ta = null;
+	private List<TradingAccountBean> mockData(int type) {
+		List<TradingAccountBean> list = new ArrayList<TradingAccountBean>();
+		TradingAccountBean t0ta = null;
 		switch (type) {
 		case 0:
 			// ====mock T日实盘，未结算，盈利
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1l);
 			t0ta.setInitCredit(100000);
 			t0ta.setIncome(3000.01f);
@@ -128,7 +128,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
 			// ====mock T日实盘，未结算，亏损
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1l);
 			t0ta.setInitCredit(100000);
 			t0ta.setIncome(-3000.01f);
@@ -138,7 +138,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
 			// =====mock T日模拟盘，未结算，平盘
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(2l);
 			t0ta.setInitCredit(50000);
 			t0ta.setIncome(0);
@@ -150,7 +150,7 @@ public class TradingManagementServiceImpl extends
 			break;
 		case 1:
 			// ===== mock T+1日模拟盘，已结算
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(2l);
 			t0ta.setInitCredit(100000);
 			t0ta.setIncome(300.01f);
@@ -160,7 +160,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(1);// 结算
 			list.add(t0ta);
 			// ==== mock T+1日实盘、未结算，盈利
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
 			t0ta.setIncome(300.01f);
@@ -170,7 +170,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
 			// ==== mock T+1日实盘、未结算，亏损
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
 			t0ta.setIncome(-300.01f);
@@ -180,7 +180,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
 			// ==== mock T+1日实盘、未结算，平盘
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
 			t0ta.setIncome(0);
@@ -190,7 +190,7 @@ public class TradingManagementServiceImpl extends
 			t0ta.setStatus(0);// 未结算
 			list.add(t0ta);
 			// ==== mock T+1日实盘、已结算，亏损
-			t0ta = new TradingAccount();
+			t0ta = new TradingAccountBean();
 			t0ta.setId(1002l);
 			t0ta.setInitCredit(50000);
 			t0ta.setIncome(-300.01f);
@@ -206,11 +206,11 @@ public class TradingManagementServiceImpl extends
 		return list;
 	}
 
-	public List<MegagameRank> mockRankData(String t)
+	public List<MegagameRankBean> mockRankData(String t)
 			throws StockAppBizException {
-		List<MegagameRank> list = new ArrayList<MegagameRank>();
+		List<MegagameRankBean> list = new ArrayList<MegagameRankBean>();
 		for (int i = 0; i < 10; i++) {
-			MegagameRank mr = new MegagameRank();
+			MegagameRankBean mr = new MegagameRankBean();
 			mr.setAcctID(1);
 			mr.setNickName("模拟用户" + i);
 			mr.setGainRate("3%");
@@ -228,11 +228,11 @@ public class TradingManagementServiceImpl extends
 		return list;
 	}
 
-	public List<RegularTicket> mockRegularTicketRank()
+	public List<RegularTicketBean> mockRegularTicketRank()
 			throws StockAppBizException {
-		List<RegularTicket> list = new ArrayList<RegularTicket>();
+		List<RegularTicketBean> list = new ArrayList<RegularTicketBean>();
 		for (int i = 0; i < 10; i++) {
-			RegularTicket mr = new RegularTicket();
+			RegularTicketBean mr = new RegularTicketBean();
 			mr.setNickName("模拟用户" + i);
 			mr.setRegular(1000 * (10 - i));
 			mr.setGainCount(6 - i % 5);
@@ -241,10 +241,10 @@ public class TradingManagementServiceImpl extends
 		return list;
 	}
 
-	public List<WeekRank> mockWeekRank() throws StockAppBizException {
-		List<WeekRank> list = new ArrayList<WeekRank>();
+	public List<WeekRankBean> mockWeekRank() throws StockAppBizException {
+		List<WeekRankBean> list = new ArrayList<WeekRankBean>();
 		for (int i = 0; i < 10; i++) {
-			WeekRank mr = new WeekRank();
+			WeekRankBean mr = new WeekRankBean();
 			mr.setDates("2013年11月04日-2013年11月08日");
 			mr.setGainCount(6 - i % 5);
 			mr.setNickName("模拟用户" + i);
@@ -254,14 +254,14 @@ public class TradingManagementServiceImpl extends
 		return list;
 	}
 
-	public UserCreateTradAccInfo getUserCreateTradAccInfo() {
-		UserCreateTradAccInfo info = new UserCreateTradAccInfo();
-		/*info.setCapitalRate(0.05f);
+	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
+		UserCreateTradAccInfoBean info = new UserCreateTradAccInfoBean();
+		info.setCapitalRate(0.05f);
 		info.setCostRate(0.00399f);
 		info.setDepositRate(0.05f);
 		info.setMaxAmount(30000000l);
 		info.setRateString("0.08;0.10,0.12;0.13,0.05;0.08");
-		info.setVoucherCostRate(0.00399f);*/
+		info.setVoucherCostRate(0.00399f);
 		return info;
 	}
 
