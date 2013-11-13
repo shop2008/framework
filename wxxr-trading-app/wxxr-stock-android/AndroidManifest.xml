@@ -102,10 +102,11 @@
         
         <activity
             android:name=".ui.UnBindCardDialog"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
             android:theme="@style/dialog"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" 
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true" 
+            />
         <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"

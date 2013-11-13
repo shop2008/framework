@@ -44,6 +44,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             bind:field="newNickName"
+            bind:on_TextChanged="newNickChanged"
             />
         
     </LinearLayout>
