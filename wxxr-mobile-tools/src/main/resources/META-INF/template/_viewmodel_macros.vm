@@ -87,7 +87,7 @@
         ${binding.field.simpleType} v_${binding.field.name} = this.${binding.field.name}Updater.doEvaluate();
         if(!ModelUtils.isEquals(this.${binding.field.name}, v_${binding.field.name})){
             this.${binding.field.name} = v_${binding.field.name};
-            regsiterBean("${binding.field.name}", this.${binding.field.name});
+            registerBean("${binding.field.name}", this.${binding.field.name});
             if(this.${binding.field.name} instanceof IBindableBean){
                 ((IBindableBean)this.${binding.field.name}).addPropertyChangeListener(new BeanPropertyChangedListener("${binding.field.name}"));
             }
