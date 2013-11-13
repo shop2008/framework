@@ -85,7 +85,6 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	protected void startService() {
 		context.registerService(IArticleManagementService.class, this);
-
 	}
 
 	
@@ -100,6 +99,8 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
 		}
+		articles.setHomeArticles(mockData());
+		articles.setHelpArticles(mockData());
 		final NewsQueryBO query = new NewsQueryBO();
 		query.setLimit(limit);
 		query.setStart(start);
