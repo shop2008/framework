@@ -5,6 +5,8 @@ package com.wxxr.mobile.tools.model;
 
 import java.util.LinkedList;
 
+import com.wxxr.mobile.core.ui.api.IProgressGuard;
+
 
 /**
  * @author neillin
@@ -20,6 +22,7 @@ public class UICommandModel implements JavaModel{
 	private String enabledWhenExpress,visibleWhenExpress;
 	private LinkedList<MenuItemModel> menuItems;
 	private LinkedList<NavigationModel> navigations;
+	private IProgressGuard progressGuard;
 	/**
 	 * @return the commandName
 	 */
@@ -141,6 +144,18 @@ public class UICommandModel implements JavaModel{
 		if(this.visibleWhenExpress != null){
 			ViewModelUtils.createExpressionModel(this.classModel, this, "visible", this.visibleWhenExpress);
 		}
+	}
+	/**
+	 * @return the progressGuard
+	 */
+	public IProgressGuard getProgressGuard() {
+		return progressGuard;
+	}
+	/**
+	 * @param progressGuard the progressGuard to set
+	 */
+	public void setProgressGuard(IProgressGuard progressGuard) {
+		this.progressGuard = progressGuard;
 	}
 
 }

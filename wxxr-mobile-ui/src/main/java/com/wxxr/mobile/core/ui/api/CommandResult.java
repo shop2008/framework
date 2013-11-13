@@ -35,4 +35,12 @@ public class CommandResult {
 		this.payload = payload;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CommandResult [result=" + result + ", payload=" + payload + "]";
+	}
+	
 }

@@ -144,7 +144,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 					}
 				}
 			};
-			timer.schedule(t, TimeUnit.MILLISECONDS.convert(delay, unit));
+			getTimer().schedule(t, TimeUnit.MILLISECONDS.convert(delay, unit));
 			return new ICancellable() {
 				private boolean cancelled = false;
 				@Override
@@ -242,6 +242,12 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	}
 
 
+	protected Timer getTimer() {
+		if(this.timer == null){
+			timer = new Timer("MicroKernel Timer Thread");
+		}
+		return this.timer;
+	}
 	@SuppressWarnings("unchecked")
 	public void start() throws Exception{
 		IProgressMonitor monitor = null;
@@ -261,7 +267,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 				startModule(((M)mod));
 				cnt++;
 			}
-			timer = new Timer("MicroKernel Timer Thread");
+			
 			setStatus(MStatus.STARTED);
 			fireKernelStarted();
 			if((monitor = getStartMonitor()) != null){

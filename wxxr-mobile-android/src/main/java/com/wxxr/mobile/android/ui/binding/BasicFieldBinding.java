@@ -9,6 +9,7 @@ import java.util.Set;
 
 import android.view.View;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
@@ -27,12 +28,12 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
  */
 public class BasicFieldBinding implements IFieldBinding {
 	
-	private View pComponent;	// physical component
-	private IView viewModel;	// Logic view component
-	private IWorkbenchRTContext bContext;
-	private IAndroidBindingContext context;
-	private Map<String, String> bindingAttrs;
-	private String fieldName;
+	protected View pComponent;	// physical component
+	protected IView viewModel;	// Logic view component
+	protected IWorkbenchRTContext bContext;
+	protected IAndroidBindingContext context;
+	protected Map<String, String> bindingAttrs;
+	protected String fieldName;
 	
 	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
 		this.pComponent = ctx.getBindingControl();
@@ -115,10 +116,13 @@ public class BasicFieldBinding implements IFieldBinding {
 	@Override
 	public void activate(IView model) {
 		this.viewModel = model;
-//		if(this.field != null){
-//			this.field.doBinding(this);
-//		}
-		updateUI(true);
+		AppUtils.runOnUIThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				updateUI(true);
+			}
+		});
 	}
 
 	/* (non-Javadoc)
@@ -127,7 +131,6 @@ public class BasicFieldBinding implements IFieldBinding {
 	@Override
 	public void deactivate() {
 		if(this.viewModel != null){
-//			this.field.doUnbinding(this);
 			this.viewModel = null;
 		}
 	}

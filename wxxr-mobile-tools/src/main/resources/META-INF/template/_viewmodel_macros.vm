@@ -190,9 +190,11 @@
  #set( $HType = ${model.addImport("com.wxxr.mobile.core.ui.common.AbstractUICommandHandler")})
  #set( $CMDType = ${model.addImport("com.wxxr.mobile.core.ui.common.UICommand")})
  #set( $NavType = ${model.addImport("com.wxxr.mobile.core.ui.common.SimpleNavigationDescriptor")})
+ #set( $GuardType = ${model.addImport("com.wxxr.mobile.core.ui.common.SimpleProgressGuard")})
     $NavType navDesc = null;
     $CMDType item = null;
     $HType handler = null;
+    $GuardType guard = null;
 #foreach($cmd in $commands)
 #if(${cmd.className})
     handler = new ${model.addImport(${cmd.className})}();
@@ -223,6 +225,21 @@
 #end
     handler.addNavigation(navDesc);
 #end
+#end
+#if(${cmd.progressGuard})
+    guard = new SimpleProgressGuard();
+    guard.setCancellable(${cmd.progressGuard.cancellable});
+#if(${cmd.progressGuard.icon})
+    guard.setIcon("${cmd.progressGuard.icon}");
+#end
+#if(${cmd.progressGuard.message})
+    guard.setMessage("${cmd.progressGuard.message}");
+#end
+    guard.setSilentPeriod(${cmd.progressGuard.silentPeriod});
+#if(${cmd.progressGuard.title})
+    guard.setTitle("${cmd.progressGuard.title}");
+#end
+    handler.setProgressGuard(guard);
 #end
     addUICommand("${cmd.name}", handler);
 #if(${cmd.menuItems})

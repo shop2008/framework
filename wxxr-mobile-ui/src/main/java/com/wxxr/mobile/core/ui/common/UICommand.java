@@ -3,7 +3,9 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 
 /**
@@ -12,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
  */
 public class UICommand extends UIComponent implements IUICommand{
 	private String cmdName;
-	
+	private IUICommandHandler handler;
 	
 	public UICommand() {
 		super();
@@ -28,6 +30,10 @@ public class UICommand extends UIComponent implements IUICommand{
 	@Override
 	public void invokeCommand(String command, InputEvent event) {
 		if(command == null){
+			if(this.handler != null){
+				getUIContext().getWorkbenchManager().getCommandExecutor().executeCommand(this.cmdName, null, this.handler, event);
+				return;
+			}
 			command = this.cmdName == null ? getName() : this.cmdName;
 		}
 		super.invokeCommand(command, event);
@@ -44,6 +50,20 @@ public class UICommand extends UIComponent implements IUICommand{
 	 */
 	public void setCommandName(String cmdName) {
 		this.cmdName = cmdName;
+	}
+
+	/**
+	 * @return the handler
+	 */
+	public IUICommandHandler getHandler() {
+		return handler;
+	}
+
+	/**
+	 * @param handler the handler to set
+	 */
+	public void setHandler(IUICommandHandler handler) {
+		this.handler = handler;
 	}
 
 }

@@ -28,6 +28,7 @@ import com.sun.source.tree.VariableTree;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -54,6 +55,7 @@ import com.wxxr.mobile.core.ui.common.DomainValueChangedEventImpl;
 import com.wxxr.mobile.core.ui.common.ELAttributeValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ModelUtils;
+import com.wxxr.mobile.core.ui.common.SimpleProgressGuard;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -660,6 +662,24 @@ public abstract class ViewModelUtils {
 //		model.addField(elem.getSimpleName().toString(), elem.asType().toString());
 	}
 
+	protected static void processProgressGuard(ViewModelClass model,Element elem, UICommandModel m){
+		ExeGuard ann = elem.getAnnotation(ExeGuard.class);
+		if(ann != null){
+			SimpleProgressGuard guard = new SimpleProgressGuard();
+			guard.setSilentPeriod(ann.silentPeriod());
+			guard.setCancellable(ann.cancellable());
+			if(StringUtils.isNotBlank(ann.message())){
+				guard.setMessage(ann.message());
+			}
+			if(StringUtils.isNotBlank(ann.title())){
+				guard.setTitle(ann.title());
+			}
+			if(StringUtils.isNotBlank(ann.sign())){
+				guard.setIcon(ann.sign());
+			}
+			m.setProgressGuard(guard);
+		}
+	}
 	/**
 	 * @param model
 	 * @param elem
@@ -686,6 +706,7 @@ public abstract class ViewModelUtils {
 				cmdModel.setVisibleWhenExpress(ann.visibleWhen());
 			}
 			model.addCommandModel(cmdModel);
+			processProgressGuard(model, elem, cmdModel);
 			Navigation[] navs = ann.navigations();
 			if(navs != null){
 				for (Navigation nav : navs) {

@@ -24,6 +24,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 
 import com.wxxr.mobile.core.api.ApplicationFactory;
@@ -295,7 +296,11 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	 */
 	@Override
 	public void runOnUIThread(Runnable task) {
-		this.uiThreadHandler.post(safeRunnable(task));
+	    if(Looper.myLooper() == this.uiThreadHandler.getLooper()){
+	        task.run();
+	    }else{
+	    	this.uiThreadHandler.post(safeRunnable(task));
+	    }
 	}
 
 }

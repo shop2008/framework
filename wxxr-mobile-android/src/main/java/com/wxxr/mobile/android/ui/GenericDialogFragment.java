@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.wxxr.mobile.android.app.AppUtils;
@@ -61,37 +60,37 @@ public class GenericDialogFragment extends DialogFragment {
 	    	if((titleField != null)&&StringUtils.isNotBlank(titleField.getValue())){
 	    		builder.setTitle(BindingUtils.getMessage(titleField.getValue()));
 	    	}
-	    }
-	    // Add action buttons
-	    final IUICommand leftButton = (IUICommand)this.view.getChild("left_button");
-	    if(leftButton != null){
-	    	builder.setPositiveButton(leftButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, leftButton);
-	            	   leftButton.invokeCommand(null, evt);
-	               }
-	         });
-	    }
-	    final IUICommand rightButton = (IUICommand)this.view.getChild("right_button");
-	    if(rightButton != null){
-	    	builder.setPositiveButton(rightButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, rightButton);
-	            	   leftButton.invokeCommand(null, evt);
-	               }
-	         });
-	    }
-	    final IUICommand middleButton = (IUICommand)this.view.getChild("mid_button");
-	    if(middleButton != null){
-	    	builder.setPositiveButton(middleButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) {
-	            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, middleButton);
-	            	   leftButton.invokeCommand(null, evt);
-	               }
-	         });
+		    // Add action buttons
+		    final IUICommand leftButton = (IUICommand)this.view.getChild("left_button");
+		    if(leftButton != null){
+		    	builder.setPositiveButton(leftButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
+		               @Override
+		               public void onClick(DialogInterface dialog, int id) {
+		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, leftButton);
+		            	   leftButton.invokeCommand(null, evt);
+		               }
+		         });
+		    }
+		    final IUICommand rightButton = (IUICommand)this.view.getChild("right_button");
+		    if(rightButton != null){
+		    	builder.setPositiveButton(rightButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
+		               @Override
+		               public void onClick(DialogInterface dialog, int id) {
+		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, rightButton);
+		            	   leftButton.invokeCommand(null, evt);
+		               }
+		         });
+		    }
+		    final IUICommand middleButton = (IUICommand)this.view.getChild("mid_button");
+		    if(middleButton != null){
+		    	builder.setPositiveButton(middleButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
+		               @Override
+		               public void onClick(DialogInterface dialog, int id) {
+		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, middleButton);
+		            	   leftButton.invokeCommand(null, evt);
+		               }
+		         });
+		    }
 	    }
 	    return builder.create();
 	}

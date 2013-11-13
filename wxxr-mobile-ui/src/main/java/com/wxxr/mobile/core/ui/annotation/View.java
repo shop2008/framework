@@ -20,7 +20,9 @@ import java.lang.annotation.Target;
 public @interface View {
 	String name() default "";
 	String description() default "";
+	String title() default "";
 	AttributeKey[] attrTypes() default {};
 	Attribute[] attributes() default {};
 	boolean withToolbar() default false;
+	String[] alias() default {};
 }

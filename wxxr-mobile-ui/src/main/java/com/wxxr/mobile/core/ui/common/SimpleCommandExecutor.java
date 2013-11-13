@@ -5,11 +5,14 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
+import com.wxxr.mobile.core.ui.api.IProgressGuard;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
@@ -23,6 +26,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  *
  */
 public class SimpleCommandExecutor implements IUICommandExecutor {
+	private static final Trace log = Trace.register(SimpleCommandExecutor.class);
 	private final IWorkbenchRTContext context;
 	
 	public SimpleCommandExecutor(IWorkbenchRTContext ctx){
@@ -31,10 +35,53 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.IUICommandHandler, java.lang.Object[])
 	 */
-	public void executeCommand(String cmdName,IView view,IUICommandHandler cmdHandler, InputEvent event) {
+	public void executeCommand(final String cmdName,final IView view,final IUICommandHandler cmdHandler, final InputEvent event) {
+		IProgressGuard guard = cmdHandler.getProgressGuard();
+		if(guard != null){
+			if(log.isDebugEnabled()){
+				log.debug("Command :"+cmdName+" will be executed asynchronously with monitor guard :"+guard);
+			}
+			InvocationMonitor monitor = new InvocationMonitor(context) {
+				
+				@Override
+				protected void handleFailed(Throwable cause) {
+					log.warn("Command :"+cmdName+" executed failed", cause);
+					CommandResult result = new CommandResult();
+					result.setResult("failed");
+					result.setPayload(cause);
+					processCommandResult(view, cmdHandler, result);
+				}
+				
+				@Override
+				protected void handleDone(Object returnVal) {
+					processCommandResult(view, cmdHandler, returnVal);
+				}
+			};
+			
+			monitor.setCancellable(guard.isCancellable());
+			monitor.setIcon(guard.getIcon());
+			monitor.setMessage(guard.getMessage());
+			monitor.setSilentPeriod(guard.getSilentPeriod());
+			monitor.setTitle(guard.getTitle());
+			monitor.executeOnMonitor(new Callable<Object>() {			
+				@Override
+				public Object call() throws Exception {
+					return cmdHandler.execute(event);
+				}
+			});
+		}else{
+			Object cmdResult = cmdHandler.execute(event);
+			processCommandResult(view, cmdHandler, cmdResult);
+		}
+	}
+	/**
+	 * @param view
+	 * @param cmdHandler
+	 * @param cmdResult
+	 */
+	protected void processCommandResult(IView view, IUICommandHandler cmdHandler, Object cmdResult) {
 		String result = null;
 		Object payload = null;
-		Object cmdResult = cmdHandler.execute(event);
 		if(cmdResult instanceof String){
 			result = (String)cmdResult;
 		}else if(cmdResult instanceof CommandResult){
@@ -52,7 +99,10 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 				context.getWorkbenchManager().getWorkbench().showPage(toPage, params, null);
 			}else if(toView != null){
 				IPage page = getPage(view);
-				IView v = page.getView(toView);
+				IView v = page != null ? page.getView(toView) : null;
+				if(v == null){
+					v = context.getWorkbenchManager().getWorkbench().createNInitializedView(toView);
+				}
 				boolean add2backstack = true;
 				Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
 				if((params != null)&&(params.size() > 0)){
