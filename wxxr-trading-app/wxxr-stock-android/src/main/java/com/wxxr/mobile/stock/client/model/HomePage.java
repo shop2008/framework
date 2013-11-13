@@ -14,9 +14,11 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -24,13 +26,15 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.stock.client.IStockAppToolbar;
-import com.wxxr.mobile.stock.client.bean.UserBean;
+import com.wxxr.mobile.stock.client.bean.UserInfoEntity;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
@@ -44,8 +48,8 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
-	@Bean(type=BindingType.Pojo)
-	UserBean userInfo;
+	@Bean(type=BindingType.Pojo,express="${usrMgr.myInfo}")
+	UserInfoEntity userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4"})
 	private IMenu leftMenu;
@@ -104,13 +108,13 @@ public abstract class HomePage extends PageBase {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
-//		getUIContext()
-//				.getWorkbenchManager()
-//				.getPageNavigator()
-//				.showPage(
-//						getUIContext().getWorkbenchManager().getWorkbench()
-//								.getPage("stockSearchPage"), null, null);
-		return "search";
+		getUIContext()
+				.getWorkbenchManager()
+				.getPageNavigator()
+				.showPage(
+						getUIContext().getWorkbenchManager().getWorkbench()
+								.getPage("stockSearchPage"), null, null);
+		return null;
 	}
 	
 	
@@ -133,6 +137,7 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="page4",showView="helpCenter")
 			}
 	)
+	@ExeGuard(title="测试1111",message="2222 55长时间调用，进度弹出框...",silentPeriod=1,cancellable=true)
 	String menuClicked(InputEvent event){
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			String name = ((IUICommand)event.getProperty("ItemClicked")).getName();
@@ -147,6 +152,12 @@ public abstract class HomePage extends PageBase {
 //			if(tool != null){
 //				tool.setTitle(title, null);
 //			}
+			if("page4".equals(name)){
+				try {
+					Thread.sleep(5000L);
+				} catch (InterruptedException e) {
+				}
+			}
 			return name;
 		}
 		return null;
@@ -156,9 +167,9 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
-				@UIItem(id="rhome",label="我的认证",icon="resourceId:drawable/rz"),
-				@UIItem(id="rpage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${usrMgr.userRegistered}"),
-				@UIItem(id="rpage2",label="交易记录",icon="resourceId:drawable/jyjl"),
+				@UIItem(id="rhome",label="我的认证",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),
+				@UIItem(id="rpage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${userInfo != null}"),
+				@UIItem(id="rpage2",label="交易记录",icon="resourceId:drawable/jyjl",visibleWhen="${userInfo != null}"),
 				@UIItem(id="rpage3",label="设置",icon="resourceId:drawable/seting"),
 				@UIItem(id="rpage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
@@ -186,46 +197,5 @@ public abstract class HomePage extends PageBase {
 		}
 		return null;
 	}
-	
-	@OnCreate
-	void injectServices() {
-		this.usrMgr = AppUtils.getService(IUserManagementService.class);
-	}
-	
-	@OnShow
-	protected void updateRightMenu() {
-//		log.info("Menu :"+menuId+" is shown !");
-		this.userInfo = this.usrMgr.fetchUserInfo();
 		
-		if(this.userInfo == null){
-			((UICommand)rightMenu.getCommand("rhome")).setAttribute(AttributeKeys.visible, false);
-			((UICommand)rightMenu.getCommand("rpage1")).setAttribute(AttributeKeys.visible, false);
-			((UICommand)rightMenu.getCommand("rpage2")).setAttribute(AttributeKeys.visible, false);
-		}
-	}
-	
-	@OnShow
-	void testNotification(){
-//		if(rightMenu!=null) {
-//			String title = ((UICommand)rightMenu.getCommand("home")).getAttribute(AttributeKeys.title);
-//			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
-//			if(tool != null){
-//				tool.setTitle(title, null);
-//			}
-//		}
-		final Runnable[] tasks = new Runnable[1];
-		final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
-		tasks[0] = new Runnable() {
-			
-			@Override
-			public void run() {
-				IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
-				if(tool != null){
-					tool.showNotification("当前时间 :"+fmt.format(new Date()), null);
-				}
-				AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
-			}
-		};
-//		AppUtils.runOnUIThread(tasks[0], 30, TimeUnit.SECONDS);
-	}
 }

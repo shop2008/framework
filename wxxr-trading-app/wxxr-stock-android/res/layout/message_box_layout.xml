@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
@@ -14,6 +15,7 @@
         android:padding="8dp"
         android:textColor="#e1e1e1"
         android:textSize="16sp"
+        bind:field="title"
         android:layout_margin="12dp"/>
 
     <View android:layout_width="fill_parent"
@@ -38,6 +40,7 @@
             android:layout_height="wrap_content"
             android:text="确认删除数据？" 
             android:textColor="#e1e1e1"
+            bind:field="message"
         	android:textSize="14sp"
         	android:layout_marginLeft="8dp"/>
         
@@ -61,8 +64,22 @@
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
             android:background="@drawable/message_box_btn"
+            bind:field="left_button"
             android:layout_marginRight="4dp"/>
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="取消" 
+            android:textColor="#e1e1e1"
+            android:textSize="14sp"
+            android:padding="15dp"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            bind:field="mid_button"
+            android:background="@drawable/message_box_btn"/>
+        
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
@@ -73,6 +90,7 @@
         	android:padding="15dp"
         	android:layout_marginLeft="4dp"
             android:layout_weight="1"
+            bind:field="right_button"
             android:background="@drawable/message_box_btn"/>
         
    </LinearLayout>     
