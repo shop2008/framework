@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.List;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
+import com.wxxr.mobile.stock.client.bean.TradingRecordBean;
 
 /**
  * @author wangyan
@@ -29,7 +30,7 @@ public class DealDetail{
 	/**
 	 * 交易记录
 	 */
-	private List<TradingRecord> tradingRecords;
+	private List<TradingRecordBean> tradingRecords;
 
 	
 	
