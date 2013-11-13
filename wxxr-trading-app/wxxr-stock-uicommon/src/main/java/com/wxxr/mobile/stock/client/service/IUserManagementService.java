@@ -48,4 +48,7 @@ public interface IUserManagementService {
 	 *  	false 未绑定
 	 */
 	boolean isBindCard();
+	
+	
+	boolean bindBankCard(String accountName,String bankName,String bankAddr, String bankNum);
 }

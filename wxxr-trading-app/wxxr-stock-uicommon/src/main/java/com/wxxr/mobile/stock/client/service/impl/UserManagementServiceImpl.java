@@ -122,4 +122,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		return false;
 	}
 
+	@Override
+	public boolean bindBankCard(String accountName, String bankName,
+			String bankAddr, String bankNum) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
