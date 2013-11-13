@@ -247,7 +247,8 @@ public class ViewModelClass extends AbstractClassModel {
 		}
 		boolean hasBeanBindings = false;
 		List<BeanBindingModel> bbindings = getBeanBindings();
-		if((bbindings != null)&&(bbindings.size() > 0)){
+		int bbindingSize = bbindings != null ? bbindings.size() : 0;
+		if(bbindingSize > 0){
 			for (BeanBindingModel beanBinding : bbindings) {
 				String name = beanBinding.getField().getName()+"Updater";
 				if(getField(name) == null){
@@ -340,7 +341,7 @@ public class ViewModelClass extends AbstractClassModel {
 		}
 
 		List<MethodModel> onMenuShowMethods = getOnMenuShowMethods();
-		if((onMenuShowMethods != null)&&(onMenuShowMethods.size() > 0)){
+		if((bbindingSize > 0)||((onMenuShowMethods != null)&&(onMenuShowMethods.size() > 0))){
 			MethodModel m = ViewModelUtils.createOnMenuShowMethod(context, this, onMenuShowMethods);
 			addMethod(m);
 		}
