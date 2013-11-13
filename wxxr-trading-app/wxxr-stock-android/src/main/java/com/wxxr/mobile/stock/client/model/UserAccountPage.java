@@ -1,16 +1,27 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.List;
+
 import android.R.bool;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDataChanged;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.client.bean.AccountInfoBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
@@ -41,10 +52,17 @@ public abstract class UserAccountPage extends PageBase {
 	@Field(valueKey="text")
 	String userAvalible;
 	
-	
 	@Field
+	AccountInfoBean bean;
+	
+	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
 
+
+	DataField<String> userBalanceField;
+	DataField<String> userFreezeField;
+	DataField<String> userAvalibleField;
+	
 	@Command(commandName="back")
 	String back(InputEvent event) {
 		
@@ -73,22 +91,70 @@ public abstract class UserAccountPage extends PageBase {
 		return null;
 	}
 	
+	@OnCreate
+	void injectServices() {
+		this.userService = AppUtils.getService(IUserManagementService.class);
+	}
 	
 	private void showDialog() {
 		getUIContext().getWorkbenchManager().getWorkbench().showPage("unBindCardDialog", null, null);
 	}
 
-	@Command(commandName="incomeDetail")
+	/**
+	 * 进入收支明细业务界面
+	 * @param event
+	 * @return
+	 */
+	@Command(
+			commandName="incomeDetail",
+			navigations={
+					@Navigation(on="OK", 
+					showPage="uRealPanelScorePage", 
+					params={@Parameter(name="incomeDetail",value="{$entity.}")})
+			}
+	)
 	String incomeDetail(InputEvent event) {
 		
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 进入收支明细业务界面
-		}
-		return null;
+		
+		return "OK";
+	}
+	
+	/**
+	 * 进入实盘积分明细
+	 * @param event
+	 * @return
+	 */
+	@Command(
+			commandName="actualIntegralDetail",
+			navigations={
+					@Navigation(on="OK", 
+					showPage="uRealPanelScorePage", 
+					params={@Parameter(name="scores",value="{$entity.}")})
+			}
+	)
+	String actualIntegralDetail(InputEvent event) {
+		
+		
+		return "OK";
 	}
 	
 	@OnShow
 	protected void initData() {
 		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
+		bean = userService.fetchUserAccountInfo("");
+	}
+	
+	@OnDataChanged
+	protected void dataChanged(ValueChangedEvent event) {
+		if (bean != null) {
+			this.userAvalible = bean.getAvalible();
+			this.userAvalibleField.setValue(bean.getAvalible());
+			
+			this.userBalance = bean.getBalance();
+			this.userBalanceField.setValue(bean.getBalance());
+			
+			this.userFreeze = bean.getFreeze();
+			this.userFreezeField.setValue(bean.getFreeze());
+		}
 	}
 }

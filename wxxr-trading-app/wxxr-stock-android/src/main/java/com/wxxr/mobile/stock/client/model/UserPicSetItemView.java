@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.UserPic;
+import com.wxxr.mobile.stock.client.bean.UserPicBean;
 
 @View(name="imageItemForPic")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_pic_set_item_layout")
@@ -31,13 +31,13 @@ public abstract class UserPicSetItemView extends ViewBase implements IModelUpdat
 	@Override
 	public void updateModel(Object value) {
 		
-		if (value instanceof UserPic) {
-			UserPic userPic = (UserPic) value;
+		if (value instanceof UserPicBean) {
+			UserPicBean userPic = (UserPicBean) value;
 			this.userIcon = userPic.getImageURI();
 			this.userIconField.setValue(userPic.getImageURI());
 			
-			this.picChecked = userPic.isPicChecked();
-			this.picCheckedField.setValue(userPic.isPicChecked());
+			this.picChecked = userPic.getIsPicChecked();
+			this.picCheckedField.setValue(userPic.getIsPicChecked());
 			
 		}
 	}

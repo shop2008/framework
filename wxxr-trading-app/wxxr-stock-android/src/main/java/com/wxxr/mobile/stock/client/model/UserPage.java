@@ -10,6 +10,7 @@ import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.api.ApplicationFactory;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -17,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -26,8 +28,8 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.bean.TradingAccount;
-import com.wxxr.mobile.stock.client.bean.User;
+import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.UserBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
@@ -77,10 +79,10 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	String joinSharedNum;
 
 	@Field(valueKey = "options")
-	List<TradingAccount> joinTradeInfos;
+	List<TradingAccountBean> joinTradeInfos;
 
 	@Field(valueKey = "options")
-	List<TradingAccount> challengeTradeInfos;
+	List<TradingAccountBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible")
 	boolean cSharedVisiable;
@@ -123,8 +125,8 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	DataField<Boolean> jSharedVisiableField;
 	DataField<Boolean> jNoSharedVisiableField;
 
-	@Field
-	User user;
+	@Bean(type=BindingType.Pojo)
+	UserBean user;
 
 	@OnShow
 	protected void initData() {
@@ -132,10 +134,10 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		user = getUIContext().getKernelContext()
 				.getService(IUserManagementService.class).fetchUserInfo();
 		if (user != null) {
-			List<TradingAccount> tradeInfos = user.getTradeInfos();
-			joinTradeInfos = new ArrayList<TradingAccount>();
-			challengeTradeInfos = new ArrayList<TradingAccount>();
-			for (TradingAccount tradeInfo : tradeInfos) {
+			List<TradingAccountBean> tradeInfos = user.getTradeInfos();
+			joinTradeInfos = new ArrayList<TradingAccountBean>();
+			challengeTradeInfos = new ArrayList<TradingAccountBean>();
+			for (TradingAccountBean tradeInfo : tradeInfos) {
 				switch (tradeInfo.getType()) {
 				case 0:
 					/* 参赛交易盘 */
@@ -226,8 +228,8 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 							on = "SUCCESS", 
 							showPage = "userSelfDefine",
 							params = { 
-									@Parameter(name = "curUserIcon", value = "$user.userIcon"),
-									@Parameter(name = "curUserHomeBack", value = "$user.userHomeBack")
+									@Parameter(name = "curUserIcon", value = "${user.userIcon}"),
+									@Parameter(name = "curUserHomeBack", value = "${user.userHomeBack}")
 									}
 							) 
 					}

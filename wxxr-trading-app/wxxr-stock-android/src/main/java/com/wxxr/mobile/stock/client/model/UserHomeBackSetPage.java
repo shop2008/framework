@@ -17,7 +17,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.UserPic;
+import com.wxxr.mobile.stock.client.bean.UserPicBean;
 
 
 @View(name="user_home_set")
@@ -27,7 +27,7 @@ public abstract class UserHomeBackSetPage extends PageBase implements IModelUpda
 	
 	
 	@Field(valueKey="options")
-	List<UserPic> systemImages;
+	List<UserPicBean> systemImages;
 	
 	
 	
@@ -42,16 +42,16 @@ public abstract class UserHomeBackSetPage extends PageBase implements IModelUpda
 	@OnShow
 	protected void initData() {
 		
-		systemImages = new ArrayList<UserPic>();
+		systemImages = new ArrayList<UserPicBean>();
 		for(int i=0;i<4;i++) {
 			String s = "resourceId:drawable/back"+(i+1);
-			UserPic userPic = new UserPic();
+			UserPicBean userPic = new UserPicBean();
 			userPic.setImageURI(s);
 			
 			if (this.selectHomeBack != null && this.selectHomeBack.equals(s)) {
-				userPic.setPicChecked(true);
+				userPic.setIsPicChecked(true);
 			} else {
-				userPic.setPicChecked(false);
+				userPic.setIsPicChecked(false);
 			}
 			systemImages.add(userPic);
 		}
@@ -100,20 +100,20 @@ public abstract class UserHomeBackSetPage extends PageBase implements IModelUpda
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
-			UserPic userPic = this.systemImages.get(position);
-			if (userPic.isPicChecked()) {
-				userPic.setPicChecked(false);
+			UserPicBean userPic = this.systemImages.get(position);
+			if (userPic.getIsPicChecked()) {
+				userPic.setIsPicChecked(false);
 				selectHomeBack = null;
 			} else {
-				userPic.setPicChecked(true);
+				userPic.setIsPicChecked(true);
 				selectHomeBack = userPic.getImageURI();
 			}
 			
 			for(int i=0;i<this.systemImages.size();i++) {
 				
 				if (i != position) {
-					UserPic unSelectedItem = this.systemImages.get(i);
-					unSelectedItem.setPicChecked(false);
+					UserPicBean unSelectedItem = this.systemImages.get(i);
+					unSelectedItem.setIsPicChecked(false);
 				}
 			}
 			
