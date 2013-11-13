@@ -66,6 +66,11 @@ public abstract class ChampionShipView extends ViewBase {
 		ChampionT1ShipField.setValue(this.ChampionT1Ship);
 		ChampionWeekShipField.setValue(this.ChampionWeekShip);
 		ChampionRegularShipField.setValue(this.ChampionRegularShip);
+		
+		ChampionShipField.setAttribute(AttributeKeys.visible, true);
+		ChampionT1ShipField.setAttribute(AttributeKeys.visible, false);
+		ChampionWeekShipField.setAttribute(AttributeKeys.visible, false);
+		ChampionRegularShipField.setAttribute(AttributeKeys.visible, false);
 	}
 
 	@Command
