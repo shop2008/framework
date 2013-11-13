@@ -12,13 +12,13 @@ public class AuditDetail{
 	/**申请资金*/
 	private String fund;
 	/**总盈亏率*/
-	private String plRisk;
+	private float plRisk;
 	/**盈亏总额（交易盘，除去费用）*/
-	private String totalGain;
+	private float totalGain;
 	/**玩家实得收益--没有收益时不显示80%*/
-	private String userGain;
+	private float userGain;
 	/**补偿交易综合费--总收益<手续费，=总收益（优先补偿)*/
-	private String tradingCost;
+	private float tradingCost;
 	/**账户管理费--没有收益时不显示20%*/
 	private String accountPay;
 	/**止损比例*/
