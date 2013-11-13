@@ -190,7 +190,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 	
 	
-	protected void regsiterBean(String name, Object bean){
+	protected void registerBean(String name, Object bean){
 		if(this.beans == null){
 			this.beans = new HashMap<String, Object>();
 		}
@@ -208,8 +208,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		if(this.domainModels == null){
 			this.domainModels = new ArrayList<IDomainValueModel<?>>();
 		}
-		if(!this.evaluators.contains(model)){
-			this.evaluators.add(model);
+		if(!this.domainModels.contains(model)){
+			this.domainModels.add(model);
 		}
 	}
 	
@@ -291,6 +291,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			}
 		}
 		this.binding = binding;
+		forValueEvalution();
 	}
 
 	protected void onShow(IBinding<IView> binding){
@@ -366,6 +367,20 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			}
 			this.eventQueue.addPendingEvent(event);
 		}
+	}
+	
+	protected void forValueEvalution() {
+		if(this.evaluators != null){
+			for (IValueEvaluator<?> eval : this.evaluators) {
+					eval.doEvaluate();
+			}
+		}
+		if(this.domainModels != null){
+			for (IDomainValueModel<?> m : this.domainModels) {
+				m.doEvaluate();
+			}
+		}
+
 	}
 	
 	protected void onDataChanged(ValueChangedEvent event){

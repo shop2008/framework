@@ -333,6 +333,21 @@ public abstract class ViewModelUtils {
 		return m;
 	}
 
+	
+	public static MethodModel createRegisterBeansMethod(ICodeGenerationContext context,ViewModelClass model, List<BeanField> beans){
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("registerBeans");
+		m.setModifiers("private");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("beans", beans);
+		String javaStatement = context.getTemplateRenderer().renderMacro("registerBeans", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
 
 
 	public static MethodModel createInitCommandsMethod(ICodeGenerationContext context,ViewModelClass model, List<UICommandModel> cmds){

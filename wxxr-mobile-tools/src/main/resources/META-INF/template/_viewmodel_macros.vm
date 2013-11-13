@@ -56,6 +56,14 @@
     }
 #end
 
+#macro(registerBeans $model $beans)
+    private void registerBeans() {
+#foreach($bean in $beans)
+        registerBean("${bean.name}",this.${bean.name});
+#end
+    }
+#end
+
 #macro(injectServices $model $bindings)
     private void injectServices() {
 #set( $AppUtilType = ${model.addImport("com.wxxr.mobile.android.app.AppUtils")})
@@ -79,11 +87,7 @@
         ${binding.field.simpleType} v_${binding.field.name} = this.${binding.field.name}Updater.doEvaluate();
         if(!ModelUtils.isEquals(this.${binding.field.name}, v_${binding.field.name})){
             this.${binding.field.name} = v_${binding.field.name};
-            if(this.userInfo != null){
-                regsiterBean("${binding.field.name}", this.${binding.field.name});
-            }else{
-                unregisterBean("${binding.field.name}");
-            }
+            regsiterBean("${binding.field.name}", this.${binding.field.name});
             if(this.${binding.field.name} instanceof IBindableBean){
                 ((IBindableBean)this.${binding.field.name}).addPropertyChangeListener(new BeanPropertyChangedListener("${binding.field.name}"));
             }
@@ -282,6 +286,9 @@
 #end
 #if(${model.onCreateMethods})
        callOnCreateMethods();
+#end
+#if(${model.beanFields})
+       registerBeans();
 #end
 #if(${model.expressions})
        initFieldAttributes();

@@ -106,6 +106,20 @@ public class ViewModelClass extends AbstractClassModel {
 		}
 		return result.isEmpty() ? null : result;
 	}
+	
+	public List<BeanField> getBeanFields() {
+		if((this.fields == null)||(this.fields.size() == 0)){
+			return null;
+		}
+		ArrayList<BeanField> result = new ArrayList<BeanField>();
+		for (FieldModel field : this.fields.values()) {
+			if(field instanceof BeanField){
+				result.add((BeanField)field);
+			}
+		}
+		return result.isEmpty() ? null : result;
+	}
+
 
 	
 	public List<ViewGroupModel> getViewGroups() {
@@ -255,6 +269,13 @@ public class ViewModelClass extends AbstractClassModel {
 			addMethod(m);
 		}
 		
+		List<BeanField> beanFields = getBeanFields();
+		int beanSize = (beanFields != null) ? beanFields.size() : 0;
+		if(beanSize > 0){
+			MethodModel m = ViewModelUtils.createRegisterBeansMethod(context, this, beanFields);
+			addMethod(m);
+		}
+
 		List<ExpressionModel> expressions = getExpressions();
 		int expSize = (expressions != null) ? expressions.size() : 0;
 		if(expSize > 0){
