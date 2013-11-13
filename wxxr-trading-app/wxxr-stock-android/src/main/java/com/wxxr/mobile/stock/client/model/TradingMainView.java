@@ -24,7 +24,7 @@ import com.wxxr.mobile.stock.client.service.ITradingManagementService;
  * @author neillin
  *
  */
-@View(name="tradingMain")
+@View(name="tradingMain", description="短线放大镜")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.home_view_layout")
 public abstract class TradingMainView extends ViewBase{
 	private static final Trace log = Trace.register(TradingMainView.class);
