@@ -1,26 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wxxr.mobile.stock.client.widget.StockSearchView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
-    android:orientation="vertical" >
+    android:background="@color/black" >
 
-    <com.wxxr.mobile.stock.client.widget.StockSearchView
-        android:id="@+id/ssv_stock_search"
+    <RelativeLayout
+        android:id="@+id/edit_box"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/light_gray"
+        android:gravity="center_vertical"
+        android:padding="4dip" >
 
-        <ListView
-            android:id="@+id/lv_stock_list"
+        <EditText
+            android:id="@+id/et_stock_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="65dip"
-            android:cacheColorHint="#00000000"
-            android:divider="@drawable/separator_white"
-            android:dividerHeight="1.0dip"
-            android:paddingTop="9dip"
-            android:scrollbars="none" >
-        </ListView>
-    </com.wxxr.mobile.stock.client.widget.StockSearchView>
+            android:layout_height="wrap_content"
+            android:background="@drawable/et_stock_input"
+            android:drawableLeft="@drawable/menu_search"
+            android:drawablePadding="4dip"
+            android:gravity="left|center_vertical"
+            android:hint="@string/search_hint"
+            android:maxLength="6"
+            android:padding="6dip"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            bind:field="searchEdit"
+            bind:on_TextChanged="searchTextChanged" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/bt_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dip"
+            android:src="@drawable/search_2_btn" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_stock_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/edit_box"
+        android:cacheColorHint="#00000000"
+        android:divider="@color/gray"
+        android:dividerHeight="0.5dip"
+        android:scrollbars="none"
+        bind:field="searchList"
+        bind:itemViewId="StockSearchItemView"
+        bind:on_ItemClick="handleItemClick" >
+    </ListView>
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:keyTextColor="@color/white"
+        android:keyTextSize="20sp"
+        android:labelTextSize="20sp" />
+
+</com.wxxr.mobile.stock.client.widget.StockSearchView>

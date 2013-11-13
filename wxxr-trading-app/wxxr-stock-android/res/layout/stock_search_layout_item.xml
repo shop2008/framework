@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="6dip" >
 
     <TextView
         android:id="@+id/tv_result_stock_name"
+        style="@style/style_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="30dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        bind:field="stockName" />
 
     <TextView
         android:id="@+id/tv_result_stock_code"
-        android:layout_width="wrap_content"
+        style="@style/style_title_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_result_stock_name"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textColor="@color/white"
+        android:layout_toRightOf="@id/tv_result_stock_name"
+        android:gravity="center"
+        bind:field="stockCode" />
 
 </RelativeLayout>

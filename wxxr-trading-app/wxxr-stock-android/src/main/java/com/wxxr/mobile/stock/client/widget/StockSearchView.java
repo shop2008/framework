@@ -2,157 +2,83 @@ package com.wxxr.mobile.stock.client.widget;
 
 import java.util.List;
 
-import com.wxxr.mobile.stock.client.R;
-
-
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.Keyboard.Key;
+import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.inputmethod.InputMethodManager;
+
+import com.wxxr.mobile.stock.client.R;
 
 public class StockSearchView extends RelativeLayout implements
-		OnKeyboardActionListener, OnTouchListener, TextWatcher,
-		OnScrollListener {
+		OnKeyboardActionListener, OnTouchListener, OnClickListener, OnScrollListener {
 
-	/**
-	 * 上下文环境
-	 */
 	private Context context;
-
-	/**
-	 * 编辑框
-	 */
 	private EditText editText;
-
-	/**
-	 * 位于上方的编辑框(左边搜索图标和编辑框)
-	 */
-	private RelativeLayout editBox;
-
-	/**
-	 * 整个键盘布局控件
-	 */
+	private ImageView deleteImage;
+	private ListView listView;
 	private KeyboardView keyboardView;
 
-	/**
-	 * 英文键盘
-	 */
 	private Keyboard eng;
-
-	/**
-	 * 股票键盘
-	 */
 	private Keyboard search_num;
-
-	/**
-	 * 英文-股票键盘切换标记位
-	 */
 	private boolean isEng;
 	private boolean isupper;
-	
-	private ListView stock_result_list;
-	private OnTextChangedListener listener;
-
-	private Animation keyBoardAnim;
 
 	public StockSearchView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		this.context = context;
 	}
 
 	public StockSearchView(Context context) {
 		super(context);
-		init(context);
-	}
-
-	private void init(Context context) {
 		this.context = context;
-		addEditBox(context);
-	}
-
-	private void progressLogic(Context context) {
-		eng = new Keyboard(context, R.xml.eng);
-		search_num = new Keyboard(context, R.xml.search_num);
-		isEng = true;
-		isupper = false;
-		keyboardView.setKeyboard(search_num);
-		keyboardView.setOnKeyboardActionListener(this);
-		keyboardView.setPreviewEnabled(true);
-		editText.setOnTouchListener(this);
-		editText.addTextChangedListener(this);
-		editText.setInputType(InputType.TYPE_NULL);
-	}
-
-
-	/**
-	 * 添加文本框
-	 * 
-	 * @param context
-	 */
-	private void addEditBox(Context context) {
-		editBox = (RelativeLayout) View.inflate(context, R.layout.edit_box,
-				null);
-		editText = (EditText) editBox.findViewById(R.id.et_stock_search);
-
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.topMargin = dip2px(context, 10);
-
-		// 项部显示
-		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		addView(editBox, params);
 	}
 
 	/**
-	 * 添加软键盘
+	 * 初始化文本框
 	 * 
 	 * @param context
 	 */
-	private void addKeyBoardView(Context context) {
-		View view = View.inflate(getContext(), R.layout.keybord, null);
-		keyboardView = (KeyboardView) view.findViewById(R.id.keyboard_view);
-
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT, dip2px(context, 60));
-		params.topMargin = dip2px(context, 5);
-		// 项部显示
-		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-
-		addView(view, params);
+	private void initEditBox() {
+		editText = (EditText) findViewById(R.id.et_stock_search);
+		deleteImage = (ImageView) findViewById(R.id.bt_delete);
+		listView = (ListView) findViewById(R.id.lv_stock_list);
+		keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
+		progressLogic();
 	}
 
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		// initEditTextView();
+//		progressLogic(context);
+		initEditBox();
+	}
 
-		int childCount = getChildCount();
-
-		addKeyBoardView(context);
-		progressLogic(context);
-		for (int i = 0; i < childCount; i++) {
-			View view = getChildAt(i);
-			if (view instanceof ListView) {
-				stock_result_list = (ListView) view;
-				stock_result_list.setOnScrollListener(this);
-			}
-		}
+	private void progressLogic() {
+		eng = new Keyboard(context, R.xml.eng);
+		search_num = new Keyboard(context, R.xml.search_num);
+		isEng = false;
+		isupper = false;
+		keyboardView.setKeyboard(search_num);
+		keyboardView.setOnKeyboardActionListener(this);
+		keyboardView.setPreviewEnabled(false);
+		editText.setOnTouchListener(this);
+		listView.setOnTouchListener(this);
+		editText.setInputType(InputType.TYPE_NULL);
+		deleteImage.setOnClickListener(this);
 	}
 
 	@Override
@@ -213,6 +139,7 @@ public class StockSearchView extends RelativeLayout implements
 			break;
 		case 55555:// 清空键
 			editable.clear();
+			editText.setText("");
 			break;
 		default:
 			// 打印键盘上内容
@@ -223,8 +150,8 @@ public class StockSearchView extends RelativeLayout implements
 
 	private void changeKey() {
 		List<Key> keylist = eng.getKeys();
-		if (isEng) {// 切换到小写
-			isEng = false;
+		if (isupper) {// 切换到小写
+			isupper = false;
 			for (Key key : keylist) {
 				if (key.label != null && isword(key.label.toString())) {
 					key.label = key.label.toString().toLowerCase();
@@ -232,7 +159,7 @@ public class StockSearchView extends RelativeLayout implements
 				}
 			}
 		} else {// 切换到大写
-			isEng = true;
+			isupper = true;
 			for (Key key : keylist) {
 				if (key.label != null && isword(key.label.toString())) {
 					key.label = key.label.toString().toUpperCase();
@@ -299,77 +226,50 @@ public class StockSearchView extends RelativeLayout implements
 		return (int) (pxValue / scale + 0.5f);
 	}
 
-	/**
-	 * 供外部使用
-	 * 
-	 * @param listener
-	 */
-	public void setOnTextChangedListener(OnTextChangedListener listener) {
-		this.listener = listener;
-	}
-
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			switch(v.getId()){
-		case R.id.et_stock_search:
-			keyboardView.setVisibility(View.VISIBLE);
-			break;
-		case R.id.lv_stock_list:
-			keyboardView.setVisibility(View.GONE);
-			break;
+			switch (v.getId()) {
+			case R.id.et_stock_search:
+				keyboardView.setVisibility(View.VISIBLE);
+				break;
+			case R.id.lv_stock_list:
+				keyboardView.setVisibility(View.GONE);
+				break;
 			}
-//			if (keyboardView.getVisibility() != View.VISIBLE) {
-//				keyboardView.setVisibility(View.VISIBLE);
-//			} else {
-//				keyboardView.setVisibility(View.GONE);
-//			}
+			// if (keyboardView.getVisibility() != View.VISIBLE) {
+			// keyboardView.setVisibility(View.VISIBLE);
+			// } else {
+			// keyboardView.setVisibility(View.GONE);
+			// }
 		}
 		return false;
 	}
 
-	public interface OnTextChangedListener {
-
-		/**
-		 * 将改变后的文本传递给调用者
-		 * 
-		 * @param changedText
-		 */
-		void onTextChanged(String changedText);
-	}
-
 	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-		if (!TextUtils.isEmpty(s)) {
-			if (listener != null) {
-				listener.onTextChanged(s.toString());
-			}
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		int id = v.getId();
+		switch (id) {
+		case R.id.bt_delete:
+			editText.setText(null);
+			break;
+		default:
+			break;
 		}
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (keyboardView != null) {
-			keyboardView.setVisibility(View.INVISIBLE);
-		}
-
 	}
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		
 	}
 }

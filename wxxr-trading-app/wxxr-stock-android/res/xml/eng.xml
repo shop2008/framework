@@ -125,7 +125,7 @@
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"
-            android:keyLabel="完成"
+            android:keyLabel="search"
             android:keyWidth="20.000004%p" />
     </Row>
 
