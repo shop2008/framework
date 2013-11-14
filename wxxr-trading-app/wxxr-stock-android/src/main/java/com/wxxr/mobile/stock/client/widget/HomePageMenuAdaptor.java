@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.IMenuAdaptor;
 import com.wxxr.mobile.core.ui.api.IMenuCallback;
@@ -78,7 +79,13 @@ public class HomePageMenuAdaptor implements IMenuAdaptor {
 		
 		@Override
 		public void showMenu() {
-			widget.openDrawer(gravity);
+			AppUtils.runOnUIThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					widget.openDrawer(gravity);
+				}
+			});
 		}
 		
 		@Override
@@ -88,7 +95,13 @@ public class HomePageMenuAdaptor implements IMenuAdaptor {
 		
 		@Override
 		public void hideMenu() {
-			widget.closeDrawer(gravity);
+			AppUtils.runOnUIThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					widget.closeDrawer(gravity);
+				}
+			});
 		}
 		
 		public void setMenuCallback(IMenuCallback cb){
