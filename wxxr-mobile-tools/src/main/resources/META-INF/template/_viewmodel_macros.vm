@@ -204,7 +204,7 @@
 #else
     handler = new AbstractUICommandHandler() {           
         @Override
-        public String execute(InputEvent event) {
+        public Object execute(InputEvent event) {
              return ${cmd.methodName}(event);
         }
     };

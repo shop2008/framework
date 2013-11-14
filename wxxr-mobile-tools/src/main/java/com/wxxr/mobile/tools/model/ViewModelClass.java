@@ -36,6 +36,7 @@ public class ViewModelClass extends AbstractClassModel {
 	private String id;
 	private boolean isPage;
 	private String description;
+	private String[] alias;
 //	private final ViewModelDomainResolver domainResolver;
 	private final ICodeGenerationContext context;
 	
@@ -427,6 +428,20 @@ public class ViewModelClass extends AbstractClassModel {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @return the alias
+	 */
+	public String[] getAlias() {
+		return alias;
+	}
+
+	/**
+	 * @param alias the alias to set
+	 */
+	public void setAlias(String[] alias) {
+		this.alias = alias;
 	}
 
 //	/**

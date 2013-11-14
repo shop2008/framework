@@ -19,5 +19,12 @@ public class DeclarativePModelProvider {
 #foreach($desc in $model.descriptors)		
 		mgr.registerView(new ${desc}());
 #end
+#if(${model.allAlias})
+#foreach($alias in ${model.allAlias})
+        ${alias.value} v_${alias.key} = new ${alias.value}();
+        v_${alias.key}.setViewId("${alias.key}");
+        mgr.registerView(v_${alias.key});
+#end
+#end
 	}
 }

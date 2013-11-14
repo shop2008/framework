@@ -98,6 +98,9 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				if(StringUtils.isNotBlank(ann.description())){
 					model.setDescription(ann.description());
 				}
+				if((ann.alias() != null)&&(ann.alias().length > 0)){
+					model.setAlias(ann.alias());
+				}
 				model.setToolbarRequired(ann.withToolbar());
 				if(StringUtils.isNotBlank(ann.name())){
 					model.setId(StringUtils.trimToNull(ann.name()));
@@ -216,30 +219,14 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 					}
 				}
 				
-				ViewDescriptorClass descriptor = new ViewDescriptorClass();
-				descriptor.setTargetUI(targetUI);
-				descriptor.setViewModel(model);
-				descriptor.setName(defaultName+"Descriptor");
-				descriptor.setPkgName(pkg+".view");
-				descriptor.setLayoutId(binding.layoutId());
-				descriptor.setBindingType(binding.type().name());
-				this.provider.addDescriptor(descriptor.getClassName());
-				attributes.clear();
-				attributes.put("model", descriptor);
-				String vmFile = "ViewDescriptor.vm";
-				if(model.isPage()){
-					vmFile = "PageDescriptor.vm";
-				}
-				try {
-					String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/"+vmFile, attributes);
-					JavaFileObject file = filer.createSourceFile(descriptor.getPkgName()+"."+descriptor.getName());
-					log.info("Generate java class file : {}",file.toUri());
-					Writer w = file.openWriter();
-					w.write(text);
-					w.close();
-				} catch (Throwable e) {
-					log.error("Failed to generate UI class for :"+descriptor.getPkgName()+"."+descriptor.getName(),e);
-				}
+				generateViewDescriptor(model.getName(),context, model,
+						attributes, binding, targetUI,filer);
+//				if((!model.isPage())&&(model.getAlias() != null)){
+//					for (String aliasName : model.getAlias()) {
+//						generateViewDescriptor(aliasName,context, model,
+//								attributes, binding, targetUI,filer);
+//					}
+//				}
 			}
 		}
 		if((cnt == 0)&&(this.provider != null)){
@@ -259,6 +246,49 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 			
 		}
 
+	}
+	/**
+	 * @param context
+	 * @param filer
+	 * @param pkg
+	 * @param defaultName
+	 * @param model
+	 * @param attributes
+	 * @param binding
+	 * @param targetUI
+	 */
+	protected void generateViewDescriptor(String name,ICodeGenerationContext context,ViewModelClass model,
+			Map<String, Object> attributes, AndroidBinding binding,
+			TargetUIClass targetUI,Filer filer) {
+		ViewDescriptorClass descriptor = new ViewDescriptorClass();
+		descriptor.setTargetUI(targetUI);
+		descriptor.setViewModel(model);
+		descriptor.setName(name+"Descriptor");
+		descriptor.setPkgName(model.getApplicationId()+".view");
+		descriptor.setLayoutId(binding.layoutId());
+		descriptor.setBindingType(binding.type().name());
+		this.provider.addDescriptor(descriptor.getClassName());
+		if(model.getAlias() != null){
+			for (String a : model.getAlias()) {
+				this.provider.addAlias(a, descriptor.getClassName());
+			}
+		}
+		attributes.clear();
+		attributes.put("model", descriptor);
+		String vmFile = "ViewDescriptor.vm";
+		if(model.isPage()){
+			vmFile = "PageDescriptor.vm";
+		}
+		try {
+			String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/"+vmFile, attributes);
+			JavaFileObject file = filer.createSourceFile(descriptor.getPkgName()+"."+descriptor.getName());
+			log.info("Generate java class file : {}",file.toUri());
+			Writer w = file.openWriter();
+			w.write(text);
+			w.close();
+		} catch (Throwable e) {
+			log.error("Failed to generate UI class for :"+descriptor.getPkgName()+"."+descriptor.getName(),e);
+		}
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.tools.AbstractCodeGenerator#finishProcessing(com.wxxr.mobile.core.tools.ICodeGenerationContext)
