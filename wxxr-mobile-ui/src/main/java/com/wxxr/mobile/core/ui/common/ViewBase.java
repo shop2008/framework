@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.wxxr.javax.el.BeanNameResolver;
 import com.wxxr.javax.el.ELManager;
+import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -199,6 +200,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		if(!ModelUtils.isEquals(oldBean, bean)){
             DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
             fireDataChangedEvent(evt);
+            if(bean instanceof IBindableBean){
+            	((IBindableBean)bean).addPropertyChangeListener(new BeanPropertyChangedListener(name));
+            }
 		}
 	}
 	
