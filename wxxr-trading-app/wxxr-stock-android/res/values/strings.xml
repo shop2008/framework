@@ -72,10 +72,6 @@
     <string name="tv_title_stock_search">搜索股票</string>
     <string name="search_hint">代码/拼音/首字母</string>
 
-    <!-- 实盘积分明细 -->
- 	<string name="tv_title_actual_panel_integral">实盘积分明细</string> 
- 	<string name="actual_integral_info_label">实盘积分明细</string> 
- 	<string name="tv_integral_balance_label">当前实盘积分余额:</string>
     <!-- 快速买入 -->
     <string name="bt_hang_order_text">挂单</string>
     <string name="bt_market_price_text">市价</string>
@@ -132,6 +128,7 @@
 
     <!-- 实盘积分明细 -->
     <string name="tv_title_actual_panel_integral">实盘积分明细</string>
+    <string name="actual_integral_info_label">实盘积分明细</string> 
     <string name="tv_integral_balance_label">当前实盘积分余额:</string>
 
     <!-- 登录界面 -->
