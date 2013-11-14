@@ -23,6 +23,12 @@ public class ListDecorator<E> implements List<E> {
 		this.name = propertyName;
 	}
 
+	public ListDecorator(String propertyName,PropertyChangeSupport p,List<E> list){
+		this.support = p;
+		this.name = propertyName;
+		this.data = list;
+	}
+
 	/**
 	 * @return the data
 	 */
