@@ -146,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:background="@drawable/red_btn_back"
+            android:background="@drawable/bg_red_btn"
             android:text="@string/btn_login_text"
             android:textColor="@color/white"
             android:textSize="15sp" 

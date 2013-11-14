@@ -91,7 +91,7 @@
     <string name="btn_cash_auth_text">认证</string>
 
     <!-- 更换银行卡 -->
-    <string name="tv_title_switch_bank_card">更换银行卡</string>
+    <string name="title_switch_bank_card">更换银行卡</string>
     <string name="tv_account_name_label">户名:</string>
     <string name="hint_switch_account_bank">开户行</string>
     <string name="hint_switch_account_bank_addr">开户行所在地</string>
@@ -210,5 +210,13 @@
     <string name="header_hint_refresh_time">更新于：</string>
     <string name="footer_hint_load_normal">查看更多</string>
     <string name="footer_hint_load_ready">松开载入更多</string>
+    
+    <!-- 用户管理界面 -->
+    <string name="title_user_manager">账号安全</string>
 
+    <string name="label_modify_password">修改密码</string>
+    <string name="title_modify_passwrod">修改密码</string>
+    <string name="hint_old_psw">旧密码</string>
+    <string name="hint_new_psw">新密码</string>
+    <string name="hint_retype_psw">重复新密码</string>
 </resources>

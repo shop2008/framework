@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import javax.security.auth.login.LoginException;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -49,7 +51,12 @@ public abstract class UserLoginPage extends PageBase {
 				log.debug("login:mobileNum"+mobileNum);
 				log.debug("login:password"+password);
 			}
-			getUIContext().getKernelContext().getService(IUserManagementService.class).login(mobileNum, password);
+			try {
+				getUIContext().getKernelContext().getService(IUserManagementService.class).login(mobileNum, password);
+			} catch (LoginException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

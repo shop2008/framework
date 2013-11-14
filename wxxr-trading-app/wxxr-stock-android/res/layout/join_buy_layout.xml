@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text="@string/btn_buy_order_text"
-            android:background="@drawable/red_btn_back"
+            android:background="@drawable/bg_red_btn"
             />
     </LinearLayout>
 

@@ -75,7 +75,7 @@
             android:id="@+id/btn_buy"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/red_btn_back"
+            android:background="@drawable/bg_red_btn"
             android:text="买入" />
     </LinearLayout>
     

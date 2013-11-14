@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name = "userRegPage")
@@ -81,7 +82,12 @@ public abstract class UserRegPage extends PageBase {
 			if (log.isDebugEnabled()) {
 				log.debug("register:Send Message To Mobile");
 			}
-			getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+			try {
+				getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+			} catch (StockAppBizException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 		return null;
