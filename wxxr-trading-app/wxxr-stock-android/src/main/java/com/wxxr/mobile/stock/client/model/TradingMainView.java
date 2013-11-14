@@ -58,7 +58,7 @@ public abstract class TradingMainView extends ViewBase{
 	
 	/**获取T+1日数据*/
 
-	@Field(valueKey="options",binding="${tradingAccount1!=null?tradingAccount.t1TradingAccountBeans:null}")
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccountBeans:null}")
 	List<TradingAccountBean> tradingT1;
 	
 	
