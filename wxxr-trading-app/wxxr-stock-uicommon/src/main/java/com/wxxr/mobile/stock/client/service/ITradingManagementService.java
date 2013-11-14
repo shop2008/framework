@@ -3,10 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
-import java.util.List;
-
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MyTradingAccountListBean;
 import com.wxxr.mobile.stock.client.bean.RankListBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
