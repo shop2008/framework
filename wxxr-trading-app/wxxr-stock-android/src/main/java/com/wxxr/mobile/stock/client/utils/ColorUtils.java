@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.utils;
 
-import android.graphics.Color;
 
 public class ColorUtils {
 	public static final String STOCK_RED = "#BA2514"; //红色
