@@ -4,7 +4,6 @@
 package com.wxxr.mobile.stock.client.bean;
 
 import java.util.List;
-import com.wxxr.mobile.stock.client.model.TradingRecord;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
@@ -16,12 +15,12 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class DealDetailBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
-	private List<TradingRecord> tradingRecords;
+	private List<TradingRecordBean> tradingRecords;
 	private String[] imgUrl;
-	private String totalGain;
-	private String userGain;
+	private float totalGain;
+	private float userGain;
 	private String fund;
-	private String plRisk;
+	private float plRisk;
 
 	/**
 	 * @param listener
@@ -59,15 +58,15 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the tradingRecords
 	 */
-	public List<TradingRecord> getTradingRecords() {
+	public List<TradingRecordBean> getTradingRecords() {
 		return tradingRecords;
 	}
 
 	/**
 	 * @param tradingRecords the tradingRecords to set
 	 */
-	public void setTradingRecords(List<TradingRecord> tradingRecords) {
-		List<TradingRecord> old = this.tradingRecords;
+	public void setTradingRecords(List<TradingRecordBean> tradingRecords) {
+		List<TradingRecordBean> old = this.tradingRecords;
 		this.tradingRecords = tradingRecords;
 		this.emitter.firePropertyChange("tradingRecords", old, this.tradingRecords);
 	}
@@ -91,15 +90,15 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the totalGain
 	 */
-	public String getTotalGain() {
+	public float getTotalGain() {
 		return totalGain;
 	}
 
 	/**
 	 * @param totalGain the totalGain to set
 	 */
-	public void setTotalGain(String totalGain) {
-		String old = this.totalGain;
+	public void setTotalGain(float totalGain) {
+		float old = this.totalGain;
 		this.totalGain = totalGain;
 		this.emitter.firePropertyChange("totalGain", old, this.totalGain);
 	}
@@ -107,15 +106,15 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the userGain
 	 */
-	public String getUserGain() {
+	public float getUserGain() {
 		return userGain;
 	}
 
 	/**
 	 * @param userGain the userGain to set
 	 */
-	public void setUserGain(String userGain) {
-		String old = this.userGain;
+	public void setUserGain(float userGain) {
+		float old = this.userGain;
 		this.userGain = userGain;
 		this.emitter.firePropertyChange("userGain", old, this.userGain);
 	}
@@ -139,15 +138,15 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the plRisk
 	 */
-	public String getPlRisk() {
+	public float getPlRisk() {
 		return plRisk;
 	}
 
 	/**
 	 * @param plRisk the plRisk to set
 	 */
-	public void setPlRisk(String plRisk) {
-		String old = this.plRisk;
+	public void setPlRisk(float plRisk) {
+		float old = this.plRisk;
 		this.plRisk = plRisk;
 		this.emitter.firePropertyChange("plRisk", old, this.plRisk);
 	}
