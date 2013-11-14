@@ -13,5 +13,6 @@ public @interface Navigation {
 	String message() default "";
 	String showView() default "";
 	String showPage() default "";
+	String showDialog() default "";
 	Parameter[] params() default {};
 }
