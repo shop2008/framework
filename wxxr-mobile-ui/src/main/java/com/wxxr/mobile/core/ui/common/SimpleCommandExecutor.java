@@ -93,35 +93,43 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 		if(nextNavigation != null){
 			String toPage = StringUtils.trimToNull(nextNavigation.getToPage());
 			String toView = StringUtils.trimToNull(nextNavigation.getToView());
+			String toDialog = StringUtils.trimToNull(nextNavigation.getToDialog());
 			String message = StringUtils.trimToNull(nextNavigation.getMessage());
+			Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
 			if(toPage != null){
-				Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
 				context.getWorkbenchManager().getWorkbench().showPage(toPage, params, null);
 			}else if(toView != null){
-				IPage page = getPage(view);
-				IView v = page != null ? page.getView(toView) : null;
-				if(v == null){
-					v = context.getWorkbenchManager().getWorkbench().createNInitializedView(toView);
-				}
-				boolean add2backstack = true;
-				Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
-				if((params != null)&&(params.size() > 0)){
-					IModelUpdater updater = v.getAdaptor(IModelUpdater.class);
-					if(updater != null){
-						updater.updateModel(params);
-					}
-					String val = (String)params.get("add2BackStack");
-					if("false".equalsIgnoreCase(val)){
-						add2backstack = false;
-					}
-				}
-				page.showView(toView,add2backstack);
+				showView(view, toView, params);
+			}else if(toDialog != null){
+				context.getWorkbenchManager().getWorkbench().createDialog(toDialog, params).show();
 			}else if(message != null){
-				context.getWorkbenchManager().getWorkbench().showMessageBox(message, nextNavigation.getParameters());
+				context.getWorkbenchManager().getWorkbench().showMessageBox(message, params);
 			}
 		}
 	}
 	
+	
+	protected void showView(IView sourceView,String toViewId,Map<String, Object> params) {
+		IPage page = getPage(sourceView);
+		IView v = page != null ? page.getView(toViewId) : null;
+		if(v == null){
+			v = context.getWorkbenchManager().getWorkbench().createNInitializedView(toViewId);
+		}
+		boolean add2backstack = true;
+//		Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
+		if((params != null)&&(params.size() > 0)){
+			IModelUpdater updater = v.getAdaptor(IModelUpdater.class);
+			if(updater != null){
+				updater.updateModel(params);
+			}
+			String val = (String)params.get("add2BackStack");
+			if("false".equalsIgnoreCase(val)){
+				add2backstack = false;
+			}
+		}
+		page.showView(toViewId,add2backstack);
+
+	}
 	/**
 	 * @param payload
 	 * @param nextNavigation

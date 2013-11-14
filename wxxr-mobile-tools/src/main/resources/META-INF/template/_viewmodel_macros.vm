@@ -218,6 +218,9 @@
 #if(${nav.toView})
     navDesc.setToView("${nav.toView}");
 #end
+#if(${nav.toDialog})
+    navDesc.setToDialog("${nav.toDialog}");
+#end
 #if(${nav.message})
     navDesc.setMessage("${nav.message}");
 #end

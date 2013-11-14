@@ -15,7 +15,7 @@ import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
  */
 public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	
-	private String result,message,toView,toPage;
+	private String result,message,toView,toPage,toDialog;
 	private Map<String, Object> params;
 
 
@@ -178,6 +178,22 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 			this.params.remove(name);
 		}
 		return this;
+	}
+
+
+	/**
+	 * @return the toDialog
+	 */
+	public String getToDialog() {
+		return toDialog;
+	}
+
+
+	/**
+	 * @param toDialog the toDialog to set
+	 */
+	public void setToDialog(String toDialog) {
+		this.toDialog = toDialog;
 	}
 
 }

@@ -13,7 +13,7 @@ import java.util.Map;
  *
  */
 public class NavigationModel {
-	private String result, toPage, toView, message;
+	private String result, toPage, toView, message,toDialog;
 	private Map<String, Parameter> params;
 	/**
 	 * @return the result
@@ -75,5 +75,17 @@ public class NavigationModel {
 			this.params = new HashMap<String, Parameter>();
 		}
 		this.params.put(p.getName(), p);
+	}
+	/**
+	 * @return the toDialog
+	 */
+	public String getToDialog() {
+		return toDialog;
+	}
+	/**
+	 * @param toDialog the toDialog to set
+	 */
+	public void setToDialog(String toDialog) {
+		this.toDialog = toDialog;
 	}
 }
