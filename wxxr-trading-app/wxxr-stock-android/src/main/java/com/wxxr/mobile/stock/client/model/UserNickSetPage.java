@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 
-@View(name="user_nick_set")
+@View(name="userNickSet")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_nick_set_layout")
 public abstract class UserNickSetPage extends PageBase {
 	

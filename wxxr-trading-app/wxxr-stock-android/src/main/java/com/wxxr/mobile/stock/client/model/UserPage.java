@@ -42,145 +42,70 @@ import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
 public abstract class UserPage extends PageBase implements IModelUpdater {
 
+	@Bean(type=BindingType.Service)
+	IUserManagementService usrService;
+	
+	@Bean(type=BindingType.Pojo,express="${usrService.fetchUserInfo}")
+	UserBean user;
+	
 	/**
 	 * 用户形象照
 	 */
-	@Field(valueKey = "imageURI")
+	@Field(valueKey = "imageURI", binding="${user!=null?user.userPic:null}")
 	String userIcon;
 
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${user!=null?user.homeBack:null}")
 	String userNickName;
 
 	/**
 	 * 累计实盘积分
 	 */
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${user!=null?user.totoalScore:null}")
 	String totalScore;
 
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${user!=null?user.totoalProfit:null}")
 	String totalProfit;
 
 	/**
 	 * 挑战交易盘分享多少笔
 	 */
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${user!=null?user.challengeShared:null}")
 	String challengeSharedNum;
 
 	/**
 	 * 参赛交易盘分享多少笔
 	 */
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${user!=null?user.joinShared:null}")
 	String joinSharedNum;
 
-	@Field(valueKey = "options")
+	@Field(valueKey = "options", binding="${user!=null?user.joinTradeInfos:null}")
 	List<TradingAccountBean> joinTradeInfos;
 
-	@Field(valueKey = "options")
+	@Field(valueKey = "options", binding="${user!=null?user.challengeTradeInfos:null}")
 	List<TradingAccountBean> challengeTradeInfos;
 
-	@Field(valueKey = "visible")
+	@Field(valueKey = "visible", binding="${(user!=null&&user.challengeTradeInfos.size>0) ? true:false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible")
+	@Field(valueKey = "visible", binding="${(user!=null&&user.challengeTradeInfos.size>0) ? false:true}")
 	boolean cNoSharedVisiable;
 
-	@Field(valueKey = "visible")
+	@Field(valueKey = "visible", binding="${(user!=null&&user.joinTradeInfos.size>0) ? true:false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible")
+	@Field(valueKey = "visible", binding="${(user!=null&&user.joinTradeInfos.size>0) ? false:false}")
 	boolean jNoSharedVisiable;
 
-	@Field
-	String alteredUserIcon = null;
 
-	@Field
-	String alteredUserHome = null;
 
-	@Field(valueKey = "backgroundImageURI")
+	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack:null}")
 	String userHomeBack;
-
-	DataField<String> userHomeBackField;
-	DataField<String> userIconField;
-
-	DataField<String> userNickNameField;
-
-	DataField<String> totalScoreField;
-
-	DataField<String> totalProfitField;
-
-	DataField<String> challengeSharedNumField;
-
-	DataField<String> joinSharedNumField;
-	DataField<List> challengeTradeInfosField;
-	DataField<List> joinTradeInfosField;
-
-	DataField<Boolean> cSharedVisiableField;
-	DataField<Boolean> cNoSharedVisiableField;
-	DataField<Boolean> jSharedVisiableField;
-	DataField<Boolean> jNoSharedVisiableField;
-
-	@Bean(type=BindingType.Pojo)
-	UserBean user;
-
-	@OnShow
-	protected void initData() {
-
-		user = getUIContext().getKernelContext()
-				.getService(IUserManagementService.class).fetchUserInfo();
-		if (user != null) {
-			List<TradingAccountBean> tradeInfos = user.getTradeInfos();
-			joinTradeInfos = new ArrayList<TradingAccountBean>();
-			challengeTradeInfos = new ArrayList<TradingAccountBean>();
-			for (TradingAccountBean tradeInfo : tradeInfos) {
-				switch (tradeInfo.getType()) {
-				case 0:
-					/* 参赛交易盘 */
-					joinTradeInfos.add(tradeInfo);
-					break;
-				case 1:
-					challengeTradeInfos.add(tradeInfo);
-					break;
-				default:
-					break;
-				}
-			}
-			joinTradeInfosField.setValue(joinTradeInfos);
-			challengeTradeInfosField.setValue(challengeTradeInfos);
-			showView();
-		}
-
-	}
-
-	protected void showView() {
-		setUserIcon(user.getUserPic());
-		setUserNickName(user.getNickName());
-		setUserHomeBack(user.getHomeBack());
-		setTotalProfit(user.getTotoalProfit());
-		setTotoalScore(user.getTotoalScore());
-		setChallengeSharedNum(user.getChallengeShared());
-		setJoinSharedNum(user.getJoinShared());
-	}
-
-	/**
-	 * 设置用户的背景图片
-	 * 
-	 * @param homeBack
-	 */
-	private void setUserHomeBack(String homeBack) {
-		if (TextUtils.isEmpty(homeBack)) {
-			this.userHomeBack = "resourceId:drawable/back1";
-			this.userHomeBackField.setValue("resourceId:drawable/back1");
-		} else {
-			this.userHomeBack = homeBack;
-			this.userHomeBackField.setValue(homeBack);
-		}
-	}
 
 	/**
 	 * 标题栏-"返回"按钮事件处理
@@ -203,14 +128,18 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "manage", description = "To Manage UI")
+	@Command(
+			commandName = "manage", 
+			description = "To Manage UI", 
+			navigations = { 
+					@Navigation(
+							on = "SUCCESS", 
+							showPage = "userManagePage"
+							) 
+					}
+			)
 	String manage(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-
-			System.out.println("-----manage-----");
-
-		}
-		return null;
+		return "SUCCESS";
 	}
 
 	/**
@@ -235,13 +164,6 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 					}
 			)
 	String personalSet(InputEvent event) {
-
-		/*if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("curUserIcon", this.userIcon);
-			map.put("curUserHomeBack", this.userHomeBack);
-		}*/
 		return "SUCCESS";
 	}
 
@@ -277,80 +199,6 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		return null;
 	}
 
-	protected void setUserIcon(String uIcon) {
-		this.userIcon = uIcon;
-		this.userIconField.setValue(uIcon);
-	}
-
-	protected void setUserNickName(String uNickName) {
-		this.userNickName = uNickName;
-		this.userNickNameField.setValue(uNickName);
-	}
-
-	protected void setTotoalScore(String totalScore) {
-		this.totalScore = totalScore;
-		this.totalScoreField.setValue(totalScore);
-
-		if (Float.parseFloat(totalScore) > 0) {
-			this.totalScoreField.setAttribute(AttributeKeys.textColor,
-					ColorUtils.STOCK_RED);
-		} else {
-			this.totalScoreField.setAttribute(AttributeKeys.textColor,
-					ColorUtils.STOCK_GREEN);
-		}
-	}
-
-	protected void setTotalProfit(String totalProfit) {
-		this.totalProfit = totalProfit;
-
-		this.totalProfitField.setValue(totalProfit);
-		if (Float.parseFloat(totalProfit) > 0) {
-			this.totalProfitField.setAttribute(AttributeKeys.textColor,
-					ColorUtils.STOCK_RED);
-		} else {
-			this.totalProfitField.setAttribute(AttributeKeys.textColor,
-					ColorUtils.STOCK_GREEN);
-		}
-	}
-
-	protected void setChallengeSharedNum(String num) {
-		this.challengeSharedNum = num;
-		this.challengeSharedNumField.setValue(num);
-
-		if (Integer.parseInt(num) > 0) {
-			this.cSharedVisiable = true;
-			this.cNoSharedVisiable = false;
-
-			this.cSharedVisiableField.setValue(true);
-			this.cNoSharedVisiableField.setValue(false);
-		} else {
-			this.cSharedVisiable = false;
-			this.cNoSharedVisiable = true;
-
-			this.cSharedVisiableField.setValue(false);
-			this.cNoSharedVisiableField.setValue(true);
-		}
-	}
-
-	protected void setJoinSharedNum(String num) {
-		this.joinSharedNum = num;
-		this.joinSharedNumField.setValue(num);
-
-		if (Integer.parseInt(num) > 0) {
-			this.jSharedVisiable = true;
-			this.jNoSharedVisiable = false;
-
-			this.jSharedVisiableField.setValue(true);
-			this.jNoSharedVisiableField.setValue(false);
-		} else {
-			this.jSharedVisiable = false;
-			this.jNoSharedVisiable = true;
-
-			this.jSharedVisiableField.setValue(false);
-			this.jNoSharedVisiableField.setValue(true);
-		}
-
-	}
 
 	@Command(commandName = "joinItemClick")
 	String joinItemClick(InputEvent event) {
@@ -378,17 +226,24 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "setNickName")
+	@Command(
+			commandName = "setNickName", 
+			description = "To Personal_setting UI", 
+			navigations = { 
+					@Navigation(
+							on = "SUCCESS", 
+							showPage = "userNickSet"
+					)
+			}
+	)
 	String setNickName(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench()
-					.showPage("user_nick_set", null, null);
-		}
-		return null;
+		
+		return "SUCCESS";
 	}
 
 	@Override
 	public void updateModel(Object value) {
-
+		
+		
 	}
 }
