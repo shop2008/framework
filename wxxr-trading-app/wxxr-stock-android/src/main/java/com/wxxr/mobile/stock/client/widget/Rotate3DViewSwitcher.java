@@ -76,12 +76,12 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 	}
 
 	private void showNotification(String message) {
-		if(mShowing)
-			return;
-		mShowing = true;
 		if(log.isDebugEnabled()) {
 			log.debug("show notification :["+message+"]");
 		}
+		if(mShowing)
+			return;
+		mShowing = true;
 		TextView msgTv = (TextView) findViewById(R.id.time);
 		msgTv.setText(message);
 		setRorateUp();
