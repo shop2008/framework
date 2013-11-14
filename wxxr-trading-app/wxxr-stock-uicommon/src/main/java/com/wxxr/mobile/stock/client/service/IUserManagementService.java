@@ -3,6 +3,9 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
+import javax.security.auth.login.LoginException;
+
+import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.client.bean.UserBean;
 
@@ -11,10 +14,64 @@ import com.wxxr.mobile.stock.client.bean.UserBean;
  *
  */
 public interface IUserManagementService {
-	UserBean fetchUserInfo();
-	void register(String userId);
-	void login(String userId,String pwd);
-	
+	/**
+	 * 获取当前用户信息
+	 * @return
+	 */
+	UserBean getMyUserInfo();
+	/**
+	 * 获取他人用户信息
+	 * @return
+	 */
+	UserBean getUserInfoById(String userId);
+	/**
+	 * 注册用户-使用手机号注册
+	 * 用户使用手机号注册，如果没有注册过，则直接使用短信把密码发给他
+	 * 
+	 * @param phoneNumber - 用户手机号
+	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
+	 */
+	void register(String phoneNumber) throws StockAppBizException;
+	/**
+	 * 注册用户-普通注册方式
+	 * 
+	 * @param userId
+	 * @param password
+	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
+	 */
+	 void register(String userId,String password) throws StockAppBizException;
+	 
+	/**
+	 * 用户登陆
+	 * @param userId
+	 * @param pwd
+	 * @throws LoginException
+	 */
+	void login(String userId,String pwd) throws LoginException;
+	/**
+	 * 修改密码
+	 * @param oldPwd - 旧密码
+	 * @param newPwd - 新密码
+	 * @throws StockAppBizException
+	 */
+	void updatePassword(String oldPwd,String newPwd) throws StockAppBizException;
+	/**
+	 * 检查用户是否登陆，如果用户已登录返回true，否则返回false
+	 * @return
+	 */
+	boolean isLogin();
+	/**
+	 * 手机认证-绑定手机号
+	 * @param phoneNumber - 手机号
+	 * @param vertifyCode - 认证码
+	 */
+	void bindMobile(String phoneNumber,String vertifyCode);
+	/**
+	 * 更改手机绑定
+	 * @param phoneNumber - 手机号
+	 * @param vertifyCode - 认证码
+	 */
+	void changeBindingMobile(String phoneNumber,String vertifyCode);
 	/**
 	 * 设置是否推送消息
 	 * @param on 

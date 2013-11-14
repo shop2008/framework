@@ -4,30 +4,55 @@
 package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.security.auth.login.LoginException;
 
+import com.wxxr.javax.ws.rs.NotAuthorizedException;
+import com.wxxr.mobile.android.preference.DictionaryUtils;
+import com.wxxr.mobile.core.api.IUserAuthCredential;
+import com.wxxr.mobile.core.api.IUserAuthManager;
+import com.wxxr.mobile.core.api.UsernamePasswordCredential;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.client.IStockAppContext;
+import com.wxxr.mobile.stock.client.RestBizException;
+import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.ScoreBean;
 import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
-import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.client.bean.UserBean;
 import com.wxxr.mobile.stock.client.service.IUserManagementService;
-import com.wxxr.mobile.stock.security.impl.Connector;
-import com.wxxr.mobile.stock.security.impl.ConnectorContext;
+import com.wxxr.security.vo.SimpleResultVo;
+import com.wxxr.security.vo.UpdatePwdVO;
+import com.wxxr.stock.common.valobject.ResultBaseVO;
+import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
+import com.wxxr.stock.restful.resource.StockUserResource;
 
 /**
  * @author neillin
- *
+ * 
  */
-public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> implements
-		IUserManagementService {
-	private static final Trace log = Trace.register(UserManagementServiceImpl.class);
+public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
+		implements IUserManagementService, IUserAuthManager {
+	private static final Trace log = Trace
+			.register(UserManagementServiceImpl.class);
+
+	private static final String KEY_USERNAME = "U";
+	private static final String KEY_PASSWORD = "P";
+	private static final String KEY_UPDATE_DATE = "UD";
+	private IPreferenceManager prefManager;
+	private UsernamePasswordCredential UsernamePasswordCredential4Login;
+	private UserBean myUserInfo = new UserBean();
+	private TradingAccountListBean myTradingAccountListBean = new TradingAccountListBean();
+	private UserBean otherUserInfo = new UserBean();
 
 	@Override
 	protected void initServiceDependency() {
@@ -35,75 +60,160 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	protected void startService() {
-		ConnectorContext conectorContext = new ConnectorContext(context);
-		Connector.createConnector(conectorContext);
 		context.registerService(IUserManagementService.class, this);
+		context.registerService(IUserAuthManager.class, this);
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(IUserManagementService.class, this);
-		
+		context.unregisterService(IUserAuthManager.class, this);
 	}
-	
-	
-	@Override
-	public UserBean fetchUserInfo() {
-		UserBean user = new UserBean();
-	
-		user.setNickName("王五");
-		user.setUserPic("resourceId:drawable/head1");
-		user.setBalance("1000");
-		user.setScore("20");
-		user.setUsername("李四");
-		user.setTotoalProfit("20000.00");
-		user.setTotoalScore("12000.00");
-		user.setChallengeShared("0");
-		user.setJoinShared("19");
-		
-		List<TradingAccountBean> tradeInfos = new ArrayList<TradingAccountBean>();
-		for(int i=0;i<5;i++) {
-			TradingAccountBean account = new TradingAccountBean();
-			account.setIncome(i%2==0?2000.00f:-100.00f);
-			account.setCreateDate("2012-10-2");
-			account.setType(i%2==0? 1: 0);
-			account.setStockName("股票"+i);
-			account.setStockCode("60020");
-			account.setStatus(i%2==0?0:1);
-			account.setAvailable(2000.0f);
-			tradeInfos.add(account);
+
+	protected IPreferenceManager getPrefManager() {
+		if (this.prefManager == null) {
+			this.prefManager = context.getService(IPreferenceManager.class);
 		}
-		
-		user.setTradeInfos(tradeInfos);
-		return user;
-	}
-	@Override
-	public void register(String userId) {
-		log.info("userId:"+userId);
-		
+		return this.prefManager;
 	}
 
 	@Override
-	public void login(String userId, String pwd) {
-		final String userName = userId;
-		final String password = pwd;
+	public IUserAuthCredential getAuthCredential(String host, String realm) {
+		IPreferenceManager mgr = getPrefManager();
+		if (!mgr.hasPreference(getModuleName())
+				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
+			if (UsernamePasswordCredential4Login != null) {
+				return UsernamePasswordCredential4Login;
+			}
+			return null;
+		}
+		Dictionary<String, String> d = mgr.getPreference(getModuleName());
+		String userName = d.get(KEY_USERNAME);
+		String passwd = d.get(KEY_PASSWORD);
+		return new UsernamePasswordCredential(userName, passwd);
+	}
+
+	@Override
+	public UserBean getMyUserInfo() {
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Connector.getInstance().login(userName, password);
-				} catch (LoginException e) {
-					log.warn("Login Failed", e);
+					UserVO vo = context.getService(IRestProxyService.class)
+							.getRestService(StockUserResource.class).getUser();
+					if (vo != null) {
+						myUserInfo.setNickName(vo.getNickName());
+						myUserInfo.setUsername(vo.getUserName());
+						myUserInfo.setPhoneNumber(vo.getMoblie());
+						myUserInfo.setUserPic(vo.getIcon());
+					}
+				} catch (Exception e) {
+					log.warn("Error when get user info", e);
 				}
 			}
-		}, 1, TimeUnit.SECONDS);
-		
+		}, 0, TimeUnit.SECONDS);
+
+		return myUserInfo;
+	}
+
+	@Override
+	public void register(final String phoneNumber) throws StockAppBizException {
+		Future<StockAppBizException> future = context.getExecutor().submit(
+				new Callable<StockAppBizException>() {
+					@Override
+					public StockAppBizException call() throws Exception {
+						try {
+							SimpleResultVo vo = context
+									.getService(IRestProxyService.class)
+									.getRestService(StockUserResource.class)
+									.register(phoneNumber);
+							if (vo != null && vo.getResult() == 0) {
+								return null;
+							}
+							return new StockAppBizException("注册失败");
+						} catch (RestBizException e) {
+							return new StockAppBizException("用户已存在");
+						}
+					}
+				});
+		if (future != null) {
+			try {
+				StockAppBizException e = future.get(1, TimeUnit.SECONDS);
+				if (e != null) {
+					if (log.isDebugEnabled()) {
+						log.debug("Register error", e);
+					}
+					throw e;
+				}
+			} catch (Exception e) {
+				throw new StockAppBizException("网络连接超时，请稍后再试");
+			}
+		}
+	}
+
+	@Override
+	public void login(final String userId, final String pwd)
+			throws LoginException {
+		Callable<LoginException> task = new Callable<LoginException>() {
+			public LoginException call() throws Exception {
+				UserVO vo = null;
+				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
+						userId, pwd);
+				try {
+					vo = context.getService(IRestProxyService.class)
+							.getRestService(StockUserResource.class).getUser();
+				} catch (NotAuthorizedException e) {
+					return new LoginException("用户名或密码错误");
+				} catch (Exception e) {
+					return new LoginException("登录异常");
+				} finally {
+					UsernamePasswordCredential4Login = null;
+				}
+				if (vo == null) {
+					return new LoginException("登录异常");
+				}
+				// 根据用户密码登录成功
+				Dictionary<String, String> pref = getPrefManager()
+						.getPreference(getModuleName());
+				if (pref == null) {
+					pref = new Hashtable<String, String>();
+					getPrefManager().newPreference(getModuleName(), pref);
+				} else {
+					pref = DictionaryUtils.clone(pref);
+				}
+				pref.put(KEY_USERNAME, userId);
+				pref.put(KEY_PASSWORD, pwd);
+				pref.put(KEY_UPDATE_DATE,
+						String.valueOf(System.currentTimeMillis()));
+				getPrefManager().putPreference(getModuleName(), pref);
+				return null;
+			}
+		};
+		Future<LoginException> future = context.getExecutor().submit(task);
+		if (future != null) {
+			try {
+				LoginException e = future.get(1, TimeUnit.SECONDS);
+				if (e != null) {
+					if (log.isDebugEnabled()) {
+						log.debug("Login error", e);
+					}
+					throw e;
+				}
+			} catch (Exception e) {
+				throw new LoginException("登陆超时");
+			}
+		}
+
+	}
+
+	@Override
+	public String getModuleName() {
+		return "UserManagementService";
 	}
 
 	@Override
 	public void pushMessageSetting(boolean on) {
-		
-		
+
 	}
 
 	@Override
@@ -112,8 +222,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	}
 
 	public void setRegRulesReaded(boolean isRead) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -130,24 +239,91 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	}
 
 	public ScoreInfoBean fetchUserScoreInfo(String userId) {
-		
+
 		ScoreInfoBean entity = new ScoreInfoBean();
-		
+
 		entity.setBalance("200");
-		
+
 		List<ScoreBean> scores = new ArrayList<ScoreBean>();
-		for(int i=0;i<9;i++) {
+		for (int i = 0; i < 9; i++) {
 			ScoreBean score = new ScoreBean();
 			score.setCatagory("推荐好友奖励");
 			score.setAmount("200");
 			score.setDate("2011-10-12");
 			scores.add(score);
 		}
-		
+
 		entity.setScores(scores);
 		return entity;
 	}
 
-	
+	@Override
+	public void updatePassword(final String oldPwd, final String newPwd) throws StockAppBizException{
+		Future<StockAppBizException> future = context.getExecutor().submit(
+				new Callable<StockAppBizException>() {
+					@Override
+					public StockAppBizException call() throws Exception {
+						try {
+							UpdatePwdVO vo = new UpdatePwdVO();
+							vo.setOldPwd(oldPwd);
+							vo.setPassword(newPwd);
+							ResultBaseVO ret = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).updatePwd(vo);
+							if (ret != null && ret.getResulttype() == 0) {
+								if (ret.getResulttype()!=0) {
+									return new StockAppBizException(ret.getResultInfo());
+								}
+								return null;
+							}			
+							return new StockAppBizException("更新失败");
+						} catch (RestBizException e) {
+							return new StockAppBizException("更新失败");
+						}
+					}
+				});
+		if (future != null) {
+			try {
+				StockAppBizException e = future.get(1, TimeUnit.SECONDS);
+				if (e != null) {
+					if (log.isDebugEnabled()) {
+						log.debug("Register error", e);
+					}
+					throw e;
+				}
+			} catch (Exception e) {
+				throw new StockAppBizException("网络连接超时，请稍后再试");
+			}
+		}
+
+	}
+
+	@Override
+	public boolean isLogin() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void register(String userId, String password)
+			throws StockAppBizException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void bindMobile(String phoneNumber, String vertifyCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void changeBindingMobile(String phoneNumber, String vertifyCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public UserBean getUserInfoById(String userId) {
+		return otherUserInfo;
+	}
 
 }

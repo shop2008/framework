@@ -6,8 +6,10 @@ package com.wxxr.mobile.stock.client.service;
 import java.util.List;
 
 import com.wxxr.mobile.stock.client.StockAppBizException;
+import com.wxxr.mobile.stock.client.bean.MyTradingAccountListBean;
 import com.wxxr.mobile.stock.client.bean.RankListBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
 
 /**
@@ -25,7 +27,7 @@ public interface ITradingManagementService {
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<TradingAccountBean> getTradingAccountList(int type)
+	TradingAccountListBean getMyTradingAccountList()
 			throws StockAppBizException;
 
 	/**
@@ -36,7 +38,7 @@ public interface ITradingManagementService {
 	 *            - 0表示T日交易盘，1表示T+1日交易盘
 	 * @return
 	 */
-	List<TradingAccountBean> getTradingAccountList(String userId, int type);
+	TradingAccountListBean getOtherTradingAccountList(String userId);
 
 	/**
 	 * 

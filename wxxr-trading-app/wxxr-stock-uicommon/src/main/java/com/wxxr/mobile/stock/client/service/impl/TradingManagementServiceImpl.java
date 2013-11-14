@@ -37,7 +37,6 @@ public class TradingManagementServiceImpl extends
 	//=========================beans =======================
 	private RankListBean rank = new RankListBean();
 	private TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
-	private TradingAccountListBean otherTradingAccounts = new TradingAccountListBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
