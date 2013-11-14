@@ -6,11 +6,9 @@ package com.wxxr.mobile.stock.client.service;
 import java.util.List;
 
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.client.bean.RankListBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
-import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 
 /**
  * 交易管理模块
@@ -69,30 +67,32 @@ public interface ITradingManagementService {
 	 */
 	Long createTradingAccount(String type, String credit, String stops,
 			String fee1, String freezing) throws StockAppBizException;
-    /**
+    
+	
+	/**
      * 获取T日排行榜
      * @return
      * @throws StockAppBizException
      */
-	List<MegagameRankBean> getTMegagameRank() throws StockAppBizException;
+	RankListBean getTMegagameRank() throws StockAppBizException;
 	/**
 	 * 获取T+1日排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<MegagameRankBean> getT1MegagameRank() throws StockAppBizException;
+	RankListBean getT1MegagameRank() throws StockAppBizException;
 	/**
 	 * 获取实盘券排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<RegularTicketBean> getRegularTicketRank() throws StockAppBizException;
+	RankListBean getRegularTicketRank() throws StockAppBizException;
 	/**
 	 * 获取周赛排行榜
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	List<WeekRankBean> getWeekRank() throws StockAppBizException;
+	RankListBean getWeekRank() throws StockAppBizException;
 	/**
 	 * 获取创建交易盘相关参数
 	 * @return

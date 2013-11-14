@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.StockAppBizException;
 import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.client.bean.RankListBean;
 import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
@@ -33,6 +34,7 @@ public class TradingManagementServiceImpl extends
 	private static final Trace log = Trace
 			.register(TradingManagementServiceImpl.class);
 
+	private RankListBean rank = new RankListBean();
 	// =================module life cycle methods=============================
 
 	@Override
@@ -91,24 +93,28 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	public List<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
-		return mockRankData("T");
+	public RankListBean getTMegagameRank() throws StockAppBizException {
+		rank.setTRankBeans(mockRankData("T"));
+		return rank;
 	}
 
 	@Override
-	public List<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
-		return mockRankData("T+1");
+	public RankListBean getT1MegagameRank() throws StockAppBizException {
+		rank.setT1RankBeans(mockRankData("T+1"));
+		return rank;
 	}
 
 	@Override
-	public List<RegularTicketBean> getRegularTicketRank()
+	public RankListBean getRegularTicketRank()
 			throws StockAppBizException {
-		return mockRegularTicketRank();
+		rank.setRegularTicketBeans(mockRegularTicketRank());
+		return rank;
 	}
 
 	@Override
-	public List<WeekRankBean> getWeekRank() throws StockAppBizException {
-		return mockWeekRank();
+	public RankListBean getWeekRank() throws StockAppBizException {
+		rank.setWeekRanKBeans(mockWeekRank());
+		return rank;
 	}
 
 	// =================private method =======================================
