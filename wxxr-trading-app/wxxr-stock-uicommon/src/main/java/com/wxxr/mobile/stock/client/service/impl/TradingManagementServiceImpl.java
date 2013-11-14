@@ -47,13 +47,40 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	protected void startService() {
+	protected void startService() {		
 		context.registerService(ITradingManagementService.class, this);
+		List<TradingAccountBean> t0_list = myTradingAccounts.getT0TradingAccounts();
+		if (t0_list==null) {
+			t0_list = mockData(0);
+			myTradingAccounts.setT0TradingAccounts(t0_list);
+		}
+		List<TradingAccountBean> t1_list = myTradingAccounts.getT1TradingAccountBeans();
+		if (t1_list==null) {
+			t1_list = mockData(1);
+			myTradingAccounts.setT1TradingAccountBeans(t1_list);
+		}
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			public void run() {
+				// ====mock T日实盘，未结算，盈利
+				TradingAccountBean	t0ta = new TradingAccountBean();
+				seq.getAndDecrement();
+				t0ta.setId(1l);
+				t0ta.setInitCredit(100000);
+				t0ta.setIncome(3000.01f);
+				t0ta.setStockCode(String.format("000%d", seq.get()));
+				t0ta.setStockName("无限新锐"+seq.get());
+				t0ta.setType(1);// 实盘
+				t0ta.setStatus(0);// 未结算
+				myTradingAccounts.getT0TradingAccounts().add(t0ta);
+			}
+		}, 5000, 5000);
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(ITradingManagementService.class, this);
+		timer.cancel();
 	}
 
 	// =================interface method =====================================
@@ -61,32 +88,7 @@ public class TradingManagementServiceImpl extends
 	private AtomicLong seq = new AtomicLong(0);
 	public TradingAccountListBean getTradingAccountList() {
 		if (context.getApplication().isInDebugMode()) {
-			List<TradingAccountBean> t0_list = myTradingAccounts.getT0TradingAccounts();
-			if (t0_list==null) {
-				t0_list = mockData(0);
-				myTradingAccounts.setT0TradingAccounts(t0_list);
-			}
-			List<TradingAccountBean> t1_list = myTradingAccounts.getT1TradingAccountBeans();
-			if (t1_list==null) {
-				t1_list = mockData(1);
-				myTradingAccounts.setT1TradingAccountBeans(t1_list);
-			}
-			timer.scheduleAtFixedRate(new TimerTask() {
-				
-				public void run() {
-					// ====mock T日实盘，未结算，盈利
-					TradingAccountBean	t0ta = new TradingAccountBean();
-					seq.getAndDecrement();
-					t0ta.setId(1l);
-					t0ta.setInitCredit(100000);
-					t0ta.setIncome(3000.01f);
-					t0ta.setStockCode(String.format("000%d", seq.get()));
-					t0ta.setStockName("无限新锐"+seq.get());
-					t0ta.setType(1);// 实盘
-					t0ta.setStatus(0);// 未结算
-					myTradingAccounts.getT0TradingAccounts().add(t0ta);
-				}
-			}, 5000, 5000);
+			
 			return myTradingAccounts;
 		}
 		
