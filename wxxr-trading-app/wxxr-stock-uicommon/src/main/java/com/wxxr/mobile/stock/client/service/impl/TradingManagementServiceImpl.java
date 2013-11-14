@@ -5,7 +5,10 @@ package com.wxxr.mobile.stock.client.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -54,10 +57,39 @@ public class TradingManagementServiceImpl extends
 	}
 
 	// =================interface method =====================================
-
+	private Timer timer = new Timer();
+	private AtomicLong seq = new AtomicLong(0);
 	public TradingAccountListBean getTradingAccountList() {
-		myTradingAccounts.setT0TradingAccounts(mockData(0));
-		myTradingAccounts.setT1TradingAccountBeans(mockData(1));
+		if (context.getApplication().isInDebugMode()) {
+			List<TradingAccountBean> t0_list = myTradingAccounts.getT0TradingAccounts();
+			if (t0_list==null) {
+				t0_list = mockData(0);
+				myTradingAccounts.setT0TradingAccounts(t0_list);
+			}
+			List<TradingAccountBean> t1_list = myTradingAccounts.getT1TradingAccountBeans();
+			if (t1_list==null) {
+				t1_list = mockData(1);
+				myTradingAccounts.setT1TradingAccountBeans(t1_list);
+			}
+			timer.scheduleAtFixedRate(new TimerTask() {
+				
+				public void run() {
+					// ====mock T日实盘，未结算，盈利
+					TradingAccountBean	t0ta = new TradingAccountBean();
+					seq.getAndDecrement();
+					t0ta.setId(1l);
+					t0ta.setInitCredit(100000);
+					t0ta.setIncome(3000.01f);
+					t0ta.setStockCode(String.format("000%d", seq.get()));
+					t0ta.setStockName("无限新锐"+seq.get());
+					t0ta.setType(1);// 实盘
+					t0ta.setStatus(0);// 未结算
+					myTradingAccounts.getT0TradingAccounts().add(t0ta);
+				}
+			}, 5000, 5000);
+			return myTradingAccounts;
+		}
+		
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -65,15 +97,38 @@ public class TradingManagementServiceImpl extends
 					
 					List<TradingAccInfoVO> vo = getService(IRestProxyService.class).getRestService(
 							TradingResourse.class).getTradingAccountList();
+					if (vo!=null) {
+						
+					}else{
+						if (!context.getApplication().isInDebugMode()) {
+							myTradingAccounts.getT0TradingAccounts();
+						}
+					}
+					
+					
 				} catch (Throwable e) {
 					log.error("fetch data error",e);
 				}
 			}
-		}, 2, TimeUnit.SECONDS);
+		}, 10, TimeUnit.SECONDS);
 
 		return myTradingAccounts;
 	}
-
+	
+	private TradingAccountBean fromVO(TradingAccInfoVO vo){
+		if (vo==null) {
+			return null;
+		}
+		TradingAccountBean bean = new TradingAccountBean();
+		bean.setId(vo.getAcctID());
+		bean.setIncome(vo.getTotalGain()/100.0f);
+		bean.setStockName(vo.getMaxStockName());
+		bean.setStockCode(vo.getMaxStockCode());
+		bean.setStatus("CLOSED".equals(vo.getOver())?1:0);
+		bean.setType(vo.getStatus()==1?0:1);
+		//bean.setCreateDate(vo.getCreateDate());
+		return bean;
+	}
 	@Override
 	public TradingAccountBean getTradingAccount(Long id) {
 		// TODO Auto-generated method stub
