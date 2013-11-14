@@ -9,6 +9,7 @@ import java.util.List;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.bean.StockBean;
 import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
@@ -26,6 +27,8 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 	public List<StockBean> searchStock(String keyword) {
 		// TODO Auto-generated method stub
 		List<StockBean> list = new ArrayList<StockBean>();
+		if(StringUtils.isEmpty(keyword))
+			return list;
 		List<StockBean> searchList = getAllMockData();
 		for(StockBean bean : searchList) {
 			if(bean.toString().contains(keyword)) {

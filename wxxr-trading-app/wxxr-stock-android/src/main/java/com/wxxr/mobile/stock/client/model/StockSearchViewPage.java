@@ -3,12 +3,13 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
@@ -20,7 +21,6 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.client.bean.StockBean;
 import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
 
@@ -35,6 +35,9 @@ public abstract class StockSearchViewPage extends PageBase {
 
 	private static Trace log = Trace.getLogger(StockSearchViewPage.class);
 	
+	@Bean
+	String key;
+	
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
@@ -42,9 +45,15 @@ public abstract class StockSearchViewPage extends PageBase {
 	String searchEdit;
 	DataField<String> searchEditField;
 		
-	@Field(valueKey="options")
+	@Bean(type=BindingType.Service)
+	IInfoCenterManagementService infoCenterService;
+	
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.searchStock(key)}")
+	List<StockBean> searchListBean;
+	
+	@Field(valueKey="options", binding="${searchListBean != null ? searchListBean : null}")
 	List<StockBean> searchList;
-	DataField<List> searchListField;
+//	DataField<List> searchListField;
 
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -56,19 +65,21 @@ public abstract class StockSearchViewPage extends PageBase {
 	
 	@OnShow
 	void initStockView() {
-		searchList = new ArrayList<StockBean>();
+		registerBean("key", "");
+//		searchList = new ArrayList<StockBean>();
 	}
 	
 	@Command
 	String searchTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
 			String key = (String) event.getProperty("changedText");
-			searchEditField.setValue(key);
-			if(StringUtils.isNotEmpty(key)) {
-				searchList.clear();
-				List<StockBean> stock = getUIContext().getKernelContext()
+//			searchEditField.setValue(key);
+//			if(StringUtils.isNotEmpty(key)) {
+//				searchList.clear();
+				registerBean("key", key);
+				getUIContext().getKernelContext()
 						.getService(IInfoCenterManagementService.class).searchStock(key);
-				searchList.addAll(stock);
+//				searchList.addAll(stock);
 //				Stock s;
 ////				for(int i=0;i<10;i++) {
 //					s = new Stock();
@@ -101,12 +112,12 @@ public abstract class StockSearchViewPage extends PageBase {
 //					s.setCode("001696");
 //					searchList.add(s);
 //				}
-				searchListField.setValue(searchList);
+//				searchListField.setValue(searchList);
 			} else {
-				searchList.clear();
-				searchListField.setValue(searchList);
+//				searchList.clear();
+//				searchListField.setValue(searchList);
 			}
-		}
+//		}
 		return null;
 	}
 	
