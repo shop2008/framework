@@ -59,7 +59,9 @@
 #macro(registerBeans $model $beans)
     private void registerBeans() {
 #foreach($bean in $beans)
+#if(!${bean.service})
         registerBean("${bean.name}",this.${bean.name});
+#end
 #end
     }
 #end
@@ -69,6 +71,7 @@
 #set( $AppUtilType = ${model.addImport("com.wxxr.mobile.android.app.AppUtils")})
 #foreach($srv in $bindings) 
         this.${srv.field.name} = ${AppUtilType}.getService(${srv.field.simpleType}.class);  
+        registerService("${srv.field.name}",this.${srv.field.name});
 #end
     }
 #end

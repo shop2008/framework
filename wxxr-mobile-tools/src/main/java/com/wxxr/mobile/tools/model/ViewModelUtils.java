@@ -563,7 +563,7 @@ public abstract class ViewModelUtils {
 	
 	public static BeanField createBeanFieldModel(ICodeGenerationContext context,ViewModelClass vModel, Element elem,Bean bean){
 		BeanField model = new BeanField();
-		model.setBeanType(bean.type().name());
+		model.setBeanType(bean.type());
 		model.setNullable(bean.nullable());
 		model.setValueExpression(bean.express());
 		updateBasicFieldModel(context, model, elem);
