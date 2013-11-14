@@ -194,7 +194,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		if(this.beans == null){
 			this.beans = new HashMap<String, Object>();
 		}
+		Object oldBean = this.beans.get(name);
 		this.beans.put(name, bean);
+		if(!ModelUtils.isEquals(oldBean, bean)){
+            DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
+            fireDataChangedEvent(evt);
+		}
 	}
 	
 	protected ViewBase unregisterBean(String name){
