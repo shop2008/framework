@@ -41,7 +41,7 @@ public abstract class AttributeKeys {
 	
 	public static final AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
 
-	public static final AttributeKey<Integer> textColor = new AttributeKey<Integer>(Integer.class,"textColor");
+	public static final AttributeKey<String> textColor = new AttributeKey<String>(String.class,"textColor");
 	
 	public static final AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
 
