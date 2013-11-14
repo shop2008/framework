@@ -202,6 +202,21 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 	
+	protected void registerService(String name, Object service){
+		if(this.beans == null){
+			this.beans = new HashMap<String, Object>();
+		}
+		this.beans.put(name, service);
+	}
+
+	protected ViewBase unregisterService(String name){
+		if(this.beans != null){
+			this.beans.remove(name);
+		}
+		return this;
+	}
+
+	
 	protected ViewBase unregisterBean(String name){
 		if(this.beans != null){
 			this.beans.remove(name);
