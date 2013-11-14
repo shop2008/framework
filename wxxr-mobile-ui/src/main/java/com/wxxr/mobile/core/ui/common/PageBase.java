@@ -130,6 +130,13 @@ public abstract class PageBase extends ViewBase implements IPage {
 	public void onToolbarHide() {
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IPage#getPageToolbar()
+	 */
+	@Override 
+	public IAppToolbar getPageToolbar() {
+		return this.toolbar;
+	}
 
 	protected IAppToolbar getAppToolbar() {
 		return this.toolbar;

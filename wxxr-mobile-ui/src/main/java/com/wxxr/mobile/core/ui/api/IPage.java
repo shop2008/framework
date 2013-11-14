@@ -22,4 +22,5 @@ public interface IPage extends IView {
 	void onToolbarShow();
 	void onToolbarHide();
 	void onToolbarDestroy();
+	IAppToolbar getPageToolbar();
 }
