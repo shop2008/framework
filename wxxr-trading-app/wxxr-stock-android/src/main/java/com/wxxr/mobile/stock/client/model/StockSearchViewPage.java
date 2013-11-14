@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
-import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -45,21 +45,13 @@ public abstract class StockSearchViewPage extends PageBase {
 	@Field(valueKey="options")
 	List<StockBean> searchList;
 	DataField<List> searchListField;
-	
-	@Command(description="Invoke when a toolbar item was clicked",
-			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
-			},
-			navigations={
-				@Navigation(on="stockSearchPage",showPage="home")
-			}
-	)
+
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-//		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		return "stockSearchPage";
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		return null;
 	}
 	
 	@OnShow
@@ -70,12 +62,12 @@ public abstract class StockSearchViewPage extends PageBase {
 	@Command
 	String searchTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String text = (String) event.getProperty("changedText");
-			searchEditField.setValue(text);
-			if(StringUtils.isNotEmpty(text)) {
+			String key = (String) event.getProperty("changedText");
+			searchEditField.setValue(key);
+			if(StringUtils.isNotEmpty(key)) {
 				searchList.clear();
 				List<StockBean> stock = getUIContext().getKernelContext()
-						.getService(IInfoCenterManagementService.class).searchStock("");
+						.getService(IInfoCenterManagementService.class).searchStock(key);
 				searchList.addAll(stock);
 //				Stock s;
 ////				for(int i=0;i<10;i++) {
@@ -119,7 +111,11 @@ public abstract class StockSearchViewPage extends PageBase {
 	}
 	
 	@Command(navigations = { 
-			@Navigation(on = "home", showPage = "userLoginPage") })
+			@Navigation(on = "home", showPage = "userLoginPage", params={
+				@Parameter(name="p1",value="v1"),
+				@Parameter(name="p2",value="v2")})
+			}
+	)
 	String handleItemClick(InputEvent event) {
 		return "home";
 	}
