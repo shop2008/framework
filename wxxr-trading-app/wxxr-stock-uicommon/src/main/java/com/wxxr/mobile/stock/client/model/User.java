@@ -3,10 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.List;
-
 import com.wxxr.mobile.core.annotation.BindableBean;
-import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
 
 
 /**
@@ -44,7 +41,11 @@ public class User {
 	 * 电话号吗
 	 */
 	private String phoneNumber;
-
+	
+	/**
+	 * 未读消息
+	 */
+	private String unReadMsg;
 	/**
 	 * 积分
 	 */
@@ -75,5 +76,5 @@ public class User {
 	 */
 	private String joinShared;
 
-	private List<TradingAccountBean> tradeInfos;
+//	private List<TradingAccountBean> tradeInfos;
 }
