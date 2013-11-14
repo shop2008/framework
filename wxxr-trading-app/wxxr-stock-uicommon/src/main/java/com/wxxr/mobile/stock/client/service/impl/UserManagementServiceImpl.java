@@ -25,6 +25,7 @@ import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.client.IStockAppContext;
 import com.wxxr.mobile.stock.client.RestBizException;
 import com.wxxr.mobile.stock.client.StockAppBizException;
+import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.client.bean.ScoreBean;
 import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
@@ -324,6 +325,28 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public UserBean getUserInfoById(String userId) {
 		return otherUserInfo;
+	}
+
+	public boolean switchBankCard(String accountName, String bankName,
+			String bankAddr, String bankNum) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean withDrawCashAuth(String accountName, String bankName,
+			String bankAddr, String bankNum) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public AuthInfoBean getUserAuthInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getUserAuthMobileNum(String userId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.client.service;
 import javax.security.auth.login.LoginException;
 
 import com.wxxr.mobile.stock.client.StockAppBizException;
+import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.client.bean.UserBean;
 
@@ -120,4 +121,30 @@ public interface IUserManagementService {
 
 	
 	ScoreInfoBean fetchUserScoreInfo(String userId);
+	
+	boolean switchBankCard(String accountName, String bankName, String bankAddr,String bankNum);
+	
+	/**
+	 * 提现认证
+	 * @param accountName 用户名
+	 * @param bankName 开户行名称
+	 * @param bankAddr 开户行所在地
+	 * @param bankNum 银行账号
+	 * @return true 认证成功， false 认证失败
+	 */
+	boolean withDrawCashAuth(String accountName, String bankName, String bankAddr,String bankNum);
+
+	
+	/**
+	 * 获取用户认证信息--提现认证
+	 * @return null 未认证， 非空为已认证
+	 */
+	AuthInfoBean getUserAuthInfo();
+	
+	
+	/**
+	 * 获取认证手机号
+	 * @return 认证的手机号码
+	 */
+	String getUserAuthMobileNum(String userId);
 }
