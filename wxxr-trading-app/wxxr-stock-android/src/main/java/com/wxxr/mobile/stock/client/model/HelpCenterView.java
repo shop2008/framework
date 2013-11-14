@@ -7,12 +7,13 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.bean.ArticleBean;
+import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 
 /**
@@ -22,14 +23,10 @@ import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 @View(name="helpCenter", description="帮助中心")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase {
-	@Field(valueKey="options")
+	@Bean(type=BindingType.Service)
+	IArticleManagementService articleService;
+	@Bean(type=BindingType.Pojo,express="${articleService.getMyArticles(0,10,19)}")
+	MyArticlesBean articlesBean;
+	@Field(valueKey="options",binding="${articlesBean!=null?articlesBean.helpArticles:null}")
 	List<ArticleBean> helpArticles;
-	
-	DataField<List> helpArticlesField;
-	
-	@OnShow	
-	protected void updateHelpArticles() {
-		helpArticles = getUIContext().getKernelContext().getService(IArticleManagementService.class).getNewArticles(0, 4, 19);
-		helpArticlesField.setValue(helpArticles);
-	}
 }
