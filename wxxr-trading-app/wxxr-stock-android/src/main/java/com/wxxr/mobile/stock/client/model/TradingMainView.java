@@ -21,6 +21,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.bean.ArticleBean;
 import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.client.service.IArticleManagementService;
 import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 
@@ -51,7 +52,7 @@ public abstract class TradingMainView extends ViewBase{
 	ITradingManagementService tradingService;
 	
 	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountList()}")
-	TradingAccountList tradingAccount;
+	TradingAccountListBean tradingAccount;
 
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
 	List<TradingAccountBean> tradingT;
