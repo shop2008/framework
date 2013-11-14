@@ -1,12 +1,14 @@
 package com.wxxr.mobile.stock.client.model;
 
-import junit.framework.Protectable;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
@@ -58,12 +60,12 @@ public abstract class WithDrawCashAuthPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "back", description = "Back To Last UI")
+	@Command(
+			commandName = "back"
+			)
 	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
+		
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 

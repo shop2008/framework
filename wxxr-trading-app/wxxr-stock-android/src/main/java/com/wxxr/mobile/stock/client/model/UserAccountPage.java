@@ -141,7 +141,7 @@ public abstract class UserAccountPage extends PageBase {
 	@OnShow
 	protected void initData() {
 		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
-		bean = userService.fetchUserAccountInfo("");
+		//bean = userService.fetchUserAccountInfo("");
 	}
 	
 	@OnDataChanged
