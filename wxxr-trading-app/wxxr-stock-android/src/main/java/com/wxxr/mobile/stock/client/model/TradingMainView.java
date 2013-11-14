@@ -50,19 +50,15 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountList(0)}")
-	List<TradingAccountBean> tradingAccount;
+	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountList()}")
+	TradingAccountList tradingAccount;
 
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount:null}")
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
 	List<TradingAccountBean> tradingT;
 	
-	
 	/**获取T+1日数据*/
-	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountList(1)}")
-	List<TradingAccountBean> tradingAccount1;
 
-	@Field(valueKey="options",binding="${tradingAccount1!=null?tradingAccount1:null}")
+	@Field(valueKey="options",binding="${tradingAccount1!=null?tradingAccount.t1TradingAccountBeans:null}")
 	List<TradingAccountBean> tradingT1;
 	
 	
