@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_bar_bj"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            android:text="@string/title_switch_bank_card" />
+
+        <ImageButton
+            android:id="@id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
+        
+    </RelativeLayout>
+
+    <LinearLayout 
+        android:layout_margin="5dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:text="@string/tv_account_name_label"
+            />
+        
+        <TextView 
+            android:id="@+id/tv_account_name_what"
+            android:layout_width="wrap_content"
+           	android:layout_height="wrap_content"
+           	android:textSize="15sp"
+            android:textColor="@color/white"
+           	android:layout_marginLeft="5dip"
+           	android:text="张XX"
+           	bind:field="accountName"
+            />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="5dip"
+        android:background="@drawable/bg_circle_white"
+        android:orientation="vertical" >
+        
+        <EditText
+            android:id="@+id/et_switch_account_bank"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/hint_switch_account_bank"
+            android:singleLine="true"
+            android:textSize="15sp" 
+            bind:field="bankName"
+            bind:on_TextChanged="bankNameTextChanged"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#1b1b1b" />
+
+        <EditText
+            android:id="@+id/et_switch_account_bank_addr"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/hint_switch_account_bank_addr"
+            android:textSize="15sp" 
+            bind:field="bankAddr"
+            bind:on_TextChanged="bankAddrTextChanged"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#1b1b1b" />
+
+        <EditText
+            android:id="@+id/et_switch_account_number"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/hint_switch_account_number"
+            android:inputType="number"
+            android:textSize="15sp" 
+            bind:field="bankNum"
+            bind:on_TextChanged="bankNumTextChanged"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_margin="5dip"
+        android:background="@drawable/text_back"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_cash_auth"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="2dip"
+            android:background="@drawable/bg_red_btn"
+            android:gravity="center"
+            android:text="@string/btn_commit_text"
+            android:textColor="@color/white"
+            android:textSize="15sp" 
+            bind:field="*"
+            bind:on_Click="commit"
+            />
+    </LinearLayout>
+</LinearLayout>
