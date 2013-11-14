@@ -2,6 +2,8 @@ package com.wxxr.mobile.android.ui.updater;
 
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
@@ -13,19 +15,25 @@ public class CheckBoxAttributeUpdater implements IAttributeUpdater<View> {
 	private static final Trace log = Trace.register(TextAttributeUpdater.class);
 	public <T> void updateControl(View control, AttributeKey<T> attrType,
 			IUIComponent field, Object value) {
-		if(!(control instanceof CheckBox)){
+		if(!(control instanceof CheckBox || control instanceof RadioButton)){
 			return;
 		}
+		CompoundButton cb = null;
+		if(control instanceof CheckBox) {
+			cb = (CheckBox)control;
+		} else if(control instanceof RadioButton) {
+			cb = (RadioButton)control;
+		}
 		
-		CheckBox cb = (CheckBox)control;
 		Boolean val = (Boolean)value;
 		
 		
 		if((val != null)&&(attrType == AttributeKeys.checked)){
 			try {
-				cb.setChecked(val);
+				if(cb!=null)
+					cb.setChecked(val);
 			} catch (Exception e) {
-				log.error("Failed to set CheckBox for field :"+field.getName(), e);
+				log.error("Failed to set CheckBox/RadioButton for field :"+field.getName(), e);
 			}
 		}
 	}
