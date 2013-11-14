@@ -127,8 +127,9 @@
     <string name="tv_title_balance_detail">余额明细</string>
 
     <!-- 实盘积分明细 -->
+    
     <string name="tv_title_actual_panel_integral">实盘积分明细</string>
-    <string name="actual_integral_info_label">实盘积分明细</string> 
+    <string name="actual_integral_info_label">实盘积分明细</string>
     <string name="tv_integral_balance_label">当前实盘积分余额:</string>
 
     <!-- 登录界面 -->

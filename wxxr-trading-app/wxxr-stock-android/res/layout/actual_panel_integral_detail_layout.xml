@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -11,39 +12,44 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/list_button" />
-
         <TextView
             android:id="@id/tv_title_content"
             style="@style/style_title_text"
             android:text="@string/tv_title_actual_panel_integral" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/back_button"
+            bind:field="*"
+            bind:on_Click="back" />
+
     </RelativeLayout>
     
     
     <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@color/gray"
+        android:background="@color/light_gray"
         >
         
         <TextView 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_integral_balance_label"
+            android:textColor="@color/black"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_integral_balance_amount"
-            android:text="123"
+            android:textColor="@color/black"
+            bind:field="scoreBalance"
             />
     </LinearLayout>
     
@@ -52,6 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"
+        bind:itemViewId="actualScoreItemView"
+        bind:on_ItemClick="itemClicked"
+        bind:field="actualScores"
         >
     </ListView>
 </LinearLayout>
