@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dip"
             android:layout_toRightOf="@id/iv_personal_pic"
-            android:text="张三短短的" 
+            android:text="登录账号" 
             bind:field="nickName"/>
 
         <TextView

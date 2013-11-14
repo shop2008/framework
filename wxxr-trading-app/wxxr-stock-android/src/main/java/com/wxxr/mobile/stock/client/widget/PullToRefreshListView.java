@@ -1,5 +1,8 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -16,6 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.ui.api.IPage;
+import com.wxxr.mobile.core.ui.api.IWorkbench;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.stock.client.IStockAppToolbar;
 import com.wxxr.mobile.stock.client.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
@@ -171,8 +179,21 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         if (mPullRefreshing) {
             mPullRefreshing = false;
             resetHeaderHeight();
+            notifyToolBar();
         }
     }
+    
+	void notifyToolBar() {
+		final SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+		IWorkbench bench = AppUtils.getService(IWorkbenchManager.class).getWorkbench();
+		String id = bench.getActivePageId();
+		IPage page = bench.getPage(id);
+		IStockAppToolbar tool = ((IStockAppToolbar) page.getPageToolbar());
+		if (tool != null) {
+			tool.showNotification("最后更新:" + fmt.format(new Date()), null);
+		}
+	}
 
     /**
      * stop load more, reset footer view.
