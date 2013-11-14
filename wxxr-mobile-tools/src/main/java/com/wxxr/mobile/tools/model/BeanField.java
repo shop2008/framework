@@ -3,12 +3,14 @@
  */
 package com.wxxr.mobile.tools.model;
 
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+
 /**
  * @author neillin
  *
  */
 public class BeanField extends FieldModel {
-	private String beanType;
+	private BindingType beanType;
 	private String valueExpression;
 	private boolean nullable;
 	
@@ -29,14 +31,18 @@ public class BeanField extends FieldModel {
 	/**
 	 * @return the beanType
 	 */
-	public String getBeanType() {
+	public BindingType getBeanType() {
 		return beanType;
 	}
 
+	public boolean isService() {
+		return this.beanType == BindingType.Service;
+	}
+	
 	/**
 	 * @param beanType the beanType to set
 	 */
-	public void setBeanType(String beanType) {
+	public void setBeanType(BindingType beanType) {
 		this.beanType = beanType;
 	}
 
