@@ -16,6 +16,7 @@ import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.client.bean.RankListBean;
 import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.client.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.client.bean.WeekRankBean;
 import com.wxxr.mobile.stock.client.service.ITradingManagementService;
@@ -33,10 +34,11 @@ public class TradingManagementServiceImpl extends
 
 	private static final Trace log = Trace
 			.register(TradingManagementServiceImpl.class);
-
+	//=========================beans =======================
 	private RankListBean rank = new RankListBean();
+	private TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
+	private TradingAccountListBean otherTradingAccounts = new TradingAccountListBean();
 	// =================module life cycle methods=============================
-
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
@@ -53,18 +55,16 @@ public class TradingManagementServiceImpl extends
 	}
 
 	// =================interface method =====================================
-	List<TradingAccInfoVO> t_list;
-	List<TradingAccInfoVO> t1_list;
 
-	public List<TradingAccountBean> getTradingAccountList(final int type) {
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("getTradingAccountList[type: %s]", type));
-		}
+	public TradingAccountListBean getTradingAccountList() {
+		myTradingAccounts.setT0TradingAccounts(mockData(0));
+		myTradingAccounts.setT1TradingAccountBeans(mockData(1));
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					t_list = getService(IRestProxyService.class).getRestService(
+					
+					List<TradingAccInfoVO> vo = getService(IRestProxyService.class).getRestService(
 							TradingResourse.class).getTradingAccountList();
 				} catch (Throwable e) {
 					log.error("fetch data error",e);
@@ -72,12 +72,7 @@ public class TradingManagementServiceImpl extends
 			}
 		}, 2, TimeUnit.SECONDS);
 
-		return mockData(type);
-	}
-
-	public List<TradingAccountBean> getTradingAccountList(String userId, int type) {
-		// TODO Auto-generated method stub
-		return null;
+		return myTradingAccounts;
 	}
 
 	@Override
@@ -269,6 +264,19 @@ public class TradingManagementServiceImpl extends
 		info.setRateString("0.08;0.10,0.12;0.13,0.05;0.08");
 		info.setVoucherCostRate(0.00399f);
 		return info;
+	}
+
+	@Override
+	public TradingAccountListBean getMyTradingAccountList()
+			throws StockAppBizException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TradingAccountListBean getOtherTradingAccountList(String userId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
