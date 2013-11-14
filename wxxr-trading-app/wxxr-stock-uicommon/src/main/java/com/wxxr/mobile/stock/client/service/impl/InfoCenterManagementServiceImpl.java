@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -24,7 +25,80 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 	@Override
 	public List<StockBean> searchStock(String keyword) {
 		// TODO Auto-generated method stub
-		return null;
+		List<StockBean> list = new ArrayList<StockBean>();
+		List<StockBean> searchList = getAllMockData();
+		for(StockBean bean : searchList) {
+			if(bean.toString().contains(keyword)) {
+				list.add(bean);
+			}
+		}
+		return list;
+	}
+
+	private List<StockBean> getAllMockData() {
+		List<StockBean> searchList = new ArrayList<StockBean>();
+		StockBean s;
+//		for(int i=0;i<10;i++) {
+			s = new StockBean();
+			s.setName("招商地产");
+			s.setCode("000024");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中山公用");
+			s.setCode("000685");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中色股份");
+			s.setCode("000758");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("武汉中商");
+			s.setCode("000785");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中水渔业");
+			s.setCode("000798");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("宗申动力");
+			s.setCode("001696");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("招商地产");
+			s.setCode("600024");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中山公用");
+			s.setCode("600685");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中色股份");
+			s.setCode("600758");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("武汉中商");
+			s.setCode("600785");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("中水渔业");
+			s.setCode("600798");
+			searchList.add(s);
+			
+			s = new StockBean();
+			s.setName("宗申动力");
+			s.setCode("601696");
+			searchList.add(s);
+		return searchList;
 	}
 	
 	// ====================module life cycle methods ==================
