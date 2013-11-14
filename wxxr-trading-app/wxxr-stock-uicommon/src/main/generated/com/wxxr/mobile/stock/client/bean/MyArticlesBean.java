@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.client.bean;
 
 import java.util.List;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
+import com.wxxr.mobile.core.bean.api.ListDecorator;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 
@@ -55,7 +56,7 @@ public class MyArticlesBean implements IBindableBean {
 	 * @return the helpArticles
 	 */
 	public List<ArticleBean> getHelpArticles() {
-		return helpArticles;
+		return (helpArticles instanceof ListDecorator) ? ((ListDecorator<ArticleBean>)this.helpArticles).getData() : helpArticles;
 	}
 
 	/**
@@ -64,6 +65,9 @@ public class MyArticlesBean implements IBindableBean {
 	public void setHelpArticles(List<ArticleBean> helpArticles) {
 		List<ArticleBean> old = this.helpArticles;
 		this.helpArticles = helpArticles;
+		if(this.helpArticles != null){
+			this.helpArticles = new ListDecorator<ArticleBean>("helpArticles", this.emitter,this.helpArticles);
+		}
 		this.emitter.firePropertyChange("helpArticles", old, this.helpArticles);
 	}
 
@@ -71,7 +75,7 @@ public class MyArticlesBean implements IBindableBean {
 	 * @return the homeArticles
 	 */
 	public List<ArticleBean> getHomeArticles() {
-		return homeArticles;
+		return (homeArticles instanceof ListDecorator) ? ((ListDecorator<ArticleBean>)this.homeArticles).getData() : homeArticles;
 	}
 
 	/**
@@ -80,6 +84,9 @@ public class MyArticlesBean implements IBindableBean {
 	public void setHomeArticles(List<ArticleBean> homeArticles) {
 		List<ArticleBean> old = this.homeArticles;
 		this.homeArticles = homeArticles;
+		if(this.homeArticles != null){
+			this.homeArticles = new ListDecorator<ArticleBean>("homeArticles", this.emitter,this.homeArticles);
+		}
 		this.emitter.firePropertyChange("homeArticles", old, this.homeArticles);
 	}
 
