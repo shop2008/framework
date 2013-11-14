@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
@@ -33,15 +34,13 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 
-	@Bean(type=BindingType.Pojo, express="${usrMgr.fetchUserInfo}")
+	@Bean(type=BindingType.Pojo, express="${usrMgr.myUserInfo}")
 	UserBean userInfo;
 	
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
 	boolean userRegistered;
 	
-	DataField<Boolean> userRegisteredField;
-	
-	@Field(valueKey="imageURI")
+	@Field(valueKey="imageURI", binding="${userInfo != null ? userInfo.userPic : 'resourceId:drawable/default_user_icons'}")
 	String headIcon;
 	
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.nickName : '登录账号'}")
@@ -50,15 +49,16 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.phoneNumber : '赶快登录赚实盘积分吧'}")
 	String userNum;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${userInfo != null ? userInfo.unReadMsg : 0}")
 	String unreadNews;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${userInfo != null ? userInfo.score : 0}")
 	String integralBalance;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${userInfo != null ? userInfo.balance : '0.00'}")
 	String accountBalance;
 	
+	DataField<Boolean> userRegisteredField;
 	DataField<String> headIconField;
 	DataField<String> nickNameField;
 	DataField<String> userNumField;
@@ -67,39 +67,52 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	DataField<String> accountBalanceField;
 
 	@Command(commandName="handleClickImage",
-			navigations={
+		navigations={
 			@Navigation(on="userLoginPage",showPage="userLoginPage"),
-			@Navigation(on="userPage",showPage="userPage")
+			@Navigation(on="userPage",showPage="userPage", params={
+					@Parameter(name="phone",value="${userInfo.phoneNumber}")
 		})
+	})
 	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");
-		if(this.userInfo == null){
+		if(this.userInfo != null){
 			return "userPage";
 		} else {
 			return "userLoginPage";
 		}
 	}
 	
-	@Command
-	String handleClickBalance(InputEvent event){
-		log.info("User click on Account balance !");
-		return null;
-	}
-	@Command
+	@Command(commandName="handleClickImage",
+			navigations={
+			@Navigation(on="*",showPage="userLoginPage")
+		})
 	String handleClickUnread(InputEvent event){
 		log.info("User click on Unread acticles !");
-		return null;
+		return "";
 	}
-
-	@Command
+	
+	@Command(commandName="handleClickImage",
+			navigations={
+			@Navigation(on="*",showPage="userLoginPage")
+		})
+	String handleClickBalance(InputEvent event){
+		log.info("User click on Account balance !");
+		return "";
+	}
+	
+	@Command(commandName="handleClickImage",
+			navigations={
+			@Navigation(on="*",showPage="userLoginPage")
+		})
 	String handleClickCash(InputEvent event){
 		log.info("User click on cash icon !");
-		return null;
+		return "";
 	}
-//
+
 //	@OnCreate
 //	void injectServices() {
 //		this.usrMgr = AppUtils.getService(IUserManagementService.class);
+//		UserBean user = usrMgr.fetchUserInfo();
 //	}
 //	
 //	@OnShow

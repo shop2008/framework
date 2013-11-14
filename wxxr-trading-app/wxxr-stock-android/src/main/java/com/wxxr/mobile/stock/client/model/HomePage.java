@@ -35,7 +35,7 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
-	@Bean(type=BindingType.Pojo,express="${usrMgr.fetchUserInfo}")
+	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4"})
