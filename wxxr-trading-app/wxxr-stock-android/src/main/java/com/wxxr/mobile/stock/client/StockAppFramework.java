@@ -92,7 +92,6 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new ArticleManagementServiceImpl());//
 		registerKernelModule(new UserManagementServiceImpl());
 		registerKernelModule(new TradingManagementServiceImpl());
-		registerKernelModule(new TradingManagementServiceImpl());
 		registerKernelModule(new InfoCenterManagementServiceImpl());
 	}
 	/* (non-Javadoc)
