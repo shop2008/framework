@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 
 /**
  * 
@@ -126,15 +127,7 @@ public class LRUMap<K,V> {
         this.capacity = size;
         listeners = new ConcurrentLinkedQueue<LRUMapEvictionListener<K,V>>();  
         if(executor == null){
-	        poolExecutor = new ThreadPoolExecutor(1,5,120L,TimeUnit.SECONDS,
-	    			new LinkedBlockingQueue<Runnable>(100),
-	    			new ThreadFactory() {
-						
-						@Override
-						public Thread newThread(Runnable r) {
-							return new Thread(r,"LRUMap Listener Thread");
-						}
-					});
+        	poolExecutor = KUtils.getApplication().getExecutor();
         }else{
         	poolExecutor = executor;
         }
