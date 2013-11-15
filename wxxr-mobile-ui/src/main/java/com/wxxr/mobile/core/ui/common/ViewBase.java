@@ -30,6 +30,7 @@ import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.util.LRUMap;
 import com.wxxr.mobile.core.util.StringUtils;
 
 
@@ -49,6 +50,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
+			if(log.isDebugEnabled()){
+				log.debug("Receiving property changed event from bean :"+beanName+", event :["+evt+"]");
+			}
 			fireDataChangedEvent(new DomainValueChangedEventImpl(evt.getSource(), beanName, evt.getPropertyName()));
 		}
 	}
@@ -156,6 +160,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
+	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
 	
 	public ViewBase() {
 		onCreate();
@@ -190,6 +195,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		mgr.importClass(AttributeKeys.class.getCanonicalName());
 	}
 	
+	protected BeanPropertyChangedListener getBeanListener(String name){
+		BeanPropertyChangedListener l = this.beanListeners.get(name);
+		if(l == null){
+			l = new BeanPropertyChangedListener(name);
+			this.beanListeners.put(name, l);
+		}
+		return l;
+	}
 	
 	protected void registerBean(String name, Object bean){
 		if(this.beans == null){
@@ -201,7 +214,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
             DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
             fireDataChangedEvent(evt);
             if(bean instanceof IBindableBean){
-            	((IBindableBean)bean).addPropertyChangeListener(new BeanPropertyChangedListener(name));
+            	((IBindableBean)bean).addPropertyChangeListener(getBeanListener(name));
             }
 		}
 	}
