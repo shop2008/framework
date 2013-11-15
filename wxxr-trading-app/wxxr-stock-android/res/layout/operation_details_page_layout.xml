@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
+    
+     <RadioGroup
+         android:id="@+id/radioGroup1"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content" 
+         android:orientation="horizontal"
+         android:background="@drawable/dsphb_title_bj">
+
+         <RadioButton
+             android:id="@+id/radio0"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:checked="true"
+             android:layout_weight="1"
+             android:button="@null"
+             android:gravity="center"
+             bind:field="*"
+             bind:on_Click="showDealsDetailsView"
+             android:text="成交记录" 
+             android:padding="8dp"
+             android:textSize="15sp"/>
+
+         <RadioButton
+             android:id="@+id/radio1"
+             android:layout_width="fill_parent"
+             android:layout_weight="1"
+             android:layout_height="wrap_content"
+             android:text="清算详情" 
+             android:gravity="center"
+             android:button="@null"
+             android:textSize="15sp"
+             bind:field="*"
+             bind:on_Click="showLiquidateView"
+             android:padding="8dp"/>
+     </RadioGroup>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent" 
+         >
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             bind:field="DealsDetails" 
+        	android:visibility="visible"
+             >
+			<include layout="@layout/deal_record_layout"/>
+         </LinearLayout>
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             bind:field="LiquidateView"  
+        	 android:visibility="gone"
+              >
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:visibility="visible"
+			    bind:field="showShiPanView"  
+			    >
+			    <include layout="@layout/audit_detail_page_layout"/>
+			</LinearLayout>
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:visibility="gone"
+			    bind:field="showMoNiView"  >
+			    <include layout="@layout/m_audit_detail_page_layout"/>
+			</LinearLayout>
+         </LinearLayout>
+     </LinearLayout>
+</LinearLayout>

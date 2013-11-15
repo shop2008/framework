@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding">
 
     <ListView
         android:id="@+id/lv_down_amount"
         android:layout_width="match_parent"
-        android:layout_height="90dip"
-        android:cacheColorHint="@android:color/transparent" />
+        android:layout_height="150dip"
+        style="@style/mListView"
+        bind:on_ItemClick="dropDownMenuListItemClick"/>
 </LinearLayout>

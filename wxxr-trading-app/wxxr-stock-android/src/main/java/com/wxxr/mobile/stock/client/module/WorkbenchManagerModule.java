@@ -22,10 +22,12 @@ import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
+import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
+import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 
 /**
  * @author neillin
@@ -37,6 +39,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	protected void initFieldBinders(IFieldBinderManager mgr) {
 		mgr.registerFieldBinder(UIComponent.class,PageSwiperView.class, new PageSwiperViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, KLineView.class, new KlineFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, TextSpinnerView.class, new TextSpinnerViewFieldBinder());
 	}
 
 	@Override
