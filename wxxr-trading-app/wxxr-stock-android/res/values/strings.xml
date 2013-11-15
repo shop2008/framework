@@ -123,6 +123,15 @@
     <string name="hint_draw_cash_amount_alert">提现金量：需为100的整数倍</string>
     <string name="tv_remit_bank_card_label">汇入认证银行卡：</string>
     <string name="tv_draw_cash_notice">提取现金重要须知</string>
+    <string name="title_draw_cash_text">提现金</string>
+    <string name="hint_withdraw_cash_text">提现金量：需为100的整数倍</string>
+    <string name="label_withdraw_cath_text">汇入认证银行卡</string>
+    <string name="label_account_name">户名</string>
+    <string name="label_bank_name">银行</string>
+    <string name="label_bank_addr">所在地</string>
+    <string name="label_bank_num">卡号</string>
+    <string name="withdraw_cash_rules">提取现金重要须知</string>
+    
     <!-- 余额明细 -->
     <string name="tv_title_balance_detail">余额明细</string>
 
@@ -198,7 +207,9 @@
 
     <!-- 交易记录 -->
     <string name="tv_title_trade_record">我的交易记录</string>
-
+	<string name="tab_success_operation_text">成功操作</string>
+	<string name="tab_whole_operation_text">全部操作</string>
+	<string name="record_null_text">无交易记录数据</string>
     <!-- 注册条款 -->
     <string name="tv_title_register_rules">注册条款</string>
     <string name="register_rules_title">短线放大镜客户端注册条款</string>
@@ -219,4 +230,7 @@
     <string name="hint_old_psw">旧密码</string>
     <string name="hint_new_psw">新密码</string>
     <string name="hint_retype_psw">重复新密码</string>
+    
+    <!-- 设置界面 -->
+    <string name="not_login_text">未登录</string>
 </resources>

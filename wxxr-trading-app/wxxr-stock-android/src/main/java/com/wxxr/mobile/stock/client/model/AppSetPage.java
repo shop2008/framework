@@ -26,9 +26,6 @@ public abstract class AppSetPage extends PageBase {
 	@Field(valueKey="checked", visibleWhen="${userService.isLogin?true:false}", attributes={@Attribute(name="checked", value="${isChecked==true?true:false}")})
 	boolean pushEnabled;
 	
-	DataField<Boolean> pushEnabledField;
-	
-	
 	@Field
 	IUserManagementService userService;
 	
