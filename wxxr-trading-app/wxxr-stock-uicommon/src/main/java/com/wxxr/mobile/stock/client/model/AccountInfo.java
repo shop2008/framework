@@ -3,6 +3,8 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.List;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
+import com.wxxr.mobile.stock.client.bean.ScoreBean;
+import com.wxxr.mobile.stock.client.bean.TradeDetailBean;
 
 @BindableBean(pkg="com.wxxr.mobile.stock.client.bean",className="AccountInfoBean")
 public class AccountInfo {
@@ -31,60 +33,11 @@ public class AccountInfo {
 	/**
 	 * 积分信息
 	 */
-	private List<Score> scores;
+	private List<ScoreBean> scores;
 	
 	/**
 	 * 收支明细
 	 */
-	private List<TradeDetail> tradeDetails;
+	private List<TradeDetailBean> tradeDetails;
 
-	public String getBalance() {
-		return balance;
-	}
-
-	public void setBalance(String balance) {
-		this.balance = balance;
-	}
-
-
-	public String getFreeze() {
-		return freeze;
-	}
-
-	public void setFreeze(String freeze) {
-		this.freeze = freeze;
-	}
-
-	public String getAvalible() {
-		return avalible;
-	}
-
-	public void setAvalible(String avalible) {
-		this.avalible = avalible;
-	}
-
-	public String getScoreBalance() {
-		return scoreBalance;
-	}
-
-	public void setScoreBalance(String scoreBalance) {
-		this.scoreBalance = scoreBalance;
-	}
-
-	public List<Score> getScores() {
-		return scores;
-	}
-
-	public void setScores(List<Score> scores) {
-		this.scores = scores;
-	}
-
-	public List<TradeDetail> getTradeDetails() {
-		return tradeDetails;
-	}
-
-	public void setTradeDetails(List<TradeDetail> tradeDetails) {
-		this.tradeDetails = tradeDetails;
-	}
-	
 }
