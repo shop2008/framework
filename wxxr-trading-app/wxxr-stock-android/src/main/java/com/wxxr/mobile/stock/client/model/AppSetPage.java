@@ -5,17 +5,14 @@ import javax.security.auth.login.LoginException;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.rpc.rest.IsHttpMethod;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
@@ -23,10 +20,10 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked", visibleWhen="${userService.isLogin?true:false}", attributes={@Attribute(name="checked", value="${isChecked==true?true:false}")})
+	@Field(valueKey="checked", visibleWhen="${userService.isLogin?true:false}",attributes={@Attribute(name="checked", value="${userService.pushMessageSetting}")})
 	boolean pushEnabled;
 	
-	@Field
+	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
 	
 	
@@ -44,14 +41,6 @@ public abstract class AppSetPage extends PageBase {
 		
 		}
 		return null;
-	}
-
-	boolean isChecked = userService.getPushMessageSetting();;
-	
-	@OnCreate
-	protected void initData() {
-		
-		registerBean("isChecked", isChecked);
 	}
 	
 	/**
@@ -120,8 +109,12 @@ public abstract class AppSetPage extends PageBase {
 	String setPushMsgEnabled(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
-			isChecked = !isChecked;
-			this.userService.pushMessageSetting(isChecked);
+			if (userService.getPushMessageSetting()) {
+				
+				this.userService.pushMessageSetting(false);
+			} else {
+				this.userService.pushMessageSetting(true);
+			}
 		}
 		return null;
 	}
