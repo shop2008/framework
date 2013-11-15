@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.StockBasicMarketInfoBean;
+import com.wxxr.mobile.stock.app.bean.StockBasicMarketInfoBean;
 
 /**
  * @author wangxuyang

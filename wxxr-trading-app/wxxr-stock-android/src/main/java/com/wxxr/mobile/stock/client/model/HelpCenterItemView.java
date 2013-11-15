@@ -9,7 +9,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.ArticleBean;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
 
 @View(name = "helpCenterItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.help_center_page_layout_item")

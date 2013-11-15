@@ -12,9 +12,9 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.ArticleBean;
-import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
-import com.wxxr.mobile.stock.client.service.IArticleManagementService;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
+import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 
 /**
  * @author neillin

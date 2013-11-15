@@ -14,16 +14,16 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.ArticleBean;
-import com.wxxr.mobile.stock.client.bean.MyArticlesBean;
-import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.client.bean.TradingAccountListBean;
-import com.wxxr.mobile.stock.client.service.IArticleManagementService;
-import com.wxxr.mobile.stock.client.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
+import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.service.IArticleManagementService;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 /**
  * @author neillin
@@ -65,7 +65,9 @@ public abstract class TradingMainView extends ViewBase{
 	
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
-	String type;
+	int type=0;
+	/**状态 0-未结算 ； 1-已结算*/
+	int status=0;
 	
 	@OnShow
 	protected void updataArticles() {
@@ -99,20 +101,20 @@ public abstract class TradingMainView extends ViewBase{
 //		return null;
 //	}
 	
-	@Command(
-			navigations={
-				@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name="stockType",value="${type}")})
-				})
-	String tradingMessageClick(InputEvent event){
+	@Command(navigations={@Navigation(on="operationDetails",showPage="OperationDetails")})
+	CommandResult tradingMessageClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
-//			if(event.getProperty("position") instanceof Integer){
-//				int position = (Integer) event.getProperty("position");
-//				if(tradingT1!=null && tradingT1.size()>0){
-//					TradingAccount tempTradingA = tradingT1.get(position);
-//					this.type = String.valueOf(tempTradingA.getType());
-//				}
-//			}
-			return "operationDetails";
+			CommandResult resutl = new CommandResult();
+			if(event.getProperty("position") instanceof Integer){
+				int position = (Integer) event.getProperty("position");
+				if(tradingT1!=null && tradingT1.size()>0){
+					TradingAccountBean tempTradingA = tradingT1.get(position);
+					this.type = tempTradingA.getType();
+				}
+			}
+			resutl.setResult("operationDetails");
+			resutl.setPayload(type);
+			return resutl;
 		}
 		return null;
 	}
