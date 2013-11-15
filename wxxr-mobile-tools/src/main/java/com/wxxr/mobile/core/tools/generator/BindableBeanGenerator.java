@@ -73,7 +73,7 @@ public class BindableBeanGenerator extends AbstractCodeGenerator {
 				if(children != null){
 					for (Element child : children) {
 						if(child.getKind() == ElementKind.FIELD){
-							log.info("Found field {}, type :{}" , child,child.asType());
+							//log.info("Found field {}, type :{}" , child,child.asType());
 							//TypeElement type = (TypeElement)context.getProcessingEnvironment().getTypeUtils().asElement(child.asType());
 							model.addField(child.getSimpleName().toString(), child.asType().toString());
 						}

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.bean.api.ListDecorator;
+import com.wxxr.mobile.core.bean.api.MapDecorator;
+import com.wxxr.mobile.core.bean.api.SetDecorator;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -45,17 +48,20 @@ public class BindableBeanModel extends AbstractClassModel {
 		if((name == null)||(className == null)){
 			throw new IllegalArgumentException("name and className cannot be NULL !");
 		}
-		if(this.fields == null){
-			this.fields = new HashMap<String, FieldModel>();
+		BindableField fld = new BindableField();
+		fld.setName(name);
+		addField(fld);
+		TypeModel type = new TypeModel(className); //.toSimpleName(this)
+		fld.setType(type.toSimpleName(this));
+		if("java.util.List".equals(type.getType())){
+			type.setType(ListDecorator.class.getCanonicalName());
+			fld.setDecoratedType(type.toSimpleName(this));
+		}else if("java.util.Set".equals(type.getType())){
+			type.setType(SetDecorator.class.getCanonicalName());
+			fld.setDecoratedType(type.toSimpleName(this));
+		}else if("java.util.Map".equals(type.getType())){
+			type.setType(MapDecorator.class.getCanonicalName());
 		}
-		FieldModel fld = this.fields.get(name);
-		if(fld == null){
-			fld = new FieldModel();
-			fld.setName(name);
-			this.fields.put(name, fld);
-		}
-		fld.setType(new TypeModel(className).toSimpleName(this));
-		addImport(className);
 	}
 	
 }

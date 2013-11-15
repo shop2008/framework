@@ -137,17 +137,18 @@ public class AbstractClassModel {
 	public List<MethodModel> getMethods() {
 		return methods == null ? null : new ArrayList<MethodModel>(methods.values());
 	}
-	public void addField(String name, String className) {
-		name = StringUtils.trimToNull(name);
-		className = StringUtils.trimToNull(className);
-		if((name == null)||(className == null)){
-			throw new IllegalArgumentException("name and className cannot be NULL !");
-		}
-		DataFieldModel fld = new DataFieldModel();
-		fld.setName(name);
-		fld.setType(className);
-		addField(fld);
-	}
+	
+//	public void addField(String name, String className) {
+//		name = StringUtils.trimToNull(name);
+//		className = StringUtils.trimToNull(className);
+//		if((name == null)||(className == null)){
+//			throw new IllegalArgumentException("name and className cannot be NULL !");
+//		}
+//		DataFieldModel fld = new DataFieldModel();
+//		fld.setName(name);
+//		fld.setType(className);
+//		addField(fld);
+//	}
 	/**
 	 * 
 	 */

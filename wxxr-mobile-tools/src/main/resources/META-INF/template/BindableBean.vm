@@ -68,6 +68,11 @@ public class ${model.name} implements IBindableBean {
 	public void set${helper.capitalize($fld.name)}($fld.type $fld.name) {
 		$fld.type old = this.${fld.name};
 		this.${fld.name} = $fld.name;
+#if(${fld.decorated})
+		if(this.${fld.name} != null){
+            this.${fld.name} = new ${fld.decoratedType}("${fld.name}", this.emitter,this.${fld.name});
+        }
+#end		
 		this.emitter.firePropertyChange("${fld.name}", old, this.${fld.name});
 	}
 #end
