@@ -7,7 +7,7 @@ package com.wxxr.mobile.stock.client;
  * @author wangxuyang
  *
  */
-public class StockAppBizException extends Exception {
+public class StockAppBizException extends RuntimeException {
 
 	/**
 	 * 
