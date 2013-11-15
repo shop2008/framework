@@ -238,11 +238,6 @@ public class StockSearchView extends RelativeLayout implements
 				keyboardView.setVisibility(View.GONE);
 				break;
 			}
-			// if (keyboardView.getVisibility() != View.VISIBLE) {
-			// keyboardView.setVisibility(View.VISIBLE);
-			// } else {
-			// keyboardView.setVisibility(View.GONE);
-			// }
 		}
 		return false;
 	}

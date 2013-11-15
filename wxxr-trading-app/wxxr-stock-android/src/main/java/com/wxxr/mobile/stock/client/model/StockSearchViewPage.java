@@ -79,51 +79,10 @@ public abstract class StockSearchViewPage extends PageBase {
 	String searchTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
 			String key = (String) event.getProperty("changedText");
-//			searchEditField.setValue(key);
-//			if(StringUtils.isNotEmpty(key)) {
-//				searchList.clear();
 				registerBean("key", key);
 				getUIContext().getKernelContext()
 						.getService(IInfoCenterManagementService.class).searchStock(key);
-//				searchList.addAll(stock);
-//				Stock s;
-////				for(int i=0;i<10;i++) {
-//					s = new Stock();
-//					s.setName("招商地产");
-//					s.setCode("000024");
-//					searchList.add(s);
-//					
-//					s = new Stock();
-//					s.setName("中山公用");
-//					s.setCode("000685");
-//					searchList.add(s);
-//					
-//					s = new Stock();
-//					s.setName("中色股份");
-//					s.setCode("000758");
-//					searchList.add(s);
-//					
-//					s = new Stock();
-//					s.setName("武汉中商");
-//					s.setCode("000785");
-//					searchList.add(s);
-//					
-//					s = new Stock();
-//					s.setName("中水渔业");
-//					s.setCode("000798");
-//					searchList.add(s);
-//					
-//					s = new Stock();
-//					s.setName("宗申动力");
-//					s.setCode("001696");
-//					searchList.add(s);
-//				}
-//				searchListField.setValue(searchList);
-			} else {
-//				searchList.clear();
-//				searchListField.setValue(searchList);
-			}
-//		}
+		}
 		return null;
 	}
 	

@@ -5,11 +5,9 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockBean;
 
@@ -22,35 +20,18 @@ import com.wxxr.mobile.stock.app.bean.StockBean;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.stock_search_layout_item")
 public abstract class StockSearchItemView extends ViewBase implements IModelUpdater{
 	
-	private static final Trace log = Trace.register(StockSearchItemView.class);
+	StockBean stock;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding = "${stock!=null?stock.name:'--'}")
 	String stockName;//股票名称
-	DataField<String> stockNameField;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding = "${stock!=null?stock.code:'--'}")
 	String stockCode;//股票代码
-	DataField<String> stockCodeField;
 	
 	@Override
 	public void updateModel(Object data) {
 		if (data instanceof StockBean) {
-			StockBean stock = (StockBean) data;
-			stockName = stock.getName();
-			stockNameField.setValue(stockName);
-			stockCode = stock.getCode();
-			stockCodeField.setValue(stockCode);
+			registerBean("stock",data);
 		}		
 	}
-//	/**
-//	 * 事件处理-单击一条股票
-//	 * 
-//	 * */
-//	@Command
-//	String handleItemClick1(InputEvent event){
-//		if(log.isDebugEnabled()) {
-//			log.debug("StockSearchItemView : handle item click stockname:" + stockName);
-//		}
-//		return null;
-//	}
 }
