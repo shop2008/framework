@@ -17,13 +17,13 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.client.bean.RankListBean;
-import com.wxxr.mobile.stock.client.bean.RegularTicketBean;
-import com.wxxr.mobile.stock.client.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.RankListBean;
+import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
-import com.wxxr.mobile.stock.client.service.ITradingManagementService;
 
 /**
  * @author neillin

@@ -21,8 +21,8 @@ import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.UserBean;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 /**
  * @author neillin

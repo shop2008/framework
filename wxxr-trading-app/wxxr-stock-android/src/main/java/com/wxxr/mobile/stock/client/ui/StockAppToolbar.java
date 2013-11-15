@@ -8,7 +8,7 @@ import java.util.Map;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.common.AbstractToolbarView;
-import com.wxxr.mobile.stock.client.IStockAppToolbar;
+import com.wxxr.mobile.stock.app.IStockAppToolbar;
 
 /**
  * @author neillin

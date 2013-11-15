@@ -23,7 +23,7 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-import com.wxxr.mobile.stock.client.IStockAppToolbar;
+import com.wxxr.mobile.stock.app.IStockAppToolbar;
 import com.wxxr.mobile.stock.client.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
