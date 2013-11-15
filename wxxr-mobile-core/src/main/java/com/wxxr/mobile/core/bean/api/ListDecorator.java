@@ -7,16 +7,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author neillin
  *
  */
-public class ListDecorator<E> implements List<E> {
+public class ListDecorator<E> implements List<E>,ICollectionDecorator {
 	
 	private List<E> data;
 	final private PropertyChangeSupport support;
 	final private String name;
+	private AtomicBoolean changed = new AtomicBoolean();
 	
 	public ListDecorator(String propertyName,PropertyChangeSupport p){
 		this.support = p;
@@ -51,6 +53,7 @@ public class ListDecorator<E> implements List<E> {
 	public boolean add(E object) {
 		 data.add(object);
 		 this.support.fireIndexedPropertyChange(name, data.size()-1, null, object);
+		 this.changed.set(true);
 		 return true;
 	}
 
@@ -62,6 +65,7 @@ public class ListDecorator<E> implements List<E> {
 	public void add(int location, E object) {
 		data.add(location, object);
 		this.support.fireIndexedPropertyChange(name, location, null, object);
+		this.changed.set(true);
 	}
 
 	/**
@@ -72,6 +76,7 @@ public class ListDecorator<E> implements List<E> {
 	public boolean addAll(Collection<? extends E> arg0) {
 		 data.addAll(arg0);
 		 this.support.firePropertyChange(name, null, this);
+		 this.changed.set(true);
 		 return true;
 	}
 
@@ -84,6 +89,7 @@ public class ListDecorator<E> implements List<E> {
 	public boolean addAll(int arg0, Collection<? extends E> arg1) {
 		 data.addAll(arg0, arg1);
 		 this.support.firePropertyChange(name, null, this);
+		 this.changed.set(true);
 		 return true;
 	}
 
@@ -94,6 +100,7 @@ public class ListDecorator<E> implements List<E> {
 	public void clear() {
 		data.clear();
 		 this.support.firePropertyChange(name, this, null);
+		 this.changed.set(true);
 	}
 
 	/**
@@ -199,6 +206,7 @@ public class ListDecorator<E> implements List<E> {
 	public E remove(int location) {
 		E val = data.remove(location);
 		 this.support.firePropertyChange(name, this, null);
+		 this.changed.set(true);
 		return val;
 	}
 
@@ -210,6 +218,7 @@ public class ListDecorator<E> implements List<E> {
 	public boolean remove(Object object) {
 		boolean val = data.remove(object);
 		 this.support.firePropertyChange(name, this, null);
+		 this.changed.set(true);
 		return val;
 	}
 
@@ -221,6 +230,7 @@ public class ListDecorator<E> implements List<E> {
 	public boolean removeAll(Collection<?> arg0) {
 		boolean val = data.removeAll(arg0);
 		this.support.firePropertyChange(name, this, null);
+		this.changed.set(true);
 		return val;
 	}
 
@@ -242,6 +252,7 @@ public class ListDecorator<E> implements List<E> {
 	public E set(int location, E object) {
 		E val = data.set(location, object);
 		 this.support.fireIndexedPropertyChange(name, 0,val, object);
+		 this.changed.set(true);
 		return val;
 	}
 
@@ -280,4 +291,11 @@ public class ListDecorator<E> implements List<E> {
 		return data.toArray(array);
 	}
 
+	public boolean checkChangedNClear() {
+		return this.changed.compareAndSet(true, false);
+	}
+
+	public boolean isChanged() {
+		return this.changed.get();
+	}
 }

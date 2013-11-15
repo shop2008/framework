@@ -204,6 +204,7 @@ public abstract class BindableFragment extends Fragment {
 		}
 		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
 		if(toolbar != null){
+			toolbar.attach(getBindingView());
 			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingView().getName());
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
@@ -226,6 +227,10 @@ public abstract class BindableFragment extends Fragment {
 			getLogger().debug("onStop ...");
 		}
 		this.onShow = false;
+		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
+		if(toolbar != null){
+			toolbar.dettach(getBindingView());
+		}
 		this.androidViewBinding.deactivate();
 		super.onStop();
 	}

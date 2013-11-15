@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -146,6 +147,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		IPage page = getBindingPage();
 		this.androidViewBinding.activate(page);
+		if(this.toolbar != null){
+			this.toolbar.attach(page);
+		}
 		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
 			this.toolbarViewBingding.activate(this.rootView);
 			if(this.toolbar != null){
@@ -170,6 +174,31 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 	}
 
+	public void showFragment(ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack) {
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		try {
+			BindableFragment fragment = (BindableFragment)bDesc.getTargetClass().newInstance();
+			transaction.replace(vgControl.getId(),fragment);
+			if(add2Backstack){
+				transaction.addToBackStack(null);
+			}
+			transaction.commitAllowingStateLoss();
+			addFragment(fragment);
+		}catch(Throwable t){
+			throw new RuntimeException("Failed to show framment for view :"+viewId, t);
+		}
+	}
+
+	
+	public void hideFragment(String viewId) {
+		BindableFragment fragment = getFragment(viewId);
+		if(fragment != null){
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.hide(fragment);
+			transaction.commit();
+		}
+	}
+
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStop()
@@ -185,6 +214,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.toolbarViewBingding.deactivate();
 		}
 		if(this.toolbar != null){
+			this.toolbar.dettach(page);
 			this.page.onToolbarHide();
 		}
 		this.androidViewBinding.deactivate();

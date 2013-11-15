@@ -233,8 +233,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		Object oldBean = this.beans.get(name);
 		this.beans.put(name, bean);
 		if(!ModelUtils.isEquals(oldBean, bean)){
-			DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
-			fireDataChangedEvent(evt);
+			if(!isEventDisabled()){
+				DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
+				fireDataChangedEvent(evt);
+			}
 			if(bean instanceof IBindableBean){
 				((IBindableBean)bean).addPropertyChangeListener(getBeanListener(name));
 			}

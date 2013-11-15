@@ -156,9 +156,16 @@ public class GenericListAdapter extends BaseAdapter {
 			vModel.init(context);
 			bag.view = vModel;
 		}
-		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
-		binding.activate(vModel);
-		return view;
+		boolean bool = UIComponent.disableEvents();
+		try {
+			vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
+			binding.activate(vModel);
+			return view;
+		}finally{
+			if(bool){
+				UIComponent.enableEvents();
+			}
+		}
 	}
 	
 	

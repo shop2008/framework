@@ -336,38 +336,15 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			}else if(bDesc.getBindingType() == AndroidBindingType.FRAGMENT){
 				if(activity.getActivity() instanceof BindableFragmentActivity){
 					if(show){
-						showFragement((BindableFragmentActivity)activity.getActivity(),vgControl,view.getName(),bDesc,true);
+						activity.showFragment(vgControl,view.getName(),bDesc,true);
 					}else{
-						hideFragement((BindableFragmentActivity)activity.getActivity(),view.getName());
+						activity.hideFragment(view.getName());
 					}
 				}
 			}
 		}
 	}
 	
-	private void hideFragement(BindableFragmentActivity activity,String viewId) {
-		BindableFragment fragment = activity.getFragment(viewId);
-		if(fragment != null){
-			FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-			transaction.hide(fragment);
-			transaction.commit();
-		}
-	}
-
-	private void showFragement(BindableFragmentActivity activity,ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack) {
-		FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-		try {
-			BindableFragment fragment = (BindableFragment)bDesc.getTargetClass().newInstance();
-			transaction.replace(vgControl.getId(),fragment);
-			if(add2Backstack){
-				transaction.addToBackStack(null);
-			}
-			transaction.commitAllowingStateLoss();
-			activity.addFragment(fragment);
-		}catch(Throwable t){
-			throw new RuntimeException("Failed to show framment for view :"+viewId, t);
-		}
-	}
 
 
 	protected IPage getPage(IView view) {

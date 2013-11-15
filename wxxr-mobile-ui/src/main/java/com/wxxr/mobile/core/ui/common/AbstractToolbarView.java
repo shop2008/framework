@@ -1,14 +1,16 @@
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.Stack;
+
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IMenu;
-import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IView;
 
 public abstract class AbstractToolbarView extends ViewBase implements IAppToolbar{
 
-	private IPage activePage;
+	private Stack<IView> viewStack = new Stack<IView>();
 	
 	public AbstractToolbarView() {
 		super();
@@ -26,9 +28,19 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 		return super.getChild(name, clazz);
 	}
 
-	protected IMenu getToolbarMenu() {		
-		IPage page = getCurrentPage();
-		return page != null ? page.getChild("toolbar", IMenu.class) : null;
+	protected IMenu getToolbarMenu() {
+		int len = this.viewStack.size();
+		if(len <= 0){
+			return null;
+		}
+		for(int i=len-1;i >= 0 ; i--){
+			IView page = this.viewStack.get(i);
+			IMenu menu = page != null ? page.getChild("toolbar", IMenu.class) : null;
+			if(menu != null){
+				return menu;
+			}
+		}
+		return null;
 	}
 
 
@@ -52,23 +64,24 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 	 * @see com.wxxr.mobile.core.ui.api.IAppToolbar#getCurrentPage()
 	 */
 	@Override
-	public IPage getCurrentPage() {
-		return this.activePage;
+	public IView getCurrentAttachment() {
+		return this.viewStack.peek();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IAppToolbar#setCurrentPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
-	public void attachPage(IPage page) {
-		this.activePage = page;
+	public void attach(IView page) {
+		if(this.viewStack.contains(page)){
+			this.viewStack.remove(page);
+		}
+		this.viewStack.push(page);
 	}
 
 	@Override
-	public void dettachPage(IPage page) {
-		if(this.activePage == page){
-			this.activePage = null;
-		}
+	public void dettach(IView page) {
+		this.viewStack.remove(page);
 	}
 
 	/* (non-Javadoc)

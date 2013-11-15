@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui;
 
 import android.app.Activity;
+import android.view.ViewGroup;
 
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
@@ -21,4 +22,6 @@ public interface IBindableActivity {
 	IViewBinding getViewBinding();
 	IDialog createDialog(IView view,Object handback);
 	IAppToolbar getToolbar();
+	void showFragment(ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack);
+	void hideFragment(String viewId);
 }

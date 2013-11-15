@@ -3,9 +3,9 @@ package com.wxxr.mobile.core.ui.api;
 import java.util.Map;
 
 public interface IAppToolbar {
-	void attachPage(IPage page);
-	void dettachPage(IPage page);
-	IPage getCurrentPage();
+	void attach(IView page);
+	void dettach(IView page);
+	IView getCurrentAttachment();
 	void show();
 	void hide();
 	boolean isActive();

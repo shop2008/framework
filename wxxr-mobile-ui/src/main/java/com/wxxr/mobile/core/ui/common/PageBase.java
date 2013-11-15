@@ -109,7 +109,6 @@ public abstract class PageBase extends ViewBase implements IPage {
 	@Override
 	public void onToolbarCreated(IAppToolbar toolbar) {
 		this.toolbar = toolbar;
-		this.toolbar.attachPage(this);
 	}
 
 
@@ -148,7 +147,6 @@ public abstract class PageBase extends ViewBase implements IPage {
 	@Override
 	public void onToolbarDestroy() {
 		if(this.toolbar != null){
-			this.toolbar.dettachPage(this);
 			this.toolbar = null;
 		}
 	}

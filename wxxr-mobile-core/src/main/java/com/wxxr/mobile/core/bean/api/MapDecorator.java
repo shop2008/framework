@@ -7,16 +7,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author neillin
  *
  */
-public class MapDecorator<K, V> implements Map<K, V> {
+public class MapDecorator<K, V> implements Map<K, V>, ICollectionDecorator {
 
 	private Map<K,V> data;
 	final private PropertyChangeSupport support;
 	final private String name;
+	private AtomicBoolean changed = new AtomicBoolean();
 	
 	public MapDecorator(String propertyName,PropertyChangeSupport p){
 		this.support = p;
@@ -29,6 +31,7 @@ public class MapDecorator<K, V> implements Map<K, V> {
 	 */
 	public void clear() {
 		data.clear();
+		this.changed.set(true);
 		this.support.firePropertyChange(name,  this, null);
 	}
 
@@ -108,6 +111,7 @@ public class MapDecorator<K, V> implements Map<K, V> {
 	 */
 	public V put(K key, V value) {
 		V val = data.put(key, value);
+		this.changed.set(true);
 		this.support.fireIndexedPropertyChange(name,1, val, value);
 		return val;
 	}
@@ -118,7 +122,8 @@ public class MapDecorator<K, V> implements Map<K, V> {
 	 */
 	public void putAll(Map<? extends K, ? extends V> arg0) {
 		data.putAll(arg0);
-		this.support.firePropertyChange(name, null, arg0);
+		this.changed.set(true);
+		this.support.firePropertyChange(name, null, arg0);		
 	}
 
 	/**
@@ -128,6 +133,7 @@ public class MapDecorator<K, V> implements Map<K, V> {
 	 */
 	public V remove(Object key) {
 		V val = data.remove(key);
+		this.changed.set(true);
 		this.support.firePropertyChange(name, val, null);
 		return val;
 	}
@@ -148,5 +154,11 @@ public class MapDecorator<K, V> implements Map<K, V> {
 		return data.values();
 	}
 
+	public boolean checkChangedNClear() {
+		return this.changed.compareAndSet(true, false);
+	}
 
+	public boolean isChanged() {
+		return this.changed.get();
+	}
 }
