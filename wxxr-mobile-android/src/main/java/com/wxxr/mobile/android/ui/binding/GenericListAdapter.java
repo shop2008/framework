@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.ui.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
@@ -39,6 +40,7 @@ public class GenericListAdapter extends BaseAdapter {
 	private final Context uiContext;
 	private final String itemViewId;
 	private List<ObserverDataChangedListerWrapper> listeners;
+	private Integer lastItemCount;
 	
 	public GenericListAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
 		if((ctx == null)||(bCtx == null)||(prov == null)||(viewId == null)){
@@ -60,7 +62,24 @@ public class GenericListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return this.provider.getItemCounts();
+		int cnt = this.provider.getItemCounts();
+		if(this.lastItemCount == null){
+			this.lastItemCount = cnt;
+			return cnt;
+		}else if(cnt != this.lastItemCount.intValue()){
+			int oldcnt = this.lastItemCount.intValue();
+			this.lastItemCount = cnt;
+			AppUtils.runOnUIThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					notifyDataSetChanged();
+					
+				}
+			}, 0, null);
+			return oldcnt;
+		}
+		return cnt;
 	}
 
 	/* (non-Javadoc)
