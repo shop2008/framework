@@ -10,11 +10,11 @@ import java.util.Map;
  *
  */
 public interface IWorkbench {
-	public final static String HOME_PAGE_ID = "home";
-	public final static String MESSAGE_BOX_ID = "messageBox";
-	public final static String MESSAGE_BOX_MESSAGE_ID = "message";
-	public final static String TOOL_BAR_VIEW_ID = "toolbarView";
-	public final static String PROGRESSMONITOR_DIALOG_ID = "progressMonitor";
+	public final static String HOME_PAGE_ID = UIConstants.HOME_PAGE_ID;
+	public final static String MESSAGE_BOX_ID = UIConstants.MESSAGE_BOX_ID;
+	public final static String MESSAGE_BOX_MESSAGE_ID = UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE;
+	public final static String TOOL_BAR_VIEW_ID = UIConstants.TOOL_BAR_VIEW_ID;
+	public final static String PROGRESSMONITOR_DIALOG_ID = UIConstants.PROGRESSMONITOR_DIALOG_ID;
 
 	
 	String[] getPageIds();
@@ -23,7 +23,6 @@ public interface IWorkbench {
 	void showPage(String pageId,Map<String, Object> params,IPageCallback callback);
 	void showHomePage();
 	void hidePage(String pageId);
-	void showMessageBox(String message, Map<String, Object> params);
 	IView createNInitializedView(String viewId);
 	IDialog createDialog(String viewId, Map<String, Object> params);
 }

@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.UIConstants;
 
 /**
  * @author neillin
@@ -116,14 +117,6 @@ public abstract class WorkbenchBase implements IWorkbench {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showMessageBox(java.lang.String, java.util.Map)
-	 */
-	public void showMessageBox(String message, Map<String, Object> params) {
-		params = params != null ? new HashMap<String, Object>(params) : new HashMap<String, Object>();
-		params.put(MESSAGE_BOX_MESSAGE_ID, message);
-		showPage(MESSAGE_BOX_ID, params, null);
-	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#createNInitializedView(java.lang.String)
@@ -156,7 +149,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 			if(!view.isInitialized()){
 				view.init(getUIContext());
 			}
-			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view);
+			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view,params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK));
 		}
 		return null;
 	}	

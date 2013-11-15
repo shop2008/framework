@@ -3,10 +3,10 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
-import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.UIConstants;
 
 /**
  * @author neillin
@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 public class UICommand extends UIComponent implements IUICommand{
 	private String cmdName;
 	private IUICommandHandler handler;
+	private Object handback;
 	
 	public UICommand() {
 		super();
@@ -29,6 +30,9 @@ public class UICommand extends UIComponent implements IUICommand{
 	 */
 	@Override
 	public void invokeCommand(String command, InputEvent event) {
+		if((this.handback != null)&&(event instanceof SimpleInputEvent)){
+			((SimpleInputEvent)event).addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, this.handback);
+		}
 		if(command == null){
 			if(this.handler != null){
 				getUIContext().getWorkbenchManager().getCommandExecutor().executeCommand(this.cmdName, null, this.handler, event);
@@ -64,6 +68,20 @@ public class UICommand extends UIComponent implements IUICommand{
 	 */
 	public void setHandler(IUICommandHandler handler) {
 		this.handler = handler;
+	}
+
+	/**
+	 * @return the handback
+	 */
+	public Object getHandback() {
+		return handback;
+	}
+
+	/**
+	 * @param handback the handback to set
+	 */
+	public void setHandback(Object handback) {
+		this.handback = handback;
 	}
 
 }

@@ -8,12 +8,13 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IDialog {
-	String DIALOG_ATTRIBUTE_TITLE = "title";		// correspondent value should String in format of regular message or resource id url
-	String DIALOG_ATTRIBUTE_ICON = "icon";		// correspondent value should String in format of image url or resource id url
-	String DIALOG_ATTRIBUTE_MESSAGE = "message";		// correspondent value should String in format of regular message or resource id url
-	String DIALOG_ATTRIBUTE_LEFT_BUTTON = "left_button";	// correspondent value should be type of IUICommand
-	String DIALOG_ATTRIBUTE_RIGHT_BUTTON = "right_button";	// correspondent value should be type of IUICommand
-	String DIALOG_ATTRIBUTE_MID_BUTTON = "mid_button";		// correspondent value should be type of IUICommand
+	String DIALOG_ATTRIBUTE_TITLE = UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE;
+	String DIALOG_ATTRIBUTE_ICON = UIConstants.MESSAGEBOX_ATTRIBUTE_ICON;
+	String DIALOG_ATTRIBUTE_MESSAGE = UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE;
+	String DIALOG_ATTRIBUTE_LEFT_BUTTON = UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON;
+	String DIALOG_ATTRIBUTE_RIGHT_BUTTON = UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON;
+	String DIALOG_ATTRIBUTE_MID_BUTTON = UIConstants.MESSAGEBOX_ATTRIBUTE_MID_BUTTON;
 	void dismiss();
 	void show();
+	boolean isOnShow();
 }

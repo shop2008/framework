@@ -25,4 +25,5 @@ public @interface View {
 	Attribute[] attributes() default {};
 	boolean withToolbar() default false;
 	String[] alias() default {};
+	boolean singleton() default false;
 }

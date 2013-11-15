@@ -6,19 +6,24 @@ package com.wxxr.mobile.core.ui.common;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IProgressGuard;
+import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.UIConstants;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -103,7 +108,40 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			}else if(toDialog != null){
 				context.getWorkbenchManager().getWorkbench().createDialog(toDialog, params).show();
 			}else if(message != null){
-				context.getWorkbenchManager().getWorkbench().showMessageBox(message, params);
+				String cmdId = (String)params.remove(UIConstants.MESSAGEBOX_ATTRIBUTE_ON_CANCEL);
+				if(cmdId != null){
+					IUICommand command = view.getChild(cmdId, IUICommand.class);
+					if(command != null){
+						params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON, command);
+					}
+				}
+				cmdId = (String)params.remove(UIConstants.MESSAGEBOX_ATTRIBUTE_ON_OK);
+				if(cmdId != null){
+					IUICommand command = view.getChild(cmdId, IUICommand.class);
+					if(command != null){
+						params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, command);
+					}
+				}
+				final IDialog dialog = context.getWorkbenchManager().getWorkbench().createDialog(message, params);
+				dialog.show();
+				Object val = params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED);
+				int autoCloseInSeconds = -1;
+				if(val instanceof Integer){
+					autoCloseInSeconds = ((Integer)val).intValue();
+				}else if(val instanceof String){
+					try {
+						autoCloseInSeconds = Integer.parseInt((String)val);
+					}catch(NumberFormatException e){}
+				}
+				if(autoCloseInSeconds > 0){
+					KUtils.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							dialog.dismiss();
+						}
+					}, autoCloseInSeconds, autoCloseInSeconds > 100 ? TimeUnit.MILLISECONDS : TimeUnit.SECONDS);
+				}
 			}
 		}
 	}
@@ -135,6 +173,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 	 * @param nextNavigation
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map<String, Object> getNavigationParameters(Object payload,
 			INavigationDescriptor nextNavigation) {
 		Map<String, Object> params = nextNavigation.getParameters();
@@ -144,7 +183,11 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			}else{
 				params = new HashMap<String, Object>();
 			}
-			params.put("result", payload);
+			if((payload instanceof Map)&&(((Map)payload).size() > 0)&&(((Map)payload).keySet().iterator().next() instanceof String)){
+				params.putAll((Map<String,Object>)payload);
+			}else{
+				params.put("result", payload);
+			}
 		}
 		return params;
 	}
