@@ -14,7 +14,6 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -55,14 +54,6 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.balance : '0.00'}")
 	String accountBalance;
 	
-	DataField<Boolean> userRegisteredField;
-	DataField<String> headIconField;
-	DataField<String> nickNameField;
-	DataField<String> userNumField;
-	DataField<String> unreadNewsField;
-	DataField<String> integralBalanceField;
-	DataField<String> accountBalanceField;
-
 	@Command(commandName="handleClickImage",
 		navigations={
 			@Navigation(on="userLoginPage",showPage="userLoginPage"),
@@ -105,34 +96,4 @@ public abstract class HeaderMenuItemView extends ViewBase {
 		log.info("User click on cash icon !");
 		return "";
 	}
-
-//	@OnCreate
-//	void injectServices() {
-//		this.usrMgr = AppUtils.getService(IUserManagementService.class);
-//		UserBean user = usrMgr.fetchUserInfo();
-//	}
-//	
-//	@OnShow
-//	private void updateRightMenu() {
-//		this.userInfo = this.usrMgr.fetchUserInfo();
-//		
-//		if(this.userInfo == null){
-//			this.userRegistered = false;
-//			this.userRegisteredField.setValue(false);
-//			this.nickName = "登录账号";
-//			this.nickNameField.setValue(this.nickName);
-//			this.userNum = "赶快登录赚实盘积分吧";
-//			this.userNumField.setValue(this.userNum);
-//		}else{
-//			this.userRegistered = true;
-//			this.userRegisteredField.setValue(true);
-//			this.nickName = userInfo.getNickName();
-//			this.nickNameField.setValue(this.nickName);
-//			this.userNum = userInfo.getPhoneNumber();
-//			this.userNumField.setValue(this.userNum);
-//		}
-//	}
-
-	
-
 }
