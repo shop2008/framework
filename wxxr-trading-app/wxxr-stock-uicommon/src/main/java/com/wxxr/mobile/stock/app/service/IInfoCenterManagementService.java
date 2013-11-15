@@ -3,9 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import java.util.List;
-
-import com.wxxr.mobile.stock.app.bean.StockBean;
+import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 
 /**
  * @author wangxuyang
@@ -17,8 +15,7 @@ public interface IInfoCenterManagementService {
 	 * @param keyword-关键词：股票代码或拼音代码
 	 * @return
 	 */
-	List<StockBean> searchStock(String keyword);
+	SearchStockListBean searchStock(String keyword);
 	
-	//List<StockBasicMarketInfo> getStockMarketInfos(int start,int limit);
 
 }

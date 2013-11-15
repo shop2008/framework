@@ -4,7 +4,7 @@ import com.wxxr.mobile.core.annotation.BindableBean;
 
 /**
  * 
- * @author chenchao
+ * @author wangxuyang
  *
  */
 @BindableBean(pkg="com.wxxr.mobile.stock.app.bean",className="AuditDetailBean")
