@@ -5,13 +5,17 @@ import javax.security.auth.login.LoginException;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name = "userLoginPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
@@ -32,6 +36,10 @@ public abstract class UserLoginPage extends PageBase {
 	
 	DataField<String> loginBtnField;
 
+	@Bean(type=BindingType.Service)
+	IUserManagementService usrService;
+	
+	
 	/**
 	 * 处理登录
 	 * @param event
@@ -50,6 +58,8 @@ public abstract class UserLoginPage extends PageBase {
 				log.debug("login:mobileNum"+mobileNum);
 				log.debug("login:password"+password);
 			}
+			
+			usrService.login(mobileNum, password);
 			
 		}
 		return null;
