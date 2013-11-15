@@ -32,6 +32,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 	private static final Trace log = Trace.register(BindableActivity.class);
 	
 	private IViewBinding androidViewBinding;
+	private boolean onShow;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -54,6 +55,11 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 			public IWorkbenchManager getWorkbenchManager() {
 				return AppUtils.getService(IWorkbenchManager.class);
 			}
+
+			@Override
+			public boolean isOnShow() {
+				return onShow;
+			}
 		}, getBindingDescriptor(getBindingPageId()));
 		setContentView((View)this.androidViewBinding.getUIControl());
 		super.onCreate(savedInstanceState);
@@ -71,6 +77,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 		super.onStart();
 		getNavigator().onPageShow(getBindingPage());
 		onActivityStarted();
+		this.onShow = true;
 	}
 
 
@@ -79,6 +86,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 	 */
 	@Override
 	protected final void onStop() {
+		this.onShow = false;
 		super.onStop();
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
@@ -157,7 +165,7 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 	 * @see com.wxxr.mobile.android.ui.IBindableActivity#createDialog(com.wxxr.mobile.core.ui.api.IView)
 	 */
 	@Override
-	public IDialog createDialog(IView view) {
+	public IDialog createDialog(IView view,Object handback) {
 		// TODO Auto-generated method stub
 		return null;
 	}

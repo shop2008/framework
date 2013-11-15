@@ -28,6 +28,8 @@ import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.ui.common.UICommand;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -38,7 +40,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 
 	private static final Trace log = Trace.register(BindableFragmentActivity.class);
-	
+
 	private IViewBinding androidViewBinding;
 	private Map<String, BindableFragment> fragments;
 	private IViewBinding toolbarViewBingding;
@@ -46,7 +48,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	private IView rootView;
 	private IPage page;
 	private IAppToolbar toolbar;
-	
+	private boolean onShow;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -59,20 +61,25 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		IPageDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getPageDescriptor(page.getName());
 		if(descriptor.withToolbar()){
 			this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
-				
+
 				@Override
 				public Context getUIContext() {
 					return BindableFragmentActivity.this;
 				}
-				
+
 				@Override
 				public View getBindingControl() {
 					return null;
 				}
-	
+
 				@Override
 				public IWorkbenchManager getWorkbenchManager() {
 					return AppUtils.getService(IWorkbenchManager.class);
+				}
+
+				@Override
+				public boolean isOnShow() {
+					return onShow;
 				}
 			}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
 			this.contentRoot = (View)toolbarViewBingding.getUIControl();
@@ -85,12 +92,12 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.contentRoot = null;
 		}
 		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
-			
+
 			@Override
 			public Context getUIContext() {
 				return getActivity();
 			}
-			
+
 			@Override
 			public View getBindingControl() {
 				return null;
@@ -99,12 +106,17 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			public IWorkbenchManager getWorkbenchManager() {
 				return AppUtils.getService(IWorkbenchManager.class);
 			}
+
+			@Override
+			public boolean isOnShow() {
+				return onShow;
+			}
 		}, getBindingDescriptor(getBindingPageId()));
-		
+
 		if(this.contentRoot != null){
-				ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
-				vg.addView((View)this.androidViewBinding.getUIControl());
-				setContentView(this.contentRoot);
+			ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
+			vg.addView((View)this.androidViewBinding.getUIControl());
+			setContentView(this.contentRoot);
 		}else{
 			setContentView((View)this.androidViewBinding.getUIControl());
 		}
@@ -115,7 +127,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Activity created !");
 		}
 	}
-	
+
 
 	@Override
 	public IAppToolbar getToolbar() {
@@ -123,7 +135,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	}
 
 
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onStart()
 	 */
@@ -152,6 +164,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		super.onStart();
 		getNavigator().onPageShow(page);
 		onActivityStarted();
+		this.onShow = true;
 		if(log.isDebugEnabled()){
 			log.debug("Activity started !");
 		}
@@ -166,6 +179,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(log.isDebugEnabled()){
 			log.debug("Stopping activity ...");
 		}
+		this.onShow = false;
 		super.onStop();
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();
@@ -181,7 +195,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 	}
 
-	
+
 
 
 	/* (non-Javadoc)
@@ -208,7 +222,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Activity destroyed !");
 		}
 	}
-	
+
 
 	public void addFragment(BindableFragment frag){
 		if(this.fragments == null){
@@ -216,15 +230,15 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		this.fragments.put(frag.getViewId(), frag);
 	}
-	
+
 	public BindableFragment getFragment(String name){
 		return this.fragments != null ? fragments.get(name) : null;
 	}
-	
+
 	public BindableFragment removeFragment(String name){
 		return this.fragments != null ? fragments.remove(name) : null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.ui.IBindableActivity#getViewBinding()
 	 */
@@ -233,7 +247,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		return this.androidViewBinding;
 	}
 
-	
+
 	protected abstract String getBindingPageId();
 
 	@Override
@@ -248,23 +262,23 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	public Activity getActivity() {
 		return this;
 	}
-	
+
 	protected void onContentViewCreated(Bundle savedInstanceState){
-		
+
 	}
 
-	
+
 	protected void onActivityStarted(){
-		
+
 	}
 
-	
+
 	protected void onActivityDestroied(){
-		
+
 	}
 
 	protected void onActivityStopped() {
-		
+
 	}
 
 
@@ -299,18 +313,24 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 * @see com.wxxr.mobile.android.ui.IBindableActivity#showDialog(com.wxxr.mobile.core.ui.api.IView)
 	 */
 	@Override
-	public IDialog createDialog(final IView view) {
-		final GenericDialogFragment dialog = new GenericDialogFragment(view);
+	public IDialog createDialog(final IView view, Object handback) {
+		final GenericDialogFragment dialog = new GenericDialogFragment(view,handback);
 		return new IDialog() {
-			
+
 			@Override
 			public void show() {
 				dialog.show(getSupportFragmentManager(), view.getName());
 			}
-			
+
 			@Override
 			public void dismiss() {
 				dialog.dismiss();
+			}
+
+			@Override
+			public boolean isOnShow() {
+				// TODO Auto-generated method stub
+				return false;
 			}
 		};
 	}

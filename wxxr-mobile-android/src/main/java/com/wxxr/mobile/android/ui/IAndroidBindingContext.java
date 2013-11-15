@@ -17,5 +17,6 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 public interface IAndroidBindingContext extends IBindingContext {
 	Context getUIContext();
 	View getBindingControl();
+	boolean isOnShow();
 
 }

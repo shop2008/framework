@@ -22,8 +22,10 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.ui.api.UIConstants;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
+import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -32,14 +34,17 @@ import com.wxxr.mobile.core.util.StringUtils;
  */
 public class GenericDialogFragment extends DialogFragment {
 	private final IView view;
+	private final Object handback;
 	private IBinding<IView> binding = null;
+	private boolean onShow;
 
 	
-	public GenericDialogFragment(IView v){
+	public GenericDialogFragment(IView v,Object hb){
 		if(v == null){
 			throw new IllegalArgumentException("Pass in view cannot be NULL !");
 		}
 		this.view = v;
+		this.handback = hb;
 	}
 
 	@Override
@@ -51,9 +56,23 @@ public class GenericDialogFragment extends DialogFragment {
 	    View v = createUI();
 	    if(v != null){
 	    	builder.setView(v);
+	    	if(this.handback != null){
+		    	IUICommand cmd = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON);
+			    if(cmd instanceof UICommand){
+			    	((UICommand)cmd).setHandback(this.handback);
+			    }
+			    cmd = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON);
+			    if(cmd instanceof UICommand){
+			    	((UICommand)cmd).setHandback(this.handback);
+			    }
+			    cmd = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_MID_BUTTON);
+			    if(cmd instanceof UICommand){
+			    	((UICommand)cmd).setHandback(this.handback);
+			    }
+	    	}
 	    }else{
-	    	IDataField<String> msgField = (IDataField<String>)view.getChild("message");
-	    	IDataField<String> titleField = (IDataField<String>)view.getChild("title");
+	    	IDataField<String> msgField = (IDataField<String>)view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE);
+	    	IDataField<String> titleField = (IDataField<String>)view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE);
 	    	if((msgField != null)&&StringUtils.isNotBlank(msgField.getValue())){
 	    		builder.setMessage(BindingUtils.getMessage(msgField.getValue()));
 	    	}
@@ -61,32 +80,41 @@ public class GenericDialogFragment extends DialogFragment {
 	    		builder.setTitle(BindingUtils.getMessage(titleField.getValue()));
 	    	}
 		    // Add action buttons
-		    final IUICommand leftButton = (IUICommand)this.view.getChild("left_button");
+		    final IUICommand leftButton = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON);
 		    if(leftButton != null){
 		    	builder.setPositiveButton(leftButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
 		               @Override
 		               public void onClick(DialogInterface dialog, int id) {
 		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, leftButton);
+		            	   if(handback != null){
+		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
+		            	   }
 		            	   leftButton.invokeCommand(null, evt);
 		               }
 		         });
 		    }
-		    final IUICommand rightButton = (IUICommand)this.view.getChild("right_button");
+		    final IUICommand rightButton = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON);
 		    if(rightButton != null){
 		    	builder.setPositiveButton(rightButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
 		               @Override
 		               public void onClick(DialogInterface dialog, int id) {
 		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, rightButton);
+		            	   if(handback != null){
+		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
+		            	   }
 		            	   leftButton.invokeCommand(null, evt);
 		               }
 		         });
 		    }
-		    final IUICommand middleButton = (IUICommand)this.view.getChild("mid_button");
+		    final IUICommand middleButton = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_MID_BUTTON);
 		    if(middleButton != null){
 		    	builder.setPositiveButton(middleButton.getAttribute(AttributeKeys.label), new DialogInterface.OnClickListener() {
 		               @Override
 		               public void onClick(DialogInterface dialog, int id) {
 		            	   SimpleInputEvent evt = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, middleButton);
+		            	   if(handback != null){
+		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
+		            	   }
 		            	   leftButton.invokeCommand(null, evt);
 		               }
 		         });
@@ -119,6 +147,11 @@ public class GenericDialogFragment extends DialogFragment {
 			public IWorkbenchManager getWorkbenchManager() {
 				return mgr;
 			}
+
+			@Override
+			public boolean isOnShow() {
+				return onShow;
+			}
 		}, bDesc);
 		View view = (View)binding.getUIControl();
 		view.setTag(binding);
@@ -135,6 +168,7 @@ public class GenericDialogFragment extends DialogFragment {
 			this.binding.activate(view);
 		}
 		super.onStart();
+		this.onShow = true;
 	}
 
 	/* (non-Javadoc)
@@ -142,6 +176,7 @@ public class GenericDialogFragment extends DialogFragment {
 	 */
 	@Override
 	public void onStop() {
+		this.onShow = false;
 		if(this.binding != null){
 			this.binding.deactivate();
 		}

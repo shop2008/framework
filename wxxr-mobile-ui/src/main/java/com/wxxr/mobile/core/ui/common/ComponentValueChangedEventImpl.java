@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -17,14 +18,21 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
  *
  */
 public class ComponentValueChangedEventImpl implements ComponentValueChangedEvent {
+	
+	private static SimpleDateFormat fmt = new SimpleDateFormat("yy/MM/dd HH:mm:ss sss");
+
 
 	private final IUIComponent source;
 	private long timestamp = System.currentTimeMillis();
+	private String date;
 	private List<AttributeKey<?>> keys;
 	
 	public ComponentValueChangedEventImpl(IUIComponent src,AttributeKey<?>...keys){
 		this.source = src;
 		this.keys = Arrays.asList(keys);
+		synchronized(fmt){
+			this.date = fmt.format(new Date(this.timestamp));
+		}
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.event.api.IEventObject#getSource()
@@ -66,7 +74,7 @@ public class ComponentValueChangedEventImpl implements ComponentValueChangedEven
 	@Override
 	public String toString() {
 		return "ComponentValueChangedEventImpl [source=" + source + ", timestamp="
-				+ new Date(timestamp) + ", keys=" + keys + "]";
+				+ date + ", keys=" + keys + "]";
 	}
 	@Override
 	public String getSourceName() {

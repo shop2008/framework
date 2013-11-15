@@ -72,6 +72,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					public IWorkbenchManager getWorkbenchManager() {
 						return bindingContext.getWorkbenchManager();
 					}
+
+					@Override
+					public boolean isOnShow() {
+						return bindingContext.isOnShow();
+					}
 				}, fieldName, params);
 				binding.init(runtimeContext);
 			}
@@ -150,6 +155,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	private List<IMenuAdaptor> menuAdaptors;
 	private IView model;
 	private IWorkbenchRTContext runtimeContext;
+	private boolean onShow;
 	private IViewCreationCallback callback = new IViewCreationCallback() {
 
 		@Override
@@ -209,6 +215,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 								@Override
 								public IWorkbenchManager getWorkbenchManager() {
 									return bindingContext.getWorkbenchManager();
+								}
+
+								@Override
+								public boolean isOnShow() {
+									return bindingContext.isOnShow();
 								}
 							}, val, cmdName, params);
 							bindings.add(eBinding);
@@ -389,4 +400,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			b.refresh();
 		}
 	}
+
+
+	@Override
+	public boolean isOnShow() {
+		return this.bindingContext.isOnShow();
+	}
+
 }

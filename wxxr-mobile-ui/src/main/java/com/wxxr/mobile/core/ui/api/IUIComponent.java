@@ -27,5 +27,7 @@ public interface IUIComponent extends IAdaptable,Cloneable {
 	void destroy();
 	boolean isInitialized();
 	
+	void setValueChangedCallback(IBindingValueChangedCallback cb);
+	
 	void invokeCommand(String cmdName, InputEvent event);
 }

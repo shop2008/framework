@@ -3,7 +3,9 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,15 +16,19 @@ import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
  *
  */
 public class DomainValueChangedEventImpl implements DomainValueChangedEvent {
-
+	private static SimpleDateFormat fmt = new SimpleDateFormat("yy/MM/dd HH:mm:ss sss");
 	private final Object source;
 	private final String beanName;
 	private long timestamp = System.currentTimeMillis();
+	private String date;
 	private List<String> changedProperties;
 	
 	public DomainValueChangedEventImpl(Object bean, String beanName, String ... properties){
 		this.source = bean;
 		this.beanName = beanName;
+		synchronized(fmt){
+			this.date = fmt.format(new Date(this.timestamp));
+		}
 		if(properties != null){
 			this.changedProperties = Arrays.asList(properties);
 		}
@@ -71,8 +77,10 @@ public class DomainValueChangedEventImpl implements DomainValueChangedEvent {
 	 */
 	@Override
 	public String toString() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
 		return "DomainValueChangedEventImpl [source=" + source + ", beanName="
-				+ beanName + ", timestamp=" + new Date(timestamp)
+				+ beanName + ", timestamp=" + date
 				+ ", changedProperties=" + changedProperties + "]";
 	}
 

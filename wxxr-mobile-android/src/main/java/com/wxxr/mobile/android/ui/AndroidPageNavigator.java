@@ -387,10 +387,10 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 
 	@Override
-	public IDialog createDialog(IView view) {
+	public IDialog createDialog(IView view,Object handback) {
 		IBindableActivity act = getOnShowActivity();
 		if(act != null){
-			return act.createDialog(view);
+			return act.createDialog(view,handback);
 		}
 		return null;
 	}

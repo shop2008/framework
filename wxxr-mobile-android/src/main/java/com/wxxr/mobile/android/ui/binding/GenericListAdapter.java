@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -34,18 +35,20 @@ public class GenericListAdapter extends BaseAdapter {
 	private final IListDataProvider provider;
 	private final IObservableListDataProvider observable;
 	private final IWorkbenchRTContext context;
+	private final IAndroidBindingContext bindingCtx;
 	private final Context uiContext;
 	private final String itemViewId;
 	private List<ObserverDataChangedListerWrapper> listeners;
 	
-	public GenericListAdapter(IWorkbenchRTContext ctx, Context uiCtx, IListDataProvider prov, String viewId){
-		if((ctx == null)||(uiCtx == null)||(prov == null)||(viewId == null)){
+	public GenericListAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
+		if((ctx == null)||(bCtx == null)||(prov == null)||(viewId == null)){
 			throw new IllegalArgumentException("All arguments cannot be NULL");
 		}
 		this.context = ctx;
 		this.provider = prov;
 		this.itemViewId = viewId;
-		this.uiContext = uiCtx;
+		this.bindingCtx = bCtx;
+		this.uiContext = bCtx.getUIContext();
 		if(prov instanceof IObservableListDataProvider){
 			this.observable = (IObservableListDataProvider)prov;
 		}else{
@@ -95,10 +98,17 @@ public class GenericListAdapter extends BaseAdapter {
 			public IWorkbenchManager getWorkbenchManager() {
 				return context.getWorkbenchManager();
 			}
+
+			@Override
+			public boolean isOnShow() {
+				return bindingCtx.isOnShow();
+			}
 		}, bDesc);
 		binding.init(context);
 		View view = (View)binding.getUIControl();
-		view.setTag(binding);
+		BindingBag bag = new BindingBag();
+		bag.binding = binding;
+		view.setTag(bag);
 		return view;
 
 	}
@@ -116,12 +126,17 @@ public class GenericListAdapter extends BaseAdapter {
 			view = convertView;
 			existing = true;
 		}
-		IBinding<IView> binding = (IBinding<IView>)view.getTag();
+		BindingBag bag = (BindingBag)view.getTag();
+		IBinding<IView> binding = bag.binding;
 		if(existing){
 			binding.deactivate();
 		}
-		IView vModel = v.createPresentationModel(context);
-		vModel.init(context);
+		IView vModel = bag.view;
+		if(vModel == null){
+			vModel = v.createPresentationModel(context);
+			vModel.init(context);
+			bag.view = vModel;
+		}
 		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
 		binding.activate(vModel);
 		return view;
@@ -187,4 +202,8 @@ public class GenericListAdapter extends BaseAdapter {
 		return this.provider.isItemEnabled(this.provider.getItem(position));
 	}
 
+	private static class BindingBag {
+		IBinding<IView> binding;
+		IView view;
+	}
 }

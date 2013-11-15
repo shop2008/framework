@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.wxxr.javax.el.BeanNameResolver;
 import com.wxxr.javax.el.ELManager;
@@ -22,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuCallback;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
+import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
@@ -39,35 +41,51 @@ import com.wxxr.mobile.core.util.StringUtils;
  *
  */
 public abstract class ViewBase extends UIContainer<IUIComponent> implements IView {
-	private static final Trace log = Trace.register(ViewBase.class);
-	
+	private static final Trace loger = Trace.register(ViewBase.class);
+	private Trace vLog;
+
+	protected Trace getLog() {
+		if((vLog == null)&&(getName() != null)){
+			vLog = Trace.getLogger("com.wxxr.mobile.core.ui."+(IPage.class.isAssignableFrom(getClass()) ? "P" : "V")+getName());
+		}
+		return vLog != null ? vLog : loger;
+	}
+
 	protected class BeanPropertyChangedListener implements PropertyChangeListener {
 		private final String beanName;
-		
+
 		public BeanPropertyChangedListener(String name){
 			this.beanName = name;
 		}
 
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			if(log.isDebugEnabled()){
-				log.debug("Receiving property changed event from bean :"+beanName+", event :["+evt+"]");
+			if(getLog().isDebugEnabled()){
+				getLog().debug("Receiving property changed event from bean :"+beanName+", event :["+evt+"]");
 			}
-			fireDataChangedEvent(new DomainValueChangedEventImpl(evt.getSource(), beanName, evt.getPropertyName()));
+			if(!isActive()){
+				Object source = evt.getSource();
+				if(source instanceof IBindableBean){
+					((IBindableBean)source).removePropertyChangeListener(this);
+				}
+				return;
+			}else {
+				fireDataChangedEvent(new DomainValueChangedEventImpl(evt.getSource(), beanName, evt.getPropertyName()));
+			}
 		}
 	}
-	
+
 	private class EventQueue implements Runnable{
 		private LinkedList<ValueChangedEvent> pendingEvents;
 		private volatile Thread thread;
-		
+
 		protected synchronized void addPendingEvent(ValueChangedEvent evt) {
 			if(pendingEvents == null){
 				this.pendingEvents = new LinkedList<ValueChangedEvent>();
 			}
 			pendingEvents.add(evt);
 		}
-		
+
 		protected synchronized ValueChangedEvent[] getPendingEvents() {
 			ValueChangedEvent[] evts = null;
 			if((pendingEvents != null)&&(pendingEvents.size() > 0)){
@@ -90,8 +108,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					ValueChangedEvent[] evts = getPendingEvents();
 					if(evts != null){
 						if(binding != null){
-							if(log.isDebugEnabled()){
-								log.debug("fire data changed events :"+StringUtils.join(evts));
+							if(getLog().isDebugEnabled()){
+								getLog().debug("fire data changed events :"+StringUtils.join(evts));
 							}
 							binding.notifyDataChanged(evts);
 						}
@@ -102,7 +120,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 						}
 					}
 				}catch(Throwable t){
-					log.error("Caught exception at event loop of viewbase", t);
+					getLog().error("Caught exception at event loop of viewbase", t);
 				}
 			}
 			if((this.pendingEvents != null)&&(this.pendingEvents.size() > 0)){
@@ -113,11 +131,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				this.pendingEvents = null;
 			}
 		}
-		
+
 		public synchronized void start() {
 			new Thread(this).start();
 		}
-		
+
 		public synchronized void stop() {
 			if(this.thread != null){
 				Thread t = this.thread;
@@ -132,7 +150,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			}
 		}
 	}
-	
+
 	private BeanNameResolver beanNameResolver = new BeanNameResolver() {
 
 		/* (non-Javadoc)
@@ -152,7 +170,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			return (getChild(beanName) != null)||((beans != null)&&(beans.containsKey(beanName)));
 		}
 	};
-	private IBinding<IView> binding;
+	private IViewBinding binding;
 	private Map<String, IUICommandHandler> commands;
 	private EventQueue eventQueue;
 	private IMenuCallback menuCallback;
@@ -161,24 +179,28 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
 	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
-	
+
 	public ViewBase() {
-		onCreate();
+		doInit();
 	}
-	
+
 	public ViewBase(String name) {
 		super(name);
+		doInit();
+	}
+
+	protected void doInit(){
 		onCreate();
 	}
 
 	public boolean isActive() {
-		return this.binding != null;
+		return this.binding != null && this.binding.isOnShow();
 	}
-	
+
 	public void show(){
 		this.show(true);
 	}
-	
+
 	public ELManager getELManager(boolean createIfNotExisting){
 		if(createIfNotExisting&&(this.elm == null)){
 			this.elm = new ELManager();
@@ -194,7 +216,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		mgr.addBeanNameResolver(this.beanNameResolver);
 		mgr.importClass(AttributeKeys.class.getCanonicalName());
 	}
-	
+
 	protected BeanPropertyChangedListener getBeanListener(String name){
 		BeanPropertyChangedListener l = this.beanListeners.get(name);
 		if(l == null){
@@ -203,7 +225,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		return l;
 	}
-	
+
 	protected void registerBean(String name, Object bean){
 		if(this.beans == null){
 			this.beans = new HashMap<String, Object>();
@@ -211,14 +233,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		Object oldBean = this.beans.get(name);
 		this.beans.put(name, bean);
 		if(!ModelUtils.isEquals(oldBean, bean)){
-            DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
-            fireDataChangedEvent(evt);
-            if(bean instanceof IBindableBean){
-            	((IBindableBean)bean).addPropertyChangeListener(getBeanListener(name));
-            }
+			DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
+			fireDataChangedEvent(evt);
+			if(bean instanceof IBindableBean){
+				((IBindableBean)bean).addPropertyChangeListener(getBeanListener(name));
+			}
 		}
 	}
-	
+
 	protected void registerService(String name, Object service){
 		if(this.beans == null){
 			this.beans = new HashMap<String, Object>();
@@ -233,14 +255,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return this;
 	}
 
-	
+
 	protected ViewBase unregisterBean(String name){
 		if(this.beans != null){
 			this.beans.remove(name);
 		}
 		return this;
 	}
-	
+
 	protected void registerDomainModel(IDomainValueModel<?> model){
 		if(this.domainModels == null){
 			this.domainModels = new ArrayList<IDomainValueModel<?>>();
@@ -249,7 +271,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.domainModels.add(model);
 		}
 	}
-	
+
 	protected ViewBase unregisterDomainModel(IDomainValueModel<?> model){
 		if(this.domainModels != null){
 			this.domainModels.remove(model);
@@ -257,7 +279,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return this;
 	}
 
-	
+
 	protected void addValueEvaluator(IValueEvaluator<?> evaluator){
 		if(this.evaluators == null){
 			this.evaluators = new ArrayList<IValueEvaluator<?>>();
@@ -266,14 +288,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.evaluators.add(evaluator);
 		}
 	}
-	
+
 	protected ViewBase removeValueEvaluator(IValueEvaluator<?> evaluator){
 		if(this.evaluators != null){
 			this.evaluators.remove(evaluator);
 		}
 		return this;
 	}
-	
+
 	public void show(boolean backable) {
 		getUIContext().getWorkbenchManager().getPageNavigator().showView(this,backable);
 	}
@@ -312,12 +334,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				}
 				if(this.menuCallback == null){
 					this.menuCallback = new IMenuCallback() {
-						
+
 						@Override
 						public void onShow(String menuName) {
 							onMenuShow(menuName);
 						}
-						
+
 						@Override
 						public void onHide(String menuName) {
 							onMenuHide(menuName);
@@ -327,28 +349,47 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				handler.setMenuCallback(this.menuCallback);
 			}
 		}
-		this.binding = binding;
-		forValueEvalution();
+		this.binding = (IViewBinding)binding;
+		forceValueEvalution();
+		if(this.beans != null){
+			for (Entry<String,Object> entry: this.beans.entrySet()) {
+				Object bean = entry.getValue();
+				if(bean instanceof IBindableBean){
+					((IBindableBean)bean).addPropertyChangeListener(getBeanListener(entry.getKey()));
+				}
+			}
+		}
 	}
 
 	protected void onShow(IBinding<IView> binding){
-		
+
 	}
-	
+
 	protected void onMenuShow(String menuId){
-		
+
 	}
-	
+
 	protected void onMenuHide(String menuId){
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)
 	 */
 	public boolean doUnbinding(IBinding<IView> binding) {
 		if(this.binding == binding){
 			this.binding = null;
+			if(this.beans != null){
+				for (Entry<String,Object> entry: this.beans.entrySet()) {
+					Object bean = entry.getValue();
+					if(bean instanceof IBindableBean){
+						BeanPropertyChangedListener l = getBeanListener(entry.getKey());
+						if(l != null){
+							((IBindableBean)bean).addPropertyChangeListener(l);
+						}
+					}
+				}
+			}
 			onHide(binding);
 			List<IMenu> menus = getChildren(IMenu.class);
 			if((menus != null)&&(menus.size() > 0)){
@@ -368,9 +409,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		return false;
 	}
-	
+
 	protected void onHide(IBinding<IView> binding) {
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -378,8 +419,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 */
 	@Override
 	protected void fireDataChangedEvent(ValueChangedEvent event) {
-		if(log.isTraceEnabled()){
-			log.trace("processing event :", event);
+		if(getLog().isDebugEnabled()){
+			getLog().debug("processing event :", event);
 		}
 		onDataChanged(event);
 		if(this.evaluators != null){
@@ -392,7 +433,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		if(event instanceof DomainValueChangedEvent){
 			if(this.domainModels != null){
 				for (IDomainValueModel<?> m : this.domainModels) {
-					m.doEvaluate();
+					if(m.valueEffectedBy(event)){
+						m.doEvaluate();
+					}
 				}
 			}
 			return;
@@ -405,25 +448,24 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.eventQueue.addPendingEvent(event);
 		}
 	}
-	
-	protected void forValueEvalution() {
-		if(this.evaluators != null){
-			for (IValueEvaluator<?> eval : this.evaluators) {
-					eval.doEvaluate();
-			}
-		}
+
+	protected void forceValueEvalution() {
 		if(this.domainModels != null){
 			for (IDomainValueModel<?> m : this.domainModels) {
 				m.doEvaluate();
 			}
 		}
+		if(this.evaluators != null){
+			for (IValueEvaluator<?> eval : this.evaluators) {
+				eval.doEvaluate();
+			}
+		}
+	}
+
+	protected void onDataChanged(ValueChangedEvent event){
 
 	}
-	
-	protected void onDataChanged(ValueChangedEvent event){
-		
-	}
-	
+
 	protected ViewBase addUICommand(String cmdName,IUICommandHandler command){
 		if(this.commands == null){
 			this.commands = new HashMap<String, IUICommandHandler>();
@@ -431,7 +473,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		this.commands.put(cmdName, command);
 		return this;
 	}
-	
+
 	protected ViewBase removeUICommand(String cmdName,IUICommandHandler command){
 		if(this.commands != null){
 			IUICommandHandler cmd = this.commands.get(cmdName);
@@ -446,9 +488,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	protected boolean hasCommand(String cmdName){
 		return this.commands != null && this.commands.containsKey(cmdName);
 	}
-	
+
 	protected abstract void onCreate();
-	
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.AbstractUIComponent#invokeCommand(java.lang.String, java.lang.Object[])
 	 */
@@ -460,7 +502,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			super.invokeCommand(cmdName, event);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected <T> IDataField<T> getField(String name){
 		return getChild(name, IDataField.class);

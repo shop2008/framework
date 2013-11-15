@@ -84,4 +84,12 @@ public class UICommand extends UIComponent implements IUICommand{
 		this.handback = handback;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UICommand:" + getName()+"/"+cmdName + "]";
+	}
+
 }

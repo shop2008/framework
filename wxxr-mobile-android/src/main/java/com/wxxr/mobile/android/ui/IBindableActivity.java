@@ -19,6 +19,6 @@ public interface IBindableActivity {
 	IPage getBindingPage();
 	Activity getActivity();
 	IViewBinding getViewBinding();
-	IDialog createDialog(IView view);
+	IDialog createDialog(IView view,Object handback);
 	IAppToolbar getToolbar();
 }

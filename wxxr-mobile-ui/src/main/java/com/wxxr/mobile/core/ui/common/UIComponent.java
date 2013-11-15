@@ -8,24 +8,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.wxxr.mobile.core.bean.api.ICollectionDecorator;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.util.ObjectUtils;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
  *
  */
 public abstract class UIComponent implements IUIComponent {
+	private static final Trace log = Trace.register(UIComponent.class);
+	
+	private static final ThreadLocal<Boolean> eventDisabled = new ThreadLocal<Boolean>();
+	
+	public static boolean disableEvents() {
+		Boolean val = eventDisabled.get();
+		if((val == null)||(val.booleanValue() == false)){
+			eventDisabled.set(true);
+			return true;
+		}
+		return false;
+	}
+	
+	public static void enableEvents() {
+		eventDisabled.set(null);
+	}
+	
+	public boolean isEventDisabled() {
+		return (ModelUtils.isViewOnShow(this) == false)||((eventDisabled.get() != null)&&(eventDisabled.get().booleanValue()));
+	}
 	
 	private String name;
 	private Map<AttributeKey<?>, Object> attrs;
 	private IUIContainer<IUIComponent> parent;
 	private IWorkbenchRTContext ctx;
+	private IBindingValueChangedCallback callback;
 	
 	public UIComponent(){
 	}
@@ -112,6 +137,8 @@ public abstract class UIComponent implements IUIComponent {
 		if(!ObjectUtils.isEquals(old, val)){
 			this.attrs.put(key, val);
 			fireDataChangedEvent(key);
+		}else if((old instanceof ICollectionDecorator)&&((ICollectionDecorator)old).checkChangedNClear()){
+			fireDataChangedEvent(key);
 		}
 		return this;
 	}
@@ -119,10 +146,21 @@ public abstract class UIComponent implements IUIComponent {
 	
 	@SuppressWarnings("unchecked")
 	protected <T> T removeAttribute(AttributeKey<T> key){
-		return this.attrs != null ? (T)this.attrs.remove(key) : null;
+		T val = this.attrs != null ? (T)this.attrs.remove(key) : null;
+		fireDataChangedEvent(key);
+		return val;
 	}
 	
 	protected void fireDataChangedEvent(AttributeKey<?> ... keys){
+		if(isEventDisabled()){
+			return;
+		}
+		if(log.isDebugEnabled()){
+			log.debug("Going to fire ComponentValueChangedEvent for :"+this.toString()+", key :"+StringUtils.join(keys,','));
+		}
+		if(this.callback != null){
+			this.callback.valueChanged(this, keys);
+		}
 		fireDataChangedEvent(new ComponentValueChangedEventImpl(this, keys));
 	}
 	
@@ -167,6 +205,14 @@ public abstract class UIComponent implements IUIComponent {
 		if(getParent() != null){
 			getParent().invokeCommand(cmdName, event);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#setValueChangedCallback(com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback)
+	 */
+	@Override
+	public void setValueChangedCallback(IBindingValueChangedCallback cb) {
+		this.callback = cb;
 	}
 		
 }

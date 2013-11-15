@@ -14,6 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
+import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IDataField;
@@ -27,6 +28,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 
 /**
  * @author neillin
@@ -62,7 +64,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			provider = createAdaptorFromValue(comp);
 		}
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
-				getAndroidBindingContext().getUIContext(), provider,
+				getAndroidBindingContext(), provider,
 				itemViewId);
 		Object list = getUIControl();
 		if (list instanceof ListView) {
@@ -115,6 +117,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			@Override
 			public IWorkbenchManager getWorkbenchManager() {
 				return getWorkbenchContext().getWorkbenchManager();
+			}
+
+			@Override
+			public boolean isOnShow() {
+				return getAndroidBindingContext().isOnShow();
 			}
 		}, bDesc);
 		binding.init(getWorkbenchContext());
@@ -209,6 +216,18 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter.notifyDataSetChanged();
 		}
 		super.refresh();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#handleValueChangedCallback(com.wxxr.mobile.core.ui.common.UIComponent, com.wxxr.mobile.core.ui.api.AttributeKey<?>[])
+	 */
+	@Override
+	protected void handleValueChangedCallback(UIComponent component,
+			AttributeKey<?>... keys) {
+		if(this.listAdapter != null){
+			this.listAdapter.notifyDataSetChanged();
+		}
+		super.handleValueChangedCallback(component, keys);
 	}
 
 }

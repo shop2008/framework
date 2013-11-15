@@ -13,6 +13,7 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
+import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
@@ -21,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 
 /**
  * @author neillin
@@ -34,6 +36,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	protected IAndroidBindingContext context;
 	protected Map<String, String> bindingAttrs;
 	protected String fieldName;
+	protected IUIComponent field;
 	
 	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
 		this.pComponent = ctx.getBindingControl();
@@ -49,6 +52,15 @@ public class BasicFieldBinding implements IFieldBinding {
 		return this.bindingAttrs;
 	}
 	
+	private void doUpdateUI(final boolean recursive){
+		AppUtils.runOnUIThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				updateUI(recursive);
+			}
+		});
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.ui.IAndroidBinding#updateUI()
 	 */
@@ -116,13 +128,17 @@ public class BasicFieldBinding implements IFieldBinding {
 	@Override
 	public void activate(IView model) {
 		this.viewModel = model;
-		AppUtils.runOnUIThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				updateUI(true);
-			}
-		});
+		this.field = this.viewModel.getChild(getFieldName());
+		if(this.field != null){
+			this.field.setValueChangedCallback(new IBindingValueChangedCallback() {
+				
+				@Override
+				public void valueChanged(UIComponent component, AttributeKey<?>... keys) {
+					handleValueChangedCallback(component, keys);
+				}
+			});
+		}
+		doUpdateUI(true);
 	}
 
 	/* (non-Javadoc)
@@ -169,7 +185,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	public void notifyDataChanged(ValueChangedEvent... events) {
 		for (ValueChangedEvent event : events) {
 			if(event.getSource() == getField()){
-				updateUI(true);
+				doUpdateUI(true);
 				break;
 			}
 		}
@@ -231,7 +247,14 @@ public class BasicFieldBinding implements IFieldBinding {
 
 	@Override
 	public void refresh() {
-		updateUI(true);
+		doUpdateUI(true);
+	}
+
+	/**
+	 * 
+	 */
+	protected void handleValueChangedCallback(UIComponent component, AttributeKey<?>... keys) {
+		// doUpdateUI(true);
 	}
 
 

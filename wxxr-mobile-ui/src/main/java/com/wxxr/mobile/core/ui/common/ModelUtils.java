@@ -42,6 +42,11 @@ public abstract class ModelUtils {
 		}
 	}
 	
+	public static boolean isViewOnShow(IUIComponent p){
+		IView v = getView(p);
+		return v != null && v.isActive();
+	}
+	
 	public static boolean isEquals(Object obj1, Object obj2){
 		if(obj1 == obj2){
 			return  true;

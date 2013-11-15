@@ -31,6 +31,7 @@ public abstract class BindableFragment extends Fragment {
 	
 	private IBinding<IView> androidViewBinding;
 	private BindableFragmentActivity fragActivity;
+	private boolean onShow;
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
 	 */
@@ -93,6 +94,11 @@ public abstract class BindableFragment extends Fragment {
 			@Override
 			public IWorkbenchManager getWorkbenchManager() {
 				return AppUtils.getService(IWorkbenchManager.class);
+			}
+
+			@Override
+			public boolean isOnShow() {
+				return onShow;
 			}
 		}, getBindingDescriptor(getViewId()));
 		return (View)this.androidViewBinding.getUIControl();
@@ -208,6 +214,7 @@ public abstract class BindableFragment extends Fragment {
 		}
 		this.androidViewBinding.activate(getBindingView());
 		super.onStart();
+		this.onShow = true;
 	}
 
 	/* (non-Javadoc)
@@ -218,6 +225,7 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onStop ...");
 		}
+		this.onShow = false;
 		this.androidViewBinding.deactivate();
 		super.onStop();
 	}
