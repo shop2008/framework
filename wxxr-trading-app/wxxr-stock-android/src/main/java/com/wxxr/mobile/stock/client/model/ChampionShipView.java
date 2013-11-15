@@ -53,24 +53,32 @@ public abstract class ChampionShipView extends ViewBase {
 	List<RegularTicketBean> ChampionRegularShip;
 	//RadioButton
 	@Field(valueKey = "checked", attributes={
-			@Attribute(name = "checked", value = "${currentViewId == 1}")
+			@Attribute(name = "checked", value = "${currentViewId == 1}"),
+			@Attribute(name = "textColor", value = "${currentViewId == 1?'resourceId:color/white':'resourceId:color/gray'}")
 			})
 	boolean tMegaBtn;
 	
 	@Field(valueKey = "checked", attributes={
-			@Attribute(name = "checked", value = "${currentViewId == 2}")
+			@Attribute(name = "checked", value = "${currentViewId == 2}"),
+			@Attribute(name = "textColor", value = "${currentViewId == 2?'resourceId:color/white':'resourceId:color/gray'}")
 			})
 	boolean t1MegaBtn;
 	
 	@Field(valueKey = "checked", attributes={
-			@Attribute(name = "checked", value = "${currentViewId == 3}")
+			@Attribute(name = "checked", value = "${currentViewId == 3}"),
+			@Attribute(name = "textColor", value = "${currentViewId == 3?'resourceId:color/white':'resourceId:color/gray'}")
 			})
 	boolean weekBtn;
 	
 	@Field(valueKey = "checked", attributes={
-			@Attribute(name = "checked", value = "${currentViewId == 4}")
+			@Attribute(name = "checked", value = "${currentViewId == 4}"),
+			@Attribute(name = "textColor", value = "${currentViewId == 4?'resourceId:color/white':'resourceId:color/gray'}")
 			})
 	boolean regularTicketBtn;
+	//week Title
+	@Field(valueKey = "text", binding="${ChampionShipBean!=null?(ChampionShipBean.weekRanKBeans!=null?(ChampionShipBean.weekRanKBeans.size()>0?ChampionShipBean.weekRanKBeans.get(0).dates:''):''):''}"
+			,visibleWhen="${currentViewId == 3}")
+	String weekDate;
 	
 	int currentViewId = 1;
 	@OnShow
