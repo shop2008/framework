@@ -297,12 +297,16 @@ public class TradingManagementServiceImpl extends
 			MegagameRankBean mr = new MegagameRankBean();
 			mr.setAcctID(1);
 			mr.setNickName("模拟用户" + i);
-			mr.setGainRate("3%");
+			mr.setGainRate("+10.01%");
 
 			if (t.equals("T")) {
+				mr.setRankSeq(i+1);
+				mr.setStatus(1);
 				mr.setMaxStockCode("600521");
 				mr.setMaxStockMarket("华海药业");
 			} else {
+				mr.setRankSeq(i+1);
+				mr.setStatus(0);
 				mr.setMaxStockCode("600175");
 				mr.setMaxStockMarket("美都控股");
 			}
@@ -317,6 +321,7 @@ public class TradingManagementServiceImpl extends
 		List<RegularTicketBean> list = new ArrayList<RegularTicketBean>();
 		for (int i = 0; i < 10; i++) {
 			RegularTicketBean mr = new RegularTicketBean();
+			mr.setRankSeq(i+1);
 			mr.setNickName("模拟用户" + i);
 			mr.setRegular(1000 * (10 - i));
 			mr.setGainCount(6 - i % 5);
@@ -329,10 +334,11 @@ public class TradingManagementServiceImpl extends
 		List<WeekRankBean> list = new ArrayList<WeekRankBean>();
 		for (int i = 0; i < 10; i++) {
 			WeekRankBean mr = new WeekRankBean();
+			mr.setRankSeq(i+1);
 			mr.setDates("2013年11月04日-2013年11月08日");
 			mr.setGainCount(6 - i % 5);
 			mr.setNickName("模拟用户" + i);
-			mr.setGainRate(String.format("%s", 15 - i) + "%");
+			mr.setGainRate(String.format("+%s", 15 - i) + "%");
 			list.add(mr);
 		}
 		return list;
