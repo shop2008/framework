@@ -9,11 +9,12 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="userSwitchCardPage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.switch_bank_card_layout")
@@ -104,9 +105,13 @@ public abstract class UserSwitchCardPage extends PageBase implements IModelUpdat
 	
 	@Override
 	public void updateModel(Object value) {
-		Map<String, String> map = (Map<String, String>)value;
-		String accountNameStr = map.get("accountName");
-		this.accountName = accountNameStr;
-		this.accountNameField.setValue(accountNameStr);
+		
+		if (value instanceof CommandResult) {
+			CommandResult result = (CommandResult) value;
+			String accountNameStr = result.getResult();
+			this.accountName = accountNameStr;
+			this.accountNameField.setValue(accountNameStr);
+		}
+		
 	}
 }

@@ -1,23 +1,29 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import javax.security.auth.login.LoginException;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.rpc.rest.IsHttpMethod;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="appSetPage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked")
+	@Field(valueKey="checked", visibleWhen="${userService.isLogin?true:false}", attributes={@Attribute(name="checked", value="${isChecked==true?true:false}")})
 	boolean pushEnabled;
 	
 	DataField<Boolean> pushEnabledField;
@@ -25,6 +31,10 @@ public abstract class AppSetPage extends PageBase {
 	
 	@Field
 	IUserManagementService userService;
+	
+	
+	@Field(valueKey="text", visibleWhen="${userService.isLogin?false:true}")
+	String notLoginText;
 	/**
 	 * 标题栏-"返回"按钮事件处理
 	 * 
@@ -39,6 +49,13 @@ public abstract class AppSetPage extends PageBase {
 		return null;
 	}
 
+	boolean isChecked = userService.getPushMessageSetting();;
+	
+	@OnCreate
+	protected void initData() {
+		
+		registerBean("isChecked", isChecked);
+	}
 	
 	/**
 	 * 联系我们
@@ -82,6 +99,21 @@ public abstract class AppSetPage extends PageBase {
 	}
 	
 	/**
+	 * 提示用户登录
+	 * @param event
+	 * @return
+	 * @throws LoginException 
+	 */
+	@Command(commandName = "notLogin", description = "Alert User Login!")
+	String notLogin(InputEvent event) throws LoginException {
+		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			//TODO 未登录，提示登录
+			throw new LoginException();
+		}
+		return null;
+	}
+	
+	/**
 	 * 是否推送消息
 	 * 
 	 * @param event
@@ -91,27 +123,10 @@ public abstract class AppSetPage extends PageBase {
 	String setPushMsgEnabled(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
-			if (this.pushEnabled == true) {
-				this.pushEnabled = false;
-				this.pushEnabledField.setValue(false);
-			} else {
-				this.pushEnabled = true;
-				this.pushEnabledField.setValue(true);
-			}
-			this.userService.pushMessageSetting(this.pushEnabledField.getValue());
+			isChecked = !isChecked;
+			this.userService.pushMessageSetting(isChecked);
 		}
 		return null;
 	}
-	
-	
-	@OnShow
-	protected void initData() {
-		/**1.获取之前配置信息*/
-		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
-		boolean isPushOn = userService.getPushMessageSetting();
-		/**2.根据之前配置信息设置值*/
-		this.pushEnabled = isPushOn;
-		this.pushEnabledField.setValue(isPushOn);
-		
-	}
+
 }

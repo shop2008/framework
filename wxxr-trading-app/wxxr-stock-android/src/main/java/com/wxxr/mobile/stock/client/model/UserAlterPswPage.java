@@ -10,8 +10,8 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.UserBean;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="userAlterPswPage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.alter_password_page_layout")

@@ -12,7 +12,6 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 @View(name = "userLoginPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
@@ -51,12 +50,7 @@ public abstract class UserLoginPage extends PageBase {
 				log.debug("login:mobileNum"+mobileNum);
 				log.debug("login:password"+password);
 			}
-			try {
-				getUIContext().getKernelContext().getService(IUserManagementService.class).login(mobileNum, password);
-			} catch (LoginException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		}
 		return null;
 	}

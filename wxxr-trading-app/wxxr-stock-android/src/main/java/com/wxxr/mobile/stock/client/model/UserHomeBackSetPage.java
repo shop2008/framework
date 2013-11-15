@@ -17,7 +17,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.UserPicBean;
+import com.wxxr.mobile.stock.app.bean.UserPicBean;
 
 
 @View(name="user_home_set")

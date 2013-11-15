@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.TradeDetailBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name="incomeDetailsItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.income_details_item_layout")

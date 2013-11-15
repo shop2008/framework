@@ -15,13 +15,13 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
-import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
-import com.wxxr.mobile.stock.client.bean.UserBean;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * @author neillin
@@ -108,14 +108,15 @@ public abstract class UserAuthPage extends PageBase {
 			navigations = { 
 					@Navigation(
 							on = "SUCCESS", 
-							showPage = "userSwitchCardPage", 
-							params={@Parameter(name="accountName", value="${authBean!=null?authBean.accountName:null}", type=ValueType.STRING)}
+							showPage = "userSwitchCardPage"
 							) 
 					}
 			)
-	String switchBankCard(InputEvent event) {
+	CommandResult switchBankCard(InputEvent event) {
 		
-		return "SUCCESS";
+		CommandResult result = new CommandResult();
+		result.setResult(authBean.getAccountName());
+		return result;
 	}
 	
 	/**

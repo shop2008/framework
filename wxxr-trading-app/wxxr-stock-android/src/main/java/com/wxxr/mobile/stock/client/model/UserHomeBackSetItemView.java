@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.bean.UserPicBean;
+import com.wxxr.mobile.stock.app.bean.UserPicBean;
 
 @View(name="imageItemForHomeBack")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_home_set_item_layout")

@@ -11,8 +11,8 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.StockAppBizException;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name = "userRegPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
@@ -83,7 +83,12 @@ public abstract class UserRegPage extends PageBase {
 				log.debug("register:Send Message To Mobile");
 			}
 			try {
-				getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+				try {
+					getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+				} catch (com.wxxr.mobile.stock.app.StockAppBizException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} catch (StockAppBizException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

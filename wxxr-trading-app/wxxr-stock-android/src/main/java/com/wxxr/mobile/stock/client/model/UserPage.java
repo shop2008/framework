@@ -27,10 +27,10 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.client.bean.UserBean;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 /**
@@ -186,7 +186,6 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	/**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
-	 * 
 	 * @param event
 	 * @return
 	 */

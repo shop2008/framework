@@ -19,9 +19,9 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.ScoreBean;
-import com.wxxr.mobile.stock.client.bean.ScoreInfoBean;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.bean.ScoreBean;
+import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="uRealPanelScorePage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.actual_panel_integral_detail_layout")

@@ -18,9 +18,9 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.TradeDetailBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
-import com.wxxr.mobile.stock.client.service.IUserManagementService;
 
 /**
  * 收支明细界面
@@ -33,7 +33,8 @@ public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
 	
-	@Field(valueKey = "options")
+	
+	@Field(valueKey = "options", binding="")
 	List<TradeDetailBean> incomeDetails;
 	
 	@Bean(type=BindingType.Service)
