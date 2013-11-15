@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -16,6 +17,8 @@ import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 
 public class TextChangedEventBinding implements IBinding<IView> {
 
+	private static Trace log = Trace.getLogger(TextChangedEventBinding.class);
+	
 	private EditText editText;
 	private String fieldName;
 	private String commandName;
@@ -47,6 +50,9 @@ public class TextChangedEventBinding implements IBinding<IView> {
 				return;
 			}
 			String text = s.toString();
+			if(log.isDebugEnabled()) {
+				log.debug("afterTextChanged , text is : " + text);
+			}
 			if (!TextUtils.isEmpty(text)) {
 				SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_TEXT_CHANGED,
 						pModel);
@@ -76,7 +82,7 @@ public class TextChangedEventBinding implements IBinding<IView> {
 
 	@Override
 	public void deactivate() {
-		this.editText.addTextChangedListener(null);
+		this.editText.removeTextChangedListener(textWatcher);
 		this.pModel = null;
 	}
 

@@ -16,13 +16,14 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.bean.StockBean;
-import com.wxxr.mobile.stock.client.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.bean.StockBean;
+import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 
 /**
  * 股票搜索页面
@@ -55,6 +56,11 @@ public abstract class StockSearchViewPage extends PageBase {
 	List<StockBean> searchList;
 //	DataField<List> searchListField;
 
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+			}
+	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
