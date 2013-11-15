@@ -2,26 +2,20 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
-import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * ��Ʊ��ָ�� VO
- * @author zhengjincheng
+ * 股票、指数vo
+ * @author wangxuyang
  *
  */
 @XmlRootElement(name = "STOCK")
 public class StockBaseInfoVO implements Serializable{
-	@XmlElement(name="name")
-	private String name; //��Ʊ��ָ�� ���
-	@XmlElement(name="market")
-	private String mc;//�г����룺 SH��SZ������Ϻ������ڡ�
-	@XmlElement(name="spell")
-	private String abbr;// ��Ʊ��Ƶ�����ƴ��������ĸ �磺���´�½��  Ϊ ��xdl��
-	@XmlElement(name="code")
-	private String code;  //��Ʊ��ָ�� ����
-	@XmlElement(name="type")
-	private String type;// 0:ָ��1��A�ɣ�2��B��
+	private String name; //股票或指数 名称
+	private String mc;//市场代码： SH，SZ各代表上海，深圳。
+	private String abbr;// 股票名称的中文拼音的首字母 如：“新大陆”  为 “xdl”
+	private String code;  //股票或指数 代码
+	private String type;// 0:指数，1：A股，2：B股
 
 	
 	public String getType() {

@@ -15,11 +15,13 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -38,8 +40,18 @@ public class TradingManagementServiceImpl extends
 	private static final Trace log = Trace
 			.register(TradingManagementServiceImpl.class);
 	//=========================beans =======================
+	/**
+	 * 排行榜列表
+	 */
 	private RankListBean rank = new RankListBean();
+	/**
+	 * 我的交易盘列表
+	 */
 	private TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
+	/**
+	 * 成交详情
+	 */
+	private DealDetailBean dealDetailBean = new DealDetailBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -333,6 +345,50 @@ public class TradingManagementServiceImpl extends
 	public TradingAccountListBean getOtherTradingAccountList(String userId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public DealDetailBean getDealDetail(String accId) {
+		context.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				
+			}
+		}, 0, TimeUnit.SECONDS);
+		dealDetailBean.setFund("10万");
+		dealDetailBean.setPlRisk(0.001f);
+		dealDetailBean.setUserGain(1000);
+		dealDetailBean.setImgUrl(new String[]{"#"});
+		dealDetailBean.setTradingRecords(mockTradingRecord());
+		return dealDetailBean;
+	}
+	private List<TradingRecordBean> mockTradingRecord(){
+		List<TradingRecordBean> list = new ArrayList<TradingRecordBean>();
+		TradingRecordBean t = new TradingRecordBean();
+		t.setDate(System.currentTimeMillis());
+		t.setBeDone(true);
+		t.setDay(0);
+		/*private long date;// 日期
+		private String market;// 股票市场
+		private String code;// 股票代码
+		private String describe;// 成交方向：
+		private long price;// 成交价格
+		private long vol;// 成交量
+		private long amount;// 成交金额
+		private long brokerage;// 佣金
+		private long tax;// 印花税
+		private long fee;// 过户费
+		private int day;// 1:表示t日,0:表示t+1日
+		private boolean beDone;// 订单是否完成，DONE为true；否则为false
+*/		t.setCode("600521");
+		t.setFee(3990);
+		t.setPrice(1256);
+		t.setTax(1230);
+		t.setVol(3500);
+		t.setAmount(12000000);
+		t.setDescribe("买入成交");
+		list.add(t);
+		return list;
 	}
 
 }
