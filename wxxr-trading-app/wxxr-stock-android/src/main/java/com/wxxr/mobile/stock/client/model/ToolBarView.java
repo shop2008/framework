@@ -22,7 +22,7 @@ import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
  * @author neillin
  * 
  */
-@View(name="toolbarView")
+@View(name="toolbarView",singleton=true)
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.layout_animation_tool_bar_view")
 public abstract class ToolBarView extends StockAppToolbar {
 
