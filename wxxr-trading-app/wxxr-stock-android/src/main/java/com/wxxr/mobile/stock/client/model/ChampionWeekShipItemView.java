@@ -5,7 +5,6 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 
@@ -14,38 +13,25 @@ import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 public abstract class ChampionWeekShipItemView extends ViewBase implements
 		IModelUpdater {
 
-	@Field(valueKey = "text")
+	WeekRankBean weekRank;
+	
+	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.rankSeq:'--'}")
 	String rankSeq;
-	DataField<String> rankSeqField;
 	
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.nickName:'--'}")
 	String nickName;
-	DataField<String> nickNameField;
 	
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainCount:'--'}")
 	String gainCount;
-	DataField<String> gainCountField;
 
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainRate:'--'}")
 	String gainRate;
-	DataField<String> gainRateField;
 
 
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof WeekRankBean) {
-			WeekRankBean msgRank = (WeekRankBean) value;
-			this.rankSeq = String.valueOf(msgRank.getRankSeq());
-			this.rankSeqField.setValue(this.rankSeq);
-
-			this.nickName = msgRank.getNickName();
-			this.nickNameField.setValue(this.nickName);
-			
-			this.gainCount = msgRank.getGainCount()+"个正收益";
-			this.gainCountField.setValue(this.gainCount);
-
-			this.gainRate = msgRank.getGainRate();
-			this.gainRateField.setValue(this.gainRate);
+			registerBean("weekRank",value);
 		}
 	}
 }
