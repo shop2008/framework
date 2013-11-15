@@ -47,8 +47,9 @@
     private void initFieldAttributes() {
 #foreach($expr in $expressions)
 #if(${expr.elexpress})
-        ELAttributeValueEvaluator v_${expr.field.name}Updater = new ELAttributeValueEvaluator(getELManager(true), "${expr.expression}", "${expr.attributeKey}", getChild("${expr.field.name}"));
-        addValueEvaluator(v_${expr.field.name}Updater);
+        addValueEvaluator(
+            new ELAttributeValueEvaluator(getELManager(true), "${expr.expression}", "${expr.attributeKey}", getChild("${expr.field.name}"))
+        );
 #else
         AttributeKeys.updateAttribute("${expr.attributeKey}",getChild("${expr.field.name}"), "${expr.expression}");
 #end
