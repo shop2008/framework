@@ -20,4 +20,5 @@ public class TradingAccountList {
 	private List<TradingAccountBean> t1TradingAccountBeans;//T+1日
 	private List<TradingAccountBean> virtualTradingAccountBeans;//参赛交易盘
 	private List<TradingAccountBean> realTradingAccountBeans;//挑战交易盘
+	private List<TradingAccountBean> successTradingAccountBeans; //成功交易记录
 }
