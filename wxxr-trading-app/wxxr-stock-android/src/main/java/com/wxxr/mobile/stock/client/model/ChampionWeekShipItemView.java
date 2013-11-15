@@ -21,7 +21,7 @@ public abstract class ChampionWeekShipItemView extends ViewBase implements
 	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.nickName:'--'}")
 	String nickName;
 	
-	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainCount:'--'}")
+	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainCount:'--'}${'个正收益'}")
 	String gainCount;
 
 	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainRate:'--'}")

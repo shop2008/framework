@@ -12,7 +12,7 @@
         android:background="@drawable/dsphb_title_bj"
         android:orientation="horizontal"
         android:padding="6dp" >
-		
+
         <RadioButton
             android:id="@+id/textView1"
             android:layout_width="fill_parent"
@@ -26,6 +26,7 @@
             android:text="T日排名"
             android:textColor="@color/white"
             android:textSize="15sp"
+            android:textStyle="bold"
             bind:field="tMegaBtn"
             bind:on_Click="handleTMegaClick" />
 
@@ -42,6 +43,7 @@
             android:text="T+1日排名"
             android:textColor="@color/white"
             android:textSize="15sp"
+            android:textStyle="bold"
             bind:field="t1MegaBtn"
             bind:on_Click="handleTMega1Click" />
 
@@ -58,6 +60,7 @@
             android:text="周赛排名"
             android:textColor="@color/white"
             android:textSize="15sp"
+            android:textStyle="bold"
             bind:field="weekBtn"
             bind:on_Click="handleWeekClick" />
 
@@ -74,6 +77,7 @@
             android:text="实盘券"
             android:textColor="@color/white"
             android:textSize="15sp"
+            android:textStyle="bold"
             bind:field="regularTicketBtn"
             bind:on_Click="handleRegularTicketClick" />
     </RadioGroup>
@@ -90,8 +94,8 @@
             android:visibility="visible"
             bind:field="ChampionShip"
             bind:itemViewId="ChampionShipItemView"
-            bind:on_TopRefresh="handleTMegaTopRefresh"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+            bind:on_BottomRefresh="handleTMegaBottomRefresh"
+            bind:on_TopRefresh="handleTMegaTopRefresh" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
@@ -102,21 +106,37 @@
             android:visibility="invisible"
             bind:field="ChampionT1Ship"
             bind:itemViewId="ChampionShipItemView"
-            bind:on_TopRefresh="handleTMega1TopRefresh"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+            bind:on_BottomRefresh="handleTMegaBottomRefresh"
+            bind:on_TopRefresh="handleTMega1TopRefresh" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
-        <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
-            android:id="@+id/listView3"
-            style="@style/mListView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            bind:field="ChampionWeekShip"
-            bind:itemViewId="ChampionWeekShipItemView"
-            bind:on_TopRefresh="handleWeekTopRefresh"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
-        </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-2dp"
+                android:background="@drawable/dsphb_title_bj"
+                android:gravity="center_vertical|left"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                bind:field="weekDate" />
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                android:id="@+id/listView3"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                bind:field="ChampionWeekShip"
+                bind:itemViewId="ChampionWeekShipItemView"
+                bind:on_BottomRefresh="handleTMegaBottomRefresh"
+                bind:on_TopRefresh="handleWeekTopRefresh" >
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+        </LinearLayout>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
             android:id="@+id/listView4"
@@ -126,8 +146,8 @@
             android:visibility="invisible"
             bind:field="ChampionRegularShip"
             bind:itemViewId="ChampionRegularShipItemView"
-            bind:on_TopRefresh="handleRegularTicketTopRefresh"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh" >
+            bind:on_BottomRefresh="handleTMegaBottomRefresh"
+            bind:on_TopRefresh="handleRegularTicketTopRefresh" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
     </FrameLayout>
 
