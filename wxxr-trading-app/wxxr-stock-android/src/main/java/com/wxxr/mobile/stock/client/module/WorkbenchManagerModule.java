@@ -17,7 +17,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
-import com.wxxr.mobile.stock.client.IStockAppContext;
+import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;

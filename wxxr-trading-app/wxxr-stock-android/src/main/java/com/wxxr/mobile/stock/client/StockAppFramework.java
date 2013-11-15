@@ -26,11 +26,13 @@ import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
+import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.IStockAppFramework;
+import com.wxxr.mobile.stock.app.service.impl.ArticleManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
-import com.wxxr.mobile.stock.client.service.impl.ArticleManagementServiceImpl;
-import com.wxxr.mobile.stock.client.service.impl.InfoCenterManagementServiceImpl;
-import com.wxxr.mobile.stock.client.service.impl.TradingManagementServiceImpl;
-import com.wxxr.mobile.stock.client.service.impl.UserManagementServiceImpl;
 
 /**
  * @author neillin
