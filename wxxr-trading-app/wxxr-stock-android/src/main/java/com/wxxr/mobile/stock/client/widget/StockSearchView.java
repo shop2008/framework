@@ -139,7 +139,6 @@ public class StockSearchView extends RelativeLayout implements
 			break;
 		case 55555:// 清空键
 			editable.clear();
-			editText.setText("");
 			break;
 		default:
 			// 打印键盘上内容
