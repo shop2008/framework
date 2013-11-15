@@ -277,5 +277,14 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 		}
 		super.destroy();
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DataField:[" + getName() + "]";
+	}
 	
 }
