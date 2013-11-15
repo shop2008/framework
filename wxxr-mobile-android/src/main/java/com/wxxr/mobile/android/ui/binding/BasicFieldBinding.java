@@ -133,8 +133,14 @@ public class BasicFieldBinding implements IFieldBinding {
 			this.field.setValueChangedCallback(new IBindingValueChangedCallback() {
 				
 				@Override
-				public void valueChanged(UIComponent component, AttributeKey<?>... keys) {
-					handleValueChangedCallback(component, keys);
+				public void valueChanged(final UIComponent component, final AttributeKey<?>... keys) {
+					AppUtils.runOnUIThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							handleValueChangedCallback(component, keys);
+						}
+					}, 0, null);
 				}
 			});
 		}
@@ -146,6 +152,10 @@ public class BasicFieldBinding implements IFieldBinding {
 	 */
 	@Override
 	public void deactivate() {
+		if(this.field != null){
+			this.field.setValueChangedCallback(null);
+			this.field = null;
+		}
 		if(this.viewModel != null){
 			this.viewModel = null;
 		}

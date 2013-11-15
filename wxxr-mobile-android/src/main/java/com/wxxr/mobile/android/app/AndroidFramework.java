@@ -288,7 +288,11 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	 */
 	@Override
 	public void runOnUIThread(Runnable task, long delay, TimeUnit unit) {
-		this.uiThreadHandler.postDelayed(safeRunnable(task), TimeUnit.MILLISECONDS.convert(delay, unit));
+		if(delay == 0){
+			this.uiThreadHandler.post(safeRunnable(task));
+		}else{
+			this.uiThreadHandler.postDelayed(safeRunnable(task), TimeUnit.MILLISECONDS.convert(delay, unit));
+		}
 	}
 
 	/* (non-Javadoc)
