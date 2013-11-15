@@ -102,6 +102,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 					model.setAlias(ann.alias());
 				}
 				model.setToolbarRequired(ann.withToolbar());
+				model.setSingleton(ann.singleton());
 				if(StringUtils.isNotBlank(ann.name())){
 					model.setId(StringUtils.trimToNull(ann.name()));
 				}else{

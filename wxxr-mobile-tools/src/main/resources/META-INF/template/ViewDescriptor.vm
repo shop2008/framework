@@ -34,6 +34,7 @@ public class ${model.name} extends AbstractViewDescriptor {
 	@Override
 	protected void init() {
 		setViewId("${model.viewModel.id}");
+		setSingleton(${model.viewModel.singleton});
 #if(${model.viewModel.description})
 		setViewDescription("${model.viewModel.description}");
 #end
