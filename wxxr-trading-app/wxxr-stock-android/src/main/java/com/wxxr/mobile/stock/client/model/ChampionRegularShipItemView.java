@@ -21,7 +21,7 @@ public abstract class ChampionRegularShipItemView extends ViewBase implements
 	@Field(valueKey = "text", binding="${regularTicket!=null?regularTicket.nickName:'--'}")
 	String nickName;
 
-	@Field(valueKey = "text", binding="${regularTicket!=null?regularTicket.gainCount:'--'}")
+	@Field(valueKey = "text", binding="${regularTicket!=null?regularTicket.gainCount:'--'}${'个正收益'}")
 	String gainCount;
 
 	@Field(valueKey = "text", binding="${regularTicket!=null?regularTicket.regular:'--'}")
