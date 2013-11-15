@@ -36,6 +36,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
+import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
@@ -162,15 +163,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			throws LoginException {
 		Callable<LoginException> task = new Callable<LoginException>() {
 			public LoginException call() throws Exception {
-				UserVO vo = null;
+				UserBaseInfoVO vo = null;
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
 						userId, pwd);
 				try {
 					vo = context.getService(IRestProxyService.class)
-							.getRestService(StockUserResource.class).getUser();
+							.getRestService(StockUserResource.class).info();
 				} catch (NotAuthorizedException e) {
+					log.warn("用户名或密码错误", e);
 					return new LoginException("用户名或密码错误");
 				} catch (Exception e) {
+					log.warn("登录异常",e);
 					return new LoginException("登录异常");
 				} finally {
 					UsernamePasswordCredential4Login = null;
@@ -198,7 +201,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		Future<LoginException> future = context.getExecutor().submit(task);
 		if (future != null) {
 			try {
-				LoginException e = future.get(1, TimeUnit.SECONDS);
+				LoginException e = future.get(7, TimeUnit.SECONDS);
 				if (e != null) {
 					if (log.isDebugEnabled()) {
 						log.debug("Login error", e);

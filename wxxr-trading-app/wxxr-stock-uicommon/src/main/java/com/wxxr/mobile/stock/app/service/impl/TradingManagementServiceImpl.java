@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
@@ -37,8 +38,7 @@ import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 public class TradingManagementServiceImpl extends
 		AbstractModule<IStockAppContext> implements ITradingManagementService {
 
-	private static final Trace log = Trace
-			.register(TradingManagementServiceImpl.class);
+	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	//=========================beans =======================
 	/**
 	 * 排行榜列表
@@ -52,6 +52,10 @@ public class TradingManagementServiceImpl extends
 	 * 成交详情
 	 */
 	private DealDetailBean dealDetailBean = new DealDetailBean();
+	/**
+	 * 清算详情
+	 */
+	private AuditDetailBean auditDetailBean = new AuditDetailBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -62,6 +66,7 @@ public class TradingManagementServiceImpl extends
 	protected void startService() {		
 		context.registerService(ITradingManagementService.class, this);
 		List<TradingAccountBean> t0_list = myTradingAccounts.getT0TradingAccounts();
+		
 		if (t0_list==null) {
 			t0_list = mockData(0);
 			myTradingAccounts.setT0TradingAccounts(t0_list);
@@ -100,7 +105,17 @@ public class TradingManagementServiceImpl extends
 	private AtomicLong seq = new AtomicLong(0);
 	public TradingAccountListBean getTradingAccountList() {
 		if (context.getApplication().isInDebugMode()) {
+			List<TradingAccountBean> ss_list = myTradingAccounts.getSuccessTradingAccountBeans();
 			
+			if (ss_list==null) {
+				ss_list = mockData(0);
+				myTradingAccounts.setT0TradingAccounts(ss_list);
+			}
+			List<TradingAccountBean> all_list = myTradingAccounts.getAllTradingAccounts();
+			if (all_list==null) {
+				all_list = mockData(0);
+				myTradingAccounts.setT0TradingAccounts(all_list);
+			}
 			return myTradingAccounts;
 		}
 		
@@ -368,19 +383,7 @@ public class TradingManagementServiceImpl extends
 		t.setDate(System.currentTimeMillis());
 		t.setBeDone(true);
 		t.setDay(0);
-		/*private long date;// 日期
-		private String market;// 股票市场
-		private String code;// 股票代码
-		private String describe;// 成交方向：
-		private long price;// 成交价格
-		private long vol;// 成交量
-		private long amount;// 成交金额
-		private long brokerage;// 佣金
-		private long tax;// 印花税
-		private long fee;// 过户费
-		private int day;// 1:表示t日,0:表示t+1日
-		private boolean beDone;// 订单是否完成，DONE为true；否则为false
-*/		t.setCode("600521");
+		t.setCode("600521");
 		t.setFee(3990);
 		t.setPrice(1256);
 		t.setTax(1230);
@@ -389,6 +392,19 @@ public class TradingManagementServiceImpl extends
 		t.setDescribe("买入成交");
 		list.add(t);
 		return list;
+	}
+
+	@Override
+	public AuditDetailBean getAuditDetail(String accId) {
+		auditDetailBean.setAccountPay("122.3");
+		auditDetailBean.setBuyDay("2013-11-12");
+		auditDetailBean.setDeadline("2013-11-13");
+		auditDetailBean.setBuyAverage("39.9");
+		auditDetailBean.setId("123");
+		auditDetailBean.setFrozenAmount("0");
+		auditDetailBean.setFund("10万");
+		
+		return auditDetailBean;
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -54,6 +55,12 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	DealDetailBean getDealDetail(String accId);
+	/**
+	 * 获取清算详情
+	 * @param accId-交易盘Id
+	 * @return
+	 */
+	AuditDetailBean getAuditDetail(String accId);
 	/**
 	 * 创建交易盘
 	 * 

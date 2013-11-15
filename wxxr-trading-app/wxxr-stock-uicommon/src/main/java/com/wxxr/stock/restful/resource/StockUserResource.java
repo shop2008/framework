@@ -2,6 +2,7 @@ package com.wxxr.stock.restful.resource;
 
 import java.util.List;
 
+import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
@@ -29,8 +30,8 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 public interface StockUserResource {
 
 	/**
-	 * 用户使用手机号注册，如果没有注册过，则直接使用短信把密码发给他
-	 * 如果已经注册过，就告诉客户端已经注册
+	 * 用户使用手机号注册，如果没有注册过，则直接使用短信把密码发给他 如果已经注册过，就告诉客户端已经注册
+	 * 
 	 * @param phoneNum
 	 *            用户手机号
 	 * @return 所创建用户的缺省信息--UserBaseInfoVO--->String
@@ -39,7 +40,10 @@ public interface StockUserResource {
 	@GET
 	@Path("/regUser")
 	@Produces({ "application/json" })
-	public SimpleResultVo register(@QueryParam("phone") String phoneNum) throws RestBizException;
+	@Consumes({ "application/json" })
+	public SimpleResultVo register(@QueryParam("phone") String phoneNum)
+			throws RestBizException;
+
 	/**
 	 * 用户首次使用时缺省注册流程，系统首先验证SHA1值是否正确，然后注册缺省用户，并将信息返回给手机客户端
 	 * 
@@ -51,120 +55,140 @@ public interface StockUserResource {
 	@GET
 	@Path("/resetPass")
 	@Produces({ "application/json" })
-	public Response resetPassword(@QueryParam("phone") String phoneNum) throws RestBizException;
+	@Consumes({ "application/json" })
+	public Response resetPassword(@QueryParam("phone") String phoneNum)
+			throws RestBizException;
 
 	/**
-	 * 用户登陆后绑定客户端app
-	 * 		所有的信息在ejb那里取得
-	 * @return 
+	 * 用户登陆后绑定客户端app 所有的信息在ejb那里取得
+	 * 
+	 * @return
 	 * @throws Exception
 	 */
 	@GET
 	@Path("/bindApp")
 	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public Response bindApp() throws RestBizException;
+
 	/**
-	 * 用户登陆后绑定客户端app
-	 * 		所有的信息在ejb那里取得
-	 * @return 
+	 * 用户登陆后绑定客户端app 所有的信息在ejb那里取得
+	 * 
+	 * @return
 	 * @throws Exception
 	 */
 	@GET
 	@Path("/unbindApp")
 	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public Response unbindApp() throws RestBizException;
-	
+
 	/**
-	 * 用户登陆后绑定客户端app
-	 * 		所有的信息在ejb那里取得
-	 * @return 
+	 * 用户登陆后绑定客户端app 所有的信息在ejb那里取得
+	 * 
+	 * @return
 	 * @throws Exception
 	 */
 	@GET
 	@Path("/isBindApp")
 	@Produces({ "application/json" })
-	public SimpleResultVo isBindApp() throws RestBizException ;
-	
+	@Consumes({ "application/json" })
+	public SimpleResultVo isBindApp() throws RestBizException;
 
-
-	
 	@POST
 	@Path("/regist")
 	@Produces({ "application/json" })
-	public Response regist(RegistVO query) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public Response regist(RegistVO query) throws RestBizException;
 
 	@GET
 	@Path("/info")
 	@Produces({ "application/json" })
-	public UserBaseInfoVO info() throws RestBizException ;
+	@Consumes({ "application/json" })
+	public UserBaseInfoVO info() throws RestBizException;
 
 	@POST
 	@Path("/updatePwd")
 	@Produces({ "application/json" })
-	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException;
 
 	@GET
 	@Path("/getuserpermis")
 	@Produces({ "application/json" })
-	public UserPermisVO getUserPermis() throws RestBizException ;
-
+	@Consumes({ "application/json" })
+	public UserPermisVO getUserPermis() throws RestBizException;
 
 	@POST
 	@Path("/bindmobile")
 	@Produces({ "application/json" })
-	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
 
 	@POST
 	@Path("/changebindmobile")
 	@Produces({ "application/json" })
-	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo)
+			throws RestBizException;
 
 	@POST
 	@Path("/verify")
 	@Produces({ "application/json" })
-	public ResultBaseVO verifyUser(VerifyVO vo) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public ResultBaseVO verifyUser(VerifyVO vo) throws RestBizException;
+
 	@GET
 	@Path("/token")
 	@Produces({ "application/json" })
-	public ResultBaseVO token() throws RestBizException ;
-	
+	@Consumes({ "application/json" })
+	public ResultBaseVO token() throws RestBizException;
+
 	@POST
 	@Path("/pollAndPushToken")
 	@Produces({ "application/json" })
-	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException ;
+	@Consumes({ "application/json" })
+	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException;
 
 	@GET
 	@Path("/getmobile")
 	@Produces({ "application/json" })
-	public UserBaseInfoVO getMobile() throws RestBizException ;
-	
+	@Consumes({ "application/json" })
+	public UserBaseInfoVO getMobile() throws RestBizException;
+
 	@POST
 	@Path("/updateNickName")
 	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public ResultBaseVO updateNickName(UserParamVO vo);
 
-    @GET
-    @Path("/getUser")
-    @Produces( { "application/json" })
+	@GET
+	@Path("/getUser")
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public UserVO getUser() throws Exception;
-	
+
 	@GET
 	@Path("/getActivityUser")
-	@Produces( { "application/json" })
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public ActivityUserVo getActivityUser() throws Exception;
-	
+
 	@POST
 	@Path("/userAttrIdentify")
-	@Produces( { "application/json" })
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public ResultBaseVO userAttributeIdentify(UserAuthenticaVO vo);
-	
+
 	@POST
 	@Path("/updateAttrIdentify")
-	@Produces( { "application/json" })
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public ResultBaseVO updateAttributeIdentify(UserAuthenticaVO vo);
-	
+
 	@GET
 	@Path("/getUserAttributes")
-	@Produces( { "application/json" })
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
 	public List<UserAttributeVO> getUserAttributes() throws Exception;
 }

@@ -14,10 +14,11 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class ClosedSumInfoVO implements Serializable{
 	
 	private static final long serialVersionUID = -4958155134857709147L;
-	/**成交详情*/
+	/**清算详情*/
 	@XmlElement(name = "auditDetailVO")
 	private AuditDetailVO auditDetailVO;
-	/**清算详情*/
+	
+	/**成交详情*/
 	@XmlElement(name = "dealDetailVO")
 	private DealDetailVO dealDetailVO;
 	
