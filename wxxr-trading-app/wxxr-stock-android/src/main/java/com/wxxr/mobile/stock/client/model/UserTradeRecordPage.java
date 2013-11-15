@@ -15,7 +15,7 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="userTradeRecordPage")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 
 	@Bean(type=BindingType.Service)
