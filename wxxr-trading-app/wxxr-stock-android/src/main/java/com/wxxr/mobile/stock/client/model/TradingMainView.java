@@ -20,7 +20,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -51,16 +51,16 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountList()}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getHomePageTradingAccountList()}")
 	TradingAccountListBean tradingAccount;
 
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
-	List<TradingAccountBean> tradingT;
+	List<TradingAccInfoBean> tradingT;
 	
 	/**获取T+1日数据*/
 
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccountBeans:null}")
-	List<TradingAccountBean> tradingT1;
+	List<TradingAccInfoBean> tradingT1;
 	
 	
 	
@@ -108,8 +108,8 @@ public abstract class TradingMainView extends ViewBase{
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
 				if(tradingT1!=null && tradingT1.size()>0){
-					TradingAccountBean tempTradingA = tradingT1.get(position);
-					this.type = tempTradingA.getType();
+					TradingAccInfoBean tempTradingA = tradingT1.get(position);
+					this.type = tempTradingA.getVirtual()?0:1;
 				}
 			}
 			resutl.setResult("operationDetails");

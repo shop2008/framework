@@ -123,7 +123,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	}
 	@Override
 	public String getApplicationName() {
-			return "ComHelper";
+			return "MobileStock";
 	}
 	
 	@Override
