@@ -28,6 +28,7 @@ public class ${model.name} extends AbstractViewDescriptor {
 	protected IView createPModel(IWorkbenchRTContext ctx) {
 		${model.viewModel.name} view= new ${model.viewModel.name}();
 		view.setName(getViewId());
+		view.setEnableSelectionProvider(${model.viewModel.provideSelection});
 		return view;
 	}
 
@@ -35,7 +36,6 @@ public class ${model.name} extends AbstractViewDescriptor {
 	protected void init() {
 		setViewId("${model.viewModel.id}");
 		setSingleton(${model.viewModel.singleton});
-		setEnableSelectionProvider(${model.viewModel.provideSelection});
 #if(${model.viewModel.description})
 		setViewDescription("${model.viewModel.description}");
 #end

@@ -28,6 +28,7 @@ public class ${model.name} extends AbstractPageDescriptor {
 	protected IPage createPModel(IWorkbenchRTContext ctx) {
 		${model.viewModel.name} page= new ${model.viewModel.name}();
 		page.setName(getViewId());
+		page.setEnableSelectionProvider(${model.viewModel.provideSelection});
 		return page;
 	}
 
@@ -35,7 +36,6 @@ public class ${model.name} extends AbstractPageDescriptor {
 	protected void init() {
 		setViewId("${model.viewModel.id}");
 		setSingleton(${model.viewModel.singleton});
-		setEnableSelectionProvider(${model.viewModel.provideSelection});
 #if(${model.viewModel.description})
         setViewDescription("${model.viewModel.description}");
 #end

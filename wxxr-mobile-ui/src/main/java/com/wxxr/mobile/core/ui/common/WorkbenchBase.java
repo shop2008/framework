@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
@@ -27,6 +28,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	private static final Trace log = Trace.register(WorkbenchBase.class);
 	
 	private final IWorkbenchRTContext uiContext;
+	private final SelectionServiceSupport selectionService = new SelectionServiceSupport();
 	
 //	private String activePageId;
 	private Map<String, IPage> pages = new HashMap<String, IPage>();
@@ -152,6 +154,14 @@ public abstract class WorkbenchBase implements IWorkbench {
 			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view,params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK));
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getSelectionService()
+	 */
+	@Override
+	public ISelectionService getSelectionService() {
+		return this.selectionService;
 	}	
 
 }
