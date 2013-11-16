@@ -592,7 +592,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			provider.setSelection(impl);
 		}else if(selections.length == 1){
 			SimpleSelectionImpl impl = new SimpleSelectionImpl();
-			impl.setSelected(selections);
+			impl.setSelected(selections[0]);
 			provider.setSelection(impl);
 		}
 	}
