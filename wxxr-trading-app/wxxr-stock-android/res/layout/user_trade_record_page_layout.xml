@@ -56,8 +56,9 @@
                     android:checked="false"
                     android:gravity="center"
                     android:text="@string/tab_success_operation_text"
-                    bind:field="sucRecords"
-                    bind:on_Click="showSucRecords" />
+                    bind:field="sucRecordBtn"
+                    bind:on_Click="showSucRecords" 
+                    />
 
                 <View
                     android:layout_width="1dip"
@@ -73,7 +74,7 @@
                     android:checked="false"
                     android:gravity="center"
                     android:text="@string/tab_whole_operation_text"
-                    bind:field="allRecords"
+                    bind:field="allRecordBtn"
                     bind:on_Click="showAllRecords" />
             </RadioGroup>
 
@@ -125,7 +126,7 @@
                     android:background="@drawable/abs_divider_hor_btn" />
 
                 <TextView
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_btn_horizontal"
@@ -144,6 +145,7 @@
                     android:visibility="visible"
                     bind:field="successRecordsList"
                     bind:itemViewId="tradeRecordItemView"
+                    bind:on_ItemClick="sucRecordItemClicked"
                     bind:on_BottomRefresh="handleSucBottomRefresh"
                     bind:on_TopRefresh="handleSucTopRefresh" >
                 </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
@@ -154,6 +156,7 @@
                     android:visibility="visible"
                     bind:field="allRecordsList"
                     bind:itemViewId="tradeRecordItemView"
+                    bind:on_ItemClick="allRecordItemClicked"
                     bind:on_BottomRefresh="handleAllBottomRefresh"
                     bind:on_TopRefresh="handleAllTopRefresh" >
                 </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
