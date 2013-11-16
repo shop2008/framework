@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.http.auth.AUTH;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -28,11 +30,14 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
+import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 
 /**
@@ -66,6 +71,10 @@ public class TradingManagementServiceImpl extends
 	 * 清算详情
 	 */
 	private AuditDetailBean auditDetailBean = new AuditDetailBean();
+	/**
+	 * 创建交易盘的数值
+	 */
+	private UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -428,6 +437,22 @@ public class TradingManagementServiceImpl extends
 		}
 		return list;
 	}
+		private List<TradingRecordBean> mockTradingRecord(){
+			List<TradingRecordBean> list = new ArrayList<TradingRecordBean>();
+			TradingRecordBean t = new TradingRecordBean();
+			t.setDate(System.currentTimeMillis());
+			t.setBeDone(true);
+			t.setDay(0);
+			t.setCode("600521");
+			t.setFee(3990);
+			t.setPrice(1256);
+			t.setTax(1230);
+			t.setVol(3500);
+			t.setAmount(12000000);
+			t.setDescribe("买入成交");
+			list.add(t);
+			return list;
+		}
 
 	public List<MegagameRankBean> mockRankData(String t)
 			throws StockAppBizException {
@@ -519,21 +544,38 @@ public class TradingManagementServiceImpl extends
 		bean.setRegular(vo.getRegular());
 		return bean;
 	}
+	private void checkLogin(){
+		if (!getService(UserManagementServiceImpl.class).isLogin()) {
+			getService(IWorkbenchManager.class).getWorkbench().showPage("", null, null);
+		}
+	}
 	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
-		UserCreateTradAccInfoBean info = new UserCreateTradAccInfoBean();
-		info.setCapitalRate(0.05f);
-		info.setCostRate(0.00399f);
-		info.setDepositRate(0.05f);
-		info.setMaxAmount(30000000l);
-		info.setRateString("0.08;0.10,0.12;0.13,0.05;0.08");
-		info.setVoucherCostRate(0.00399f);
-		return info;
+		checkLogin();
+		context.invokeLater(new Runnable() {			
+			public void run() {
+				UserCreateTradAccInfoVO vo = null;
+				try {
+					vo = context.getService(IRestProxyService.class).getRestService(TradingResourse.class).getCreateStrategyInfo();
+					if (vo!=null) {
+						createTDConfig.setCapitalRate(vo.getCapitalRate());
+						createTDConfig.setCostRate(vo.getCostRate());
+						createTDConfig.setDepositRate(vo.getDepositRate());
+						createTDConfig.setMaxAmount(vo.getMaxAmount());
+						createTDConfig.setRateString(vo.getRateString());
+						createTDConfig.setVoucherCostRate(0.00399f);
+					}
+				} catch (Throwable e) {
+					log.warn("Failed to create trading account",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+			}
+		}, 0, TimeUnit.SECONDS);
+		return createTDConfig;
 	}
 
 	@Override
 	public TradingAccountListBean getMyTradingAccountList()
 			throws StockAppBizException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -558,76 +600,227 @@ public class TradingManagementServiceImpl extends
 		dealDetailBean.setTradingRecords(mockTradingRecord());
 		return dealDetailBean;
 	}
-	private List<TradingRecordBean> mockTradingRecord(){
-		List<TradingRecordBean> list = new ArrayList<TradingRecordBean>();
-		TradingRecordBean t = new TradingRecordBean();
-		t.setDate(System.currentTimeMillis());
-		t.setBeDone(true);
-		t.setDay(0);
-		t.setCode("600521");
-		t.setFee(3990);
-		t.setPrice(1256);
-		t.setTax(1230);
-		t.setVol(3500);
-		t.setAmount(12000000);
-		t.setDescribe("买入成交");
-		list.add(t);
-		return list;
-	}
-
+	
 	@Override
-	public AuditDetailBean getAuditDetail(String accId) {
-		log.info("getAuditDetail: accid= "+accId);
-		auditDetailBean.setAccountPay("122.3");
-		auditDetailBean.setBuyDay("2013-11-12");
-		auditDetailBean.setDeadline("2013-11-13");
-		auditDetailBean.setBuyAverage("39.9");
-		auditDetailBean.setId("123");
-		auditDetailBean.setFrozenAmount("0");
-		auditDetailBean.setFund("10万");
+	public AuditDetailBean getAuditDetail(final String acctId) {
+		if (context.getApplication().isInDebugMode()) {
+			log.info("getAuditDetail: accid= "+acctId);
+			auditDetailBean.setAccountPay("122.3");
+			auditDetailBean.setBuyDay("2013-11-12");
+			auditDetailBean.setDeadline("2013-11-13");
+			auditDetailBean.setBuyAverage("39.9");
+			auditDetailBean.setId("123");
+			auditDetailBean.setFrozenAmount("0");
+			auditDetailBean.setFund("10万");
+			return auditDetailBean;
+		}
+		context.invokeLater(new Runnable() {
+			public void run() {
+				AuditDetailVO vo = null;
+				try {
+					vo = getRestService(TradingResourse.class).getAuditDetail(acctId);
+				} catch (Throwable e) {
+					log.warn("Failed to fetch audit detail info",e);
+				}
+				if (vo!=null) {
+					auditDetailBean.setAccountPay(vo.getAccountPay());
+					auditDetailBean.setBuyDay(vo.getBuyDay());
+					auditDetailBean.setBuyAverage(vo.getBuyAverage());
+					auditDetailBean.setCapitalRate(vo.getCapitalRate());
+					auditDetailBean.setCost(vo.getCost());
+					auditDetailBean.setDeadline(vo.getDeadline());
+					auditDetailBean.setFrozenAmount(vo.getFrozenAmount());
+					auditDetailBean.setFund(vo.getFund());					
+					auditDetailBean.setId(vo.getId());
+					auditDetailBean.setPayOut(vo.getPayOut());
+					auditDetailBean.setPlRisk(vo.getPlRisk());
+					auditDetailBean.setSellAverage(vo.getSellAverage());
+					auditDetailBean.setTotalGain(vo.getTotalGain());
+					auditDetailBean.setTradingCost(vo.getTradingCost());
+					auditDetailBean.setTradingDate(vo.getTradingDate());
+					auditDetailBean.setType(vo.getType());
+					auditDetailBean.setUnfreezeAmount(vo.getFrozenAmount());
+					auditDetailBean.setUserGain(vo.getUserGain());
+					auditDetailBean.setVirtual(vo.isVirtual());
+					
+				}
+			}
+		}, 0, TimeUnit.SECONDS);
 		
 		return auditDetailBean;
 	}
 
 	@Override
-	public void createTradingAccount(Long captitalAmount, float capitalRate,
-			boolean virtual, float depositRate) throws StockAppBizException {
-		
+	public void createTradingAccount(final Long captitalAmount, final float capitalRate,
+			final boolean virtual, final float depositRate) throws StockAppBizException {
+			checkLogin();
+			context.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						StockResultVO vo = getRestService(TradingResourse.class).createTradingAccount(captitalAmount, capitalRate, virtual, depositRate);
+						if (vo!=null) {
+							if (vo.getSuccOrNot()==0) {
+								if (log.isDebugEnabled()) {
+									log.debug("Failed to create trading account, caused by "+vo.getCause());
+								}
+								throw new StockAppBizException(vo.getCause());
+							}
+							if (vo.getSuccOrNot()==1) {
+								if (log.isDebugEnabled()) {
+									log.debug("Create trading account successfully.");
+								}
+							}
+						}
+					} catch (Throwable e) {
+						log.warn("Failed to create trading account",e);
+						throw new StockAppBizException(e.getMessage());
+					}
+					
+					
+				}
+			}, 0, TimeUnit.SECONDS);
+	
+	}
+	private <T> T getRestService(Class<T> restResouce){
+		return context.getService(IRestProxyService.class).getRestService(restResouce);
+	}
+	@Override
+	public void buyStock(final String acctID, final String market, final String code,
+			 String price,String amount) throws StockAppBizException {
+		checkLogin();
+		//check validation
+		final long cPrice = Long.valueOf(price);//需要判断处理
+		final long c_amount = Long.valueOf(amount);
+		context.invokeLater(new Runnable() {
+			public void run() {
+				StockResultVO vo = null;
+				try {
+					vo = getRestService(TradingResourse.class).buyStock(acctID, market, code, cPrice, c_amount);
+					if (vo!=null) {
+						if (vo.getSuccOrNot()==0) {//表示失败
+							if (log.isDebugEnabled()) {
+								log.debug("Failed to buy stock, caused by "+vo.getCause());
+							}
+							throw new StockAppBizException(vo.getCause());
+						}
+						if (vo.getSuccOrNot()==1) {//表示成功
+							if (log.isDebugEnabled()) {
+								log.debug("Buy stock successfully.");
+							}
+						}
+					}
+				} catch (Exception e) {
+					log.warn("Failed to buy stock",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+				
+			}
+		}, 0, TimeUnit.SECONDS);
 		
 	}
 
 	@Override
-	public void buyStock(String acctID, String market, String code,
+	public void sellStock(final String acctID, final String market, final String code,
 			String price, String amount) throws StockAppBizException {
 		
-		
+		checkLogin();
+		//check validation
+		final long cPrice = Long.valueOf(price);//需要判断处理
+		final long c_amount = Long.valueOf(amount);
+		context.invokeLater(new Runnable() {
+			public void run() {
+				StockResultVO vo = null;
+				try {
+					vo = getRestService(TradingResourse.class).sellStock(acctID, market, code, cPrice, c_amount);
+					if (vo!=null) {
+						if (vo.getSuccOrNot()==0) {//表示失败
+							if (log.isDebugEnabled()) {
+								log.debug("Failed to sell stock, caused by "+vo.getCause());
+							}
+							throw new StockAppBizException(vo.getCause());
+						}
+						if (vo.getSuccOrNot()==1) {//表示成功
+							if (log.isDebugEnabled()) {
+								log.debug("Sell stock successfully.");
+							}
+						}
+					}
+				} catch (Exception e) {
+					log.warn("Failed to sell stock",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+				
+			}
+		}, 0, TimeUnit.SECONDS);
 	}
 
 	@Override
-	public void sellStock(String acctID, String market, String code,
-			String price, String amount) throws StockAppBizException {
-		// TODO Auto-generated method stub
-		
+	public void cancelOrder(final String orderID) throws StockAppBizException {
+		checkLogin();
+		//check validation
+		context.invokeLater(new Runnable() {
+			public void run() {
+				StockResultVO vo = null;
+				try {
+					vo = getRestService(TradingResourse.class).cancelOrder(orderID);
+					if (vo!=null) {
+						if (vo.getSuccOrNot()==0) {//表示失败
+							if (log.isDebugEnabled()) {
+								log.debug("Failed to cancel order, caused by "+vo.getCause());
+							}
+							throw new StockAppBizException(vo.getCause());
+						}
+						if (vo.getSuccOrNot()==1) {//表示成功
+							if (log.isDebugEnabled()) {
+								log.debug("Cancel order successfully.");
+							}
+						}
+					}
+				} catch (Exception e) {
+					log.warn("Failed to cancel order",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+				
+			}
+		}, 0, TimeUnit.SECONDS);
 	}
 
 	@Override
-	public void cancelOrder(String orderID) throws StockAppBizException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void quickBuy(Long captitalAmount, String capitalRate,
-			boolean virtual, String stockMarket, String stockCode,
-			String stockBuyAmount, String depositRate)
+	public void quickBuy(final Long captitalAmount,  String capitalRate,
+			final boolean virtual, final String stockMarket, final String stockCode,
+			 String stockBuyAmount,  String depositRate)
 			throws StockAppBizException {
-		// TODO Auto-generated method stub
+		checkLogin();
+		//check validation
+		final float _capitalRate= Float.valueOf(capitalRate);
+		final long _stockBuyAmount = Long.valueOf(stockBuyAmount);
+		final float _depositRate = Float.valueOf(depositRate);
+		context.invokeLater(new Runnable() {
+			public void run() {
+				StockResultVO vo = null;
+				try {
+					vo = getRestService(TradingResourse.class).quickBuy(captitalAmount, _capitalRate, virtual, stockMarket, stockCode, _stockBuyAmount, _depositRate);
+					if (vo!=null) {
+						if (vo.getSuccOrNot()==0) {//表示失败
+							if (log.isDebugEnabled()) {
+								log.debug("Failed to cancel order, caused by "+vo.getCause());
+							}
+							throw new StockAppBizException(vo.getCause());
+						}
+						if (vo.getSuccOrNot()==1) {//表示成功
+							if (log.isDebugEnabled()) {
+								log.debug("Cancel order successfully.");
+							}
+						}
+					}
+				} catch (Throwable e) {
+					log.warn("Failed to cancel order",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+				
+			}
+		}, 0, TimeUnit.SECONDS);
 		
 	}
-
-	
-
-	
-	
 
 }
