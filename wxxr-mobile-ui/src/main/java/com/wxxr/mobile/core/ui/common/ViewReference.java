@@ -10,6 +10,7 @@ import java.util.Set;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
+import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -285,5 +286,10 @@ public class ViewReference implements IViewReference {
 	@Override
 	public void setValueChangedCallback(IBindingValueChangedCallback cb) {
 		
+	}
+
+	@Override
+	public ISelectionProvider getSelectionProvider() {
+		return delegate.getSelectionProvider();
 	}	
 }
