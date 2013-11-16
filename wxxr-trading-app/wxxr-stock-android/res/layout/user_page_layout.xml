@@ -96,7 +96,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@color/gray"
+                    android:background="@color/mid_gray"
                     android:padding="8dp" >
 
                     <LinearLayout
@@ -154,7 +154,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/gray"
+                    android:background="@color/mid_gray"
                     android:padding="8dp" >
 
                     <TextView
@@ -285,7 +285,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/gray"
+                    android:background="@color/mid_gray"
                     android:padding="8dp" >
 
                     <TextView

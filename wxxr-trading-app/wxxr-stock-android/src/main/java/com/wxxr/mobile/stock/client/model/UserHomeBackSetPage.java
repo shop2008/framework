@@ -2,63 +2,82 @@ package com.wxxr.mobile.stock.client.model;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserPicBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.UserIcon;
 
 
-@View(name="user_home_set")
+@View(name="userHomeSet")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_home_set_layout")
-public abstract class UserHomeBackSetPage extends PageBase implements IModelUpdater {
+public abstract class UserHomeBackSetPage extends PageBase {
 
-	
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
+	UserBean user;
 	
 	@Field(valueKey="options")
-	List<UserPicBean> systemImages;
+	List<UserIcon> systemImages;
 	
 	
 	
 	DataField<List> systemImagesField;
 	
-	@Field
-	String selectHomeBack;
+	String selectHomeBack = null;
 
-	
-
-	
 	@OnShow
 	protected void initData() {
 		
-		systemImages = new ArrayList<UserPicBean>();
+		if(user != null) {
+			String curHomeBack = user.getHomeBack();
+			if (curHomeBack!=null) {
+				selectHomeBack = curHomeBack;
+			} else {
+				selectHomeBack = "resourceId:drawable/back1";
+			}
+		} else {
+			selectHomeBack = "resourceId:drawable/back1";
+		}
+		systemImages = new ArrayList<UserIcon>();
 		for(int i=0;i<4;i++) {
 			String s = "resourceId:drawable/back"+(i+1);
-			UserPicBean userPic = new UserPicBean();
-			userPic.setImageURI(s);
+			UserIcon userIcon = new UserIcon();
+			userIcon.setImageURI(s);
 			
 			if (this.selectHomeBack != null && this.selectHomeBack.equals(s)) {
-				userPic.setIsPicChecked(true);
+				userIcon.setPicChecked(true);
 			} else {
-				userPic.setIsPicChecked(false);
+				userIcon.setPicChecked(false);
 			}
-			systemImages.add(userPic);
+			systemImages.add(userIcon);
 		}
 		systemImagesField.setValue(systemImages);
 	}
 	
-	@Command(commandName="back")
+	@Command
 	String back(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -68,31 +87,16 @@ public abstract class UserHomeBackSetPage extends PageBase implements IModelUpda
 		return null;
 	}
 	
-	
-	@Command(commandName="selected")
+	@Command
 	String selected(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
-			finish();
+			if (user != null) {
+				user.setHomeBack(selectHomeBack);
+			}
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
-	}
-	
-	private void finish() {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-	}
-	
-	@OnHide
-	public void hide() {
-		if (selectHomeBack != null) {
-			this.setAttribute(AttributeKeys.name, ""+selectHomeBack);
-		}
-	}
-	@Override
-	public void updateModel(Object value) {
-		Map<String, String> map = (Map<String, String>)value;
-		this.selectHomeBack = map.get("curHomeBack");
 	}
 	
 	@Command(commandName="imageSelected")
@@ -100,20 +104,20 @@ public abstract class UserHomeBackSetPage extends PageBase implements IModelUpda
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
-			UserPicBean userPic = this.systemImages.get(position);
-			if (userPic.getIsPicChecked()) {
-				userPic.setIsPicChecked(false);
+			UserIcon userIcon = this.systemImages.get(position);
+			if (userIcon.isPicChecked()) {
+				userIcon.setPicChecked(false);
 				selectHomeBack = null;
 			} else {
-				userPic.setIsPicChecked(true);
-				selectHomeBack = userPic.getImageURI();
+				userIcon.setPicChecked(true);
+				selectHomeBack = userIcon.getImageURI();
 			}
 			
 			for(int i=0;i<this.systemImages.size();i++) {
 				
 				if (i != position) {
-					UserPicBean unSelectedItem = this.systemImages.get(i);
-					unSelectedItem.setIsPicChecked(false);
+					UserIcon unSelectedItem = this.systemImages.get(i);
+					unSelectedItem.setPicChecked(false);
 				}
 			}
 			

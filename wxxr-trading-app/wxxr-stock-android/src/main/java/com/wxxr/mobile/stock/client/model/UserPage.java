@@ -1,37 +1,23 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import android.text.TextUtils;
 
-import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.api.ApplicationFactory;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnCreate;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.api.AttributeKey;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 /**
  * 个人主页
@@ -40,72 +26,76 @@ import com.wxxr.mobile.stock.client.utils.ColorUtils;
  */
 @View(name = "userPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
-public abstract class UserPage extends PageBase implements IModelUpdater {
+public abstract class UserPage extends PageBase  {
 
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.fetchUserInfo}")
+	@Bean(type=BindingType.Service)
+	ITradingManagementService tradingService;
+	
+	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
+	
+	@Bean(type=BindingType.Pojo, express="${tradingService.tradingAccountList}")
+	TradingAccountListBean tradingAccount;
 	/**
 	 * 用户形象照
 	 */
-	@Field(valueKey = "imageURI", binding="${user!=null?user.userPic:null}")
-	String userIcon;
+	@Field(valueKey = "imageURI", binding="${user!=null?user.userPic!=null?user.userPic:'resourceId:drawable/head1':'resourceId:drawable/head1'}")
+	String userIcon = "resourceId:drawable/head1";
 
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.homeBack:null}")
+	@Field(valueKey = "text", binding="${user!=null?user.nickName!=null?user.nickName:'--':'--'}")
 	String userNickName;
 
 	/**
 	 * 累计实盘积分
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.totoalScore:null}")
+	@Field(valueKey = "text", binding="${user!=null?user.totoalScore!=null?user.totoalScore:'--':'--'}")
 	String totalScore;
 
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.totoalProfit:null}")
+	@Field(valueKey = "text", binding="${user!=null?user.totoalProfit!=null?user.totoalProfit:'--':'--'}")
 	String totalProfit;
 
 	/**
 	 * 挑战交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.challengeShared:null}")
+	@Field(valueKey = "text", binding="${user!=null?user.challengeShared!=null?user.challengeShared:'--':'--'}")
 	String challengeSharedNum;
 
 	/**
 	 * 参赛交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.joinShared:null}")
+	@Field(valueKey = "text", binding="${user!=null?user.joinShared!=null?user.joinShared:'--':'--'}")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding="${user!=null?user.joinTradeInfos:null}")
+	@Field(valueKey = "options", binding="${tradingAccount!=null?tradingAccount.virtualTradingAccountBeans:null}")
 	List<TradingAccountBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding="${user!=null?user.challengeTradeInfos:null}")
+	@Field(valueKey = "options", binding="${tradingAccount!=null?tradingAccount.realTradingAccountBeans:null}")
 	List<TradingAccountBean> challengeTradeInfos;
 
-	@Field(valueKey = "visible", binding="${(user!=null&&user.challengeTradeInfos.size>0) ? true:false}")
+	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?true:false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${(user!=null&&user.challengeTradeInfos.size>0) ? false:true}")
+	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?false:true}")
 	boolean cNoSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${(user!=null&&user.joinTradeInfos.size>0) ? true:false}")
+	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?true:false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${(user!=null&&user.joinTradeInfos.size>0) ? false:false}")
+	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?false:false}")
 	boolean jNoSharedVisiable;
 
-
-
-	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack:null}")
-	String userHomeBack;
+	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
+	String userHomeBack = "resourceId:drawable/back1";
 
 	/**
 	 * 标题栏-"返回"按钮事件处理
@@ -154,17 +144,13 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 		
 			navigations = { 
 					@Navigation(
-							on = "SUCCESS", 
-							showPage = "userSelfDefine",
-							params = { 
-									@Parameter(name = "curUserIcon", value = "${user.userIcon}"),
-									@Parameter(name = "curUserHomeBack", value = "${user.userHomeBack}")
-									}
+							on = "OK", 
+							showPage = "userSelfDefine"
 							) 
 					}
 			)
 	String personalSet(InputEvent event) {
-		return "SUCCESS";
+		return "OK";
 	}
 
 	/**
@@ -211,14 +197,22 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	String challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
-
-			ApplicationFactory.getInstance().getApplication();
-
 			System.out.println((Integer) event.getProperty("position"));
 		}
 		return null;
 	}
 
+	
+/*	protected void registerSelectionListener(){
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("userSelfDefine",new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(String providerId, ISelection selection) {
+				
+			}
+		});
+	}*/
+	
 	/**
 	 * 设置昵称
 	 * 
@@ -238,11 +232,5 @@ public abstract class UserPage extends PageBase implements IModelUpdater {
 	String setNickName(InputEvent event) {
 		
 		return "SUCCESS";
-	}
-
-	@Override
-	public void updateModel(Object value) {
-		
-		
 	}
 }
