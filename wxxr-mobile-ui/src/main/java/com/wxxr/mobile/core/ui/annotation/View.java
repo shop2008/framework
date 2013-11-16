@@ -26,4 +26,5 @@ public @interface View {
 	boolean withToolbar() default false;
 	String[] alias() default {};
 	boolean singleton() default false;
+	boolean provideSelection() default false;
 }

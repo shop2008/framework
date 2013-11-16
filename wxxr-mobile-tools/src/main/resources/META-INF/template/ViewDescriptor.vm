@@ -35,6 +35,7 @@ public class ${model.name} extends AbstractViewDescriptor {
 	protected void init() {
 		setViewId("${model.viewModel.id}");
 		setSingleton(${model.viewModel.singleton});
+		setEnableSelectionProvider(${model.viewModel.provideSelection});
 #if(${model.viewModel.description})
 		setViewDescription("${model.viewModel.description}");
 #end

@@ -34,7 +34,7 @@ public class ViewModelClass extends AbstractClassModel {
 	boolean traceRequired,toolbarRequired;
 	private String applicationId;
 	private String id;
-	private boolean isPage,singleton;
+	private boolean isPage,singleton, provideSelection;
 	private String description;
 	private String[] alias;
 //	private final ViewModelDomainResolver domainResolver;
@@ -456,6 +456,20 @@ public class ViewModelClass extends AbstractClassModel {
 	 */
 	public void setSingleton(boolean singleton) {
 		this.singleton = singleton;
+	}
+
+	/**
+	 * @return the provideSelection
+	 */
+	public boolean isProvideSelection() {
+		return provideSelection;
+	}
+
+	/**
+	 * @param provideSelection the provideSelection to set
+	 */
+	public void setProvideSelection(boolean provideSelection) {
+		this.provideSelection = provideSelection;
 	}
 
 //	/**
