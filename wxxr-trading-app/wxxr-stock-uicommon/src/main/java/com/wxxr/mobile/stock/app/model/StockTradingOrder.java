@@ -21,6 +21,10 @@ public class StockTradingOrder{
 	 */
 	private String stockCode;
 	/**
+	 * 股票名称
+	 */
+	private String stockName;
+	/**
 	 * 市场代码
 	 */
 	private String marketCode;
