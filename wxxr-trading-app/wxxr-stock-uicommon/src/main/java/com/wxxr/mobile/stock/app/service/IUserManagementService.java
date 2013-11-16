@@ -3,8 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import javax.security.auth.login.LoginException;
-
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
@@ -46,16 +44,15 @@ public interface IUserManagementService {
 	 * 用户登陆
 	 * @param userId
 	 * @param pwd
-	 * @throws LoginException
+	 * @throws StockAppBizException
 	 */
-	void login(String userId,String pwd) throws LoginException;
+	void login(String userId,String pwd) throws StockAppBizException;
 	/**
 	 * 退出登陆
 	 * @param userId
 	 * @param pwd
-	 * @throws LoginException
 	 */
-	void logout() throws LoginException;
+	void logout();
 	/**
 	 * 修改密码
 	 * @param oldPwd - 旧密码

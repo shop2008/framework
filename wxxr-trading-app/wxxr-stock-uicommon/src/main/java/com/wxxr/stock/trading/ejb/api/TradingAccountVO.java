@@ -66,7 +66,7 @@ public class TradingAccountVO implements Serializable{
 	@XmlElement(name = "maxStockCode")
 	private String maxStockCode;
 	/**
-	 * 最大持股名称
+	 * 最大持股市场
 	 */
 	@XmlElement(name = "maxStockMarket")
 	private String maxStockMarket;

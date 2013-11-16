@@ -11,8 +11,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import javax.security.auth.login.LoginException;
-
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
 import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
@@ -22,6 +20,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.RestBizException;
@@ -63,6 +62,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(IRestProxyService.class);
 	}
 
 	@Override
@@ -159,10 +159,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public void login(final String userId, final String pwd)
-			throws LoginException {
-		Callable<LoginException> task = new Callable<LoginException>() {
-			public LoginException call() throws Exception {
+	public void login(final String userId, final String pwd) throws StockAppBizException {
+		Callable<StockAppBizException> task = new Callable<StockAppBizException>() {
+			public StockAppBizException call() throws Exception {
 				UserBaseInfoVO vo = null;
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
 						userId, pwd);
@@ -170,16 +169,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					vo = context.getService(IRestProxyService.class)
 							.getRestService(StockUserResource.class).info();
 				} catch (NotAuthorizedException e) {
-					log.warn("用户名或密码错误", e);
-					return new LoginException("用户名或密码错误");
-				} catch (Exception e) {
-					log.warn("登录异常",e);
-					return new LoginException("登录异常");
+					log.warn("用户名或密码错误",e);
+					return new StockAppBizException("用户名或密码错误");
 				} finally {
 					UsernamePasswordCredential4Login = null;
 				}
-				if (vo == null) {
-					return new LoginException("登录异常");
+				if (vo == null) {//未登录成功，弹出登陆对话框
+					getService(IWorkbenchManager.class).getWorkbench().showPage("userLoginPage", null, null);
 				}
 				// 根据用户密码登录成功
 				Dictionary<String, String> pref = getPrefManager()
@@ -198,10 +194,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				return null;
 			}
 		};
-		Future<LoginException> future = context.getExecutor().submit(task);
+		Future<StockAppBizException> future = context.getExecutor().submit(task);
 		if (future != null) {
 			try {
-				LoginException e = future.get(7, TimeUnit.SECONDS);
+				StockAppBizException e = future.get(7, TimeUnit.SECONDS);
 				if (e != null) {
 					if (log.isDebugEnabled()) {
 						log.debug("Login error", e);
@@ -209,7 +205,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					throw e;
 				}
 			} catch (Exception e) {
-				throw new LoginException("登陆超时");
+				log.warn("连接超时",e);
 			}
 		}
 
@@ -400,7 +396,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public void logout() throws LoginException {
+	public void logout(){
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {

@@ -3,9 +3,12 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.List;
+
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.service.ITradingRecordManagementService;
 
 /**
@@ -48,6 +51,13 @@ public class TradingRecordManagementServiceImpl extends AbstractModule<IStockApp
 	protected void stopService() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<TradingRecordBean> getTradingAccountRecord(String acctID,
+			int start, int limit) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

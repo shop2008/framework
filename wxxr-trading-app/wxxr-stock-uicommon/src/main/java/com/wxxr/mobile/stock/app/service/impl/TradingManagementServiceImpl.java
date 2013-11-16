@@ -6,7 +6,6 @@ package com.wxxr.mobile.stock.app.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -20,6 +19,8 @@ import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
@@ -27,12 +28,17 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
+import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 
 /**
  * 交易管理模块
  * 
- * @author wangxuyang
+ * @author wangxuyang 
  * 
  */
 public class TradingManagementServiceImpl extends
@@ -48,6 +54,10 @@ public class TradingManagementServiceImpl extends
 	 * 我的交易盘列表
 	 */
 	private TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
+	/**
+	 * 我的交易盘详情
+	 */
+	private TradingAccountBean myTradingAccount = new TradingAccountBean();
 	/**
 	 * 成交详情
 	 */
@@ -65,33 +75,6 @@ public class TradingManagementServiceImpl extends
 	@Override
 	protected void startService() {		
 		context.registerService(ITradingManagementService.class, this);
-		List<TradingAccountBean> t0_list = myTradingAccounts.getT0TradingAccounts();
-		
-		if (t0_list==null) {
-			t0_list = mockData(0);
-			myTradingAccounts.setT0TradingAccounts(t0_list);
-		}
-		List<TradingAccountBean> t1_list = myTradingAccounts.getT1TradingAccountBeans();
-		if (t1_list==null) {
-			t1_list = mockData(1);
-			myTradingAccounts.setT1TradingAccountBeans(t1_list);
-		}
-		timer.scheduleAtFixedRate(new TimerTask() {
-			
-			public void run() {
-				// ====mock T日实盘，未结算，盈利
-				TradingAccountBean	t0ta = new TradingAccountBean();
-				seq.getAndDecrement();
-				t0ta.setId(1l);
-				t0ta.setInitCredit(100000);
-				t0ta.setIncome(3000.01f);
-				t0ta.setStockCode(String.format("000%d", seq.get()));
-				t0ta.setStockName("无限新锐"+seq.get());
-				t0ta.setType(1);// 实盘
-				t0ta.setStatus(0);// 未结算
-				myTradingAccounts.getT0TradingAccounts().add(t0ta);
-			}
-		}, 5000, 5000);
 	}
 
 	@Override
@@ -102,28 +85,11 @@ public class TradingManagementServiceImpl extends
 
 	// =================interface method =====================================
 	private Timer timer = new Timer();
-	private AtomicLong seq = new AtomicLong(0);
 	public TradingAccountListBean getTradingAccountList() {
-		if (context.getApplication().isInDebugMode()) {
-			List<TradingAccountBean> ss_list = myTradingAccounts.getSuccessTradingAccountBeans();
-			
-			if (ss_list==null) {
-				ss_list = mockData(0);
-				myTradingAccounts.setT0TradingAccounts(ss_list);
-			}
-			List<TradingAccountBean> all_list = myTradingAccounts.getAllTradingAccounts();
-			if (all_list==null) {
-				all_list = mockData(0);
-				myTradingAccounts.setT0TradingAccounts(all_list);
-			}
-			return myTradingAccounts;
-		}
-		
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					
 					List<TradingAccInfoVO> vo = getService(IRestProxyService.class).getRestService(
 							TradingResourse.class).getTradingAccountList();
 					if (vo!=null) {
@@ -143,60 +109,213 @@ public class TradingManagementServiceImpl extends
 
 		return myTradingAccounts;
 	}
-	
-	private TradingAccountBean fromVO(TradingAccInfoVO vo){
-		if (vo==null) {
-			return null;
-		}
-		TradingAccountBean bean = new TradingAccountBean();
-		bean.setId(vo.getAcctID());
-		bean.setIncome(vo.getTotalGain()/100.0f);
-		bean.setStockName(vo.getMaxStockName());
-		bean.setStockCode(vo.getMaxStockCode());
-		bean.setStatus("CLOSED".equals(vo.getOver())?1:0);
-		bean.setType(vo.getStatus()==1?0:1);
-		//bean.setCreateDate(vo.getCreateDate());
-		return bean;
-	}
 	@Override
-	public TradingAccountBean getTradingAccount(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public TradingAccountListBean getHomePageTradingAccountList()
+			throws StockAppBizException {
+		//如果未登录
+		context.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					List<TradingAccInfoVO> volist = getService(IRestProxyService.class).getRestService(
+							TradingResourse.class).getTradingAccountList();
+					if (volist!=null&&volist.size()>0) {
+						List<TradingAccInfoBean> t0_list = new ArrayList<TradingAccInfoBean>();
+						List<TradingAccInfoBean> t1_list = new ArrayList<TradingAccInfoBean>();
+						for (TradingAccInfoVO vo : volist) {
+							if (vo.getStatus()==1) {
+								t0_list.add(fromVO(vo));
+							}else{
+								t1_list.add(fromVO(vo));
+							}
+						}
+						myTradingAccounts.setT0TradingAccounts(t0_list);
+						myTradingAccounts.setT1TradingAccountBeans(t1_list);
+					}
+				} catch (Throwable e) {
+					log.error("fetch data error",e);
+				}
+			}
+		}, 0, TimeUnit.SECONDS);
+		return myTradingAccounts;
 	}
 
-	@Override
-	public Long createTradingAccount(String type, String credit, String stops,
-			String fee1, String freezing) throws StockAppBizException {
-		return null;
-	}
-
-	@Override
 	public RankListBean getTMegagameRank() throws StockAppBizException {
-		rank.setTRankBeans(mockRankData("T"));
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					List<MegagameRankVO> volist = getService(IRestProxyService.class).getRestService(TradingResourse.class).getTMegagameRank();
+					if (volist!=null&&volist.size()>0) {
+						List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
+						int rankNo = 1;
+						for (MegagameRankVO vo : volist) {
+							MegagameRankBean bean = fromVO(vo);
+							bean.setRankSeq(rankNo++);
+							beanList.add(bean);
+						}
+						rank.setTRankBeans(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Error when fetching week rank",e);
+				}			
+			}
+		}, 0, TimeUnit.SECONDS);
 		return rank;
 	}
-
 	@Override
 	public RankListBean getT1MegagameRank() throws StockAppBizException {
-		rank.setT1RankBeans(mockRankData("T+1"));
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					List<MegagameRankVO> volist = getService(IRestProxyService.class).getRestService(TradingResourse.class).getTPlusMegagameRank();
+					if (volist!=null&&volist.size()>0) {
+						List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
+						int rankNo = 1;
+						for (MegagameRankVO vo : volist) {
+							MegagameRankBean bean = fromVO(vo);
+							bean.setRankSeq(rankNo++);
+							beanList.add(bean);
+						}
+						rank.setT1RankBeans(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Error when fetching week rank",e);
+				}			
+			}
+		}, 0, TimeUnit.SECONDS);
 		return rank;
 	}
 
 	@Override
 	public RankListBean getRegularTicketRank()
 			throws StockAppBizException {
-		rank.setRegularTicketBeans(mockRegularTicketRank());
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					List<RegularTicketVO> volist = getService(IRestProxyService.class).getRestService(TradingResourse.class).getRegularTicketRank();
+					if (volist!=null&&volist.size()>0) {
+						List<RegularTicketBean> beanList = new ArrayList<RegularTicketBean>();
+						int rankNo = 1;
+						for (RegularTicketVO vo : volist) {
+							RegularTicketBean bean = fromVO(vo);
+							bean.setRankSeq(rankNo++);
+							beanList.add(bean);
+						}
+						rank.setRegularTicketBeans(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Error when fetching week rank",e);
+				}			
+			}
+
+			
+		}, 0, TimeUnit.SECONDS);
 		return rank;
 	}
 
 	@Override
 	public RankListBean getWeekRank() throws StockAppBizException {
-		rank.setWeekRanKBeans(mockWeekRank());
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					List<WeekRankVO> volist = getService(IRestProxyService.class).getRestService(TradingResourse.class).getWeekRank();
+					if (volist!=null&&volist.size()>0) {
+						List<WeekRankBean> beanList = new ArrayList<WeekRankBean>();
+						int rankNo =1;
+						for (WeekRankVO weekRankVO : volist) {
+							WeekRankBean bean = fromVO(weekRankVO);
+							bean.setRankSeq(rankNo++);
+							beanList.add(bean);
+						}
+						rank.setWeekRanKBeans(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Error when fetching week rank",e);
+				}			
+			}
+		}, 0, TimeUnit.SECONDS);
 		return rank;
 	}
-
+	@Override
+	public TradingAccountBean getTradingAccountInfo(final String acctID)
+			throws StockAppBizException {
+			context.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						TradingAccountVO vo = getService(IRestProxyService.class).getRestService(TradingResourse.class).getAccount(acctID);
+						if (vo!=null) {
+							myTradingAccount.setId(vo.getId());
+							myTradingAccount.setApplyFee(vo.getApplyFee());
+							myTradingAccount.setAvalibleFee(vo.getAvalibleFee());
+							myTradingAccount.setBuyDay(vo.getBuyDay());
+							myTradingAccount.setFrozenVol(vo.getFrozenVol());
+							myTradingAccount.setGainRate(vo.getGainRate());
+							myTradingAccount.setLossLimit(vo.getLossLimit());
+							myTradingAccount.setMaxStockCode(vo.getMaxStockCode());
+							myTradingAccount.setMaxStockMarket(vo.getMaxStockMarket());
+							myTradingAccount.setOver(vo.getOver());
+							myTradingAccount.setSellDay(vo.getSellDay());
+							myTradingAccount.setStatus(vo.getStatus());
+							myTradingAccount.setTotalGain(vo.getTotalGain());
+							myTradingAccount.setType(vo.getType());
+							List<StockTradingOrderVO> orderVos = vo.getTradingOrders();
+							if (orderVos!=null) {
+								List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
+								for (StockTradingOrderVO order : orderVos) {
+									list.add(fromVO(order));
+								}
+								myTradingAccount.setTradingOrders(list);
+							}
+							myTradingAccount.setUsedFee(vo.getUsedFee());
+							myTradingAccount.setVirtual(vo.isVirtual());
+						}
+					} catch (Exception e) {
+						log.error(String.format("Error when fetch trading account info[id=%s]", acctID),e);
+						throw new StockAppBizException("网络不给力，请稍候再试");
+					}
+				}
+			}, 0, TimeUnit.SECONDS);
+			return myTradingAccount;
+	}
 	// =================private method =======================================
-	private List<TradingAccountBean> mockData(int type) {
+	private TradingAccInfoBean fromVO(TradingAccInfoVO vo){
+		if (vo==null) {
+			return null;
+		}
+		TradingAccInfoBean bean = new TradingAccInfoBean();
+		bean.setAcctID(vo.getAcctID());
+		bean.setCreateDate(vo.getCreateDate());
+		bean.setMaxStockCode(vo.getMaxStockCode());
+		bean.setMaxStockMarket(vo.getMaxStockMarket());
+		bean.setMaxStockName(vo.getMaxStockName());
+		bean.setOver(vo.getOver());
+		bean.setStatus(vo.getStatus());
+		bean.setSum(vo.getSum());
+		bean.setTotalGain(vo.getTotalGain());
+		bean.setVirtual(vo.isVirtual());
+		return bean;
+	}
+	
+	private StockTradingOrderBean fromVO(StockTradingOrderVO vo){
+		if (vo==null) {
+			return null;
+		}
+		StockTradingOrderBean bean = new StockTradingOrderBean();
+		bean.setAmount(vo.getAmount());
+		bean.setBuy(vo.getBuy());
+		bean.setChangeRate(vo.getChangeRate());
+		bean.setCurrentPirce(vo.getCurrentPirce());
+		bean.setGain(vo.getGain());
+		bean.setGainRate(vo.getGainRate());
+		bean.setId(vo.getId());
+		bean.setMarketCode(vo.getMarketCode());
+		bean.setStatus(vo.getStatus());
+		bean.setStockCode(vo.getStockCode());
+		return bean;
+	}
+	
+	/*	private List<TradingAccountBean> mockData(int type) {
 		List<TradingAccountBean> list = new ArrayList<TradingAccountBean>();
 		TradingAccountBean t0ta = null;
 		switch (type) {
@@ -297,16 +416,12 @@ public class TradingManagementServiceImpl extends
 			MegagameRankBean mr = new MegagameRankBean();
 			mr.setAcctID(1);
 			mr.setNickName("模拟用户" + i);
-			mr.setGainRate("+10.01%");
+			mr.setGainRate("3%");
 
 			if (t.equals("T")) {
-				mr.setRankSeq(i+1);
-				mr.setStatus(1);
 				mr.setMaxStockCode("600521");
 				mr.setMaxStockMarket("华海药业");
 			} else {
-				mr.setRankSeq(i+1);
-				mr.setStatus(0);
 				mr.setMaxStockCode("600175");
 				mr.setMaxStockMarket("美都控股");
 			}
@@ -321,7 +436,6 @@ public class TradingManagementServiceImpl extends
 		List<RegularTicketBean> list = new ArrayList<RegularTicketBean>();
 		for (int i = 0; i < 10; i++) {
 			RegularTicketBean mr = new RegularTicketBean();
-			mr.setRankSeq(i+1);
 			mr.setNickName("模拟用户" + i);
 			mr.setRegular(1000 * (10 - i));
 			mr.setGainCount(6 - i % 5);
@@ -331,19 +445,60 @@ public class TradingManagementServiceImpl extends
 	}
 
 	public List<WeekRankBean> mockWeekRank() throws StockAppBizException {
+		
 		List<WeekRankBean> list = new ArrayList<WeekRankBean>();
 		for (int i = 0; i < 10; i++) {
 			WeekRankBean mr = new WeekRankBean();
-			mr.setRankSeq(i+1);
 			mr.setDates("2013年11月04日-2013年11月08日");
 			mr.setGainCount(6 - i % 5);
 			mr.setNickName("模拟用户" + i);
-			mr.setGainRate(String.format("+%s", 15 - i) + "%");
+			mr.setGainRate(String.format("%s", 15 - i) + "%");
 			list.add(mr);
 		}
 		return list;
+	}*/
+	private WeekRankBean fromVO(WeekRankVO vo){
+		if (vo==null) {
+			return null;
+		}
+		WeekRankBean bean = new WeekRankBean();
+		bean.setDates(vo.getDates());
+		bean.setGainCount(vo.getGainCount());
+		bean.setGainRate(vo.getGainRate());
+		bean.setGainRates(vo.getGainRates());
+		bean.setNickName(vo.getNickName());
+		bean.setTotalGain(vo.getTotalGain());
+		bean.setUserId(vo.getUesrId());
+		return bean;
+	}	
+	private MegagameRankBean fromVO(MegagameRankVO vo) {
+		if (vo==null) {
+			return null;
+		}
+		MegagameRankBean bean = new MegagameRankBean();
+		bean.setAcctID(vo.getAcctID());
+		bean.setGainRate(vo.getGainRate());
+		bean.setGainRates(vo.getGainRates());
+		bean.setMaxStockCode(vo.getMaxStockCode());
+		bean.setMaxStockMarket(vo.getMaxStockMarket());
+		bean.setNickName(vo.getNickName());
+		bean.setOver(vo.getOver());
+		bean.setStatus(vo.getStatus());
+		bean.setTotalGain(vo.getTotalGain());
+		bean.setUserId(vo.getUesrId());
+		return bean;
 	}
 
+	private  RegularTicketBean fromVO(RegularTicketVO vo) {
+		if (vo==null) {
+			return null;
+		}
+		RegularTicketBean bean = new RegularTicketBean();
+		bean.setGainCount(vo.getGainCount());
+		bean.setNickName(vo.getNickName());
+		bean.setRegular(vo.getRegular());
+		return bean;
+	}
 	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
 		UserCreateTradAccInfoBean info = new UserCreateTradAccInfoBean();
 		info.setCapitalRate(0.05f);
@@ -412,5 +567,46 @@ public class TradingManagementServiceImpl extends
 		
 		return auditDetailBean;
 	}
+
+	@Override
+	public void createTradingAccount(Long captitalAmount, float capitalRate,
+			boolean virtual, float depositRate) throws StockAppBizException {
+		
+		
+	}
+
+	@Override
+	public void buyStock(String acctID, String market, String code,
+			String price, String amount) throws StockAppBizException {
+		
+		
+	}
+
+	@Override
+	public void sellStock(String acctID, String market, String code,
+			String price, String amount) throws StockAppBizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cancelOrder(String orderID) throws StockAppBizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void quickBuy(Long captitalAmount, String capitalRate,
+			boolean virtual, String stockMarket, String stockCode,
+			String stockBuyAmount, String depositRate)
+			throws StockAppBizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+	
+	
 
 }
