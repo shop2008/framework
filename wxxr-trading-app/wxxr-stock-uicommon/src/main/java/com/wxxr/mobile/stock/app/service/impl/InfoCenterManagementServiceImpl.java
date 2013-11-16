@@ -11,7 +11,8 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
-import com.wxxr.mobile.stock.app.bean.StockBean;
+import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 
 /**
@@ -22,82 +23,86 @@ public class InfoCenterManagementServiceImpl extends AbstractModule<IStockAppCon
 		implements IInfoCenterManagementService {
 
 	private static final Trace log = Trace.register(InfoCenterManagementServiceImpl.class);
+	private SearchStockListBean stockListbean = new SearchStockListBean();
 	//====================interface methods =====================
 	@Override
-	public List<StockBean> searchStock(String keyword) {
+	public SearchStockListBean searchStock(String keyword) {
 		// TODO Auto-generated method stub
-		List<StockBean> list = new ArrayList<StockBean>();
-		if(StringUtils.isEmpty(keyword))
-			return list;
-		List<StockBean> searchList = getAllMockData();
-		for(StockBean bean : searchList) {
+		List<StockBaseInfoBean> list = new ArrayList<StockBaseInfoBean>();
+		if(StringUtils.isEmpty(keyword)) {
+			stockListbean.setSearchResult(list);
+			return stockListbean;
+		}
+		List<StockBaseInfoBean> searchList = getAllMockData();
+		for(StockBaseInfoBean bean : searchList) {
 			if(bean.toString().contains(keyword)) {
 				list.add(bean);
 			}
 		}
-		return list;
+		stockListbean.setSearchResult(list);
+		return this.stockListbean;
 	}
 
-	private List<StockBean> getAllMockData() {
-		List<StockBean> searchList = new ArrayList<StockBean>();
-		StockBean s;
+	private List<StockBaseInfoBean> getAllMockData() {
+		List<StockBaseInfoBean> searchList = new ArrayList<StockBaseInfoBean>();
+		StockBaseInfoBean s;
 //		for(int i=0;i<10;i++) {
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("招商地产");
 			s.setCode("000024");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中山公用");
 			s.setCode("000685");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中色股份");
 			s.setCode("000758");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("武汉中商");
 			s.setCode("000785");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中水渔业");
 			s.setCode("000798");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("宗申动力");
 			s.setCode("001696");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("招商地产");
 			s.setCode("600024");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中山公用");
 			s.setCode("600685");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中色股份");
 			s.setCode("600758");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("武汉中商");
 			s.setCode("600785");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("中水渔业");
 			s.setCode("600798");
 			searchList.add(s);
 			
-			s = new StockBean();
+			s = new StockBaseInfoBean();
 			s.setName("宗申动力");
 			s.setCode("601696");
 			searchList.add(s);
