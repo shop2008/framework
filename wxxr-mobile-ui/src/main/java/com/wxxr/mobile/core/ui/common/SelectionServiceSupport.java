@@ -108,6 +108,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 			this.stack.remove(provider);
 		}
 		this.stack.push(provider);
+		provider.addSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -116,6 +117,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	@Override
 	public boolean unregisterProvider(ISelectionProvider provider) {
 		this.map.remove(provider.getProviderId());
+		provider.removeSelectionListener(this);
 		return this.stack.remove(provider);
 	}
 	
