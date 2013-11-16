@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.core.microkernel.api;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.api.ApplicationFactory;
@@ -32,5 +34,14 @@ public abstract class KUtils {
 	public static void invokeLater(Runnable task,long delay, TimeUnit unit){
 		getApplication().invokeLater(task, delay, unit);
 	}
+	
+	public static Future<?> executeTask(Runnable task){
+		return getApplication().getExecutor().submit(task);
+	}
+	
+	public static <V> Future<V> executeTask(Callable<V> task){
+		return getApplication().getExecutor().submit(task);
+	}
+
 
 }

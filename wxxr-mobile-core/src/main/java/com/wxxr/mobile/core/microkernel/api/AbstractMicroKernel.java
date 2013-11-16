@@ -133,6 +133,24 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 		@Override
 		public ICancellable invokeLater(final Runnable task, long delay, TimeUnit unit) {
+			if(delay == 0L){
+				try {
+					getExecutor().execute(task);
+				}catch(Throwable t){
+					log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
+				}
+				return new ICancellable() {
+					
+					@Override
+					public boolean isCancelled() {
+						return false;
+					}
+					
+					@Override
+					public void cancel() {
+					}
+				};
+			}
 			final TimerTask t = new TimerTask() {
 				
 				@Override
