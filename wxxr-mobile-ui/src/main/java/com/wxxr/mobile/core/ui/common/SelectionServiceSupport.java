@@ -149,7 +149,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 		this.map.put(providerId, selection);
 		final ISelectionChangedListener[] list = getAllListeners(providerId);
 		if((list != null)&&(list.length > 0)){
-			KUtils.invokeLater(new Runnable() {
+			KUtils.executeTask(new Runnable() {
 				
 				@Override
 				public void run() {
@@ -157,7 +157,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 						iSelectionChangedListener.selectionChanged(providerId, selection);
 					}
 				}
-			}, 0, null);
+			});
 		}
 		
 	}
