@@ -75,7 +75,16 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 				}
 			});
 		}else{
-			Object cmdResult = cmdHandler.execute(event);
+			Object cmdResult = null;
+			try {
+				cmdResult = cmdHandler.execute(event);
+			}catch(Throwable t){
+				log.warn("Command :"+cmdName+" executed failed", t);
+				CommandResult result = new CommandResult();
+				result.setResult("failed");
+				result.setPayload(t);
+				cmdResult = result;
+			}
 			processCommandResult(view, cmdHandler, cmdResult);
 		}
 	}
@@ -94,7 +103,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			payload = ((CommandResult)cmdResult).getPayload();
 		}
 		INavigationDescriptor[] navs = cmdHandler.getNavigations();
-		INavigationDescriptor nextNavigation = getNextNavigation(result, cmdHandler,navs);
+		INavigationDescriptor nextNavigation = getNextNavigation(result, payload,cmdHandler,navs);
 		if(nextNavigation != null){
 			String toPage = StringUtils.trimToNull(nextNavigation.getToPage());
 			String toView = StringUtils.trimToNull(nextNavigation.getToView());
@@ -213,10 +222,47 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 		return null;
 	}
 
-	public INavigationDescriptor getNextNavigation(String status,IUICommandHandler command,INavigationDescriptor[] navigationInfos) {
+	public INavigationDescriptor getNextNavigation(String status,Object payload,IUICommandHandler command,INavigationDescriptor[] navigationInfos) {
 		if((status == null)||(navigationInfos == null)||(navigationInfos.length == 0)){
 			return null;
 		}
+		INavigationDescriptor nav = null;
+		if(payload instanceof Throwable){
+			Class<?> clazz = payload.getClass();
+			String clazzName = clazz.getSimpleName();
+			while(true){
+				nav = findMatchNavigation(clazzName, navigationInfos);
+				if(nav != null){
+					break;
+				}else if("Exception".equals(clazzName)){
+					break;
+				}else{
+					clazz = clazz.getSuperclass();
+					clazzName = clazz.getSimpleName();
+				}
+			}
+			if(nav == null){
+				SimpleNavigationDescriptor simnav = new SimpleNavigationDescriptor();
+				simnav.setMessage("resourceId:messages/default_error_message");
+				simnav.setResult("Exception");
+				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED, 2);
+				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE, "resourceId:messages/default_error_message");
+				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_ICON, "resourceId:image/default_error_icon");
+				simnav.addParameterObject("result", payload);
+				nav = simnav;
+			}
+		}else{
+			nav = findMatchNavigation(status, navigationInfos);
+		}
+		return nav;
+	}
+	/**
+	 * @param status
+	 * @param navigationInfos
+	 * @return
+	 */
+	protected INavigationDescriptor findMatchNavigation(String status,
+			INavigationDescriptor[] navigationInfos) {
 		INavigationDescriptor possibleMatch = null;
 		for (INavigationDescriptor desc : navigationInfos) {
 			String thisStatus = desc.getResult();
