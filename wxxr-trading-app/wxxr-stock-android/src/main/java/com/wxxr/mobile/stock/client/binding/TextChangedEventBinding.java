@@ -53,7 +53,7 @@ public class TextChangedEventBinding implements IBinding<IView> {
 			if(log.isDebugEnabled()) {
 				log.debug("afterTextChanged , text is : " + text);
 			}
-			if (!TextUtils.isEmpty(text)) {
+//			if (!TextUtils.isEmpty(text)) {
 				SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_TEXT_CHANGED,
 						pModel);
 				editText.setSelection(text.length());
@@ -64,7 +64,7 @@ public class TextChangedEventBinding implements IBinding<IView> {
 				} else {
 					pModel.invokeCommand(commandName, event);
 				}
-			}	
+//			}	
 		}
 	};
 

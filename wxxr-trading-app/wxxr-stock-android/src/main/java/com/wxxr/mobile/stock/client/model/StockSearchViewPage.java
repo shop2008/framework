@@ -22,7 +22,8 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.StockBean;
+import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 
 /**
@@ -35,7 +36,7 @@ import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 public abstract class StockSearchViewPage extends PageBase {
 
 	private static Trace log = Trace.getLogger(StockSearchViewPage.class);
-	
+
 	@Bean
 	String key;
 	
@@ -50,11 +51,10 @@ public abstract class StockSearchViewPage extends PageBase {
 	IInfoCenterManagementService infoCenterService;
 	
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.searchStock(key)}")
-	List<StockBean> searchListBean;
+	SearchStockListBean searchListBean;
 	
-	@Field(valueKey="options", binding="${searchListBean != null ? searchListBean : null}")
-	List<StockBean> searchList;
-//	DataField<List> searchListField;
+	@Field(valueKey="options", binding="${searchListBean != null ? searchListBean.searchResult : null}")
+	List<StockBaseInfoBean> searchList;
 
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
@@ -79,9 +79,9 @@ public abstract class StockSearchViewPage extends PageBase {
 	String searchTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
 			String key = (String) event.getProperty("changedText");
-				registerBean("key", key);
-				getUIContext().getKernelContext()
-						.getService(IInfoCenterManagementService.class).searchStock(key);
+			registerBean("key", key);
+			if (infoCenterService != null)
+				infoCenterService.searchStock(key);
 		}
 		return null;
 	}
