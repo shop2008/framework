@@ -131,7 +131,8 @@
     <string name="label_bank_addr">所在地</string>
     <string name="label_bank_num">卡号</string>
     <string name="withdraw_cash_rules">提取现金重要须知</string>
-    
+    <string name="avalible_cash_amount">可提取现金：</string>
+    <string name="unit_yuan">元</string>
     <!-- 余额明细 -->
     <string name="tv_title_balance_detail">余额明细</string>
 

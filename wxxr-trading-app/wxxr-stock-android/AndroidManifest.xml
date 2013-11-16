@@ -82,11 +82,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             />
-        <activity
-            android:name=".ui.WithDrawCashPage"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
         
         <activity
             android:name=".ui.UserFindPswPage"
@@ -126,11 +121,16 @@
             android:screenOrientation="portrait" />
         
         <activity
-            android:name=".ui.WithDrawCashAuthPage"
+            android:name=".ui.UserWithDrawCashAuthPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
         
+        <activity
+            android:name=".ui.UserTradeRecordPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"
