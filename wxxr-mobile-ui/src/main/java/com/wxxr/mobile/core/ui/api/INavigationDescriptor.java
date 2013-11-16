@@ -16,4 +16,5 @@ public interface INavigationDescriptor {
 	String getToPage();
 	String getToDialog();
 	Map<String, Object> getParameters();
+	boolean getCloseCurrentView();
 }

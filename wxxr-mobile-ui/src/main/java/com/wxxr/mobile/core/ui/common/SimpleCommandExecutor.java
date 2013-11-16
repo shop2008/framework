@@ -100,11 +100,18 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			String toView = StringUtils.trimToNull(nextNavigation.getToView());
 			String toDialog = StringUtils.trimToNull(nextNavigation.getToDialog());
 			String message = StringUtils.trimToNull(nextNavigation.getMessage());
+			boolean closeCurrentView = nextNavigation.getCloseCurrentView();
 			Map<String, Object> params = getNavigationParameters(payload,nextNavigation);
 			if(toPage != null){
+				if(closeCurrentView){
+					IPage page = getPage(view);
+					if(page != null){
+						page.hide();
+					}
+				}
 				context.getWorkbenchManager().getWorkbench().showPage(toPage, params, null);
 			}else if(toView != null){
-				showView(view, toView, params);
+				showView(view, toView, params,closeCurrentView);
 			}else if(toDialog != null){
 				context.getWorkbenchManager().getWorkbench().createDialog(toDialog, params).show();
 			}else if(message != null){
@@ -147,7 +154,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 	}
 	
 	
-	protected void showView(IView sourceView,String toViewId,Map<String, Object> params) {
+	protected void showView(IView sourceView,String toViewId,Map<String, Object> params, boolean closeCurrentView) {
 		IPage page = getPage(sourceView);
 		IView v = page != null ? page.getView(toViewId) : null;
 		if(v == null){
@@ -164,6 +171,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			if("false".equalsIgnoreCase(val)){
 				add2backstack = false;
 			}
+		}
+		if(closeCurrentView&&(page != null)){
+			page.hideView(sourceView.getName());
 		}
 		page.showView(toViewId,add2backstack);
 

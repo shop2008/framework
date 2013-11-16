@@ -17,7 +17,7 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	
 	private String result,message,toView,toPage,toDialog;
 	private Map<String, Object> params;
-
+	private boolean closeCurrentView;
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.INavigationDescriptor#getParameters()
@@ -194,6 +194,22 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	 */
 	public void setToDialog(String toDialog) {
 		this.toDialog = toDialog;
+	}
+
+
+	/**
+	 * @return the closeCurrentView
+	 */
+	public boolean getCloseCurrentView() {
+		return closeCurrentView;
+	}
+
+
+	/**
+	 * @param closeCurrentView the closeCurrentView to set
+	 */
+	public void setCloseCurrentView(boolean closeCurrentView) {
+		this.closeCurrentView = closeCurrentView;
 	}
 
 }

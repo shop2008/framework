@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class NavigationModel {
 	private String result, toPage, toView, message,toDialog;
+	private boolean closeCurrentView;
 	private Map<String, Parameter> params;
 	/**
 	 * @return the result
@@ -87,5 +88,17 @@ public class NavigationModel {
 	 */
 	public void setToDialog(String toDialog) {
 		this.toDialog = toDialog;
+	}
+	/**
+	 * @return the closeCurrentView
+	 */
+	public boolean getCloseCurrentView() {
+		return closeCurrentView;
+	}
+	/**
+	 * @param closeCurrentView the closeCurrentView to set
+	 */
+	public void setCloseCurrentView(boolean closeCurrentView) {
+		this.closeCurrentView = closeCurrentView;
 	}
 }

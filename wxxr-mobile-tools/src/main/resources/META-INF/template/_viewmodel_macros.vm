@@ -225,6 +225,7 @@
 #if(${nav.message})
     navDesc.setMessage("${nav.message}");
 #end
+    navDesc.setCloseCurrentView(${nav.closeCurrentView});
 #if(${nav.params})
 #foreach($p in $nav.params)
     navDesc.addParameter("${p.name}","${p.value}");

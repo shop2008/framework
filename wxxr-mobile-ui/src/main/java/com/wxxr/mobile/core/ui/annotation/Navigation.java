@@ -15,4 +15,5 @@ public @interface Navigation {
 	String showPage() default "";
 	String showDialog() default "";
 	Parameter[] params() default {};
+	boolean closeCurrentView() default false;
 }
