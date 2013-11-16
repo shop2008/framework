@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.android.ui.binding;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
-import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IDataField;
@@ -28,7 +26,6 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.ui.common.UIComponent;
 
 /**
  * @author neillin
@@ -39,6 +36,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public static final String LIST_FOOTER_VIEW_ID = "footerViewId";
 	public static final String LIST_HEADER_VIEW_ID = "headerViewId";
 	private GenericListAdapter listAdapter;
+	private IListDataProvider provider;
 
 	public AdapterViewFieldBinding(IAndroidBindingContext ctx,
 			String fieldName, Map<String, String> attrSet) {
@@ -59,7 +57,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		String footerViewId = getBindingAttrs().get(LIST_FOOTER_VIEW_ID);
 		String headerViewId = getBindingAttrs().get(LIST_HEADER_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
-		IListDataProvider provider = comp.getAdaptor(IListDataProvider.class);
+		provider = comp.getAdaptor(IListDataProvider.class);
 		if (provider == null) {
 			provider = createAdaptorFromValue(comp);
 		}
@@ -93,6 +91,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 				((ListView) getUIControl()).addFooterView(view);
 			}
 		}
+		this.provider.updateDataIfNeccessary();
 		setupAdapter(listAdapter);
 	}
 
@@ -135,16 +134,17 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		((AbsListView) getUIControl()).setAdapter(adapter);
 	}
 	
-	protected List<Object> getListData(IUIComponent comp){
+	protected Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
-			return comp.getAttribute(AttributeKeys.options);
+			List<Object> result = comp.getAttribute(AttributeKeys.options);
+			return result != null ? result.toArray() : null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
-				return (List<Object>)val;
+				return ((List<Object>)val).toArray();
 			}else if((val != null)&&val.getClass().isArray()){
-				return Arrays.asList((Object[])val);
+				return (Object[])val;
 			}
 		}
 		return null;
@@ -157,7 +157,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 */
 	protected IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
 		return new IListDataProvider() {
-			List<Object>  data = null;
+			Object[]  data = null;
 			@Override
 			public Object getItemId(Object item) {
 				return null;
@@ -165,17 +165,22 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 
 			@Override
 			public int getItemCounts() {
-				data = getListData(comp);
-				return data != null ? data.size() : 0;
+				return data != null ? data.length : 0;
 			}
 
 			@Override
 			public Object getItem(int i) {
-				return data.get(i);
+				return data[i];
 			}
 
 			@Override
 			public boolean isItemEnabled(Object item) {
+				return true;
+			}
+
+			@Override
+			public boolean updateDataIfNeccessary() {
+				data = getListData(comp);
 				return true;
 			}
 		};
@@ -222,12 +227,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#handleValueChangedCallback(com.wxxr.mobile.core.ui.common.UIComponent, com.wxxr.mobile.core.ui.api.AttributeKey<?>[])
 	 */
 	@Override
-	protected void handleValueChangedCallback(UIComponent component,
-			AttributeKey<?>... keys) {
-		if(this.listAdapter != null){
+	protected void updateUI(boolean recursive) {
+		if((this.provider != null)&&this.provider.updateDataIfNeccessary()&&(this.listAdapter != null)){
 			this.listAdapter.notifyDataSetChanged();
 		}
-		super.handleValueChangedCallback(component, keys);
+		super.updateUI(recursive);
 	}
 
 }

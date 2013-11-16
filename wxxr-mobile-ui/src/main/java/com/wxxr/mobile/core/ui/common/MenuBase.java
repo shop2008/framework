@@ -89,13 +89,7 @@ public class MenuBase extends UIComponent implements IMenu {
 					
 					@Override
 					public int getItemCounts() {
-						items.clear();
-						for (String id : commandIds) {
-							IUICommand cmd = getCommand(id);
-							if((cmd != null)&&((cmd.getAttribute(AttributeKeys.visible) == null)||(cmd.getAttribute(AttributeKeys.visible) == true))){
-								items.add(id);
-							}
-						}
+						updateItems();
 						return items.size();
 					}
 					
@@ -110,6 +104,23 @@ public class MenuBase extends UIComponent implements IMenu {
 						Boolean enabled = cmd.getAttribute(AttributeKeys.enabled);
 						return (enabled == null)||(enabled.booleanValue() == true);
 					}
+
+					@Override
+					public boolean updateDataIfNeccessary() {
+						updateItems();
+						return true;
+					}
+
+					protected void updateItems() {
+						items.clear();
+						for (String id : commandIds) {
+							IUICommand cmd = getCommand(id);
+							if((cmd != null)&&((cmd.getAttribute(AttributeKeys.visible) == null)||(cmd.getAttribute(AttributeKeys.visible) == true))){
+								items.add(id);
+							}
+						}
+					}
+
 				};
 			}
 			return clazz.cast(this.provider);
@@ -183,4 +194,5 @@ public class MenuBase extends UIComponent implements IMenu {
 		IMenuHandler handler = getMenuHandler();
 		return handler != null ? handler.isMenuOnShow() : false;
 	}
+
 }

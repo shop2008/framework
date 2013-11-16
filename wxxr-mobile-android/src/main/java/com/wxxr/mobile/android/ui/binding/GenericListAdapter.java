@@ -6,7 +6,12 @@ package com.wxxr.mobile.android.ui.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wxxr.mobile.android.app.AppUtils;
+import android.content.Context;
+import android.database.DataSetObserver;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
@@ -16,16 +21,8 @@ import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
-import com.wxxr.mobile.core.ui.common.UIComponent;
-
-import android.content.Context;
-import android.database.DataSetObserver;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 /**
  * @author neillin
@@ -40,7 +37,6 @@ public class GenericListAdapter extends BaseAdapter {
 	private final Context uiContext;
 	private final String itemViewId;
 	private List<ObserverDataChangedListerWrapper> listeners;
-	private Integer lastItemCount;
 	
 	public GenericListAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
 		if((ctx == null)||(bCtx == null)||(prov == null)||(viewId == null)){
@@ -62,24 +58,7 @@ public class GenericListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		int cnt = this.provider.getItemCounts();
-		if(this.lastItemCount == null){
-			this.lastItemCount = cnt;
-			return cnt;
-		}else if(cnt != this.lastItemCount.intValue()){
-			int oldcnt = this.lastItemCount.intValue();
-			this.lastItemCount = cnt;
-			AppUtils.runOnUIThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					notifyDataSetChanged();
-					
-				}
-			}, 0, null);
-			return oldcnt;
-		}
-		return cnt;
+		return this.provider.getItemCounts();
 	}
 
 	/* (non-Javadoc)
@@ -102,31 +81,13 @@ public class GenericListAdapter extends BaseAdapter {
 		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
 		IViewBinder vBinder = this.context.getWorkbenchManager().getViewBinder();
-		binding = vBinder.createBinding(new IAndroidBindingContext() {
-			
-			@Override
-			public Context getUIContext() {
-				return uiContext;
-			}
-			
-			@Override
-			public View getBindingControl() {
-				return null;
-			}
-			@Override
-			public IWorkbenchManager getWorkbenchManager() {
-				return context.getWorkbenchManager();
-			}
-
-			@Override
-			public boolean isOnShow() {
-				return bindingCtx.isOnShow();
-			}
-		}, bDesc);
+		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
+		binding = vBinder.createBinding(ctx, bDesc);
 		binding.init(context);
 		View view = (View)binding.getUIControl();
 		BindingBag bag = new BindingBag();
 		bag.binding = binding;
+		bag.ctx = ctx;
 		view.setTag(bag);
 		return view;
 
@@ -147,8 +108,10 @@ public class GenericListAdapter extends BaseAdapter {
 		}
 		BindingBag bag = (BindingBag)view.getTag();
 		IBinding<IView> binding = bag.binding;
+		CascadeAndroidBindingCtx localCtx = bag.ctx;
 		if(existing){
 			binding.deactivate();
+			localCtx.setReady(false);
 		}
 		IView vModel = bag.view;
 		if(vModel == null){
@@ -156,16 +119,10 @@ public class GenericListAdapter extends BaseAdapter {
 			vModel.init(context);
 			bag.view = vModel;
 		}
-		boolean bool = UIComponent.disableEvents();
-		try {
-			vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
-			binding.activate(vModel);
-			return view;
-		}finally{
-			if(bool){
-				UIComponent.enableEvents();
-			}
-		}
+		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
+		binding.activate(vModel);
+		localCtx.setReady(true);
+		return view;
 	}
 	
 	
@@ -231,5 +188,7 @@ public class GenericListAdapter extends BaseAdapter {
 	private static class BindingBag {
 		IBinding<IView> binding;
 		IView view;
+		CascadeAndroidBindingCtx ctx;
 	}
+	
 }

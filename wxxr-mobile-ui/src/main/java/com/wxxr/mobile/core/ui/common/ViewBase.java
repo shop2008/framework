@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -75,81 +76,81 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 
-	private class EventQueue implements Runnable{
-		private LinkedList<ValueChangedEvent> pendingEvents;
-		private volatile Thread thread;
-
-		protected synchronized void addPendingEvent(ValueChangedEvent evt) {
-			if(pendingEvents == null){
-				this.pendingEvents = new LinkedList<ValueChangedEvent>();
-			}
-			pendingEvents.add(evt);
-		}
-
-		protected synchronized ValueChangedEvent[] getPendingEvents() {
-			ValueChangedEvent[] evts = null;
-			if((pendingEvents != null)&&(pendingEvents.size() > 0)){
-				ValueChangedEvent last = this.pendingEvents.getLast();
-				ValueChangedEvent first = this.pendingEvents.getFirst();
-				if(((System.currentTimeMillis() - first.getTimestamp()) > 2000L)||((System.currentTimeMillis() - last.getTimestamp()) > 500L)){
-					evts = this.pendingEvents.toArray(new ValueChangedEvent[0]);
-					this.pendingEvents.clear();
-				}
-			}
-			return evts;
-		}
-
-
-		@Override
-		public void run() {
-			this.thread = Thread.currentThread();
-			while(this.thread != null){
-				try {
-					ValueChangedEvent[] evts = getPendingEvents();
-					if(evts != null){
-						if(binding != null){
-							if(getLog().isDebugEnabled()){
-								getLog().debug("fire data changed events :"+StringUtils.join(evts));
-							}
-							binding.notifyDataChanged(evts);
-						}
-					}else{
-						try {
-							Thread.sleep(60L);
-						} catch (InterruptedException e) {
-						}
-					}
-				}catch(Throwable t){
-					getLog().error("Caught exception at event loop of viewbase", t);
-				}
-			}
-			if((this.pendingEvents != null)&&(this.pendingEvents.size() > 0)){
-				if(binding != null){
-					binding.notifyDataChanged(this.pendingEvents.toArray(new ValueChangedEvent[0]));
-				}
-				this.pendingEvents.clear();
-				this.pendingEvents = null;
-			}
-		}
-
-		public synchronized void start() {
-			new Thread(this).start();
-		}
-
-		public synchronized void stop() {
-			if(this.thread != null){
-				Thread t = this.thread;
-				this.thread = null;
-				if(t.isAlive()){
-					t.interrupt();
-					try {
-						t.join(1000L);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}
-	}
+//	private class EventQueue implements Runnable{
+//		private LinkedList<ValueChangedEvent> pendingEvents;
+//		private volatile Thread thread;
+//
+//		protected synchronized void addPendingEvent(ValueChangedEvent evt) {
+//			if(pendingEvents == null){
+//				this.pendingEvents = new LinkedList<ValueChangedEvent>();
+//			}
+//			pendingEvents.add(evt);
+//		}
+//
+//		protected synchronized ValueChangedEvent[] getPendingEvents() {
+//			ValueChangedEvent[] evts = null;
+//			if((pendingEvents != null)&&(pendingEvents.size() > 0)){
+//				ValueChangedEvent last = this.pendingEvents.getLast();
+//				ValueChangedEvent first = this.pendingEvents.getFirst();
+//				if(((System.currentTimeMillis() - first.getTimestamp()) > 2000L)||((System.currentTimeMillis() - last.getTimestamp()) > 500L)){
+//					evts = this.pendingEvents.toArray(new ValueChangedEvent[0]);
+//					this.pendingEvents.clear();
+//				}
+//			}
+//			return evts;
+//		}
+//
+//
+//		@Override
+//		public void run() {
+//			this.thread = Thread.currentThread();
+//			while(this.thread != null){
+//				try {
+//					ValueChangedEvent[] evts = getPendingEvents();
+//					if(evts != null){
+//						if(binding != null){
+//							if(getLog().isDebugEnabled()){
+//								getLog().debug("fire data changed events :"+StringUtils.join(evts));
+//							}
+//							binding.notifyDataChanged(evts);
+//						}
+//					}else{
+//						try {
+//							Thread.sleep(60L);
+//						} catch (InterruptedException e) {
+//						}
+//					}
+//				}catch(Throwable t){
+//					getLog().error("Caught exception at event loop of viewbase", t);
+//				}
+//			}
+//			if((this.pendingEvents != null)&&(this.pendingEvents.size() > 0)){
+//				if(binding != null){
+//					binding.notifyDataChanged(this.pendingEvents.toArray(new ValueChangedEvent[0]));
+//				}
+//				this.pendingEvents.clear();
+//				this.pendingEvents = null;
+//			}
+//		}
+//
+//		public synchronized void start() {
+//			new Thread(this).start();
+//		}
+//
+//		public synchronized void stop() {
+//			if(this.thread != null){
+//				Thread t = this.thread;
+//				this.thread = null;
+//				if(t.isAlive()){
+//					t.interrupt();
+//					try {
+//						t.join(1000L);
+//					} catch (InterruptedException e) {
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	private BeanNameResolver beanNameResolver = new BeanNameResolver() {
 
@@ -172,7 +173,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	};
 	private IViewBinding binding;
 	private Map<String, IUICommandHandler> commands;
-	private EventQueue eventQueue;
+//	private EventQueue eventQueue;
 	private IMenuCallback menuCallback;
 	private ELManager elm;
 	private Map<String, Object> beans;
@@ -403,10 +404,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				}
 			}
 			this.menuCallback = null;
-			if(this.eventQueue != null){
-				this.eventQueue.stop();
-				this.eventQueue = null;
-			}
+//			if(this.eventQueue != null){
+//				this.eventQueue.stop();
+//				this.eventQueue = null;
+//			}
 			return true;
 		}
 		return false;
@@ -440,15 +441,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					}
 				}
 			}
-			return;
+//			return;
 		}
-		if(this.binding != null){
-			if(this.eventQueue == null){
-				this.eventQueue = new EventQueue();
-				this.eventQueue.start();
-			}
-			this.eventQueue.addPendingEvent(event);
-		}
+//		if(this.binding != null){
+//			if(this.eventQueue == null){
+//				this.eventQueue = new EventQueue();
+//				this.eventQueue.start();
+//			}
+//			this.eventQueue.addPendingEvent(event);
+//		}
 	}
 
 	protected void forceValueEvalution() {
@@ -517,5 +518,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	public IBinding<IView> getBinding() {
 		return this.binding;
 	}
+	
+	@Override
+	public void setValueChangedCallback(IBindingValueChangedCallback cb) {
+		
+	}	
+
 
 }

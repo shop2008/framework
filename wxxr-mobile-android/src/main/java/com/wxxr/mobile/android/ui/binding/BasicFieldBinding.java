@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.ui.binding;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import android.view.View;
 
@@ -37,6 +38,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	protected Map<String, String> bindingAttrs;
 	protected String fieldName;
 	protected IUIComponent field;
+	protected boolean updateUIScheduled;
 	
 	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
 		this.pComponent = ctx.getBindingControl();
@@ -50,6 +52,24 @@ public class BasicFieldBinding implements IFieldBinding {
 			this.bindingAttrs = new HashMap<String, String>();
 		}
 		return this.bindingAttrs;
+	}
+	
+	protected synchronized void scheduleUIUpdating() {
+		if(updateUIScheduled == false){
+			updateUIScheduled = true;
+			AppUtils.runOnUIThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					doUIUpdating();
+				}
+			}, 300, TimeUnit.MILLISECONDS);
+		}
+	}
+	
+	protected synchronized void doUIUpdating() {
+		updateUI(true);
+		updateUIScheduled = false;
 	}
 	
 	private void doUpdateUI(final boolean recursive){
@@ -134,13 +154,7 @@ public class BasicFieldBinding implements IFieldBinding {
 				
 				@Override
 				public void valueChanged(final UIComponent component, final AttributeKey<?>... keys) {
-					AppUtils.runOnUIThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							handleValueChangedCallback(component, keys);
-						}
-					}, 0, null);
+					scheduleUIUpdating();
 				}
 			});
 		}
@@ -259,13 +273,5 @@ public class BasicFieldBinding implements IFieldBinding {
 	public void refresh() {
 		doUpdateUI(true);
 	}
-
-	/**
-	 * 
-	 */
-	protected void handleValueChangedCallback(UIComponent component, AttributeKey<?>... keys) {
-		// doUpdateUI(true);
-	}
-
 
 }
