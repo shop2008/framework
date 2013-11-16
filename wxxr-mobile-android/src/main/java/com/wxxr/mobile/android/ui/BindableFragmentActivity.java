@@ -215,10 +215,6 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Stopping activity ...");
 		}
 		this.onShow = false;
-		if(this.provider != null){
-			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
-			this.provider = null;
-		}
 		super.onStop();
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();
@@ -245,6 +241,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	protected final void onDestroy() {
 		if(log.isDebugEnabled()){
 			log.debug("Destroying activity ...");
+		}
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
+			this.provider = null;
 		}
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.destroy();
@@ -341,6 +341,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	protected void onResume() {
 		if(log.isDebugEnabled()){
 			log.debug("Resuming activity ...");
+		}
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
 		}
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.refresh();

@@ -129,7 +129,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 			result.addAll(list);
 		}
 		if("*".equals(providerId) == false){
-			list = this.listeners.get("*");
+			list = this.listeners != null ? this.listeners.get("*") : null;
 			if((list != null)&&(list.size() > 0)){
 				if(result == null){
 					result = new ArrayList<ISelectionChangedListener>();
