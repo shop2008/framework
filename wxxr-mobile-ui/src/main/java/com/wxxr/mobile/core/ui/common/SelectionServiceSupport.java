@@ -123,7 +123,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	
 	protected synchronized ISelectionChangedListener[] getAllListeners(String providerId){
 		ArrayList<ISelectionChangedListener> result = null;
-		List<ISelectionChangedListener> list = this.listeners.get(providerId);
+		List<ISelectionChangedListener> list = this.listeners != null ? this.listeners.get(providerId) : null;
 		if((list != null)&&(list.size() > 0)){
 			result = new ArrayList<ISelectionChangedListener>();
 			result.addAll(list);

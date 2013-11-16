@@ -116,6 +116,10 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onDestroy ...");
 		}
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
+			this.provider = null;
+		}
 		this.androidViewBinding.destroy();
 		super.onDestroy();
 	}
@@ -179,6 +183,9 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onResume ...");
 		}
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
+		}
 		if(this.androidViewBinding != null){
 			this.androidViewBinding.refresh();
 		}
@@ -235,10 +242,6 @@ public abstract class BindableFragment extends Fragment {
 			getLogger().debug("onStop ...");
 		}
 		this.onShow = false;
-		if(this.provider != null){
-			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
-			this.provider = null;
-		}
 		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
 		if(toolbar != null){
 			toolbar.dettach(getBindingView());
