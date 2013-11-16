@@ -243,10 +243,10 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			}
 			if(nav == null){
 				SimpleNavigationDescriptor simnav = new SimpleNavigationDescriptor();
-				simnav.setMessage("resourceId:messages/default_error_message");
+				simnav.setMessage("resourceId:message/default_error_message");
 				simnav.setResult("Exception");
 				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED, 2);
-				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE, "resourceId:messages/default_error_message");
+				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE, "resourceId:message/default_error_message");
 				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_ICON, "resourceId:image/default_error_icon");
 				simnav.addParameterObject("result", payload);
 				nav = simnav;

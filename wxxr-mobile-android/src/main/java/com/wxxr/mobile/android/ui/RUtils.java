@@ -32,6 +32,12 @@ public class RUtils {
 	public static final String CATEGORY_NAME_STYLEABLE ="styleable";
 	
 	private static final Trace log = Trace.register(RUtils.class);
+	private static final Map<String, String> categoryMapping = new HashMap<String, String>();
+	
+	static {
+		categoryMapping.put("message", "string");
+		categoryMapping.put("image", "drawable");
+	}
 	
 	private static HashMap<String, RUtils> map = new HashMap<String, RUtils>();
 	
@@ -71,6 +77,9 @@ public class RUtils {
 		if(idx > 0){
 			category = resourceURI.substring(0,idx);
 			resourceURI = resourceURI.substring(idx+1);
+			if(categoryMapping.containsKey(category)){
+				category = categoryMapping.get(category);
+			}
 		}
 		return getResourceId(category, resourceURI);
 	}

@@ -597,6 +597,13 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 	
+	protected void updateSelection(ISelection selection){
+		SelectionProviderSupport provider = getSelectionProvider();
+		if(provider == null){
+			throw new IllegalStateException("Selection provider must be enabled before update selection !");
+		}
+		provider.setSelection(selection);		
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IView#getSelectionProvider()
 	 */
