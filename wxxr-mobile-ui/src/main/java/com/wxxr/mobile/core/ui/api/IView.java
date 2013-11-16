@@ -21,5 +21,7 @@ public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	List<ValidationError> getErrors();
 	
 	void show(boolean backable);
+	
+	ISelectionProvider getSelectionProvider();
 
 }

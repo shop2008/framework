@@ -25,4 +25,5 @@ public interface IWorkbench {
 	void hidePage(String pageId);
 	IView createNInitializedView(String viewId);
 	IDialog createDialog(String viewId, Map<String, Object> params);
+	ISelectionService getSelectionService();
 }

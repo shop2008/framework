@@ -16,4 +16,5 @@ public interface ISelectionService {
 	ISelection getSelection(String providerId);
 	void registerProvider(ISelectionProvider provider);
 	boolean unregisterProvider(ISelectionProvider provider);
+	String getCurrentProviderId();
 }

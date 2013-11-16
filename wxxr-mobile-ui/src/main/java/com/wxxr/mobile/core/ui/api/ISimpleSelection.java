@@ -7,6 +7,6 @@ package com.wxxr.mobile.core.ui.api;
  * @author neillin
  *
  */
-public interface ISelection {
-	boolean isEmpty();
+public interface ISimpleSelection extends ISelection {
+	Object getSelected();
 }

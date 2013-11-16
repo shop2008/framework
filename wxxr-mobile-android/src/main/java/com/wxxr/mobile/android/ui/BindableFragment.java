@@ -18,6 +18,7 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
@@ -32,6 +33,8 @@ public abstract class BindableFragment extends Fragment {
 	private IBinding<IView> androidViewBinding;
 	private BindableFragmentActivity fragActivity;
 	private boolean onShow;
+	private ISelectionProvider provider;
+
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
 	 */
@@ -202,9 +205,10 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onStart ...");
 		}
+		IView view = getBindingView();
 		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
 		if(toolbar != null){
-			toolbar.attach(getBindingView());
+			toolbar.attach(view);
 			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingView().getName());
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
@@ -213,8 +217,12 @@ public abstract class BindableFragment extends Fragment {
 				toolbar.setTitle("",null);
 			}
 		}
-		this.androidViewBinding.activate(getBindingView());
+		this.androidViewBinding.activate(view);
 		super.onStart();
+		this.provider = view.getSelectionProvider();
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
+		}
 		this.onShow = true;
 	}
 
@@ -227,6 +235,10 @@ public abstract class BindableFragment extends Fragment {
 			getLogger().debug("onStop ...");
 		}
 		this.onShow = false;
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
+			this.provider = null;
+		}
 		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
 		if(toolbar != null){
 			toolbar.dettach(getBindingView());

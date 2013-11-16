@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
+import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
@@ -50,6 +51,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	private IPage page;
 	private IAppToolbar toolbar;
 	private boolean onShow;
+	private ISelectionProvider provider;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -169,6 +171,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		getNavigator().onPageShow(page);
 		onActivityStarted();
 		this.onShow = true;
+		this.provider = page.getSelectionProvider();
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
+		}
 		if(log.isDebugEnabled()){
 			log.debug("Activity started !");
 		}
@@ -209,6 +215,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Stopping activity ...");
 		}
 		this.onShow = false;
+		if(this.provider != null){
+			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().unregisterProvider(this.provider);
+			this.provider = null;
+		}
 		super.onStop();
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();

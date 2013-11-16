@@ -25,6 +25,8 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuCallback;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IPage;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
@@ -179,6 +181,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
+	private boolean enableSelectionProvider;
+	private SelectionProviderSupport selectionProvider;
 	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
 
 	public ViewBase() {
@@ -522,6 +526,49 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	@Override
 	public void setValueChangedCallback(IBindingValueChangedCallback cb) {
 		
+	}
+
+	/**
+	 * @return the enableSelectionProvider
+	 */
+	public boolean isEnableSelectionProvider() {
+		return enableSelectionProvider;
+	}
+
+	/**
+	 * @param enableSelectionProvider the enableSelectionProvider to set
+	 */
+	public void setEnableSelectionProvider(boolean enableSelectionProvider) {
+		this.enableSelectionProvider = enableSelectionProvider;
+	}
+
+	protected void updateSelection(Object... selections){
+		SelectionProviderSupport provider = getSelectionProvider();
+		if(provider == null){
+			throw new IllegalStateException("Selection provider must be enabled before update selection !");
+		}
+		if(selections.length > 1){
+			StructureSelectionImpl impl = new StructureSelectionImpl();
+			for (Object val : selections) {
+				impl.addSelection(val);
+			}
+			provider.setSelection(impl);
+		}else if(selections.length == 1){
+			SimpleSelectionImpl impl = new SimpleSelectionImpl();
+			impl.setSelected(selections);
+			provider.setSelection(impl);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#getSelectionProvider()
+	 */
+	@Override
+	public SelectionProviderSupport getSelectionProvider() {
+		if(enableSelectionProvider && (this.selectionProvider == null)){
+			this.selectionProvider = new SelectionProviderSupport(getName());
+		}
+		return this.selectionProvider;
 	}	
 
 

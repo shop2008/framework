@@ -8,5 +8,5 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface ISelectionChangedListener {
-	void selectionChanged(ISelection selection);
+	void selectionChanged(String providerId,ISelection selection);
 }
