@@ -58,19 +58,35 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <CheckBox
-                android:id="@id/cb_news_push_switch"
+            <FrameLayout 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_cb_news_push"
-                android:button="@null"
-                android:checked="false"
-                android:clickable="false"
-                android:focusable="false" 
-                bind:field="pushEnabled"
-                />
+	            android:layout_centerVertical="true"
+                >
+	            <CheckBox
+	                android:id="@id/cb_news_push_switch"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/bg_cb_news_push"
+	                android:button="@null"
+	                android:checked="false"
+	                android:clickable="false"
+	                android:focusable="false" 
+	                bind:field="pushEnabled"
+	                />
+	            
+	            <TextView 
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_vertical|right"
+	                android:textColor="@color/black"
+	                android:text="@string/not_login_text"
+	                bind:field="notLoginText"
+	                bind:on_Click="notLogin"
+	                android:visibility="gone"
+	                />
+            </FrameLayout>
         </RelativeLayout>
 
         <View
