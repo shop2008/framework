@@ -40,18 +40,11 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	public void activate(IView model) {
 		super.activate(model);
 		IUIComponent comp = model.getChild(getFieldName());
-		IListDataProvider provider = comp.getAdaptor(IListDataProvider.class);
-		if(provider == null){
-			if(comp instanceof IDataField){
-				Object val = ((IDataField<?>)comp).getValue();
-				provider = createAdaptorFromValue(val);
-			}
+		listAdapter = comp.getAdaptor(IListDataProvider.class);
+		if (listAdapter == null) {
+			listAdapter = createAdaptorFromValue(comp);
 		}
-		if(provider == null){
-			provider = createAdaptorFromValue(comp.getAttribute(AttributeKeys.options));
-		}
-		if(provider != null){
-			this.listAdapter = provider;
+		if(listAdapter != null){
 			((KLineView)getUIControl()).setDataProvider(this);
 		}
 	}
@@ -61,58 +54,52 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	 * @param val
 	 * @return
 	 */
-	protected IListDataProvider createAdaptorFromValue(Object val) {
-		IListDataProvider provider = null;
-		if(val instanceof List){
-			final List data = (List)val;
-			provider = new IListDataProvider() {
-				
-				@Override
-				public Object getItemId(Object item) {
-					return null;
-				}
-				
-				@Override
-				public int getItemCounts() {
-					return data.size();
-				}
-				
-				@Override
-				public Object getItem(int i) {
-					return data.get(i);
-				}
+	protected IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
+		return new IListDataProvider() {
+			Object[]  data = null;
+			@Override
+			public Object getItemId(Object item) {
+				return null;
+			}
 
-				@Override
-				public boolean isItemEnabled(Object arg0) {
-					return true;
-				}
-			};
-		}else if((val != null)&& val.getClass().isArray()){
-			final Object[] data = (Object[])val;
-			provider = new IListDataProvider() {
-				
-				@Override
-				public Object getItemId(Object item) {
-					return null;
-				}
-				
-				@Override
-				public int getItemCounts() {
-					return data.length;
-				}
-				
-				@Override
-				public Object getItem(int i) {
-					return data[i];
-				}
+			@Override
+			public int getItemCounts() {
+				return data != null ? data.length : 0;
+			}
 
-				@Override
-				public boolean isItemEnabled(Object arg0) {
-					return true;
-				}
-			};
+			@Override
+			public Object getItem(int i) {
+				return data[i];
+			}
+
+			@Override
+			public boolean isItemEnabled(Object item) {
+				return true;
+			}
+
+			@Override
+			public boolean updateDataIfNeccessary() {
+				data = getListData(comp);
+				return true;
+			}
+		};
+	}
+
+
+	protected Object[] getListData(IUIComponent comp){
+		if(comp.hasAttribute(AttributeKeys.options)){
+			List<Object> result = comp.getAttribute(AttributeKeys.options);
+			return result != null ? result.toArray() : null;
 		}
-		return provider;
+		if (comp instanceof IDataField) {
+			Object val = ((IDataField<?>) comp).getValue();
+			if (val instanceof List){
+				return ((List<Object>)val).toArray();
+			}else if((val != null)&&val.getClass().isArray()){
+				return (Object[])val;
+			}
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +159,7 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	 */
 	@Override
 	protected void updateUI(boolean recursive) {
+		this.listAdapter.updateDataIfNeccessary();
 		if(this.listener != null){
 			this.listener.dataSetChanged();
 		}
@@ -181,6 +169,11 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	@Override
 	public boolean isItemEnabled(Object arg0) {
 		return listAdapter.isItemEnabled(arg0);
+	}
+
+	@Override
+	public boolean updateDataIfNeccessary() {
+		return this.listAdapter.updateDataIfNeccessary();
 	}
 
 }
