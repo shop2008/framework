@@ -27,6 +27,8 @@ import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionProvider;
+import com.wxxr.mobile.core.ui.api.ISimpleSelection;
+import com.wxxr.mobile.core.ui.api.IStructureSelection;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
@@ -161,8 +163,43 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		 */
 		@Override
 		public Object getBean(String beanName) {
+			if("selection".equals(beanName)){
+				return getSelection();
+			}
+			if("selections".equals(beanName)){
+				return getSelections();
+			}
 			Object bean = beans != null ? beans.get(beanName) : null;
 			return bean != null ? bean : getChild(beanName);
+		}
+
+		/**
+		 * @return
+		 */
+		protected Object getSelection() {
+			ISelection selection  = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection();
+			if(selection instanceof ISimpleSelection){
+				return ((ISimpleSelection)selection).getSelected();
+			}else if(selection instanceof IStructureSelection){
+				Object[] vals = ((IStructureSelection)selection).toArray();
+				return (vals != null)&& (vals.length > 0) ? vals[0] : null;
+			}else{
+				return null;
+			}
+		}
+		
+		/**
+		 * @return
+		 */
+		protected Object[] getSelections() {
+			ISelection selection  = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection();
+			if(selection instanceof ISimpleSelection){
+				return new Object[] { ((ISimpleSelection)selection).getSelected()};
+			}else if(selection instanceof IStructureSelection){
+				return ((IStructureSelection)selection).toArray();
+			}else{
+				return null;
+			}
 		}
 
 		/* (non-Javadoc)
@@ -170,7 +207,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		 */
 		@Override
 		public boolean isNameResolved(String beanName) {
-			return (getChild(beanName) != null)||((beans != null)&&(beans.containsKey(beanName)));
+			return (getChild(beanName) != null)||((beans != null)&&(beans.containsKey(beanName)))||"selection".equals(beanName)||"selections".equals(beanName);
 		}
 	};
 	private IViewBinding binding;
