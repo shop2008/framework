@@ -112,6 +112,11 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountListBean getHomePageTradingAccountList()
 			throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()){
+			myTradingAccounts.setT1TradingAccountBeans(mockData(1));
+			myTradingAccounts.setT0TradingAccounts(mockData(0));
+			return myTradingAccounts;
+		}
 		//如果未登录
 		context.invokeLater(new Runnable() {
 			@Override
@@ -293,7 +298,7 @@ public class TradingManagementServiceImpl extends
 		bean.setStatus(vo.getStatus());
 		bean.setSum(vo.getSum());
 		bean.setTotalGain(vo.getTotalGain());
-		bean.setVirtual(vo.isVirtual());
+		bean.setVirtual(vo.isVirtual());		
 		return bean;
 	}
 	
@@ -315,92 +320,87 @@ public class TradingManagementServiceImpl extends
 		return bean;
 	}
 	
-	/*	private List<TradingAccountBean> mockData(int type) {
-		List<TradingAccountBean> list = new ArrayList<TradingAccountBean>();
-		TradingAccountBean t0ta = null;
+		private List<TradingAccInfoBean> mockData(int type) {
+		List<TradingAccInfoBean> list = new ArrayList<TradingAccInfoBean>();
+		TradingAccInfoBean t0ta = null;
 		switch (type) {
 		case 0:
 			// ====mock T日实盘，未结算，盈利
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1l);
-			t0ta.setInitCredit(100000);
-			t0ta.setIncome(3000.01f);
-			t0ta.setStockCode("600521");
-			t0ta.setStockName("华海药业");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(0);// 未结算
-			list.add(t0ta);
-			// ====mock T日实盘，未结算，亏损
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1l);
-			t0ta.setInitCredit(100000);
-			t0ta.setIncome(-3000.01f);
-			t0ta.setStockCode("600521");
-			t0ta.setStockName("华海药业");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(0);// 未结算
-			list.add(t0ta);
-			// =====mock T日模拟盘，未结算，平盘
-			t0ta = new TradingAccountBean();
-			t0ta.setId(2l);
-			t0ta.setInitCredit(50000);
-			t0ta.setIncome(0);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(0);// 模拟盘
-			t0ta.setStatus(0);// 未结算
+			t0ta = new TradingAccInfoBean();
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("上海");
+			t0ta.setMaxStockName("中华人寿");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(1);
+			t0ta.setSum(2l);
+			t0ta.setTotalGain(3l);
+			t0ta.setVirtual(true);	
 			list.add(t0ta);
 			break;
 		case 1:
 			// ===== mock T+1日模拟盘，已结算
-			t0ta = new TradingAccountBean();
-			t0ta.setId(2l);
-			t0ta.setInitCredit(100000);
-			t0ta.setIncome(300.01f);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(0);// 模拟盘
-			t0ta.setStatus(1);// 结算
+			t0ta = new TradingAccInfoBean();
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("601169");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("CLOSED");
+			t0ta.setStatus(1);
+			t0ta.setSum(2L);
+			t0ta.setTotalGain(3l);
+			t0ta.setVirtual(true);	
 			list.add(t0ta);
+			
 			// ==== mock T+1日实盘、未结算，盈利
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1002l);
-			t0ta.setInitCredit(50000);
-			t0ta.setIncome(300.01f);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(0);// 未结算
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("601169");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(0);
+			t0ta.setSum(2L);
+			t0ta.setTotalGain(3l);
+			t0ta.setVirtual(true);	
 			list.add(t0ta);
 			// ==== mock T+1日实盘、未结算，亏损
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1002l);
-			t0ta.setInitCredit(50000);
-			t0ta.setIncome(-300.01f);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(0);// 未结算
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("601169");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(0);
+			t0ta.setSum(2L);
+			t0ta.setTotalGain(-3l);
+			t0ta.setVirtual(false);	
 			list.add(t0ta);
 			// ==== mock T+1日实盘、未结算，平盘
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1002l);
-			t0ta.setInitCredit(50000);
-			t0ta.setIncome(0);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(0);// 未结算
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("601169");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(0);
+			t0ta.setSum(2L);
+			t0ta.setTotalGain(-3l);
+			t0ta.setVirtual(false);	
 			list.add(t0ta);
 			// ==== mock T+1日实盘、已结算，亏损
-			t0ta = new TradingAccountBean();
-			t0ta.setId(1002l);
-			t0ta.setInitCredit(50000);
-			t0ta.setIncome(-300.01f);
-			t0ta.setStockCode("601169");
-			t0ta.setStockName("北京银行");
-			t0ta.setType(1);// 实盘
-			t0ta.setStatus(1);// 结算
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("601169");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("CLOSED");
+			t0ta.setStatus(0);
+			t0ta.setSum(2L);
+			t0ta.setTotalGain(-3l);
+			t0ta.setVirtual(false);	
 			list.add(t0ta);
 			break;
 		default:
@@ -456,7 +456,7 @@ public class TradingManagementServiceImpl extends
 			list.add(mr);
 		}
 		return list;
-	}*/
+	}
 	private WeekRankBean fromVO(WeekRankVO vo){
 		if (vo==null) {
 			return null;
