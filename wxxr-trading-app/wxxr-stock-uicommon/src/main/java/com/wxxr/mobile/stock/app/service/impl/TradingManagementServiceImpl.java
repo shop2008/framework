@@ -146,6 +146,10 @@ public class TradingManagementServiceImpl extends
 	}
 
 	public RankListBean getTMegagameRank() throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()) {
+			rank.setTRankBeans(mockRankData("T"));
+			return rank;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -169,6 +173,10 @@ public class TradingManagementServiceImpl extends
 	}
 	@Override
 	public RankListBean getT1MegagameRank() throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()) {
+			rank.setT1RankBeans(mockRankData("T1"));
+			return rank;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -194,6 +202,10 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public RankListBean getRegularTicketRank()
 			throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()) {
+			rank.setRegularTicketBeans(mockRegularTicketRank());
+			return rank;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -220,6 +232,10 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public RankListBean getWeekRank() throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()) {
+			rank.setWeekRanKBeans(mockWeekRank());
+			return rank;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
