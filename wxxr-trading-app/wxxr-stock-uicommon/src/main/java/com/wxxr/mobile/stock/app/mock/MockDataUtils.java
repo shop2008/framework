@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -497,6 +498,44 @@ public class MockDataUtils {
 		
 		tradeDetailListBean.setTradeDetails(tradeDetails);
 		return tradeDetailListBean;
+	}
+	
+	public static TradingAccountBean mockTradingAccountInfo() {
+		TradingAccountBean myTradingAccount = new TradingAccountBean();
+		
+		myTradingAccount.setId(1L);
+		myTradingAccount.setBuyDay(1256006105375L);
+		myTradingAccount.setSellDay(1256006105375L+24*3600);
+		myTradingAccount.setApplyFee(100000);
+		myTradingAccount.setAvalibleFee(98700);
+		myTradingAccount.setGainRate(12);
+		myTradingAccount.setTotalGain(300);
+		List<StockTradingOrderBean> tradingOrders = new ArrayList<StockTradingOrderBean>();
+		StockTradingOrderBean item = new StockTradingOrderBean();
+		item.setStockName("唐山港");
+		item.setStockCode("601000");
+		item.setCurrentPirce(306L);
+		item.setChangeRate(66L);
+		item.setBuy(300L);
+		item.setAmount(1000L);
+		item.setGain(100L);
+		item.setGainRate(1L);
+		tradingOrders.add(item);
+		
+		item = new StockTradingOrderBean();
+		item.setStockName("唐山港");
+		item.setStockCode("601000");
+		item.setCurrentPirce(306L);
+		item.setChangeRate(66L);
+		item.setBuy(300L);
+		item.setAmount(1000L);
+		item.setGain(100L);
+		item.setGainRate(1L);
+		tradingOrders.add(item);
+		
+		myTradingAccount.setTradingOrders(tradingOrders);
+		
+		return myTradingAccount;
 	}
 	// ====================mockData end ==========
 }

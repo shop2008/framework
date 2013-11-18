@@ -269,6 +269,10 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountBean getTradingAccountInfo(final String acctID)
 			throws StockAppBizException {
+			if(context.getApplication().isInDebugMode()) {
+				myTradingAccount = MockDataUtils.mockTradingAccountInfo();
+				return myTradingAccount;
+			}
 			context.invokeLater(new Runnable() {
 				@Override
 				public void run() {
