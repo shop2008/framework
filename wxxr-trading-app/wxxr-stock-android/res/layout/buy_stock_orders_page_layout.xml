@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/stock_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="时间"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="名称代码"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="方向"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="@drawable/abs_divider_hor_btn" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_horizontal"
+            android:gravity="center"
+            android:text="价量"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-2dp"
+            android:background="@drawable/dsphb_title_bj"
+            android:gravity="center_vertical|left"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            bind:field="weekDate" />
+
+        <ListView
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            bind:field="StockOrdersList"
+            bind:itemViewId="StockOrdersItemView"
+             >
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>
