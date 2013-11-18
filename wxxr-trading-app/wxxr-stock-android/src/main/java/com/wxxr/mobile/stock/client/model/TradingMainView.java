@@ -61,10 +61,10 @@ public abstract class TradingMainView extends ViewBase{
 	boolean isVisibleT;
 	/**获取T+1日数据*/
 
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccountBeans:null}")
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
 	List<TradingAccInfoBean> tradingT1;
 	
-	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccountBeans!=null?true:false}")
+	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
 	boolean isVisibleT1;
 	
 	
