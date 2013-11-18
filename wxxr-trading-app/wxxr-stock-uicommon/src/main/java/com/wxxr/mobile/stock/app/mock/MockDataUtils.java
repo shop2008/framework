@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
@@ -186,163 +187,162 @@ public class MockDataUtils {
 	}
 	
 	/**模拟交易记录*/
-	public static List<TradingAccountBean> mockTradeRecord(int type) {
+	public static List<GainBean> mockTradeRecord(int type) {
 		
-		List<TradingAccountBean> tradeRecordList = new ArrayList<TradingAccountBean>();
+		List<GainBean> tradeRecordList = new ArrayList<GainBean>();
 		switch (type) {
 		case 0:
 			//成功记录
-			TradingAccountBean mockSucData;
+			GainBean mockSucData;
 			
-			mockSucData = new TradingAccountBean();
+			mockSucData = new GainBean();
 			mockSucData.setMaxStockMarket("北京银行");
 			mockSucData.setMaxStockCode("6001023");
-			mockSucData.setBuyDay(System.currentTimeMillis());
-			mockSucData.setTotalGain(2000);
-			mockSucData.setApplyFee(10000);
+			mockSucData.setCloseTime("2013-11-1");
+			mockSucData.setTotalGain(200L);
+			mockSucData.setSum(10000L);
 			tradeRecordList.add(mockSucData);
 			
 			
-			mockSucData = new TradingAccountBean();
+			mockSucData = new GainBean();
 			mockSucData.setMaxStockMarket("交通银行");
 			mockSucData.setMaxStockCode("6001022");
-			mockSucData.setBuyDay(System.currentTimeMillis());
-			mockSucData.setTotalGain(-200);
-			mockSucData.setApplyFee(20000);
+			mockSucData.setCloseTime("2013-11-1");
+			mockSucData.setTotalGain(-200L);
+			mockSucData.setSum(20000L);
 		    tradeRecordList.add(mockSucData);
 			
-		    mockSucData = new TradingAccountBean();
+		    mockSucData = new GainBean();
 		    mockSucData.setMaxStockMarket("招商银行");
 		    mockSucData.setMaxStockCode("6001025");
-		    mockSucData.setBuyDay(System.currentTimeMillis());
-		    mockSucData.setTotalGain(200);
-		    mockSucData.setApplyFee(10000);
+		    mockSucData.setCloseTime("2013-11-1");
+		    mockSucData.setTotalGain(200L);
+		    mockSucData.setSum(10000L);
 		    tradeRecordList.add(mockSucData);
 			break;
 			
 		case 1:
 			
 			//全部交易记录
-			TradingAccountBean mockAllData;
+			GainBean mockAllData;
 			
-			mockAllData = new TradingAccountBean();
+			mockAllData = new GainBean();
 			mockAllData.setMaxStockMarket("北京银行");
 			mockAllData.setMaxStockCode("6001023");
-			mockAllData.setBuyDay(System.currentTimeMillis());
-			mockAllData.setTotalGain(2000);
-			mockAllData.setApplyFee(10000);
+			mockAllData.setCloseTime("2013-11-1");
+			mockAllData.setTotalGain(200L);
+			mockAllData.setSum(10000L);
 			tradeRecordList.add(mockAllData);
 			
 			
-			mockAllData = new TradingAccountBean();
+			mockAllData = new GainBean();
 			mockAllData.setMaxStockMarket("交通银行");
 			mockAllData.setMaxStockCode("6001022");
-			mockAllData.setBuyDay(System.currentTimeMillis());
-			mockAllData.setTotalGain(-200);
-			mockAllData.setApplyFee(20000);
+			mockAllData.setCloseTime("2013-11-1");
+			mockAllData.setTotalGain(-200L);
+			mockAllData.setSum(20000L);
 		    tradeRecordList.add(mockAllData);
 			
-		    mockAllData = new TradingAccountBean();
+		    mockAllData = new GainBean();
 			mockAllData.setMaxStockMarket("招商银行");
 			mockAllData.setMaxStockCode("6001025");
-			mockAllData.setBuyDay(System.currentTimeMillis());
-			mockAllData.setTotalGain(200);
-			mockAllData.setApplyFee(10000);
+			mockAllData.setCloseTime("2013-11-1");
+			mockAllData.setTotalGain(200L);
+			mockAllData.setSum(10000L);
 		    tradeRecordList.add(mockAllData);
 			
-		    mockAllData = new TradingAccountBean();
+		    mockAllData = new GainBean();
 			mockAllData.setMaxStockMarket("农业银行");
 			mockAllData.setMaxStockCode("6001032");
-			mockAllData.setBuyDay(System.currentTimeMillis());
-			mockAllData.setTotalGain(-200);
-			mockAllData.setApplyFee(20000);
+			mockAllData.setCloseTime("2013-11-1");
+			mockAllData.setTotalGain(-200L);
+			mockAllData.setSum(20000L);
 		    tradeRecordList.add(mockAllData);
 			
-		    mockAllData = new TradingAccountBean();
+		    mockAllData = new GainBean();
 			mockAllData.setMaxStockMarket("哈尔滨银行");
 			mockAllData.setMaxStockCode("6001088");
-			mockAllData.setBuyDay(System.currentTimeMillis());
-			mockAllData.setTotalGain(400);
-			mockAllData.setApplyFee(20000);
+			mockAllData.setCloseTime("2013-11-1");
+			mockAllData.setTotalGain(400L);
+			mockAllData.setSum(20000L);
 		    tradeRecordList.add(mockAllData);
 			break;
 		case 2:
 			//挑战交易盘
 			
-			TradingAccountBean mockChallengeData;
+			GainBean mockChallengeDate;
 			
-			mockChallengeData = new TradingAccountBean();
-			mockChallengeData.setMaxStockMarket("北京银行");
-			mockChallengeData.setMaxStockCode("6001023");
-			mockChallengeData.setBuyDay(System.currentTimeMillis());
-			mockChallengeData.setTotalGain(2000);
-			mockChallengeData.setApplyFee(10000);
-			tradeRecordList.add(mockChallengeData);
+			mockChallengeDate = new GainBean();
+			mockChallengeDate.setMaxStockMarket("北京银行");
+			mockChallengeDate.setMaxStockCode("6001023");
+			mockChallengeDate.setCloseTime("2013-11-1");
+			mockChallengeDate.setTotalGain(200L);
+			mockChallengeDate.setSum(10000L);
+			tradeRecordList.add(mockChallengeDate);
 			
 			
-			mockChallengeData = new TradingAccountBean();
-			mockChallengeData.setMaxStockMarket("交通银行");
-			mockChallengeData.setMaxStockCode("6001022");
-			mockChallengeData.setBuyDay(System.currentTimeMillis());
-			mockChallengeData.setTotalGain(-200);
-			mockChallengeData.setApplyFee(20000);
-		    tradeRecordList.add(mockChallengeData);
+			mockChallengeDate = new GainBean();
+			mockChallengeDate.setMaxStockMarket("交通银行");
+			mockChallengeDate.setMaxStockCode("6001022");
+			mockChallengeDate.setCloseTime("2013-11-1");
+			mockChallengeDate.setTotalGain(-200L);
+			mockChallengeDate.setSum(20000L);
+		    tradeRecordList.add(mockChallengeDate);
 			
-		    mockChallengeData = new TradingAccountBean();
-			mockChallengeData.setMaxStockMarket("招商银行");
-			mockChallengeData.setMaxStockCode("6001025");
-			mockChallengeData.setBuyDay(System.currentTimeMillis());
-			mockChallengeData.setTotalGain(200);
-			mockChallengeData.setApplyFee(10000);
-		    tradeRecordList.add(mockChallengeData);
+		    mockChallengeDate = new GainBean();
+			mockChallengeDate.setMaxStockMarket("招商银行");
+			mockChallengeDate.setMaxStockCode("6001025");
+			mockChallengeDate.setCloseTime("2013-11-1");
+			mockChallengeDate.setTotalGain(200L);
+			mockChallengeDate.setSum(10000L);
+		    tradeRecordList.add(mockChallengeDate);
 			
-		    mockChallengeData = new TradingAccountBean();
-			mockChallengeData.setMaxStockMarket("农业银行");
-			mockChallengeData.setMaxStockCode("6001032");
-			mockChallengeData.setBuyDay(System.currentTimeMillis());
-			mockChallengeData.setTotalGain(-200);
-			mockChallengeData.setApplyFee(20000);
-		    tradeRecordList.add(mockChallengeData);
+		    mockChallengeDate = new GainBean();
+			mockChallengeDate.setMaxStockMarket("农业银行");
+			mockChallengeDate.setMaxStockCode("6001032");
+			mockChallengeDate.setCloseTime("2013-11-1");
+			mockChallengeDate.setTotalGain(-200L);
+			mockChallengeDate.setSum(20000L);
+		    tradeRecordList.add(mockChallengeDate);
 			
-		    mockChallengeData = new TradingAccountBean();
-			mockChallengeData.setMaxStockMarket("哈尔滨银行");
-			mockChallengeData.setMaxStockCode("6001088");
-			mockChallengeData.setBuyDay(System.currentTimeMillis());
-			mockChallengeData.setTotalGain(400);
-			mockChallengeData.setApplyFee(20000);
-		    tradeRecordList.add(mockChallengeData);
+		    mockChallengeDate = new GainBean();
+			mockChallengeDate.setMaxStockMarket("哈尔滨银行");
+			mockChallengeDate.setMaxStockCode("6001088");
+			mockChallengeDate.setCloseTime("2013-11-1");
+			mockChallengeDate.setTotalGain(400L);
+			mockChallengeDate.setSum(20000L);
+		    tradeRecordList.add(mockChallengeDate);
 			break;
 			
 		case 3:
 			
 			//参赛交易盘
-			TradingAccountBean mockJoinData;
+			GainBean mockJoinData;
 			
-			mockJoinData = new TradingAccountBean();
+			mockJoinData = new GainBean();
 			mockJoinData.setMaxStockMarket("北京银行");
 			mockJoinData.setMaxStockCode("6001023");
-			mockJoinData.setBuyDay(System.currentTimeMillis());
-			mockJoinData.setTotalGain(2000);
-			mockJoinData.setApplyFee(10000);
+			mockJoinData.setCloseTime("2013-11-1");
+			mockJoinData.setTotalGain(200L);
+			mockJoinData.setSum(10000L);
 			tradeRecordList.add(mockJoinData);
 			
 			
-			mockJoinData = new TradingAccountBean();
+			mockJoinData = new GainBean();
 			mockJoinData.setMaxStockMarket("交通银行");
 			mockJoinData.setMaxStockCode("6001022");
-			mockJoinData.setBuyDay(System.currentTimeMillis());
-			mockJoinData.setTotalGain(-200);
-			mockJoinData.setApplyFee(20000);
+			mockJoinData.setCloseTime("2013-11-1");
+			mockJoinData.setTotalGain(-200L);
+			mockJoinData.setSum(20000L);
 		    tradeRecordList.add(mockJoinData);
 			
-		    mockJoinData = new TradingAccountBean();
-		    mockJoinData.setMaxStockMarket("招商银行");
-		    mockJoinData.setMaxStockCode("6001025");
-		    mockJoinData.setBuyDay(System.currentTimeMillis());
-		    mockJoinData.setTotalGain(200);
-		    mockJoinData.setApplyFee(10000);
+		    mockJoinData = new GainBean();
+			mockJoinData.setMaxStockMarket("农业银行");
+			mockJoinData.setMaxStockCode("6001032");
+			mockJoinData.setCloseTime("2013-11-1");
+			mockJoinData.setTotalGain(-200L);
+			mockJoinData.setSum(20000L);
 		    tradeRecordList.add(mockJoinData);
-			
 			break;
 		default:
 			break;
