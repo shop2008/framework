@@ -17,4 +17,5 @@ public interface IViewGroup extends IUIContainer<IView>{
 	IView getView(String name);
 	boolean hasView(String name);
 	String getDefaultViewId();
+	void resetViewStack();
 }

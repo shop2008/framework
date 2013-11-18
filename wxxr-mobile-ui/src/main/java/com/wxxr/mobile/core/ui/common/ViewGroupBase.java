@@ -67,7 +67,6 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 			if(this.viewStack.isEmpty()){
 				setAttribute(AttributeKeys.visible, true);
 			}
-			view.show();
 			this.viewStack.remove(name);
 			this.viewStack.push(name);
 		}
@@ -113,6 +112,11 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 	 */
 	public void setDefaultViewId(String defaultViewId) {
 		this.defaultViewId = defaultViewId;
+	}
+	
+	public void resetViewStack() {
+		if(this.viewStack != null)
+			this.viewStack.clear();
 	}
 
 }
