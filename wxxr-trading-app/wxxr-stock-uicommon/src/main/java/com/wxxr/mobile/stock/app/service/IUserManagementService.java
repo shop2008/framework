@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.service;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 
 /**
@@ -151,4 +152,19 @@ public interface IUserManagementService {
 	 * @return 认证的手机号码
 	 */
 	String getUserAuthMobileNum(String userId);
+	
+	
+	/**
+	 * 获取当前用户的实盘积分明细
+	 * @return 
+	 * 		如果有记录返回记录信息，否则返回空
+	 */
+	ScoreInfoBean getMyUserScoreInfo();
+	
+	/**
+	 * 获取当前用户余额明细
+	 * @return 
+	 * 		如果有记录返回记录信息，否则返回空
+	 */	
+	TradeDetailListBean getMyTradeDetailInfo();
 }

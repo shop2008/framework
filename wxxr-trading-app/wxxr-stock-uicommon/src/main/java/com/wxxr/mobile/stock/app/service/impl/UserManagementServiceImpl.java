@@ -29,8 +29,10 @@ import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
@@ -60,6 +62,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private UserBean otherUserInfo = new UserBean();
 	private BindMobileBean bindMobile = new BindMobileBean();
 
+	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
+	
+	private TradeDetailListBean myTradeDetails = new TradeDetailListBean();
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
@@ -408,6 +413,25 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				}
 			}
 		}, 0, TimeUnit.SECONDS);
+	}
+
+	@Override
+	public ScoreInfoBean getMyUserScoreInfo() {
+		if (context.getApplication().isInDebugMode()) {
+			
+			myScoreInfo = MockDataUtils.mockScoreInfo();
+			return myScoreInfo;
+		}
+		return null;
+	}
+
+	@Override
+	public TradeDetailListBean getMyTradeDetailInfo() {
+		if (context.getApplication().isInDebugMode()) {
+			myTradeDetails = MockDataUtils.mockTradeDetails();
+			return myTradeDetails;
+		}
+		return null;
 	}
 
 }

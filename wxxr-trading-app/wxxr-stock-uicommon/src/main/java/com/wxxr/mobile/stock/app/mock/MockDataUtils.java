@@ -9,9 +9,15 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.ScoreBean;
+import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 
 /**
@@ -179,6 +185,187 @@ public class MockDataUtils {
 		return list;
 	}
 	
+	/**模拟交易记录*/
+	public static List<TradingAccountBean> mockTradeRecord(int type) {
+		
+		List<TradingAccountBean> tradeRecordList = new ArrayList<TradingAccountBean>();
+		switch (type) {
+		case 0:
+			//成功记录
+			TradingAccountBean mockSucData;
+			
+			mockSucData = new TradingAccountBean();
+			mockSucData.setMaxStockMarket("北京银行");
+			mockSucData.setMaxStockCode("6001023");
+			mockSucData.setBuyDay(System.currentTimeMillis());
+			mockSucData.setTotalGain(2000);
+			mockSucData.setApplyFee(10000);
+			tradeRecordList.add(mockSucData);
+			
+			
+			mockSucData = new TradingAccountBean();
+			mockSucData.setMaxStockMarket("交通银行");
+			mockSucData.setMaxStockCode("6001022");
+			mockSucData.setBuyDay(System.currentTimeMillis());
+			mockSucData.setTotalGain(-200);
+			mockSucData.setApplyFee(20000);
+		    tradeRecordList.add(mockSucData);
+			
+		    mockSucData = new TradingAccountBean();
+		    mockSucData.setMaxStockMarket("招商银行");
+		    mockSucData.setMaxStockCode("6001025");
+		    mockSucData.setBuyDay(System.currentTimeMillis());
+		    mockSucData.setTotalGain(200);
+		    mockSucData.setApplyFee(10000);
+		    tradeRecordList.add(mockSucData);
+			break;
+			
+		case 1:
+			
+			//全部交易记录
+			TradingAccountBean mockAllData;
+			
+			mockAllData = new TradingAccountBean();
+			mockAllData.setMaxStockMarket("北京银行");
+			mockAllData.setMaxStockCode("6001023");
+			mockAllData.setBuyDay(System.currentTimeMillis());
+			mockAllData.setTotalGain(2000);
+			mockAllData.setApplyFee(10000);
+			tradeRecordList.add(mockAllData);
+			
+			
+			mockAllData = new TradingAccountBean();
+			mockAllData.setMaxStockMarket("交通银行");
+			mockAllData.setMaxStockCode("6001022");
+			mockAllData.setBuyDay(System.currentTimeMillis());
+			mockAllData.setTotalGain(-200);
+			mockAllData.setApplyFee(20000);
+		    tradeRecordList.add(mockAllData);
+			
+		    mockAllData = new TradingAccountBean();
+			mockAllData.setMaxStockMarket("招商银行");
+			mockAllData.setMaxStockCode("6001025");
+			mockAllData.setBuyDay(System.currentTimeMillis());
+			mockAllData.setTotalGain(200);
+			mockAllData.setApplyFee(10000);
+		    tradeRecordList.add(mockAllData);
+			
+		    mockAllData = new TradingAccountBean();
+			mockAllData.setMaxStockMarket("农业银行");
+			mockAllData.setMaxStockCode("6001032");
+			mockAllData.setBuyDay(System.currentTimeMillis());
+			mockAllData.setTotalGain(-200);
+			mockAllData.setApplyFee(20000);
+		    tradeRecordList.add(mockAllData);
+			
+		    mockAllData = new TradingAccountBean();
+			mockAllData.setMaxStockMarket("哈尔滨银行");
+			mockAllData.setMaxStockCode("6001088");
+			mockAllData.setBuyDay(System.currentTimeMillis());
+			mockAllData.setTotalGain(400);
+			mockAllData.setApplyFee(20000);
+		    tradeRecordList.add(mockAllData);
+			break;
+		case 2:
+			//挑战交易盘
+			
+			TradingAccountBean mockChallengeData;
+			
+			mockChallengeData = new TradingAccountBean();
+			mockChallengeData.setMaxStockMarket("北京银行");
+			mockChallengeData.setMaxStockCode("6001023");
+			mockChallengeData.setBuyDay(System.currentTimeMillis());
+			mockChallengeData.setTotalGain(2000);
+			mockChallengeData.setApplyFee(10000);
+			tradeRecordList.add(mockChallengeData);
+			
+			
+			mockChallengeData = new TradingAccountBean();
+			mockChallengeData.setMaxStockMarket("交通银行");
+			mockChallengeData.setMaxStockCode("6001022");
+			mockChallengeData.setBuyDay(System.currentTimeMillis());
+			mockChallengeData.setTotalGain(-200);
+			mockChallengeData.setApplyFee(20000);
+		    tradeRecordList.add(mockChallengeData);
+			
+		    mockChallengeData = new TradingAccountBean();
+			mockChallengeData.setMaxStockMarket("招商银行");
+			mockChallengeData.setMaxStockCode("6001025");
+			mockChallengeData.setBuyDay(System.currentTimeMillis());
+			mockChallengeData.setTotalGain(200);
+			mockChallengeData.setApplyFee(10000);
+		    tradeRecordList.add(mockChallengeData);
+			
+		    mockChallengeData = new TradingAccountBean();
+			mockChallengeData.setMaxStockMarket("农业银行");
+			mockChallengeData.setMaxStockCode("6001032");
+			mockChallengeData.setBuyDay(System.currentTimeMillis());
+			mockChallengeData.setTotalGain(-200);
+			mockChallengeData.setApplyFee(20000);
+		    tradeRecordList.add(mockChallengeData);
+			
+		    mockChallengeData = new TradingAccountBean();
+			mockChallengeData.setMaxStockMarket("哈尔滨银行");
+			mockChallengeData.setMaxStockCode("6001088");
+			mockChallengeData.setBuyDay(System.currentTimeMillis());
+			mockChallengeData.setTotalGain(400);
+			mockChallengeData.setApplyFee(20000);
+		    tradeRecordList.add(mockChallengeData);
+			break;
+			
+		case 3:
+			
+			//参赛交易盘
+			TradingAccountBean mockJoinData;
+			
+			mockJoinData = new TradingAccountBean();
+			mockJoinData.setMaxStockMarket("北京银行");
+			mockJoinData.setMaxStockCode("6001023");
+			mockJoinData.setBuyDay(System.currentTimeMillis());
+			mockJoinData.setTotalGain(2000);
+			mockJoinData.setApplyFee(10000);
+			tradeRecordList.add(mockJoinData);
+			
+			
+			mockJoinData = new TradingAccountBean();
+			mockJoinData.setMaxStockMarket("交通银行");
+			mockJoinData.setMaxStockCode("6001022");
+			mockJoinData.setBuyDay(System.currentTimeMillis());
+			mockJoinData.setTotalGain(-200);
+			mockJoinData.setApplyFee(20000);
+		    tradeRecordList.add(mockJoinData);
+			
+		    mockJoinData = new TradingAccountBean();
+		    mockJoinData.setMaxStockMarket("招商银行");
+		    mockJoinData.setMaxStockCode("6001025");
+		    mockJoinData.setBuyDay(System.currentTimeMillis());
+		    mockJoinData.setTotalGain(200);
+		    mockJoinData.setApplyFee(10000);
+		    tradeRecordList.add(mockJoinData);
+			
+			break;
+		default:
+			break;
+		}
+		
+		return tradeRecordList;
+	}
+	
+	public static UserBean mockUserInfo() {
+		UserBean userBean = new UserBean();
+		
+		userBean.setBalance(""+20000);
+		userBean.setChallengeShared(""+2);
+		userBean.setHomeBack("resourceId:drawable/back2");
+		userBean.setUserPic("resourceId:drawable/head2");
+		userBean.setJoinShared(""+3);
+		
+		userBean.setNickName("李四");
+		userBean.setScore(""+900);
+		return userBean;
+	}
+	
+	
 	public static  List<StockBaseInfoBean> getAllMockDataForSearchStock() {
 		List<StockBaseInfoBean> searchList = new ArrayList<StockBaseInfoBean>();
 		StockBaseInfoBean s;
@@ -243,6 +430,73 @@ public class MockDataUtils {
 			s.setCode("601696");
 			searchList.add(s);
 		return searchList;
+	}
+	
+	
+	public static ScoreInfoBean mockScoreInfo() {
+		ScoreInfoBean scoreInfoBean = new ScoreInfoBean();
+		scoreInfoBean.setBalance(300+"");
+		List<ScoreBean> scoreBeans = new ArrayList<ScoreBean>();
+		
+		ScoreBean scoreBean;
+		
+		scoreBean = new ScoreBean();
+		scoreBean.setAmount(200+"");
+		scoreBean.setCatagory("推荐好友奖励");
+		scoreBean.setDate("2013-10-20");
+		scoreBeans.add(scoreBean);
+		
+		scoreBean = new ScoreBean();
+		scoreBean.setAmount(300+"");
+		scoreBean.setCatagory("评论奖励");
+		scoreBean.setDate("2013-10-25");
+		scoreBeans.add(scoreBean);
+		
+		
+		scoreBean = new ScoreBean();
+		scoreBean.setAmount(100+"");
+		scoreBean.setCatagory("新手奖励");
+		scoreBean.setDate("2013-10-26");
+		scoreBeans.add(scoreBean);
+		
+		
+		scoreBean = new ScoreBean();
+		scoreBean.setAmount(-200+"");
+		scoreBean.setCatagory("申请实盘");
+		scoreBean.setDate("2013-10-28");
+		scoreBeans.add(scoreBean);
+		scoreInfoBean.setScores(scoreBeans);
+		return scoreInfoBean;
+	}
+	
+	public static TradeDetailListBean mockTradeDetails() {
+		
+		TradeDetailListBean tradeDetailListBean = new TradeDetailListBean();
+		
+		List<TradeDetailBean> tradeDetails = new ArrayList<TradeDetailBean>();
+		
+		TradeDetailBean detailBean;
+		detailBean = new TradeDetailBean();
+		detailBean.setTradeAmount(200+"");
+		detailBean.setTradeCatagory("充入现金");
+		detailBean.setTradeDate("2013-11-11");
+		
+		tradeDetails.add(detailBean);
+		
+		detailBean = new TradeDetailBean();
+		detailBean.setTradeAmount(300+"");
+		detailBean.setTradeCatagory("实盘结盘收益");
+		detailBean.setTradeDate("2013-11-10");
+		tradeDetails.add(detailBean);
+		
+		detailBean = new TradeDetailBean();
+		detailBean.setTradeAmount(300+"");
+		detailBean.setTradeCatagory("其它");
+		detailBean.setTradeDate("2013-11-8");
+		tradeDetails.add(detailBean);
+		
+		tradeDetailListBean.setTradeDetails(tradeDetails);
+		return tradeDetailListBean;
 	}
 	// ====================mockData end ==========
 }
