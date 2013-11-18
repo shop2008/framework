@@ -19,14 +19,19 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
  */
 public interface ITradingManagementService {
 	/**
-	 * 获取当前用户交易盘列表
+	 * 获取当前用户全部交易盘记录
 	 * 
 	 * @return
-	 * @throws StockAppBizException
 	 */
-	TradingAccountListBean getMyTradingAccountList() throws StockAppBizException;
+	TradingAccountListBean getMyAllTradingAccountList(int strat,int limit);
 	/**
-	 * 获取当前用户交易盘列表
+	 * 获取当前用户成功操作交易盘记录
+	 * 
+	 * @return
+	 */
+	TradingAccountListBean getMySuccessTradingAccountList(int strat,int limit);
+	/**
+	 * 获取当前用户首页交易盘列表
 	 * 
 	 * @return
 	 * @throws StockAppBizException

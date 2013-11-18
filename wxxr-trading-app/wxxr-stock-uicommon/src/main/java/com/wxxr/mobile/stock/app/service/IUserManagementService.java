@@ -61,10 +61,10 @@ public interface IUserManagementService {
 	 */
 	void updatePassword(String oldPwd,String newPwd) throws StockAppBizException;
 	/**
-	 * 检查用户是否登陆，如果用户已登录返回true，否则返回false
+	 * 检查用户是否登陆，如果用户未登录则会弹出登陆框
 	 * @return
 	 */
-	boolean isLogin();
+	void checkLogin();
 	/**
 	 * 手机认证-绑定手机号
 	 * @param phoneNumber - 手机号

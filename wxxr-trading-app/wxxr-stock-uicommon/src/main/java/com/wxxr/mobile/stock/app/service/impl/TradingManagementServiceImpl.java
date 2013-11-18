@@ -8,16 +8,14 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.auth.AUTH;
-
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -25,13 +23,14 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
-import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
+import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
@@ -123,7 +122,7 @@ public class TradingManagementServiceImpl extends
 	public TradingAccountListBean getHomePageTradingAccountList()
 			throws StockAppBizException {
 		if(context.getApplication().isInDebugMode()){
-			myTradingAccounts.setT1TradingAccountBeans(MockDataUtils.mockData(1));
+			myTradingAccounts.setT1TradingAccounts(MockDataUtils.mockData(1));
 			myTradingAccounts.setT0TradingAccounts(MockDataUtils.mockData(0));
 			return myTradingAccounts;
 		}
@@ -145,7 +144,7 @@ public class TradingManagementServiceImpl extends
 							}
 						}
 						myTradingAccounts.setT0TradingAccounts(t0_list);
-						myTradingAccounts.setT1TradingAccountBeans(t1_list);
+						myTradingAccounts.setT1TradingAccounts(t1_list);
 					}
 				} catch (Throwable e) {
 					log.error("fetch data error",e);
@@ -389,9 +388,7 @@ public class TradingManagementServiceImpl extends
 		return bean;
 	}
 	private void checkLogin(){
-		if (!getService(UserManagementServiceImpl.class).isLogin()) {
-			getService(IWorkbenchManager.class).getWorkbench().showPage("", null, null);
-		}
+		getService(IUserManagementService.class).checkLogin();
 	}
 	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
 		checkLogin();
@@ -416,33 +413,6 @@ public class TradingManagementServiceImpl extends
 		}, 0, TimeUnit.SECONDS);
 		return createTDConfig;
 	}
-
-	@Override
-	public TradingAccountListBean getMyTradingAccountList()
-			throws StockAppBizException {
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					List<TradingAccInfoVO> vo = getService(IRestProxyService.class).getRestService(
-							TradingResourse.class).getTradingAccountList();
-					if (vo!=null) {
-						
-					}else{
-						if (!context.getApplication().isInDebugMode()) {
-							myTradingAccounts.getT0TradingAccounts();
-						}
-					}
-					
-					
-				} catch (Throwable e) {
-					log.error("fetch data error",e);
-				}
-			}
-		}, 10, TimeUnit.SECONDS);
-		return myTradingAccounts;
-	}
-
 	@Override
 	public TradingAccountListBean getOtherTradingAccountList(String userId) {
 		// TODO Auto-generated method stub
@@ -687,4 +657,78 @@ public class TradingManagementServiceImpl extends
 		
 	}
 
+	@Override
+	public TradingAccountListBean getMyAllTradingAccountList(final int start,
+			final int limit) {
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					if (log.isDebugEnabled()) {
+						log.debug("fetch all trading account info...");
+					}
+					List<GainVO> list = getRestService(TradingResourse.class).getTotalGain(start, limit);
+					if (list!=null&&list.size()>0) {
+						List<GainBean>  beanList = new ArrayList<GainBean>();
+						for (GainVO vo : list) {
+							GainBean bean = fromVO(vo);
+							beanList.add(bean);
+						}
+						myTradingAccounts.setAllTradingAccounts(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Failed to fetch all trading account",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+			}
+		}, 0, TimeUnit.SECONDS);
+		return myTradingAccounts;
+	}
+	@Override
+	public TradingAccountListBean getMySuccessTradingAccountList(final int start,
+			final int limit) {
+		context.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					if (log.isDebugEnabled()) {
+						log.debug("fetch success trading account info...");
+					}
+					List<GainVO> list = getRestService(TradingResourse.class).getGain(start, limit);
+					if (list!=null&&list.size()>0) {
+						List<GainBean>  beanList = new ArrayList<GainBean>();
+						for (GainVO vo : list) {
+							GainBean bean = fromVO(vo);
+							beanList.add(bean);
+						}
+						myTradingAccounts.setSuccessTradingAccounts(beanList);
+					}
+				} catch (Throwable e) {
+					log.warn("Failed to fetch success trading account",e);
+					throw new StockAppBizException(e.getMessage());
+				}
+			}
+		}, 0, TimeUnit.SECONDS);
+		return myTradingAccounts;
+	}
+	/**
+	 * @param vo
+	 * @return
+	 */
+	private GainBean fromVO(GainVO vo) {
+		if (vo==null) {
+			return null;
+		}
+		GainBean bean = new GainBean();
+		bean.setCloseTime(vo.getCloseTime());
+		bean.setMaxStockCode(vo.getMaxStockCode());
+		bean.setMaxStockMarket(vo.getMaxStockMarket());
+		bean.setMaxStockName(vo.getMaxStockName());
+		bean.setOver(vo.getOver());
+		bean.setStatus(vo.getStatus());
+		bean.setSum(vo.getSum());
+		bean.setTotalGain(vo.getTotalGain());
+		bean.setTradingAccountId(vo.getTradingAccountId());
+		bean.setUserGain(vo.getUserGain());
+		bean.setVirtual(vo.isVirtual());
+		return bean;
+	}
 }

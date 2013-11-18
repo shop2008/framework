@@ -3,8 +3,10 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.stock.restful.json.ParamVO;
 
 /**
  * @author wangxuyang
@@ -31,10 +33,7 @@ public interface IInfoCenterManagementService {
 	 * @param page -第几页
 	 * @return
 	 */
-	StockMinuteKBean getMinuteline(String code, String market,Long start,
-			Long limit,
-			String date, Long startTime,
-			Long endTime,
-			int page);
+	StockMinuteKBean getMinuteline(String code, String market);
+	LineListBean getDayline(ParamVO paramVO);
 
 }

@@ -113,7 +113,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 						myUserInfo.setUsername(vo.getUserName());
 						myUserInfo.setPhoneNumber(vo.getMoblie());
 						myUserInfo.setUserPic(vo.getIcon());
+					}else{
+						getService(IWorkbenchManager.class).getWorkbench().showPage("userLoginPage", null, null);
 					}
+					
 				} catch (Exception e) {
 					log.warn("Error when get user info", e);
 				}
@@ -307,9 +310,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public boolean isLogin() {
-
-		return false;
+	public void checkLogin() {
+		getMyUserInfo();
 	}
 
 	@Override
