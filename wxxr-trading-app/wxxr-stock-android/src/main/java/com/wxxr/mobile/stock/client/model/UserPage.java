@@ -38,7 +38,7 @@ public abstract class UserPage extends PageBase  {
 	UserBean user;
 	
 	
-	@Bean(type=BindingType.Pojo, express="${tradingService.tradingAccountList}")
+	@Bean(type=BindingType.Pojo, express="${tradingService.myTradingAccountList}")
 	TradingAccountListBean tradingAccount;
 	/**
 	 * 用户形象照
@@ -76,22 +76,22 @@ public abstract class UserPage extends PageBase  {
 	@Field(valueKey = "text", binding="${user!=null?user.joinShared!=null?user.joinShared:'--':'--'}")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding="${tradingAccount!=null?tradingAccount.virtualTradingAccountBeans:null}")
+	@Field(valueKey = "options", binding="${tradingAccount.virtualTradingAccountBeans!=null?tradingAccount.virtualTradingAccountBeans:null}")
 	List<TradingAccountBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding="${tradingAccount!=null?tradingAccount.realTradingAccountBeans!=null?tradingAccount.realTradingAccountBeans:null:null}")
+	@Field(valueKey = "options", binding="${tradingAccount.realTradingAccountBeans!=null?tradingAccount.realTradingAccountBeans:null}")
 	List<TradingAccountBean> challengeTradeInfos;
 
-	@Field(valueKey = "visible", binding="${tradingAccount!=null?tradingAccount.realTradingAccountBeans!=null?true:false:false}")
+	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?true:false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount!=null?tradingAccount.realTradingAccountBeans!=null?false:true:true}")
+	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?false:true}")
 	boolean cNoSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount!=null?tradingAccount.virtualTradingAccountBeans!=null?true:false:false}")
+	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?true:false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount!=null?tradingAccount.virtualTradingAccountBeans!=null?false:true:true}")
+	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?false:true}")
 	boolean jNoSharedVisiable;
 
 	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
