@@ -14,7 +14,6 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name = "userLoginPage")
@@ -45,7 +44,10 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return null
 	 */
-	@Command(commandName = "login")
+	@Command(
+			commandName = "login",
+			navigations={@Navigation(on="failed")}
+			)
 	String login(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -58,9 +60,7 @@ public abstract class UserLoginPage extends PageBase {
 				log.debug("login:mobileNum"+mobileNum);
 				log.debug("login:password"+password);
 			}
-			
-			usrService.login(mobileNum, password);
-			
+		    usrService.login(mobileNum, password);
 		}
 		return null;
 	}
@@ -116,12 +116,9 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName="findPasswordBack")
+	@Command(commandName="findPasswordBack", navigations={@Navigation(on="OK", showPage="userFindPswPage")})
 	String findPasswordBack(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench().showPage("userFindPswPage", null, null);
-		}
-		return null;
+		return "OK";
 	}
 	
 	/**
@@ -130,12 +127,9 @@ public abstract class UserLoginPage extends PageBase {
 	 * @return
 	 */
 
-	@Command(commandName="quickRegister")
+	@Command(commandName="quickRegister", navigations={@Navigation(on="OK", showPage="userRegPage")})
 	String quickRegister(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench().showPage("userRegPage", null, null);
-		}
-		return null;
+		return "OK";
 	}
 	
 }

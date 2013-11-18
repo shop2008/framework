@@ -1,17 +1,13 @@
 package com.wxxr.mobile.stock.client.model;
 
-import android.R.bool;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.android.ui.binding.GenericListAdapter;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.UserPicBean;
 import com.wxxr.mobile.stock.client.biz.UserIcon;
 
 @View(name="imageItemForPic")
