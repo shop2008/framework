@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -92,7 +91,7 @@ public abstract class TradingMainView extends ViewBase{
 			return "createBuy";
 		}
 		return null;
-	}
+	} 
 	
 	//点击T日列表跳转
 	@Command(navigations={@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")})
@@ -124,7 +123,7 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
-				List<TradingAccInfoBean> tradingList = tradingAccount.getT1TradingAccountBeans();
+				List<TradingAccInfoBean> tradingList = tradingAccount.getT1TradingAccounts();
 				if(tradingList!=null && tradingList.size()>0){
 					TradingAccInfoBean tempTradingA = tradingList.get(position);
 					this.type = tempTradingA.getVirtual()?0:1;
