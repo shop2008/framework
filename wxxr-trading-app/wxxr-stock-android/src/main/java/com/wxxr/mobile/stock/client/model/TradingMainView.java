@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -29,7 +30,7 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
  * @author neillin
  *
  */
-@View(name="tradingMain", description="短线放大镜")
+@View(name="tradingMain", description="短线放大镜",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.home_view_layout")
 public abstract class TradingMainView extends ViewBase{
 	private static final Trace log = Trace.register(TradingMainView.class);
@@ -57,10 +58,16 @@ public abstract class TradingMainView extends ViewBase{
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
 	List<TradingAccInfoBean> tradingT;
 	
+	@Field(valueKey="visible",visibleWhen="${tradingAccount.t0TradingAccounts!=null?true:false}")
+	boolean isVisibleT;
 	/**获取T+1日数据*/
 
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccountBeans:null}")
 	List<TradingAccInfoBean> tradingT1;
+	
+	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccountBeans!=null?true:false}")
+	boolean isVisibleT1;
+	
 	
 	
 	
@@ -77,10 +84,12 @@ public abstract class TradingMainView extends ViewBase{
 	 * 创建买入页跳转
 	 * 
 	 * */
-	@Command
+	@Command(navigations={
+		@Navigation(on="createBuy",showPage="creataBuyTradePage")
+		})
 	String createBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			getUIContext().getWorkbenchManager().getPageNavigator().showPage(getUIContext().getWorkbenchManager().getWorkbench().getPage("creataBuyTradePage"), null, null);
+			return "createBuy";
 		}
 		return null;
 	}
@@ -105,30 +114,36 @@ public abstract class TradingMainView extends ViewBase{
 		return null;
 	}
 	//点击T+1日列表跳转
-	
-	
-//	@Command
-//	String T1_TradingMessageClick(InputEvent event){
-//		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
-//			getUIContext().getWorkbenchManager().getPageNavigator().showPage(getUIContext().getWorkbenchManager().getWorkbench().getPage("OperationDetails"), null, null);
-//		}
-//		return null;
-//	}
-	
-	@Command(navigations={@Navigation(on="operationDetails",showPage="OperationDetails")})
+		
+	@Command(navigations={
+			@Navigation(on="operationDetails",showPage="OperationDetails"),
+			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount")
+			})
 	CommandResult tradingMessageClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
-				if(tradingT1!=null && tradingT1.size()>0){
-					TradingAccInfoBean tempTradingA = tradingT1.get(position);
+				List<TradingAccInfoBean> tradingList = tradingAccount.getT1TradingAccountBeans();
+				if(tradingList!=null && tradingList.size()>0){
+					TradingAccInfoBean tempTradingA = tradingList.get(position);
 					this.type = tempTradingA.getVirtual()?0:1;
+					String acctId = String.valueOf(tempTradingA.getAcctID());
+					//是否是模拟盘：true 模拟盘 false 实盘
+					boolean isVirtual = tempTradingA.getVirtual();
+					String over = tempTradingA.getOver();
+					updateSelection(acctId);
+					resutl.setPayload(isVirtual);
+					if("CLOSED".equals(over)){
+						resutl.setResult("operationDetails");
+					}
+					if("UNCLOSE".equals(over)){
+						resutl.setResult("sellTradingAccount");
+						resutl.setPayload(isVirtual);
+					}
+					return resutl;
 				}
 			}
-			resutl.setResult("operationDetails");
-			resutl.setPayload(type);
-			return resutl;
 		}
 		return null;
 	}

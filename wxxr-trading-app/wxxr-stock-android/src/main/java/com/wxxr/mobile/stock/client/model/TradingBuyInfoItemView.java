@@ -20,25 +20,25 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	
 	/**股票名称*/
 	@Field(valueKey="text",binding="${trading!=null?trading.maxStockName:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")
+			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockName;
 	
 	/**股票代码*/
 	@Field(valueKey="text",binding="${trading!=null?trading.maxStockCode:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")
+			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockCode;
 	
 	/**额度（申请资金）*/
 	@Field(valueKey="text",binding="${trading!=null?trading.sum:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")
+			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String initCredit;
 	
 	/**总收益*/
 	@Field(valueKey="text",binding="${trading!=null?trading.totalGain:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED' ? 'resourceId:color/gray': (trading.totalGain > 0 ? 'resourceId:color/red' : (trading.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
+			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED') ? 'resourceId:color/gray': (trading.totalGain > 0 ? 'resourceId:color/red' : (trading.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
 			})	
 	String income;
 	
