@@ -24,6 +24,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	private Map<String, List<ISelectionChangedListener>> listeners;
 	private Stack<ISelectionProvider> stack = new Stack<ISelectionProvider>();
 	private Map<String, ISelection> map = new HashMap<String, ISelection>();
+	private ISelection currentSelection;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.ISelectionService#addSelectionListener(com.wxxr.mobile.core.ui.api.ISelectionChangedListener)
 	 */
@@ -87,8 +88,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	 */
 	@Override
 	public ISelection getSelection() {
-		String provId = getCurrentProviderId();
-		return provId == null ? null : this.map.get(provId);
+		return this.currentSelection;
 	}
 
 	/* (non-Javadoc)
@@ -116,7 +116,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	 */
 	@Override
 	public boolean unregisterProvider(ISelectionProvider provider) {
-		this.map.remove(provider.getProviderId());
+//		this.map.remove(provider.getProviderId());
 		provider.removeSelectionListener(this);
 		return this.stack.remove(provider);
 	}
@@ -147,6 +147,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	@Override
 	public void selectionChanged(final String providerId, final ISelection selection) {
 		this.map.put(providerId, selection);
+		this.currentSelection = selection;
 		final ISelectionChangedListener[] list = getAllListeners(providerId);
 		if((list != null)&&(list.length > 0)){
 			KUtils.executeTask(new Runnable() {
