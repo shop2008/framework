@@ -19,7 +19,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:padding="8dp"
-            bind:field="stockCode"
+            bind:field="stockName"
 			/>
 
         <TextView
