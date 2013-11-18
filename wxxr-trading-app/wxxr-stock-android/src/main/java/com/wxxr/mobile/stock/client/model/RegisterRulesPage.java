@@ -14,7 +14,7 @@ public abstract class RegisterRulesPage extends PageBase {
 	 * 处理后退
 	 * @param event
 	 * @return
-	 */
+	 */	
 	@Command(commandName = "back")
 	String back(InputEvent event) {
 
