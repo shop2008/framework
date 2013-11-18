@@ -5,16 +5,19 @@ package com.wxxr.mobile.stock.client.binding;
 
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
-import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
-import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshListViewListener;
+import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshViewListener;
+import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
+import com.wxxr.mobile.stock.client.widget.PullToRefreshView.OnFooterRefreshListener;
+import com.wxxr.mobile.stock.client.widget.PullToRefreshView.OnHeaderRefreshListener;
 
 /**
  * @author neillin
@@ -22,38 +25,78 @@ import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshListVie
  */
 public class RefreshEventBinding implements IBinding<IView> {
 
-	private PullToRefreshListView control;
+	private ViewGroup control;
 	private String fieldName,commandName;
 	private IView pModel;
-//	private OnHeaderRefreshListener headerListener = new OnHeaderRefreshListener() {
-//		
-//		@Override
-//		public void onHeaderRefresh(PullToRefreshView view) {
-//			SimpleInputEvent event = new SimpleInputEvent("TopRefresh",pModel);
-//			IUIComponent field = pModel.getChild(fieldName);
-//			if(field != null){
-//				field.invokeCommand(commandName, event);
-//			}else{
-//				pModel.invokeCommand(commandName, event);
-//			}			
-//		}
-//	};
-//	
-//	private OnFooterRefreshListener footerListener = new OnFooterRefreshListener() {
-//		
-//		@Override
-//		public void onFooterRefresh(PullToRefreshView view) {
-//			SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",pModel);
-//			IUIComponent field = pModel.getChild(fieldName);
-//			if(field != null){
-//				field.invokeCommand(commandName, event);
-//			}else{
-//				pModel.invokeCommand(commandName, event);
-//			}			
-//		}
-//	};
+	private OnHeaderRefreshListener headerListener = new OnHeaderRefreshListener() {
+		
+		@Override
+		public void onHeaderRefresh(PullToRefreshView view) {
+			
+			IUIComponent field = pModel.getChild(fieldName);
+			if(field != null){
+				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
+				event.addProperty("callback", new IRefreshCallback() {
+					
+					@Override
+					public void refreshSuccess() {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onHeaderRefreshComplete();
+						}
+					}
+					
+					@Override
+					public void refreshFailed(String message) {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onHeaderRefreshComplete();
+						}
+					}
+				});
+				field.invokeCommand(commandName, event);
+			}else{
+				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",pModel);
+				pModel.invokeCommand(commandName, event);
+			}			
+		}
+	};
 	
-	private IRefreshListViewListener refreshListener = new IRefreshListViewListener() {
+	private OnFooterRefreshListener footerListener = new OnFooterRefreshListener() {
+		
+		@Override
+		public void onFooterRefresh(PullToRefreshView view) {
+			
+			IUIComponent field = pModel.getChild(fieldName);
+			if(field != null){
+				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
+				event.addProperty("callback", new IRefreshCallback() {
+					
+					@Override
+					public void refreshSuccess() {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onHeaderRefreshComplete();
+						}
+					}
+					
+					@Override
+					public void refreshFailed(String message) {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onHeaderRefreshComplete();
+						}
+					}
+				});
+				field.invokeCommand(commandName, event);
+			}else{
+				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",pModel);
+				pModel.invokeCommand(commandName, event);
+			}			
+		}
+	};
+	
+	private IRefreshViewListener refreshListener = new IRefreshViewListener() {
 
 		@Override
 		public void onRefresh() {
@@ -66,13 +109,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 					@Override
 					public void refreshSuccess() {
 						// TODO Auto-generated method stub
-						control.stopRefresh();
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopRefresh();
+						}
 					}
 					
 					@Override
 					public void refreshFailed(String message) {
 						// TODO Auto-generated method stub
-						control.stopRefresh();
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopRefresh();
+						}
 					}
 				});
 				field.invokeCommand(commandName, event);
@@ -87,6 +134,24 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
+				event.addProperty("callback", new IRefreshCallback() {
+					
+					@Override
+					public void refreshSuccess() {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopLoadMore();
+						}
+					}
+					
+					@Override
+					public void refreshFailed(String message) {
+						// TODO Auto-generated method stub
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopLoadMore();
+						}
+					}
+				});
 				field.invokeCommand(commandName, event);
 			}else{
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",pModel);
@@ -95,7 +160,12 @@ public class RefreshEventBinding implements IBinding<IView> {
 		}
 	};
 	public RefreshEventBinding(View view,String cmdName,String field){
-		this.control = (PullToRefreshListView)view;
+//		if(control instanceof PullToRefreshListView) {
+//			this.control = (PullToRefreshListView)view;
+//		} else if(control instanceof PullToRefreshScrollView) {
+//			this.control = (PullToRefreshScrollView)view;
+//		}
+		this.control = (ViewGroup)view;
 		this.commandName = cmdName;
 		this.fieldName = field;
 	}
@@ -108,7 +178,12 @@ public class RefreshEventBinding implements IBinding<IView> {
 	public void activate(IView model) {
 //		this.control.setOnHeaderRefreshListener(headerListener);
 //		this.control.setOnFooterRefreshListener(footerListener);
-		this.control.setRefreshListViewListener(refreshListener);
+		if(control instanceof PullToRefreshListView) {
+			((PullToRefreshListView)control).setRefreshViewListener(refreshListener);
+		} else if(control instanceof PullToRefreshView) {
+			((PullToRefreshView)control).setOnHeaderRefreshListener(headerListener);
+			((PullToRefreshView)control).setOnFooterRefreshListener(footerListener);
+		}
 		this.pModel = model;
 	}
 
@@ -116,7 +191,12 @@ public class RefreshEventBinding implements IBinding<IView> {
 	public void deactivate() {
 //		this.control.setOnHeaderRefreshListener(null);
 //		this.control.setOnFooterRefreshListener(null);
-		this.control.setRefreshListViewListener(null);
+		if(control instanceof PullToRefreshListView) {
+			((PullToRefreshListView)control).setRefreshViewListener(null);
+		} else if(control instanceof PullToRefreshView) {
+			((PullToRefreshView)control).setOnHeaderRefreshListener(null);
+			((PullToRefreshView)control).setOnFooterRefreshListener(null);
+		}
 		this.pModel = null;
 		
 	}

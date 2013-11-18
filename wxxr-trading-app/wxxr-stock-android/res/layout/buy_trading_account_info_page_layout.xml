@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color" >
+
+    <LinearLayout
+        android:id="@+id/date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/defaultColor"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="--"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="buyDay" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="--"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="sellDay" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buy_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/blue_btn_back"
+        android:gravity="center"
+        android:text="买入"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        bind:field="buyBtn"
+        bind:on_Click="handleBuyBtnClick" /> />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/buy_btn"
+        android:layout_below="@id/date_layout"
+        android:layout_marginTop="40dip"
+        android:gravity="center"
+        android:text="尚未买入股票"
+        android:textColor="@color/light_gray"
+        android:textSize="26sp"
+        bind:field="noOrders" />
+
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/buy_btn"
+        android:layout_below="@id/date_layout"
+        android:orientation="vertical"
+        bind:field="*"
+        bind:on_TopRefresh="handleTopRefresh" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/account_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:field="*"
+                    bind:on_Click="handleStockClick" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="申请资金"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="可用资金"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="总盈亏率"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="盈亏总额"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/account_content_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    bind:field="*"
+                    bind:on_Click="handleStockClick" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        bind:field="applyFee" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        bind:field="avalibleFee" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        bind:field="gainRate" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="--"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        bind:field="totalGain" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/stock_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="名称代码"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="最新行情"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="价量"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="1dip"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/abs_divider_hor_btn" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_horizontal"
+                        android:gravity="center"
+                        android:text="盈亏"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <com.wxxr.mobile.stock.client.widget.AutoHeightListView
+                    style="@style/mListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    bind:field="tradingOrders"
+                    bind:itemViewId="TBuyTradingItemView"
+                    bind:on_ItemClick="handleItemClick" >
+                </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
+            </LinearLayout>
+        </ScrollView>
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+</RelativeLayout>

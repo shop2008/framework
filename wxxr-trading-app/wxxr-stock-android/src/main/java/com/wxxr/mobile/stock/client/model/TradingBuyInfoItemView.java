@@ -10,12 +10,11 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 
 @View(name="TradingBuyInfoItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.trading_buy_info_item")
 public abstract class TradingBuyInfoItemView extends ViewBase implements IModelUpdater {
-	final Trace log = Trace.register(TradingMainView.class);
+	final Trace log = Trace.register(TradingBuyInfoItemView.class);
 	
 	TradingAccInfoBean trading;
 	
@@ -39,7 +38,7 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	
 	/**总收益*/
 	@Field(valueKey="text",binding="${trading!=null?trading.totalGain:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED' ? 'resourceId:color/gray': (trading.income > 0 ? 'resourceId:color/red' : (trading.income < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
+			@Attribute(name = "textColor", value = "${trading.over!=null&&trading.over=='CLOSED' ? 'resourceId:color/gray': (trading.totalGain > 0 ? 'resourceId:color/red' : (trading.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
 			})	
 	String income;
 	
@@ -49,7 +48,7 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	
 	@Override
 	public void updateModel(Object data) {
-		if(data instanceof TradingAccountBean){
+		if(data instanceof TradingAccInfoBean){
 			registerBean("trading", data);
 		}
 	}

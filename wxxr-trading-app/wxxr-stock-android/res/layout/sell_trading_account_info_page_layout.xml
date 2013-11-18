@@ -247,7 +247,6 @@
             android:text="清仓" 
             android:layout_weight="1"
             android:background="@drawable/blue_btn_back"
-            android:layout_weight="1"
             android:textColor="@color/white"
             android:textSize="15sp"
             android:gravity="center"

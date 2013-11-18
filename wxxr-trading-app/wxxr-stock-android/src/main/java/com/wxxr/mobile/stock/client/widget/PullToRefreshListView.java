@@ -34,7 +34,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private OnScrollListener mScrollListener; // user's scroll listener
 
     // the interface to trigger refresh and load more.
-    private IRefreshListViewListener mListViewListener;
+    private IRefreshViewListener mListViewListener;
 
     // -- header view
     private RefreshHeaderView mHeaderView;
@@ -372,7 +372,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         }
     }
 
-    public void setRefreshListViewListener(IRefreshListViewListener l) {
+    public void setRefreshViewListener(IRefreshViewListener l) {
         mListViewListener = l;
     }
 
@@ -387,7 +387,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     /**
      * implements this interface to get refresh/load more event.
      */
-    public interface IRefreshListViewListener {
+    public interface IRefreshViewListener {
         public void onRefresh();
 
         public void onLoadMore();

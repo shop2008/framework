@@ -86,8 +86,22 @@ public abstract class TradingMainView extends ViewBase{
 	}
 	
 	//点击T日列表跳转
-	@Command
-	String T_TradingMessageClick(InputEvent event){
+	@Command(navigations={@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")})
+	CommandResult T_TradingMessageClick(InputEvent event) {
+		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
+			CommandResult resutl = new CommandResult();
+			Long stockId = 0L;
+			if (event.getProperty("position") instanceof Integer) {
+				int position = (Integer) event.getProperty("position");
+				if (tradingT != null && tradingT.size() > 0) {
+					TradingAccInfoBean tempTradingA = tradingT.get(position);
+					stockId = tempTradingA.getAcctID();
+				}
+			}
+			resutl.setResult("TBuyTradingPage");
+			resutl.setPayload(stockId);
+			return resutl;
+		}
 		return null;
 	}
 	//点击T+1日列表跳转

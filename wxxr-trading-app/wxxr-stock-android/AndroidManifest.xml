@@ -35,12 +35,26 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+        <!-- 股票交易相关 -->
         <activity
             android:name=".ui.StockSearchViewPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.TBuyTradingPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.TBuyStockInfoPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
         <activity
             android:name=".ui.UserPage"
             android:configChanges="keyboardHidden|orientation"
