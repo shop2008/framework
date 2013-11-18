@@ -82,12 +82,8 @@ public abstract class UserRegPage extends PageBase {
 			if (log.isDebugEnabled()) {
 				log.debug("register:Send Message To Mobile");
 			}
-				try {
-					getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
-				} catch (StockAppBizException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		    getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+				
 		}
 		return null;
 	}
