@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
@@ -25,27 +25,40 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Field(valueKey = "visible", binding = "${tradingAccount!=null?tradingAccount.allTradingAccounts!=null?true:false:false}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts!=null?true:false:false}")
 	boolean recordNotNullVisible;
 
-	@Field(valueKey = "visible", binding = "${tradingAccount!=null?tradingAccount.allTradingAccounts!=null?false:true:true}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts!=null?false:true:true}")
 	boolean recordNullVisible;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.myTradingAccountList:null}", nullable = true)
-	TradingAccountListBean tradingAccount;
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getMyAllTradingAccountList(0,2):null}", nullable = true)
+	TradingAccountListBean allTradeAccountListBean;
+	
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getMySuccessTradingAccountList(0,2):null}", nullable = true)
+	TradingAccountListBean successTradeAccountListBean;
 
-	@Field(valueKey = "options", binding = "${tradingAccount!=null?tradingAccount.allTradingAccounts:null}", visibleWhen = "${curItemId==2}")
-	List<TradingAccountBean> allRecordsList;
+	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts:null}", visibleWhen = "${curItemId==2}")
+	List<GainBean> allRecordsList;
 
-	@Field(valueKey = "options", binding = "${tradingAccount!=null?tradingAccount.successTradingAccountBeans:null}", visibleWhen = "${curItemId==1}")
-	List<TradingAccountBean> successRecordsList;
+	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.successTradingAccounts:null}", visibleWhen = "${curItemId==1}")
+	List<GainBean> successRecordsList;
 
-	@Field(valueKey = "checked", attributes = {@Attribute(name = "checked", value = "${curItemId==1}") })
+	@Field(valueKey = "checked",  attributes={
+			@Attribute(name = "checked", value = "${curItemId == 1}"),
+			@Attribute(name = "textColor", value = "${curItemId == 1?'resourceId:color/white':'resourceId:color/gray'}")
+			})
 	boolean sucRecordBtn;
 
-	@Field(valueKey = "checked", attributes = {@Attribute(name = "checked", value = "${curItemId==2}") })
+	@Field(valueKey = "checked", attributes={
+			@Attribute(name = "checked", value = "${curItemId == 2}"),
+			@Attribute(name = "textColor", value = "${curItemId == 2?'resourceId:color/white':'resourceId:color/gray'}")
+			})
 	boolean allRecordBtn;
 
+
+	int curItemId = 1;
+		
+	
 	/**
 	 * 标题栏-"返回"按钮事件处理
 	 * 
@@ -61,7 +74,6 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	int curItemId = 1;
 
 	@OnShow
 	protected void initCurItemId() {
@@ -77,8 +89,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 	String showSucRecords(InputEvent event) {
 		curItemId = 1;
 		registerBean("curItemId", curItemId);
-		if (tradingService != null)
-			tradingService.getMyTradingAccountList().getSuccessTradingAccountBeans();
+		if (successTradeAccountListBean != null)
+			getUIContext().getKernelContext().getService(ITradingManagementService.class).getMySuccessTradingAccountList(0, 2);
 		return null;
 	}
 
@@ -92,8 +104,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 		curItemId = 2;
 		registerBean("curItemId", curItemId);
-		if (tradingService != null)
-			tradingService.getMyTradingAccountList().getAllTradingAccounts();
+		if (allTradeAccountListBean != null)
+			getUIContext().getKernelContext().getService(ITradingManagementService.class).getMyAllTradingAccountList(0, 2);
 		return null;
 	}
 
@@ -102,8 +114,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
 			if (allRecordsList != null && allRecordsList.size() > 0) {
-				TradingAccountBean bean = allRecordsList.get(position);
-				System.out.println("-----" + bean.getType());
+				GainBean bean = allRecordsList.get(position);
+				System.out.println("-----------"+bean.getMaxStockName());
 			}
 
 		}
@@ -115,10 +127,9 @@ public abstract class UserTradeRecordPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
 			if (successRecordsList != null && successRecordsList.size() > 0) {
-				TradingAccountBean bean = successRecordsList.get(position);
-				System.out.println("-----" + bean.getType());
+				GainBean bean = successRecordsList.get(position);
+				System.out.println("-----" + bean.getMaxStockName());
 			}
-
 		}
 		return null;
 	}
