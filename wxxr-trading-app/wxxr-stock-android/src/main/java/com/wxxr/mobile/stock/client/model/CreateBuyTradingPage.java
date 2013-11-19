@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
@@ -63,8 +64,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	/**可申请最大金额*/
 	long maxAmount;
 
-	/**止损比例*/
-	float capitalRate;	
 	
 	/**综合费用比例,手续费*/
 	float costRate;	
@@ -76,6 +75,11 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	String userId;
 	
 	int currentRadioBtnId = 1;
+	
+	/**止损比例*/
+	@Field(valueKey="text",binding="${'终止止损：-'}${CapitalRate!=null?CapitalRate:'--'}")
+	String capitalRate;
+	
 	
 	/**止损*/
 	@Field(valueKey="text",binding="${'余额创建'}${rateData1!=null?rateData1:'--'}${'止损'}",attributes={
@@ -115,14 +119,31 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Field(valueKey="options",binding="${moneyData!=null?moneyData:null}")
 	List<String> money;
 	
+	//同意守则-挑战交易盘
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${checkedbox==0?'resourceId:color/white':'resourceId:color/gray'}"),
+			@Attribute(name = "enabled", value = "${checkedbox==0?true:false}")
+			}
+	)
+	String submitBtnStatus;
 	
-	@Field(valueKey="enabled",enableWhen="${checkedbox==0}")
-	boolean submitBtnStatus;
-	
-	boolean isChecked = true;
-	
-
+	@Field(valueKey="checked",binding="${checkedbox==0?true:false}")
+	boolean isChecked;
 	int checkedbox = 0;
+	
+	
+	//同意守则-挑战交易盘
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${checkedbox1==0?'resourceId:color/white':'resourceId:color/gray'}"),
+			@Attribute(name = "enabled", value = "${checkedbox1==0?true:false}")
+			})
+	String submitBtnStatus1;
+	
+	@Field(valueKey="checked",binding="${checkedbox1==0?true:false}")
+	boolean isChecked1;
+	
+	int checkedbox1 = 0;
+	
 	
 	int changeMoney = 0;
 	
@@ -208,6 +229,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	String showChallengeTradingClick(InputEvent event){
 		this.currentViewId = 0;
 		registerBean("currentViewId", currentViewId);
+		this.checkedbox = 0;
+		registerBean("checkedbox", checkedbox);
 		return null;
 	}
 	
@@ -216,6 +239,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	String showParticipatingTradingClick(InputEvent event){
 		this.currentViewId = 1;
 		registerBean("currentViewId", currentViewId);
+		this.checkedbox1 = 0;
+		registerBean("checkedbox1", checkedbox1);
 		return null;
 	}
 	
@@ -247,19 +272,29 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		return null;
 	}
 	
-	//同意守则
+	//同意守则-挑战交易盘
 	@Command
 	String isCheckBoxChecked(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			if(isChecked){
-				this.checkedbox = 1;
-				this.isChecked = false;
-				registerBean("checkedbox", checkedbox);
+			if(checkedbox==0){
+				checkedbox = 1;
 			}else{
-				this.checkedbox = 0;
-				this.isChecked = true;
-				registerBean("checkedbox", checkedbox);
+				checkedbox = 0;
 			}
+			registerBean("checkedbox", checkedbox);
+		}
+		return null;
+	}
+	//同意守则-参赛交易盘
+	@Command
+	String isCheckBoxChecked1(InputEvent event){
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			if(checkedbox1==0){
+				checkedbox1 = 1;
+			}else{
+				checkedbox1 = 0;
+			}
+			registerBean("checkedbox1", checkedbox1);
 		}
 		return null;
 	}
@@ -289,6 +324,15 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	//初始化数据
 	@OnShow
 	protected void initData(){
+
+		String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
+		registerBean("CapitalRate", CapitalRate);
+		
+		this.checkedbox = 0;
+		this.checkedbox1 = 0;
+		registerBean("checkedbox", checkedbox);
+		registerBean("checkedbox1", checkedbox1);
+		
 		this.zhfzf = "0.00元";
 		this.djDeposit = "0元";
 		this.changeMoney = 0;
@@ -302,8 +346,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		registerBean("rateData1", "--");
 		registerBean("rateData2", "--");
 		registerBean("rateData3", "--");	
-		this.checkedbox = 0;
-		registerBean("checkedbox", checkedbox);
 		 if(userCreateTradAccInfo!=null){
 			 ArrayList<String> money1 = new ArrayList<String>();
 			Long maxAmount = userCreateTradAccInfo.getMaxAmount();

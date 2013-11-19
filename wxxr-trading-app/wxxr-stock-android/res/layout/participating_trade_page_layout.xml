@@ -20,7 +20,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="中止止损：-5%" 
+        bind:field="capitalRate"
+        android:text="--" 
         android:textSize="14sp"
         android:textColor="@color/white"
         android:layout_marginTop="8dp"/>
@@ -43,7 +44,7 @@
         android:textSize="14sp"
         android:background="@drawable/bule_button_bj"
         android:layout_marginTop="8dp"
-        bind:field="submitBtnStatus"
+        bind:field="submitBtnStatus1"
         bind:on_Click="submitDataClick1" />
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,8 +62,8 @@
             android:background="@drawable/bg_cb_read_rule_or_not"
             android:button="@null"
             android:checked="true" 
-            bind:field="*"
-            bind:on_Click="isCheckBoxChecked"
+            bind:field="isChecked1"
+            bind:on_Click="isCheckBoxChecked1"
             />
 
         <TextView

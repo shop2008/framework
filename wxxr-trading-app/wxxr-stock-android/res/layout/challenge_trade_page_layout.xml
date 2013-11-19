@@ -156,7 +156,6 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             bind:field="submitBtnStatus"
-            android:enabled="false"
             bind:on_Click="submitDataClick"
             android:background="@drawable/button_up"
             />
@@ -180,7 +179,7 @@
             android:background="@drawable/bg_cb_read_rule_or_not"
             android:button="@null"
             android:checked="true"
-            bind:field="*"
+            bind:field="isChecked"
         	bind:on_Click="isCheckBoxChecked" 
             />
 
