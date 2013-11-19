@@ -28,13 +28,16 @@
             bind:field="*"
             bind:on_Click="back" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/ic_stock_search"
+            android:background="@drawable/bg_red_btn"
+            android:text="@string/btn_manage_text"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             bind:field="*"
             bind:on_Click="manage" />
     </RelativeLayout>
@@ -255,7 +258,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             bind:field="challengeTradeInfos"
-                            bind:itemViewId="upage_item_view"
+                            bind:itemViewId="uPageItemView"
                             bind:on_ItemClick="challengeItemClick" />
 
                         <TextView
@@ -387,7 +390,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             bind:field="joinTradeInfos"
-                            bind:itemViewId="upage_item_view"
+                            bind:itemViewId="uPageItemView"
                             bind:on_ItemClick="joinItemClick" />
 
                         <TextView
