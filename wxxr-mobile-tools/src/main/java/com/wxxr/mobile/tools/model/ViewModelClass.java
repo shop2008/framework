@@ -362,7 +362,7 @@ public class ViewModelClass extends AbstractClassModel {
 		}
 
 		List<MethodModel> destroyMethods = getOnDestroyedMethods();
-		if((destroyMethods != null)&&(destroyMethods.size() > 0)){
+		if((convSize > 0)||((destroyMethods != null)&&(destroyMethods.size() > 0))){
 			MethodModel m = ViewModelUtils.createOnDestroyMethod(context, this, destroyMethods);
 			addMethod(m);
 		}

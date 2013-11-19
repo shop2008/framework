@@ -432,6 +432,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	protected void onMenuHide(String menuId){
 
 	}
+	
+	protected void onDestroy(){
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)
@@ -629,6 +633,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.selectionProvider = new SelectionProviderSupport(getName());
 		}
 		return this.selectionProvider;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIContainer#destroy()
+	 */
+	@Override
+	public void destroy() {
+		onDestroy();
+		super.destroy();
 	}	
 
 
