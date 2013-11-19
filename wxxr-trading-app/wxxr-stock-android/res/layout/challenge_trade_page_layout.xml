@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" 
+    android:background="@drawable/context_bj"
+    android:padding="8dp"
     >
 
 
@@ -15,13 +17,16 @@
         android:layout_height="wrap_content" 
         bind:field="money"
         bind:itemViewId="challengeTradeMoneyItem"
-        android:background="@color/gray"
-        android:padding="8dp"
         android:textSize="14sp"
+        android:paddingLeft="8dp"
         android:clickable="true"
         android:enabled="true"
         android:hint="申请金额"
         android:textColor="@color/white"
+        android:background="@drawable/inpunt_bj"
+        android:drawableRight="@drawable/inpunt_arrows"
+        android:drawablePadding="0dp"
+        
         bind:on_TextChanged="moneyTextChanged"/>
 
     <RadioGroup
@@ -39,7 +44,9 @@
             android:layout_weight="1"
             android:checked="true"
             style="@style/create_buy_radion_button"
-            android:text="@string/bt_negative_8_text" 
+            android:text="--" 
+            bind:field="rate1"
+            bind:on_Click="rateClick1"
             android:layout_marginRight="4dp"/>
 
         <RadioButton
@@ -48,7 +55,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
            	style="@style/create_buy_radion_button"
-            android:text="@string/bt_negative_12_text" 
+            android:text="--" 
+            bind:field="rate2"
+            bind:on_Click="rateClick2"
             android:layout_marginRight="4dp"/>
 
         <RadioButton
@@ -57,7 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="@style/create_buy_radion_button"
-            android:text="@string/bt_negative_5_text" />
+            android:text="--" 
+            bind:on_Click="rateClick3"
+            bind:field="rate3"/>
     </RadioGroup>
 
     <TextView
@@ -98,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="0.00元"
                 android:textSize="14sp"
+                bind:field="jiaoyi_zhf"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -121,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="0元"
                 android:textSize="14sp"
+                bind:field="frozen_money"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -138,12 +151,14 @@
         <Button
             android:id="@+id/bt_commit_creat_trade"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:text="@string/bt_commit_apply_text" 
             android:textColor="@color/white"
             android:textSize="14sp"
             bind:field="submitBtnStatus"
+            android:enabled="false"
             bind:on_Click="submitDataClick"
+            android:background="@drawable/button_up"
             />
     </LinearLayout>
 
@@ -155,7 +170,8 @@
         android:gravity="center"
         android:orientation="horizontal" 
         android:layout_marginTop="8dp"
-        bind:on_Click="isCheckBoxChecked" >
+        android:layout_marginBottom="12dp"
+        >
 
         <CheckBox
             android:id="@+id/cb_agree_or_not"
@@ -164,7 +180,8 @@
             android:background="@drawable/bg_cb_read_rule_or_not"
             android:button="@null"
             android:checked="true"
-            bind:field="isChecked"
+            bind:field="*"
+        	bind:on_Click="isCheckBoxChecked" 
             />
 
         <TextView

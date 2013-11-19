@@ -21,11 +21,12 @@
              android:layout_weight="1"
              android:button="@null"
              android:gravity="center"
-             bind:field="*"
-             bind:on_Click="showDealsDetailsView"
              android:text="成交记录" 
              android:padding="8dp"
-             android:textSize="15sp"/>
+             android:textSize="15sp"
+             bind:field="*"
+             bind:on_Click="readRecordClick"
+             android:background="@drawable/bg_champion_btn"/>
 
          <RadioButton
              android:id="@+id/radio1"
@@ -36,46 +37,16 @@
              android:gravity="center"
              android:button="@null"
              android:textSize="15sp"
+             android:padding="8dp"
              bind:field="*"
-             bind:on_Click="showLiquidateView"
-             android:padding="8dp"/>
+             bind:on_Click="tabSelectedClick"
+             android:background="@drawable/bg_champion_btn"/>
      </RadioGroup>
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="match_parent" 
-         >
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             bind:field="DealsDetails" 
-        	android:visibility="visible"
-             >
-			<include layout="@layout/deal_record_layout"/>
-         </LinearLayout>
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             bind:field="LiquidateView"  
-        	 android:visibility="gone"
-              >
-			<LinearLayout 
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:visibility="visible"
-			    bind:field="showShiPanView"  
-			    >
-			    <include layout="@layout/audit_detail_page_layout"/>
-			</LinearLayout>
-			<LinearLayout 
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:visibility="gone"
-			    bind:field="showMoNiView"  >
-			    <include layout="@layout/m_audit_detail_page_layout"/>
-			</LinearLayout>
-         </LinearLayout>
-     </LinearLayout>
+     <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        bind:field="contents"
+        />
 </LinearLayout>

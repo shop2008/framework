@@ -5,50 +5,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@color/page_background_color">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:background="@drawable/dsphb_title_bj">
-        <RadioGroup
-            android:id="@+id/radioGroup1"
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+        android:background="@drawable/tab_bj">
+
+        <RadioButton
+            android:id="@+id/radio0"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:orientation="horizontal">
+            android:layout_height="fill_parent"
+            android:checked="true"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            bind:field="*"
+            bind:on_Click="showChallengeTradingClick"
+            android:text="挑战交易盘" 
+            android:textSize="15sp"
+            android:layout_margin="4dp"
+            android:background="@drawable/tab_bj_btn"/>
 
-            <RadioButton
-                android:id="@+id/radio0"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:layout_weight="1"
-                android:button="@null"
-                android:gravity="center"
-                bind:field="*"
-                bind:on_Click="showChallengeTradingClick"
-                android:text="挑战交易盘" 
-                android:padding="8dp"
-                android:textSize="15sp"/>
-
-            <RadioButton
-                android:id="@+id/radio1"
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="参赛交易盘" 
-                android:gravity="center"
-                android:button="@null"
-                android:textSize="15sp"
-                bind:field="*"
-                bind:on_Click="showParticipatingTradingClick"
-                android:padding="8dp"/>
-        </RadioGroup>
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:text="参赛交易盘" 
+            android:gravity="center"
+            android:button="@null"
+            android:textSize="15sp"
+            android:layout_margin="4dp"
+            bind:field="*"
+            bind:on_Click="showParticipatingTradingClick"
+            android:background="@drawable/tab_bj_btn"/>
+    </RadioGroup>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
-        android:padding="8dp">
+        android:padding="6dp">
         <!-- 挑战交易盘 开始 -->
         <LinearLayout 
             android:layout_width="fill_parent"
@@ -64,7 +62,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:visibility="invisible"
+            android:visibility="gone"
             bind:field="showParticipatingTrading">
 			<include layout="@layout/participating_trade_page_layout"/>
 		</LinearLayout>	

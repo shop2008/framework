@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:background="@color/qsxq">
 
     <ScrollView
@@ -56,6 +57,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="fund"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	
@@ -80,7 +82,8 @@
 	    		        android:layout_width="wrap_content"
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
-	    		        android:text="--" />
+	    		        android:text="--" 
+	    		        bind:field="plRisk"/>
 	    		</RelativeLayout>
 	
 	    		<RelativeLayout
@@ -104,6 +107,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="totalGain"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>
@@ -143,6 +147,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="tradingCost"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -166,6 +171,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="accountPay"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -189,6 +195,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="userGain"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>
@@ -230,6 +237,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="capitalRate"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -253,6 +261,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="frozenAmount"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -276,6 +285,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="payOut"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -299,6 +309,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="unfreezeAmount"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>    		            

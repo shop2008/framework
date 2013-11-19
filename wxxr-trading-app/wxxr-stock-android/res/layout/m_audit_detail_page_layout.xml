@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:background="@color/qsxq">
 
     <ScrollView
         android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scrollbars="none"
         android:fadingEdge="none" >
@@ -56,6 +57,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="fund"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	
@@ -80,7 +82,8 @@
 	    		        android:layout_width="wrap_content"
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
-	    		        android:text="--" />
+	    		        android:text="--" 
+	    		        bind:field="plRisk"/>
 	    		</RelativeLayout>
 	
 	    		<RelativeLayout
@@ -95,7 +98,7 @@
 	    		        android:layout_width="wrap_content"
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentLeft="true"
-	    		        android:text="操盘收益" 
+	    		        android:text="模拟盘收益" 
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	
 	    		    <TextView
@@ -104,6 +107,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="totalGain"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>
@@ -143,6 +147,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="tradingCost"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -166,6 +171,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="accountPay"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
 	    		<RelativeLayout
@@ -189,6 +195,7 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="userGain"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>
@@ -230,11 +237,10 @@
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
+	    		        bind:field="capitalRate"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>
-	    		        
 	    	</LinearLayout>    		            
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

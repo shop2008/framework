@@ -31,7 +31,7 @@
 				<TextView
 				    android:id="@+id/textView1"
 				    android:layout_width="fill_parent"
-				    android:layout_height="30dp"
+				    android:layout_height="32dp"
 				    android:text="最大持股" 
 				    android:layout_weight="1"
 				    android:gravity="center"
@@ -45,7 +45,7 @@
 				<TextView
 				    android:id="@+id/textView2"
 				    android:layout_width="fill_parent"
-				    android:layout_height="30dp"
+				    android:layout_height="32dp"
 				    android:text="额度" 
 				    android:layout_weight="1"
 				    android:gravity="center"
@@ -58,7 +58,7 @@
 				<TextView
 				    android:id="@+id/textView3"
 				    android:layout_width="fill_parent"
-				    android:layout_height="30dp"
+				    android:layout_height="32dp"
 				    android:text="盈亏" 
 				    android:layout_weight="1"
 				    android:gravity="center"
@@ -90,8 +90,17 @@
 		                android:textColor="@android:color/white"
 		                android:textSize="16sp" />		
 			</LinearLayout>
-		
-			<com.wxxr.mobile.stock.client.widget.TListView
+		    <TextView 
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="T日"
+		        android:id="@+id/listview_header_title"
+		        android:padding="4dp"
+		        android:textColor="#808080"
+		        android:textSize="15sp"
+		        android:background="#2D2C2A"
+		        bind:field="isVisibleT"/>
+			<com.wxxr.mobile.stock.client.widget.AutoHeightListView
 			    android:id="@+id/t_listView1"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
@@ -101,9 +110,19 @@
 			    bind:itemViewId="TradingBuyInfoItemView"
 			    bind:on_ItemClick="T_TradingMessageClick"
 			    >
-			</com.wxxr.mobile.stock.client.widget.TListView>
+			</com.wxxr.mobile.stock.client.widget.AutoHeightListView>
 			
-			<com.wxxr.mobile.stock.client.widget.TListView
+			<TextView 
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="T+1日"
+		        android:id="@+id/listview_header_title"
+		        android:padding="4dp"
+		        android:textColor="#808080"
+		        android:textSize="15sp"
+		        bind:field="isVisibleT1"
+		        android:background="#2D2C2A"/>
+			<com.wxxr.mobile.stock.client.widget.AutoHeightListView
 			    android:id="@+id/t_listView2"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
@@ -112,7 +131,7 @@
 			    style="@style/mListView"
 			    bind:itemViewId="TradingBuyInfoItemView"
 			    bind:on_ItemClick="tradingMessageClick">
-			</com.wxxr.mobile.stock.client.widget.TListView>                 
+			</com.wxxr.mobile.stock.client.widget.AutoHeightListView>                 
         </LinearLayout>
     </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
 

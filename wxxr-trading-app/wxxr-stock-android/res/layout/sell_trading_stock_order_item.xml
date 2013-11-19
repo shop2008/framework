@@ -3,11 +3,13 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/listview_selected_item1">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="4dp">
 
         <TextView
             android:id="@+id/textView1"
@@ -18,7 +20,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp"
             bind:field="stockName"
 			/>
 
@@ -31,7 +32,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp" 
             bind:field="currentPirce"           
             />
 
@@ -44,7 +44,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp"
             bind:field="buy"
             />
 
@@ -57,7 +56,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp"
             bind:field="gain"
             />
 
@@ -65,7 +63,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:layout_marginBottom="4dp">
 
         <TextView
             android:id="@+id/textView5"
@@ -76,7 +75,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp" 
             bind:field="stockCode"           
 			/>
 
@@ -89,7 +87,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp" 
             bind:field="changeRate"           
 			/>
 
@@ -102,7 +99,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp"
             bind:field="amount"
             />
 
@@ -115,7 +111,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:padding="8dp"
             bind:field="gainRate"
             />
 

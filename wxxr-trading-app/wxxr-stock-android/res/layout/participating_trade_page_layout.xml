@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/context_bj"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/textView1"
@@ -39,7 +41,7 @@
         android:text="提交申请" 
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:background="@drawable/blue_btn_back"
+        android:background="@drawable/bule_button_bj"
         android:layout_marginTop="8dp"
         bind:field="submitBtnStatus"
         bind:on_Click="submitDataClick1" />
@@ -49,7 +51,8 @@
         android:gravity="center"
         android:orientation="horizontal" 
         android:layout_marginTop="8dp"
-        bind:on_Click="isCheckBoxChecked">
+        android:layout_marginBottom="12dp"
+        >
 
         <CheckBox
             android:id="@+id/cb_agree_or_not"
@@ -58,7 +61,8 @@
             android:background="@drawable/bg_cb_read_rule_or_not"
             android:button="@null"
             android:checked="true" 
-            bind:field="isChecked"
+            bind:field="*"
+            bind:on_Click="isCheckBoxChecked"
             />
 
         <TextView

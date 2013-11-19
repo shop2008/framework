@@ -28,7 +28,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" 
+            />
         
         <activity
             android:name=".ui.WebPage"
@@ -174,6 +175,25 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.CreateBuyTradingPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.OpetationDetailsPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.SellTradingAccountPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
         
         
     </application>

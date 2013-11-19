@@ -181,6 +181,7 @@
             android:background="@drawable/list_header_first_bj"
             android:padding="10dp"
             android:textColor="#ffffff"
+            android:textSize="15sp"
             />
         <Button 
             android:id="@+id/btn_latest_price"
@@ -189,6 +190,7 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:text="最新价格"
+            android:textSize="15sp"
             bind:on_ItemClick="orderByPercent"
             android:background="@drawable/list_header_center_last_bj"
             android:textColor="#ffffff"
@@ -202,6 +204,7 @@
             android:background="@drawable/list_header_center_last_bj"
             android:drawableRight="@drawable/up_arrows"
             android:padding="10dp"
+            android:textSize="15sp"
             android:text="涨跌幅"
             bind:on_ItemClick="orderByPercent"
             android:textColor="#ffffff" />
