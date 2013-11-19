@@ -174,6 +174,9 @@
     <string name="title_my_account">我的账号</string>
     <string name="label_define_pic">个性头像</string>
     <string name="label_user_home_back">主页背景</string>
+    <string name="hint_please_input_new_nick">请输入昵称</string>
+    <string name="label_login_out">退出登录</string>
+    <string name="btn_manage_text">管理</string>
 
     <!-- 头像设置 -->
     <string name="title_user_pic_set">头像设置</string>
@@ -234,4 +237,11 @@
     
     <!-- 设置界面 -->
     <string name="not_login_text">未登录</string>
+    <!-- 联系我们 -->
+    <string name="title_constract_us">联系我们</string>
+    <string name="label_official_site">官方网站</string>
+    <string name="label_service_tel">客服电话</string>
+    <string name="label_service_email">客服邮箱</string>
+    <string name="label_platform_support">安信证券</string>
+    <string name="label_platform_addr">北京中关村大街营业部</string>
 </resources>

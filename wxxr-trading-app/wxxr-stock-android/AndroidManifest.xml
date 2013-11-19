@@ -145,14 +145,25 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.UserNewsPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
+        <activity
+            android:name=".ui.ConstructUsPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
                 
+        
         <activity
             android:name=".ui.RegisterRulesPage"
             android:configChanges="keyboardHidden|orientation"
