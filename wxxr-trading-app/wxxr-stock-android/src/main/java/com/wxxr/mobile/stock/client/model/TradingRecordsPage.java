@@ -77,9 +77,13 @@ public abstract class TradingRecordsPage extends PageBase implements
 		if (value instanceof Map) {
 			Map temp = (Map) value;
 			for (Object key : temp.keySet()) {
-				Long tempt = (Long) temp.get(key);
+				Object tempt = temp.get(key);
 				if (tempt != null && "result".equals(key)) {
-					accId = tempt + "";
+					if(tempt instanceof Long) {
+						accId = (Long)tempt + "";
+					} else if(tempt instanceof String) {
+						accId = (String)tempt;
+					}
 				}
 			}
 		}
