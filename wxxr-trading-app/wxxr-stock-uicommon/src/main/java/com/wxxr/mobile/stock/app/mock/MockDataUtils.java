@@ -46,6 +46,32 @@ public class MockDataUtils {
 			t0ta.setTotalGain(3l);
 			t0ta.setVirtual(true);
 			list.add(t0ta);
+			
+			t0ta = new TradingAccInfoBean();
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("上海");
+			t0ta.setMaxStockName("北京银行");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(1);
+			t0ta.setSum(2l);
+			t0ta.setTotalGain(3l);
+			t0ta.setVirtual(true);
+			list.add(t0ta);
+			
+			t0ta = new TradingAccInfoBean();
+			t0ta.setAcctID(1L);
+			t0ta.setCreateDate(0);
+			t0ta.setMaxStockCode("1233");
+			t0ta.setMaxStockMarket("上海");
+			t0ta.setMaxStockName("中华人寿");
+			t0ta.setOver("UNCLOSED");
+			t0ta.setStatus(1);
+			t0ta.setSum(2l);
+			t0ta.setTotalGain(3l);
+			t0ta.setVirtual(true);
+			list.add(t0ta);
 			break;
 		case 1:
 			// ===== mock T+1日模拟盘，已结算
@@ -128,6 +154,49 @@ public class MockDataUtils {
 		t.setBeDone(true);
 		t.setDay(0);
 		t.setCode("600521");
+		t.setMarket("浦发银行");
+		t.setFee(3990);
+		t.setPrice(1256);
+		t.setTax(1230);
+		t.setVol(3500);
+		t.setAmount(12000000);
+		t.setDescribe("买入成交");
+		list.add(t);
+		
+		t = new TradingRecordBean();
+		t.setDate(System.currentTimeMillis());
+		t.setBeDone(false);
+		t.setDay(0);
+		t.setCode("600531");
+		t.setMarket("浦发银行");
+		t.setFee(3990);
+		t.setPrice(1256);
+		t.setTax(1230);
+		t.setVol(3500);
+		t.setAmount(12000000);
+		t.setDescribe("买入下单");
+		list.add(t);
+		
+		t = new TradingRecordBean();
+		t.setDate(System.currentTimeMillis());
+		t.setBeDone(false);
+		t.setDay(0);
+		t.setCode("601521");
+		t.setMarket("方正科技");
+		t.setFee(3990);
+		t.setPrice(1256);
+		t.setTax(1230);
+		t.setVol(3500);
+		t.setAmount(12000000);
+		t.setDescribe("买入下单");
+		list.add(t);
+		
+		t = new TradingRecordBean();
+		t.setDate(System.currentTimeMillis());
+		t.setBeDone(true);
+		t.setDay(0);
+		t.setCode("602521");
+		t.setMarket("方正科技");
 		t.setFee(3990);
 		t.setPrice(1256);
 		t.setTax(1230);

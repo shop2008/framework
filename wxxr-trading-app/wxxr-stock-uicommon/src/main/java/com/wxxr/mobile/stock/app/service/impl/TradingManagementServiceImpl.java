@@ -314,6 +314,10 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountBean getTradingAccountInfo(final String acctID)
 			throws StockAppBizException {
+		if(context.getApplication().isInDebugMode()) {
+			myTradingAccount = MockDataUtils.mockTradingAccountInfo();
+			return myTradingAccount;
+		}
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -741,6 +745,10 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingRecordListBean getTradingAccountRecord(final String acctID,
 			final int start, final int limit) {
+		if (context.getApplication().isInDebugMode()) {
+			recordsBean.setRecords(MockDataUtils.mockTradingRecord());
+			return recordsBean;
+		}
 		context.invokeLater(new Runnable() {
 
 			public void run() {
