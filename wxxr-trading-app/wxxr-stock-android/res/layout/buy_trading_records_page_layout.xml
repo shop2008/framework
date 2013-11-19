@@ -86,10 +86,9 @@
             style="@style/mListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            bind:field="StockOrdersList"
-            bind:itemViewId="StockOrdersItemView"
-             >
+            bind:field="tradingRecordBean"
+            bind:itemViewId="TradingRecordItemView"
+            bind:on_ItemClick="handleItemClick" >
         </ListView>
     </LinearLayout>
 
