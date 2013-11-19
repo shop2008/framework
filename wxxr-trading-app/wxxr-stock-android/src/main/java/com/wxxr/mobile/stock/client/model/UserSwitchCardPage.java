@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
