@@ -57,6 +57,24 @@
             android:screenOrientation="portrait" />
         
         <activity
+            android:name=".ui.TradingRecordsPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.TradingRecordOrderDetailPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.TradingRecordDoneDetailPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
             android:name=".ui.UserPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"

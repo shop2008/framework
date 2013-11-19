@@ -98,16 +98,16 @@ public abstract class TradingMainView extends ViewBase{
 	CommandResult T_TradingMessageClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			Long stockId = 0L;
+			Long acctId = 0L;
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
 				if (tradingT != null && tradingT.size() > 0) {
 					TradingAccInfoBean tempTradingA = tradingT.get(position);
-					stockId = tempTradingA.getAcctID();
+					acctId = tempTradingA.getAcctID();
 				}
 			}
 			resutl.setResult("TBuyTradingPage");
-			resutl.setPayload(stockId);
+			resutl.setPayload(acctId);
 			return resutl;
 		}
 		return null;

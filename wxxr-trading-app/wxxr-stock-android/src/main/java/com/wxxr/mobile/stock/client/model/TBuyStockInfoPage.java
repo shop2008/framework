@@ -31,15 +31,15 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 		IModelUpdater {
 
 	@Bean
-	long idBean;
+	String idBean;
 	@Bean
-	long buyDayBean;
+	String buyDayBean;
 	@Bean
-	long sellDayBean;
+	String sellDayBean;
 	@Bean
-	long applyFeeBean;
+	String applyFeeBean;
 	@Bean
-	float lossLimitBean;
+	String lossLimitBean;
 
 	@Field(valueKey = "text", binding = "${idBean}")
 	String id;
@@ -67,11 +67,11 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 
 	@OnShow
 	protected void initStockInfo() {
-		registerBean("idBean", "");
-		registerBean("buyDayBean", "");
-		registerBean("sellDayBean", "");
-		registerBean("applyFeeBean", "");
-		registerBean("lossLimitBean", "");
+//		registerBean("idBean", "--");
+//		registerBean("buyDayBean", "--");
+//		registerBean("sellDayBean", "--");
+//		registerBean("applyFeeBean", "--");
+//		registerBean("lossLimitBean", "--");
 	}
 
 	
