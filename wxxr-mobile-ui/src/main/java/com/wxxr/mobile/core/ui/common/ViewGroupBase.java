@@ -67,6 +67,7 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 			if(this.viewStack.isEmpty()){
 				setAttribute(AttributeKeys.visible, true);
 			}
+			view.show();
 			this.viewStack.remove(name);
 			this.viewStack.push(name);
 		}
