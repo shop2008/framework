@@ -93,15 +93,16 @@ public interface StockResource {
     @Produces( { "application/json" })
     //@GZIP
     public List<StockMinuteKVO> getFiveDayMinuteline(ParamVO paramVO) throws Exception;
-    @POST
-    @Path("/blocStockkHQ")
-    @Produces( { "application/json" })
+   
     /**
      * @GZIP
      * @param taxisvo
      * @return
      * @throws Exception
      */
+    @POST
+    @Path("/blocStockkHQ")
+    @Produces( { "application/json" })
     public List<StockQuotationVO> getStockHQListByBlockId(TaxisVO taxisvo) throws Exception;
     /**
      * 周K线数据接口

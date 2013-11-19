@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -167,4 +168,16 @@ public interface IUserManagementService {
 	 * 		如果有记录返回记录信息，否则返回空
 	 */	
 	TradeDetailListBean getMyTradeDetailInfo();
+	/**
+	 * 获取他人主页
+	 * @param userId
+	 * @return
+	 */
+	PersonalHomePageBean getOtherPersonalHomePage(String userId);
+	/**
+	 * 获取当前用户个人主页
+	 * @param userId
+	 * @return
+	 */
+	PersonalHomePageBean getMyPersonalHomePage();
 }

@@ -15,11 +15,11 @@ public class PersonalHomePage{
 	 */
 	private double totalProfit;
 	/**
-	 * 收益率
+	 * 挑战交易盘分享笔数
 	 */
 	private long actualCount;
 	/**
-	 * 
+	 * 参赛交易盘分享笔数
 	 */
 	private long virtualCount;
 	/**

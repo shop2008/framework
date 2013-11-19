@@ -9,6 +9,7 @@ import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 
 /**
@@ -44,7 +45,8 @@ public interface ITradingManagementService {
 	 * @throws StockAppBizException
 	 */
 	TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException;
- //======================交易部分接口 =======================
+	
+	//======================交易部分接口 =======================
 	
 	/**
 	 * 创建交易盘
@@ -94,9 +96,13 @@ public interface ITradingManagementService {
 	/**
 	 * 撤单
 	 * @param orderID -交易订单ID
-	 * @throws StockAppBizException
 	 */
-	void cancelOrder(String orderID) throws StockAppBizException;
+	void cancelOrder(String orderID);
+	/**
+	 * 清算交易盘
+	 * @param acctID - 交易盘Id
+	 */
+	public void clearTradingAccount(String acctID);
 	/**
 	 * 快速买入
 	  * @param captitalAmount
@@ -141,7 +147,14 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	AuditDetailBean getAuditDetail(String accId);
-
+	//========================排行榜 ============================
+	/**
+	 * 获取赚钱榜
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public RankListBean getEarnRank(int start,int limit);
 	/**
 	 * 获取T日排行榜
 	 * 
@@ -180,4 +193,14 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	UserCreateTradAccInfoBean getUserCreateTradAccInfo();
+	
+	
+	/**
+	 * 交易记录
+	 * @param acctID
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	TradingRecordListBean getTradingAccountRecord(String acctID,int start,int limit);
 }

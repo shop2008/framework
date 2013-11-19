@@ -4,6 +4,8 @@
 package com.wxxr.mobile.stock.app.model;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
+import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 
 
 /**
@@ -45,11 +47,11 @@ public class User {
 	/**
 	 * 未读消息
 	 */
-	private String unReadMsg;
+	private String unReadMsg="0";
 	/**
 	 * 积分
 	 */
-	private String score;
+	private String score="0";
 
 	/**
 	 * 余额
@@ -75,6 +77,21 @@ public class User {
 	 * 参赛交易盘分享笔数
 	 */
 	private String joinShared;
-
+	/**
+	 * 是否绑定银行卡
+	 */
+	private boolean bindCard =false;
+	/**
+	 * 推送消息设置
+	 */
+	private boolean messagePushSettingOn = false;
+	/**
+	 * 用户资产信息
+	 */
+	private UserAssetBean userAsset;
+	/**
+	 * 银行卡信息	 
+	 */
+	private AuthInfoBean bankInfo;
 //	private List<TradingAccountBean> tradeInfos;
 }
