@@ -9,6 +9,8 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
+import com.wxxr.mobile.stock.app.bean.MessageInfoListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
@@ -606,6 +608,35 @@ public class MockDataUtils {
 		myTradingAccount.setTradingOrders(tradingOrders);
 		
 		return myTradingAccount;
+	}
+	
+	public static MessageInfoListBean mockMessageInfos() {
+		
+		MessageInfoListBean messageListBean = new MessageInfoListBean();
+		
+		List<MessageInfoBean> messageInfoBeans = new ArrayList<MessageInfoBean>();
+		MessageInfoBean messageInfo;
+		
+		messageInfo = new MessageInfoBean();
+		messageInfo.setTitle("平安银行模拟盘");
+		messageInfo.setContent("开始系统清仓，清仓时仓位80.88%");
+		messageInfo.setDate(System.currentTimeMillis());
+		messageInfoBeans.add(messageInfo);
+		
+		messageInfo = new MessageInfoBean();
+		messageInfo.setTitle("实盘买入平安银行");
+		messageInfo.setContent("9.98元成交2000股，清仓时仓位80.88%");
+		messageInfo.setDate(System.currentTimeMillis());
+		messageInfoBeans.add(messageInfo);
+		
+		messageInfo = new MessageInfoBean();
+		messageInfo.setTitle("幸运获得实盘券");
+		messageInfo.setContent("恭喜您创建了新锐操盘交易分享平台的第1万个实盘，您将收到我们赠送的50000元实盘券");
+		messageInfo.setDate(System.currentTimeMillis());
+		messageInfoBeans.add(messageInfo);
+		
+		messageListBean.setMessageInfos(messageInfoBeans);
+		return messageListBean;
 	}
 	// ====================mockData end ==========
 	
