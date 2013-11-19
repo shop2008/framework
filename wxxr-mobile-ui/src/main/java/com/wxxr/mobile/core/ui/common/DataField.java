@@ -11,12 +11,10 @@ import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
-import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
-import com.wxxr.mobile.core.ui.utils.ConvertorRegistry;
 
 /**
  * @author neillin
@@ -31,7 +29,6 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	private IDomainValueModel<T> domainModel;
 	
 	private boolean readOnly = false;
-	private IValueConvertor<T> convertor;
 	
 	private Class<T> valueType;
 	
@@ -74,20 +71,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 
 	public DataField(String name) {
 		super(name);
-	}
-
-
-	/**
-	 * @return
-	 */
-	protected IValueConvertor<T> getConvertor() {
-		IValueConvertor<T> v = convertor;
-		if(v == null){
-			v = ConvertorRegistry.getInstance().getConverter(getValueType());
-		}
-		return v;
-	}
-	
+	}	
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.IAdaptable#getAdaptor(java.lang.Class)
@@ -125,15 +109,6 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
-
-
-	/**
-	 * @param convertor the convertor to set
-	 */
-	public void setConvertor(IValueConvertor<T> validator) {
-		this.convertor = validator;
-	}
-
 
 	/**
 	 * @param valueType the valueType to set

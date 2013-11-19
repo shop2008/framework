@@ -33,7 +33,11 @@ public class FieldModel implements MemberModel{
 	}
 	
 	public String getSimpleBoxedType() {
-		String type = new TypeModel(getType()).getType();
+		return getSimpleBoxedType(getType());
+	}
+	
+	protected String getSimpleBoxedType(String sType) {
+		String type = new TypeModel(sType).getType();
 		if(type.indexOf('.') > 0){
 			return getSimpleType();
 		}
@@ -56,6 +60,7 @@ public class FieldModel implements MemberModel{
 		}
 		return null;
 	}
+
 	
 	/**
 	 * @param name the name to set

@@ -9,13 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.lang.model.element.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
-import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
-import com.wxxr.mobile.core.tools.generator.ViewModelDomainResolver;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.common.ELDomainValueModel;
@@ -25,8 +26,14 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
+@SuppressWarnings("restriction")
 public class ViewModelClass extends AbstractClassModel {
 	private static final Logger log = LoggerFactory.getLogger(ViewModelClass.class);
+	
+	private static class UnresolvedField {
+		Element elem;
+		Field annotation;
+	}
 
 	private Map<String,UICommandModel> commandModels;
 	private Map<String, ExpressionModel> expressions;
@@ -39,6 +46,7 @@ public class ViewModelClass extends AbstractClassModel {
 	private String[] alias;
 //	private final ViewModelDomainResolver domainResolver;
 	private final ICodeGenerationContext context;
+	private ArrayList<UnresolvedField> unresolvedFields;
 	
 	public ViewModelClass(ICodeGenerationContext ctx){
 //		domainResolver = new ViewModelDomainResolver(ctx);
@@ -121,6 +129,19 @@ public class ViewModelClass extends AbstractClassModel {
 		return result.isEmpty() ? null : result;
 	}
 
+	public List<ConvertorField> getConvertorFields() {
+		if((this.fields == null)||(this.fields.size() == 0)){
+			return null;
+		}
+		ArrayList<ConvertorField> result = new ArrayList<ConvertorField>();
+		for (FieldModel field : this.fields.values()) {
+			if(field instanceof ConvertorField){
+				result.add((ConvertorField)field);
+			}
+		}
+		return result.isEmpty() ? null : result;
+	}
+
 
 	
 	public List<ViewGroupModel> getViewGroups() {
@@ -136,6 +157,16 @@ public class ViewModelClass extends AbstractClassModel {
 		return result.isEmpty() ? null : result;
 	}
 
+	public void addUnresolvedField(Element elem, Field annotation){
+		UnresolvedField f = new UnresolvedField();
+		f.annotation = annotation;
+		f.elem = elem;
+		if(this.unresolvedFields == null){
+			this.unresolvedFields = new ArrayList<UnresolvedField>();
+		}
+		this.unresolvedFields.add(f);
+	}
+	
 	public void addField(String name, Class<?> type){
 		name = StringUtils.trimToNull(name);
 		if((name == null)||(type == null)){
@@ -236,6 +267,11 @@ public class ViewModelClass extends AbstractClassModel {
 	}
 
 	public void prepare(ICodeGenerationContext context) {
+		if(this.unresolvedFields != null){
+			for (UnresolvedField f : this.unresolvedFields) {
+				addField(ViewModelUtils.createDataFieldModel(context, this, f.elem, f.annotation, true));				
+			}
+		}
 		List<DataFieldModel> dFields = getDataFields();
 		if(dFields != null){
 			for (DataFieldModel f : dFields) {
@@ -277,6 +313,16 @@ public class ViewModelClass extends AbstractClassModel {
 			MethodModel m = ViewModelUtils.createRegisterBeansMethod(context, this, beanFields);
 			addMethod(m);
 		}
+		
+		List<ConvertorField> convFields = getConvertorFields();
+		int convSize = (convFields != null) ? convFields.size() : 0;
+		if(convSize > 0){
+			MethodModel m = ViewModelUtils.createInitConvertorsMethod(context, this, convFields);
+			addMethod(m);
+			m = ViewModelUtils.createDestroyConvertorsMethod(context, this, convFields);
+			addMethod(m);
+		}
+
 
 		List<ExpressionModel> expressions = getExpressions();
 		int expSize = (expressions != null) ? expressions.size() : 0;
@@ -398,8 +444,6 @@ public class ViewModelClass extends AbstractClassModel {
 			return;
 		}
 		super.addField(field);
-//		TypeModel typeModel = new TypeModel(field.getType());
-//		this.domainResolver.registerBean(field.getName(), context.getProcessingEnvironment().getElementUtils().getTypeElement(typeModel.getType()).asType());
 	}
 
 	/**

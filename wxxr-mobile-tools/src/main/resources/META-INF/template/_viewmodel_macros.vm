@@ -20,6 +20,7 @@
 #macro(initDataFields $model $dataFields)
     private void initDataFields() {
 #set( $DType = ${model.addImport("com.wxxr.mobile.core.ui.common.DataField")})
+        ELDomainValueModel dModel = null;
 #foreach($fld in $dataFields) 
         this.${fld.name}Field = new ${DType}<${fld.simpleBoxedType}>("${fld.name}");
         this.${fld.name}Field.setValueType(${fld.simpleType}.class);
@@ -28,7 +29,13 @@
 #end
         this.${fld.name}Field.setValue(this.${fld.name});
 #if(${fld.binding})
-        this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType}>(getELManager(true), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class));
+#if(${fld.convertor})
+        dModel = new ELDomainValueModel<${fld.simpleBoxedType},${fld.convertor.simpleSourceType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.convertor.simpleSourceType}.class);
+        dModel.setConvertor(this.${fld.convertor.name});
+        this.${fld.name}Field.setDomainModel(dModel);
+#else
+        this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType},${fld.simpleBoxedType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class));
+#end
 #end
         add(this.${fld.name}Field);        
 #end
@@ -48,7 +55,7 @@
 #foreach($expr in $expressions)
 #if(${expr.elexpress})
         addValueEvaluator(
-            new ELAttributeValueEvaluator(getELManager(true), "${expr.expression}", "${expr.attributeKey}", getChild("${expr.field.name}"))
+            new ELAttributeValueEvaluator(getEvaluatorContext(), "${expr.expression}", "${expr.attributeKey}", getChild("${expr.field.name}"))
         );
 #else
         AttributeKeys.updateAttribute("${expr.attributeKey}",getChild("${expr.field.name}"), "${expr.expression}");
@@ -80,7 +87,7 @@
 #macro(initBeanUpdaters $model $bindings)
     private void initBeanUpdaters() {
 #foreach($binding in $bindings) 
-        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getELManager(true), "${binding.expression}", ${binding.field.simpleBoxedType}.class); 
+        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", ${binding.field.simpleBoxedType}.class); 
 #end
     }
 #end
@@ -160,6 +167,9 @@
     protected void onDestroy() {
 #foreach($meth in $methods) 
         ${meth.name}();       
+#end
+#if(${model.convertorFields})
+    destroyConvertors();
 #end
     }
 #end
@@ -266,6 +276,40 @@
     }
 #end 
 
+#macro(initConvertors $model $convertors)
+    private void initConvertors() {
+#set( $map = ${model.addImport("java.util.Map")})
+#set( $map = ${model.addImport("java.util.HashMap")})
+        Map<String, Object> params = null;
+#foreach($conv in $convertors)
+        if(this.${conv.name} == null){
+            this.${conv.name} = new ${conv.simpleType}();
+        }
+#if(${conv.params})
+        params = new HashMap<String, Object>();
+#foreach($p in ${conv.params})        
+        params.put("${p.name}", ${p.stringValue});
+#end
+#else
+        params = null;
+#end
+        this.${conv.name}.init(getUIContext(), params);
+        
+#end
+    }
+#end
+  
+#macro(destroyConvertors $model $convertors)  
+    private void destroyConvertors() {
+#foreach($conv in $convertors)
+        if(this.${conv.name} != null){
+            this.${conv.name}.destroy();
+            this.${conv.name} = null;
+        }
+#end
+    }
+#end
+
 #macro(init $model )
     @Override
     protected void onCreate() {
@@ -274,6 +318,9 @@
 #end
 #if(${model.beanBindings})
     initBeanUpdaters();
+#end
+#if(${model.convertorFields})
+    initConvertors();
 #end
 
 #if(${model.commands})

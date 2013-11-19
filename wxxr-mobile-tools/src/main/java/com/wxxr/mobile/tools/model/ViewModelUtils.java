@@ -10,24 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import javax.lang.model.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.ext.DeclHandler;
 
 import com.sun.source.tree.VariableTree;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -47,6 +42,7 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
@@ -366,6 +362,40 @@ public abstract class ViewModelUtils {
 		return m;
 	}
 	
+	public static MethodModel createInitConvertorsMethod(ICodeGenerationContext context,ViewModelClass model, List<ConvertorField> convs){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("initConvertors");
+		m.setModifiers("private");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("convertors", convs);
+		String javaStatement = context.getTemplateRenderer().renderMacro("initConvertors", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+	
+	public static MethodModel createDestroyConvertorsMethod(ICodeGenerationContext context,ViewModelClass model, List<ConvertorField> convs){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("destroyConvertors");
+		m.setModifiers("private");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("convertors", convs);
+		String javaStatement = context.getTemplateRenderer().renderMacro("destroyConvertors", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+
+	
 	public static boolean isPrimitiveType(TypeMirror type){
 		TypeKind kind = type.getKind();
 		return (kind == TypeKind.BOOLEAN)||
@@ -436,9 +466,13 @@ public abstract class ViewModelUtils {
 		Menu menu = elem.getAnnotation(Menu.class);
 		ViewGroup vg = elem.getAnnotation(ViewGroup.class);
 		Bean bean = elem.getAnnotation(Bean.class);
+		Convertor conv = elem.getAnnotation(Convertor.class);
 		if(field != null){
 			if(isFieldAnnotationApplyable(context, elem)){
-				model.addField(createDataFieldModel(context,model,elem,field));
+				FieldModel m = createDataFieldModel(context,model,elem,field,false);
+				if(m != null){
+					model.addField(m);
+				}
 			}else{
 				log.error("@Field annotation is applyable on member field with type of IDataField !!!");
 			}
@@ -446,6 +480,8 @@ public abstract class ViewModelUtils {
 			model.addField(createMenuModel(context,elem,menu));
 		}else if(vg != null){
 			model.addField(createViewGroupModel(context,elem,vg));
+		}else if(conv != null){
+			model.addField(createConvertorModel(context,model,elem,conv));
 		}else if(bean != null){
 			model.addField(createBeanFieldModel(context,model,elem,bean));
 		}else{
@@ -467,7 +503,17 @@ public abstract class ViewModelUtils {
 		return updateBasicFieldModel(context, new FieldModel(), elem);
 	}
 
-	public static DataFieldModel createDataFieldModel(ICodeGenerationContext context,ViewModelClass vModel,Element elem,Field field){
+	public static DataFieldModel createDataFieldModel(ICodeGenerationContext context,ViewModelClass vModel,Element elem,Field field, boolean failIfUnresolved){
+		String convName = StringUtils.trimToNull(field.converter());
+		ConvertorField conv = (ConvertorField)vModel.getField(convName);
+		if((convName != null)&&(conv == null)){
+			if(failIfUnresolved){
+				throw new IllegalArgumentException("Cannot found converter named :"+convName);
+			}else{
+				vModel.addUnresolvedField(elem, field);
+				return null;
+			}
+		}
 		DataFieldModel model = new DataFieldModel();
 		String s = null;
 		if((s = StringUtils.trimToNull(field.binding())) != null){
@@ -488,8 +534,60 @@ public abstract class ViewModelUtils {
 			}
 			model.setValueKey(key);
 		}
+		if(conv != null){
+			model.setConvertor(conv);
+		}
 		updateFieldAttributes(context, elem, field.enableWhen(),field.visibleWhen(),field.attributes(), model);
 		return model;
+	}
+	
+	public static ConvertorField createConvertorModel(ICodeGenerationContext context,ViewModelClass vModel,Element elem,Convertor conv){
+		ConvertorField model = new ConvertorField();
+		model.setClassModel(vModel);
+		String s = null;
+		if((s = StringUtils.trimToNull(conv.className())) != null){
+			model.setClassName(s);
+		}
+		if(conv.params() != null){
+			for (Parameter p : conv.params()) {
+				model.addParameter(p.name(),p.value(),p.type());
+			}
+		}
+		updateBasicFieldModel(context,model,elem);
+		DeclaredType fieldType = (DeclaredType)elem.asType();
+		List<? extends TypeMirror> types = getParameterTypesOfConvertor(context, fieldType);
+		if(types != null){
+			model.setTargetValueType(types.get(0).toString());
+			model.setSourceValueType(types.get(1).toString());
+			log.info("Find convertor field :"+model);			
+		}else{
+			throw new IllegalArgumentException("Invalid convertor field type :["+fieldType+"]");
+		}
+		return model;
+	}
+	
+	
+	private static List<? extends TypeMirror> getParameterTypesOfConvertor(ICodeGenerationContext context,DeclaredType type){
+		log.info("Convertor field type :["+type.getClass()+"]/"+type);
+//		if(context.getProcessingEnvironment().getTypeUtils().isSubtype(type, interfaceType) == false){
+//			return null;
+//		}
+		List<? extends TypeMirror> types = type.getTypeArguments();
+		if((types != null)&&(types.size() == 2)){
+			return types;
+		}
+		List<? extends TypeMirror> superTypes = context.getProcessingEnvironment().getTypeUtils().directSupertypes(type);
+		if(superTypes != null){
+			for (TypeMirror typeMirror : superTypes) {
+				if(typeMirror instanceof DeclaredType){
+					types = getParameterTypesOfConvertor(context, (DeclaredType)typeMirror);
+					if(types != null){
+						return types;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

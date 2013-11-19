@@ -5,12 +5,12 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.wxxr.javax.el.BeanNameResolver;
+import com.wxxr.javax.el.ELContext;
 import com.wxxr.javax.el.ELManager;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
@@ -21,12 +21,12 @@ import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
+import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IMenuCallback;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.ISelection;
-import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.api.IStructureSelection;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
@@ -34,11 +34,11 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.util.LRUMap;
-import com.wxxr.mobile.core.util.StringUtils;
 
 
 /**
@@ -218,6 +218,18 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
+	private IEvaluatorContext evalCtx = new IEvaluatorContext() {
+		
+		@Override
+		public IWorkbenchRTContext getUIContext() {
+			return ViewBase.this.getUIContext();
+		}
+		
+		@Override
+		public ELContext getELContext() {
+			return getELManager(true).getELContext();
+		}
+	};
 	private boolean enableSelectionProvider;
 	private SelectionProviderSupport selectionProvider;
 	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
@@ -249,6 +261,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			initELManager(this.elm);
 		}
 		return this.elm;
+	}
+	
+	protected IEvaluatorContext getEvaluatorContext(){
+		return this.evalCtx;
 	}
 
 	/**

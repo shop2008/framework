@@ -17,11 +17,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Documented
 @PresentationModel
-public @interface Field {
-	String enableWhen() default "";
-	String visibleWhen() default "";
-	Attribute[] attributes() default {};
-	String valueKey() default "";
-	String binding()default "";
-	String converter() default "";
+public @interface Convertor {
+		String className() default "";
+		Parameter[] params() default {};
 }

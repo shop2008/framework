@@ -11,6 +11,7 @@ package com.wxxr.mobile.tools.model;
 public class DataFieldModel extends AttributedFieldModel {
 	private String valueKey;
 	private FieldBindingModel binding;
+	private ConvertorField convertor;
 	/**
 	 * @return the valueKey
 	 */
@@ -35,6 +36,18 @@ public class DataFieldModel extends AttributedFieldModel {
 	 */
 	public void setBinding(FieldBindingModel binding) {
 		this.binding = binding;
+	}
+	/**
+	 * @return the convertor
+	 */
+	public ConvertorField getConvertor() {
+		return convertor;
+	}
+	/**
+	 * @param convertor the convertor to set
+	 */
+	public void setConvertor(ConvertorField convertor) {
+		this.convertor = convertor;
 	}
 
 }
