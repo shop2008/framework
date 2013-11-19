@@ -19,6 +19,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_nick_set_layout")
 public abstract class UserNickSetPage extends PageBase {
 	
+	
 	@Field(valueKey="text")
 	String newNickName;
 	

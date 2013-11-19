@@ -3,7 +3,9 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/mid_gray"
+    >
     
 
     <RelativeLayout
@@ -45,6 +47,8 @@
             android:background="@null"
             bind:field="newNickName"
             bind:on_TextChanged="newNickChanged"
+            android:layout_marginLeft="5dp"
+            android:hint="@string/hint_please_input_new_nick"
             />
         
     </LinearLayout>
@@ -56,19 +60,27 @@
         android:textColor="@color/white"
         android:text="@string/nick_set_instruction"
         />
-    <LinearLayout 
+    <LinearLayout
+        android:layout_marginTop="10dip"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="vertical"
-        android:layout_margin="5dp"
+        android:layout_height="60dip"
+        android:background="@drawable/text_back"
+        android:gravity="center"
+        android:orientation="vertical" 
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
         >
-        <Button 
+
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:background="@drawable/bg_red_btn"
             android:text="@string/btn_done_text"
+            android:textColor="@color/white"
+            android:textSize="15sp" 
             bind:field="*"
             bind:on_Click="done"
             />
-        
     </LinearLayout>
 </LinearLayout>
