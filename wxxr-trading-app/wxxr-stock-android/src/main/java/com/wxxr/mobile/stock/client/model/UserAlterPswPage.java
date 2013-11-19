@@ -17,10 +17,10 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.alter_password_page_layout")
 public abstract class UserAlterPswPage extends PageBase {
 
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
-	@Bean(type=BindingType.Pojo,express="${usrService.fetchUserInfo()}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;
 	
 	@Field(valueKey="text")
@@ -98,7 +98,10 @@ public abstract class UserAlterPswPage extends PageBase {
 	@Command(commandName="done")
 	String done(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
+			String newPsw = this.newPswField.getValue();
+			if (newPsw != null) {
+				this.user.setPassword(newPsw);
+			}
 		}
 		return null;
 	}
