@@ -20,6 +20,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 
 /**
@@ -607,4 +608,16 @@ public class MockDataUtils {
 		return myTradingAccount;
 	}
 	// ====================mockData end ==========
+	
+	
+	public static UserCreateTradAccInfoBean getUserCreateTradAccInfo(){
+		UserCreateTradAccInfoBean info = new UserCreateTradAccInfoBean();
+		info.setCapitalRate(0.05f);
+		info.setCostRate(0.00399f);
+		info.setDepositRate(0.05f);
+		info.setMaxAmount(300000l);
+		info.setRateString("0.08;0.10,0.12;0.13,0.05;0.08");
+		info.setVoucherCostRate(0.00399f);	
+		return info;
+	}
 }

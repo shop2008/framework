@@ -371,6 +371,10 @@ public class TradingManagementServiceImpl extends
 	}
 
 	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
+		if(context.getApplication().isInDebugMode()){
+			createTDConfig = MockDataUtils.getUserCreateTradAccInfo();
+			return createTDConfig;
+		}
 		checkLogin();
 		context.invokeLater(new Runnable() {
 			public void run() {
