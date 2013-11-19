@@ -70,7 +70,7 @@
         android:layout_above="@id/buy_btn"
         android:layout_below="@id/date_layout"
         android:orientation="vertical"
-        bind:field="*"
+        bind:field="acctRefreshView"
         bind:on_TopRefresh="handleTopRefresh" >
 
         <ScrollView

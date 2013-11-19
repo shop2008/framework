@@ -30,19 +30,19 @@ import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 /**
  * @author duzhen
  */
-@View(name = "TBuyTradingPage", withToolbar = true)
+@View(name = "TBuyTradingPage", withToolbar = true, description="模拟盘/实盘")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_trading_account_info_page_layout")
 public abstract class TBuyTradingPage extends PageBase implements IModelUpdater {
 
 	private static final Trace log = Trace.register(TBuyTradingPage.class);
 
 	@Bean
-	String stockId;
+	String acctId;
 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(stockId)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
 	TradingAccountBean tradingBean;
 	// 字段
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}${'买入'}")
@@ -72,10 +72,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Field(valueKey = "text")
 	String buyBtn;
 
+	@Field(valueKey = "text")
+	String acctRefreshView;
+	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
@@ -87,7 +91,9 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, navigations = { @Navigation(on = "*", showPage = "stockSearchPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
+			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		Long stockId = 0L;
@@ -99,14 +105,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 				stockId = tempTradingA.getId();
 			}
 		}
-		resutl.setResult("stockSearchPage");
+		resutl.setResult("TradingRecordsPage");
 		resutl.setPayload(stockId);
 		return resutl;
 	}
 
 	@OnShow
 	void initTitleBar() {
-		registerBean("stockId", stockId);
+		registerBean("stockId", acctId);
 		getPageToolbar().setTitle("模拟盘", null);
 		// ((IStockAppToolbar)getAppToolbar()).setTitle("模拟盘", null);
 	}
@@ -118,7 +124,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 			for (Object key : temp.keySet()) {
 				Long tempt = (Long) temp.get(key);
 				if (tempt != null && "result".equals(key)) {
-					stockId = tempt + "";
+					acctId = tempt + "";
 				}
 			}
 		}
@@ -128,10 +134,10 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleTMegaTopRefresh");
+			log.debug("TBuyTradingPage : handleTopRefresh");
 		}
 		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		tradingService.getTradingAccountInfo(stockId);
+		tradingService.getTradingAccountInfo(acctId);
 		if (cb != null)
 			cb.refreshSuccess();
 		return null;
@@ -190,7 +196,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	}
 
 	/**
-	 * 购买点击
+	 * 买入点击
 	 * 
 	 * @param event
 	 * @return

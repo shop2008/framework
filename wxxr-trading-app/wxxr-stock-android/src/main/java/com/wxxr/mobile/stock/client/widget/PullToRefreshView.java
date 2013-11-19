@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
@@ -20,6 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.ui.api.IPage;
+import com.wxxr.mobile.core.ui.api.IWorkbench;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.stock.app.IStockAppToolbar;
 import com.wxxr.mobile.stock.client.R;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.SpUtil;
@@ -565,6 +571,18 @@ public class PullToRefreshView extends LinearLayout {
 		invalidate();
 	}
 
+	void notifyToolBar() {
+		final SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+		IWorkbench bench = AppUtils.getService(IWorkbenchManager.class).getWorkbench();
+		String id = bench.getActivePageId();
+		IPage page = bench.getPage(id);
+		IStockAppToolbar tool = ((IStockAppToolbar) page.getPageToolbar());
+		if (tool != null) {
+			tool.showNotification("最后更新:" + fmt.format(new Date()), null);
+		}
+	}
+	
 	/**
 	 * header view 完成更新后恢复初始状态
 	 */
@@ -579,6 +597,8 @@ public class PullToRefreshView extends LinearLayout {
 		mHeaderUpdateTextView.setText("上次更新：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
 		mHeaderState = PULL_TO_REFRESH;
+		
+		notifyToolBar();
 	}
 
 	/**

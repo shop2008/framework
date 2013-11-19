@@ -69,14 +69,14 @@ public class RefreshEventBinding implements IBinding<IView> {
 			
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
-				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
+				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
 				event.addProperty("callback", new IRefreshCallback() {
 					
 					@Override
 					public void refreshSuccess() {
 						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
-							((PullToRefreshView)control).onHeaderRefreshComplete();
+							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
 					}
 					
@@ -84,7 +84,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 					public void refreshFailed(String message) {
 						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
-							((PullToRefreshView)control).onHeaderRefreshComplete();
+							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
 					}
 				});
