@@ -3,7 +3,9 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/mid_gray"
+    >
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -40,7 +42,7 @@
             android:id="@+id/rl_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@drawable/bg_manage"
+            android:background="@drawable/bg_up"
             android:clickable="true"
             bind:field="*"
             bind:on_Click="modifyPsw" >
@@ -52,6 +54,39 @@
                 android:layout_centerVertical="true"
                 android:layout_margin="10dip"
                 android:text="@string/label_modify_password"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_arrow_right" />
+        </RelativeLayout>
+        
+        <View 
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/mid_gray"
+            />
+        <RelativeLayout
+            android:id="@+id/rl_extract_cash"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/bg_bottom"
+            android:clickable="true"
+            bind:field="*"
+            bind:on_Click="loginOut" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dip"
+                android:text="@string/label_login_out"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
