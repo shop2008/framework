@@ -162,7 +162,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-                
+        
+        <activity
+            android:name=".ui.OtherUserPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         
         <activity
             android:name=".ui.RegisterRulesPage"
