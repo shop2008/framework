@@ -2,6 +2,8 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -20,7 +22,7 @@ public abstract class UserFindPswPage extends PageBase {
 	
 	DataField<String> mobileNumField;
 	
-	@Field
+	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
 	
 	/**
@@ -63,14 +65,14 @@ public abstract class UserFindPswPage extends PageBase {
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
+			if (userService != null) {
+				
+			}
 		}
 		return null;
 	}
 	
-	protected void initData() {
-		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
-	}
+	
 
 
 }
