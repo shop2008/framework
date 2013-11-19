@@ -154,6 +154,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 
 	String zhfzf,djDeposit;
+	float djMoney;
 	
 	//交易综合费
 	@Field(valueKey="text",binding="${zhfzf!=null?zhfzf:'0.00元'}")
@@ -199,6 +200,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(changeMoney>0 && _deposit1>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", (changeMoney*10000 * _deposit1))+"元";
+			djMoney = (changeMoney*10000 * _deposit1);
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}		
@@ -210,6 +212,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(changeMoney>0 && _deposit2>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", ((changeMoney*10000) * _deposit2))+"元";
+			djMoney = ((changeMoney*10000) * _deposit2);
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -220,6 +223,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(changeMoney>0 && _deposit2>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", (changeMoney*10000.0))+"元";
+			djMoney = changeMoney*10000;
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -303,8 +307,24 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Command
 	String submitDataClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			Context context = AppUtils.getFramework().getAndroidApplication();
-			Toast.makeText(context, "点击了我", Toast.LENGTH_SHORT).show();
+			float money = changeMoney * 10000;
+			switch(currentRadioBtnId){
+			case 1:
+				if(money>0 && _rate1>0 && djMoney>0 ){
+					
+				}
+				break;
+			case 2:
+				if(money>0 && _rate2>0 && djMoney>0 ){
+					
+				}
+				break;
+			case 3:
+				if(money>0 && _rate3>0 && djMoney>0 ){
+					
+				}
+				break;
+			}
 		}
 		return null;
 	}
@@ -314,8 +334,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		@Command
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				Context context = AppUtils.getFramework().getAndroidApplication();
-				Toast.makeText(context, "点击了我", Toast.LENGTH_SHORT).show();
+				
 			}
 			return null;
 		}
