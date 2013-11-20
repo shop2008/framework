@@ -6,161 +6,145 @@
     android:orientation="vertical"
     android:background="@color/page_background_color">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dip"
-        android:orientation="horizontal" 
-        android:id="@id/ll_szsz"
-        >
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="0dip"
+        <LinearLayout 
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/widget_bar_bg_n"
-            bind:on_ItemClick="handleSHClick"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="match_parent"
+            >
+            <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:layout_weight="1"
                 android:text="上证指数"
-                android:textColor="@android:color/black"
-                android:textSize="30sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@drawable/divider_horizontal" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@id/tv_szzs_up_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="19288.8"
-                        bind:field="shPrice"
-                        android:textSize="20sp" />
-
-                    <ImageView
-                        android:id="@id/iv_szzs_up_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dip"
-                        android:src="@drawable/ic_down" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@id/tv_szzs_up_down_what"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-23.2" 
-                        bind:field="shDelta"/>
-
-                    <TextView
-                        android:id="@id/tv_szzs_up_down_rate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:text="23.2%" 
-                        bind:field="shDeltaPer"/>
-                </LinearLayout>
-            </LinearLayout>
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                bind:field="sh_market"
+                android:paddingTop="8dp"
+            	android:paddingBottom="8dp"/>
+            
+            <View android:layout_width="0.5dp"
+			    android:layout_height="fill_parent"
+			    android:background="#303030"/>
+            
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="深圳成指"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                bind:field="sz_market"
+                android:paddingTop="8dp"
+            	android:paddingBottom="8dp"/>
+            
         </LinearLayout>
-
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/abs_divider_light" />
-
-        <LinearLayout
-            android:layout_width="0dip"
+        <View android:layout_width="fill_parent"
+		    android:layout_height="0.5dp"
+		    android:background="#303030"/>
+        <LinearLayout 
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/widget_bar_bg_n"
-            bind:on_ItemClick="handleSZClick"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
+            >
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="深证成指"
-                android:textColor="@android:color/black"
-                android:textSize="30sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@drawable/divider_horizontal" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:paddingTop="8dp"
+            	android:paddingBottom="8dp">
+                <LinearLayout 
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@id/tv_szcz_up_down"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="19288.8"
-                        bind:field="szPrice"
-                        android:textSize="20sp" />
-
-                    <ImageView
-                        android:id="@id/iv_szcz_up_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dip"
-                        android:src="@drawable/ic_down" />
+                        android:text="--"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"
+                        bind:field="sh_newprice"/>
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="14sp"
+	                        bind:field="sh_change"
+	                        android:textColor="@color/white"/>
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="14sp"
+	                        android:layout_marginLeft="4dp"
+	                        android:textColor="@color/white"
+	                        bind:field="sh_risefallrate"/>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@id/tv_szcz_up_down_what"
+                <TextView 
+                    android:layout_width="21dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/risefallrate_stype"
+                    bind:field="shType"
+                    android:layout_marginLeft="8dp"
+                    />
+            </LinearLayout>
+            
+            <View android:layout_width="0.5dp"
+			    android:layout_height="fill_parent"
+			    android:background="#303030"/>
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="8dp"
+            	android:paddingBottom="8dp">
+                <LinearLayout 
+                    android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:orientation="vertical"
+	                android:gravity="center"
+	                >
+                	<TextView 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-23.2" 
-                        bind:field="szDelta"/>
-
-                    <TextView
-                        android:id="@id/tv_szcz_up_down_rate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
-                        android:text="23.2%" 
-                        bind:field="szDeltaPer"/>
-                </LinearLayout>
+                        android:text="--"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"
+                        bind:field="sz_newprice"/>
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="14sp"
+	                        bind:field="sz_change"
+	                        android:textColor="@color/white"/>
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        bind:field="sz_risefallrate"
+	                        android:textSize="14sp"
+	                        android:layout_marginLeft="4dp"
+	                        android:textColor="@color/white"/>
+                    </LinearLayout>
+            	</LinearLayout>
+                <TextView 
+                    android:layout_width="21dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/risefallrate_stype"
+                    bind:field="szType"
+                    android:layout_marginLeft="8dp"
+                    />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -178,36 +162,45 @@
             android:layout_weight="1"
             android:enabled="false"
             android:text="股票名称"
-            android:background="@drawable/list_header_first_bj"
-            android:padding="10dp"
             android:textColor="#ffffff"
             android:textSize="15sp"
+            android:background="@drawable/title_background"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/title_line"
+            android:paddingBottom="0.5dp"
             />
         <Button 
             android:id="@+id/btn_latest_price"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="10dp"
             android:text="最新价格"
             android:textSize="15sp"
             bind:on_ItemClick="orderByPercent"
-            android:background="@drawable/list_header_center_last_bj"
+            android:background="@drawable/title_background"
             android:textColor="#ffffff"
             />
-
+		<ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/title_line"
+            android:paddingBottom="0.5dp"
+            />
         <Button
             android:id="@+id/btn_up_down_rate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/list_header_center_last_bj"
+            android:background="@drawable/title_background"
             android:drawableRight="@drawable/up_arrows"
-            android:padding="10dp"
             android:textSize="15sp"
             android:text="涨跌幅"
             bind:on_ItemClick="orderByPercent"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff" 
+            />
 
     </LinearLayout>
 

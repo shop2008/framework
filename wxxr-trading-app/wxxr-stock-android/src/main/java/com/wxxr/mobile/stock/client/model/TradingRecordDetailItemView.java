@@ -18,7 +18,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.deal_record_layout_item")
 public abstract class TradingRecordDetailItemView extends ViewBase implements IModelUpdater {
 
-	
+	@Bean
 	TradingRecordBean tradingRecord;
 	
 	/**日期 ${tradingRecord!=null?tradingRecord.date:'--'}*/

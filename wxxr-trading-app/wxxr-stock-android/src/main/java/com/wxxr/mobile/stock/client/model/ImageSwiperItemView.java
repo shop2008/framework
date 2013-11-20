@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -16,7 +17,9 @@ import com.wxxr.mobile.stock.app.bean.ArticleBean;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.image_swiper_view_item")
 public abstract class ImageSwiperItemView extends ViewBase implements IModelUpdater {
 
+	@Bean
 	ArticleBean article;
+	
 	@Field(valueKey="imageURI",binding="${article!=null?article.imageUrl:'--'}")
 	String swiperImage;
 	

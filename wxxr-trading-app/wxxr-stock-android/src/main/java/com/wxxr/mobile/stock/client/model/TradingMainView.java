@@ -9,6 +9,7 @@ import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -21,7 +22,6 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
-import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
@@ -70,7 +70,8 @@ public abstract class TradingMainView extends ViewBase{
 	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
 	boolean isVisibleT1;
 	
-	@Field(valueKey = "text")
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	
 	

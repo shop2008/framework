@@ -3,19 +3,25 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.StockBasicMarketInfoBean;
+import com.wxxr.mobile.stock.app.bean.QuotationListBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 
 /**
  * @author neillin
@@ -23,68 +29,85 @@ import com.wxxr.mobile.stock.app.bean.StockBasicMarketInfoBean;
  */
 @View(name = "infoCenter", description = "行情中心")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.price_center_page_layout")
-public abstract class InfoCenterView extends ViewBase {
-	//=====上证======
-	@Field(valueKey="text")
-	String shPrice;//上证指数
-	DataField<String> shPriceField;
+public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	
-	@Field(valueKey="text")
-	String shDelta;//上证指数涨跌量
-	DataField<String> shDeltaField;
 	
-	@Field(valueKey="text")
-	String shDeltaPer;//上证指数涨跌幅
-	DataField<String> shDeltaPerField;
-	
-	//====深证=======
-	@Field(valueKey="text")
-	String szPrice;//深证指数
-	DataField<String> szPriceField;
-	
-	@Field(valueKey="text")
-	String szDelta;//深证指数涨跌量
-	DataField<String> szDeltaField;
-	
-	@Field(valueKey="text")
-	String szDeltaPer;//深证指数涨跌幅
-	DataField<String> szDeltaPerField;
+	@Bean(type = BindingType.Service)
+	IInfoCenterManagementService infoCenterService;
 
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getQuotations()}")
+	QuotationListBean quotationBean;
+	
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('newprice','desc',0,20)}")
+	StockTaxisListBean stockTaxis;
+	
+	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.shBean:null}")
+	StockQuotationBean shBean;
+	
+	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.szBean:null}")
+	StockQuotationBean szBean;
+	
+	/**-------上证指数 上海*/
+	
+	//箭头
+	@Field(valueKey="text",enableWhen="${(shBean!=null && shBean.newprice > shBean.close)?true:false}",visibleWhen="${(shBean!=null && shBean.newprice != shBean.close)?true:false}")
+	String shType;
+	
+	// 涨跌幅
+	@Field(valueKey="text",binding="${shBean!=null?shBean.risefallrate:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sh_risefallrate;
+	// 市场代码： SH，SZ各代表上海，深圳。
+	@Field(valueKey="text",binding="${shBean!=null?shBean.market:'--'}")
+	String sh_market;
+	// 最新
+	@Field(valueKey="text",binding="${shBean!=null?shBean.newprice:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sh_newprice;
+	// 涨跌额
+	@Field(valueKey="text",binding="${shBean!=null?shBean.change:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sh_change;
+	
+	/**-----------深圳成指 深圳*/
+	
+	//箭头 
+		@Field(valueKey="text",enableWhen="${(szBean!=null && szBean.newprice > szBean.close)?true:false}",visibleWhen="${(szBean!=null && szBean.newprice != szBean.close)?true:false}")
+		String szType;
+	
+	// 涨跌幅
+	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sz_risefallrate;
+	
+	// 市场代码： SH，SZ各代表上海，深圳。
+	@Field(valueKey="text",binding="${szBean!=null?szBean.market:'--'}")
+	String sz_market;
+	
+	// 最新
+	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sz_newprice;
+	
+	// 涨跌额
+	@Field(valueKey="text",binding="${szBean!=null?szBean.change:'--'}",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String sz_change;
+	
 	// 股票列表
-	@Field(valueKey = "options")
-	List<StockBasicMarketInfoBean> stockInfos;
-	DataField<List> stockInfosField;
+	@Field(valueKey = "options",binding="${(stockTaxis!=null&&stockTaxis.list!=null)?stockTaxis.list:null}")
+	List<StockTaxisBean> stockInfos;
 
 	
 	@OnShow
 	protected void updateInfo() {
-		//TODO set sh
-		shPrice = "2012.03";
-		shPriceField.setValue(shPrice);
-		
-		shDelta = "2.02";
-		shDeltaField.setValue(shDelta);
-		
-		shDeltaPer ="1.01%";
-		shDeltaPerField.setValue(shDeltaPer);
-		//TODO set sz
-		szPrice = "8012.03";
-		shPriceField.setValue(szPrice);
-		
-		shDelta = "8.02";
-		shDeltaField.setValue(szDelta);
-		
-		szDeltaPer ="1.21%";
-		szDeltaPerField.setValue(szDeltaPer);
-		//TODO set stock list
-		stockInfos = new ArrayList<StockBasicMarketInfoBean>();
-		StockBasicMarketInfoBean st = new StockBasicMarketInfoBean();
-		st.setCode("600521");
-		st.setName("华海药业");
-		st.setCurrentPrice(11.88f);
-		st.setTodayInitPrice(12.31f);
-		stockInfos.add(st);
-		stockInfosField.setValue(stockInfos);
+
 	}
 
 	/**
@@ -132,4 +155,9 @@ public abstract class InfoCenterView extends ViewBase {
 		return null;
 	}
 	
+	@Override
+	public void updateModel(Object value) {
+		// TODO Auto-generated method stub
+		
+	}
 }

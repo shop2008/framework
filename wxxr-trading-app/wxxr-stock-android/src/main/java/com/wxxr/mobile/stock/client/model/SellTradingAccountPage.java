@@ -102,7 +102,8 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Field(valueKey="enabled",binding="${stockTradingOrder!=null?true:false}")
 	boolean isEmpty;
 	
-	@Field(valueKey="text")
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	
 	/**交易盘状态 CLOSED-已结算；UNCLOSE-未结算,CLEARING-正在结算*/
@@ -124,7 +125,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	void initData(){
 		registerBean("virtual", true);
 		registerBean("accid", accid);
-		registerBean("utils", utils);
 		if(getAppToolbar()!=null){
 			if(this.virtual){
 				getAppToolbar().setTitle("模拟盘", null);
