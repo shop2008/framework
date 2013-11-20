@@ -22,7 +22,7 @@ public class TradeDetail {
 	/**
 	 * 交易额度
 	 */
-	private String tradeAmount;
+	private float tradeAmount;
 
 	
 }

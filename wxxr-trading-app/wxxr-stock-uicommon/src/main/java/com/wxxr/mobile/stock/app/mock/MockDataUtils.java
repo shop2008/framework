@@ -434,6 +434,7 @@ public class MockDataUtils {
 	public static UserBean mockUserInfo() {
 		if (userBean == null) {
 			userBean = new UserBean();
+			userBean.setPhoneNumber("15611545676");
 			userBean.setHomeBack("resourceId:drawable/back2");
 			userBean.setUserPic("resourceId:drawable/head2");
 			userBean.setJoinShared(""+3);
@@ -602,27 +603,27 @@ public class MockDataUtils {
 		ScoreBean scoreBean;
 		
 		scoreBean = new ScoreBean();
-		scoreBean.setAmount(200+"");
+		scoreBean.setAmount(200f);
 		scoreBean.setCatagory("推荐好友奖励");
 		scoreBean.setDate("2013-10-20");
 		scoreBeans.add(scoreBean);
 		
 		scoreBean = new ScoreBean();
-		scoreBean.setAmount(300+"");
+		scoreBean.setAmount(300f);
 		scoreBean.setCatagory("评论奖励");
 		scoreBean.setDate("2013-10-25");
 		scoreBeans.add(scoreBean);
 		
 		
 		scoreBean = new ScoreBean();
-		scoreBean.setAmount(100+"");
+		scoreBean.setAmount(100f);
 		scoreBean.setCatagory("新手奖励");
 		scoreBean.setDate("2013-10-26");
 		scoreBeans.add(scoreBean);
 		
 		
 		scoreBean = new ScoreBean();
-		scoreBean.setAmount(-200+"");
+		scoreBean.setAmount(-200f);
 		scoreBean.setCatagory("申请实盘");
 		scoreBean.setDate("2013-10-28");
 		scoreBeans.add(scoreBean);
@@ -638,20 +639,20 @@ public class MockDataUtils {
 		
 		TradeDetailBean detailBean;
 		detailBean = new TradeDetailBean();
-		detailBean.setTradeAmount(200+"");
+		detailBean.setTradeAmount(200f);
 		detailBean.setTradeCatagory("充入现金");
 		detailBean.setTradeDate("2013-11-11");
 		
 		tradeDetails.add(detailBean);
 		
 		detailBean = new TradeDetailBean();
-		detailBean.setTradeAmount(300+"");
+		detailBean.setTradeAmount(300f);
 		detailBean.setTradeCatagory("实盘结盘收益");
 		detailBean.setTradeDate("2013-11-10");
 		tradeDetails.add(detailBean);
 		
 		detailBean = new TradeDetailBean();
-		detailBean.setTradeAmount(300+"");
+		detailBean.setTradeAmount(300f);
 		detailBean.setTradeCatagory("其它");
 		detailBean.setTradeDate("2013-11-8");
 		tradeDetails.add(detailBean);

@@ -22,6 +22,6 @@ public class Score {
 	/**
 	 * 积分获得数量
 	 */
-	private String amount;
+	private float amount;
 	
 }
