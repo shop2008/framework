@@ -48,11 +48,6 @@
 			<artifactId>wxxr-mobile-xml</artifactId>
 			<version>${framework.version}</version>
 		</dependency>
-            <dependency>
-                <groupId>com.wxxr.mobile</groupId>
-                <artifactId>wxxr-mobile-tools</artifactId>
-                <version>${wxxr.tools.version}</version>
-            </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
