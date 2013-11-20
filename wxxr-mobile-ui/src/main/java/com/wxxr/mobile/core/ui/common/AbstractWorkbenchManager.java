@@ -3,11 +3,21 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.hibernate.validator.HibernateValidator;
+import org.hibernate.validator.engine.ConstraintValidatorFactoryImpl;
+import org.hibernate.validator.engine.resolver.DefaultTraversableResolver;
+
+import com.wxxr.javax.validation.ConstraintValidatorFactory;
+import com.wxxr.javax.validation.MessageInterpolator;
+import com.wxxr.javax.validation.TraversableResolver;
 import com.wxxr.javax.validation.Validator;
-import com.wxxr.javax.validation.ValidatorFactory;
+import com.wxxr.javax.validation.spi.ConfigurationState;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
@@ -272,10 +282,43 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	@Override
 	public Validator getValidator() {
 		if(this.validator == null){
-			ValidatorFactory factory = context.getKernelContext().getService(ValidatorFactory.class);
-			if(factory != null){
-				this.validator = factory.getValidator();
-			}
+			this.validator = new HibernateValidator().buildValidatorFactory(new ConfigurationState() {
+				
+				private DefaultTraversableResolver defaultTraversableResolver = new DefaultTraversableResolver();
+				private ConstraintValidatorFactoryImpl vFactory = new ConstraintValidatorFactoryImpl();
+				private DummyMessageInterpolator dummyInterpolator = new DummyMessageInterpolator();
+
+				@Override
+				public boolean isIgnoreXmlConfiguration() {
+					return true;
+				}
+				
+				@Override
+				public TraversableResolver getTraversableResolver() {
+					return defaultTraversableResolver;
+				}
+				
+				@Override
+				public Map<String, String> getProperties() {
+					return null;
+				}
+				
+				@Override
+				public MessageInterpolator getMessageInterpolator() {
+					MessageInterpolator interpolator = context.getKernelContext().getService(MessageInterpolator.class);
+					return interpolator != null ? interpolator : dummyInterpolator;
+				}
+				
+				@Override
+				public Set<InputStream> getMappingStreams() {
+					return null;
+				}
+				
+				@Override
+				public ConstraintValidatorFactory getConstraintValidatorFactory() {
+					return vFactory;
+				}
+			}).getValidator();
 		}
 		return this.validator;
 	}
