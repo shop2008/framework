@@ -19,13 +19,14 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 
 @View(name="OperationDetails", withToolbar=true, description="模拟盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.operation_details_page_layout")
 public abstract class OpetationDetailsPage extends PageBase implements IModelUpdater{
 	static Trace log = Trace.getLogger(OpetationDetailsPage.class);
 	
-	@Menu(items={"left"})
+	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
 	@ViewGroup(viewIds={"readRecord","auditDetail","mnAuditDetail"},defaultViewId="readRecord")
@@ -51,10 +52,16 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	@Bean
 	boolean isVirtual;
 	
+	@Bean
+	String accid;
+	
+	Object stockId;
+	
 	
 	@OnShow
 	void showView(){
 		registerBean("isVirtual", false);
+		registerBean("accid", accid);
 		contents.resetViewStack();
 	}
 	
@@ -62,6 +69,7 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	String readRecordClick(InputEvent event){
 		return "readRecord";
 	}
+	
 	
 	
 	@Command(navigations={
@@ -87,12 +95,59 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 		if(value instanceof Map){
 			Map temp = (Map)value;
 	        for (Object key : temp.keySet()) {
-	            boolean tempt = (Boolean) temp.get(key);
-	            if ("result".equals(key)) {
-	            	this.isVirtual = tempt;
-	            	registerBean("isVirtual", tempt);
+	            Object tempt = temp.get(key);
+	            if("accid".equals(key)){
+	            	this.accid = tempt+"";
+	            	this.stockId = tempt;
+	            }
+	            if("isVirtual".equals(key)){
+	            	this.isVirtual = (Boolean)tempt;
 	            }
 	        }
+	        log.info("TradingMainView virtual="+isVirtual+"accid= "+accid);
+	        registerBean("isVirtual", isVirtual);
+	        registerBean("accid", accid);
 		}
 	}
+	
+	
+//	/**
+//	 * 订单详情点击
+//	 * 
+//	 * @param event
+//	 * @return
+//	 */
+//	@Command(description = "Invoke when a toolbar item was clicked", 
+//			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
+//			navigations = { @Navigation(on = "ecordsPage", showPage = "TradingRecordsPage") })
+//	CommandResult toolbarClickedRight(InputEvent event) {
+//		CommandResult resutlt = new CommandResult();
+//		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+//			if (accid != null) {
+//				resutlt.setResult("ecordsPage");
+//				resutlt.setPayload(accid);
+//			}
+//		}
+//		return resutlt;
+//	}
+	
+	
+	/**
+	 * 订单详情点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	CommandResult toolbarClickedRight(InputEvent event) {
+		CommandResult resutl = new CommandResult();
+		resutl.setResult("TradingRecordsPage");
+		if (stockId != null) {
+			resutl.setPayload(stockId);
+		}else{
+			return null;
+		}
+		return resutl;
+	}
+	
 }

@@ -11,36 +11,36 @@
          android:layout_width="fill_parent"
          android:layout_height="wrap_content" 
          android:orientation="horizontal"
-         android:background="@drawable/dsphb_title_bj">
+         android:background="@drawable/title_background"
+         android:gravity="center">
 
          <RadioButton
              android:id="@+id/radio0"
              android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="fill_parent"
              android:checked="true"
              android:layout_weight="1"
              android:button="@null"
              android:gravity="center"
              android:text="成交记录" 
-             android:padding="8dp"
              android:textSize="15sp"
              bind:field="*"
              bind:on_Click="readRecordClick"
-             android:background="@drawable/bg_champion_btn"/>
+             android:background="@drawable/tab_left_btn_background"
+             />
 
          <RadioButton
              android:id="@+id/radio1"
              android:layout_width="fill_parent"
              android:layout_weight="1"
-             android:layout_height="wrap_content"
+             android:layout_height="fill_parent"
              android:text="清算详情" 
              android:gravity="center"
              android:button="@null"
              android:textSize="15sp"
-             android:padding="8dp"
              bind:field="*"
              bind:on_Click="tabSelectedClick"
-             android:background="@drawable/bg_champion_btn"/>
+             android:background="@drawable/tab_right_btn_background"/>
      </RadioGroup>
 
      <FrameLayout

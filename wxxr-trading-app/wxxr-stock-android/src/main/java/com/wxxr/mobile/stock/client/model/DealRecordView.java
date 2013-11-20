@@ -13,8 +13,10 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.model.TradingRecord;
@@ -31,6 +33,10 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 	
 	@Bean(type=BindingType.Pojo,express="${tempId=selection;tradingService.getDealDetail(tempId)}")
 	DealDetailBean dealDetail;
+	
+	@Field(valueKey="text",binding="${selection!=null?selection:null}")
+	String accId;
+	DataField<String> accIdField;
 	
 	/**交易记录*/
 	@Field(valueKey="options",binding="${dealDetail!=null?dealDetail.tradingRecords:null}")
@@ -67,6 +73,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 	 * */
 	@OnShow
 	void ininViews(){
+//		registerBean("accId", "${selection}");
 	}
 	
 	@Override
@@ -86,10 +93,18 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 		return result;
 	}
 	
+	
+	
 	/**转让操作盘详情界面*/
-	@Command(navigations={@Navigation(on="details",showPage="")})
-	String detailsAction(InputEvent event){
-		String result = "details";
-		return result;
-	}
+	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })
+	CommandResult detailsAction(InputEvent event) {
+		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
+			CommandResult resutl = new CommandResult();
+			resutl.setPayload(accIdField.getValue());
+			resutl.setResult("TBuyStockInfoPage");
+			return resutl;
+		}
+
+		return null;
+	}	
 }

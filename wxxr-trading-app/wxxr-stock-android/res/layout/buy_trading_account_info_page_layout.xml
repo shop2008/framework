@@ -10,15 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center" >
+        android:gravity="center" 
+        android:background="@drawable/date_bj1">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/defaultColor"
             android:gravity="center"
-            android:padding="8dp"
             android:text="--"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -28,9 +27,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/blue"
             android:gravity="center"
-            android:padding="8dp"
             android:text="--"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -88,62 +85,64 @@
                     android:id="@+id/account_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/title_background"
                     bind:field="*"
-                    bind:on_Click="handleStockClick" >
+                    bind:on_Click="handleStockClick" 
+                    android:gravity="center"
+                    android:paddingBottom="0.5dp">
 
                     <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="申请资金"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="可用资金"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="总盈亏率"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="盈亏总额"
                         android:textColor="@color/white"
@@ -206,62 +205,64 @@
                 <LinearLayout
                     android:id="@+id/stock_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:gravity="center"
+                    android:background="@drawable/title_background"
+                    android:paddingBottom="0.5dp">
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="名称代码"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="最新行情"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="价量"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <View
-                        android:layout_width="1dip"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/abs_divider_hor_btn" />
+                    <ImageView
+				            android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+				            android:src="@drawable/title_line"
+				            />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_btn_horizontal"
                         android:gravity="center"
                         android:text="盈亏"
                         android:textColor="@color/white"

@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:orientation="horizontal"
-        android:background="@drawable/tab_bj">
+        android:background="@drawable/title_background">
 
         <RadioButton
             android:id="@+id/radio0"
@@ -25,8 +25,8 @@
             bind:on_Click="showChallengeTradingClick"
             android:text="挑战交易盘" 
             android:textSize="15sp"
-            android:layout_margin="4dp"
-            android:background="@drawable/tab_bj_btn"/>
+            android:background="@drawable/tab_left_btn_background"
+            android:layout_marginBottom="0.5dp"/>
 
         <RadioButton
             android:id="@+id/radio1"
@@ -37,10 +37,10 @@
             android:gravity="center"
             android:button="@null"
             android:textSize="15sp"
-            android:layout_margin="4dp"
             bind:field="*"
             bind:on_Click="showParticipatingTradingClick"
-            android:background="@drawable/tab_bj_btn"/>
+             android:layout_marginBottom="0.5dp"
+            android:background="@drawable/tab_right_btn_background"/>
     </RadioGroup>
 
     <FrameLayout

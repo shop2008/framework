@@ -9,58 +9,59 @@
     <LinearLayout
         android:id="@+id/stock_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:background="@drawable/title_background"
+        android:gravity="center">
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_horizontal"
             android:gravity="center"
             android:text="时间"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/abs_divider_hor_btn" />
+        <ImageView
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:src="@drawable/title_line"
+           />
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_horizontal"
             android:gravity="center"
             android:text="名称代码"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/abs_divider_hor_btn" />
+        <ImageView
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:src="@drawable/title_line"
+           />
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_horizontal"
             android:gravity="center"
             android:text="方向"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/abs_divider_hor_btn" />
+        <ImageView
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:src="@drawable/title_line"
+           />
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_horizontal"
             android:gravity="center"
             android:text="价量"
             android:textColor="@color/white"
@@ -76,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
-            android:background="@drawable/dsphb_title_bj"
+            android:background="@color/gray"
             android:gravity="center_vertical|left"
             android:textColor="@color/white"
             android:textSize="16sp"

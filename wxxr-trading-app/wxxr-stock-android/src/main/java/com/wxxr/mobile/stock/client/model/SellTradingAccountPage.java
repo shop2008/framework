@@ -19,32 +19,28 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.app.model.StockTradingOrder;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
 @View(name="sellTradingAccount",withToolbar=true, description="--")
-@AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.sell_trading_account_info_page_layout")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.sell_trading_account_info_page_layout")
 public abstract class SellTradingAccountPage extends PageBase implements IModelUpdater {
 
 	static Trace log = Trace.getLogger(SellTradingAccountPage.class);
 	
-	@Menu(items={"left"})
+	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
-	@ViewGroup(viewIds={"readRecord","auditDetail","mnAuditDetail"},defaultViewId="readRecord")
-	private IViewGroup contents;
 
-	@Command(description="Invoke when a toolbar item was clicked",
-			uiItems={
+	@Command(description="Invoke when a toolbar item was clicked",uiItems={
 				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
 			}
 	)
@@ -56,10 +52,13 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		return null;
 	}	
 	
+	@Bean
+	String accid;
+	
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${accid=selection;tradingService.getTradingAccountInfo(accid)}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
 	TradingAccountBean tradingAccount;
 	
 	/** 交易盘编号*/
@@ -95,13 +94,16 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
 	/**交易订单列表*/
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}")
-	List<StockTradingOrder> stockTradingOrder;
+	List<StockTradingOrderBean> stockTradingOrder;
 	/**交易订单
 	 * 为空：按钮不可用
 	 * 非空：按钮可用
 	 * */
 	@Field(valueKey="enabled",binding="${stockTradingOrder!=null?true:false}")
 	boolean isEmpty;
+	
+	@Field(valueKey="text")
+	String acctRefreshView;
 	
 	/**交易盘状态 CLOSED-已结算；UNCLOSE-未结算,CLEARING-正在结算*/
 	private String over;
@@ -121,6 +123,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@OnShow
 	void initData(){
 		registerBean("virtual", true);
+		registerBean("accid", accid);
 		registerBean("utils", utils);
 		if(getAppToolbar()!=null){
 			if(this.virtual){
@@ -131,20 +134,75 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		}
 	}
 	
+	/**
+	 * 订单详情点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	CommandResult toolbarClickedRight(InputEvent event) {
+		CommandResult resutl = new CommandResult();
+		Long stockId = 0L;
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			if (stockTradingOrder != null && stockTradingOrder.size() > 0) {
+				StockTradingOrderBean tempTradingA = stockTradingOrder.get(position);
+				stockId = tempTradingA.getId();
+			}
+		}
+		resutl.setResult("TradingRecordsPage");
+		resutl.setPayload(stockId);
+		return resutl;
+	}
+	
+	
+	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })
+	CommandResult handleStockClick(InputEvent event) {
+		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
+			CommandResult resutl = new CommandResult();
+			if (tradingAccount != null) {
+				resutl.setPayload(tradingAccount.getId());
+			}
+			resutl.setResult("TBuyStockInfoPage");
+			return resutl;
+		}
+
+		return null;
+	}
+	
 	@Override
 	public void updateModel(Object value) {
 		if(value instanceof Map){
 			Map temp = (Map)value;
 	        for (Object key : temp.keySet()) {
-	            boolean tempt = (Boolean) temp.get(key);
-	            if ("result".equals(key)) {
-	            	this.virtual = tempt;
-	            	log.info("TradingMainView virtual="+virtual);
-	            	registerBean("virtual", tempt);
-	            }
+	        	if("accid".equals(key)){
+	        		Object tempt = temp.get(key);
+	        		this.accid = tempt+"";
+	        	}
+	        	if("isVirtual".equals(key)){
+	        		Object tempt = temp.get(key);
+	        		this.virtual = (Boolean)tempt;
+	        	}
 	        }
+	        log.info("TradingMainView virtual="+virtual+"accid="+accid);
+	        registerBean("virtual", virtual);
+	        registerBean("accid", accid);
 		}
 	}
+	
+	@Command
+	String handleTopRefresh(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("ChampionShipView : handleTMegaTopRefresh");
+		}
+		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
+		tradingService.getTradingAccountInfo(accid);
+		if (cb != null)
+			cb.refreshSuccess();
+		return null;
+	}
+	
 	
 	//卖出
 	@Command(navigations={@Navigation(on="sell",showPage="sellTrading")})

@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -25,6 +26,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 /**
  * @author neillin
@@ -68,6 +70,8 @@ public abstract class TradingMainView extends ViewBase{
 	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
 	boolean isVisibleT1;
 	
+	@Field(valueKey = "text")
+	String acctRefreshView;
 	
 	
 	
@@ -75,6 +79,20 @@ public abstract class TradingMainView extends ViewBase{
 	int type=0;
 	/**状态 0-未结算 ； 1-已结算*/
 	int status=0;
+	
+	
+	@Command
+	String handleTopRefresh(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("TradingMainView : handleTMegaTopRefresh");
+		}
+		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
+		articleService.getMyArticles(0, 4, 15);
+		tradingService.getHomePageTradingAccountList();
+		if (cb != null)
+			cb.refreshSuccess();
+		return null;
+	}	
 	
 	@OnShow
 	protected void updataArticles() {
@@ -132,15 +150,20 @@ public abstract class TradingMainView extends ViewBase{
 					String acctId = String.valueOf(tempTradingA.getAcctID());
 					//是否是模拟盘：true 模拟盘 false 实盘
 					boolean isVirtual = tempTradingA.getVirtual();
+					Long accid = tempTradingA.getAcctID();
 					String over = tempTradingA.getOver();
 					updateSelection(acctId);
 					resutl.setPayload(isVirtual);
+					HashMap<String, Object> map = new HashMap<String, Object>();
+					map.put("accid", accid);
+					map.put("isVirtual", isVirtual);
 					if("CLOSED".equals(over)){
+						resutl.setPayload(map);
 						resutl.setResult("operationDetails");
 					}
 					if("UNCLOSE".equals(over)){
 						resutl.setResult("sellTradingAccount");
-						resutl.setPayload(isVirtual);
+						resutl.setPayload(map);
 					}
 					return resutl;
 				}

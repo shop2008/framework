@@ -14,10 +14,13 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 /**
  * 模拟盘详情
@@ -31,29 +34,27 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 		IModelUpdater {
 
 	@Bean
-	String idBean;
-	@Bean
-	String buyDayBean;
-	@Bean
-	String sellDayBean;
-	@Bean
-	String applyFeeBean;
-	@Bean
-	String lossLimitBean;
+	String acctId;
 
-	@Field(valueKey = "text", binding = "${idBean}")
+	@Bean(type = BindingType.Service)
+	ITradingManagementService tradingService;
+
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
+	TradingAccountBean tradingBean;
+
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
-	@Field(valueKey = "text", binding = "${buyDayBean}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${sellDayBean}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${applyFeeBean}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${lossLimitBean}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}")
 	String lossLimit;
 
 	@Menu(items = { "left" })
@@ -67,47 +68,18 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 
 	@OnShow
 	protected void initStockInfo() {
-//		registerBean("idBean", "--");
-//		registerBean("buyDayBean", "--");
-//		registerBean("sellDayBean", "--");
-//		registerBean("applyFeeBean", "--");
-//		registerBean("lossLimitBean", "--");
+		registerBean("acctId", acctId);
 	}
 
 	
 	@Override
 	public void updateModel(Object data) {
-
 		if (data instanceof Map) {
 			Map result = (Map) data;
 			for (Object key : result.keySet()) {
-				Object tempt = (Object) result.get(key);
-
-				if ("id".equals(key)) {
-					if (tempt != null)
-						registerBean("idBean", tempt);
-					else
-						registerBean("idBean", "");
-				} else if ("buyDay".equals(key)) {
-					if (tempt != null)
-						registerBean("buyDayBean", tempt);
-					else
-						registerBean("buyDayBean", "");
-				} else if ("sellDay".equals(key)) {
-					if (tempt != null)
-						registerBean("sellDayBean", tempt);
-					else
-						registerBean("sellDayBean", "");
-				} else if ("applyFee".equals(key)) {
-					if (tempt != null)
-						registerBean("applyFeeBean", tempt);
-					else
-						registerBean("applyFeeBean", "");
-				} else if ("lossLimit".equals(key)) {
-					if (tempt != null)
-						registerBean("lossLimitBean", tempt);
-					else
-						registerBean("lossLimitBean", "");
+				if("result".equals(key)){
+					Object tempt = result.get(key);
+					registerBean("acctId", tempt);
 				}
 			}
 		}
