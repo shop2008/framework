@@ -70,27 +70,24 @@ public abstract class HeaderMenuItemView extends ViewBase {
 		}
 	}
 	
-	@Command(commandName="handleClickImage",
-			navigations={
-			@Navigation(on="*",showPage="userLoginPage")
+	@Command(navigations={
+			@Navigation(on="*",showPage="userNewsPage")
 		})
 	String handleClickUnread(InputEvent event){
 		log.info("User click on Unread acticles !");
 		return "";
 	}
 	
-	@Command(commandName="handleClickImage",
-			navigations={
-			@Navigation(on="*",showPage="userLoginPage")
+	@Command(navigations={
+			@Navigation(on="*",showPage="userAccountPage")
 		})
 	String handleClickBalance(InputEvent event){
 		log.info("User click on Account balance !");
 		return "";
 	}
 	
-	@Command(commandName="handleClickImage",
-			navigations={
-			@Navigation(on="*",showPage="userLoginPage")
+	@Command(navigations={
+			@Navigation(on="*",showPage="userAccountPage")
 		})
 	String handleClickCash(InputEvent event){
 		log.info("User click on cash icon !");
