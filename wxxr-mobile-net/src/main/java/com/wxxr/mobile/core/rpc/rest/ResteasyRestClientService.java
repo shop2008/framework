@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.rpc.rest.provider.ByteArrayProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.DocumentProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.FileProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.FormUrlEncodedProvider;
+import com.wxxr.mobile.core.rpc.rest.provider.GSONProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.InputStreamProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.JaxrsFormProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.SerializableProvider;
@@ -216,7 +217,8 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 			register(JaxrsFormProvider.class).
 			register(SerializableProvider.class).
 			register(StreamingOutputProvider.class).
-			register(new XStreamProvider());
+			register(new XStreamProvider()).
+			register(GSONProvider.class);
 		this.providerFactory = factory;
 		try {
 			httpEngine = new HttpRpcClientEngine(this.application.getService(HttpRpcService.class));

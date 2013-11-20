@@ -112,7 +112,8 @@ public class ClientInvocation implements Invocation
       {
          if (status >= 300 && status < 400) throw new RedirectionException(response);
 
-         return handleErrorStatus(response);
+         handleErrorStatus(response);
+         return null;
       }
       finally
       {
@@ -129,7 +130,7 @@ public class ClientInvocation implements Invocation
     * @param <T>
     * @return
     */
-   public static <T> T handleErrorStatus(Response response)
+   public static void handleErrorStatus(Response response)
    {
       final int status = response.getStatus();
       switch (status)
