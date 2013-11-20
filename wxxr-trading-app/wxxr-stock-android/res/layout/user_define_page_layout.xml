@@ -12,6 +12,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
+        
         <TextView
             android:id="@id/tv_title_content"
             style="@style/style_title_text"
