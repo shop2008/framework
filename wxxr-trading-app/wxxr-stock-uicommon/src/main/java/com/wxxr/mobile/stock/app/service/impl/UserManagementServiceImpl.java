@@ -211,6 +211,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				if (vo == null) {//未登录成功，弹出登陆对话框
 					getService(IWorkbenchManager.class).getWorkbench().showPage("userLoginPage", null, null);
 				}
+				
+				myUserInfo.setLogin(true);
 				// 根据用户密码登录成功
 				Dictionary<String, String> pref = getPrefManager()
 						.getPreference(getModuleName());
