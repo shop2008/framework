@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
@@ -19,8 +20,10 @@ import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IValidationErrorHandler;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.UIComponent;
@@ -251,7 +254,7 @@ public class BasicFieldBinding implements IFieldBinding {
 
 	@Override
 	public void updateModel() {
-		IUIComponent field = getField();
+		final IUIComponent field = getField();
 		if(field instanceof IDataField){
 			AttributeKey<?> attrKey =((IDataField<?>)field).getValueKey();
 			IFieldAttributeManager attrMgr = bContext.getWorkbenchManager().getFieldAttributeManager();
@@ -261,6 +264,18 @@ public class BasicFieldBinding implements IFieldBinding {
 				for (IAttributeUpdater<View> updater : updaters) {
 					if(updater.acceptable(pComponent)){
 						updater.updateModel(this.pComponent, attrKey, field);
+						final ValidationError[] errors = ((IDataField<?>) field).getValidationErrors();
+						if((errors != null)&&(errors.length > 0)){
+							final IValidationErrorHandler handler = bContext.getWorkbenchManager().getValidationErrorHandler();
+							if(handler != null){
+								KUtils.runOnUIThread(new Runnable() {
+									@Override
+									public void run() {
+										handler.handleValidationError(field,pComponent,errors);
+									}
+								},0,null);
+							}
+						}
 						break;
 					}
 				}

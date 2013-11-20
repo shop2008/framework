@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.core.ui.api;
 
+import com.wxxr.javax.validation.Validator;
+
 /**
  * 
  * C : UI binding context
@@ -28,6 +30,10 @@ public interface IWorkbenchManager {
 	 */
 	IEventBinderManager getEventBinderManager();
 
+	
+	Validator getValidator();
+	
+	IValidationErrorHandler getValidationErrorHandler();
 	
 	/**
 	 * return View binder which is suitable for specific target UI context

@@ -14,4 +14,5 @@ public interface IFieldAttributeManager {
 	<T> IFieldAttributeManager registerAttributeUpdater(String name, IAttributeUpdater<T> updater);
 	<T> IFieldAttributeManager unregisterAttributeUpdater(String name, IAttributeUpdater<T> updater);
 	IAttributeUpdater<?>[] getAttributeUpdaters(String name);
+	<T> IFieldAttributeManager registerAttribute(AttributeKey<T> key);
 }

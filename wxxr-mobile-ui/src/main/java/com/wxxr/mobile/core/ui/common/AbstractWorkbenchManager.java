@@ -6,6 +6,8 @@ package com.wxxr.mobile.core.ui.common;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.wxxr.javax.validation.Validator;
+import com.wxxr.javax.validation.ValidatorFactory;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
@@ -39,6 +41,8 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	private IPageNavigator navigator;
 	
 	private IViewBinder viewBinder;
+	
+	private Validator validator;
 	
 	private IFieldBinderManager fieldBinderManager; // = new SimpleFieldBinderManager<Context>(uiContext);
 
@@ -259,4 +263,19 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	protected abstract IPageNavigator createPageNavigator();
 	
 	protected abstract IWorkbench createWorkbench();
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchManager#getValidator()
+	 */
+	@Override
+	public Validator getValidator() {
+		if(this.validator == null){
+			ValidatorFactory factory = context.getKernelContext().getService(ValidatorFactory.class);
+			if(factory != null){
+				this.validator = factory.getValidator();
+			}
+		}
+		return this.validator;
+	}
 }
