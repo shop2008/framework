@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
@@ -100,10 +101,11 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			Long acctId = 0L;
 			if (event.getProperty("position") instanceof Integer) {
+				List<TradingAccInfoBean> trading = (tradingAccount!=null?tradingAccount.getT0TradingAccounts():null);
 				int position = (Integer) event.getProperty("position");
-				if (tradingT != null && tradingT.size() > 0) {
-					TradingAccInfoBean tempTradingA = tradingT.get(position);
-					acctId = tempTradingA.getAcctID();
+				if (trading != null && trading.size() > 0) {
+					TradingAccInfoBean bean = trading.get(position);
+					acctId = bean.getAcctID();
 				}
 			}
 			resutl.setResult("TBuyTradingPage");

@@ -99,10 +99,11 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		Long stockId = 0L;
 		if (event.getProperty("position") instanceof Integer) {
 			int position = (Integer) event.getProperty("position");
-			if (tradingOrders != null && tradingOrders.size() > 0) {
-				StockTradingOrderBean tempTradingA = tradingOrders
-						.get(position);
-				stockId = tempTradingA.getId();
+			List<StockTradingOrderBean> orders = (tradingBean != null ? tradingBean
+					.getTradingOrders() : null);
+			if (orders != null && orders.size() > 0) {
+				StockTradingOrderBean bean = orders.get(position);
+				stockId = bean.getId();
 			}
 		}
 		resutl.setResult("TradingRecordsPage");
@@ -122,9 +123,13 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		if (value instanceof Map) {
 			Map temp = (Map) value;
 			for (Object key : temp.keySet()) {
-				Long tempt = (Long) temp.get(key);
+				Object tempt = temp.get(key);
 				if (tempt != null && "result".equals(key)) {
-					acctId = tempt + "";
+					if(tempt instanceof Long) {
+						acctId = (Long)tempt + "";
+					} else if(tempt instanceof String) {
+						acctId = (String)tempt;
+					}
 				}
 			}
 		}
@@ -204,20 +209,21 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Command(navigations = { @Navigation(on = "*", showPage = "stockSearchPage") })
 	String handleBuyBtnClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
-			CommandResult resutl = new CommandResult();
-			Long stockId = 0L;
-			// if (event.getProperty("position") instanceof Integer) {
-			// int position = (Integer) event.getProperty("position");
-			// if (tradingOrders != null && tradingOrders.size() > 0) {
-			// StockTradingOrderBean tempTradingA = tradingOrders.get(position);
-			// stockId = tempTradingA.getId();
-			// }
-			// }
-			resutl.setResult("stockSearchPage");
-			resutl.setPayload(stockId);
-			// return resutl;
+//			CommandResult resutl = new CommandResult();
+//			Long stockId = 0L;
+//			// if (event.getProperty("position") instanceof Integer) {
+//			// int position = (Integer) event.getProperty("position");
+//			// if (tradingOrders != null && tradingOrders.size() > 0) {
+//			// StockTradingOrderBean tempTradingA = tradingOrders.get(position);
+//			// stockId = tempTradingA.getId();
+//			// }
+//			// }
+//			resutl.setResult("stockSearchPage");
+//			resutl.setPayload(stockId);
+//			// return resutl;
+			return "";
 		}
-		return "";
+		return null;
 	}
 
 	@Override

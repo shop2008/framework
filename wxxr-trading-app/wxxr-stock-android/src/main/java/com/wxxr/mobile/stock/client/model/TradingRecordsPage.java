@@ -103,9 +103,9 @@ public abstract class TradingRecordsPage extends PageBase implements
 			Map map = new HashMap();
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
-				if (recordListBean.getRecords() != null && recordListBean.getRecords().size() > 0) {
-					TradingRecordBean recordBean = recordListBean.getRecords()
-							.get(position);
+				List<TradingRecordBean> record = (recordListBean != null?recordListBean.getRecords():null);
+				if (record != null && record.size() > 0) {
+					TradingRecordBean recordBean = record.get(position);
 					if (recordBean != null) {
 						map.put("market", recordBean.getMarket());
 						map.put("code", recordBean.getCode());

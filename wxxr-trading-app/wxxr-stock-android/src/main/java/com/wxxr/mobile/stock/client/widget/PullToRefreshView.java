@@ -44,6 +44,7 @@ public class PullToRefreshView extends LinearLayout {
 	
 	
 	private boolean isFooterInvisible = true;
+	private boolean isHeaderInvisible = true;
 	/**
 	 * 最终y点坐标，用于计算划过距离
 	 */
@@ -329,7 +330,7 @@ public class PullToRefreshView extends LinearLayout {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_MOVE:
 			int deltaY = y - mLastMotionY;
-			if (mPullState == PULL_DOWN_STATE) {
+			if (mPullState == PULL_DOWN_STATE && isHeaderInvisible) {
 				// PullToRefreshView执行下拉
 				headerPrepareToRefresh(deltaY);
 				// setHeaderPadding(-mHeaderViewHeight);
@@ -342,7 +343,7 @@ public class PullToRefreshView extends LinearLayout {
 			break;
 		case MotionEvent.ACTION_UP:
 			int topMargin = getHeaderTopMargin();
-			if (mPullState == PULL_DOWN_STATE) {
+			if (mPullState == PULL_DOWN_STATE && isHeaderInvisible) {
 				if (topMargin >= 0) {
 					// 开始刷新
 					headerRefreshing();
@@ -383,7 +384,7 @@ public class PullToRefreshView extends LinearLayout {
 		// 对于ListView和GridView
 		if (mAdapterView != null) {
 			// 子view(ListView or GridView)滑动到最顶端
-			if (deltaY > 0 && absDeltay > 10) {
+			if (deltaY > 0 && absDeltay > 10 && isHeaderInvisible) {
 
 				View child = mAdapterView.getChildAt(0);
 				if (child == null) {
@@ -645,8 +646,13 @@ public class PullToRefreshView extends LinearLayout {
 		public void onHeaderRefresh(PullToRefreshView view);
 	}
 	
-	public void hideFooterView() {
-		mFooterView.setVisibility(View.GONE);
-		isFooterInvisible = false;
+	public void setFooterView(boolean show) {
+		mFooterView.setVisibility(show?View.VISIBLE:View.GONE);
+		isFooterInvisible = show;
+	}
+	
+	public void setHeaderView(boolean show) {
+		mHeaderView.setVisibility(show?View.VISIBLE:View.GONE);
+		isFooterInvisible = show;
 	}
 }

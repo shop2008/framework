@@ -18,12 +18,14 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 
 /**
@@ -87,12 +89,27 @@ public abstract class StockSearchViewPage extends PageBase {
 	}
 	
 	@Command(navigations = { 
-			@Navigation(on = "home", showPage = "userLoginPage", params={
-				@Parameter(name="p1",value="v1"),
-				@Parameter(name="p2",value="v2")})
+			@Navigation(on = "SearchStockDetailPage", showPage = "SearchStockDetailPage")
 			}
 	)
-	String handleItemClick(InputEvent event) {
-		return "home";
+	CommandResult handleItemClick(InputEvent event) {
+		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
+			CommandResult result = new CommandResult();
+			String code = "";
+			if (event.getProperty("position") instanceof Integer) {
+				List<StockBaseInfoBean> stocks = (searchListBean != null ? searchListBean
+						.getSearchResult() : null);
+				int position = (Integer) event.getProperty("position");
+				if (stocks != null && stocks.size() > 0) {
+					StockBaseInfoBean bean = stocks
+							.get(position);
+					code = bean.getCode();
+				}
+			}
+			result.setResult("SearchStockDetailPage");
+			result.setPayload(code);
+			return result;
+		}
+		return null;
 	}
 }
