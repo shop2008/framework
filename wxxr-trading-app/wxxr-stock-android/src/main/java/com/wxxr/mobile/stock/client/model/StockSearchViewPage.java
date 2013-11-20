@@ -108,6 +108,7 @@ public abstract class StockSearchViewPage extends PageBase {
 			}
 			result.setResult("SearchStockDetailPage");
 			result.setPayload(code);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			return result;
 		}
 		return null;
