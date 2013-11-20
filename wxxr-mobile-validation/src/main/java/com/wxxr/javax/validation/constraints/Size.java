@@ -50,7 +50,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Size {
-	String message() default "{com.wxxr.javax.validation.constraints.Size.message}";
+	String message() default "{javax.validation.constraints.Size.message}";
 	
 	Class<?>[] groups() default {};
 

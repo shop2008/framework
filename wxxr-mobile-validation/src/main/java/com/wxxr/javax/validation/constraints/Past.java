@@ -52,7 +52,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Past {
-	String message() default "{com.wxxr.javax.validation.constraints.Past.message}";
+	String message() default "{javax.validation.constraints.Past.message}";
 
 	Class<?>[] groups() default { };
 

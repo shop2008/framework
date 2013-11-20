@@ -51,7 +51,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Digits {
-	String message() default "{com.wxxr.javax.validation.constraints.Digits.message}";
+	String message() default "{javax.validation.constraints.Digits.message}";
 
 	Class<?>[] groups() default { };
 

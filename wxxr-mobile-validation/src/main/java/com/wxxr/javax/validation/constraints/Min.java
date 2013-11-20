@@ -54,7 +54,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Min {
-	String message() default "{com.wxxr.javax.validation.constraints.Min.message}";
+	String message() default "{javax.validation.constraints.Min.message}";
 
 	Class<?>[] groups() default { };
 

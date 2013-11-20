@@ -44,7 +44,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface AssertTrue {
-	String message() default "{com.wxxr.javax.validation.constraints.AssertTrue.message}";
+	String message() default "{javax.validation.constraints.AssertTrue.message}";
 
 	Class<?>[] groups() default { };
 

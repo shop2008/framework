@@ -58,7 +58,7 @@ public @interface Pattern {
 	/**
 	 * @return The error message template.
 	 */
-	String message() default "{com.wxxr.javax.validation.constraints.Pattern.message}";
+	String message() default "{javax.validation.constraints.Pattern.message}";
 
 	/**
 	 * @return The groups the constraint belongs to.

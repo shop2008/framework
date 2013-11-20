@@ -52,7 +52,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Future {
-	String message() default "{com.wxxr.javax.validation.constraints.Future.message}";
+	String message() default "{javax.validation.constraints.Future.message}";
 
 	Class<?>[] groups() default { };
 

@@ -54,7 +54,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Max {
-	String message() default "{com.wxxr.javax.validation.constraints.Max.message}";
+	String message() default "{javax.validation.constraints.Max.message}";
 
 	Class<?>[] groups() default { };
 

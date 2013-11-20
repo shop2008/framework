@@ -42,7 +42,7 @@ import com.wxxr.javax.validation.Payload;
 @Documented
 @Constraint(validatedBy = {})
 public @interface Null {
-	String message() default "{com.wxxr.javax.validation.constraints.Null.message}";
+	String message() default "{javax.validation.constraints.Null.message}";
 
 	Class<?>[] groups() default { };
 
