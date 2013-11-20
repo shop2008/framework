@@ -9,6 +9,7 @@ import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 
 /**
@@ -71,4 +72,12 @@ public interface IInfoCenterManagementService {
 	 * 获取指数行情数据
 	 */
 	public QuotationListBean getQuotations();
+	/**
+	 * 
+	 * 获取个股行情数据
+	 * @param code
+	 * @param market
+	 * @return
+	 */
+	public StockQuotationBean getStockQuotation(String code,String market);
 }

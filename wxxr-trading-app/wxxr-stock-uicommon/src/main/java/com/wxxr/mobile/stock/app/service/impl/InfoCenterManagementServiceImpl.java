@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
@@ -132,5 +133,10 @@ public class InfoCenterManagementServiceImpl extends
 		return quotationListBean;
 	}
 
+	@Override
+	public StockQuotationBean getStockQuotation(String code, String market) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
