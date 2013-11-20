@@ -77,6 +77,11 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.StockQuotationView"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.UserPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"

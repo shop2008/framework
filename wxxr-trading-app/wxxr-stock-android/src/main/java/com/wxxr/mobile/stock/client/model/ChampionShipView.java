@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -88,11 +89,12 @@ public abstract class ChampionShipView extends ViewBase {
 			,visibleWhen="${currentViewId == 3}")
 	String weekDate;
 	
+	@Bean
 	int currentViewId = 1;
-	@OnShow
-	protected void updataMegagameRank() {
-		registerBean("currentViewId", currentViewId);
-	}
+//	@OnShow
+//	protected void updataMegagameRank() {
+//		registerBean("currentViewId", currentViewId);
+//	}
 
 	
 	@Command
@@ -144,6 +146,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
 	String handleTMegaClick(InputEvent event) {
 		currentViewId = 1;
 		registerBean("currentViewId", currentViewId);
@@ -158,6 +161,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
 	String handleTMega1Click(InputEvent event) {
 		currentViewId = 2;
 		registerBean("currentViewId", currentViewId);
@@ -172,6 +176,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
 	String handleWeekClick(InputEvent event) {
 		currentViewId = 3;
 		registerBean("currentViewId", currentViewId);
@@ -185,6 +190,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
+	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=true)
 	String handleRegularTicketClick(InputEvent event) {
 		currentViewId = 4;
 		registerBean("currentViewId", currentViewId);

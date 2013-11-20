@@ -71,7 +71,8 @@
     <!-- 搜索股票 -->
     <string name="tv_title_stock_search">搜索股票</string>
     <string name="search_hint">代码/拼音/首字母</string>
-
+	<!-- 买入股票 -->
+	<string name="buy_stock_count_hint">输入最大可买股数</string>
     <!-- 快速买入 -->
     <string name="bt_hang_order_text">挂单</string>
     <string name="bt_market_price_text">市价</string>

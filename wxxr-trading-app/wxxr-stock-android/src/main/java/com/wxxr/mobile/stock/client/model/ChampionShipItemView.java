@@ -3,6 +3,7 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -14,6 +15,7 @@ import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 public abstract class ChampionShipItemView extends ViewBase implements
 		IModelUpdater {
 	
+	@Bean
 	MegagameRankBean msgRank;
 	
 	@Field(valueKey = "text", binding = "${msgRank!=null?msgRank.rankSeq:'--'}")
