@@ -54,7 +54,7 @@ public class URLLocatorManagementServiceImpl extends
 		}
 		loadLocalSettings();
 		this.serverUrl = getURL("server");
-		this.magnoliaUrl = getURL( "homePageUrl");
+		this.magnoliaUrl = getURL("magnolia");
 		if (log.isDebugEnabled()) {
 			log.debug("Local settings:"+defaultSettings);
 		}
