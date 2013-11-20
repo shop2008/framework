@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/listview_selected_item"
+    android:background="@drawable/listview_selected_item1"
     >
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             bind:field="incomeCatagory" />
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/gray"
             bind:field="incomeDate" />
     </LinearLayout>
 
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="TextView"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
         bind:field="incomeAmount" 
