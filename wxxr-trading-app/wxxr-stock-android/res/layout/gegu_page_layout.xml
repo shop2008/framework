@@ -3,314 +3,365 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	   android:background="@drawable/title_bar_bj"
-	    android:paddingLeft="8dp"
-	    android:paddingRight="8dp"
-	    >
-		<ImageView
-	        android:id="@+id/back_btn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:src="@drawable/list_button" /> 
-	    <TextView 
-	        android:id="@id/tv_title_content"
-	        style="@style/style_title_text"
-	        android:text="个股界面"
-	        />
-	</RelativeLayout>
 
-	<ScrollView
-	    android:id="@+id/scrollView1"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:orientation="vertical" >
-			<Gallery
-			    android:id="@+id/gallery1"
-			    android:layout_width="match_parent"
-			    android:layout_height="180dp" />
-		
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="vertical" >
-				 <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="昨收："
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="今开："
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <View android:layout_width="fill_parent"
-			        android:layout_height="0.5dp"
-			        android:background="#999999"/>
-			    
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="最高："
-				             android:textColor="@color/red"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/red"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="最低："
-				             android:textColor="@color/red"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/red"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <View android:layout_width="fill_parent"
-			        android:layout_height="0.5dp"
-			        android:background="#999999"/>
-			    
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="均价："
-				             android:textColor="@color/red"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/red"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="市盈率："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <View android:layout_width="fill_parent"
-			        android:layout_height="0.5dp"
-			        android:background="#999999"/>
-			    
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="量比："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="换手率："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <View android:layout_width="fill_parent"
-			        android:layout_height="0.5dp"
-			        android:background="#999999"/>
-			    
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="成交量："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="成交额："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <View android:layout_width="fill_parent"
-			        android:layout_height="0.5dp"
-			        android:background="#999999"/>
-			    
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="流通盘："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="总市值："
-				             android:textColor="@color/white"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			</LinearLayout>	        
-	    </LinearLayout>
-	</ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
+            <Gallery
+                android:id="@+id/gallery1"
+                android:layout_width="match_parent"
+                android:layout_height="180dp" />
 
-		<Button
-		    android:id="@+id/Button01"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="参赛买入" 
-		    android:layout_weight="1"
-		    android:layout_marginLeft="8dp"
-		    style="@style/red_button_style"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-		<Button
-		    android:id="@+id/button2"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="积分买入" 
-		    android:layout_weight="1"
-		    android:layout_marginLeft="8dp"
-		    android:layout_marginRight="8dp"
-		    style="@style/red_button_style"
-		    />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
 
-		<Button
-		    android:id="@+id/button1"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="挑战买入" 
-		    android:layout_marginRight="8dp"
-		    android:layout_weight="1"
-		    style="@style/red_button_style"/>	    
-	</LinearLayout>
-	
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="昨收：" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="今开：" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#999999" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="最高："
+                            android:textColor="@color/red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/red" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="最低："
+                            android:textColor="@color/red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/red" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#999999" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="均价："
+                            android:textColor="@color/red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/red" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="市盈率："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#999999" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="量比："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="换手率："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#999999" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="成交量："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="成交额："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#999999" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="流通盘："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="总市值："
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="--"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/Button01"
+            style="@style/red_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:text="参赛买入" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/red_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:text="积分买入" />
+
+        <Button
+            android:id="@+id/button1"
+            style="@style/red_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:text="挑战买入" />
+    </LinearLayout>
+
 </LinearLayout>
