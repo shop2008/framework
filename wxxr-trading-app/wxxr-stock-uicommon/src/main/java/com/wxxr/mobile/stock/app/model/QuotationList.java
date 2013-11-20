@@ -14,5 +14,14 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
  */
 @BindableBean(pkg="com.wxxr.mobile.stock.app.bean",className="QuotationListBean")
 public class QuotationList {
+	/**
+	 * 上证指数
+	 */
+	private StockQuotationBean shBean;
+	/**
+	 * 深证指数
+	 */
+	private StockQuotationBean szBean;
+	
 	private List<StockQuotationBean> list;
 }

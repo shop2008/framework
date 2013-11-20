@@ -6,6 +6,9 @@ package com.wxxr.mobile.stock.app.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -14,6 +17,7 @@ import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
+import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
@@ -21,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
+import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
 
 /**
@@ -90,11 +95,11 @@ public class InfoCenterManagementServiceImpl extends
 	}
 //=====================beans =====================
 	private StockTaxisListBean stockList = new StockTaxisListBean();
+	private QuotationListBean quotationListBean = new QuotationListBean();
 	@Override
 	public StockTaxisListBean getStocktaxis(String taxis, String orderby,
-			long start, long limit, long blockId) {
+			long start, long limit) {
 		final TaxisVO vo = new TaxisVO();
-		vo.setBlockId(blockId);
 		vo.setLimit(limit);
 		vo.setStart(start);
 		vo.setOrderby(orderby);
@@ -110,5 +115,22 @@ public class InfoCenterManagementServiceImpl extends
 		}, 1, TimeUnit.SECONDS);
 		return null;
 	}
+
+	@Override
+	public QuotationListBean getQuotations() {
+		Future<QuotationListVO> future = context.getExecutor().submit(new Callable<QuotationListVO>() {
+			public QuotationListVO call() throws Exception {
+				QuotationListVO vo = getRestService(StockResource.class).getQuotation(null);
+				return vo;
+			}
+		});
+		try {
+			QuotationListVO volist = future.get();
+		}catch (Exception e) {
+			log.warn("Failed to fetch quotation",e);
+		}
+		return quotationListBean;
+	}
+
 
 }
