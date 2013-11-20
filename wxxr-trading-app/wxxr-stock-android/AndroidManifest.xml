@@ -28,64 +28,54 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" 
-            />
-        
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.WebPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
+
         <!-- 股票交易相关 -->
         <activity
             android:name=".ui.StockSearchViewPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.TBuyTradingPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.TBuyStockInfoPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.TradingRecordsPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.TradingRecordOrderDetailPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.TradingRecordDoneDetailPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.SearchStockDetailPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.BuyStockDetailPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.UserPage"
             android:configChanges="keyboardHidden|orientation"
@@ -125,9 +115,7 @@
             android:name=".ui.UserLoginPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:screenOrientation="portrait"
-            />
-        
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.UserFindPswPage"
             android:configChanges="keyboardHidden|orientation"
@@ -138,14 +126,11 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-        
         <activity
             android:name=".ui.UserAlterPswPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.UserManagePage"
             android:configChanges="keyboardHidden|orientation"
@@ -156,21 +141,33 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.UserWithDrawCashAuthPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.UserTradeRecordPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.UserNewsPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.URealPanelScorePage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserIncomDetailPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserWithDrawCashPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
@@ -185,39 +182,31 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.OtherUserPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.RegisterRulesPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.CreateBuyTradingPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.OpetationDetailsPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.SellTradingAccountPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-        
-        
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -225,6 +214,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- FOR REST ACCESS -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+ <!-- FOR REST ACCESS -->
 
 </manifest>

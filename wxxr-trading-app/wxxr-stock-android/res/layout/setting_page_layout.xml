@@ -16,8 +16,7 @@
         <RelativeLayout
             android:id="@id/rl_news_push"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dip"
+            android:layout_height="45dp"
             android:clickable="true" 
             bind:field="*"
             bind:on_Click="setPushMsgEnabled"
@@ -30,6 +29,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="交易信息推送"
+                android:layout_marginLeft="2dp"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -37,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="2dp"
 	            android:layout_centerVertical="true"
                 >
 	            <CheckBox
@@ -72,8 +73,7 @@
         <RelativeLayout
             android:id="@id/rl_score_for_app"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dip"
+            android:layout_height="45dp"
             bind:field="*"
             bind:on_Click="playScore"
             android:clickable="true" 
@@ -106,8 +106,7 @@
         <RelativeLayout
             android:id="@id/rl_user_guide"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dip"
+            android:layout_height="45dp"
             bind:field="*"
             bind:on_Click="useInstruction"
             android:clickable="true" 
@@ -120,6 +119,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
+                android:layout_marginLeft="2dp"
                 android:textColor="@color/black"
                 android:text="新手指引" />
 
@@ -128,7 +128,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right" />
+                android:src="@drawable/ic_arrow_right" 
+                android:layout_marginRight="2dp"
+                />
         </RelativeLayout>
 
         <View
@@ -139,9 +141,8 @@
         <RelativeLayout
             android:id="@id/rl_contract_us"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:clickable="true" 
-            android:layout_margin="5dip"
             bind:field="*"
             bind:on_Click="contractUs"
             android:background="@drawable/bg_bottom"
@@ -154,14 +155,18 @@
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="联系我们" />
+                android:text="联系我们" 
+                android:layout_marginLeft="2dp"
+                />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_right" />
+                android:src="@drawable/ic_arrow_right" 
+                android:layout_marginRight="2dp"
+                />
         </RelativeLayout>
 
     </LinearLayout>
