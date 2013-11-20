@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/activity_title_bar" />
-
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
