@@ -9,6 +9,7 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
@@ -18,6 +19,8 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
@@ -28,7 +31,6 @@ import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
-import com.wxxr.mobile.stock.app.model.AuthInfo;
 
 /**
  * @author wangxuyang
@@ -760,5 +762,105 @@ public class MockDataUtils {
 			articles.add(article);
 		}
 		return articles;
+	}
+	
+	
+	
+	//上海（上证指数）
+	public static StockQuotationBean getSHStockQuotation(){
+		StockQuotationBean sh = new StockQuotationBean();
+		sh.setCode("000001");
+		sh.setMarket("上证指数");
+		sh.setClose(220661L);
+		sh.setNewprice(220661L); 
+		sh.setRisefallrate(62L);
+		sh.setChange(1349L);
+		sh.setClose(220666L);
+		return sh;
+	}
+	
+	//深圳成指
+	public static StockQuotationBean getSZStockQuotation(){
+		StockQuotationBean sz = new StockQuotationBean();
+		sz.setCode("3900001");
+		sz.setMarket("深圳成指");
+		sz.setClose(851068L);
+		sz.setNewprice(851068L); 
+		sz.setRisefallrate(58L);
+		sz.setChange(4947L);
+		sz.setClose(851060L);
+		return sz;
+	}
+	
+	
+	public static List<StockTaxisBean> getStockTaxis(){
+		ArrayList<StockTaxisBean> stockTaxis = new ArrayList<StockTaxisBean>();
+		StockTaxisBean taxis;
+		
+		taxis = new StockTaxisBean();
+		taxis.setCode("600877");
+		taxis.setName("中国嘉陵");
+		taxis.setNewprice(402L);
+		taxis.setRisefallrate(1014L);
+		stockTaxis.add(taxis);
+		
+		taxis = new StockTaxisBean();
+		taxis.setCode("600839");
+		taxis.setName("四川长虹");
+		taxis.setNewprice(326L);
+		taxis.setRisefallrate(1014L);
+		stockTaxis.add(taxis);
+		
+		taxis = new StockTaxisBean();
+		taxis.setCode("600130");
+		taxis.setName("波导股份");
+		taxis.setNewprice(436L);
+		taxis.setRisefallrate(1010L);
+		stockTaxis.add(taxis);
+		
+		taxis = new StockTaxisBean();
+		taxis.setCode("600590");
+		taxis.setName("泰豪科技");
+		taxis.setNewprice(688L);
+		taxis.setRisefallrate(1008L);
+		stockTaxis.add(taxis);
+		
+		return stockTaxis;
+	}
+	
+	public static List<EarnRankItemBean> getEarnRank(){
+		ArrayList<EarnRankItemBean> rank = new ArrayList<EarnRankItemBean>();
+		EarnRankItemBean earnRank;
+		
+		earnRank = new EarnRankItemBean();
+		earnRank.setAcctId("001");
+		earnRank.setImgUrl("http://hqpiczs.dfcfw.com/EM_Quote2010PictureProducter/picture/0000011R.png");
+		earnRank.setTitle("动视暴雪第三季度财报：净利润同比下滑75%");
+		rank.add(earnRank);
+		
+		earnRank = new EarnRankItemBean();
+		earnRank.setAcctId("002");
+		earnRank.setImgUrl("http://i0.sinaimg.cn/cj/201311/20131120/image_sinajs_cn_newchart_png_min_cn_min_n_sh000001_183028.png");
+		earnRank.setTitle("券商称后市看涨");
+		rank.add(earnRank);
+		
+		earnRank = new EarnRankItemBean();
+		earnRank.setAcctId("003");
+		earnRank.setImgUrl("http://image.sinajs.cn/newchart/png/min/cn_min/n/sh000001.png");
+		earnRank.setTitle("沪指涨0.61%收复2200 军工航天概念股现涨停潮");
+		rank.add(earnRank);
+		
+		earnRank = new EarnRankItemBean();
+		earnRank.setAcctId("004");
+		earnRank.setImgUrl("http://i2.sinaimg.cn/cj/201311/20131120/image_sinajs_cn_newchart_png_min_cn_min_n_sh000001_160126.png");
+		earnRank.setTitle("天津自贸区板块大涨3.09% 6股涨停");
+		rank.add(earnRank);
+		
+		earnRank = new EarnRankItemBean();
+		earnRank.setAcctId("005");
+		earnRank.setImgUrl("http://i3.sinaimg.cn/cj/201311/20131120/image_sinajs_cn_newchart_png_min_cn_min_n_sh000001_155918.png");
+		earnRank.setTitle("仍将震荡 关注改革受益板块的轮动");
+		rank.add(earnRank);
+		return rank;
 	}
 }
