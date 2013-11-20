@@ -30,3 +30,4 @@ public abstract class HelpCenterView extends ViewBase {
 	@Field(valueKey="options",binding="${articlesBean!=null?articlesBean.helpArticles:null}")
 	List<ArticleBean> helpArticles;
 }
+ 

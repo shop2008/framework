@@ -29,7 +29,7 @@ public abstract class HelpCenterItemView extends ViewBase implements
 	@Command(commandName="handleItemClick")
 	String handleItemClick(InputEvent event){
 		return null;
-	}
+	} 
 	
 	@Override
 	public void updateModel(Object data) {

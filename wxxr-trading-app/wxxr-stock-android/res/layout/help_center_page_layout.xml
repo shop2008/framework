@@ -20,4 +20,4 @@
         android:cacheColorHint="#00000000"
         >
     </com.wxxr.mobile.stock.client.widget.RefreshListView>
-</FrameLayout>
+</FrameLayout> 
