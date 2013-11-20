@@ -5,12 +5,14 @@ package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.stock.app.ConverterUtils;
+import com.wxxr.mobile.core.rpc.util.MarshallerClassRegistry;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -30,9 +32,10 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
+import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -81,15 +84,10 @@ public class TradingManagementServiceImpl extends
 	 * 创建交易盘的参数配置
 	 */
 	private UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
-	
-	
-	private TradingRecordListBean recordsBean = new TradingRecordListBean();
-	
 	/**
-	 * 模拟用户交易记录数据
+	 * 交易订单记录
 	 */
-	private TradingAccountListBean myTradeRecords = new TradingAccountListBean();
-
+	private TradingRecordListBean recordsBean = new TradingRecordListBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -98,340 +96,410 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	protected void startService() {
+		MarshallerClassRegistry.register(TradingAccInfoVO.class);
+		MarshallerClassRegistry.register(HomePageVO.class);
+		MarshallerClassRegistry.register(MegagameRankVO.class);
+		MarshallerClassRegistry.register(RegularTicketVO.class);
+		MarshallerClassRegistry.register(WeekRankVO.class);
+		MarshallerClassRegistry.register(StockTradingOrderVO.class);
+		MarshallerClassRegistry.register(GainVO.class);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(ITradingManagementService.class, this);
+		MarshallerClassRegistry.unregister(TradingAccInfoVO.class);
+		MarshallerClassRegistry.unregister(HomePageVO.class);
+		MarshallerClassRegistry.unregister(MegagameRankVO.class);
+		MarshallerClassRegistry.unregister(RegularTicketVO.class);
+		MarshallerClassRegistry.unregister(WeekRankVO.class);
+		MarshallerClassRegistry.unregister(StockTradingOrderVO.class);
+		MarshallerClassRegistry.unregister(GainVO.class);
 	}
 
 	// =================interface method =====================================
-	public TradingAccountListBean getTradingAccountList() {
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					List<TradingAccInfoVO> vo = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getTradingAccountList();
-					if (vo != null) {
-
-					} else {
-						if (!context.getApplication().isInDebugMode()) {
-							myTradingAccounts.getT0TradingAccounts();
-						}
-					}
-				} catch (Throwable e) {
-					log.error("fetch data error", e);
-				}
-			}
-		}, 11, TimeUnit.SECONDS);
-
-		return myTradingAccounts;
-	}
-
 	@Override
+	//首页交易盘列表
 	public TradingAccountListBean getHomePageTradingAccountList()
 			throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
-			myTradingAccounts.setT1TradingAccounts(MockDataUtils.mockData(1));
-			myTradingAccounts.setT0TradingAccounts(MockDataUtils.mockData(0));
-			return myTradingAccounts;
-		}
-		// 如果未登录
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					List<TradingAccInfoVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getTradingAccountList();
-					if (volist != null && volist.size() > 0) {
-						List<TradingAccInfoBean> t0_list = new ArrayList<TradingAccInfoBean>();
-						List<TradingAccInfoBean> t1_list = new ArrayList<TradingAccInfoBean>();
-						for (TradingAccInfoVO vo : volist) {
-							if (vo.getStatus() == 1) {
-								t0_list.add(ConverterUtils.fromVO(vo));
-							} else {
-								t1_list.add(ConverterUtils.fromVO(vo));
-							}
+		/*
+		 * if (context.getApplication().isInDebugMode()) {
+		 * myTradingAccounts.setT1TradingAccounts(MockDataUtils.mockData(1));
+		 * myTradingAccounts.setT0TradingAccounts(MockDataUtils.mockData(0));
+		 * return myTradingAccounts; }
+		 */
+		Future<List<TradingAccInfoVO>> future = context.getExecutor().submit(
+				new Callable<List<TradingAccInfoVO>>() {
+					@Override
+					public List<TradingAccInfoVO> call() throws Exception {
+						try {
+							List<TradingAccInfoVO> volist = getService(
+									IRestProxyService.class).getRestService(
+									TradingResourse.class)
+									.getTradingAccountList();
+							return volist;
+						} catch (Throwable e) {
+							log.error("fetch data error", e);
 						}
-						myTradingAccounts.setT0TradingAccounts(t0_list);
-						myTradingAccounts.setT1TradingAccounts(t1_list);
+						return null;
 					}
-				} catch (Throwable e) {
-					log.error("fetch data error", e);
+				});
+		List<TradingAccInfoVO> volist = null;
+		try {
+			volist = future.get();
+			if (volist != null && volist.size() > 0) {
+				List<TradingAccInfoBean> t0_list = new ArrayList<TradingAccInfoBean>();
+				List<TradingAccInfoBean> t1_list = new ArrayList<TradingAccInfoBean>();
+				for (TradingAccInfoVO vo : volist) {
+					if (vo.getStatus() == 1) {
+						t0_list.add(ConverterUtils.fromVO(vo));
+					} else {
+						t1_list.add(ConverterUtils.fromVO(vo));
+					}
 				}
+				myTradingAccounts.setT0TradingAccounts(t0_list);
+				myTradingAccounts.setT1TradingAccounts(t1_list);
 			}
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching home page data", e);
+		}
 		return myTradingAccounts;
 	}
 
-	@Override
-	public RankListBean getEarnRank(final int start, final int limit) {
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					List<HomePageVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getHomeList(start, limit);
-					if (volist != null && volist.size() > 0) {
-						List<EarnRankItemBean> beanList = new ArrayList<EarnRankItemBean>();
-						for (HomePageVO vo : volist) {
-							EarnRankItemBean bean = new EarnRankItemBean();
-							bean.setAcctId(vo.getAccID());
-							bean.setImgUrl(vo.getUrl());
-							bean.setTitle(vo.getWordage());
-							beanList.add(bean);
-						}
-						rank.setEarnRankBeans(beanList);
-					}
-				} catch (Throwable e) {
-					log.warn("Error when fetching earn rank", e);
-					throw new StockAppBizException(e.getMessage());
 
+	@Override
+	//赚钱榜
+	public RankListBean getEarnRank(final int start, final int limit) {
+		List<HomePageVO> volist = null;
+		try {
+			volist = fetchDataFromServer(new Callable<List<HomePageVO>>() {
+				public List<HomePageVO> call() throws Exception {
+					try {
+						List<HomePageVO> _volist = getService(
+								IRestProxyService.class).getRestService(
+								TradingResourse.class).getHomeList(start, limit);
+						return _volist;
+					} catch (Throwable e) {
+						log.warn("Error when fetching earn rank", e);
+						throw new StockAppBizException(e.getMessage());
+
+					}
 				}
+			});
+		} catch (Exception e) {
+			log.warn("Error when fetching earn rank", e);
+		}
+		if (volist != null && volist.size() > 0) {
+			List<EarnRankItemBean> beanList = new ArrayList<EarnRankItemBean>();
+			for (HomePageVO vo : volist) {
+				EarnRankItemBean bean = new EarnRankItemBean();
+				bean.setAcctId(vo.getAccID());
+				bean.setImgUrl(vo.getUrl());
+				bean.setTitle(vo.getWordage());
+				beanList.add(bean);
 			}
-		}, 1, TimeUnit.SECONDS);
+			rank.setEarnRankBeans(beanList);
+		}
 		return rank;
 	}
 
 	public RankListBean getTMegagameRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
+		/*if (context.getApplication().isInDebugMode()) {
 			rank.setTRankBeans(MockDataUtils.mockRankData("T"));
 			return rank;
-		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					List<MegagameRankVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getTMegagameRank();
-					if (volist != null && volist.size() > 0) {
-						List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
-						int rankNo = 1;
-						for (MegagameRankVO vo : volist) {
-							MegagameRankBean bean = ConverterUtils.fromVO(vo);
-							bean.setRankSeq(rankNo++);
-							beanList.add(bean);
-						}
-						rank.setTRankBeans(beanList);
+		}*/
+		try {
+			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
+				public List<MegagameRankVO> call() throws Exception {
+					try {
+						List<MegagameRankVO> volist = getService(
+								IRestProxyService.class).getRestService(
+								TradingResourse.class).getTMegagameRank();
+						return volist;
+					} catch (Throwable e) {
+						log.warn("Error when fetching T+1 rank from server", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Error when fetching week rank", e);
 				}
+			});
+			if (volist != null && volist.size() > 0) {
+				List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
+				int rankNo = 1;
+				for (MegagameRankVO vo : volist) {
+					MegagameRankBean bean = ConverterUtils.fromVO(vo);
+					bean.setRankSeq(rankNo++);
+					beanList.add(bean);
+				}
+				rank.setTRankBeans(beanList);
 			}
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching T+1 rank", e);
+		}
 		return rank;
 	}
 
 	@Override
 	public RankListBean getT1MegagameRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
+		/*if (context.getApplication().isInDebugMode()) {
 			rank.setT1RankBeans(MockDataUtils.mockRankData("T1"));
 			return rank;
-		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					List<MegagameRankVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getTPlusMegagameRank();
-					if (volist != null && volist.size() > 0) {
-						List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
-						int rankNo = 1;
-						for (MegagameRankVO vo : volist) {
-							MegagameRankBean bean = ConverterUtils.fromVO(vo);
-							bean.setRankSeq(rankNo++);
-							beanList.add(bean);
-						}
-						rank.setT1RankBeans(beanList);
+		}*/
+		try {
+			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
+				public List<MegagameRankVO> call() throws Exception {
+					try {
+						List<MegagameRankVO> volist = getService(
+								IRestProxyService.class).getRestService(
+								TradingResourse.class).getTPlusMegagameRank();
+						return volist;
+					} catch (Throwable e) {
+						log.warn("Error when fetching T+1 rank from server", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Error when fetching week rank", e);
 				}
+			});
+			if (volist != null && volist.size() > 0) {
+				List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
+				int rankNo = 1;
+				for (MegagameRankVO vo : volist) {
+					MegagameRankBean bean = ConverterUtils.fromVO(vo);
+					bean.setRankSeq(rankNo++);
+					beanList.add(bean);
+				}
+				rank.setT1RankBeans(beanList);
 			}
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching T+1 rank", e);
+		}
 		return rank;
 	}
 
 	@Override
 	public RankListBean getRegularTicketRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
+	/*	if (context.getApplication().isInDebugMode()) {
 			rank.setRegularTicketBeans(MockDataUtils.mockRegularTicketRank());
 			return rank;
-		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					List<RegularTicketVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getRegularTicketRank();
-					if (volist != null && volist.size() > 0) {
-						List<RegularTicketBean> beanList = new ArrayList<RegularTicketBean>();
-						int rankNo = 1;
-						for (RegularTicketVO vo : volist) {
-							RegularTicketBean bean = ConverterUtils.fromVO(vo);
-							bean.setRankSeq(rankNo++);
-							beanList.add(bean);
-						}
-						rank.setRegularTicketBeans(beanList);
+		}*/
+		try {
+			List<RegularTicketVO> volist = fetchDataFromServer(new Callable<List<RegularTicketVO>>() {
+				public List<RegularTicketVO> call() throws Exception {
+					try {
+						List<RegularTicketVO> volist = getService(
+								IRestProxyService.class).getRestService(
+								TradingResourse.class).getRegularTicketRank();
+						return volist;
+					} catch (Throwable e) {
+						log.warn("Error when fetching rg rank from server", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Error when fetching week rank", e);
 				}
+			});
+			if (volist != null && volist.size() > 0) {
+				List<RegularTicketBean> beanList = new ArrayList<RegularTicketBean>();
+				int rankNo = 1;
+				for (RegularTicketVO vo : volist) {
+					RegularTicketBean bean = ConverterUtils.fromVO(vo);
+					bean.setRankSeq(rankNo++);
+					beanList.add(bean);
+				}
+				rank.setRegularTicketBeans(beanList);
 			}
-
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching rg rank", e);
+		}
 		return rank;
 	}
 
 	@Override
 	public RankListBean getWeekRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
+		/*if (context.getApplication().isInDebugMode()) {
 			rank.setWeekRanKBeans(MockDataUtils.mockWeekRank());
 			return rank;
-		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					List<WeekRankVO> volist = getService(
-							IRestProxyService.class).getRestService(
-							TradingResourse.class).getWeekRank();
-					if (volist != null && volist.size() > 0) {
-						List<WeekRankBean> beanList = new ArrayList<WeekRankBean>();
-						int rankNo = 1;
-						for (WeekRankVO weekRankVO : volist) {
-							WeekRankBean bean = ConverterUtils
-									.fromVO(weekRankVO);
-							bean.setRankSeq(rankNo++);
-							beanList.add(bean);
-						}
-						rank.setWeekRanKBeans(beanList);
+		}*/
+		try {
+			List<WeekRankVO> volist = fetchDataFromServer(new Callable<List<WeekRankVO>>() {
+				public List<WeekRankVO> call() throws Exception {
+					try {
+						List<WeekRankVO> volist = getService(
+								IRestProxyService.class).getRestService(
+								TradingResourse.class).getWeekRank();
+						return volist;
+					} catch (Throwable e) {
+						log.warn("Error when fetching week rank", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Error when fetching week rank", e);
 				}
+			});
+			if (volist != null && volist.size() > 0) {
+				List<WeekRankBean> beanList = new ArrayList<WeekRankBean>();
+				int rankNo = 1;
+				for (WeekRankVO weekRankVO : volist) {
+					WeekRankBean bean = ConverterUtils
+							.fromVO(weekRankVO);
+					bean.setRankSeq(rankNo++);
+					beanList.add(bean);
+				}
+				rank.setWeekRanKBeans(beanList);
 			}
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching week rank", e);
+		}
 		return rank;
+		
 	}
 
 	@Override
 	public TradingAccountBean getTradingAccountInfo(final String acctID)
 			throws StockAppBizException {
-		if(context.getApplication().isInDebugMode()) {
-			myTradingAccount = MockDataUtils.mockTradingAccountInfo();
-			return myTradingAccount;
+		if (log.isDebugEnabled()) {
+			log.debug("Get trading account info for id:" + acctID);
 		}
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					TradingAccountVO vo = getService(IRestProxyService.class)
-							.getRestService(TradingResourse.class).getAccount(
-									acctID);
-					if (vo != null) {
-						myTradingAccount.setId(vo.getId());
-						myTradingAccount.setApplyFee(vo.getApplyFee());
-						myTradingAccount.setAvalibleFee(vo.getAvalibleFee());
-						myTradingAccount.setBuyDay(vo.getBuyDay());
-						myTradingAccount.setFrozenVol(vo.getFrozenVol());
-						myTradingAccount.setGainRate(vo.getGainRate());
-						myTradingAccount.setLossLimit(vo.getLossLimit());
-						myTradingAccount.setMaxStockCode(vo.getMaxStockCode());
-						myTradingAccount.setMaxStockMarket(vo
-								.getMaxStockMarket());
-						myTradingAccount.setOver(vo.getOver());
-						myTradingAccount.setSellDay(vo.getSellDay());
-						myTradingAccount.setStatus(vo.getStatus());
-						myTradingAccount.setTotalGain(vo.getTotalGain());
-						myTradingAccount.setType(vo.getType());
-						List<StockTradingOrderVO> orderVos = vo
-								.getTradingOrders();
-						if (orderVos != null) {
-							List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
-							for (StockTradingOrderVO order : orderVos) {
-								list.add(ConverterUtils.fromVO(order));
-							}
-							myTradingAccount.setTradingOrders(list);
+		TradingAccountVO vo  = null;
+		try {
+			vo = fetchDataFromServer(new Callable<TradingAccountVO>() {
+				public TradingAccountVO call() throws Exception {
+					try {
+						TradingAccountVO _vo = getService(IRestProxyService.class)
+								.getRestService(TradingResourse.class).getAccount(
+										acctID);
+						if (log.isDebugEnabled()) {
+							log.debug("fetch data:" + _vo);
 						}
-						myTradingAccount.setUsedFee(vo.getUsedFee());
-						myTradingAccount.setVirtual(vo.isVirtual());
+						return _vo;
+					} catch (Exception e) {
+						log.warn(String.format(
+								"Error when fetch trading account info[id=%s]",
+								acctID), e);
+						throw new StockAppBizException("网络不给力，请稍候再试");
 					}
-				} catch (Exception e) {
-					log.error(String.format(
-							"Error when fetch trading account info[id=%s]",
-							acctID), e);
-					throw new StockAppBizException("网络不给力，请稍候再试");
 				}
+			});
+		} catch (Exception e) {
+			log.warn(String.format(
+					"Error when fetch trading account info[id=%s]",
+					acctID), e);
+		}
+		if (vo != null) {
+			myTradingAccount.setId(vo.getId());
+			myTradingAccount.setApplyFee(vo.getApplyFee());
+			myTradingAccount.setAvalibleFee(vo.getAvalibleFee());
+			myTradingAccount.setBuyDay(vo.getBuyDay());
+			myTradingAccount.setFrozenVol(vo.getFrozenVol());
+			myTradingAccount.setGainRate(vo.getGainRate());
+			myTradingAccount.setLossLimit(vo.getLossLimit());
+			myTradingAccount.setMaxStockCode(vo.getMaxStockCode());
+			myTradingAccount.setMaxStockMarket(vo
+					.getMaxStockMarket());
+			myTradingAccount.setOver(vo.getOver());
+			myTradingAccount.setSellDay(vo.getSellDay());
+			myTradingAccount.setStatus(vo.getStatus());
+			myTradingAccount.setTotalGain(vo.getTotalGain());
+			myTradingAccount.setType(vo.getType());
+			List<StockTradingOrderVO> orderVos = vo
+					.getTradingOrders();
+			if (orderVos != null) {
+				List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
+				for (StockTradingOrderVO order : orderVos) {
+					list.add(ConverterUtils.fromVO(order));
+				}
+				myTradingAccount.setTradingOrders(list);
 			}
-		}, 1, TimeUnit.SECONDS);
+			myTradingAccount.setUsedFee(vo.getUsedFee());
+			myTradingAccount.setVirtual(vo.isVirtual());
+		}
+		
+		if (log.isDebugEnabled()) {
+			log.debug(myTradingAccount.toString());
+		}
 		return myTradingAccount;
 	}
-
-	// =================private method =======================================
-
-	private void checkLogin() {
-		getService(IUserManagementService.class).checkLogin();
-	}
-
+	
 	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
-		if(context.getApplication().isInDebugMode()){
-			createTDConfig = MockDataUtils.getUserCreateTradAccInfo();
-			return createTDConfig;
-		}
-		checkLogin();
-		context.invokeLater(new Runnable() {
-			public void run() {
-				UserCreateTradAccInfoVO vo = null;
-				try {
-					vo = context.getService(IRestProxyService.class)
-							.getRestService(TradingResourse.class)
-							.getCreateStrategyInfo();
-					if (vo != null) {
-						createTDConfig.setCapitalRate(vo.getCapitalRate());
-						createTDConfig.setCostRate(vo.getCostRate());
-						createTDConfig.setDepositRate(vo.getDepositRate());
-						createTDConfig.setMaxAmount(vo.getMaxAmount());
-						createTDConfig.setRateString(vo.getRateString());
-						createTDConfig.setVoucherCostRate(0.00399f);
+		try {
+			UserCreateTradAccInfoVO vo = fetchDataFromServer(new Callable<UserCreateTradAccInfoVO>() {
+				public UserCreateTradAccInfoVO call() throws Exception {
+					UserCreateTradAccInfoVO _vo = null;
+					try {
+						_vo = context.getService(IRestProxyService.class)
+								.getRestService(TradingResourse.class)
+								.getCreateStrategyInfo();
+						if (log.isDebugEnabled()) {
+							log.debug("fetch data:" + _vo);
+						}
+					} catch (Throwable e) {
+						log.warn("Failed to create trading account", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Failed to create trading account", e);
-					throw new StockAppBizException(e.getMessage());
+					return _vo;
 				}
+			});
+			if (vo != null) {
+				createTDConfig.setCapitalRate(vo.getCapitalRate());
+				createTDConfig.setCostRate(vo.getCostRate());
+				createTDConfig.setDepositRate(vo.getDepositRate());
+				createTDConfig.setMaxAmount(vo.getMaxAmount());
+				createTDConfig.setRateString(vo.getRateString());
+				createTDConfig.setVoucherCostRate(vo.getVoucherCostRate());
 			}
-		}, 1, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			log.warn("Error when fetching create trading account config", e);
+			throw new StockAppBizException("网络不给力，请稍后再试");
+		}
 		return createTDConfig;
 	}
-
+	
 	@Override
-	public TradingAccountListBean getOtherTradingAccountList(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public DealDetailBean getDealDetail(final String acctID) {
+		/*if (context.getApplication().isInDebugMode()) {
+			dealDetailBean.setFund("10万");
+			dealDetailBean.setPlRisk(0.001f);
+			dealDetailBean.setUserGain(1000);
+			dealDetailBean.setImgUrl(new String[] { "#" });
+			dealDetailBean.setTradingRecords(MockDataUtils.mockTradingRecord());
+			return dealDetailBean;
+		}*/
+		try {
+			DealDetailVO vo = fetchDataFromServer(new Callable<DealDetailVO>() {
+				public DealDetailVO call() throws Exception {
+					try {
+						DealDetailVO vo = getRestService(TradingResourse.class)
+								.getDealDetail(acctID);
+						if (log.isDebugEnabled()) {
+							log.debug("fetch data:" + vo);
+						}
+						return vo;
+					} catch (Throwable e) {
+						log.warn("Failed to fetch deal detail", e);
+						throw new StockAppBizException(e);
+					}
+				}
+			});
+			if (vo != null) {
+				dealDetailBean.setFund(vo.getFund());
 
-	@Override
-	public DealDetailBean getDealDetail(String accId) {
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-
+				dealDetailBean.setPlRisk(Float.valueOf(vo.getPlRisk()));
+				dealDetailBean.setUserGain(Float.valueOf(vo
+						.getUserGain()));
+				dealDetailBean.setImgUrl(vo.getImgUrl());
+				List<TradingRecordVO> volist = vo.getTradingRecords();
+				if (volist != null && volist.size() > 0) {
+					List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
+					for (TradingRecordVO tradingRecordVO : volist) {
+						beans.add(ConverterUtils
+								.fromVO(tradingRecordVO));
+					}
+					dealDetailBean.setTradingRecords(beans);
+				}
 			}
-		}, 1, TimeUnit.SECONDS);
-		dealDetailBean.setFund("10万");
-		dealDetailBean.setPlRisk(0.001f);
-		dealDetailBean.setUserGain(1000);
-		dealDetailBean.setImgUrl(new String[] { "#" });
-		dealDetailBean.setTradingRecords(MockDataUtils.mockTradingRecord());
+		} catch (Exception e) {
+			log.warn("Error when fetch deal detail", e);
+		}
 		return dealDetailBean;
 	}
-
-	@Override
+	
 	public AuditDetailBean getAuditDetail(final String acctId) {
-		if (context.getApplication().isInDebugMode()) {
+		/*if (context.getApplication().isInDebugMode()) {
 			log.info("getAuditDetail: accid= " + acctId);
 			auditDetailBean.setAccountPay("122.3");
 			auditDetailBean.setBuyDay("2013-11-12");
@@ -441,49 +509,54 @@ public class TradingManagementServiceImpl extends
 			auditDetailBean.setFrozenAmount("0");
 			auditDetailBean.setFund("10万");
 			return auditDetailBean;
+		}*/
+		AuditDetailVO vo = null;
+		try {
+			vo = fetchDataFromServer(new Callable<AuditDetailVO>() {
+				public AuditDetailVO call() throws Exception {
+					AuditDetailVO vo = null;
+					try {
+						vo = getRestService(TradingResourse.class).getAuditDetail(
+								acctId);
+						return vo;
+					} catch (Throwable e) {
+						log.warn("Failed to fetch audit detail info", e);
+						throw new StockAppBizException(e.getMessage());
+					}
+				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch audit detail info", e);
 		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				AuditDetailVO vo = null;
-				try {
-					vo = getRestService(TradingResourse.class).getAuditDetail(
-							acctId);
-				} catch (Throwable e) {
-					log.warn("Failed to fetch audit detail info", e);
-				}
-				if (vo != null) {
-					auditDetailBean.setAccountPay(vo.getAccountPay());
-					auditDetailBean.setBuyDay(vo.getBuyDay());
-					auditDetailBean.setBuyAverage(vo.getBuyAverage());
-					auditDetailBean.setCapitalRate(vo.getCapitalRate());
-					auditDetailBean.setCost(vo.getCost());
-					auditDetailBean.setDeadline(vo.getDeadline());
-					auditDetailBean.setFrozenAmount(vo.getFrozenAmount());
-					auditDetailBean.setFund(vo.getFund());
-					auditDetailBean.setId(vo.getId());
-					auditDetailBean.setPayOut(vo.getPayOut());
-					auditDetailBean.setPlRisk(vo.getPlRisk());
-					auditDetailBean.setSellAverage(vo.getSellAverage());
-					auditDetailBean.setTotalGain(vo.getTotalGain());
-					auditDetailBean.setTradingCost(vo.getTradingCost());
-					auditDetailBean.setTradingDate(vo.getTradingDate());
-					auditDetailBean.setType(vo.getType());
-					auditDetailBean.setUnfreezeAmount(vo.getFrozenAmount());
-					auditDetailBean.setUserGain(vo.getUserGain());
-					auditDetailBean.setVirtual(vo.isVirtual());
+		if (vo != null) {
+			auditDetailBean.setAccountPay(vo.getAccountPay());
+			auditDetailBean.setBuyDay(vo.getBuyDay());
+			auditDetailBean.setBuyAverage(vo.getBuyAverage());
+			auditDetailBean.setCapitalRate(vo.getCapitalRate());
+			auditDetailBean.setCost(vo.getCost());
+			auditDetailBean.setDeadline(vo.getDeadline());
+			auditDetailBean.setFrozenAmount(vo.getFrozenAmount());
+			auditDetailBean.setFund(vo.getFund());
+			auditDetailBean.setId(vo.getId());
+			auditDetailBean.setPayOut(vo.getPayOut());
+			auditDetailBean.setPlRisk(vo.getPlRisk());
+			auditDetailBean.setSellAverage(vo.getSellAverage());
+			auditDetailBean.setTotalGain(vo.getTotalGain());
+			auditDetailBean.setTradingCost(vo.getTradingCost());
+			auditDetailBean.setTradingDate(vo.getTradingDate());
+			auditDetailBean.setType(vo.getType());
+			auditDetailBean.setUnfreezeAmount(vo.getFrozenAmount());
+			auditDetailBean.setUserGain(vo.getUserGain());
+			auditDetailBean.setVirtual(vo.isVirtual());
 
-				}
-			}
-		}, 1, TimeUnit.SECONDS);
-
+		}
 		return auditDetailBean;
 	}
-
+	
 	@Override
 	public void createTradingAccount(final Long captitalAmount,
 			final float capitalRate, final boolean virtual,
 			final float depositRate) throws StockAppBizException {
-		checkLogin();
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -513,18 +586,10 @@ public class TradingManagementServiceImpl extends
 		}, 1, TimeUnit.SECONDS);
 
 	}
-
-	private <T> T getRestService(Class<T> restResouce) {
-		return context.getService(IRestProxyService.class).getRestService(
-				restResouce);
-	}
-
 	@Override
 	public void buyStock(final String acctID, final String market,
 			final String code, String price, String amount)
 			throws StockAppBizException {
-		checkLogin();
-		// check validation
 		final long cPrice = Long.valueOf(price);// 需要判断处理
 		final long c_amount = Long.valueOf(amount);
 		context.invokeLater(new Runnable() {
@@ -556,14 +621,10 @@ public class TradingManagementServiceImpl extends
 		}, 1, TimeUnit.SECONDS);
 
 	}
-
 	@Override
 	public void sellStock(final String acctID, final String market,
 			final String code, String price, String amount)
 			throws StockAppBizException {
-
-		checkLogin();
-		// check validation
 		final long cPrice = Long.valueOf(price);// 需要判断处理
 		final long c_amount = Long.valueOf(amount);
 		context.invokeLater(new Runnable() {
@@ -594,7 +655,6 @@ public class TradingManagementServiceImpl extends
 			}
 		}, 1, TimeUnit.SECONDS);
 	}
-
 	@Override
 	public void cancelOrder(final String orderID) throws StockAppBizException {
 		context.invokeLater(new Runnable() {
@@ -625,13 +685,12 @@ public class TradingManagementServiceImpl extends
 			}
 		}, 1, TimeUnit.SECONDS);
 	}
-
 	@Override
 	public void quickBuy(final Long captitalAmount, String capitalRate,
 			final boolean virtual, final String stockMarket,
 			final String stockCode, String stockBuyAmount, String depositRate)
 			throws StockAppBizException {
-		
+
 		final float _capitalRate = Float.valueOf(capitalRate);
 		final long _stockBuyAmount = Long.valueOf(stockBuyAmount);
 		final float _depositRate = Float.valueOf(depositRate);
@@ -665,14 +724,14 @@ public class TradingManagementServiceImpl extends
 		}, 1, TimeUnit.SECONDS);
 
 	}
-
 	@Override
 	public void clearTradingAccount(final String acctID) {
 		context.invokeLater(new Runnable() {
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class).clearTradingAccount(acctID);
+					vo = getRestService(TradingResourse.class)
+							.clearTradingAccount(acctID);
 					if (vo != null) {
 						if (vo.getSuccOrNot() == 0) {// 表示失败
 							if (log.isDebugEnabled()) {
@@ -696,100 +755,128 @@ public class TradingManagementServiceImpl extends
 		}, 1, TimeUnit.SECONDS);
 
 	}
-
 	@Override
 	public TradingAccountListBean getMyAllTradingAccountList(final int start,
 			final int limit) {
 		if (context.getApplication().isInDebugMode()) {
-			myTradeRecords.setAllTradingAccounts(MockDataUtils.mockTradeRecord(1));
-			return myTradeRecords;
+			myTradingAccounts.setAllTradingAccounts(MockDataUtils.mockTradeRecord(1));
+			return myTradingAccounts;
 		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					if (log.isDebugEnabled()) {
-						log.debug("fetch all trading account info...");
-					}
-					List<GainVO> list = getRestService(TradingResourse.class)
-							.getTotalGain(start, limit);
-					if (list != null && list.size() > 0) {
-						List<GainBean> beanList = new ArrayList<GainBean>();
-						for (GainVO vo : list) {
-							GainBean bean = ConverterUtils.fromVO(vo);
-							beanList.add(bean);
+		List<GainVO> volist = null;
+		try {
+			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
+				public List<GainVO> call() throws Exception {
+					try {
+						if (log.isDebugEnabled()) {
+							log.debug("fetch all trading account info...");
 						}
-						myTradingAccounts.setAllTradingAccounts(beanList);
+						List<GainVO> list = getRestService(TradingResourse.class)
+								.getTotalGain(start, limit);
+						return list;
+					} catch (Throwable e) {
+						log.warn("Failed to fetch all trading account", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Failed to fetch all trading account", e);
-					throw new StockAppBizException(e.getMessage());
 				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch all trading account", e);
+		}
+		if (volist != null && volist.size() > 0) {
+			List<GainBean> beanList = new ArrayList<GainBean>();
+			for (GainVO vo : volist) {
+				GainBean bean = ConverterUtils.fromVO(vo);
+				beanList.add(bean);
 			}
-		}, 1, TimeUnit.SECONDS);
+			myTradingAccounts.setAllTradingAccounts(beanList);
+		}
 		return myTradingAccounts;
 	}
 
 	@Override
 	public TradingAccountListBean getMySuccessTradingAccountList(
 			final int start, final int limit) {
-		
 		if (context.getApplication().isInDebugMode()) {
-			myTradeRecords.setSuccessTradingAccounts(MockDataUtils.mockTradeRecord(0));
-			return myTradeRecords;
+			myTradingAccounts.setSuccessTradingAccounts(MockDataUtils.mockTradeRecord(0));
+			return myTradingAccounts;
 		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					if (log.isDebugEnabled()) {
-						log.debug("fetch success trading account info...");
-					}
-					List<GainVO> list = getRestService(TradingResourse.class)
-							.getGain(start, limit);
-					if (list != null && list.size() > 0) {
-						List<GainBean> beanList = new ArrayList<GainBean>();
-						for (GainVO vo : list) {
-							GainBean bean = ConverterUtils.fromVO(vo);
-							beanList.add(bean);
+		List<GainVO> volist = null;
+		try {
+			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
+				public List<GainVO> call() throws Exception {
+					try {
+						if (log.isDebugEnabled()) {
+							log.debug("fetch all trading account info...");
 						}
-						myTradingAccounts.setSuccessTradingAccounts(beanList);
+						List<GainVO> list = getRestService(TradingResourse.class)
+								.getGain(start, limit);
+						return list;
+					} catch (Throwable e) {
+						log.warn("Failed to fetch success trading account", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Throwable e) {
-					log.warn("Failed to fetch success trading account", e);
-					throw new StockAppBizException(e.getMessage());
 				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch success trading account", e);
+		}
+		if (volist != null && volist.size() > 0) {
+			List<GainBean> beanList = new ArrayList<GainBean>();
+			for (GainVO vo : volist) {
+				GainBean bean = ConverterUtils.fromVO(vo);
+				beanList.add(bean);
 			}
-		}, 1, TimeUnit.SECONDS);
+			myTradingAccounts.setSuccessTradingAccounts(beanList);
+		}
 		return myTradingAccounts;
 	}
-
-	@Override
 	public TradingRecordListBean getTradingAccountRecord(final String acctID,
 			final int start, final int limit) {
-		if (context.getApplication().isInDebugMode()) {
-			recordsBean.setRecords(MockDataUtils.mockTradingRecord());
-			return recordsBean;
-		}
-		context.invokeLater(new Runnable() {
-
-			public void run() {
-				try {
-					List<TradingRecordVO> volist = getRestService(
-							TradingResourse.class).getTradingAccountRecord(
-							acctID, start, limit);
-					if (volist != null && volist.size() > 0) {
-						List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
-						for (TradingRecordVO vo : volist) {
-							TradingRecordBean bean = ConverterUtils.fromVO(vo);
-							beans.add(bean);
-						}
-						recordsBean.setRecords(beans);
+		List<TradingRecordVO> volist = null;
+		try {
+			volist = fetchDataFromServer(new Callable<List<TradingRecordVO>>() {
+				public List<TradingRecordVO> call() throws Exception {
+					try {
+						List<TradingRecordVO> volist = getRestService(
+								TradingResourse.class).getTradingAccountRecord(
+								acctID, start, limit);
+						return volist;
+					} catch (Exception e) {
+						log.warn("Error when getting trading record", e);
+						throw new StockAppBizException(e.getMessage());
 					}
-				} catch (Exception e) {
-					log.warn("Error when getting trading record", e);
 				}
+			});
+		} catch (Exception e) {
+			log.warn("Error when getting trading record", e);
+		}
+		if (volist != null && volist.size() > 0) {
+			List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
+			for (TradingRecordVO vo : volist) {
+				TradingRecordBean bean = ConverterUtils.fromVO(vo);
+				beans.add(bean);
 			}
-		}, 1, TimeUnit.SECONDS);
+			recordsBean.setRecords(beans);
+		}
 		return recordsBean;
 	}
+	// =================private method =======================================
+	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
+		Future<T> future = context.getExecutor().submit(task);
+		T result = null;
+		try {
+			result = future.get();
+			return result;
+		} catch (Exception e) {
+			log.warn("Error when fetching data from server", e);
+			throw e;
+		}
+	}
+
+	private <T> T getRestService(Class<T> restResouce) {
+		return context.getService(IRestProxyService.class).getRestService(
+				restResouce);
+	}
+	
 
 }

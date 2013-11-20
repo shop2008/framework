@@ -122,15 +122,6 @@ public interface ITradingManagementService {
 			stockBuyAmount,String depositRate)throws StockAppBizException;
 	//======================交易部分接口  end =======================
 	/**
-	 * 获取他人交易盘列表
-	 * 
-	 * @param userId
-	 * @param type
-	 *            - 0表示T日交易盘，1表示T+1日交易盘
-	 * @return
-	 */
-	TradingAccountListBean getOtherTradingAccountList(String userId);
-	/**
 	 * 获取成交详情
 	 * 
 	 * @param accId
