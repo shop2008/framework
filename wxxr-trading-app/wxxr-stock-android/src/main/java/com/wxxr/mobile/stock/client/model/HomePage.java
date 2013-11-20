@@ -145,7 +145,7 @@ public abstract class HomePage extends PageBase {
 	}
 	@Menu(items={"rhome","rpage1","rpage2","rpage3","rpage4"})
 	private IMenu rightMenu;
-	
+	 
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
 				@UIItem(id="rhome",label="我的认证",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),

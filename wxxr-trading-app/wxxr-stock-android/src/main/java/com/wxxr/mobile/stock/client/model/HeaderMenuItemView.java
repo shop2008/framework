@@ -53,7 +53,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.balance : '0.00'}")
 	String accountBalance;
-	
+	 
 	@Command(commandName="handleClickImage",
 		navigations={
 			@Navigation(on="userLoginPage",showPage="userLoginPage"),
