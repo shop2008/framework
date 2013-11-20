@@ -20,9 +20,9 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 
 /**
- * 模拟盘详情
+ * 个股界面
  * 
- * @author duzhen
+ * @author
  * 
  */
 @View(name = "SearchStockDetailPage", withToolbar = true, description="个股界面")
