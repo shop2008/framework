@@ -288,7 +288,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		for (int i = 0; i < 9; i++) {
 			ScoreBean score = new ScoreBean();
 			score.setCatagory("推荐好友奖励");
-			score.setAmount("200");
+			score.setAmount(200f);
 			score.setDate("2011-10-12");
 			scores.add(score);
 		}
