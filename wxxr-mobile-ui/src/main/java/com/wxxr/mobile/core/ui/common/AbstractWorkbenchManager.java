@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
+import com.wxxr.mobile.core.ui.api.IValidationErrorHandler;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
@@ -277,5 +278,14 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 			}
 		}
 		return this.validator;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchManager#getValidationErrorHandler()
+	 */
+	@Override
+	public IValidationErrorHandler getValidationErrorHandler() {
+		return null;
 	}
 }

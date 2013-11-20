@@ -229,6 +229,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		public ELContext getELContext() {
 			return getELManager(true).getELContext();
 		}
+
+		@Override
+		public Object getBean(String name) {
+			return beanNameResolver.getBean(name);
+		}
 	};
 	private boolean enableSelectionProvider;
 	private SelectionProviderSupport selectionProvider;

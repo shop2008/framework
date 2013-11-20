@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IReadable;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
+import com.wxxr.mobile.core.ui.api.IValidationErrorHandler;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.api.InputEvent;

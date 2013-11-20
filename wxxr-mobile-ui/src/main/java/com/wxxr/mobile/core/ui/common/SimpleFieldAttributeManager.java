@@ -29,6 +29,12 @@ public class SimpleFieldAttributeManager implements IFieldAttributeManager {
 		this.attrKeys.put(name, new AttributeKey<T>(valueType,name));
 		return this;
 	}
+	
+	public <T> IFieldAttributeManager registerAttribute(AttributeKey<T> key) {
+		this.attrKeys.put(key.getName(),key);
+		return this;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IFieldAttributeManager#unregisterAttribute(java.lang.String)
