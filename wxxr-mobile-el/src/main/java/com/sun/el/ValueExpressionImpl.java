@@ -52,8 +52,10 @@ import com.sun.el.lang.ELSupport;
 import com.sun.el.lang.EvaluationContext;
 import com.sun.el.lang.ExpressionBuilder;
 import com.sun.el.parser.AbstractNodeVisitor;
+import com.sun.el.parser.AstDotSuffix;
 import com.sun.el.parser.AstIdentifier;
 import com.sun.el.parser.AstLiteralExpression;
+import com.sun.el.parser.AstPropertySuffix;
 import com.sun.el.parser.Node;
 import com.sun.el.util.ReflectionUtil;
 import com.wxxr.javax.el.ELContext;
@@ -130,7 +132,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
 
     private transient Node node;
     
-    private List<String> referringBeanNames;
+    private List<String> referringBeanNames, referringPropertyNames;
 
     public ValueExpressionImpl() {
 
@@ -188,7 +190,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
      * @return The Node for the expression
      * @throws ELException
      */
-    private Node getNode() throws ELException {
+    protected Node getNode() throws ELException {
         if (this.node == null) {
             this.node = ExpressionBuilder.createNode(this.expr);
         }
@@ -315,24 +317,58 @@ public final class ValueExpressionImpl extends ValueExpression implements
 	@Override
 	public List<String> getReferringBeanNames() {
 		if(this.referringBeanNames == null){
-			final ArrayList<String> names = new ArrayList<String>();
-			this.node.accept(new AbstractNodeVisitor(){
-
-				/* (non-Javadoc)
-				 * @see com.sun.el.parser.AbstractNodeVisitor#visit(com.sun.el.parser.AstIdentifier)
-				 */
-				@Override
-				public void visit(AstIdentifier node) {
-					String name = node.getImage();
-					if((!names.contains(name))&&((varMapper == null)||(varMapper.resolveVariable(name) == null))){
-						names.add(name);
-					}
-					super.visit(node);
-				}
-				
-			});
-			this.referringBeanNames = names;
+			initReferringNames();
 		}
 		return this.referringBeanNames;
+	}
+
+	/**
+	 * 
+	 */
+	protected void initReferringNames() {
+		final ArrayList<String> names = new ArrayList<String>();
+		final ArrayList<String> properties = new ArrayList<String>();
+		this.node.accept(new AbstractNodeVisitor(){
+
+			/* (non-Javadoc)
+			 * @see com.sun.el.parser.AbstractNodeVisitor#visit(com.sun.el.parser.AstIdentifier)
+			 */
+			@Override
+			public void visit(AstIdentifier node) {
+				String name = node.getImage();
+				if((!names.contains(name))&&((varMapper == null)||(varMapper.resolveVariable(name) == null))){
+					names.add(name);
+				}
+				super.visit(node);
+			}
+
+			/* (non-Javadoc)
+			 * @see com.sun.el.parser.AbstractNodeVisitor#visit(com.sun.el.parser.AstPropertySuffix)
+			 */
+			@Override
+			public void visit(AstDotSuffix node) {
+				if(node.jjtGetNumChildren() == 0){
+					String name = node.getImage();
+					if(!properties.contains(name)){
+						properties.add(name);
+					}
+				}
+				super.visit(node);
+			}
+			
+		});
+		this.referringBeanNames = names;
+		this.referringPropertyNames = properties;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.javax.el.ValueExpression#getReferringPropertyNames()
+	 */
+	@Override
+	public List<String> getReferringPropertyNames() {
+		if(this.referringPropertyNames == null){
+			initReferringNames();
+		}
+		return this.referringPropertyNames;
 	}
 }

@@ -143,4 +143,9 @@ public final class ValueExpressionLiteral extends ValueExpression implements
 	public List<String> getReferringBeanNames() {
 		return null;
 	}
+
+	@Override
+	public List<String> getReferringPropertyNames() {
+		return null;
+	}
 }

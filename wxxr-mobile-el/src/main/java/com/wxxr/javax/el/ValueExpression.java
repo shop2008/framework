@@ -210,6 +210,8 @@ public abstract class ValueExpression
     public abstract Class<?> getExpectedType();
     
     public abstract List<String> getReferringBeanNames();
+    
+    public abstract List<String> getReferringPropertyNames();
 
     /**
      * Returns a {@link ValueReference} for this expression instance.
