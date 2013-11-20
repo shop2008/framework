@@ -25,6 +25,8 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_define_page_layout")
 public abstract class UserSelfDefinePage extends PageBase {
 
+	
+	
 	@Field(valueKey = "imageURI", binding = "${user!=null?user.userPic!=null?user.userPic:'resourceId:drawable/head1':'resourceId:drawable/head1'}")
 	String userIcon;
 
