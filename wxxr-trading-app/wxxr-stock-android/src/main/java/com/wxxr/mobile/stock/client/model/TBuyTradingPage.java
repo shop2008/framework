@@ -158,16 +158,10 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult handleStockClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			Map map = new HashMap();
 			if (tradingBean != null) {
-				map.put("id", tradingBean.getId());
-				map.put("buyDay", tradingBean.getBuyDay());
-				map.put("sellDay", tradingBean.getSellDay());
-				map.put("applyFee", tradingBean.getApplyFee());
-				map.put("lossLimit", tradingBean.getLossLimit());
+				resutl.setPayload(tradingBean.getId());
 			}
 			resutl.setResult("TBuyStockInfoPage");
-			resutl.setPayload(map);
 			return resutl;
 		}
 
