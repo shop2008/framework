@@ -1,6 +1,12 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import java.util.Map;
+
+import org.w3c.dom.Text;
+
+import android.text.TextUtils;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -105,12 +111,13 @@ public abstract class UserSwitchCardPage extends PageBase implements IModelUpdat
 	@Override
 	public void updateModel(Object value) {
 		
-		if (value instanceof CommandResult) {
-			CommandResult result = (CommandResult) value;
-			String accountNameStr = result.getResult();
+		Map<String, String> map = (Map<String, String>) value;
+		
+		String accountNameStr = map.get("accountName");
+		
+		if (!TextUtils.isEmpty(accountNameStr)) {
 			this.accountName = accountNameStr;
 			this.accountNameField.setValue(accountNameStr);
 		}
-		
 	}
 }

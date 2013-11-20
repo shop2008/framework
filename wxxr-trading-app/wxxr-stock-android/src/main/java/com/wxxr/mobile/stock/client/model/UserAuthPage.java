@@ -4,22 +4,22 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
-import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
 
@@ -35,7 +35,10 @@ public abstract class UserAuthPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
-	@Bean(type=BindingType.Pojo,express="${usrMgr.userAuthInfo}")
+	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
+	UserBean user;
+	
+	@Bean(type=BindingType.Pojo,express="${user!=null?user.bankInfo!=null?user.bankInfo:null:null}")
 	AuthInfoBean authBean;
 	
 	/**
@@ -115,7 +118,10 @@ public abstract class UserAuthPage extends PageBase {
 	CommandResult switchBankCard(InputEvent event) {
 		
 		CommandResult result = new CommandResult();
-		result.setResult(authBean.getAccountName());
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("accountName", authBean.getAccountName());
+		result.setPayload(map);
+		result.setResult("SUCCESS");
 		return result;
 	}
 	

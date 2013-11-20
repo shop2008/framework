@@ -13,10 +13,9 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 /**
@@ -31,15 +30,14 @@ public abstract class UserPage extends PageBase  {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Bean(type=BindingType.Service)
-	ITradingManagementService tradingService;
+
 	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
 	
-	@Bean(type=BindingType.Pojo, express="${tradingService.myTradingAccountList}")
-	TradingAccountListBean tradingAccount;
+	@Bean(type=BindingType.Pojo, express="${usrService.myPersonalHomePage}")
+	PersonalHomePageBean personalBean;
 	/**
 	 * 用户形象照
 	 */
@@ -55,43 +53,43 @@ public abstract class UserPage extends PageBase  {
 	/**
 	 * 累计实盘积分
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.totoalScore!=null?user.totoalScore:'--':'--'}")
+	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.voucherVol>=0?personalBean.voucherVol:'--':'--'}")
 	String totalScore;
 
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.totoalProfit!=null?user.totoalProfit:'--':'--'}")
+	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.totalProfit>=0?personalBean.totalProfit:'--':'--'}")
 	String totalProfit;
 
 	/**
 	 * 挑战交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.challengeShared!=null?user.challengeShared:'--':'--'}")
+	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.actualCount>=0?personalBean.actualCount:'--':'--'}")
 	String challengeSharedNum;
 
 	/**
 	 * 参赛交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.joinShared!=null?user.joinShared:'--':'--'}")
+	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.virtualCount>=0?personalBean.virtualCount:'--':'--'}")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding="${tradingAccount.virtualTradingAccountBeans!=null?tradingAccount.virtualTradingAccountBeans:null}")
-	List<TradingAccountBean> joinTradeInfos;
+	@Field(valueKey = "options", binding="${personalBean!=null?personalBean.virtualList!=null?personalBean.virtualList:null:null}")
+	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding="${tradingAccount.realTradingAccountBeans!=null?tradingAccount.realTradingAccountBeans:null}")
-	List<TradingAccountBean> challengeTradeInfos;
+	@Field(valueKey = "options", binding="${personalBean!=null?personalBean.actualList!=null?personalBean.actualList:null:null}")
+	List<GainBean> challengeTradeInfos;
 
-	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?true:false}")
+	@Field(valueKey = "visible", binding="${personalBean.actualList!=null?true:false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount.realTradingAccountBeans!=null?false:true}")
+	@Field(valueKey = "visible", binding="${personalBean.actualList!=null?false:true}")
 	boolean cNoSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?true:false}")
+	@Field(valueKey = "visible", binding="${personalBean.virtualList!=null?true:false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding="${tradingAccount.virtualTradingAccountBeans!=null?false:true}")
+	@Field(valueKey = "visible", binding="${personalBean.virtualList!=null?false:true}")
 	boolean jNoSharedVisiable;
 
 	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")

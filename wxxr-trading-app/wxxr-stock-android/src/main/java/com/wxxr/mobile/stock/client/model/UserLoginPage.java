@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import javax.security.auth.login.LoginException;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -29,6 +28,7 @@ public abstract class UserLoginPage extends PageBase {
 	@Field(valueKey = "text")
 	String loginBtn;
 
+	
 	DataField<String> mobileNumField;
 
 	DataField<String> passwordField;
@@ -44,10 +44,7 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return null
 	 */
-	@Command(
-			commandName = "login",
-			navigations={@Navigation(on="failed")}
-			)
+	@Command
 	String login(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -60,7 +57,8 @@ public abstract class UserLoginPage extends PageBase {
 				log.debug("login:mobileNum"+mobileNum);
 				log.debug("login:password"+password);
 			}
-		    usrService.login(mobileNum, password);
+			if(usrService != null)
+				usrService.login(mobileNum, password);
 		}
 		return null;
 	}

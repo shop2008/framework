@@ -139,14 +139,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-        <activity
-            android:name=".ui.UnBindCardDialog"
-            android:theme="@style/dialog"
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true" 
-            />
         <activity
             android:name=".ui.UserSwitchCardPage"
             android:configChanges="keyboardHidden|orientation"

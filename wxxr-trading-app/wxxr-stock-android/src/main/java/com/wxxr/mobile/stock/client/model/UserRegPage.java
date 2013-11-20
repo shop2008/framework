@@ -1,17 +1,20 @@
 package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name = "userRegPage")
@@ -26,8 +29,8 @@ public abstract class UserRegPage extends PageBase {
 	@Field(valueKey="text")
 	String registerBtn;
 	
-	@Field
-	IUserManagementService userService;
+	@Bean(type=BindingType.Service)
+	IUserManagementService usrService;
 
 	/**
 	 * 是否阅读了《注册条款》
@@ -82,7 +85,8 @@ public abstract class UserRegPage extends PageBase {
 			if (log.isDebugEnabled()) {
 				log.debug("register:Send Message To Mobile");
 			}
-		    getUIContext().getKernelContext().getService(IUserManagementService.class).register(mobileNumField.getValue());
+			if(usrService != null)
+				usrService.register(mobileNumField.getValue());
 				
 		}
 		return null;
@@ -94,13 +98,12 @@ public abstract class UserRegPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "registerRules")
+	@Command(
+			commandName = "registerRules",
+			navigations={@Navigation(on="OK", showPage="registerRulesPage")}
+			)
 	String registerRules(InputEvent event) {
-
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getWorkbench().showPage("registerRulesPage", null, null);
-		}
-		return null;
+		return "OK";
 	}
 	
 	/**
@@ -113,7 +116,6 @@ public abstract class UserRegPage extends PageBase {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
-			System.out.println("-------------123");
 			if (this.readChecked == true) {
 				this.readChecked = false;
 				this.readCheckedField.setValue(false);
@@ -127,15 +129,13 @@ public abstract class UserRegPage extends PageBase {
 				this.registerBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_WHITE);
 				this.registerBtnField.setAttribute(AttributeKeys.enabled, true);
 			}
-			//userService.setRegRulesReaded(this.readCheckedField.getValue());
-		
-			
 		}
 		return null;
 	}
+	
 	@OnShow
 	protected void initData() {
-		
-		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
+		this.readChecked = true;
+		this.readCheckedField.setValue(true);
 	}
 }

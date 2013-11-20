@@ -244,4 +244,8 @@
     <string name="label_service_email">客服邮箱</string>
     <string name="label_platform_support">安信证券</string>
     <string name="label_platform_addr">北京中关村大街营业部</string>
+    <!-- 消息中心 -->
+    <string name="title_message_center">消息</string>
+    <string name="tab_account_trade_text">账户&amp;交易</string>
+	<string name="tab_info_notice_text">资讯&amp;公告</string>
 </resources>

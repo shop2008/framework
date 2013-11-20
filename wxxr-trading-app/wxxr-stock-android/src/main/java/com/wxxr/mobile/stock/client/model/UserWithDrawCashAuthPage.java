@@ -3,10 +3,12 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -41,8 +43,9 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	@Field(valueKey="text")
 	String bankNum;
 	
-	@Field
+	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
+	
 	
 	DataField<String> accountNameField;
 	
@@ -66,8 +69,6 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 		return null;
 	}
 
-	
-	
 	@Command(commandName="accountNameChanged")
 	String accountNameChanged(InputEvent event) {
 		
@@ -118,16 +119,24 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "cashAuth", description = "Back To Last UI")
+	@Command(
+			commandName = "cashAuth", 
+			description = "Back To Last UI",
+			navigations={
+					@Navigation(on="BINDSUC", showPage="userAuthPage"),
+					@Navigation(on="BINDFAIL", showDialog="withDrawFailDialog")
+			}
+	)
 	String cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			userService.bindBankCard(accountNameField.getValue(), bankNameField.getValue(), bankAddrField.getValue(), bankNameField.getValue());
+			boolean bindResult = userService.bindBankCard(accountNameField.getValue(), bankNameField.getValue(), bankAddrField.getValue(), bankNameField.getValue());
+			if (bindResult == true) {
+				return "BINDSUC";
+			} else {
+				return "BINDFAIL";
+			}
 		}
 		return null;
 	}
-	
-	@OnShow
-	protected void initData() {
-		userService = getUIContext().getKernelContext().getService(IUserManagementService.class);
-	}
+
 }

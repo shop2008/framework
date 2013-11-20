@@ -3,14 +3,11 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
-import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.client.utils.Utils;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 
 
 /**
@@ -22,11 +19,11 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 
 	
-	TradingAccountBean accountBean;
+	GainBean accountBean;
 	/**
 	 * 股票名称
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockMarket:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockName:'--'}")
 	String stock_name;
 	
     /**
@@ -38,32 +35,24 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 额度
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.applyFee:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.sum:'--'}")
 	String challenge_amount;
 	
 	/**
 	 * 盈亏
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.totalGain:'--'}", attributes={@Attribute(name="textColor", value="${accountBean.totalGain>0?'resourceId:color/red':'resourceId:color/green'}")})
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.userGain:'--'}", attributes={@Attribute(name="textColor", value="${accountBean.userGain>0?'resourceId:color/red':'resourceId:color/green'}")})
 	String profit_loss_amount;
 	
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?util.getDate(accountBean.buyDay):'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}")
 	String trade_date;
-	
-	@Bean
-	Utils util = Utils.getInstance();
-	
-	@OnShow
-	protected void initData() {
-		registerBean("util", util);
-	}
 	
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof TradingAccountBean) {
+		if (value instanceof GainBean) {
 			registerBean("accountBean", value);
 		}
 	}
