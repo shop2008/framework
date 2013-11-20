@@ -130,6 +130,7 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	String cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			boolean bindResult = userService.bindBankCard(accountNameField.getValue(), bankNameField.getValue(), bankAddrField.getValue(), bankNameField.getValue());
+			System.out.println("---------------------"+bindResult);
 			if (bindResult == true) {
 				return "BINDSUC";
 			} else {

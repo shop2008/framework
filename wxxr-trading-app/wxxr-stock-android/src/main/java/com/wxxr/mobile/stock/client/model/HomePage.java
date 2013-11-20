@@ -155,14 +155,14 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="rpage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="rhome",showPage="userLoginPage",params={
+				@Navigation(on="rhome",showPage="userAuthPage",params={
 						@Parameter(name="p1",value="v1"),
 						@Parameter(name="p2",value="v2")
 				}),
 				@Navigation(on="rpage1",showPage="userAccountPage"),
-				@Navigation(on="rpage2",showPage="userAuthPage"),
+				@Navigation(on="rpage2",showPage="userTradeRecordPage"),
 				@Navigation(on="rpage3",showPage="appSetPage"),
-				@Navigation(on="rpage4",showPage="myAuthPage")
+				@Navigation(on="rpage4",showDialog="curVertionDialog")
 			}
 	)
 	String menuRightClicked(InputEvent event){

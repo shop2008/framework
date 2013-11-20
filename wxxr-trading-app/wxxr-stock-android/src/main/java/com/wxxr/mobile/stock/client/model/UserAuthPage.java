@@ -35,7 +35,7 @@ public abstract class UserAuthPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
+	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean user;
 	
 	@Bean(type=BindingType.Pojo,express="${user!=null?user.bankInfo!=null?user.bankInfo:null:null}")
