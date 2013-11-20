@@ -84,7 +84,7 @@ public class CompositeConstraintTest {
 
 			assertNumberOfViolations( constraintViolations, 1 );
 			assertCorrectConstraintTypes( constraintViolations, NotNull.class );
-			assertCorrectConstraintViolationMessages( constraintViolations, "may not be null" );
+//			assertCorrectConstraintViolationMessages( constraintViolations, "may not be null" );
 
 			constraintViolations = currentValidator.validate(
 					new Person(
@@ -93,7 +93,7 @@ public class CompositeConstraintTest {
 			);
 			assertNumberOfViolations( constraintViolations, 1 );
 			assertCorrectConstraintTypes( constraintViolations, Size.class );
-			assertCorrectConstraintViolationMessages( constraintViolations, "size must be between 2 and 10" );
+//			assertCorrectConstraintViolationMessages( constraintViolations, "size must be between 2 and 10" );
 		}
 	}
 }

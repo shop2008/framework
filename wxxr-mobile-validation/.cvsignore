@@ -8,3 +8,4 @@ build
 gen
 .project
 .classpath
+test-output

@@ -201,7 +201,15 @@ public class ConfigurationImpl implements HibernateValidatorConfiguration, Confi
 	}
 
 	public MessageInterpolator getDefaultMessageInterpolator() {
-		return KUtils.getService(MessageInterpolator.class);
+		try {
+			return KUtils.getService(MessageInterpolator.class);
+		}catch(Throwable t){}
+		return null;
+//		if(msgInterpolator == null){
+//			return new ResourceBundleMessageInterpolator();
+//		}else{
+//			return msgInterpolator;
+//		}
 	}
 
 	public TraversableResolver getDefaultTraversableResolver() {

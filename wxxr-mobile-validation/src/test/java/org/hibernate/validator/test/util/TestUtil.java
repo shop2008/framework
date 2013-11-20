@@ -24,25 +24,31 @@ import static org.testng.FileAssert.fail;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
+import org.hibernate.validator.engine.ConstraintValidatorFactoryImpl;
 import org.hibernate.validator.engine.PathImpl;
+import org.hibernate.validator.engine.resolver.DefaultTraversableResolver;
+import org.hibernate.validator.test.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.util.LoggerFactory;
 
 import com.wxxr.javax.validation.Configuration;
+import com.wxxr.javax.validation.ConstraintValidatorFactory;
 import com.wxxr.javax.validation.ConstraintViolation;
+import com.wxxr.javax.validation.MessageInterpolator;
 import com.wxxr.javax.validation.Path;
+import com.wxxr.javax.validation.TraversableResolver;
 import com.wxxr.javax.validation.Validation;
 import com.wxxr.javax.validation.ValidationProviderResolver;
 import com.wxxr.javax.validation.Validator;
 import com.wxxr.javax.validation.metadata.PropertyDescriptor;
+import com.wxxr.javax.validation.spi.ConfigurationState;
 import com.wxxr.javax.validation.spi.ValidationProvider;
 import com.wxxr.mobile.core.log.api.Trace;
 
@@ -61,9 +67,44 @@ public class TestUtil {
 
 	public static Validator getValidator() {
 		if ( hibernateValidator == null ) {
-			Configuration configuration = getConfiguration( Locale.ENGLISH );
+//			Configuration configuration = getConfiguration( Locale.ENGLISH );
 //			configuration.traversableResolver( new DummyTraversableResolver() );
-			hibernateValidator = configuration.buildValidatorFactory().getValidator();
+//			hibernateValidator = configuration.buildValidatorFactory().getValidator();
+			hibernateValidator = new HibernateValidator().buildValidatorFactory(new ConfigurationState() {
+				
+				private DefaultTraversableResolver defaultTraversableResolver = new DefaultTraversableResolver();
+				private ConstraintValidatorFactoryImpl vFactory = new ConstraintValidatorFactoryImpl();
+				private ResourceBundleMessageInterpolator msgInterpolator = new ResourceBundleMessageInterpolator();
+				@Override
+				public boolean isIgnoreXmlConfiguration() {
+					return false;
+				}
+				
+				@Override
+				public TraversableResolver getTraversableResolver() {
+					return defaultTraversableResolver;
+				}
+				
+				@Override
+				public Map<String, String> getProperties() {
+					return null;
+				}
+				
+				@Override
+				public MessageInterpolator getMessageInterpolator() {
+					return msgInterpolator;
+				}
+				
+				@Override
+				public Set<InputStream> getMappingStreams() {
+					return null;
+				}
+				
+				@Override
+				public ConstraintValidatorFactory getConstraintValidatorFactory() {
+					return vFactory;
+				}
+			}).getValidator();
 		}
 		return hibernateValidator;
 	}

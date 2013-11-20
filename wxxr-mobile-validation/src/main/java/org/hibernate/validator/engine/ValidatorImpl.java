@@ -752,7 +752,7 @@ public class ValidatorImpl implements Validator {
 			pathToObject = PathImpl.createNewPath( null );
 		}
 
-		try {
+//		try {
 			isReachable = validationContext.getTraversableResolver().isReachable(
 					valueContext.getCurrentBean(),
 					valueContext.getPropertyPath().getLeafNode(),
@@ -760,10 +760,10 @@ public class ValidatorImpl implements Validator {
 					pathToObject,
 					metaConstraint.getElementType()
 			);
-		}
-		catch ( RuntimeException e ) {
-			throw new ValidationException( "Call to TraversableResolver.isReachable() threw an exception", e );
-		}
+//		}
+//		catch ( RuntimeException e ) {
+//			throw new ValidationException( "Call to TraversableResolver.isReachable() threw an exception", e );
+//		}
 
 		return isReachable;
 	}

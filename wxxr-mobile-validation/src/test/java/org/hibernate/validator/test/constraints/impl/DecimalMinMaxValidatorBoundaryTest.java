@@ -28,6 +28,7 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintMapping;
 import org.hibernate.validator.cfg.defs.DecimalMaxDef;
 import org.hibernate.validator.cfg.defs.DecimalMinDef;
+import org.hibernate.validator.test.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.test.util.TestUtil;
 import org.testng.annotations.Test;
 
@@ -53,7 +54,7 @@ public class DecimalMinMaxValidatorBoundaryTest {
 				.value( "0.100000000000000005" );
 
 		HibernateValidatorConfiguration config = TestUtil.getConfiguration( HibernateValidator.class );
-		config.addMapping( mapping );
+		config.addMapping( mapping ).messageInterpolator(new ResourceBundleMessageInterpolator());
 
 		ValidatorFactory factory = config.buildValidatorFactory();
 		Validator validator = factory.getValidator();
@@ -76,7 +77,7 @@ public class DecimalMinMaxValidatorBoundaryTest {
 				.value( "0.1" );
 
 		HibernateValidatorConfiguration config = TestUtil.getConfiguration( HibernateValidator.class );
-		config.addMapping( mapping );
+		config.addMapping( mapping ).messageInterpolator(new ResourceBundleMessageInterpolator());
 
 		ValidatorFactory factory = config.buildValidatorFactory();
 		Validator validator = factory.getValidator();
