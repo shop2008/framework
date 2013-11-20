@@ -92,7 +92,7 @@ public class ConvertorField extends FieldModel {
 	public String toString() {
 		return "ConvertorField [className=" + className + ", params=" + params
 				+ ", sourceValueType=" + sourceValueType + ", targetValueType="
-				+ targetValueType + "fieldname="+getName()+"fieldType="+getType()+"]";
+				+ targetValueType + ", fieldname="+getName()+", fieldType="+getType()+"]";
 	}
 	
 	

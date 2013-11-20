@@ -10,6 +10,7 @@ import com.wxxr.javax.validation.Validator;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
+import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
 /**
@@ -77,5 +78,16 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		T val = getValue();
 		this.field.setValue(val);
 		return val;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.AbstractELValueEvaluator#setConvertor(com.wxxr.mobile.core.ui.api.IValueConvertor)
+	 */
+	@Override
+	public ELDomainValueModel<T, V> setConvertor(
+			IValueConvertor<V, T> convertor) {
+		super.setConvertor(convertor);
+		return this;
 	}
 }

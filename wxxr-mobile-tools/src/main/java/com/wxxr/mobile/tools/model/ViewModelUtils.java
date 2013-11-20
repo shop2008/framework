@@ -557,8 +557,8 @@ public abstract class ViewModelUtils {
 		DeclaredType fieldType = (DeclaredType)elem.asType();
 		List<? extends TypeMirror> types = getParameterTypesOfConvertor(context, fieldType);
 		if(types != null){
-			model.setTargetValueType(types.get(0).toString());
-			model.setSourceValueType(types.get(1).toString());
+			model.setTargetValueType(types.get(1).toString());
+			model.setSourceValueType(types.get(0).toString());
 			log.info("Find convertor field :"+model);			
 		}else{
 			throw new IllegalArgumentException("Invalid convertor field type :["+fieldType+"]");

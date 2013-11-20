@@ -20,7 +20,6 @@
 #macro(initDataFields $model $dataFields)
     private void initDataFields() {
 #set( $DType = ${model.addImport("com.wxxr.mobile.core.ui.common.DataField")})
-        ELDomainValueModel dModel = null;
 #foreach($fld in $dataFields) 
         this.${fld.name}Field = new ${DType}<${fld.simpleBoxedType}>("${fld.name}");
         this.${fld.name}Field.setValueType(${fld.simpleType}.class);
@@ -30,9 +29,10 @@
         this.${fld.name}Field.setValue(this.${fld.name});
 #if(${fld.binding})
 #if(${fld.convertor})
-        dModel = new ELDomainValueModel<${fld.simpleBoxedType},${fld.convertor.simpleSourceType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.convertor.simpleSourceType}.class);
-        dModel.setConvertor(this.${fld.convertor.name});
-        this.${fld.name}Field.setDomainModel(dModel);
+        this.${fld.name}Field.setDomainModel(
+            new ELDomainValueModel<${fld.simpleBoxedType},${fld.convertor.simpleSourceType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.convertor.simpleSourceType}.class).
+            setConvertor(this.${fld.convertor.name})
+        );
 #else
         this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType},${fld.simpleBoxedType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class));
 #end

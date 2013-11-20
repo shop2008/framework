@@ -66,8 +66,9 @@ public class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T> {
 	/**
 	 * @param convertor the convertor to set
 	 */
-	public void setConvertor(IValueConvertor<V, T> convertor) {
+	public AbstractELValueEvaluator<T, V> setConvertor(IValueConvertor<V, T> convertor) {
 		this.convertor = convertor;
+		return this;
 	}
 
 

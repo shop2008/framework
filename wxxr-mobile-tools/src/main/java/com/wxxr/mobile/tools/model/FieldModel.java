@@ -37,9 +37,10 @@ public class FieldModel implements MemberModel{
 	}
 	
 	protected String getSimpleBoxedType(String sType) {
-		String type = new TypeModel(sType).getType();
+		TypeModel tModel = new TypeModel(sType);
+		String type = tModel.getType();
 		if(type.indexOf('.') > 0){
-			return getSimpleType();
+			return tModel.getSimpleTypeName(getClassModel());
 		}
 		if("int".equals(type)){
 			return "Integer";
