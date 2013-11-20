@@ -28,6 +28,7 @@ import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
+import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 
@@ -54,6 +55,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
+		Pull2RefreshViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 	}
 
