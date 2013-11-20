@@ -32,7 +32,7 @@ import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 @View(name="championShip", description="大赛排行榜")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.champion_ship_page_layout")
 public abstract class ChampionShipView extends ViewBase {
-	private static final Trace log = Trace.register(TradingMainView.class);
+	private static final Trace log = Trace.register(ChampionShipView.class);
 
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingMgr;
@@ -40,16 +40,24 @@ public abstract class ChampionShipView extends ViewBase {
 	@Bean(type=BindingType.Pojo,express="${tradingMgr.getTMegagameRank()}")
 	RankListBean ChampionShipBean;
 	//List
-	@Field(valueKey = "options", binding="${ChampionShipBean != null ? ChampionShipBean.TRankBeans:null}", visibleWhen="${currentViewId == 1}")
+	@Field(valueKey = "options", binding="${ChampionShipBean != null ? ChampionShipBean.TRankBeans:null}", visibleWhen="${currentViewId == 1}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+						  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<MegagameRankBean> ChampionShip;
 	
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.t1RankBeans:null}", visibleWhen="${currentViewId == 2}")
+	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.t1RankBeans:null}", visibleWhen="${currentViewId == 2}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+				  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<MegagameRankBean> ChampionT1Ship;
 
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.weekRanKBeans:null}", visibleWhen="${currentViewId == 3}")
+	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.weekRanKBeans:null}", visibleWhen="${currentViewId == 3}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
+			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<WeekRankBean> ChampionWeekShip;
 
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.regularTicketBeans:null}", visibleWhen="${currentViewId == 4}")
+	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.regularTicketBeans:null}", visibleWhen="${currentViewId == 4}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
+			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<RegularTicketBean> ChampionRegularShip;
 	//RadioButton
 	@Field(valueKey = "checked", attributes={

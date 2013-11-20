@@ -7,6 +7,7 @@ import java.util.Map;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -72,7 +73,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Field(valueKey = "text")
 	String buyBtn;
 
-	@Field(valueKey = "text")
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+						@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	
 	@Menu(items = { "left", "right" })

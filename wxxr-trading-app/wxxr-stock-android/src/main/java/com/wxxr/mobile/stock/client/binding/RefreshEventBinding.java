@@ -4,12 +4,9 @@
 package com.wxxr.mobile.stock.client.binding;
 
 
-import java.util.Set;
-
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -43,7 +40,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshSuccess() {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onHeaderRefreshComplete();
 						}
@@ -51,7 +47,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshFailed(String message) {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onHeaderRefreshComplete();
 						}
@@ -77,7 +72,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshSuccess() {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
@@ -85,7 +79,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshFailed(String message) {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
@@ -103,7 +96,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 
 		@Override
 		public void onRefresh() {
-			// TODO Auto-generated method stub
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
@@ -111,7 +103,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshSuccess() {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopRefresh();
 						}
@@ -119,7 +110,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshFailed(String message) {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopRefresh();
 						}
@@ -133,7 +123,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 		}
 		@Override
 		public void onLoadMore() {
-			// TODO Auto-generated method stub
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
@@ -141,7 +130,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshSuccess() {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopLoadMore();
 						}
@@ -149,7 +137,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 					
 					@Override
 					public void refreshFailed(String message) {
-						// TODO Auto-generated method stub
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopLoadMore();
 						}
@@ -163,11 +150,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 		}
 	};
 	public RefreshEventBinding(View view,String cmdName,String field){
-//		if(control instanceof PullToRefreshListView) {
-//			this.control = (PullToRefreshListView)view;
-//		} else if(control instanceof PullToRefreshScrollView) {
-//			this.control = (PullToRefreshScrollView)view;
-//		}
 		this.control = (ViewGroup)view;
 		this.commandName = cmdName;
 		this.fieldName = field;
@@ -179,40 +161,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 
 	@Override
 	public void activate(IView model) {
-		boolean headerEnable = true;//(boolean)pModel.getAttribute("headerEnable");
-		boolean footerEnable = false;//(boolean)pModel.getAttribute("footerEnable");
-		
 		this.pModel = model;
-		
-		Set<AttributeKey<?>> keys = pModel.getChild("acctRefreshView").getAttributeKeys();
-		if((keys != null)&&(keys.size() > 0)){
-			for (AttributeKey<?> attrKey : keys) {
-				if("headerEnable".equals(attrKey.getName())) {
-					headerEnable = Boolean.valueOf(pModel.getAttribute(attrKey).toString());
-//						headerEnable = (Boolean)pModel.getAttribute(attrKey);
-				} else if("footerEnable".equals(attrKey.getName())) {
-					footerEnable = Boolean.valueOf(pModel.getAttribute(attrKey).toString());
-//						footerEnable = (Boolean)pModel.getAttribute(attrKey);
-				}
-			}
-		}
-		
 		if(control instanceof PullToRefreshListView) {
 			((PullToRefreshListView)control).setRefreshViewListener(refreshListener);
-			((PullToRefreshListView)control).setPullRefreshEnable(headerEnable);
-			((PullToRefreshListView)control).setPullLoadEnable(footerEnable);
 		} else if(control instanceof PullToRefreshView) {
 			((PullToRefreshView)control).setOnHeaderRefreshListener(headerListener);
 			((PullToRefreshView)control).setOnFooterRefreshListener(footerListener);
-			((PullToRefreshView)control).setHeaderView(headerEnable);
-			((PullToRefreshView)control).setFooterView(footerEnable);
 		}		
 	}
 
 	@Override
 	public void deactivate() {
-//		this.control.setOnHeaderRefreshListener(null);
-//		this.control.setOnFooterRefreshListener(null);
 		if(control instanceof PullToRefreshListView) {
 			((PullToRefreshListView)control).setRefreshViewListener(null);
 		} else if(control instanceof PullToRefreshView) {

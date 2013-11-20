@@ -653,6 +653,6 @@ public class PullToRefreshView extends LinearLayout {
 	
 	public void setHeaderView(boolean show) {
 		mHeaderView.setVisibility(show?View.VISIBLE:View.GONE);
-		isFooterInvisible = show;
+		isHeaderInvisible = show;
 	}
 }

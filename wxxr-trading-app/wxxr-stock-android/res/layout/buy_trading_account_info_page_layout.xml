@@ -67,8 +67,6 @@
         android:layout_above="@id/buy_btn"
         android:layout_below="@id/date_layout"
         android:orientation="vertical"
-        bind:headerEnable="false"
-        bind:footerEnable="false"
         bind:field="acctRefreshView"
         bind:on_TopRefresh="handleTopRefresh" >
 

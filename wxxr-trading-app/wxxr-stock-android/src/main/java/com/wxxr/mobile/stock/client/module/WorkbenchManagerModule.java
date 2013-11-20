@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
+import com.wxxr.mobile.stock.client.binding.RefreshListViewAdapterBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
@@ -29,6 +30,7 @@ import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
+import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 
@@ -44,6 +46,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, KLineView.class, new KlineFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, TextSpinnerView.class, new TextSpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshView.class, new RefreshViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
 	}
 
 	@Override
