@@ -160,7 +160,7 @@ public class ValidationMessageInterpolator<T extends IAndroidAppContext> extends
 	}
 	
 	private String getAndroidString(String key) throws InvalidResourceIdException {
-		int resId = RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_STRING, key);
+		int resId = RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_STRING, key.replace('.', '_'));
 		return context.getApplication().getAndroidApplication().getResources().getString(resId);
 	}
 	
