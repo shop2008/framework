@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -739,5 +740,25 @@ public class MockDataUtils {
 		info.setRateString("0.08;0.10,0.12;0.13,0.05;0.08");
 		info.setVoucherCostRate(0.00399f);	
 		return info;
+	}
+	
+	public List<ArticleBean> mockData(){
+		List<ArticleBean> articles = new ArrayList<ArticleBean>();
+		String[] titles = {"Google","Baidu","Sina","网易"};
+		String[] articleUrls = {"http://www.google.com.hk/","http://www.baidu.com","http://www.sina.com","http://www.163.com"};
+		String[] imageUrls = {"http://www.google.com.hk/logos/doodles/2013/raymond-loewys-120th-birthday-ca-fr-us-nl-uk-ie-6388231276855296-hp.jpg",
+				"http://www.baidu.com/img/bdlogo.gif","http://ui.sina.com/assets/img/www/worldmap.jpg",
+				"http://image.gxq.com.cn/upload/ad/2013/11/07/bd7bae043de331091b93d9394eec0298.jpg"};
+		for (int i = 0; i < 4; i++) {
+			ArticleBean article = new ArticleBean();
+			article.setId(String.format("%s", i));
+			article.setTitle(titles[i]);
+			article.setAbstractInfo(titles[i]+"'s 摘要 ");
+			article.setArticleUrl(articleUrls[i]);
+			article.setImageUrl(imageUrls[i]);
+			article.setType(15);
+			articles.add(article);
+		}
+		return articles;
 	}
 }
