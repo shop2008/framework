@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.bean;
 
 import java.util.List;
+import com.wxxr.mobile.core.bean.api.ListDecorator;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
@@ -100,6 +101,9 @@ public class AccountInfoBean implements IBindableBean {
 	public void setScores(List<ScoreBean> scores) {
 		List<ScoreBean> old = this.scores;
 		this.scores = scores;
+		if(this.scores != null){
+            this.scores = new ListDecorator<ScoreBean>("scores", this.emitter,this.scores);
+        }
 		this.emitter.firePropertyChange("scores", old, this.scores);
 	}
 
@@ -116,6 +120,9 @@ public class AccountInfoBean implements IBindableBean {
 	public void setTradeDetails(List<TradeDetailBean> tradeDetails) {
 		List<TradeDetailBean> old = this.tradeDetails;
 		this.tradeDetails = tradeDetails;
+		if(this.tradeDetails != null){
+            this.tradeDetails = new ListDecorator<TradeDetailBean>("tradeDetails", this.emitter,this.tradeDetails);
+        }
 		this.emitter.firePropertyChange("tradeDetails", old, this.tradeDetails);
 	}
 

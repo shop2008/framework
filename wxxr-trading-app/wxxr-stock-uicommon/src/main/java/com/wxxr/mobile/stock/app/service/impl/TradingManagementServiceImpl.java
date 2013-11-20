@@ -81,7 +81,14 @@ public class TradingManagementServiceImpl extends
 	 * 创建交易盘的参数配置
 	 */
 	private UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
+	
+	
 	private TradingRecordListBean recordsBean = new TradingRecordListBean();
+	
+	/**
+	 * 模拟用户交易记录数据
+	 */
+	private TradingAccountListBean myTradeRecords = new TradingAccountListBean();
 
 	// =================module life cycle methods=============================
 	@Override
@@ -693,6 +700,10 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountListBean getMyAllTradingAccountList(final int start,
 			final int limit) {
+		if (context.getApplication().isInDebugMode()) {
+			myTradeRecords.setAllTradingAccounts(MockDataUtils.mockTradeRecord(1));
+			return myTradeRecords;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -721,6 +732,11 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountListBean getMySuccessTradingAccountList(
 			final int start, final int limit) {
+		
+		if (context.getApplication().isInDebugMode()) {
+			myTradeRecords.setSuccessTradingAccounts(MockDataUtils.mockTradeRecord(0));
+			return myTradeRecords;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {

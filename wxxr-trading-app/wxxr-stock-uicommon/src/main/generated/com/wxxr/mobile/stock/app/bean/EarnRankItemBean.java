@@ -16,6 +16,7 @@ public class EarnRankItemBean implements IBindableBean {
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
 	private String imgUrl;
 	private String title;
+	private String acctId;
 
 	/**
 	 * @param listener
@@ -82,6 +83,22 @@ public class EarnRankItemBean implements IBindableBean {
 		this.emitter.firePropertyChange("title", old, this.title);
 	}
 
+	/**
+	 * @return the acctId
+	 */
+	public String getAcctId() {
+		return acctId;
+	}
+
+	/**
+	 * @param acctId the acctId to set
+	 */
+	public void setAcctId(String acctId) {
+		String old = this.acctId;
+		this.acctId = acctId;
+		this.emitter.firePropertyChange("acctId", old, this.acctId);
+	}
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -90,6 +107,7 @@ public class EarnRankItemBean implements IBindableBean {
         return "EarnRankItemBean ["+
                 "imgUrl=" + this.imgUrl +
                 " , title=" + this.title +
+                " , acctId=" + this.acctId +
         "]";
     }	
 

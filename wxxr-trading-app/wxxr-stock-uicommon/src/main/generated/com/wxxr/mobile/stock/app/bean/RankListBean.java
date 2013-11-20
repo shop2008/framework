@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.bean;
 
 import java.util.List;
+import com.wxxr.mobile.core.bean.api.ListDecorator;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
@@ -17,6 +18,7 @@ public class RankListBean implements IBindableBean {
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
 	private List<MegagameRankBean> tRankBeans;
 	private List<MegagameRankBean> t1RankBeans;
+	private List<EarnRankItemBean> earnRankBeans;
 	private List<WeekRankBean> weekRanKBeans;
 	private List<RegularTicketBean> regularTicketBeans;
 
@@ -66,6 +68,9 @@ public class RankListBean implements IBindableBean {
 	public void setTRankBeans(List<MegagameRankBean> tRankBeans) {
 		List<MegagameRankBean> old = this.tRankBeans;
 		this.tRankBeans = tRankBeans;
+		if(this.tRankBeans != null){
+            this.tRankBeans = new ListDecorator<MegagameRankBean>("tRankBeans", this.emitter,this.tRankBeans);
+        }
 		this.emitter.firePropertyChange("tRankBeans", old, this.tRankBeans);
 	}
 
@@ -82,7 +87,29 @@ public class RankListBean implements IBindableBean {
 	public void setT1RankBeans(List<MegagameRankBean> t1RankBeans) {
 		List<MegagameRankBean> old = this.t1RankBeans;
 		this.t1RankBeans = t1RankBeans;
+		if(this.t1RankBeans != null){
+            this.t1RankBeans = new ListDecorator<MegagameRankBean>("t1RankBeans", this.emitter,this.t1RankBeans);
+        }
 		this.emitter.firePropertyChange("t1RankBeans", old, this.t1RankBeans);
+	}
+
+	/**
+	 * @return the earnRankBeans
+	 */
+	public List<EarnRankItemBean> getEarnRankBeans() {
+		return earnRankBeans;
+	}
+
+	/**
+	 * @param earnRankBeans the earnRankBeans to set
+	 */
+	public void setEarnRankBeans(List<EarnRankItemBean> earnRankBeans) {
+		List<EarnRankItemBean> old = this.earnRankBeans;
+		this.earnRankBeans = earnRankBeans;
+		if(this.earnRankBeans != null){
+            this.earnRankBeans = new ListDecorator<EarnRankItemBean>("earnRankBeans", this.emitter,this.earnRankBeans);
+        }
+		this.emitter.firePropertyChange("earnRankBeans", old, this.earnRankBeans);
 	}
 
 	/**
@@ -98,6 +125,9 @@ public class RankListBean implements IBindableBean {
 	public void setWeekRanKBeans(List<WeekRankBean> weekRanKBeans) {
 		List<WeekRankBean> old = this.weekRanKBeans;
 		this.weekRanKBeans = weekRanKBeans;
+		if(this.weekRanKBeans != null){
+            this.weekRanKBeans = new ListDecorator<WeekRankBean>("weekRanKBeans", this.emitter,this.weekRanKBeans);
+        }
 		this.emitter.firePropertyChange("weekRanKBeans", old, this.weekRanKBeans);
 	}
 
@@ -114,6 +144,9 @@ public class RankListBean implements IBindableBean {
 	public void setRegularTicketBeans(List<RegularTicketBean> regularTicketBeans) {
 		List<RegularTicketBean> old = this.regularTicketBeans;
 		this.regularTicketBeans = regularTicketBeans;
+		if(this.regularTicketBeans != null){
+            this.regularTicketBeans = new ListDecorator<RegularTicketBean>("regularTicketBeans", this.emitter,this.regularTicketBeans);
+        }
 		this.emitter.firePropertyChange("regularTicketBeans", old, this.regularTicketBeans);
 	}
 
@@ -125,6 +158,7 @@ public class RankListBean implements IBindableBean {
         return "RankListBean ["+
                 "tRankBeans=" + this.tRankBeans +
                 " , t1RankBeans=" + this.t1RankBeans +
+                " , earnRankBeans=" + this.earnRankBeans +
                 " , weekRanKBeans=" + this.weekRanKBeans +
                 " , regularTicketBeans=" + this.regularTicketBeans +
         "]";

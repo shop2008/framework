@@ -14,18 +14,23 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class UserBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
+	private boolean messagePushSettingOn;
 	private String userPic;
 	private String unReadMsg;
+	private boolean bindCard;
 	private String score;
 	private String totoalProfit;
 	private String challengeShared;
 	private String password;
 	private String homeBack;
 	private String joinShared;
+	private AuthInfoBean bankInfo;
 	private String balance;
 	private String username;
 	private String phoneNumber;
+	private UserAssetBean userAsset;
 	private String nickName;
+	private boolean login;
 	private String totoalScore;
 
 	/**
@@ -62,6 +67,22 @@ public class UserBean implements IBindableBean {
 
 
 	/**
+	 * @return the messagePushSettingOn
+	 */
+	public boolean getMessagePushSettingOn() {
+		return messagePushSettingOn;
+	}
+
+	/**
+	 * @param messagePushSettingOn the messagePushSettingOn to set
+	 */
+	public void setMessagePushSettingOn(boolean messagePushSettingOn) {
+		boolean old = this.messagePushSettingOn;
+		this.messagePushSettingOn = messagePushSettingOn;
+		this.emitter.firePropertyChange("messagePushSettingOn", old, this.messagePushSettingOn);
+	}
+
+	/**
 	 * @return the userPic
 	 */
 	public String getUserPic() {
@@ -91,6 +112,22 @@ public class UserBean implements IBindableBean {
 		String old = this.unReadMsg;
 		this.unReadMsg = unReadMsg;
 		this.emitter.firePropertyChange("unReadMsg", old, this.unReadMsg);
+	}
+
+	/**
+	 * @return the bindCard
+	 */
+	public boolean getBindCard() {
+		return bindCard;
+	}
+
+	/**
+	 * @param bindCard the bindCard to set
+	 */
+	public void setBindCard(boolean bindCard) {
+		boolean old = this.bindCard;
+		this.bindCard = bindCard;
+		this.emitter.firePropertyChange("bindCard", old, this.bindCard);
 	}
 
 	/**
@@ -190,6 +227,22 @@ public class UserBean implements IBindableBean {
 	}
 
 	/**
+	 * @return the bankInfo
+	 */
+	public AuthInfoBean getBankInfo() {
+		return bankInfo;
+	}
+
+	/**
+	 * @param bankInfo the bankInfo to set
+	 */
+	public void setBankInfo(AuthInfoBean bankInfo) {
+		AuthInfoBean old = this.bankInfo;
+		this.bankInfo = bankInfo;
+		this.emitter.firePropertyChange("bankInfo", old, this.bankInfo);
+	}
+
+	/**
 	 * @return the balance
 	 */
 	public String getBalance() {
@@ -238,6 +291,22 @@ public class UserBean implements IBindableBean {
 	}
 
 	/**
+	 * @return the userAsset
+	 */
+	public UserAssetBean getUserAsset() {
+		return userAsset;
+	}
+
+	/**
+	 * @param userAsset the userAsset to set
+	 */
+	public void setUserAsset(UserAssetBean userAsset) {
+		UserAssetBean old = this.userAsset;
+		this.userAsset = userAsset;
+		this.emitter.firePropertyChange("userAsset", old, this.userAsset);
+	}
+
+	/**
 	 * @return the nickName
 	 */
 	public String getNickName() {
@@ -251,6 +320,22 @@ public class UserBean implements IBindableBean {
 		String old = this.nickName;
 		this.nickName = nickName;
 		this.emitter.firePropertyChange("nickName", old, this.nickName);
+	}
+
+	/**
+	 * @return the login
+	 */
+	public boolean getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login the login to set
+	 */
+	public void setLogin(boolean login) {
+		boolean old = this.login;
+		this.login = login;
+		this.emitter.firePropertyChange("login", old, this.login);
 	}
 
 	/**
@@ -275,18 +360,23 @@ public class UserBean implements IBindableBean {
     @Override   
     public String toString() {
         return "UserBean ["+
-                "userPic=" + this.userPic +
+                "messagePushSettingOn=" + this.messagePushSettingOn +
+                " , userPic=" + this.userPic +
                 " , unReadMsg=" + this.unReadMsg +
+                " , bindCard=" + this.bindCard +
                 " , score=" + this.score +
                 " , totoalProfit=" + this.totoalProfit +
                 " , challengeShared=" + this.challengeShared +
                 " , password=" + this.password +
                 " , homeBack=" + this.homeBack +
                 " , joinShared=" + this.joinShared +
+                " , bankInfo=" + this.bankInfo +
                 " , balance=" + this.balance +
                 " , username=" + this.username +
                 " , phoneNumber=" + this.phoneNumber +
+                " , userAsset=" + this.userAsset +
                 " , nickName=" + this.nickName +
+                " , login=" + this.login +
                 " , totoalScore=" + this.totoalScore +
         "]";
     }	

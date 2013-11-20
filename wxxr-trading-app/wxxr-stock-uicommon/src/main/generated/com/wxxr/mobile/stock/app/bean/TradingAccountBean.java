@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.bean;
 
+import java.util.List;
+import com.wxxr.mobile.core.bean.api.ListDecorator;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
@@ -14,16 +16,23 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class TradingAccountBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
-	private Long id;
-	private String stockCode;
+	private boolean virtual;
+	private String maxStockCode;
 	private int status;
-	private String stockName;
-	private float income;
-	private float initCredit;
-	private String endDate;
-	private float available;
-	private String createDate;
-	private int type;
+	private float lossLimit;
+	private long avalibleFee;
+	private long buyDay;
+	private String type;
+	private List<StockTradingOrderBean> tradingOrders;
+	private long usedFee;
+	private long id;
+	private long sellDay;
+	private String over;
+	private long totalGain;
+	private long applyFee;
+	private long frozenVol;
+	private String maxStockMarket;
+	private long gainRate;
 
 	/**
 	 * @param listener
@@ -59,35 +68,35 @@ public class TradingAccountBean implements IBindableBean {
 
 
 	/**
-	 * @return the id
+	 * @return the virtual
 	 */
-	public Long getId() {
-		return id;
+	public boolean getVirtual() {
+		return virtual;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param virtual the virtual to set
 	 */
-	public void setId(Long id) {
-		Long old = this.id;
-		this.id = id;
-		this.emitter.firePropertyChange("id", old, this.id);
+	public void setVirtual(boolean virtual) {
+		boolean old = this.virtual;
+		this.virtual = virtual;
+		this.emitter.firePropertyChange("virtual", old, this.virtual);
 	}
 
 	/**
-	 * @return the stockCode
+	 * @return the maxStockCode
 	 */
-	public String getStockCode() {
-		return stockCode;
+	public String getMaxStockCode() {
+		return maxStockCode;
 	}
 
 	/**
-	 * @param stockCode the stockCode to set
+	 * @param maxStockCode the maxStockCode to set
 	 */
-	public void setStockCode(String stockCode) {
-		String old = this.stockCode;
-		this.stockCode = stockCode;
-		this.emitter.firePropertyChange("stockCode", old, this.stockCode);
+	public void setMaxStockCode(String maxStockCode) {
+		String old = this.maxStockCode;
+		this.maxStockCode = maxStockCode;
+		this.emitter.firePropertyChange("maxStockCode", old, this.maxStockCode);
 	}
 
 	/**
@@ -107,115 +116,230 @@ public class TradingAccountBean implements IBindableBean {
 	}
 
 	/**
-	 * @return the stockName
+	 * @return the lossLimit
 	 */
-	public String getStockName() {
-		return stockName;
+	public float getLossLimit() {
+		return lossLimit;
 	}
 
 	/**
-	 * @param stockName the stockName to set
+	 * @param lossLimit the lossLimit to set
 	 */
-	public void setStockName(String stockName) {
-		String old = this.stockName;
-		this.stockName = stockName;
-		this.emitter.firePropertyChange("stockName", old, this.stockName);
+	public void setLossLimit(float lossLimit) {
+		float old = this.lossLimit;
+		this.lossLimit = lossLimit;
+		this.emitter.firePropertyChange("lossLimit", old, this.lossLimit);
 	}
 
 	/**
-	 * @return the income
+	 * @return the avalibleFee
 	 */
-	public float getIncome() {
-		return income;
+	public long getAvalibleFee() {
+		return avalibleFee;
 	}
 
 	/**
-	 * @param income the income to set
+	 * @param avalibleFee the avalibleFee to set
 	 */
-	public void setIncome(float income) {
-		float old = this.income;
-		this.income = income;
-		this.emitter.firePropertyChange("income", old, this.income);
+	public void setAvalibleFee(long avalibleFee) {
+		long old = this.avalibleFee;
+		this.avalibleFee = avalibleFee;
+		this.emitter.firePropertyChange("avalibleFee", old, this.avalibleFee);
 	}
 
 	/**
-	 * @return the initCredit
+	 * @return the buyDay
 	 */
-	public float getInitCredit() {
-		return initCredit;
+	public long getBuyDay() {
+		return buyDay;
 	}
 
 	/**
-	 * @param initCredit the initCredit to set
+	 * @param buyDay the buyDay to set
 	 */
-	public void setInitCredit(float initCredit) {
-		float old = this.initCredit;
-		this.initCredit = initCredit;
-		this.emitter.firePropertyChange("initCredit", old, this.initCredit);
-	}
-
-	/**
-	 * @return the endDate
-	 */
-	public String getEndDate() {
-		return endDate;
-	}
-
-	/**
-	 * @param endDate the endDate to set
-	 */
-	public void setEndDate(String endDate) {
-		String old = this.endDate;
-		this.endDate = endDate;
-		this.emitter.firePropertyChange("endDate", old, this.endDate);
-	}
-
-	/**
-	 * @return the available
-	 */
-	public float getAvailable() {
-		return available;
-	}
-
-	/**
-	 * @param available the available to set
-	 */
-	public void setAvailable(float available) {
-		float old = this.available;
-		this.available = available;
-		this.emitter.firePropertyChange("available", old, this.available);
-	}
-
-	/**
-	 * @return the createDate
-	 */
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	/**
-	 * @param createDate the createDate to set
-	 */
-	public void setCreateDate(String createDate) {
-		String old = this.createDate;
-		this.createDate = createDate;
-		this.emitter.firePropertyChange("createDate", old, this.createDate);
+	public void setBuyDay(long buyDay) {
+		long old = this.buyDay;
+		this.buyDay = buyDay;
+		this.emitter.firePropertyChange("buyDay", old, this.buyDay);
 	}
 
 	/**
 	 * @return the type
 	 */
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(int type) {
-		int old = this.type;
+	public void setType(String type) {
+		String old = this.type;
 		this.type = type;
 		this.emitter.firePropertyChange("type", old, this.type);
+	}
+
+	/**
+	 * @return the tradingOrders
+	 */
+	public List<StockTradingOrderBean> getTradingOrders() {
+		return tradingOrders;
+	}
+
+	/**
+	 * @param tradingOrders the tradingOrders to set
+	 */
+	public void setTradingOrders(List<StockTradingOrderBean> tradingOrders) {
+		List<StockTradingOrderBean> old = this.tradingOrders;
+		this.tradingOrders = tradingOrders;
+		if(this.tradingOrders != null){
+            this.tradingOrders = new ListDecorator<StockTradingOrderBean>("tradingOrders", this.emitter,this.tradingOrders);
+        }
+		this.emitter.firePropertyChange("tradingOrders", old, this.tradingOrders);
+	}
+
+	/**
+	 * @return the usedFee
+	 */
+	public long getUsedFee() {
+		return usedFee;
+	}
+
+	/**
+	 * @param usedFee the usedFee to set
+	 */
+	public void setUsedFee(long usedFee) {
+		long old = this.usedFee;
+		this.usedFee = usedFee;
+		this.emitter.firePropertyChange("usedFee", old, this.usedFee);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		long old = this.id;
+		this.id = id;
+		this.emitter.firePropertyChange("id", old, this.id);
+	}
+
+	/**
+	 * @return the sellDay
+	 */
+	public long getSellDay() {
+		return sellDay;
+	}
+
+	/**
+	 * @param sellDay the sellDay to set
+	 */
+	public void setSellDay(long sellDay) {
+		long old = this.sellDay;
+		this.sellDay = sellDay;
+		this.emitter.firePropertyChange("sellDay", old, this.sellDay);
+	}
+
+	/**
+	 * @return the over
+	 */
+	public String getOver() {
+		return over;
+	}
+
+	/**
+	 * @param over the over to set
+	 */
+	public void setOver(String over) {
+		String old = this.over;
+		this.over = over;
+		this.emitter.firePropertyChange("over", old, this.over);
+	}
+
+	/**
+	 * @return the totalGain
+	 */
+	public long getTotalGain() {
+		return totalGain;
+	}
+
+	/**
+	 * @param totalGain the totalGain to set
+	 */
+	public void setTotalGain(long totalGain) {
+		long old = this.totalGain;
+		this.totalGain = totalGain;
+		this.emitter.firePropertyChange("totalGain", old, this.totalGain);
+	}
+
+	/**
+	 * @return the applyFee
+	 */
+	public long getApplyFee() {
+		return applyFee;
+	}
+
+	/**
+	 * @param applyFee the applyFee to set
+	 */
+	public void setApplyFee(long applyFee) {
+		long old = this.applyFee;
+		this.applyFee = applyFee;
+		this.emitter.firePropertyChange("applyFee", old, this.applyFee);
+	}
+
+	/**
+	 * @return the frozenVol
+	 */
+	public long getFrozenVol() {
+		return frozenVol;
+	}
+
+	/**
+	 * @param frozenVol the frozenVol to set
+	 */
+	public void setFrozenVol(long frozenVol) {
+		long old = this.frozenVol;
+		this.frozenVol = frozenVol;
+		this.emitter.firePropertyChange("frozenVol", old, this.frozenVol);
+	}
+
+	/**
+	 * @return the maxStockMarket
+	 */
+	public String getMaxStockMarket() {
+		return maxStockMarket;
+	}
+
+	/**
+	 * @param maxStockMarket the maxStockMarket to set
+	 */
+	public void setMaxStockMarket(String maxStockMarket) {
+		String old = this.maxStockMarket;
+		this.maxStockMarket = maxStockMarket;
+		this.emitter.firePropertyChange("maxStockMarket", old, this.maxStockMarket);
+	}
+
+	/**
+	 * @return the gainRate
+	 */
+	public long getGainRate() {
+		return gainRate;
+	}
+
+	/**
+	 * @param gainRate the gainRate to set
+	 */
+	public void setGainRate(long gainRate) {
+		long old = this.gainRate;
+		this.gainRate = gainRate;
+		this.emitter.firePropertyChange("gainRate", old, this.gainRate);
 	}
 
     /* (non-Javadoc)
@@ -224,16 +348,23 @@ public class TradingAccountBean implements IBindableBean {
     @Override   
     public String toString() {
         return "TradingAccountBean ["+
-                "id=" + this.id +
-                " , stockCode=" + this.stockCode +
+                "virtual=" + this.virtual +
+                " , maxStockCode=" + this.maxStockCode +
                 " , status=" + this.status +
-                " , stockName=" + this.stockName +
-                " , income=" + this.income +
-                " , initCredit=" + this.initCredit +
-                " , endDate=" + this.endDate +
-                " , available=" + this.available +
-                " , createDate=" + this.createDate +
+                " , lossLimit=" + this.lossLimit +
+                " , avalibleFee=" + this.avalibleFee +
+                " , buyDay=" + this.buyDay +
                 " , type=" + this.type +
+                " , tradingOrders=" + this.tradingOrders +
+                " , usedFee=" + this.usedFee +
+                " , id=" + this.id +
+                " , sellDay=" + this.sellDay +
+                " , over=" + this.over +
+                " , totalGain=" + this.totalGain +
+                " , applyFee=" + this.applyFee +
+                " , frozenVol=" + this.frozenVol +
+                " , maxStockMarket=" + this.maxStockMarket +
+                " , gainRate=" + this.gainRate +
         "]";
     }	
 

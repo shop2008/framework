@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
 import com.wxxr.mobile.stock.app.bean.MessageInfoListBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
@@ -21,15 +23,20 @@ import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
+import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 
 /**
  * @author wangxuyang
  * 
  */
 public class MockDataUtils {
+	
+	
+	public static UserBean userBean;
 	// ========================mock data ======================
 	public static List<TradingAccInfoBean> mockData(int type) {
 		List<TradingAccInfoBean> list = new ArrayList<TradingAccInfoBean>();
@@ -425,18 +432,99 @@ public class MockDataUtils {
 	}
 	
 	public static UserBean mockUserInfo() {
-		UserBean userBean = new UserBean();
-		
-		userBean.setBalance(""+20000);
-		userBean.setChallengeShared(""+2);
-		userBean.setHomeBack("resourceId:drawable/back2");
-		userBean.setUserPic("resourceId:drawable/head2");
-		userBean.setJoinShared(""+3);
-		
-		userBean.setNickName("李四");
-		userBean.setScore(""+900);
+		if (userBean == null) {
+			userBean = new UserBean();
+			userBean.setHomeBack("resourceId:drawable/back2");
+			userBean.setUserPic("resourceId:drawable/head2");
+			userBean.setJoinShared(""+3);
+			
+			userBean.setNickName("李四");
+			userBean.setScore(""+900);
+			userBean.setLogin(true);
+			userBean.setMessagePushSettingOn(true);
+			
+			UserAssetBean usrAsset = new UserAssetBean();
+			usrAsset.setBalance(2000L);
+			usrAsset.setFrozen(200);
+			usrAsset.setUsableBal(1800L);
+			userBean.setUserAsset(usrAsset);
+			
+			AuthInfoBean bankInfo = new AuthInfoBean();
+			bankInfo.setAccountName("李四");
+			bankInfo.setBankNum("6222565412512124234");
+			bankInfo.setBankAddr("北京市海淀区");
+			bankInfo.setBankName("工商银行");
+			userBean.setBankInfo(bankInfo);
+		}
 		return userBean;
 	}
+	
+	public static PersonalHomePageBean mockPersonalHome() {
+		PersonalHomePageBean pageBean = new PersonalHomePageBean();
+		pageBean.setActualCount(3);
+		pageBean.setVirtualCount(2);
+		List<GainBean> actualList = new ArrayList<GainBean>();
+		GainBean bean;
+		bean = new GainBean();
+		bean.setCloseTime("2013-10-31");
+		bean.setMaxStockName("工商银行");
+		bean.setMaxStockCode("620102");
+		bean.setStatus(0);
+		bean.setSum(10000L);
+		bean.setUserGain(200L);
+		actualList.add(bean);
+		
+		bean = new GainBean();
+		bean.setCloseTime("2013-11-1");
+		bean.setMaxStockName("和记黄埔");
+		bean.setMaxStockCode("620108");
+		bean.setStatus(0);
+		bean.setSum(20000L);
+		bean.setUserGain(-200L);
+		actualList.add(bean);
+		
+		bean = new GainBean();
+		bean.setCloseTime("2013-11-6");
+		bean.setMaxStockName("中国石化");
+		bean.setMaxStockCode("620104");
+		bean.setStatus(0);
+		bean.setSum(20000L);
+		bean.setUserGain(-300L);
+		actualList.add(bean);
+		
+		pageBean.setActualList(actualList);
+		
+		List<GainBean> virtualList = new ArrayList<GainBean>();
+		bean = new GainBean();
+		bean.setCloseTime("2013-11-2");
+		bean.setMaxStockName("无限新锐");
+		bean.setMaxStockCode("622929");
+		bean.setStatus(0);
+		bean.setSum(80000L);
+		bean.setUserGain(10000L);
+		virtualList.add(bean);
+		
+		bean = new GainBean();
+		bean.setCloseTime("2013-11-2");
+		bean.setMaxStockName("百度科技");
+		bean.setMaxStockCode("622909");
+		bean.setStatus(0);
+		bean.setSum(20000L);
+		bean.setUserGain(100L);
+		virtualList.add(bean);
+		
+		pageBean.setVirtualList(virtualList);
+		pageBean.setTotalProfit(2000.00);
+		pageBean.setVoucherVol(200L);
+		return pageBean;
+	}
+	
+	public void mockLogOut() {
+		if (userBean != null) {
+			userBean = null;
+		}
+	}
+	
 	
 	
 	public static  List<StockBaseInfoBean> getAllMockDataForSearchStock() {

@@ -72,6 +72,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
+	private PersonalHomePageBean myPersonalHomePageBean = new PersonalHomePageBean();
 	private TradeDetailListBean myTradeDetails = new TradeDetailListBean();
 	/**
 	 * 他人主页
@@ -128,6 +129,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public UserBean getMyUserInfo() {
+		
+		if (context.getApplication().isInDebugMode()) {
+			myUserInfo = MockDataUtils.mockUserInfo();
+			return myUserInfo;
+		}
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -471,8 +477,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}, 1, TimeUnit.SECONDS);
 		return otherPBean;
 	}
+	
+	
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
+		
+		if (context.getApplication().isInDebugMode()) {
+			myPersonalHomePageBean = MockDataUtils.mockPersonalHome();
+			return myPersonalHomePageBean;
+		}
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
