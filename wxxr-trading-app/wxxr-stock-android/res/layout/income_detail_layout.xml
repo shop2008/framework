@@ -7,31 +7,6 @@
     android:background="@color/black"
     >
 
-   <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
-
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/tv_title_balance_detail" />
-
-        <ImageButton
-            android:id="@id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-
-       
-    </RelativeLayout>
     <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
             android:id="@+id/listView1"
             android:cacheColorHint="#00000000"

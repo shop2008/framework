@@ -5,15 +5,18 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name="userAlterPswPage")
+@View(name="userAlterPswPage",withToolbar=true, description="修改密码")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.alter_password_page_layout")
 public abstract class UserAlterPswPage extends PageBase {
 
@@ -38,22 +41,14 @@ public abstract class UserAlterPswPage extends PageBase {
 	
 	DataField<String> reNewPswField;
 	
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
-
-	
 	
 	@Command(commandName="reNewPswTextChanged")
 	String reNewPswTextChanged(InputEvent event) {

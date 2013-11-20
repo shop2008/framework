@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;

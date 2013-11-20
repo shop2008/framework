@@ -6,14 +6,17 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 
-@View(name = "userFindPswPage")
+@View(name = "userFindPswPage", withToolbar=true, description="找回密码")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.psw_find_back_layout")
 public abstract class UserFindPswPage extends PageBase {
 	
@@ -25,21 +28,14 @@ public abstract class UserFindPswPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
 	
-	/**
-	 * 处理后退
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back")
-	String back(InputEvent event) {
-
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 处理后退事件
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
-
 	
 	/**
 	 * 手机号码编辑框

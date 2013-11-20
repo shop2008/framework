@@ -1,22 +1,23 @@
 package com.wxxr.mobile.stock.client.model;
 
 
-import android.R.bool;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name="appSetPage")
+@View(name="appSetPage", withToolbar=true, description="设置")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
@@ -32,33 +33,25 @@ public abstract class AppSetPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrService!=null?usrService.myUserInfo:null}")
 	UserBean user;
 	
+	@Menu(items = { "left" })
+	private IMenu toolbar;
 	
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
-
 	
 	/**
 	 * 联系我们
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "contractUs", description = "Back To Last UI")
+	@Command(commandName = "contractUs", 
+			description = "Back To Last UI", 
+			navigations={@Navigation(on="OK", showPage="constructUsPage")})
 	String contractUs(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 联系我们
-		}
-		return null;
+		return "OK";
 	}
 
 	/**

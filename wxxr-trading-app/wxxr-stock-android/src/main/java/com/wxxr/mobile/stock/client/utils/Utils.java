@@ -35,4 +35,13 @@ public class Utils {
 		return null;
 	}
 	
+	public static String parseFloat(Float f) { 
+		
+		if (f > 0) {
+			return "+"+String.valueOf(f);
+		} else {
+			return "-"+String.valueOf(f);
+		}
+	}
+	
 }

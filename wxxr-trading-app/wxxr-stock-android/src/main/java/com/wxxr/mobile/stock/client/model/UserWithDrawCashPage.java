@@ -1,18 +1,24 @@
 package com.wxxr.mobile.stock.client.model;
 
+import android.R.bool;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
 /**
  * 提现金界面
@@ -24,20 +30,32 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 public abstract class UserWithDrawCashPage extends PageBase {
 
 	
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
+
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
-	@Field(valueKey="text", binding="${user!=null?user.balance:'--'}")
+	@Bean(type=BindingType.Pojo, express="${user!=null?user.userAsset:null}")
+	UserAssetBean userAssetBean;
+	
+	@Field(valueKey="text", binding="${userAssetBean!=null?userAssetBean.usableBal:'--'}")
 	String avaliCashAmount;
 	
 	/**可用现金数量*/
 	@Field(valueKey="text")
 	String availCashAmount;
 	
+	@Field(valueKey="text")
+	String commitBtn;
+	
 	DataField<String> availCashAmountField;
+	DataField<String> commitBtnField;
+	
+	@Field(valueKey="checked")
+	boolean readChecked;
+	
+	DataField<Boolean> readCheckedField;
 	/**
 	 * 返回到上一个界面
 	 * @param event
@@ -47,6 +65,7 @@ public abstract class UserWithDrawCashPage extends PageBase {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			//TODO 返回到上一个界面
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -93,5 +112,33 @@ public abstract class UserWithDrawCashPage extends PageBase {
 			this.availCashAmountField.setValue(availCashAmountStr);
 		}
 		return null;
+	}
+	
+	@Command
+	String setReadChecked(InputEvent event) {
+		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+
+			if (this.readChecked == true) {
+				this.readChecked = false;
+				this.readCheckedField.setValue(false);
+				
+				this.commitBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_GRAY);
+				this.commitBtnField.setAttribute(AttributeKeys.enabled, false);
+			} else {
+				this.readChecked = true;
+				this.readCheckedField.setValue(true);
+				
+				this.commitBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_WHITE);
+				this.commitBtnField.setAttribute(AttributeKeys.enabled, true);
+			}
+			
+		}
+		return null;
+	}
+	
+	@OnShow
+	protected void initData() {
+		this.readChecked = true;
+		this.readCheckedField.setValue(true);
 	}
 }

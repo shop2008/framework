@@ -11,14 +11,18 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
+import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
@@ -27,33 +31,28 @@ import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
  * @author renwenjie
  *
  */
-@View(name="userIncomDetailPage")
+@View(name="userIncomDetailPage", withToolbar=true, description="余额明细")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.income_detail_layout")
 public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
 	
-	
-	@Field(valueKey = "options", binding="")
+	@Field(valueKey = "options", binding="${tradeDetailList!=null?tradeDetailList.tradeDetails:null}")
 	List<TradeDetailBean> incomeDetails;
 	
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
+	@Bean(type=BindingType.Pojo, express="${usrService!=null?usrService.myTradeDetailInfo:null}")
+	TradeDetailListBean tradeDetailList;
 	
-	DataField<List> incomeDetailsField;
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
+	
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 	
@@ -69,27 +68,6 @@ public abstract class UserIncomDetailPage extends PageBase {
 			cb.refreshSuccess();
 		return null;
 		
-	}
-
-	@OnCreate
-	void injectServices() {
-		this.usrService = AppUtils.getService(IUserManagementService.class);
-	}
-	
-	@OnShow
-	void showView() {
-		
-		this.incomeDetails = new ArrayList<TradeDetailBean>();
-		
-		for(int i=0;i<4;i++) {
-			TradeDetailBean detail = new TradeDetailBean();
-			detail.setTradeAmount("100");
-			detail.setTradeCatagory("充入现金");
-			detail.setTradeDate("2013-11-13");
-			this.incomeDetails.add(detail);
-		}
-		
-		this.incomeDetailsField.setValue(this.incomeDetails);
 	}
 	
 }

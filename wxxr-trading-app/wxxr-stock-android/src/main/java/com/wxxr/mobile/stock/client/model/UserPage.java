@@ -8,9 +8,12 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -23,7 +26,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
  * 
  * @author renwenjie
  */
-@View(name = "userPage")
+@View(name = "userPage", withToolbar=true, description="我的主页")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
 public abstract class UserPage extends PageBase  {
 
@@ -35,7 +38,10 @@ public abstract class UserPage extends PageBase  {
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
+	@Menu(items={"left","right"})
+	private IMenu toolbar;
 	
+
 	@Bean(type=BindingType.Pojo, express="${usrService.myPersonalHomePage}")
 	PersonalHomePageBean personalBean;
 	/**
@@ -95,41 +101,29 @@ public abstract class UserPage extends PageBase  {
 	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
 	String userHomeBack = "resourceId:drawable/back1";
 
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
+	
+	@Command(
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);	
 		return null;
 	}
-
-	/**
-	 * 标题栏-"管理"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
+	
+	
 	@Command(
-			commandName = "manage", 
-			description = "To Manage UI", 
-			navigations = { 
-					@Navigation(
-							on = "SUCCESS", 
-							showPage = "userManagePage"
-							) 
-					}
-			)
-	String manage(InputEvent event) {
-		return "SUCCESS";
+			uiItems={
+				@UIItem(id="right",label="",icon="resourceId:drawable/jyjl")
+			},
+			navigations={@Navigation(on="OK", showPage="userManagePage")}
+	)
+	String toolbarClickedRight(InputEvent event){
+		return "OK";
 	}
-
+	
+	
 	/**
 	 * "个性化"按钮事件处理
 	 * 

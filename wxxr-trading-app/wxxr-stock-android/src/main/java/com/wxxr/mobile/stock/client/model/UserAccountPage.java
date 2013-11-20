@@ -8,8 +8,11 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
@@ -21,7 +24,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
  * @author renwenjie
  *
  */
-@View(name="userAccountPage")
+@View(name="userAccountPage", withToolbar=true, description="我的帐户")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_account_page_layout")
 public abstract class UserAccountPage extends PageBase {
 
@@ -49,16 +52,15 @@ public abstract class UserAccountPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
-	@Bean(type=BindingType.Pojo, express="${user!=null?user.userAsset!=null?user.userAsset:null:null}")
+	@Bean(type=BindingType.Pojo, express="${user!=null?user.userAsset:null}")
 	UserAssetBean userAssetBean;
 	
-	@Command(commandName="back")
-	String back(InputEvent event) {
-		
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 	
@@ -74,12 +76,8 @@ public abstract class UserAccountPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			boolean isBindCard = usrService.isBindCard();
 			System.out.println("*****"+isBindCard);
-			if (isBindCard) {
-				return "WITHDRAW";
-			} else {
-				/**提示用户绑定银行卡*/
-				return "ALERTBIND";
-			}
+			
+			return "WITHDRAW";
 		}
 		return null;
 	}
@@ -97,7 +95,7 @@ public abstract class UserAccountPage extends PageBase {
 			commandName="incomeDetail",
 			navigations={
 					@Navigation(on="OK", 
-					showPage="uRealPanelScorePage"
+					showPage="userIncomDetailPage"
 					)
 			}
 	)

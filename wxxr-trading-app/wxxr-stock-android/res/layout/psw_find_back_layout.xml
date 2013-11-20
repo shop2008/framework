@@ -3,36 +3,10 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/mid_gray"
-    >
-    
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
+    android:orientation="vertical" >
 
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/tv_title_psw_find_back" />
-
-        <ImageButton
-            android:id="@id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-
-    </RelativeLayout>
-
-        <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
@@ -59,36 +33,31 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_toRightOf="@id/iv_phone"
+                android:background="@null"
                 android:hint="@string/hint_mobile_number"
                 android:inputType="number"
-                android:background="@null" 
                 bind:field="mobileNum"
-                bind:on_TextChanged="mnTextChanged"
-                />
+                bind:on_TextChanged="mnTextChanged" />
         </RelativeLayout>
-
     </LinearLayout>
-    
-        
-    <TextView 
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@color/white"
         android:layout_margin="5dip"
         android:text="@string/tv_quick_reg_des"
-        />
-    
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
     <LinearLayout
-        android:layout_marginTop="10dip"
         android:layout_width="match_parent"
         android:layout_height="60dip"
-        android:background="@drawable/text_back"
-        android:gravity="center"
-        android:orientation="vertical" 
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        >
+        android:layout_marginTop="10dip"
+        android:background="@drawable/text_back"
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <Button
             android:layout_width="match_parent"
@@ -97,9 +66,9 @@
             android:background="@drawable/bg_red_btn"
             android:text="@string/btn_quick_reg_text"
             android:textColor="@color/white"
-            android:textSize="15sp" 
+            android:textSize="15sp"
             bind:field="*"
-            bind:on_Click="sendMsg"
-            />
+            bind:on_Click="sendMsg" />
     </LinearLayout>
+
 </LinearLayout>

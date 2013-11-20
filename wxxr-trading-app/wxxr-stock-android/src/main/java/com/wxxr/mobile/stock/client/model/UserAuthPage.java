@@ -12,10 +12,13 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
@@ -27,7 +30,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
  * @author neillin
  *
  */
-@View(name="userAuthPage")
+@View(name="userAuthPage", withToolbar=true, description="我的认证")
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.user_auth_page_layout")
 public abstract class UserAuthPage extends PageBase {
 
@@ -44,7 +47,7 @@ public abstract class UserAuthPage extends PageBase {
 	/**
 	 * 认证手机号
 	 */
-	@Field(valueKey="text", binding="${usrMgr.getUserAuthMobileNum('123')}")
+	@Field(valueKey="text", binding="${user!=null?user.phoneNumber:'--'}")
 	String authMobileNum;
 	
 	
@@ -80,6 +83,16 @@ public abstract class UserAuthPage extends PageBase {
 	 */
 	@Field(valueKey="text", binding="${authBean!=null?authBean.bankNum:null}")
 	String bankNum;
+	
+	
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		return null;
+	}
 	
 	/**
 	 * 提现认证
@@ -123,18 +136,5 @@ public abstract class UserAuthPage extends PageBase {
 		result.setPayload(map);
 		result.setResult("SUCCESS");
 		return result;
-	}
-	
-	/**
-	 * 返回到上一界面
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName="back")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
-		return null;
 	}
 }
