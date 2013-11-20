@@ -19,13 +19,13 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	TradingAccInfoBean trading;
 	
 	/**股票名称*/
-	@Field(valueKey="text",binding="${trading!=null?trading.maxStockName:'--'}",attributes={
+	@Field(valueKey="text",binding="${trading!=null&&trading.maxStockName!=null?trading.maxStockName:'无持仓'}",attributes={
 			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockName;
 	
 	/**股票代码*/
-	@Field(valueKey="text",binding="${trading!=null?trading.maxStockCode:'--'}",attributes={
+	@Field(valueKey="text",binding="${trading!=null&&trading.maxStockCode!=null?trading.maxStockCode:'--'}",attributes={
 			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockCode;

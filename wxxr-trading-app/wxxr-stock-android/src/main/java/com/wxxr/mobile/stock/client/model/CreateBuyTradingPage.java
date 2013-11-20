@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -307,36 +308,40 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Command
 	String submitDataClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			float money = changeMoney * 10000;
+			long money = changeMoney * 10000;
+			float _rate = 0.0f;
 			switch(currentRadioBtnId){
 			case 1:
 				if(money>0 && _rate1>0 && djMoney>0 ){
-					
+					_rate = _rate1;
 				}
 				break;
 			case 2:
 				if(money>0 && _rate2>0 && djMoney>0 ){
-					
+					_rate = _rate2;
 				}
 				break;
 			case 3:
 				if(money>0 && _rate3>0 && djMoney>0 ){
-					
+					_rate = _rate3;
 				}
 				break;
 			}
+			userCreateService.createTradingAccount(money, _rate, false, djMoney);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
-		return null;
+		return "home";
 	}
 	
 	
 	//参赛交易-提交
-		@Command
+		@Command(navigations={@Navigation(on="home",showPage="home")})
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				
+				userCreateService.createTradingAccount(100000l, userCreateTradAccInfo.getCapitalRate(), true, 0);
 			}
-			return null;
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			return "home";
 		}
 	
 	
@@ -369,7 +374,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 			 ArrayList<String> money1 = new ArrayList<String>();
 			Long maxAmount = userCreateTradAccInfo.getMaxAmount();
 			if(maxAmount!=null && maxAmount>0){
-				long max = maxAmount/10000;
+				long max = maxAmount/10000/100;
 				for(int i=0; i<max;i++){
 					money1.add(String.valueOf(i+1)+"万");
 				}
