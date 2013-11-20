@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.service;
 import java.util.Map;
 
 import com.wxxr.mobile.stock.app.bean.LineListBean;
+import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
@@ -57,14 +58,17 @@ public interface IInfoCenterManagementService {
 	LineListBean getDayline(String code, String market);
 
 	/**
-	 * 涨跌排行接口
-	 * @param taxis
-	 * @param orderby
-	 * @param start
-	 * @param limit
-	 * @param blockId
+	 * 涨跌排序接口,默认按涨跌幅降序
+	 * @param orderby 排序字段名称，即按什么排序 ：“newprice”-按最新价；“risefallrate”-按涨跌幅
+	 * @param direction - 排序方向：升序or降序：“asc”-升序，"desc"-降序
+	 * @param start - 起始条目
+	 * @param limit - 最多可取条数
 	 * @return
 	 */
-	public StockTaxisListBean getStocktaxis(String taxis, String orderby,long start, long limit, long blockId);
-
+	public StockTaxisListBean getStocktaxis(String orderby, String direction,long start, long limit);
+	
+	/**
+	 * 获取指数行情数据
+	 */
+	public QuotationListBean getQuotations();
 }
