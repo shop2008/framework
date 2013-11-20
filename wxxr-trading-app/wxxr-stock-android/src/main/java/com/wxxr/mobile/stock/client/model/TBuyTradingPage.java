@@ -88,7 +88,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	}
 
 	/**
-	 * 订单详情点击
+	 * 交易详情点击
 	 * 
 	 * @param event
 	 * @return
@@ -99,14 +99,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		Long stockId = 0L;
-		if (event.getProperty("position") instanceof Integer) {
-			int position = (Integer) event.getProperty("position");
-			List<StockTradingOrderBean> orders = (tradingBean != null ? tradingBean
-					.getTradingOrders() : null);
-			if (orders != null && orders.size() > 0) {
-				StockTradingOrderBean bean = orders.get(position);
-				stockId = bean.getId();
-			}
+		if (tradingBean != null) {
+			stockId = tradingBean.getId();
 		}
 		resutl.setResult("TradingRecordsPage");
 		resutl.setPayload(stockId);
@@ -171,26 +165,27 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	}
 
 	/**
-	 * 订单列表点击
+	 * 列表点击
 	 * 
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "stockSearchPage", showPage = "stockSearchPage") })
+	@Command(navigations = { @Navigation(on = "BuyStockDetailPage", showPage = "BuyStockDetailPage") })
 	CommandResult handleItemClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			Long stockId = 0L;
+			String code = "";
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
-				if (tradingOrders != null && tradingOrders.size() > 0) {
-					StockTradingOrderBean tempTradingA = tradingOrders
-							.get(position);
-					stockId = tempTradingA.getId();
+				List<StockTradingOrderBean> orders = (tradingBean != null ? tradingBean
+						.getTradingOrders() : null);
+				if (orders != null && orders.size() > 0) {
+					StockTradingOrderBean bean = orders.get(position);
+					code = bean.getMarketCode();
 				}
 			}
-			resutl.setResult("stockSearchPage");
-			resutl.setPayload(stockId);
+			resutl.setResult("BuyStockDetailPage");
+			resutl.setPayload(code);
 			return resutl;
 		}
 		return null;
