@@ -86,6 +86,10 @@ public class User {
 	 */
 	private boolean messagePushSettingOn = false;
 	/**
+	 * 是否登陆
+	 */
+	private boolean login = false;
+	/**
 	 * 用户资产信息
 	 */
 	private UserAssetBean userAsset;
