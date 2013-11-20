@@ -27,7 +27,7 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater 
 	
 	@Bean(type=BindingType.Pojo,express="${tempId=selection;tradingService.getAuditDetail(tempId)}")
 	AuditDetailBean auditData;
-	
+	   
 	/**实盘额度*/
 	@Field(valueKey="text",binding="${auditData!=null ? auditData.fund:'--'}")
 	String fund;
