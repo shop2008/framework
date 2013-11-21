@@ -9,12 +9,15 @@ import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 
 /**
  * @author neillin
  *
  */
 public interface IUserManagementService {
+	
+	UserLoginCallback createLoginCallback();
 	/**
 	 * 获取当前用户信息
 	 * @return

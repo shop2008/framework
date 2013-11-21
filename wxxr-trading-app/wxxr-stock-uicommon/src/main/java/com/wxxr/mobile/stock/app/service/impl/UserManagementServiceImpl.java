@@ -36,6 +36,7 @@ import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
+import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
@@ -68,7 +69,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private TradingAccountListBean myTradingAccountListBean = new TradingAccountListBean();
 	private UserBean otherUserInfo = new UserBean();
 	private BindMobileBean bindMobile = new BindMobileBean();
-
+	private UserLoginCallback loginCallback;
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
 	private PersonalHomePageBean myPersonalHomePageBean = new PersonalHomePageBean();
@@ -526,6 +527,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	private <T> T getRestService(Class<T> restResouce){
 		return getService(IRestProxyService.class).getRestService(restResouce);
+	}
+
+	@Override
+	public UserLoginCallback createLoginCallback() {
+		this.loginCallback = new UserLoginCallback();
+		return this.loginCallback;
 	}
 
 }
