@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -27,17 +30,21 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 	private static final String DEFAULT_ENCODING = "utf-8";
 
 	private XStream xstreamXML,xstreamJSON;
+	
+	protected boolean isCollectionType(Class<?> type){
+		return List.class.isAssignableFrom(type)||Set.class.isAssignableFrom(type)||Map.class.isAssignableFrom(type);
+	}
 
 	@Override
 	public boolean isReadable(Class<?> type, Type genericType,
 			Annotation annotations[], MediaType mediaType) {
-		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null;
+		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null || isCollectionType(type);
 	}
 
 	@Override
 	public boolean isWriteable(Class<?> type, Type genericType,
 			Annotation annotations[], MediaType mediaType) {
-		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null;
+		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null || isCollectionType(type);
 	}
 
 	@Override
