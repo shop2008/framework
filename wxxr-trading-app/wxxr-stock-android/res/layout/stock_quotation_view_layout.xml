@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -26,7 +27,8 @@
             android:text="白云机场"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            bind:field="name" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +37,8 @@
             android:layout_below="@id/stock_name"
             android:text="(600004.SH)"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            bind:field="code" />
 
         <TextView
             android:id="@+id/up_rates"
@@ -45,7 +48,8 @@
             android:layout_alignParentTop="true"
             android:text="+0.07(+1.01%)"
             android:textColor="@color/red"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            bind:field="changeRisefallRate" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,7 +58,8 @@
             android:layout_below="@id/stock_name"
             android:text="2013-11-20 15:03:02"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            bind:field="time" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -68,13 +73,15 @@
                 android:text="6.98"
                 android:textColor="@color/red"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                bind:field="newprice" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/up_arrows" />
+                android:src="@drawable/up_arrows"
+                bind:field="newpriceIcon" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -107,7 +114,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellPrice5" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -116,7 +124,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellVolume5" />
 
             <TextView
                 android:layout_width="0.05dip"
@@ -138,7 +147,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyPrice1" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -147,7 +157,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyVolume1" />
         </TableRow>
 
         <TableRow
@@ -170,7 +181,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellPrice4" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -179,7 +191,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellVolume4" />
 
             <TextView
                 android:layout_width="0.05dip"
@@ -201,7 +214,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyPrice2" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -210,7 +224,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyVolume2" />
         </TableRow>
 
         <TableRow
@@ -233,7 +248,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellPrice3" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -242,7 +258,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellVolume3" />
 
             <TextView
                 android:layout_width="0.05dip"
@@ -264,7 +281,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyPrice3" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -273,7 +291,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyVolume3" />
         </TableRow>
 
         <TableRow
@@ -296,7 +315,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellPrice2" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -305,7 +325,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellVolume2" />
 
             <TextView
                 android:layout_width="0.05dip"
@@ -327,7 +348,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyPrice4" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -336,7 +358,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyVolume4" />
         </TableRow>
 
         <TableRow
@@ -359,7 +382,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellPrice1" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -368,7 +392,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="sellVolume1" />
 
             <TextView
                 android:layout_width="0.05dip"
@@ -390,7 +415,8 @@
                 android:gravity="center"
                 android:text="0.00"
                 android:textColor="@color/red"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyPrice5" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -399,7 +425,8 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                bind:field="buyVolume5" />
         </TableRow>
 
         <View
@@ -420,7 +447,8 @@
             android:gravity="center"
             android:text="内盘:2.06万"
             android:textColor="@color/green"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            bind:field="sellSum" />
 
         <TextView
             android:layout_width="match_parent"
@@ -429,7 +457,8 @@
             android:gravity="center"
             android:text="外盘1.66万"
             android:textColor="@color/red"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            bind:field="buySum" />
     </LinearLayout>
 
 </LinearLayout>
