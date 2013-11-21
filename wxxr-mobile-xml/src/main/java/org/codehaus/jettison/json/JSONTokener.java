@@ -47,7 +47,7 @@ public class JSONTokener {
         this.myIndex = 0;
         this.mySource = StringUtils.trimToNull(s);
         if(s.startsWith("[") && s.endsWith("]")){
-        	this.mySource = "{"+s+"}";
+        	this.mySource = "{ \"list\" :"+s+"}";
         }
         
     }
