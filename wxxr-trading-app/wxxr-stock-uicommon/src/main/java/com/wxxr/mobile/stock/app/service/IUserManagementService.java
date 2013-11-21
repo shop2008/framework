@@ -44,14 +44,6 @@ public interface IUserManagementService {
 	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
 	 */
 	 void register(String userId,String password) throws StockAppBizException;
-	 
-	/**
-	 * 用户登陆
-	 * @param userId
-	 * @param pwd
-	 * @throws StockAppBizException
-	 */
-	void login(String userId,String pwd) throws StockAppBizException;
 	/**
 	 * 退出登陆
 	 * @param userId

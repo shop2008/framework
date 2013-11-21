@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.rpc.util.MarshallerClassRegistry;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
@@ -73,14 +72,12 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	
 	@Override
 	protected void startService() {
-		MarshallerClassRegistry.register(ArticleVO.class);
 		context.registerService(IArticleManagementService.class, this);
 	}
 
 	
 	@Override
 	protected void stopService() {
-		MarshallerClassRegistry.unregister(ArticleVO.class);
 		context.unregisterService(IArticleManagementService.class, this);
 	}
 

@@ -3,8 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -25,16 +23,7 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * 
  */
 public class ConverterUtils {
-	private static Gson gson = buildGson();
-	private static Gson buildGson() {
-		return new GsonBuilder()		
-				.enableComplexMapKeySerialization() // 支持Map的key为复杂对象的形式
-				.serializeNulls().setDateFormat("yyyy-MM-dd HH:mm:ss:SSS")// 时间转化为特定格式
-				.setPrettyPrinting() // 对json结果格式化.
-				.setVersion(1.0) 
-				.create();
-	}
-
+	
 	public static TradingAccInfoBean fromVO(TradingAccInfoVO vo) {
 		if (vo == null) {
 			return null;
@@ -158,7 +147,5 @@ public class ConverterUtils {
 		return bean;
 	}
 	
-	public static <T> T fromJson(String str,Class<T> clazz){
-		return gson.fromJson(str, clazz);
-	}
+	
 }

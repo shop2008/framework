@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.rpc.util.MarshallerClassRegistry;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -57,37 +56,36 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 public class TradingManagementServiceImpl extends
 		AbstractModule<IStockAppContext> implements ITradingManagementService {
 
-	private static final Trace log = Trace
-			.register(TradingManagementServiceImpl.class);
+	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	// =========================beans =======================
 	/**
 	 * 排行榜列表
 	 */
-	private RankListBean rank = new RankListBean();
+	protected RankListBean rank = new RankListBean();
 	/**
 	 * 我的交易盘列表
 	 */
-	private TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
+	protected TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
 	/**
 	 * 我的交易盘详情
 	 */
-	private TradingAccountBean myTradingAccount = new TradingAccountBean();
+	protected TradingAccountBean myTradingAccount = new TradingAccountBean();
 	/**
 	 * 成交详情
 	 */
-	private DealDetailBean dealDetailBean = new DealDetailBean();
+	protected DealDetailBean dealDetailBean = new DealDetailBean();
 	/**
 	 * 清算详情
 	 */
-	private AuditDetailBean auditDetailBean = new AuditDetailBean();
+	protected AuditDetailBean auditDetailBean = new AuditDetailBean();
 	/**
 	 * 创建交易盘的参数配置
 	 */
-	private UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
+	protected UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
 	/**
 	 * 交易订单记录
 	 */
-	private TradingRecordListBean recordsBean = new TradingRecordListBean();
+	protected TradingRecordListBean recordsBean = new TradingRecordListBean();
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -96,26 +94,12 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	protected void startService() {
-		MarshallerClassRegistry.register(TradingAccInfoVO.class);
-		MarshallerClassRegistry.register(HomePageVO.class);
-		MarshallerClassRegistry.register(MegagameRankVO.class);
-		MarshallerClassRegistry.register(RegularTicketVO.class);
-		MarshallerClassRegistry.register(WeekRankVO.class);
-		MarshallerClassRegistry.register(StockTradingOrderVO.class);
-		MarshallerClassRegistry.register(GainVO.class);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(ITradingManagementService.class, this);
-		MarshallerClassRegistry.unregister(TradingAccInfoVO.class);
-		MarshallerClassRegistry.unregister(HomePageVO.class);
-		MarshallerClassRegistry.unregister(MegagameRankVO.class);
-		MarshallerClassRegistry.unregister(RegularTicketVO.class);
-		MarshallerClassRegistry.unregister(WeekRankVO.class);
-		MarshallerClassRegistry.unregister(StockTradingOrderVO.class);
-		MarshallerClassRegistry.unregister(GainVO.class);
 	}
 
 	// =================interface method =====================================
@@ -826,11 +810,20 @@ public class TradingManagementServiceImpl extends
 		}
 		if (volist != null && volist.size() > 0) {
 			List<GainBean> beanList = new ArrayList<GainBean>();
+			List<GainBean> vbeanList = new ArrayList<GainBean>();
+			List<GainBean> rbeanList = new ArrayList<GainBean>();
 			for (GainVO vo : volist) {
 				GainBean bean = ConverterUtils.fromVO(vo);
 				beanList.add(bean);
+				if (vo.isVirtual()) {
+					vbeanList.add(bean);
+				}else{
+					rbeanList.add(bean);
+				}
 			}
 			myTradingAccounts.setSuccessTradingAccounts(beanList);
+			myTradingAccounts.setVirtualTradingAccounts(vbeanList);
+			myTradingAccounts.setRealTradingAccounts(rbeanList);
 		}
 		return myTradingAccounts;
 	}
