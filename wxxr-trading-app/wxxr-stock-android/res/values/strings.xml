@@ -201,6 +201,8 @@
     <string name="label_login_out">退出登录</string>
     <string name="btn_manage_text">管理</string>
 
+   	<string name="label_actual_panel">挑战交易盘</string>
+   	<string name="label_join_panel">参赛交易盘</string>
     <!-- 头像设置 -->
     <string name="title_user_pic_set">头像设置</string>
     <string name="btn_done_text">确定</string>
@@ -237,6 +239,8 @@
 	<string name="tab_success_operation_text">成功操作</string>
 	<string name="tab_whole_operation_text">全部操作</string>
 	<string name="record_null_text">无交易记录数据</string>
+	
+	
     <!-- 注册条款 -->
     <string name="tv_title_register_rules">注册条款</string>
     <string name="register_rules_title">短线放大镜客户端注册条款</string>

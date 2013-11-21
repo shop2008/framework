@@ -176,6 +176,17 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserSucTradePage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.ArticleBodyPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <!-- 用户相关 -->
         <activity
             android:name=".ui.AppSetPage"
