@@ -217,8 +217,8 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 			register(JaxrsFormProvider.class).
 			register(SerializableProvider.class).
 			register(StreamingOutputProvider.class).
-			register(new XStreamProvider()).
-			register(GSONProvider.class);
+			register(new XStreamProvider())/*.
+			register(GSONProvider.class)*/;
 		this.providerFactory = factory;
 		try {
 			httpEngine = new HttpRpcClientEngine(this.application.getService(HttpRpcService.class));
