@@ -3,13 +3,13 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 
 /**
  * @author neillin
@@ -17,7 +17,6 @@ import com.wxxr.mobile.stock.app.model.UserLoginCallback;
  */
 public interface IUserManagementService {
 	
-	UserLoginCallback createLoginCallback();
 	/**
 	 * 获取当前用户信息
 	 * @return
@@ -44,6 +43,14 @@ public interface IUserManagementService {
 	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
 	 */
 	 void register(String userId,String password) throws StockAppBizException;
+	 
+	/**
+	 * 用户登陆
+	 * @param userId
+	 * @param pwd
+	 * @throws StockAppBizException
+	 */
+	void login(String userId,String pwd) throws LoginFailedException;
 	/**
 	 * 退出登陆
 	 * @param userId
@@ -175,23 +182,4 @@ public interface IUserManagementService {
 	 * @return
 	 */
 	PersonalHomePageBean getMyPersonalHomePage();
-	/**
-	 * 获取当前用户自己的主页更多条数地址
-	 * @param start
-	 * @param limit
-	 * @param virtual - true：虚拟盘，false；实盘
-	 * @return
-	 * @throws Exception
-	 */
-	PersonalHomePageBean getMorePersonalRecords(int start,int limit,boolean virtual);
-	/**
-	 * 获取他人主页更多条数地址
-	 * @param userId 用户ID
-	 * @param start
-	 * @param limit
-	 * @param virtual - true：虚拟盘，false；实盘
-	 * @return
-	 * @throws Exception
-	 */
-	PersonalHomePageBean getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
 }

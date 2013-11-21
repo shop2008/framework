@@ -4,15 +4,13 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
-import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
@@ -20,10 +18,9 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.ui.api.IDialog;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
@@ -36,13 +33,11 @@ import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
-import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
-import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
@@ -59,17 +54,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private static final Trace log = Trace
 			.register(UserManagementServiceImpl.class);
 
-	private static final String KEY_USERNAME = "U";
-	private static final String KEY_PASSWORD = "P";
-	private static final String KEY_UPDATE_DATE = "UD";
+//	private static final String KEY_USERNAME = "U";
+//	private static final String KEY_PASSWORD = "P";
+//	private static final String KEY_UPDATE_DATE = "UD";
 	private IPreferenceManager prefManager;
 	private UsernamePasswordCredential UsernamePasswordCredential4Login;
 	// ==================beans =============================
-	private UserBean myUserInfo = new UserBean();
+	private UserBean myUserInfo ;
 	private TradingAccountListBean myTradingAccountListBean = new TradingAccountListBean();
 	private UserBean otherUserInfo = new UserBean();
 	private BindMobileBean bindMobile = new BindMobileBean();
-	private UserLoginCallback loginCallback;
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
 	private PersonalHomePageBean myPersonalHomePageBean = new PersonalHomePageBean();
@@ -109,51 +103,51 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public IUserAuthCredential getAuthCredential(String host, String realm) {
-		IPreferenceManager mgr = getPrefManager();
-		if (!mgr.hasPreference(getModuleName())
-				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
-			if (UsernamePasswordCredential4Login != null) {
+//		IPreferenceManager mgr = getPrefManager();
+//		if (!mgr.hasPreference(getModuleName())
+//				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
+//			if (UsernamePasswordCredential4Login != null) {
 				return UsernamePasswordCredential4Login;
-			}
-			
-			
-			IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
-			dialog.show();
-			
-		}
-		Dictionary<String, String> d = mgr.getPreference(getModuleName());
-		String userName = d.get(KEY_USERNAME);
-		String passwd = d.get(KEY_PASSWORD);
-		return new UsernamePasswordCredential(userName, passwd);
+//			}
+//			
+//			
+//			IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
+//			dialog.show();
+//			
+//		}
+//		Dictionary<String, String> d = mgr.getPreference(getModuleName());
+//		String userName = d.get(KEY_USERNAME);
+//		String passwd = d.get(KEY_PASSWORD);
+//		return new UsernamePasswordCredential(userName, passwd);
 	}
 
 	@Override
 	public UserBean getMyUserInfo() {
 		
-		if (context.getApplication().isInDebugMode()) {
-			myUserInfo = MockDataUtils.mockUserInfo();
-			return myUserInfo;
-		}
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					UserVO vo = context.getService(IRestProxyService.class)
-							.getRestService(StockUserResource.class).getUser();
-					if (vo != null) {
-						myUserInfo.setNickName(vo.getNickName());
-						myUserInfo.setUsername(vo.getUserName());
-						myUserInfo.setPhoneNumber(vo.getMoblie());
-						myUserInfo.setUserPic(vo.getIcon());
-					}else{
-						
-					}
-					
-				} catch (Exception e) {
-					log.warn("Error when get user info", e);
-				}
-			}
-		}, 1, TimeUnit.SECONDS);
+//		if (context.getApplication().isInDebugMode()) {
+//			myUserInfo = MockDataUtils.mockUserInfo();
+//			return myUserInfo;
+//		}
+//		context.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					UserVO vo = context.getService(IRestProxyService.class)
+//							.getRestService(StockUserResource.class).getUser();
+//					if (vo != null) {
+//						myUserInfo.setNickName(vo.getNickName());
+//						myUserInfo.setUsername(vo.getUserName());
+//						myUserInfo.setPhoneNumber(vo.getMoblie());
+//						myUserInfo.setUserPic(vo.getIcon());
+//					}else{
+//						
+//					}
+//					
+//				} catch (Exception e) {
+//					log.warn("Error when get user info", e);
+//				}
+//			}
+//		}, 1, TimeUnit.SECONDS);
 
 		return myUserInfo;
 	}
@@ -194,55 +188,40 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public void login(final String userId, final String pwd) throws StockAppBizException {
-		Callable<StockAppBizException> task = new Callable<StockAppBizException>() {
-			public StockAppBizException call() throws Exception {
-				UserBaseInfoVO vo = null;
+	public void login(final String userId, final String pwd) throws LoginFailedException {
+		Future<?> future = context.getExecutor().submit(new Runnable() {
+			
+			@Override
+			public void run() {
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
 						userId, pwd);
 				try {
-					vo = context.getService(IRestProxyService.class)
-							.getRestService(StockUserResource.class).info();
+					UserVO vo = context.getService(IRestProxyService.class)
+							.getRestService(StockUserResource.class).getUser();
+					myUserInfo = new UserBean();
+					myUserInfo.setNickName(vo.getNickName());
+					myUserInfo.setUsername(vo.getUserName());
+					myUserInfo.setPhoneNumber(vo.getMoblie());
+					myUserInfo.setUserPic(vo.getIcon());
 				} catch (NotAuthorizedException e) {
-					log.warn("用户名或密码错误",e);
-					return new StockAppBizException("用户名或密码错误");
-				} finally {
+					log.warn("Failed to login user due to invalid user name and/or password",e);
 					UsernamePasswordCredential4Login = null;
+					throw new LoginFailedException("用户名或密码错误");
+				} catch (Throwable e) {
+					log.warn("Failed to login user due to unexpected exception",e);
+					UsernamePasswordCredential4Login = null;
+					throw new LoginFailedException("登录失败，请稍后再试...");
 				}
-				if (vo == null) {//未登录成功，弹出登陆对话框
-					getService(IWorkbenchManager.class).getWorkbench().showPage("userLoginPage", null, null);
-				}
-				
-				myUserInfo.setLogin(true);
-				// 根据用户密码登录成功
-				Dictionary<String, String> pref = getPrefManager()
-						.getPreference(getModuleName());
-				if (pref == null) {
-					pref = new Hashtable<String, String>();
-					getPrefManager().newPreference(getModuleName(), pref);
-				} else {
-					pref = DictionaryUtils.clone(pref);
-				}
-				pref.put(KEY_USERNAME, userId);
-				pref.put(KEY_PASSWORD, pwd);
-				pref.put(KEY_UPDATE_DATE,
-						String.valueOf(System.currentTimeMillis()));
-				getPrefManager().putPreference(getModuleName(), pref);
-				return null;
 			}
-		};
-		Future<StockAppBizException> future = context.getExecutor().submit(task);
+		});
 		if (future != null) {
 			try {
-				StockAppBizException e = future.get(7, TimeUnit.SECONDS);
-				if (e != null) {
-					if (log.isDebugEnabled()) {
-						log.debug("Login error", e);
-					}
-					throw e;
-				}
-			} catch (Exception e) {
+				future.get(20, TimeUnit.SECONDS);
+			} catch (ExecutionException e) {
+				throw (StockAppBizException)e.getCause();
+			} catch(Throwable e){
 				log.warn("连接超时",e);
+				throw new LoginFailedException("登录超时，请稍后再试...");
 			}
 		}
 
@@ -528,25 +507,4 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private <T> T getRestService(Class<T> restResouce){
 		return getService(IRestProxyService.class).getRestService(restResouce);
 	}
-
-	@Override
-	public UserLoginCallback createLoginCallback() {
-		this.loginCallback = new UserLoginCallback();
-		return this.loginCallback;
-	}
-
-	@Override
-	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
-			boolean virtual) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public PersonalHomePageBean getMoreOtherPersonal(String userId, int start,
-			int limit, boolean virtual) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
