@@ -9,12 +9,16 @@ import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
+import com.wxxr.mobile.core.api.IUserAuthCredential;
+import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.impl.ArticleVO;
 import com.wxxr.mobile.core.rpc.impl.IArticleResource;
 import com.wxxr.mobile.core.rpc.impl.MockApplication;
-import com.wxxr.mobile.core.rpc.impl.StockArticleQuery;
+import com.wxxr.mobile.core.rpc.impl.NewsQueryBO;
+import com.wxxr.mobile.core.rpc.impl.StockUserResource;
+import com.wxxr.mobile.core.rpc.impl.UserVO;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 
 public class ResteasyClientBuilderTest extends TestCase {
@@ -26,9 +30,23 @@ public class ResteasyClientBuilderTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+	private IUserAuthCredential auth =  new IUserAuthCredential() {
+		
+		@Override
+		public String getUserName() {
+			return "13500001009";
+		}
+		
+		@Override
+		public String getAuthPassword() {
+			return "404662";
+		}
 
+	};
+	
 	public void testGetRestServiceClassOfTString() throws Exception {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
+		
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -39,15 +57,23 @@ public class ResteasyClientBuilderTest extends TestCase {
 			public ExecutorService getExecutorService() {
 				return executor;
 			}
-
+			
 			@Override
 			protected void initModules() {
-				// TODO Auto-generated method stub
 				
 			}
 
 		};
 		IKernelContext context = app.getContext();
+		
+		context.registerService(IUserAuthManager.class, new IUserAuthManager() {
+			@Override
+			public IUserAuthCredential getAuthCredential(String host,
+					String realm) {
+				System.out.println(host+"-"+realm);
+				return auth;
+			}
+		});
 		service.startup(context);
 		context.registerService(ISiteSecurityService.class, new ISiteSecurityService() {
 			
@@ -70,16 +96,20 @@ public class ResteasyClientBuilderTest extends TestCase {
 			}
 		});
 		
-//		ResteasyRestClientService builder = new ResteasyRestClientService();
-//		builder.startup(context);
-//		IArticleResource res = builder.getRestService(IArticleResource.class, "http://192.168.123.44:8480/mobilestock");
-//		StockArticleQuery q = new StockArticleQuery();
-//		q.setMarketCode("SH");
-//		q.setStockId("601088");
-//		q.setLimit(10);
-//		q.setStart(0);
-//		List<ArticleVO> result = res.getArticleByStock(q);
-//		assertNotNull(result);
+		ResteasyRestClientService builder = new ResteasyRestClientService();
+		builder.startup(context);
+		/*try {
+			UserVO vo = builder.getRestService(StockUserResource.class,"http://192.168.123.44:8480/mobilestock2").getUser();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		IArticleResource res = builder.getRestService(IArticleResource.class, "http://192.168.123.44:8480/mobilestock2");
+		NewsQueryBO query = new NewsQueryBO();
+		query.setLimit(4);
+		query.setStart(0);
+		query.setType(String.valueOf(15));
+		List<ArticleVO> result = res.getNewArticle(query);
+		assertNotNull(result);
 	}
 
 }
