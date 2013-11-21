@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IWritable;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 
 /**
@@ -43,7 +44,13 @@ public class TextAttributeUpdater implements IAttributeUpdater<View> {
 	@Override
 	public <T> T updateModel(View control, AttributeKey<T> attrType,
 			IUIComponent field) {
-		return null;
+		TextView tv = (TextView)control;
+		String val = tv.getText().toString();
+		IWritable writer = field.getAdaptor(IWritable.class);
+		if(writer != null){
+			writer.setValue(val);
+		}
+		return attrType.getValueType().cast(val);
 	}
 
 	@Override
