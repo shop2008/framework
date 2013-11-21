@@ -792,6 +792,44 @@ public class MockDataUtils {
 		return sz;
 	}
 	
+	// 5档盘口
+	public static StockQuotationBean getStockQuotation(String code, String market) {
+		StockQuotationBean bean = new StockQuotationBean();
+		bean.setCode("002002");
+		bean.setMarket("SZ");
+		bean.setChange(494L);
+		bean.setRisefallrate(58L);
+		bean.setNewprice(510L);
+		bean.setClose(506L);
+		bean.setBuyprice1(569L);
+		bean.setBuyprice2(568L);
+		bean.setBuyprice3(567L);
+		bean.setBuyprice4(566L);
+		bean.setBuyprice5(565L);
+		
+		bean.setBuyvolume1(560L);
+		bean.setBuyvolume2(60L);
+		bean.setBuyvolume3(360L);
+		bean.setBuyvolume4(20L);
+		bean.setBuyvolume5(50L);
+		
+		bean.setSellprice1(564L);
+		bean.setSellprice2(563L);
+		bean.setSellprice3(562L);
+		bean.setSellprice4(561L);
+		bean.setSellprice5(560L);
+		
+		bean.setSellvolume1(560L);
+		bean.setSellvolume2(60L);
+		bean.setSellvolume3(360L);
+		bean.setSellvolume4(20L);
+		bean.setSellvolume5(50L);
+		
+		bean.setSellsum(1000000L);
+		bean.setBuysum(500000L);
+		
+		return bean;
+	}
 	
 	public static List<StockTaxisBean> getStockTaxis(){
 		ArrayList<StockTaxisBean> stockTaxis = new ArrayList<StockTaxisBean>();

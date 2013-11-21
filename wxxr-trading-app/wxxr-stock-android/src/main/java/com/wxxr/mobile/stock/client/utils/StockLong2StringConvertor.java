@@ -3,10 +3,9 @@
  */
 package com.wxxr.mobile.stock.client.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
+
+import android.text.format.Formatter;
 
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -15,11 +14,13 @@ import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author dz
- *
+ * 
  */
-public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
+public class StockLong2StringConvertor implements IValueConvertor<Long, String> {
 
-	private String format = "yyyy-MM-dd HH:mm:ss";
+	private String format = "%+10.2f";
+	private float multiple = 1.00f;
+
 	@Override
 	public void destroy() {
 	}
@@ -36,34 +37,28 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	@Override
 	public void init(IWorkbenchRTContext ctx, Map<String, Object> map) {
-		if(map.containsKey("format")){
-			this.format = (String)map.get("format");
+		if (map.containsKey("format")) {
+			this.format = (String) map.get("format");
+		}
+		if (map.containsKey("multiple")) {
+			this.multiple = Float.parseFloat((String) map.get("multiple"));
 		}
 	}
 
 	@Override
 	public Long toSourceTypeValue(String s) throws ValidationException {
-		if(StringUtils.isBlank(s)){
+		if (StringUtils.isBlank(s)) {
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		try {
-			Date date = sdf.parse(s);
-			return date.getTime();
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return (long) (Float.parseFloat(s) * multiple);
 	}
 
 	@Override
 	public String toTargetTypeValue(Long val) {
-		if(val == null){
+		if (val == null) {
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		Date date = new Date(val);
-		return sdf.format(date);
+		return String.format(this.format, val / multiple);
 	}
 
 }

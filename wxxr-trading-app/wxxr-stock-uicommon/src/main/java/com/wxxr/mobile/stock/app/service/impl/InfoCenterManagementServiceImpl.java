@@ -40,6 +40,7 @@ public class InfoCenterManagementServiceImpl extends
 	private static final Trace log = Trace
 			.register(InfoCenterManagementServiceImpl.class);
 	private SearchStockListBean stockListbean = new SearchStockListBean();
+	private StockQuotationBean stockQuotationbean = new StockQuotationBean();
 
 	// ====================module life cycle methods ==================
 	@Override
@@ -135,8 +136,9 @@ public class InfoCenterManagementServiceImpl extends
 
 	@Override
 	public StockQuotationBean getStockQuotation(String code, String market) {
-		// TODO Auto-generated method stub
-		return null;
+		stockQuotationbean = MockDataUtils.getStockQuotation(code, market); 
+			return stockQuotationbean;
+//		return null;
 	}
 
 }

@@ -16,6 +16,8 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "StockQuotationView")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_quotation_view_layout")
@@ -29,12 +31,35 @@ public abstract class StockQuotationView extends PageBase implements
 	@Bean
 	String marketBean;
 	@Bean
-	String timeBean;
+	Long timeBean;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="yyyyMMdd HH:mm:ss")
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
 	})
 	LongTime2StringConvertor longTime2StringConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%+10.2f"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="(%+.2f%%)"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorNoSign;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%10.2f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Bean(type=BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
@@ -44,101 +69,118 @@ public abstract class StockQuotationView extends PageBase implements
 	//Title
 	@Field(valueKey = "text", binding= "${nameBean}")
 	String name;
-	@Field(valueKey = "text", binding= "${'('}${stockQuotationBean!=null?stockQuotationBean.code:'--'}${'.'}${stockQuotationBean!=null?stockQuotationBean.market:''}${')'}")
+	
+	@Field(valueKey = "text", binding= "${'('}${stockQuotationBean!=null?stockQuotationBean.code:'--'}${'.'}${stockQuotationBean!=null?stockQuotationBean.market:'--'}${')'}")
 	String code;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.newprice:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.newprice:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String newprice;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.change:'--'}${'('}${stockQuotationBean!=null?stockQuotationBean.risefallrate:'--'}${')'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.change:'0'}", converter = "stockLong2StringConvertor", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
-	String changeRisefallRate;
-	@Field(valueKey = "imageURI", attributes={
+	String change;
+	
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.risefallrate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+			})
+	String risefallRate;
+	
+	@Field(valueKey = "imageURI", visibleWhen= "${stockQuotationBean!=null}", attributes={
 			@Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows':'resourceId:drawable/down_arrows'}")
 			})
 	String newpriceIcon;
+	
 	@Field(valueKey = "text", binding= "${timeBean}",converter="longTime2StringConvertor")
 	String time;
 	//卖
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice5:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice5:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String sellPrice5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice4:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice4:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String sellPrice4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice3:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice3:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String sellPrice3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice2:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice2:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String sellPrice2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice1:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice1:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String sellPrice1;
 	
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume5:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume5:'0'}")
 	String sellVolume5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume4:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume4:'0'}")
 	String sellVolume4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume3:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume3:'0'}")
 	String sellVolume3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume2:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume2:'0'}")
 	String sellVolume2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume1:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume1:'0'}")
 	String sellVolume1;
 	//买
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice5:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice5:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String buyPrice5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice4:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice4:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String buyPrice4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice3:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice3:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String buyPrice3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice2:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice2:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String buyPrice2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice1:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice1:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
+			@Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String buyPrice1;
 	
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume5:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume5:'0'}")
 	String buyVolume5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume4:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume4:'0'}")
 	String buyVolume4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume3:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume3:'0'}")
 	String buyVolume3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume2:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume2:'0'}")
 	String buyVolume2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume1:'--'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume1:'0'}")
 	String buyVolume1;
 	//买卖盘
-	@Field(valueKey = "text", binding= "${'内盘:'}${stockQuotationBean!=null?stockQuotationBean.sellsum:'--'}", attributes={
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellsum:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
 			@Attribute(name = "textColor", value = "resourceId:color/green")
 			})
 	String sellSum;
-	@Field(valueKey = "text", binding= "${'外盘:'}${stockQuotationBean!=null?stockQuotationBean.buysum:'--'}", attributes={
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buysum:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
 			@Attribute(name = "textColor", value = "resourceId:color/red")
 			})
 	String buySum;
+	
+	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean!=null}")
+	String quotation;
+	
+	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean==null}")
+	String dataFailed;
+	
 	@Override
 	public void updateModel(Object value) {
 		// TODO Auto-generated method stub
 		registerBean("nameBean", "鸿达兴业");
 		registerBean("codeBean", "100100");
 		registerBean("marketBean", "SH");
-		registerBean("timeBean", new Date().toGMTString());
+		registerBean("timeBean", new Date().getTime());
 	}
 }
