@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,8 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 	private static final String DEFAULT_ENCODING = "utf-8";
 
 	private XStream xstreamXML,xstreamJSON;
+	private List<Class<?>> processedXMLTypes = new ArrayList<Class<?>>();
+	private List<Class<?>> processedJSONTypes = new ArrayList<Class<?>>();
 	
 	protected boolean isCollectionType(Class<?> type){
 		return List.class.isAssignableFrom(type)||Set.class.isAssignableFrom(type)||Map.class.isAssignableFrom(type)||type.isArray();
@@ -53,7 +57,7 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 			MultivaluedMap<String, String> map, InputStream stream)
 			throws IOException, WebApplicationException {
 		String encoding = getCharsetAsString(mediaType);
-		XStream xStream = getXStream(aClass, mediaType);
+		XStream xStream = getXStream(aClass, mediaType,genericType);
 		return xStream.fromXML(new InputStreamReader(stream, encoding));
 	}
 
@@ -63,7 +67,7 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 			MultivaluedMap<String, Object> map, OutputStream stream)
 			throws IOException, WebApplicationException {
 		String encoding = getCharsetAsString(mediaType);
-		XStream xStream = getXStream(o.getClass(), mediaType);
+		XStream xStream = getXStream(o.getClass(), mediaType,null);
 		xStream.toXML(o, new OutputStreamWriter(stream, encoding));
 	}
 
@@ -75,13 +79,44 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 		return (result == null) ? DEFAULT_ENCODING : result;
 	}
 
-	protected synchronized XStream getXStream(Class<?> type, MediaType mediaType) {
-		XStream xstream = createXStream(mediaType);
-		xstream.processAnnotations(type);
+	protected synchronized XStream getXStream(Class<?> type, MediaType mediaType, Type genericType) {
+		XStream xstream = createXStream(mediaType,genericType);
+		if(xstream == this.xstreamJSON){
+			processAnnotations(type, genericType, xstream,this.processedJSONTypes);
+		}else if(xstream == this.xstreamXML){
+			processAnnotations(type, genericType, xstream,this.processedXMLTypes);
+		}
 		return xstream;
 	}
 
-	protected XStream createXStream(MediaType mediaType) {
+	/**
+	 * @param type
+	 * @param genericType
+	 * @param xstream
+	 */
+	protected void processAnnotations(Class<?> type, Type genericType,
+			XStream xstream,List<Class<?>> processed) {
+		if(!processed.contains(type)){
+			xstream.processAnnotations(type);
+			processed.add(type);
+		}
+		if(genericType instanceof ParameterizedType){
+			ParameterizedType pType = (ParameterizedType)genericType;
+			Type[] actualTypes = pType.getActualTypeArguments();
+			if(actualTypes != null){
+				for (Type atype : actualTypes) {
+					if(atype instanceof Class){
+						if(!processed.contains(atype)){
+							xstream.processAnnotations((Class<?>)atype);
+							processed.add((Class<?>)atype);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected XStream createXStream(MediaType mediaType, Type genericType) {
 //		System.out.println("XStreamProvider.createXStream()");
 		XStream xstream = null;
 		if (mediaType.isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
