@@ -7,7 +7,9 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -27,8 +29,11 @@ public abstract class StockQuotationView extends PageBase implements
 	@Bean
 	String marketBean;
 	@Bean
-	String timeBean;;
+	String timeBean;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="yyyyMMdd HH:mm:ss")
+	})
 	LongTime2StringConvertor longTime2StringConvertor;
 	
 	@Bean(type=BindingType.Service)
@@ -53,7 +58,7 @@ public abstract class StockQuotationView extends PageBase implements
 			@Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows':'resourceId:drawable/down_arrows'}")
 			})
 	String newpriceIcon;
-	@Field(valueKey = "text", binding= "${timeBean}")
+	@Field(valueKey = "text", binding= "${timeBean}",converter="longTime2StringConvertor")
 	String time;
 	//卖
 	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice5:'--'}", attributes={
