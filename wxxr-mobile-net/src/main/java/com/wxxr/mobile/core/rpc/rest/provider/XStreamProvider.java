@@ -32,7 +32,7 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 	private XStream xstreamXML,xstreamJSON;
 	
 	protected boolean isCollectionType(Class<?> type){
-		return List.class.isAssignableFrom(type)||Set.class.isAssignableFrom(type)||Map.class.isAssignableFrom(type);
+		return List.class.isAssignableFrom(type)||Set.class.isAssignableFrom(type)||Map.class.isAssignableFrom(type)||type.isArray();
 	}
 
 	@Override
