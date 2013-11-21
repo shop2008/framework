@@ -1,5 +1,4 @@
 package com.wxxr.mobile.core.rpc.rest;
-import java.net.URI;
 import java.security.KeyStore;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -10,17 +9,14 @@ import javax.net.ssl.SSLContext;
 
 import com.wxxr.javax.ws.rs.client.ClientBuilder;
 import com.wxxr.javax.ws.rs.core.Configuration;
-import com.wxxr.mobile.core.api.IApplication;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
-import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.rpc.rest.provider.ByteArrayProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.DocumentProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.FileProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.FormUrlEncodedProvider;
-import com.wxxr.mobile.core.rpc.rest.provider.GSONProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.InputStreamProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.JaxrsFormProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.SerializableProvider;
@@ -217,8 +213,7 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 			register(JaxrsFormProvider.class).
 			register(SerializableProvider.class).
 			register(StreamingOutputProvider.class).
-			register(new XStreamProvider())/*.
-			register(GSONProvider.class)*/;
+			register(new XStreamProvider());
 		this.providerFactory = factory;
 		try {
 			httpEngine = new HttpRpcClientEngine(this.application.getService(HttpRpcService.class));
