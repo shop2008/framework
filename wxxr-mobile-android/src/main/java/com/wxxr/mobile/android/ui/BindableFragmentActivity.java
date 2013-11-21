@@ -375,10 +375,21 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 			@Override
 			public boolean isOnShow() {
-				// TODO Auto-generated method stub
-				return false;
+				return dialog.isVisible();
 			}
 		};
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		if((!isFinishing())&&this.fragments.isEmpty()){
+			finish();
+		}
 	}
 
 
