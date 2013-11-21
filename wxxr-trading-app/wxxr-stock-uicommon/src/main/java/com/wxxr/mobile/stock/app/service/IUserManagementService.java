@@ -183,4 +183,23 @@ public interface IUserManagementService {
 	 * @return
 	 */
 	PersonalHomePageBean getMyPersonalHomePage();
+	/**
+	 * 获取当前用户自己的主页更多条数地址
+	 * @param start
+	 * @param limit
+	 * @param virtual - true：虚拟盘，false；实盘
+	 * @return
+	 * @throws Exception
+	 */
+	PersonalHomePageBean getMorePersonalRecords(int start,int limit,boolean virtual);
+	/**
+	 * 获取他人主页更多条数地址
+	 * @param userId 用户ID
+	 * @param start
+	 * @param limit
+	 * @param virtual - true：虚拟盘，false；实盘
+	 * @return
+	 * @throws Exception
+	 */
+	PersonalHomePageBean getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
 }
