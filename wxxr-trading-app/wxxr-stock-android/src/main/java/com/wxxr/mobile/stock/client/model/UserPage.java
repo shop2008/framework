@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -13,6 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -126,7 +129,6 @@ public abstract class UserPage extends PageBase  {
 	
 	/**
 	 * "个性化"按钮事件处理
-	 * 
 	 * @param event
 	 * @return
 	 */
@@ -151,14 +153,20 @@ public abstract class UserPage extends PageBase  {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "challengeViewMore", description = "To Challenge View More")
-	String challengeViewMore(InputEvent event) {
+	@Command(
+			commandName = "challengeViewMore", 
+			description = "To Challenge View More",
+			navigations={@Navigation(on="OK", showPage="userSucTradePage")}
+			)
+	CommandResult challengeViewMore(InputEvent event) {
 
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			System.out.println("-----challenge_view_more-----");
-
-		}
-		return null;
+		CommandResult result = new CommandResult();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("isVirtual", "0");
+		result.setPayload(map);
+		result.setResult("OK");
+		
+		return result;
 	}
 
 	/**
@@ -167,13 +175,18 @@ public abstract class UserPage extends PageBase  {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "joinViewMore", description = "To Join View More")
-	String joinViewMore(InputEvent event) {
-
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			System.out.println("-----join_view_more-----");
-		}
-		return null;
+	@Command(
+			commandName = "joinViewMore", 
+			description = "To Join View More",
+			navigations={@Navigation(on="OK", showPage="userSucTradePage")}
+			)
+	CommandResult joinViewMore(InputEvent event) {
+		CommandResult result = new CommandResult();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("isVirtual", "1");
+		result.setPayload(map);
+		result.setResult("OK");
+		return result;
 	}
 
 

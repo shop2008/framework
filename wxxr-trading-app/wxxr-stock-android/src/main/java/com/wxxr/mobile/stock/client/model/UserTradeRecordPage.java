@@ -8,9 +8,12 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -18,7 +21,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
-@View(name = "userTradeRecordPage")
+@View(name = "userTradeRecordPage", withToolbar=true, description="我的交易记录")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 
@@ -59,21 +62,19 @@ public abstract class UserTradeRecordPage extends PageBase {
 	int curItemId = 1;
 		
 	
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
+	@Menu(items={"left","right"})
+	private IMenu toolbar;
+	
+	
+	@Command(
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);	
 		return null;
 	}
-
 
 	@OnShow
 	protected void initCurItemId() {

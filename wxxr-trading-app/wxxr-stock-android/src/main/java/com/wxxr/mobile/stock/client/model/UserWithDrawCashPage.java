@@ -1,5 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.R.bool;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -11,10 +14,12 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -39,28 +44,42 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	@Bean(type=BindingType.Pojo, express="${user!=null?user.userAsset:null}")
 	UserAssetBean userAssetBean;
 	
+	@Bean(type=BindingType.Pojo, express="${user!=null?user.bankInfo:null}")
+	AuthInfoBean authInfoBean;
+	
 	@Field(valueKey="text", binding="${userAssetBean!=null?userAssetBean.usableBal:'--'}")
 	String avaliCashAmount;
-	
-	/**可用现金数量*/
-	@Field(valueKey="text")
-	String availCashAmount;
 	
 	@Field(valueKey="text")
 	String commitBtn;
 	
-	DataField<String> availCashAmountField;
 	DataField<String> commitBtnField;
+	
+	@Field(valueKey="text")
+	String availCashAmountET;
+	DataField<String> availCashAmountETField;
 	
 	@Field(valueKey="checked")
 	boolean readChecked;
-	
 	DataField<Boolean> readCheckedField;
+	
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankNum:'--'}")
+	String bankNum;
+	
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankAddr:'--'}")
+	String bankAddr;
+	
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankName:'--'}")
+	String bankName;
+	
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:'--'}")
+	String accountName;
 	/**
 	 * 返回到上一个界面
 	 * @param event
 	 * @return
 	 */
+	@Command
 	String back(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -82,7 +101,7 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	String commit(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			String withDrawCashAmount = this.availCashAmountField.getValue();
+			String withDrawCashAmount = this.availCashAmountETField.getValue();
 			if (withDrawCashAmount == null) {
 				return "isNull";
 			} else {
@@ -108,8 +127,8 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	String availCashAmountTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			String availCashAmountStr = (String)event.getProperty("changedText");
-			this.availCashAmount = availCashAmountStr;
-			this.availCashAmountField.setValue(availCashAmountStr);
+			this.availCashAmountET = availCashAmountStr;
+			this.availCashAmountETField.setValue(availCashAmountStr);
 		}
 		return null;
 	}
@@ -140,5 +159,19 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	protected void initData() {
 		this.readChecked = true;
 		this.readCheckedField.setValue(true);
+	}
+	
+	@Command(
+				commandName="withDrawCashRules",
+				navigations={@Navigation(on="OK", showPage="articleBodyPage")}
+			)
+	
+	CommandResult withDrawCashRules(InputEvent event) { 
+		CommandResult result = new CommandResult();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("loadUrl", "http://m.hao123.com");
+		result.setPayload(map);
+		result.setResult("OK");
+		return result;
 	}
 }

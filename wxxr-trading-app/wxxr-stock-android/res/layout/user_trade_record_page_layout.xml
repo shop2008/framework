@@ -5,30 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
-
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/tv_title_trade_record" />
-
-        <ImageButton
-            android:id="@id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-    </RelativeLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -37,8 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            bind:field="recordNotNullVisible" 
-            >
+            bind:field="recordNotNullVisible" >
 
             <RadioGroup
                 android:id="@id/rg_game_rank"
@@ -56,8 +31,7 @@
                     android:gravity="center"
                     android:text="@string/tab_success_operation_text"
                     bind:field="sucRecordBtn"
-                    bind:on_Click="showSucRecords" 
-                    />
+                    bind:on_Click="showSucRecords" />
 
                 <View
                     android:layout_width="1dip"
@@ -143,8 +117,8 @@
                     android:visibility="visible"
                     bind:field="successRecordsList"
                     bind:itemViewId="tradeRecordItemView"
-                    bind:on_ItemClick="sucRecordItemClicked"
                     bind:on_BottomRefresh="handleSucBottomRefresh"
+                    bind:on_ItemClick="sucRecordItemClicked"
                     bind:on_TopRefresh="handleSucTopRefresh" >
                 </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
@@ -154,20 +128,19 @@
                     android:visibility="visible"
                     bind:field="allRecordsList"
                     bind:itemViewId="tradeRecordItemView"
-                    bind:on_ItemClick="allRecordItemClicked"
                     bind:on_BottomRefresh="handleAllBottomRefresh"
+                    bind:on_ItemClick="allRecordItemClicked"
                     bind:on_TopRefresh="handleAllTopRefresh" >
                 </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
             </FrameLayout>
         </LinearLayout>
-        
-        <TextView 
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            bind:field="recordNullVisible"
             android:text="@string/record_null_text"
-            />
+            bind:field="recordNullVisible" />
     </FrameLayout>
 
 </LinearLayout>

@@ -11,33 +11,29 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name = "userLoginPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
 	static Trace log = Trace.register(UserLoginPage.class);
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${callBack.userName}")
 	String mobileNum;
 
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${callBack.password}")
 	String password;
 	
 	@Field(valueKey = "text")
 	String loginBtn;
 
-	
-	DataField<String> mobileNumField;
-
-	DataField<String> passwordField;
-	
-	DataField<String> loginBtnField;
-
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
+	
+	@Bean(type=BindingType.Pojo, express="${usrService!=null?usrService.createLoginCallback():null}")
+	UserLoginCallback callBack;
 	
 	/**
 	 * 处理登录
@@ -46,20 +42,7 @@ public abstract class UserLoginPage extends PageBase {
 	 */
 	@Command
 	String login(InputEvent event) {
-
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			/**手机号码*/
-			String mobileNum = mobileNumField.getValue();
-			/**密 码*/
-			String password = passwordField.getValue();
-			
-			if (log.isDebugEnabled()) {
-				log.debug("login:mobileNum"+mobileNum);
-				log.debug("login:password"+password);
-			}
-			if(usrService != null)
-				usrService.login(mobileNum, password);
-		}
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 
@@ -77,37 +60,6 @@ public abstract class UserLoginPage extends PageBase {
 		}
 		return null;
 	}
-
-	/**
-	 * 手机号码编辑框
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName="mnTextChanged")
-	String mnTextChanged(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String mobileNum = (String) event.getProperty("changedText");
-			mobileNumField.setValue(mobileNum);
-		}
-		return null;
-	}
-
-	
-	/**
-	 * 密码编辑框
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName="pswTextChanged")
-	String pswTextChanged(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String password = (String) event.getProperty("changedText");
-			passwordField.setValue(password);
-		}
-		return null;
-	}
-	
 	
 	/**
 	 * 找回密码
@@ -124,7 +76,6 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-
 	@Command(commandName="quickRegister", navigations={@Navigation(on="OK", showPage="userRegPage")})
 	String quickRegister(InputEvent event) {
 		return "OK";
