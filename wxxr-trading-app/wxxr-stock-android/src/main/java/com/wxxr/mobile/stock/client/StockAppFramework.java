@@ -33,6 +33,10 @@ import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
+import com.wxxr.mobile.stock.client.mock.MockArticleManagementService;
+import com.wxxr.mobile.stock.client.mock.MockInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.mock.MockTradingManagementService;
+import com.wxxr.mobile.stock.client.mock.MockUserManagementService;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 
 /**
@@ -92,11 +96,20 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
 		registerKernelModule(new WorkbenchManagerModule());
 		// register service
-		registerKernelModule(new URLLocatorManagementServiceImpl());
-		registerKernelModule(new ArticleManagementServiceImpl());//
-		registerKernelModule(new UserManagementServiceImpl());
-		registerKernelModule(new TradingManagementServiceImpl());
-		registerKernelModule(new InfoCenterManagementServiceImpl());
+		if (context.getApplication().isInDebugMode()) {
+			registerKernelModule(new URLLocatorManagementServiceImpl());
+			registerKernelModule(new MockArticleManagementService());//
+			registerKernelModule(new MockUserManagementService());
+			registerKernelModule(new MockTradingManagementService());
+			registerKernelModule(new MockInfoCenterManagementService());
+		}else{
+			registerKernelModule(new URLLocatorManagementServiceImpl());
+			registerKernelModule(new ArticleManagementServiceImpl());//
+			registerKernelModule(new UserManagementServiceImpl());
+			registerKernelModule(new TradingManagementServiceImpl());
+			registerKernelModule(new InfoCenterManagementServiceImpl());
+		}
+		
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
