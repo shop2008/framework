@@ -235,7 +235,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 				nav = findMatchNavigation(clazzName, navigationInfos);
 				if(nav != null){
 					break;
-				}else if("Exception".equals(clazzName)){
+				}else if("Throwable".equals(clazzName)){
 					break;
 				}else{
 					clazz = clazz.getSuperclass();
