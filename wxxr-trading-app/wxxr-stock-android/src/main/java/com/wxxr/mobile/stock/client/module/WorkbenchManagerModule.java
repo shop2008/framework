@@ -18,6 +18,8 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
+import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
@@ -27,6 +29,8 @@ import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
+import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
+import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
@@ -47,6 +51,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, TextSpinnerView.class, new TextSpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshView.class, new RefreshViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
+		mgr.registerFieldBinder(UIComponent.class, ArticleBodyView.class, new ArticleBodyFieldBinder());
 	}
 
 	@Override
@@ -54,11 +59,13 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("TopRefresh", new RefreshEventBinder());
 		mgr.registerFieldBinder("BottomRefresh", new RefreshEventBinder());
 		mgr.registerFieldBinder(InputEvent.EVENT_TYPE_TEXT_CHANGED, new TextChangedEventBinder());
+		mgr.registerFieldBinder("HideDialog", new HideProgressEventBinder());
 	}
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
 		Pull2RefreshViewKeys.registerKeys(mgr);
+		ArticleBodyViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 	}
 
