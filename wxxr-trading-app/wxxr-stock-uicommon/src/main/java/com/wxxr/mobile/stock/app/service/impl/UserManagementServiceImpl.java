@@ -535,4 +535,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return this.loginCallback;
 	}
 
+	@Override
+	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
+			boolean virtual) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PersonalHomePageBean getMoreOtherPersonal(String userId, int start,
+			int limit, boolean virtual) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
