@@ -171,6 +171,9 @@ public class TradingManagementServiceImpl extends
 	@Override
 	//赚钱榜
 	public RankListBean getEarnRank(final int start, final int limit) {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
+		}
 		List<HomePageVO> volist = null;
 		try {
 			volist = fetchDataFromServer(new Callable<List<HomePageVO>>() {
@@ -205,10 +208,10 @@ public class TradingManagementServiceImpl extends
 	}
 
 	public RankListBean getTMegagameRank() throws StockAppBizException {
-		/*if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			rank.setTRankBeans(MockDataUtils.mockRankData("T"));
 			return rank;
-		}*/
+		}
 		try {
 			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
 				public List<MegagameRankVO> call() throws Exception {
@@ -241,10 +244,10 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public RankListBean getT1MegagameRank() throws StockAppBizException {
-		/*if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			rank.setT1RankBeans(MockDataUtils.mockRankData("T1"));
 			return rank;
-		}*/
+		}
 		try {
 			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
 				public List<MegagameRankVO> call() throws Exception {
@@ -277,10 +280,10 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public RankListBean getRegularTicketRank() throws StockAppBizException {
-	/*	if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			rank.setRegularTicketBeans(MockDataUtils.mockRegularTicketRank());
 			return rank;
-		}*/
+		}
 		try {
 			List<RegularTicketVO> volist = fetchDataFromServer(new Callable<List<RegularTicketVO>>() {
 				public List<RegularTicketVO> call() throws Exception {
@@ -313,10 +316,10 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public RankListBean getWeekRank() throws StockAppBizException {
-		/*if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			rank.setWeekRanKBeans(MockDataUtils.mockWeekRank());
 			return rank;
-		}*/
+		}
 		try {
 			List<WeekRankVO> volist = fetchDataFromServer(new Callable<List<WeekRankVO>>() {
 				public List<WeekRankVO> call() throws Exception {
@@ -451,14 +454,14 @@ public class TradingManagementServiceImpl extends
 	
 	@Override
 	public DealDetailBean getDealDetail(final String acctID) {
-		/*if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			dealDetailBean.setFund("10万");
 			dealDetailBean.setPlRisk(0.001f);
 			dealDetailBean.setUserGain(1000);
 			dealDetailBean.setImgUrl(new String[] { "#" });
 			dealDetailBean.setTradingRecords(MockDataUtils.mockTradingRecord());
 			return dealDetailBean;
-		}*/
+		}
 		try {
 			DealDetailVO vo = fetchDataFromServer(new Callable<DealDetailVO>() {
 				public DealDetailVO call() throws Exception {
@@ -499,7 +502,7 @@ public class TradingManagementServiceImpl extends
 	}
 	
 	public AuditDetailBean getAuditDetail(final String acctId) {
-		/*if (context.getApplication().isInDebugMode()) {
+		if (context.getApplication().isInDebugMode()) {
 			log.info("getAuditDetail: accid= " + acctId);
 			auditDetailBean.setAccountPay("122.3");
 			auditDetailBean.setBuyDay("2013-11-12");
@@ -509,7 +512,7 @@ public class TradingManagementServiceImpl extends
 			auditDetailBean.setFrozenAmount("0");
 			auditDetailBean.setFund("10万");
 			return auditDetailBean;
-		}*/
+		}
 		AuditDetailVO vo = null;
 		try {
 			vo = fetchDataFromServer(new Callable<AuditDetailVO>() {
@@ -568,6 +571,7 @@ public class TradingManagementServiceImpl extends
 							if (log.isDebugEnabled()) {
 								log.debug("Failed to create trading account, caused by "
 										+ vo.getCause());
+							
 							}
 							throw new StockAppBizException(vo.getCause());
 						}
