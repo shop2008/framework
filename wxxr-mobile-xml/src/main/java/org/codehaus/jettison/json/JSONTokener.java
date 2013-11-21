@@ -15,6 +15,8 @@ limitations under the License.
 */
 package org.codehaus.jettison.json;
 
+import com.wxxr.mobile.core.util.StringUtils;
+
 /**
  * A JSONTokener takes a source string and extracts characters and tokens from
  * it. It is used by the JSONObject and JSONArray constructors to parse
@@ -43,7 +45,11 @@ public class JSONTokener {
      */
     public JSONTokener(String s) {
         this.myIndex = 0;
-        this.mySource = s;
+        this.mySource = StringUtils.trimToNull(s);
+        if(s.startsWith("[") && s.endsWith("]")){
+        	this.mySource = "{"+s+"}";
+        }
+        
     }
 
 
