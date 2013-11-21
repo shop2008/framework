@@ -100,12 +100,4 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 		setAttribute(AttributeKeys.visible, true);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.common.ViewBase#show(boolean)
-	 */
-	@Override
-	public void show(boolean backable) {
-		this.show();
-	}
-
 }

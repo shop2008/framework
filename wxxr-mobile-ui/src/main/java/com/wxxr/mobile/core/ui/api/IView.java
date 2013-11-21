@@ -20,8 +20,16 @@ public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	
 	List<ValidationError> getErrors();
 	
-	void show(boolean backable);
-	
 	ISelectionProvider getSelectionProvider();
+	
+	IView setProperty(String name, Object value);
+	
+	Object getProperty(String name);
+	
+	String[] getPropertyNames();
+	
+	boolean hasProperty(String name);
+	
+	IView clearProperties();
 
 }

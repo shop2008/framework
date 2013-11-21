@@ -150,5 +150,24 @@ public abstract class PageBase extends ViewBase implements IPage {
 			this.toolbar = null;
 		}
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.ViewBase#show()
+	 */
+	@Override
+	public void show() {
+		getUIContext().getWorkbenchManager().getPageNavigator().showPage(this, null);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.ViewBase#hide()
+	 */
+	@Override
+	public void hide() {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+	}
 	
 }

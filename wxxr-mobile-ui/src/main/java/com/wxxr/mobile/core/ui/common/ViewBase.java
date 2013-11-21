@@ -212,6 +212,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	};
 	private IViewBinding binding;
 	private Map<String, IUICommandHandler> commands;
+	private Map<String, Object> properties;
 //	private EventQueue eventQueue;
 	private IMenuCallback menuCallback;
 	private ELManager elm;
@@ -257,7 +258,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 
 	public void show(){
-		this.show(true);
+		getUIContext().getWorkbenchManager().getPageNavigator().showView(this);
 	}
 
 	public ELManager getELManager(boolean createIfNotExisting){
@@ -359,10 +360,6 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.evaluators.remove(evaluator);
 		}
 		return this;
-	}
-
-	public void show(boolean backable) {
-		getUIContext().getWorkbenchManager().getPageNavigator().showView(this,backable);
 	}
 
 	public void hide() {
@@ -639,6 +636,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		return this.selectionProvider;
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.common.UIContainer#destroy()
@@ -647,6 +646,56 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	public void destroy() {
 		onDestroy();
 		super.destroy();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#setProperty(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public IView setProperty(String name, Object value) {
+		if((name == null)||(value == null)){
+			throw new IllegalArgumentException("Property name and value cannot be NULL !");
+		}
+		if(this.properties == null){
+			this.properties = new HashMap<String, Object>();
+		}
+		this.properties.put(name, value);
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#getProperty(java.lang.String)
+	 */
+	@Override
+	public Object getProperty(String name) {
+		return this.properties != null ? this.properties.get(name) : null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#getPropertyNames()
+	 */
+	@Override
+	public String[] getPropertyNames() {
+		return this.properties != null ? this.properties.keySet().toArray(new String[0]) : null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#hasProperty(java.lang.String)
+	 */
+	@Override
+	public boolean hasProperty(String name) {
+		return this.properties != null && this.properties.containsKey(name);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IView#clearProperties()
+	 */
+	@Override
+	public IView clearProperties() {
+		if(this.properties != null){
+			this.properties.clear();
+		}
+		return this ;
 	}	
 
 

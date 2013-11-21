@@ -265,14 +265,6 @@ public class ViewReference implements IViewReference {
 	}
 
 	/**
-	 * @param backable
-	 * @see com.wxxr.mobile.core.ui.api.IView#show(boolean)
-	 */
-	public void show(boolean backable) {
-		delegate.show(backable);
-	}
-
-	/**
 	 * @param key
 	 * @param val
 	 * @return
@@ -291,5 +283,49 @@ public class ViewReference implements IViewReference {
 	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return delegate.getSelectionProvider();
+	}
+
+	/**
+	 * @param name
+	 * @param value
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IView#setProperty(java.lang.String, java.lang.Object)
+	 */
+	public IView setProperty(String name, Object value) {
+		return delegate.setProperty(name, value);
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IView#getProperty(java.lang.String)
+	 */
+	public Object getProperty(String name) {
+		return delegate.getProperty(name);
+	}
+
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IView#getPropertyNames()
+	 */
+	public String[] getPropertyNames() {
+		return delegate.getPropertyNames();
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IView#hasProperty(java.lang.String)
+	 */
+	public boolean hasProperty(String name) {
+		return delegate.hasProperty(name);
+	}
+
+	/**
+	 * @return
+	 * @see com.wxxr.mobile.core.ui.api.IView#clearProperties()
+	 */
+	public IView clearProperties() {
+		return delegate.clearProperties();
 	}	
 }

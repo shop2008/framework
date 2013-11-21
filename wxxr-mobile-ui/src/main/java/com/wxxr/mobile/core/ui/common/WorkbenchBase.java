@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IDialog;
@@ -80,10 +81,14 @@ public abstract class WorkbenchBase implements IWorkbench {
 				if(updater != null){
 					params = new HashMap<String, Object>(params);
 					updater.updateModel(params);
+				}else{
+					for (Entry<String, Object> entry : params.entrySet()) {
+						page.setProperty(entry.getKey(), entry.getValue());
+					}
 				}
 			}
 			IPageNavigator nav = this.uiContext.getWorkbenchManager().getPageNavigator();
-			nav.showPage(page,params,callback);
+			nav.showPage(page,callback);
 //			this.activePageId = nav.getCurrentActivePage() != null ? nav.getCurrentActivePage().getName() : null;
 		}
 	}

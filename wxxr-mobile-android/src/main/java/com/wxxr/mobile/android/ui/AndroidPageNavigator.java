@@ -8,20 +8,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
@@ -67,15 +64,15 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#showPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
-	public void showPage(IPage page,Map<String, Object> params,IPageCallback cb) {
+	public void showPage(IPage page,IPageCallback cb) {
 		Application app = AppUtils.getFramework().getAndroidApplication();
 		Activity activity = getCurrentActivity();
 		String pageId = page.getName();
 		Class<?> activityClass = getActivityClass(pageId);
-		IModelUpdater updater = page.getAdaptor(IModelUpdater.class);
-		if(updater != null){
-			updater.updateModel(params);
-		}
+//		IModelUpdater updater = page.getAdaptor(IModelUpdater.class);
+//		if(updater != null){
+//			updater.updateModel(params);
+//		}
 		Intent intent;
 		if(activity != null) {
 			intent = new Intent(activity, activityClass);
@@ -84,14 +81,14 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
 		initShowPageIntent(page,intent);
-		if(params != null){
-			for (Entry<String, Object> entry : params.entrySet()) {
-				String key = entry.getKey();
-				Object val = entry.getValue();
+		String[] params = page.getPropertyNames();
+		if((params != null)&&(params.length > 0)){
+			for (String key : params) {
+				Object val = page.getProperty(key);
 				if(PARAM_KEY_INTENT_FLAG.equals(key)){
 					intent.addFlags(Integer.parseInt((String)val));
-				}else{
-					add2Intent(intent,key,val);
+				}else if(key.startsWith(IAndroidPageNavigator.PARAM_KEY_INTENT_PREFIX)){
+					add2Intent(intent,key.substring(IAndroidPageNavigator.PARAM_KEY_INTENT_PREFIX.length()),val);
 				}
 			}
 		}
@@ -271,11 +268,13 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 
 	@Override
-	public void showView(final IView view, final boolean add2BackStack) {
+	public void showView(final IView view) {
 		IPage page = getPage(view);
 		IBindableActivity activity = this.activeActivities.get(page.getName());
+		Object val = view.getProperty(IAndroidPageNavigator.PARAM_KEY_ADD2BACKSTACK);
+		final boolean not2BackStack = "false".equalsIgnoreCase(String.valueOf(val));
 		if(activity != null){
-			hideOrShowView(view,add2BackStack, true);
+			hideOrShowView(view,(not2BackStack == false), true);
 		}else{
 			 IPageCallback cb = new IPageCallback() {
 				
@@ -286,7 +285,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 						
 						@Override
 						public void run() {
-							hideOrShowView(view, add2BackStack,true);							
+							hideOrShowView(view, (not2BackStack == false),true);							
 						}
 					});
 					
@@ -307,7 +306,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 					
 				}
 			};
-			showPage(page, null, cb);
+			showPage(page, cb);
 		}
 	}
 
