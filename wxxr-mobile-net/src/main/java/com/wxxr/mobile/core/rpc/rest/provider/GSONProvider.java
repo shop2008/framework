@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +27,7 @@ import com.wxxr.javax.ws.rs.core.StreamingOutput;
 import com.wxxr.javax.ws.rs.ext.Provider;
 import com.wxxr.mobile.core.rpc.rest.ReaderException;
 import com.wxxr.mobile.core.rpc.rest.WriterException;
-import com.wxxr.mobile.core.rpc.util.MarshallerClassRegistry;
+import com.wxxr.mobile.core.util.Types;
 
 /**
  * Provider for GSon &lt;-> Object marshalling. Uses the following mime types:
@@ -50,7 +52,6 @@ public class GSONProvider extends AbstractEntityProvider<List<?>> {
 	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
 		return isValidType(type);
 	}
-
 	private Gson buildGson(){
 		return new GsonBuilder()
 		// .excludeFieldsWithoutExposeAnnotation()
@@ -93,6 +94,14 @@ public class GSONProvider extends AbstractEntityProvider<List<?>> {
 			Annotation[] annotations, MediaType mediaType,
 			MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
 			throws IOException, WebApplicationException {
+		if (!(genericType instanceof ParameterizedType))
+			throw new IllegalArgumentException("Reader = " + this
+					+ " recived genericType = " + genericType
+					+ ", but it is not instance of " + ParameterizedType.class);
+
+		ParameterizedType param = (ParameterizedType) genericType;
+		Type baseType = param.getActualTypeArguments()[0];
+		Class<?> rawType = Types.getRawType(baseType);
 		try {
 			if (gson == null) {
 				gson = buildGson();
@@ -105,15 +114,13 @@ public class GSONProvider extends AbstractEntityProvider<List<?>> {
 					if (object instanceof Map) {
 						Map<String,Map> map = (Map)object;
 						for (Map.Entry<String,Map> item : map.entrySet()) {
-							Class clazz = MarshallerClassRegistry.getType(item.getKey());
-							if (clazz!=null) {
-								Object obj = gson.fromJson(gson.toJson(item.getValue()), TypeToken.get(clazz).getType());
-								System.out.println(obj);
+							if (rawType!=null) {
+								Object obj = gson.fromJson(gson.toJson(item.getValue()), TypeToken.get(rawType).getType());
 								result.add(obj);
 							}
-							
-						}
-						
+						}						
+					}else if (!(object instanceof Collection)) {
+						result.add(object);
 					}
 				}
 			}
@@ -144,13 +151,10 @@ public class GSONProvider extends AbstractEntityProvider<List<?>> {
 				gson = buildGson();
 			}
 			String jsonString = gson.toJson(t);
-			/*if (logger.isDebugEnabled()) {
-				logger.debug("write to jsonString:"+jsonString);
-			}*/
+		
 			entityStream.write(jsonString.getBytes());
 
 		} catch (Exception e) {
-			//logger.debug("Failed to encode json for object: {0}", t.toString());
 			throw new WriterException(e);
 		}
 
