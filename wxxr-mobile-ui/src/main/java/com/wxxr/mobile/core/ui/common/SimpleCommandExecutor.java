@@ -138,7 +138,8 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 						params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, command);
 					}
 				}
-				final IDialog dialog = context.getWorkbenchManager().getWorkbench().createDialog(message, params);
+				params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE, message);
+				final IDialog dialog = context.getWorkbenchManager().getWorkbench().createDialog(UIConstants.MESSAGE_BOX_ID, params);
 				dialog.show();
 				Object val = params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED);
 				int autoCloseInSeconds = -1;
