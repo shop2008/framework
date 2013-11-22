@@ -398,7 +398,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 						@Override
 						public void onShow(String menuName) {
 							onMenuShow(menuName);
-							forceValueEvalution();
+//							forceValueEvalution();
 						}
 
 						@Override
