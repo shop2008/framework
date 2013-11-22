@@ -57,6 +57,12 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :left was clicked !");
 			}
+			rightMenu.hide();
+			if(leftMenu.isOnShow()){
+				leftMenu.hide();
+			}else{
+				leftMenu.show();
+			}
 		return null;
 	}
 	
@@ -68,6 +74,12 @@ public abstract class HomePage extends PageBase {
 	String toolbarClickedRight(InputEvent event){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :right was clicked !");
+			}
+			leftMenu.hide();
+			if(rightMenu.isOnShow()){
+				rightMenu.hide();
+			}else{
+				rightMenu.show();
 			}
 		return null;
 	}
