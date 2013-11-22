@@ -99,9 +99,12 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
 		registerKernelModule(new WorkbenchManagerModule());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
+		
 		// register service
 		registerKernelModule(new NetworkCheckServiceImpl());
+		registerKernelModule(new URLLocatorManagementServiceImpl());
 		if (context.getApplication().isInDebugMode()) {
+			registerKernelModule(new MockArticleManagementService());
 			registerKernelModule(new MockUserManagementService());
 			registerKernelModule(new MockTradingManagementService());
 			registerKernelModule(new MockInfoCenterManagementService());
