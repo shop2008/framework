@@ -37,7 +37,9 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public static final String LIST_HEADER_VIEW_ID = "headerViewId";
 	private GenericListAdapter listAdapter;
 	private IListDataProvider provider;
-
+	private IBinding<IView> headerBinding;
+	private IBinding<IView> footerBinding;
+	
 	public AdapterViewFieldBinding(IAndroidBindingContext ctx,
 			String fieldName, Map<String, String> attrSet) {
 		super(ctx, fieldName, attrSet);
@@ -72,22 +74,20 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 					&& ((ListView) list).getHeaderViewsCount() == 0) {
 				IViewDescriptor v = mgr.getViewDescriptor(headerViewId);
 				View view = createUI(v);
-				@SuppressWarnings("unchecked")
-				IBinding<IView> binding = (IBinding<IView>) view.getTag();
+				headerBinding = (IBinding<IView>) view.getTag();
 				IView vModel = v.createPresentationModel(c);
 				vModel.init(c);
-				binding.activate(vModel);
+				headerBinding.activate(vModel);
 				((ListView) getUIControl()).addHeaderView(view);
 			}
 			if (footerViewId != null
 					&& ((ListView) list).getFooterViewsCount() == 0) {
 				IViewDescriptor v = mgr.getViewDescriptor(footerViewId);
 				View view = createUI(v);
-				@SuppressWarnings("unchecked")
-				IBinding<IView> binding = (IBinding<IView>) view.getTag();
+				footerBinding = (IBinding<IView>) view.getTag();
 				IView vModel = v.createPresentationModel(c);
 				vModel.init(c);
-				binding.activate(vModel);
+				footerBinding.activate(vModel);
 				((ListView) getUIControl()).addFooterView(view);
 			}
 		}
@@ -199,6 +199,23 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter = null;
 		}
 		super.deactivate();
+		Object list = getUIControl();
+		if(headerBinding != null) {
+			View headerView = (View) headerBinding.getUIControl();
+			if (list instanceof ListView) {
+				((ListView)list).removeHeaderView(headerView);
+			}
+			headerBinding.deactivate();
+			headerBinding = null;
+		}
+		if(footerBinding != null) {
+			View footerView = (View) footerBinding.getUIControl();
+			if (list instanceof ListView) {
+				((ListView)list).removeFooterView(footerView);
+			}
+			footerBinding.deactivate();
+			footerBinding = null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -210,6 +227,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter.notifyDataSetChanged();
 		}
 		super.notifyDataChanged(events);
+		if(headerBinding != null) {
+			headerBinding.notifyDataChanged(events);
+		}
+		if(footerBinding != null) {
+			footerBinding.notifyDataChanged(events);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -221,6 +244,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter.notifyDataSetChanged();
 		}
 		super.refresh();
+		if(headerBinding != null) {
+			headerBinding.refresh();
+		}
+		if(footerBinding != null) {
+			footerBinding.refresh();
+		}
 	}
 
 	/* (non-Javadoc)
