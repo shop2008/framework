@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.ExecAsyncException;
+import com.wxxr.mobile.core.ui.api.IAsyncCallback;
 import com.wxxr.mobile.core.ui.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -52,6 +53,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.IUICommandHandler, java.lang.Object[])
 	 */
 	public void executeCommand(final String cmdName,final IView view,final IUICommandHandler cmdHandler, final InputEvent event) {
+		final IAsyncCallback callback = event != null ? (IAsyncCallback)event.getProperty(InputEvent.PROPERTY_CALLBACK) : null;
 		IProgressGuard guard = cmdHandler.getProgressGuard();
 		if(guard != null){
 			if(log.isDebugEnabled()){
@@ -65,11 +67,17 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 					CommandResult result = new CommandResult();
 					result.setResult("failed");
 					result.setPayload(cause);
+					if(callback != null){
+						callback.failed(cause);
+					}
 					processCommandResult(view, cmdHandler, result);
 				}
 				
 				@Override
 				protected void handleDone(Object returnVal) {
+					if(callback != null){
+						callback.success(returnVal);
+					}
 					processCommandResult(view, cmdHandler, returnVal);
 				}
 			};
@@ -93,6 +101,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			Object cmdResult = null;
 			try {
 				cmdResult = cmdHandler.execute(event);
+				if(callback != null){
+					callback.success(cmdResult);
+				}
 			}catch(ExecAsyncException e){
 				final IAsyncTaskControl taskControl = e.getTaskControl();
 				final ICancellable cancellable = taskControl.getCancellable();
@@ -104,6 +115,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 						CommandResult result = new CommandResult();
 						result.setResult("failed");
 						result.setPayload(cause);
+						if(callback != null){
+							callback.failed(cause);
+						}
 						taskControl.unregisterProgressMonitor(this);
 						processCommandResult(view, cmdHandler, result);
 					}
@@ -111,6 +125,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 					@Override
 					protected void handleDone(Object returnVal) {
 						taskControl.unregisterProgressMonitor(this);
+						if(callback != null){
+							callback.success(returnVal);
+						}
 						processCommandResult(view, cmdHandler, returnVal);
 					}
 
@@ -122,6 +139,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 						taskControl.unregisterProgressMonitor(this);
 						if((cancellable != null)&&(!cancellable.isCancelled())){
 							cancellable.cancel();
+						}
+						if(callback != null){
+							callback.failed(null);
 						}
 					}
 				};
@@ -138,6 +158,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 				result.setResult("failed");
 				result.setPayload(t);
 				cmdResult = result;
+				if(callback != null){
+					callback.failed(t);
+				}
 			}
 			processCommandResult(view, cmdHandler, cmdResult);
 		}

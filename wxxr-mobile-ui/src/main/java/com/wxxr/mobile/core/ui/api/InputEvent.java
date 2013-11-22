@@ -8,6 +8,8 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface InputEvent {
+	String PROPERTY_CALLBACK = "Callback";	// value of this property must be type of IAsyncCallback
+	
 	String EVENT_TYPE_CLICK = "Click";
 	String EVENT_TYPE_ITEM_CLICK = "ItemClick";
 	String EVENT_TYPE_LONGCLICK = "LongClick";
