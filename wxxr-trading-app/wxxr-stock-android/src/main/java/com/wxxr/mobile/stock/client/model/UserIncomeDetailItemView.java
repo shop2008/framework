@@ -16,6 +16,8 @@ import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.income_details_item_layout")
 public abstract class UserIncomeDetailItemView extends ViewBase implements IModelUpdater {
 
+	
+	
 	@Field(valueKey = "text", binding="${detailBean!=null?detailBean.tradeCatagory:'---'}")
 	String incomeCatagory;
 
