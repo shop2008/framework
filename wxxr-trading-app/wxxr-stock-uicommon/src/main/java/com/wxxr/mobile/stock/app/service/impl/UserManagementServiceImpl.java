@@ -38,6 +38,7 @@ import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
+import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
@@ -66,12 +67,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindMobileBean bindMobile = new BindMobileBean();
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
-	private PersonalHomePageBean myPersonalHomePageBean = new PersonalHomePageBean();
+	
 	private TradeDetailListBean myTradeDetails = new TradeDetailListBean();
-	/**
-	 * 他人主页
-	 */
-	private PersonalHomePageBean otherPBean = new PersonalHomePageBean();
 	/**
 	 * 个人主页
 	 */
@@ -190,14 +187,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public void login(final String userId, final String pwd) throws LoginFailedException {
 		Future<?> future = context.getExecutor().submit(new Runnable() {
-			
 			@Override
 			public void run() {
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
 						userId, pwd);
 				try {
-					UserVO vo = context.getService(IRestProxyService.class)
-							.getRestService(StockUserResource.class).getUser();
+					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
 					myUserInfo = new UserBean();
 					myUserInfo.setNickName(vo.getNickName());
 					myUserInfo.setUsername(vo.getUserName());
@@ -445,66 +440,202 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			myTradeDetails = MockDataUtils.mockTradeDetails();
 			return myTradeDetails;
 		}
+		
+		//getRestService(TradingResourse.class).get
 		return null;
 	}
 
 	@Override
-	public PersonalHomePageBean getOtherPersonalHomePage(String userId) {
-		context.invokeLater(new Runnable() {
-			public void run() {
-				//getService(IRestProxyService.class).getRestService(TradingResourse.class)
-				
+	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
+		PersonalHomePageBean otherPBean= null;
+		/*PersonalHomePageVO vo = null;
+		try {
+			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
+				public PersonalHomePageVO call() throws Exception {
+					try {
+						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
+					} catch (Throwable e) {
+						log.warn("Failed to fetch personal home page",e);
+						throw new StockAppBizException("网络不给力，请稍后再试");
+					}
+				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch personal home page",e);
+		}
+		if (vo!=null) {
+			otherPBean = new PersonalHomePageBean();
+			otherPBean.setActualCount(vo.getActualCount());
+			otherPBean.setVirtualCount(vo.getVirtualCount());
+			otherPBean.setTotalProfit(vo.getTotalProfit());
+			otherPBean.setVoucherVol(vo.getVoucherVol());
+			List<GainVO> volist = vo.getActualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setActualList(bean_list);
 			}
-		}, 1, TimeUnit.SECONDS);
+			volist = vo.getVirtualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setVirtualList(bean_list);
+			}
+		}*/
 		return otherPBean;
 	}
 	
 	
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
-		
-		if (context.getApplication().isInDebugMode()) {
-			myPersonalHomePageBean = MockDataUtils.mockPersonalHome();
-			return myPersonalHomePageBean;
-		}
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PersonalHomePageVO vo = getRestService(TradingResourse.class).getSelfHomePage();
-					if (vo!=null) {
-						myPBean.setActualCount(vo.getActualCount());
-						myPBean.setVirtualCount(vo.getVirtualCount());
-						myPBean.setTotalProfit(vo.getTotalProfit());
-						myPBean.setVoucherVol(vo.getVoucherVol());
-						List<GainVO> volist = vo.getActualList();
-						if (volist!=null&&volist.size()>0) {
-							List<GainBean> bean_list = new ArrayList<GainBean>(); 
-							for (GainVO acVO : volist) {
-								bean_list.add(ConverterUtils.fromVO(acVO));
-							}
-							myPBean.setActualList(bean_list);
-						}
-						volist = vo.getVirtualList();
-						if (volist!=null&&volist.size()>0) {
-							List<GainBean> bean_list = new ArrayList<GainBean>(); 
-							for (GainVO acVO : volist) {
-								bean_list.add(ConverterUtils.fromVO(acVO));
-							}
-							myPBean.setVirtualList(bean_list);
-						}
+		PersonalHomePageVO vo = null;
+		try {
+			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
+				public PersonalHomePageVO call() throws Exception {
+					try {
+						return getRestService(TradingResourse.class).getSelfHomePage();
+					} catch (Throwable e) {
+						log.warn("Failed to fetch personal home page",e);
+						throw new StockAppBizException("网络不给力，请稍后再试");
 					}
-					
-				} catch (Throwable e) {
-					log.warn("Failed to fetch personal home page",e);
-					throw new StockAppBizException("网络不给力，请稍后再试");
 				}
-				
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch personal home page",e);
+		}
+		if (vo!=null) {
+			myPBean.setActualCount(vo.getActualCount());
+			myPBean.setVirtualCount(vo.getVirtualCount());
+			myPBean.setTotalProfit(vo.getTotalProfit());
+			myPBean.setVoucherVol(vo.getVoucherVol());
+			List<GainVO> volist = vo.getActualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				myPBean.setActualList(bean_list);
 			}
-		}, 1, TimeUnit.SECONDS);
+			volist = vo.getVirtualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				myPBean.setVirtualList(bean_list);
+			}
+		}
 		return myPBean;
 	}
-	
-	private <T> T getRestService(Class<T> restResouce){
-		return getService(IRestProxyService.class).getRestService(restResouce);
+	@Override
+	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
+			boolean virtual) {
+		PersonalHomePageBean otherPBean= null;
+		/*PersonalHomePageVO vo = null;
+		try {
+			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
+				public PersonalHomePageVO call() throws Exception {
+					try {
+						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
+					} catch (Throwable e) {
+						log.warn("Failed to fetch personal home page",e);
+						throw new StockAppBizException("网络不给力，请稍后再试");
+					}
+				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch personal home page",e);
+		}
+		if (vo!=null) {
+			otherPBean = new PersonalHomePageBean();
+			otherPBean.setActualCount(vo.getActualCount());
+			otherPBean.setVirtualCount(vo.getVirtualCount());
+			otherPBean.setTotalProfit(vo.getTotalProfit());
+			otherPBean.setVoucherVol(vo.getVoucherVol());
+			List<GainVO> volist = vo.getActualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setActualList(bean_list);
+			}
+			volist = vo.getVirtualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setVirtualList(bean_list);
+			}
+		}*/
+		return otherPBean;
 	}
+
+	@Override
+	public PersonalHomePageBean getMoreOtherPersonal(String userId, int start,
+			int limit, boolean virtual) {
+		PersonalHomePageBean otherPBean= null;
+		/*PersonalHomePageVO vo = null;
+		try {
+			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
+				public PersonalHomePageVO call() throws Exception {
+					try {
+						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
+					} catch (Throwable e) {
+						log.warn("Failed to fetch personal home page",e);
+						throw new StockAppBizException("网络不给力，请稍后再试");
+					}
+				}
+			});
+		} catch (Exception e) {
+			log.warn("Failed to fetch personal home page",e);
+		}
+		if (vo!=null) {
+			otherPBean = new PersonalHomePageBean();
+			otherPBean.setActualCount(vo.getActualCount());
+			otherPBean.setVirtualCount(vo.getVirtualCount());
+			otherPBean.setTotalProfit(vo.getTotalProfit());
+			otherPBean.setVoucherVol(vo.getVoucherVol());
+			List<GainVO> volist = vo.getActualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setActualList(bean_list);
+			}
+			volist = vo.getVirtualList();
+			if (volist!=null&&volist.size()>0) {
+				List<GainBean> bean_list = new ArrayList<GainBean>(); 
+				for (GainVO acVO : volist) {
+					bean_list.add(ConverterUtils.fromVO(acVO));
+				}
+				otherPBean.setVirtualList(bean_list);
+			}
+		}*/
+		return otherPBean;
+	}
+	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
+		Future<T> future = context.getExecutor().submit(task);
+		T result = null;
+		try {
+			result = future.get();
+			return result;
+		} catch (Exception e) {
+			log.warn("Error when fetching data from server", e);
+			throw e;
+		}
+	}
+
+	private <T> T getRestService(Class<T> restResouce) {
+		return context.getService(IRestProxyService.class).getRestService(
+				restResouce);
+	}
+
+
 }
