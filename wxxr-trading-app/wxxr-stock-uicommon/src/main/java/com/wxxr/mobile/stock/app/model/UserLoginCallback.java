@@ -46,6 +46,16 @@ public class UserLoginCallback {
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
+	
+	public void clear() {
+		this.userName = null;
+		this.password = null;
+	}
+	
+	public synchronized void done(boolean cancelled){
+		this.cancelled = cancelled;
+		notifyAll();
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
