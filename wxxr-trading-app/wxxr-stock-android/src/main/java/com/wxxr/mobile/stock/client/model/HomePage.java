@@ -57,12 +57,6 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :left was clicked !");
 			}
-			rightMenu.hide();
-			if(leftMenu.isOnShow()){
-				leftMenu.hide();
-			}else{
-				leftMenu.show();
-			}
 		return null;
 	}
 	
@@ -74,12 +68,6 @@ public abstract class HomePage extends PageBase {
 	String toolbarClickedRight(InputEvent event){
 			if(log.isDebugEnabled()){
 				log.debug("Toolbar item :right was clicked !");
-			}
-			leftMenu.hide();
-			if(rightMenu.isOnShow()){
-				rightMenu.hide();
-			}else{
-				rightMenu.show();
 			}
 		return null;
 	}
@@ -125,14 +113,6 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
 			}
-			if(leftMenu.isOnShow()){
-				leftMenu.hide();
-			}
-//			String title = ((UICommand)rightMenu.getCommand(name)).getAttribute(AttributeKeys.title);
-//			IStockAppToolbar tool = ((IStockAppToolbar)getAppToolbar());
-//			if(tool != null){
-//				tool.setTitle(title, null);
-//			}
 			if("page4".equals(name)){
 				try {
 					Thread.sleep(5000L);
@@ -170,9 +150,6 @@ public abstract class HomePage extends PageBase {
 			String name = ((IUICommand)event.getProperty("ItemClicked")).getName();
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
-			}
-			if(rightMenu.isOnShow()){
-				rightMenu.hide();
 			}
 			return name;
 		}
