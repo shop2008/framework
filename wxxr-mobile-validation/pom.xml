@@ -7,11 +7,11 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>wxxr-mobile-validation</name>
-	
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1</platform.version>
-    </properties>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<platform.version>2.2.1</platform.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -20,23 +20,29 @@
 			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.wxxr.mobile</groupId>
-            <artifactId>wxxr-mobile-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-            <version>5.8</version>
-            <classifier>jdk15</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.easymock</groupId>
-          <artifactId>easymock</artifactId>
-          <scope>test</scope>
-          <version>3.0</version>
-        </dependency>        
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.jtype</groupId>
+			<artifactId>jtype</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+			<version>5.8</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<scope>test</scope>
+			<version>3.0</version>
+		</dependency>
 	</dependencies>
 </project>
