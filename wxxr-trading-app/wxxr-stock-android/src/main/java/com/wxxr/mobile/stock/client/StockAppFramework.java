@@ -19,6 +19,8 @@ import com.wxxr.mobile.android.network.NetworkManagementModule;
 import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.android.preference.PreferenceManagerModule;
 import com.wxxr.mobile.android.security.DummySiteSecurityModule;
+import com.wxxr.mobile.android.ui.module.AndroidI10NServiceModule;
+import com.wxxr.mobile.android.validation.ValidationMessageInterpolator;
 import com.wxxr.mobile.core.event.api.EventRouterImpl;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -110,6 +112,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			registerKernelModule(new InfoCenterManagementServiceImpl());
 		}
 		
+		registerKernelModule(new AndroidI10NServiceModule<IStockAppContext>());
+		registerKernelModule(new ValidationMessageInterpolator<IStockAppContext>());
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
