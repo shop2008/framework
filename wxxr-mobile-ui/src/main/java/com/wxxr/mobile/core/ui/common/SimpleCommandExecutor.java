@@ -18,6 +18,8 @@ import com.wxxr.mobile.core.i10n.api.IMessageI10NService;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.ExecAsyncException;
+import com.wxxr.mobile.core.ui.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -32,6 +34,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.UIConstants;
+import com.wxxr.mobile.core.util.ICancellable;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -79,13 +82,56 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			monitor.executeOnMonitor(new Callable<Object>() {			
 				@Override
 				public Object call() throws Exception {
-					return cmdHandler.execute(event);
+					try {
+						return cmdHandler.execute(event);
+					}catch(ExecAsyncException e){
+						return e.getTaskControl().getFuture().get();
+					}
 				}
 			});
 		}else{
 			Object cmdResult = null;
 			try {
 				cmdResult = cmdHandler.execute(event);
+			}catch(ExecAsyncException e){
+				final IAsyncTaskControl taskControl = e.getTaskControl();
+				final ICancellable cancellable = taskControl.getCancellable();
+				InvocationMonitor monitor = new InvocationMonitor(context) {
+					
+					@Override
+					protected void handleFailed(Throwable cause) {
+						log.warn("Command :"+cmdName+" executed failed", cause);
+						CommandResult result = new CommandResult();
+						result.setResult("failed");
+						result.setPayload(cause);
+						taskControl.unregisterProgressMonitor(this);
+						processCommandResult(view, cmdHandler, result);
+					}
+					
+					@Override
+					protected void handleDone(Object returnVal) {
+						taskControl.unregisterProgressMonitor(this);
+						processCommandResult(view, cmdHandler, returnVal);
+					}
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.ui.common.InvocationMonitor#handleConceled(boolean)
+					 */
+					@Override
+					protected void handleConceled(boolean bool) {
+						taskControl.unregisterProgressMonitor(this);
+						if((cancellable != null)&&(!cancellable.isCancelled())){
+							cancellable.cancel();
+						}
+					}
+				};
+				
+				monitor.setCancellable(cancellable != null);
+				monitor.setMessage(e.getMessage());
+				monitor.setSilentPeriod(0);
+				monitor.setTitle(e.getTitle());
+				taskControl.registerProgressMonitor(monitor);
+				return;
 			}catch(Throwable t){
 				log.warn("Command :"+cmdName+" executed failed", t);
 				CommandResult result = new CommandResult();
