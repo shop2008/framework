@@ -53,7 +53,12 @@ public class AndroidI10NServiceModule<T extends IAndroidAppContext> extends Abst
 	}
 	
 	private String getAndroidString(String key) throws InvalidResourceIdException {
-		int resId = RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_STRING, key.replace('.', '_'));
+		Integer resId = null;
+		if(RUtils.isResourceIdURI(key)){
+			resId = RUtils.getInstance().getResourceIdByURI(key);
+		}else{
+			resId = RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_STRING, key.replace('.', '_'));
+		}
 		return context.getApplication().getAndroidApplication().getResources().getString(resId);
 	}
 
