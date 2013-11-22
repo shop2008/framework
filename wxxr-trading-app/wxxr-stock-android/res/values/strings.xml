@@ -262,6 +262,9 @@
     <string name="hint_new_psw">新密码</string>
     <string name="hint_retype_psw">重复新密码</string>
     
+    <!-- 用户登录界面 -->
+    <string name="login_failed_message">%m%n</string>
+    <string name="login_failed_title">登录失败</string>
     <!-- 设置界面 -->
     <string name="not_login_text">未登录</string>
     <!-- 联系我们 -->

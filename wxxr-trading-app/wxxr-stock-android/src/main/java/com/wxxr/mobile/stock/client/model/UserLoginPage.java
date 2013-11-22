@@ -46,9 +46,9 @@ public abstract class UserLoginPage extends PageBase {
 	 * @return null
 	 */
 	@Command(navigations={
-			@Navigation(on="LoginFailedException",message="登录失败,请稍后再试...",params={
+			@Navigation(on="LoginFailedException",message="resourceId:message/login_failed_message",params={
 					@Parameter(name="autoClosed",type=ValueType.INETGER,value="2"),
-					@Parameter(name="title",value="登录失败")
+					@Parameter(name="title",value="resourceId:message/login_failed_title")
 			})
 	})
 	@ExeGuard(title="登录中",message="正在登录，请稍候...",silentPeriod=1)
