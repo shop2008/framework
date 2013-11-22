@@ -4,14 +4,22 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.spi.LoggingEvent;
+
+import com.wxxr.mobile.core.i10n.api.IMessageI10NService;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IDialog;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -138,6 +146,19 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 						params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, command);
 					}
 				}
+				if(payload instanceof Throwable){
+					IMessageI10NService i10nService = this.context.getKernelContext().getService(IMessageI10NService.class);
+					if(i10nService != null){
+						message = i10nService.getMessageTemplate(message);
+					}
+					if(message.contains("%")){
+						try {
+							PatternLayout layout = new PatternLayout(message);
+							message = layout.format(new LoggingEvent(this.getClass().getCanonicalName(), Logger.getLogger(this.getClass()), Level.WARN, ((Throwable)payload).getMessage(), (Throwable)payload));
+						} catch (Throwable e) {
+						}
+					}
+				}
 				params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE, message);
 				final IDialog dialog = context.getWorkbenchManager().getWorkbench().createDialog(UIConstants.MESSAGE_BOX_ID, params);
 				dialog.show();
@@ -158,6 +179,22 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 							dialog.dismiss();
 						}
 					}, autoCloseInSeconds, autoCloseInSeconds > 100 ? TimeUnit.MILLISECONDS : TimeUnit.SECONDS);
+				}
+			}
+			if(!nextNavigation.keepMenuOpen()){
+				IUIContainer<?> parent = view;
+				while(parent != null){
+					if(parent instanceof IView){
+						List<IMenu> menus = ((IView)parent).getChildren(IMenu.class);
+						if(menus != null){
+							for (IMenu iMenu : menus) {
+								if(iMenu.isOnShow()){
+									iMenu.hide();
+								}
+							}
+						}
+					}
+					parent = parent.getParent();
 				}
 			}
 		}

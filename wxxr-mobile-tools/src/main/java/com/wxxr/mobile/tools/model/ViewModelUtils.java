@@ -838,6 +838,7 @@ public abstract class ViewModelUtils {
 						nModel.setToDialog(nav.showDialog());
 					}
 					nModel.setCloseCurrentView(nav.closeCurrentView());
+					nModel.setKeepMenuOpen(nav.keepMenuOpen());
 					Parameter[] params = nav.params();
 					if(params != null){
 						for (int i = 0; i < params.length; i++) {

@@ -236,6 +236,7 @@
     navDesc.setMessage("${nav.message}");
 #end
     navDesc.setCloseCurrentView(${nav.closeCurrentView});
+    navDesc.setKeepMenuOpen(${nav.keepMenuOpen});
 #if(${nav.params})
 #foreach($p in $nav.params)
     navDesc.addParameter("${p.name}","${p.value}");

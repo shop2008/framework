@@ -17,7 +17,7 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	
 	private String result,message,toView,toPage,toDialog;
 	private Map<String, Object> params;
-	private boolean closeCurrentView;
+	private boolean closeCurrentView,keepMenuOpen;
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.INavigationDescriptor#getParameters()
@@ -210,6 +210,28 @@ public class SimpleNavigationDescriptor implements INavigationDescriptor {
 	 */
 	public void setCloseCurrentView(boolean closeCurrentView) {
 		this.closeCurrentView = closeCurrentView;
+	}
+
+
+	/**
+	 * @return the keepMenuOpen
+	 */
+	public boolean isKeepMenuOpen() {
+		return keepMenuOpen;
+	}
+
+
+	/**
+	 * @param keepMenuOpen the keepMenuOpen to set
+	 */
+	public void setKeepMenuOpen(boolean keepMenuOpen) {
+		this.keepMenuOpen = keepMenuOpen;
+	}
+
+
+	@Override
+	public boolean keepMenuOpen() {
+		return this.keepMenuOpen;
 	}
 
 }

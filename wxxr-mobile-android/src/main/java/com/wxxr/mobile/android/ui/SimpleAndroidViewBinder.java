@@ -23,7 +23,7 @@ public class SimpleAndroidViewBinder implements IViewBinder {
 	@Override
 	public IViewBinding createBinding(IBindingContext context,
 			IBindingDescriptor descriptor) {
-		AndroidViewBinding androidViewBinding = new AndroidViewBinding(context,((IAndroidBindingDescriptor)descriptor).getBindingLayoutId());
+		AndroidViewBinding androidViewBinding = new AndroidViewBinding(context,((IAndroidBindingDescriptor)descriptor).getBindingLayoutId(),descriptor.getBindingViewId());
 		androidViewBinding.init(this.context);
 		return androidViewBinding;
 	}

@@ -101,13 +101,15 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		public void deactivate() {
 			if(this.binding != null){
 				this.binding.deactivate();
-				this.binding = null;
 			}
 		}
 
 		@Override
 		public void destroy() {
-			
+			if(this.binding != null){
+				this.binding.destroy();
+				this.binding = null;
+			}
 		}
 
 		@Override
@@ -146,6 +148,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	
 	private final int layoutResourceId;
 	private final IAndroidBindingContext bindingContext;
+	private final String viewId;
 	private List<IBinding<IView>> bindings = new ArrayList<IBinding<IView>>();
 	private Map<String,IFieldBinding> fieldBindings = new HashMap<String,IFieldBinding>();
 //	private Map<String, FieldBindingCreator> bindingCreators = new HashMap<String, FieldBindingCreator>();
@@ -274,10 +277,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
     }
 
 	
-	public AndroidViewBinding(IBindingContext ctx,int layoutResId){
+	public AndroidViewBinding(IBindingContext ctx,int layoutResId,String viewId){
 		this.layoutResourceId = layoutResId;
 		this.bindingContext = (IAndroidBindingContext)ctx;
 		this.layoutView = initView();
+		this.viewId = viewId;
 	}
 
 	
@@ -405,6 +409,12 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	@Override
 	public boolean isOnShow() {
 		return this.bindingContext.isOnShow();
+	}
+
+
+	@Override
+	public String getBindingViewId() {
+		return this.viewId;
 	}
 
 }

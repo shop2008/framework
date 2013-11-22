@@ -17,4 +17,5 @@ public interface INavigationDescriptor {
 	String getToDialog();
 	Map<String, Object> getParameters();
 	boolean getCloseCurrentView();
+	boolean keepMenuOpen();
 }

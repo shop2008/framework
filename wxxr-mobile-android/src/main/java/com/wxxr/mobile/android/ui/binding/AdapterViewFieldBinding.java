@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -37,12 +38,38 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public static final String LIST_HEADER_VIEW_ID = "headerViewId";
 	private GenericListAdapter listAdapter;
 	private IListDataProvider provider;
-	private IBinding<IView> headerBinding;
-	private IBinding<IView> footerBinding;
+	private IViewBinding headerBinding;
+	private IViewBinding footerBinding;
+	private IView headerView,footerView;
+	private View headItemView, footerItemView;
 	
 	public AdapterViewFieldBinding(IAndroidBindingContext ctx,
 			String fieldName, Map<String, String> attrSet) {
 		super(ctx, fieldName, attrSet);
+		String footerViewId = getBindingAttrs().get(LIST_FOOTER_VIEW_ID);
+		String headerViewId = getBindingAttrs().get(LIST_HEADER_VIEW_ID);
+		ListView list = getUIControl() instanceof ListView ? (ListView)getUIControl() : null;
+		if(list != null){
+			if (headerViewId != null
+					&& list.getHeaderViewsCount() == 0) {
+				IViewDescriptor v = ctx.getWorkbenchManager().getViewDescriptor(headerViewId);
+				View view = createUI(v,ctx.getWorkbenchManager());
+				headerBinding = (IViewBinding) view.getTag();
+				list.addHeaderView(view);
+				headItemView = view;
+				headerView = ctx.getWorkbenchManager().getWorkbench().createNInitializedView(headerBinding.getBindingViewId());
+			}
+			if (footerViewId != null
+					&& list.getFooterViewsCount() == 0) {
+				IViewDescriptor v = ctx.getWorkbenchManager().getViewDescriptor(footerViewId);
+				View view = createUI(v,ctx.getWorkbenchManager());
+				footerBinding = (IViewBinding) view.getTag();
+				list.addFooterView(view);
+				footerItemView = view;
+				footerView = ctx.getWorkbenchManager().getWorkbench().createNInitializedView(footerBinding.getBindingViewId());
+			}
+		}
+
 	}
 
 	/*
@@ -56,8 +83,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public void activate(IView model) {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
-		String footerViewId = getBindingAttrs().get(LIST_FOOTER_VIEW_ID);
-		String headerViewId = getBindingAttrs().get(LIST_HEADER_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
 		provider = comp.getAdaptor(IListDataProvider.class);
 		if (provider == null) {
@@ -66,41 +91,23 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
 				getAndroidBindingContext(), provider,
 				itemViewId);
-		Object list = getUIControl();
-		if (list instanceof ListView) {
-			IWorkbenchRTContext c = getWorkbenchContext();
-			IWorkbenchManager mgr = c.getWorkbenchManager();
-			if (headerViewId != null
-					&& ((ListView) list).getHeaderViewsCount() == 0) {
-				IViewDescriptor v = mgr.getViewDescriptor(headerViewId);
-				View view = createUI(v);
-				headerBinding = (IBinding<IView>) view.getTag();
-				IView vModel = v.createPresentationModel(c);
-				vModel.init(c);
-				headerBinding.activate(vModel);
-				((ListView) getUIControl()).addHeaderView(view);
-			}
-			if (footerViewId != null
-					&& ((ListView) list).getFooterViewsCount() == 0) {
-				IViewDescriptor v = mgr.getViewDescriptor(footerViewId);
-				View view = createUI(v);
-				footerBinding = (IBinding<IView>) view.getTag();
-				IView vModel = v.createPresentationModel(c);
-				vModel.init(c);
-				footerBinding.activate(vModel);
-				((ListView) getUIControl()).addFooterView(view);
-			}
+		if((headerBinding != null)&&(headerView != null)){
+			model.addChild(headerView);
+			headerBinding.activate(headerView);
+		}
+		if((footerBinding != null)&&(footerView != null)){
+			model.addChild(footerView);
+			footerBinding.activate(footerView);
 		}
 		this.provider.updateDataIfNeccessary();
 		setupAdapter(listAdapter);
 	}
 
-	protected View createUI(IViewDescriptor v) {
+	protected View createUI(IViewDescriptor v,final IWorkbenchManager mgr) {
 		IBindingDescriptor bDesc = v
 				.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
-		IViewBinder vBinder = getWorkbenchContext().getWorkbenchManager()
-				.getViewBinder();
+		IViewBinder vBinder = mgr.getViewBinder();
 		binding = vBinder.createBinding(new IAndroidBindingContext() {
 
 			@Override
@@ -115,7 +122,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 
 			@Override
 			public IWorkbenchManager getWorkbenchManager() {
-				return getWorkbenchContext().getWorkbenchManager();
+				return mgr;
 			}
 
 			@Override
@@ -123,7 +130,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 				return getAndroidBindingContext().isOnShow();
 			}
 		}, bDesc);
-		binding.init(getWorkbenchContext());
 		View view = (View) binding.getUIControl();
 		view.setTag(binding);
 		return view;
@@ -199,22 +205,17 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter = null;
 		}
 		super.deactivate();
-		Object list = getUIControl();
 		if(headerBinding != null) {
-			View headerView = (View) headerBinding.getUIControl();
-			if (list instanceof ListView) {
-				((ListView)list).removeHeaderView(headerView);
-			}
 			headerBinding.deactivate();
-			headerBinding = null;
+			if(headerView.getParent() != null){
+				headerView.getParent().removeChild(headerView);
+			}
 		}
 		if(footerBinding != null) {
-			View footerView = (View) footerBinding.getUIControl();
-			if (list instanceof ListView) {
-				((ListView)list).removeFooterView(footerView);
-			}
 			footerBinding.deactivate();
-			footerBinding = null;
+			if(footerView.getParent() != null){
+				footerView.getParent().removeChild(footerView);
+			}
 		}
 	}
 
@@ -261,6 +262,39 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter.notifyDataSetChanged();
 		}
 		super.updateUI(recursive);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#destroy()
+	 */
+	@Override
+	public void destroy() {
+		ListView list = getUIControl() instanceof ListView ? (ListView)getUIControl() : null;
+		if((list != null)&&(headItemView != null)){
+			list.removeHeaderView(headItemView);
+			headItemView = null;
+		}
+		if(headerBinding != null){
+			headerBinding.destroy();
+			headerBinding = null;
+		}
+		if(headerView != null){
+			headerView.destroy();
+			headerView = null;
+		}
+		if((list != null)&&(footerItemView != null)){
+			list.removeFooterView(footerItemView);
+			footerItemView = null;
+		}
+		if(footerBinding != null){
+			footerBinding.destroy();
+			footerBinding = null;
+		}
+		if(footerView != null){
+			footerView.destroy();
+			footerView = null;
+		}
+		super.destroy();
 	}
 
 }

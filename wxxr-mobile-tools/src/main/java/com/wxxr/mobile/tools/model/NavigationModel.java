@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class NavigationModel {
 	private String result, toPage, toView, message,toDialog;
-	private boolean closeCurrentView;
+	private boolean closeCurrentView,keepMenuOpen;
 	private Map<String, Parameter> params;
 	/**
 	 * @return the result
@@ -100,5 +100,17 @@ public class NavigationModel {
 	 */
 	public void setCloseCurrentView(boolean closeCurrentView) {
 		this.closeCurrentView = closeCurrentView;
+	}
+	/**
+	 * @return the keepMenuOpen
+	 */
+	public boolean isKeepMenuOpen() {
+		return keepMenuOpen;
+	}
+	/**
+	 * @param keepMenuOpen the keepMenuOpen to set
+	 */
+	public void setKeepMenuOpen(boolean keepMenuOpen) {
+		this.keepMenuOpen = keepMenuOpen;
 	}
 }
