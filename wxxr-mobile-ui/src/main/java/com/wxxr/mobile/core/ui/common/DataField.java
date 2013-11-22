@@ -4,6 +4,8 @@
 package com.wxxr.mobile.core.ui.common;
 
 import static com.wxxr.mobile.core.ui.common.ModelUtils.*;
+
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
@@ -51,10 +53,22 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 			setAttribute(valueKey, localValue);
 			if(domainModel != null){
 				// call domain model binding to update domain model
-					ValidationError[] errs = domainModel.updateValue(value);
-				if((errs != null)&&(errs.length > 0)){
-					setAttribute(AttributeKeys.validationErrors, errs);
-				}
+				KUtils.executeTask(new Runnable() {					
+					@Override
+					public void run() {
+						doUpdateModel();
+					}
+				});
+			}
+		}
+
+		/**
+		 * @param value
+		 */
+		protected void doUpdateModel() {
+			ValidationError[] errs = domainModel.updateValue(localValue);
+			if((errs != null)&&(errs.length > 0)){
+				setAttribute(AttributeKeys.validationErrors, errs);
 			}
 		}
 		

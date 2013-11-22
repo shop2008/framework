@@ -149,12 +149,12 @@ public abstract class WorkbenchBase implements IWorkbench {
 		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
 		if(desc != null){
 			IView view = desc.createPresentationModel(getUIContext());
+			if(!view.isInitialized()){
+				view.init(getUIContext());
+			}
 			IModelUpdater updater = view.getAdaptor(IModelUpdater.class);
 			if(updater != null){
 				updater.updateModel(params);
-			}
-			if(!view.isInitialized()){
-				view.init(getUIContext());
 			}
 			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view,params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK));
 		}

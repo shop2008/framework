@@ -241,12 +241,10 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
 
 	public ViewBase() {
-		doInit();
 	}
 
 	public ViewBase(String name) {
 		super(name);
-		doInit();
 	}
 
 	protected void doInit(){
@@ -696,6 +694,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			this.properties.clear();
 		}
 		return this ;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIContainer#init(com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
+	 */
+	@Override
+	public void init(IWorkbenchRTContext ctx) {
+		super.init(ctx);
+		doInit();
 	}	
 
 

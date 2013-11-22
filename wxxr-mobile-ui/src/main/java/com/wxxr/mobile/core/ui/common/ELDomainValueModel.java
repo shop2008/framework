@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.ValidationError;
 public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> implements IDomainValueModel<T>{
 	
 	private final IDataField<T> field;
+	private Boolean updatable;
 	
 	public ELDomainValueModel(IEvaluatorContext elMgr, String expr, IDataField<T> comp, Class<V> expectedType) {
 		super(elMgr, expr, expectedType);
@@ -61,7 +62,10 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 
 	@Override
 	public boolean isUpdatable() {
-		return this.valueExpr.isReadOnly(this.elm.getELContext()) == false;
+		if(this.updatable == null){
+			this.updatable = this.valueExpr.isReadOnly(this.elm.getELContext()) == false;
+		}
+		return this.updatable.booleanValue();
 	}
 
 	@Override
