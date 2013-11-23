@@ -16,13 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:background="@drawable/title_background"
+            >
 
             <RadioButton
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/widget_bar_bg"
+                android:background="@drawable/tab_left_btn_background"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/label_challenge_trade_panel"
@@ -38,7 +40,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/widget_bar_bg"
+                android:background="@drawable/tab_right_btn_background"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/label_join_trade_panel"
