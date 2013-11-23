@@ -32,6 +32,11 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
+/**
+ * 他人T买入界面
+ * @author renwenjie
+ *
+ */
 @View(name="otherUserBuyInPage", withToolbar=true, description="参赛交易盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.other_user_buy_in_layout")
 public abstract class OtherUserBuyInPage extends PageBase implements IModelUpdater {

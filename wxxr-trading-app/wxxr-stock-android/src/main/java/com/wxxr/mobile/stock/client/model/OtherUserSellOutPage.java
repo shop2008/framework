@@ -33,7 +33,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
- * 他人T/T+1日卖出界面
+ * 他人T+1日卖出界面
  * 
  * @author renwenjie
  * 
