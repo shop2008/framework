@@ -7,12 +7,12 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>wxxr-mobile-net</name>
-	
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1</platform.version>
-        <android.plugin.version>3.5.3</android.plugin.version>
-    </properties>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<platform.version>2.2.1</platform.version>
+		<android.plugin.version>3.5.3</android.plugin.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -21,27 +21,32 @@
 			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.wxxr.mobile</groupId>
-            <artifactId>wxxr-mobile-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wxxr.mobile</groupId>
-            <artifactId>wxxr-mobile-xml</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wxxr.mobile</groupId>
-            <artifactId>wxxr-mobile-android</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.2</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-xml</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-android</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

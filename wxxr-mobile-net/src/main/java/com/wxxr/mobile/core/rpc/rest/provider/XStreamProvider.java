@@ -42,13 +42,13 @@ public class XStreamProvider extends AbstractEntityProvider<Object> {
 	@Override
 	public boolean isReadable(Class<?> type, Type genericType,
 			Annotation annotations[], MediaType mediaType) {
-		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null || isCollectionType(type);
+		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null /*|| isCollectionType(type)*/;
 	}
 
 	@Override
 	public boolean isWriteable(Class<?> type, Type genericType,
 			Annotation annotations[], MediaType mediaType) {
-		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null || isCollectionType(type);
+		return type.getAnnotation(XStreamAlias.class) != null || type.getAnnotation(XmlRootElement.class) != null /*|| isCollectionType(type)*/;
 	}
 
 	@Override
