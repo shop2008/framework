@@ -184,7 +184,7 @@ public abstract class UIComponent implements IUIComponent {
 			this.attrs.clear();
 			this.attrs = null;
 		}
-		if(this.parent == null){
+		if(this.parent != null){
 			((UIContainer<?>)this.parent).remove(this);
 			this.parent = null;
 		}
