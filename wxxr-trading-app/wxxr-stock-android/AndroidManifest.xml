@@ -177,11 +177,20 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.UserSucTradePage"
+            android:name=".ui.UserViewMorePage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
+        <activity
+            android:name=".ui.OtherUserSellOutPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.OtherUserBuyInPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ArticleBodyPage"
             android:configChanges="keyboardHidden|orientation"
