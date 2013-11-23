@@ -89,9 +89,10 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_centerHorizontal="true"
-	            android:layout_marginTop="5dp"
+	           	android:layout_margin="5dp"
 	            android:layout_gravity="center"
 	            bind:on_Click="setHomeBack"
+	            android:background="@drawable/back1"
 	            android:scaleType="fitXY"
 	            bind:field="userHomeBack" />
         </FrameLayout>
