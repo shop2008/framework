@@ -239,7 +239,7 @@
 	<string name="tab_success_operation_text">成功操作</string>
 	<string name="tab_whole_operation_text">全部操作</string>
 	<string name="record_null_text">无交易记录数据</string>
-	
+	<string name="sucess_record_null_text">无成功交易记录</string>
 	
     <!-- 注册条款 -->
     <string name="tv_title_register_rules">注册条款</string>
@@ -281,5 +281,6 @@
 	<!-- 当前版本 -->
 	<string name="vertion_lastest_text">当前已是最新版本</string>
 	<string name="btn_konwn">知道了</string>
-	
+	<!-- 他人主页 -->
+	<string name="other_user_title_append">的主页</string>
 </resources>
