@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <RadioGroup
+            android:id="@id/rg_game_rank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/widget_bar_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/label_challenge_trade_panel"
+                bind:field="actualRecordBtn"
+                bind:on_Click="showActualRecords" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <RadioButton
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/widget_bar_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/label_join_trade_panel"
+                bind:field="virtualRecordBtn"
+                bind:on_Click="showVirtualRecords" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/label_stock"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/label_amount"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/label_profit_loss"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/abs_divider_hor_btn" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_horizontal"
+                android:gravity="center"
+                android:text="@string/label_date"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                bind:field="actualRecordList"
+                bind:itemViewId="tradeRecordMoreItemView"
+                bind:on_BottomRefresh="handleActualBottomRefresh"
+                bind:on_ItemClick="actualRecordItemClicked"
+                bind:on_TopRefresh="handleActualTopRefresh" >
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                bind:field="virtualRecordsList"
+                bind:itemViewId="tradeRecordMoreItemView"
+                bind:on_BottomRefresh="handleVirtualBottomRefresh"
+                bind:on_ItemClick="virtualRecordItemClicked"
+                bind:on_TopRefresh="handleVirtualTopRefresh" >
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
