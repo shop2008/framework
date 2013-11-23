@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.codehaus.jettison.json;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -26,6 +27,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  */
 public class JSONTokener {
 
+	private static final Trace log = Trace.register("com.wxxr.mobile.core.rpc.rest");
     /**
      * The index of the next character.
      */
@@ -44,6 +46,9 @@ public class JSONTokener {
      * @param s     A source string.
      */
     public JSONTokener(String s) {
+    	if(log.isDebugEnabled()){
+    		log.debug("Received json content :["+s+"]");
+    	}
         this.myIndex = 0;
         this.mySource = StringUtils.trimToNull(s);
         if(s.startsWith("[") && s.endsWith("]")){
