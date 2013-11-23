@@ -20,13 +20,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:background="@drawable/title_background"
                 android:orientation="horizontal" >
 
                 <RadioButton
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/widget_bar_bg"
+                    android:background="@drawable/tab_left_btn_background"
                     android:button="@null"
                     android:gravity="center"
                     android:text="@string/tab_success_operation_text"
@@ -42,7 +43,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/widget_bar_bg"
+                    android:background="@drawable/tab_right_btn_background"
                     android:button="@null"
                     android:gravity="center"
                     android:text="@string/tab_whole_operation_text"
