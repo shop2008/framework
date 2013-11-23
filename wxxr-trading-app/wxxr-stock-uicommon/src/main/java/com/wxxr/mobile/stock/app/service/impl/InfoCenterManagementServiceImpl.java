@@ -41,7 +41,8 @@ public class InfoCenterManagementServiceImpl extends
 			.register(InfoCenterManagementServiceImpl.class);
 	private SearchStockListBean stockListbean = new SearchStockListBean();
 	private StockQuotationBean stockQuotationbean = new StockQuotationBean();
-
+	protected LineListBean lineListBean = new LineListBean();
+	
 	// ====================module life cycle methods ==================
 	@Override
 	protected void initServiceDependency() {
