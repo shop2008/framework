@@ -668,12 +668,14 @@ public class MockDataUtils {
 		TradingAccountBean myTradingAccount = new TradingAccountBean();
 		
 		myTradingAccount.setId(1L);
-		myTradingAccount.setBuyDay(1256006105375L);
-		myTradingAccount.setSellDay(1256006105375L+24*3600);
-		myTradingAccount.setApplyFee(100000);
-		myTradingAccount.setAvalibleFee(98700);
+		myTradingAccount.setBuyDay(System.currentTimeMillis());
+		myTradingAccount.setSellDay(System.currentTimeMillis()+24*3600*1000);
+		myTradingAccount.setApplyFee(300000);
+		myTradingAccount.setAvalibleFee(36000);
 		myTradingAccount.setGainRate(12);
-		myTradingAccount.setTotalGain(300);
+		myTradingAccount.setTotalGain(3000);
+		myTradingAccount.setLossLimit(-500);
+		myTradingAccount.setStatus(1);
 		List<StockTradingOrderBean> tradingOrders = new ArrayList<StockTradingOrderBean>();
 		StockTradingOrderBean item = new StockTradingOrderBean();
 		item.setStockName("唐山港");
@@ -687,14 +689,14 @@ public class MockDataUtils {
 		tradingOrders.add(item);
 		
 		item = new StockTradingOrderBean();
-		item.setStockName("唐山港");
+		item.setStockName("浦发银行");
 		item.setStockCode("601000");
-		item.setCurrentPirce(306L);
-		item.setChangeRate(66L);
-		item.setBuy(300L);
-		item.setAmount(1000L);
-		item.setGain(100L);
-		item.setGainRate(1L);
+		item.setCurrentPirce(506L);
+		item.setChangeRate(-66L);
+		item.setBuy(500L);
+		item.setAmount(2000L);
+		item.setGain(-99L);
+		item.setGainRate(-16L);
 		tradingOrders.add(item);
 		
 		myTradingAccount.setTradingOrders(tradingOrders);
@@ -744,7 +746,7 @@ public class MockDataUtils {
 		return info;
 	}
 	
-	public List<ArticleBean> mockData(){
+	public static List<ArticleBean> mockData(){
 		List<ArticleBean> articles = new ArrayList<ArticleBean>();
 		String[] titles = {"Google","Baidu","Sina","网易"};
 		String[] articleUrls = {"http://www.google.com.hk/","http://www.baidu.com","http://www.sina.com","http://www.163.com"};
