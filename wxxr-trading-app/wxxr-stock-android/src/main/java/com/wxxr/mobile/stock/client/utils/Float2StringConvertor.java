@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 public class Float2StringConvertor implements IValueConvertor<Float, String> {
 
 	private String format = "%+10.2f";
+	private String append = "";
 	@Override
 	public void destroy() {
 	}
@@ -37,6 +38,10 @@ public class Float2StringConvertor implements IValueConvertor<Float, String> {
 		if(map.containsKey("format")){
 			this.format = (String)map.get("format");
 		}
+		
+		if (map.containsKey("append")) {
+			this.append = (String)map.get("append");
+		}
 	}
 
 	@Override
@@ -52,7 +57,7 @@ public class Float2StringConvertor implements IValueConvertor<Float, String> {
 		if(val == null){
 			return null;
 		}
-		return String.format(this.format, val);
+		return String.format(this.format, val) + append;
 	}
 
 }

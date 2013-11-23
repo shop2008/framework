@@ -14,7 +14,7 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 
 @View(name="tradeRecordMoreItemView")
-@AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_trade_record_item_layout")
+@AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_view_more_item_layout")
 public abstract class UserViewMoreItemView extends ViewBase implements IModelUpdater{
 
 	GainBean accountBean;

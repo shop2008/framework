@@ -22,6 +22,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	private String format = "yyyy-MM-dd HH:mm:ss";
 
+	private String append="";
 	@Override
 	public void destroy() {
 	}
@@ -40,6 +41,10 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 	public void init(IWorkbenchRTContext ctx, Map<String, Object> map) {
 		if (map.containsKey("format")) {
 			this.format = (String) map.get("format");
+		}
+		
+		if (map.containsKey("append")) {
+			this.append = (String) map.get("append");
 		}
 	}
 
@@ -65,7 +70,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		Date date = new Date(val);
-		return sdf.format(date);
+		return sdf.format(date) + append;
 	}
 
 }
