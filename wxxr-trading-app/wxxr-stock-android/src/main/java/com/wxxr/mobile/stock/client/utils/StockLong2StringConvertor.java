@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.utils;
 
+import java.util.IllegalFormatException;
 import java.util.Map;
 
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
@@ -61,7 +62,11 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 			if (index > 0 && index <= s.length())
 				s = s.substring(0, index);
 		}
-		return (long) (Float.parseFloat(s) * multiple);
+		try {
+			return (long) (Float.parseFloat(s) * multiple);
+		} catch (NumberFormatException e) {
+			throw new ValidationException("Invalid Long value :" + s, e);
+		}
 	}
 
 	@Override
@@ -69,7 +74,13 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 		if (val == null) {
 			return null;
 		}
-		return String.format(this.format, val / multiple) + formatUnit;
+		try {
+			return String.format(this.format, val / multiple) + formatUnit;
+		} catch (NullPointerException e) {
+			return null;
+		} catch (IllegalFormatException e) {
+			return null;
+		}
 	}
 
 }

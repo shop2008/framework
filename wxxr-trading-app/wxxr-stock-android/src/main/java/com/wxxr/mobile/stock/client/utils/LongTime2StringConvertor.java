@@ -53,13 +53,20 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		if (StringUtils.isBlank(s)) {
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		SimpleDateFormat sdf;
+		try {
+			sdf = new SimpleDateFormat(format);
+		} catch (NullPointerException e) {
+			throw new ValidationException("Invalid time-type value :" + s, e);
+		} catch (IllegalArgumentException e) {
+			throw new ValidationException("Invalid time-type value :" + s, e);
+		}
+
 		try {
 			Date date = sdf.parse(s);
 			return date.getTime();
 		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
+			throw new ValidationException("Invalid parse time value :" + s, e);
 		}
 	}
 
@@ -68,7 +75,14 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		if (val == null) {
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		SimpleDateFormat sdf;
+		try {
+			sdf = new SimpleDateFormat(format);
+		} catch (NullPointerException e) {
+			return null;
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 		Date date = new Date(val);
 		return sdf.format(date) + append;
 	}

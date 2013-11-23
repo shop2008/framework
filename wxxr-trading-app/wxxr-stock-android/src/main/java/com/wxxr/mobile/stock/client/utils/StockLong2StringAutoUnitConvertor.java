@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.utils;
 
+import java.util.IllegalFormatException;
 import java.util.Map;
 
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
@@ -61,28 +62,32 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (StringUtils.isBlank(s)) {
 			return null;
 		}
-		if (s.contains(UNIT_100M)) {
-			int index = s.indexOf(UNIT_100M);
-			if (index > 0)
-				s = s.substring(0, index);
-			return (long) (Float.parseFloat(s) * 1E8);
-		} else if (s.contains(UNIT_10T)) {
-			int index = s.indexOf(UNIT_10T);
-			if (index > 0)
-				s = s.substring(0, index);
-			return (long) (Float.parseFloat(s) * 1E4);
-		} else if (s.contains(formatUnit)) {
-			int index = s.indexOf(formatUnit);
-			if (index > 0)
-				s = s.substring(0, index);
+		try {
+			if (s.contains(UNIT_100M)) {
+				int index = s.indexOf(UNIT_100M);
+				if (index > 0)
+					s = s.substring(0, index);
+				return (long) (Float.parseFloat(s) * 1E8);
+			} else if (s.contains(UNIT_10T)) {
+				int index = s.indexOf(UNIT_10T);
+				if (index > 0)
+					s = s.substring(0, index);
+				return (long) (Float.parseFloat(s) * 1E4);
+			} else if (s.contains(formatUnit)) {
+				int index = s.indexOf(formatUnit);
+				if (index > 0)
+					s = s.substring(0, index);
+				return (long) (Float.parseFloat(s));
+			} else if (s.contains(UNIT_DEFAULT)) {
+				int index = s.indexOf(UNIT_DEFAULT);
+				if (index > 0)
+					s = s.substring(0, index);
+				return (long) (Float.parseFloat(s));
+			}
 			return (long) (Float.parseFloat(s));
-		} else if (s.contains(UNIT_DEFAULT)) {
-			int index = s.indexOf(UNIT_DEFAULT);
-			if (index > 0)
-				s = s.substring(0, index);
-			return (long) (Float.parseFloat(s));
+		} catch (NumberFormatException e) {
+			throw new ValidationException("Invalid Long value :" + s, e);
 		}
-		return (long) (Float.parseFloat(s));
 	}
 
 	@Override
@@ -90,21 +95,27 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (val == null) {
 			return null;
 		}
-		float multiple = 1;
-		String unit = "";
-		if (val > 1E8) {
-			multiple = (float) 1E8;
-			unit = UNIT_100M;
-		} else if (val > 1E4) {
-			multiple = (float) 1E4;
-			unit = UNIT_10T;
-		} else {
-			return String.format("%d", val)
-					+ (StringUtils.isEmpty(this.formatUnit) ? UNIT_DEFAULT
-							: formatUnit);
+		try {
+			float multiple = 1;
+			String unit = "";
+			if (val > 1E8) {
+				multiple = (float) 1E8;
+				unit = UNIT_100M;
+			} else if (val > 1E4) {
+				multiple = (float) 1E4;
+				unit = UNIT_10T;
+			} else {
+				return String.format("%d", val)
+						+ (StringUtils.isEmpty(this.formatUnit) ? UNIT_DEFAULT
+								: formatUnit);
+			}
+			return String.format(this.format, val / multiple) + unit
+					+ (StringUtils.isEmpty(this.formatUnit) ? "" : formatUnit);
+		} catch (NullPointerException e) {
+			return null;
+		} catch (IllegalFormatException e) {
+			return null;
 		}
-		return String.format(this.format, val / multiple) + unit
-				+ (StringUtils.isEmpty(this.formatUnit) ? "" : formatUnit);
 	}
 
 }
