@@ -1,0 +1,100 @@
+/**
+ * 
+ */
+package com.wxxr.mobile.stock.client.model;
+
+import java.util.Map;
+
+import com.wxxr.mobile.android.ui.AndroidBindingType;
+import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+
+/**
+ * 模拟盘详情
+ * 
+ * @author duzhen
+ * 
+ */
+@View(name = "ShiPanBuyStockInfoPage", withToolbar = true, description="实盘详情")
+@AndroidBinding(type = AndroidBindingType.ACTIVITY, layoutId = "R.layout.shipan__buy_stock_info_layout")
+public abstract class ShiPanBuyStockInfoPage extends PageBase implements
+		IModelUpdater {
+
+	@Bean
+	String acctId;
+
+	@Bean(type = BindingType.Service)
+	ITradingManagementService tradingService;
+
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
+	TradingAccountBean tradingBean;
+
+	/*** 交易盘编号*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
+	String id;
+
+	/*** 买入日期  */
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}")
+	String buyDay;
+	
+	/*** 卖出日期 */
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}")
+	String sellDay;
+
+	/*** 申购金额*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}")
+	String applyFee;
+
+	/*** 交易综合费*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:'--'}")
+	String usedFee;
+	
+	/*** 冻结资金*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:'--'}")
+	String frozenVol;
+	
+	/*** 止损*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}")
+	String lossLimit;
+
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		return null;
+	}
+
+	@OnShow
+	protected void initStockInfo() {
+		registerBean("acctId", acctId);
+	}
+
+	
+	@Override
+	public void updateModel(Object data) {
+		if (data instanceof Map) {
+			Map result = (Map) data;
+			for (Object key : result.keySet()) {
+				if("result".equals(key)){
+					Object tempt = result.get(key);
+					registerBean("acctId", tempt);
+				}
+			}
+		}
+	}
+}
