@@ -25,7 +25,7 @@
 
                 <RadioButton
                     android:layout_width="0dip"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/tab_left_btn_background"
                     android:button="@null"
@@ -34,14 +34,9 @@
                     bind:field="sucRecordBtn"
                     bind:on_Click="showSucRecords" />
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/abs_divider_hor_btn" />
-
                 <RadioButton
                     android:layout_width="0dip"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/tab_right_btn_background"
                     android:button="@null"
