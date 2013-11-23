@@ -27,35 +27,23 @@
             android:src="@drawable/back_button"
             bind:field="*"
             bind:on_Click="back" />
-
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_red_btn"
-            android:text="@string/btn_done_text"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            bind:field="*"
-            bind:on_Click="selected" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        android:background="@color/white"
+        android:background="@drawable/bg_circle_white"
         android:orientation="vertical" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:layout_marginLeft="5dp"
             android:text="@string/select_from_system_back_text"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
         <View
             android:layout_width="match_parent"
@@ -66,11 +54,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:choiceMode="singleChoice"
-            android:horizontalSpacing="5dp"
             android:numColumns="2"
-            android:persistentDrawingCache="all"
-            android:verticalSpacing="10dp"
             bind:field="systemImages"
+            android:cacheColorHint="#00000000"
             bind:itemViewId="imageItemForHomeBack"
             bind:on_ItemClick="imageSelected" >
         </GridView>

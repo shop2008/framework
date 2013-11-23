@@ -53,6 +53,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setSum(150000L);
 		bean.setUserGain(2000L);
 		bean.setTotalGain(10000L);
+		bean.setOver("CLOSED");
 		bean.setVirtual(false);
 		actualList.add(bean);
 
@@ -64,6 +65,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setSum(170000L);
 		bean.setTotalGain(10000L);
 		bean.setUserGain(1000L);
+		bean.setOver("UNCLOSE");
 		bean.setVirtual(false);
 		actualList.add(bean);
 
@@ -75,6 +77,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setSum(800000L);
 		bean.setTotalGain(10000L);
 		bean.setUserGain(-1000L);
+		bean.setOver("UNCLOSE");
 		bean.setVirtual(false);
 		actualList.add(bean);
 
@@ -86,6 +89,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setSum(10000L);
 		bean.setTotalGain(10000L);
 		bean.setUserGain(-1000L);
+		bean.setOver("CLOSED");
 		bean.setVirtual(false);
 		actualList.add(bean);
 
@@ -101,6 +105,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setSum(20000L);
 		vBean.setUserGain(-1000L);
 		vBean.setTotalGain(10000L);
+		vBean.setOver("CLOSED");
 		vBean.setVirtual(true);
 		virtualList.add(vBean);
 
@@ -113,6 +118,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setUserGain(1000L);
 		vBean.setVirtual(true);
 		vBean.setTotalGain(10000L);
+		vBean.setOver("CLOSED");
 		virtualList.add(vBean);
 
 		vBean = new GainBean();
@@ -124,6 +130,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setTotalGain(10000L);
 		vBean.setUserGain(2000L);
 		vBean.setVirtual(true);
+		vBean.setOver("UNCLOSE");
 		virtualList.add(vBean);
 		pHomeBean.setVirtualList(virtualList);
 
@@ -148,6 +155,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setSum(150000L);
 		bean.setUserGain(2000L);
 		bean.setTotalGain(10000L);
+		bean.setOver("CLOSED");
 		bean.setVirtual(false);
 		actualList.add(bean);
 
@@ -160,6 +168,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setUserGain(1000L);
 		bean.setTotalGain(10000L);
 		bean.setVirtual(false);
+		bean.setOver("UNCLOSE");
 		actualList.add(bean);
 
 		bean = new GainBean();
@@ -171,6 +180,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setUserGain(-1000L);
 		bean.setTotalGain(10000L);
 		bean.setVirtual(false);
+		bean.setOver("CLOSED");
 		actualList.add(bean);
 
 		bean = new GainBean();
@@ -182,6 +192,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		bean.setTotalGain(10000L);
 		bean.setUserGain(-1000L);
 		bean.setVirtual(false);
+		bean.setOver("UNCLOSE");
 		actualList.add(bean);
 
 		pHomeBean.setActualList(actualList);
@@ -196,6 +207,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setSum(20000L);
 		vBean.setUserGain(-1000L);
 		bean.setTotalGain(10000L);
+		bean.setOver("UNCLOSE");
 		vBean.setVirtual(true);
 		virtualList.add(vBean);
 
@@ -206,6 +218,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setStatus(1);// 0 T+1日交易盘，1 T日交易盘
 		vBean.setSum(90000L);
 		vBean.setUserGain(1000L);
+		bean.setOver("UNCLOSE");
 		bean.setTotalGain(10000L);
 		vBean.setVirtual(true);
 		virtualList.add(vBean);
@@ -218,6 +231,7 @@ public class MockUserManagementService extends UserManagementServiceImpl {
 		vBean.setSum(80000L);
 		vBean.setUserGain(2000L);
 		bean.setTotalGain(10000L);
+		bean.setOver("CLOSED");
 		vBean.setVirtual(true);
 		virtualList.add(vBean);
 		pHomeBean.setVirtualList(virtualList);
