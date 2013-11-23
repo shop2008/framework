@@ -9,9 +9,11 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -21,6 +23,9 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * 模拟盘详情
@@ -36,6 +41,22 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Bean
 	String acctId;
 
+	@Convertor(params={
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+	})
+	LongTime2StringConvertor longTime2StringConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
@@ -45,16 +66,16 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}", converter = "longTime2StringConvertor")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}", converter = "longTime2StringConvertor")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}", converter = "stockLong2StringConvertorSpecial")
 	String lossLimit;
 
 	@Menu(items = { "left" })

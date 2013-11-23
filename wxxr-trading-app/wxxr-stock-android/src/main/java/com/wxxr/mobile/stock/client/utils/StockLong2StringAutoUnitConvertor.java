@@ -18,9 +18,12 @@ public class StockLong2StringAutoUnitConvertor implements
 		IValueConvertor<Long, String> {
 
 	private String format = "%10.2f";
+	private String formatDefault = "%d";
+	
 	private static String UNIT_100M = "亿";
 	private static String UNIT_10T = "万";
 
+	private static String UNIT_DEFAULT = "元";
 	@Override
 	public void destroy() {
 	}
@@ -40,6 +43,9 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (map.containsKey("format")) {
 			this.format = (String) map.get("format");
 		}
+		if (map.containsKey("formatDefault")) {
+			this.formatDefault = (String) map.get("formatDefault");
+		}
 	}
 
 	@Override
@@ -51,12 +57,17 @@ public class StockLong2StringAutoUnitConvertor implements
 			int index = s.indexOf(UNIT_100M);
 			if (index > 0)
 				s = s.substring(0, index);
-			return (long) (Float.parseFloat(s) * 10E8);
+			return (long) (Float.parseFloat(s) * 1E8);
 		} else if (s.contains(UNIT_10T)) {
 			int index = s.indexOf(UNIT_10T);
 			if (index > 0)
 				s = s.substring(0, index);
-			return (long) (Float.parseFloat(s) * 10E4);
+			return (long) (Float.parseFloat(s) * 1E4);
+		} else if (s.contains(UNIT_DEFAULT)) {
+			int index = s.indexOf(UNIT_DEFAULT);
+			if (index > 0)
+				s = s.substring(0, index);
+			return (long) (Float.parseFloat(s));
 		}
 		return (long) (Float.parseFloat(s));
 	}
@@ -66,14 +77,16 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (val == null) {
 			return null;
 		}
-		double multiple = 1;
+		float multiple = 1;
 		String unit = "";
-		if (val > 10E8) {
-			multiple = 10E8;
+		if (val > 1E8) {
+			multiple = (float) 1E8;
 			unit = UNIT_100M;
-		} else if (val > 10E4) {
-			multiple = 10E4;
+		} else if (val > 1E4) {
+			multiple = (float) 1E4;
 			unit = UNIT_10T;
+		} else {
+			return String.format(this.formatDefault, val) + UNIT_DEFAULT;
 		}
 		return String.format(this.format, val / multiple) + unit;
 	}

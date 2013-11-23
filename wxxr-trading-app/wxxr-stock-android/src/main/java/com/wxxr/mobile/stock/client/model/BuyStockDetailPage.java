@@ -69,13 +69,13 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		registerBean("acctIdBean", "11111");
 		registerBean("marketBean", "SH");
 		registerBean("codeBean", "600101");
-		registerBean("priceBean", "1.56");
+		registerBean("priceBean", "156");
 		registerBean("amountBean", "6000");
 		
 		acctIdBean = "11111";
 		marketBean = "SH";
 		codeBean = "600101";
-		priceBean = "1.56";
+		priceBean = "156";
 		amountBean = "6000";
 	}
 

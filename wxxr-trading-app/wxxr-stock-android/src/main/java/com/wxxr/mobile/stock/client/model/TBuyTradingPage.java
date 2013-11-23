@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +10,12 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -27,6 +28,9 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * @author duzhen
@@ -40,28 +44,64 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Bean
 	String acctId;
 
+	@Convertor(params={
+			@Parameter(name="format",value="M月d日买入")
+	})
+	LongTime2StringConvertor longTime2StringConvertorBuy;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="M月d日卖出")
+	})
+	LongTime2StringConvertor longTime2StringConvertorSell;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f元"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorYuan;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
+	
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
 	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
 	TradingAccountBean tradingBean;
 	// 字段
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}${'买入'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}${'卖出'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}", converter = "longTime2StringConvertorSell")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}${'万'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:'--'}${'万'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:''}", converter = "stockLong2StringAutoUnitConvertor")
 	String avalibleFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:'--'}${'%'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:''}", converter = "stockLong2StringConvertorSpecial", attributes={
+			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.gainRate>0?'resourceId:color/red':(tradingBean.gainRate<0?'resourceId:color/green':'resourceId:color/gray')}")
+			})
 	String gainRate;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:'--'}${'元'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:''}", converter = "stockLong2StringConvertorYuan", attributes={
+			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.totalGain>0?'resourceId:color/red':(tradingBean.totalGain<0?'resourceId:color/green':'resourceId:color/gray')}")
+			})
 	String totalGain;
 
 	@Field(valueKey = "options", binding = "${tradingBean != null ? tradingBean.tradingOrders : null}")
