@@ -9,7 +9,6 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -59,12 +58,12 @@ public abstract class UserTradeRecordPage extends PageBase {
 	boolean allRecordBtn;
 
 
-	int curItemId = 1;
-		
 	
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
+	@Bean
+	int curItemId = 1;
 	
 	@Command(
 			uiItems={
@@ -76,17 +75,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	@OnShow
-	protected void initCurItemId() {
-		registerBean("curItemId", curItemId);
-	}
-
+	
 	/**
 	 * 显示所有成功交易记录
 	 * 
 	 * @param event
 	 * @return
 	 */
+	@Command
 	String showSucRecords(InputEvent event) {
 		curItemId = 1;
 		registerBean("curItemId", curItemId);
@@ -101,8 +97,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
+	@Command
 	String showAllRecords(InputEvent event) {
-
 		curItemId = 2;
 		registerBean("curItemId", curItemId);
 		if (allTradeAccountListBean != null)
@@ -152,4 +148,5 @@ public abstract class UserTradeRecordPage extends PageBase {
 			cb.refreshSuccess();
 		return null;
 	}
+	
 }
