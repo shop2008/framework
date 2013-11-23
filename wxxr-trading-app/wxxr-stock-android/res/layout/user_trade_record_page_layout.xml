@@ -111,21 +111,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible"
-                    bind:field="successRecordsList"
-                    bind:itemViewId="tradeRecordItemView"
-                    bind:on_BottomRefresh="handleSucBottomRefresh"
-                    bind:on_ItemClick="sucRecordItemClicked"
-                    bind:on_TopRefresh="handleSucTopRefresh" >
-                </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+                    android:layout_height="match_parent" >
+
+                    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        bind:field="successRecordsList"
+                        bind:itemViewId="tradeRecordItemView"
+                        bind:on_BottomRefresh="handleSucBottomRefresh"
+                        bind:on_ItemClick="sucRecordItemClicked"
+                        bind:on_TopRefresh="handleSucTopRefresh" >
+                    </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/sucess_record_null_text"
+                        bind:field="sucRecordNullVisible" />
+                    
+                </FrameLayout>
 
                 <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     bind:field="allRecordsList"
                     bind:itemViewId="tradeRecordItemView"
                     bind:on_BottomRefresh="handleAllBottomRefresh"
@@ -139,6 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="invisible"
             android:text="@string/record_null_text"
             bind:field="recordNullVisible" />
     </FrameLayout>

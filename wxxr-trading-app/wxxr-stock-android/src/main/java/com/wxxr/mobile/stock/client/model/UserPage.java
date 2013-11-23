@@ -9,9 +9,11 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -23,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 
 /**
  * 个人主页
@@ -68,7 +71,7 @@ public abstract class UserPage extends PageBase  {
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.totalProfit>=0?personalBean.totalProfit:'--':'--'}")
+	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.totalProfit>=0?personalBean.totalProfit:'--':'--'}", converter="f2SConvertor")
 	String totalProfit;
 
 	/**
@@ -118,34 +121,19 @@ public abstract class UserPage extends PageBase  {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="right",label="",icon="resourceId:drawable/jyjl")
+				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
 			},
-			navigations={@Navigation(on="OK", showPage="userManagePage")}
+			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
 	)
 	String toolbarClickedRight(InputEvent event){
 		return "OK";
 	}
 	
-	
-	/**
-	 * "个性化"按钮事件处理
-	 * @param event
-	 * @return
-	 */
-	@Command(
-			commandName = "personalSet", 
-			description = "To Personal_setting UI", 
-		
-			navigations = { 
-					@Navigation(
-							on = "OK", 
-							showPage = "userSelfDefine"
-							) 
-					}
+	@Convertor(
+			params={@Parameter(name="format", value="%10.2f")}
 			)
-	String personalSet(InputEvent event) {
-		return "OK";
-	}
+	Float2StringConvertor f2SConvertor;
+
 
 	/**
 	 * 挑战交易盘-"查看更多"事件处理
@@ -156,7 +144,7 @@ public abstract class UserPage extends PageBase  {
 	@Command(
 			commandName = "challengeViewMore", 
 			description = "To Challenge View More",
-			navigations={@Navigation(on="OK", showPage="userSucTradePage")}
+			navigations={@Navigation(on="OK", showPage="userViewMorePage")}
 			)
 	CommandResult challengeViewMore(InputEvent event) {
 
@@ -178,7 +166,7 @@ public abstract class UserPage extends PageBase  {
 	@Command(
 			commandName = "joinViewMore", 
 			description = "To Join View More",
-			navigations={@Navigation(on="OK", showPage="userSucTradePage")}
+			navigations={@Navigation(on="OK", showPage="userViewMorePage")}
 			)
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
@@ -190,19 +178,97 @@ public abstract class UserPage extends PageBase  {
 	}
 
 
-	@Command(commandName = "joinItemClick")
-	String joinItemClick(InputEvent event) {
+	@Command(commandName = "joinItemClick",navigations={
+			@Navigation(on="operationDetails",showPage="OperationDetails"),
+			@Navigation(on="SellOut",showPage="sellTradingAccount"),
+			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
+			})
+	CommandResult joinItemClick(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
-			System.out.println((Integer) event.getProperty("position"));
+			int position = (Integer) event.getProperty("position");
+			GainBean virtualBean = null;
+
+			// 本人
+			if (personalBean != null) {
+				List<GainBean> virtualList = personalBean.getVirtualList();
+				if (virtualList != null && virtualList.size() > 0) {
+					virtualBean = virtualList.get(position);
+				}
+			}
+			CommandResult result = null;
+			if (virtualBean != null) {
+				/** 交易盘ID */
+				Long accId = virtualBean.getTradingAccountId();
+				String tradeStatus = virtualBean.getOver();
+				Boolean isVirtual = virtualBean.getVirtual();
+				result = new CommandResult();
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("accid", accId);
+				map.put("isVirtual", isVirtual);
+				result.setPayload(map);
+				if ("CLOSED".equals(tradeStatus)) {
+					result.setResult("operationDetails");
+				}
+				if ("UNCLOSE".equals(tradeStatus)) {
+					int status = virtualBean.getStatus();
+					if (status == 0) {
+						// 进入卖出界面
+						result.setResult("SellOut");
+					} else if (status == 1) {
+						// 进入买入界面
+						result.setResult("BuyIn");
+					}
+				}
+			}
+			return result;
 		}
 		return null;
 	}
 
-	@Command(commandName = "challengeItemClick")
-	String challengeItemClick(InputEvent event) {
+	@Command(commandName = "challengeItemClick",navigations={
+			@Navigation(on="operationDetails",showPage="OperationDetails"),
+			@Navigation(on="SellOut",showPage="sellTradingAccount"),
+			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
+			})
+	CommandResult challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
-			System.out.println((Integer) event.getProperty("position"));
+			int position = (Integer) event.getProperty("position");
+			GainBean actualBean = null;
+
+			// 本人
+			if (personalBean != null) {
+				List<GainBean> actualList = personalBean.getActualList();
+				if (actualList != null && actualList.size() > 0) {
+					actualBean = actualList.get(position);
+				}
+			}
+			CommandResult result = null;
+			if (actualBean != null) {
+				/** 交易盘ID */
+				Long accId = actualBean.getTradingAccountId();
+				String tradeStatus = actualBean.getOver();
+				Boolean isVirtual = actualBean.getVirtual();
+				result = new CommandResult();
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("accid", accId);
+				map.put("isVirtual", isVirtual);
+				result.setPayload(map);
+				if ("CLOSED".equals(tradeStatus)) {
+					result.setResult("operationDetails");
+				}
+				if ("UNCLOSE".equals(tradeStatus)) {
+					int status = actualBean.getStatus();
+					if (status == 0) {
+						// 进入卖出界面
+						result.setResult("SellOut");
+					} else if (status == 1) {
+						// 进入买入界面
+						result.setResult("BuyIn");
+					}
+				}
+			}
+			return result;
 		}
 		return null;
 	}

@@ -27,10 +27,10 @@ public abstract class UserSelfDefinePage extends PageBase {
 
 	
 	
-	@Field(valueKey = "imageURI", binding = "${user!=null?user.userPic!=null?user.userPic:'resourceId:drawable/head1':'resourceId:drawable/head1'}")
+	@Field(valueKey = "imageURI", binding = "${user.userPic!=null?user.userPic:'resourceId:drawable/head1'}")
 	String userIcon;
 
-	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
+	@Field(valueKey = "backgroundImageURI", binding = "${user.homeBack!=null?user.homeBack:'resourceId:drawable/back1'}")
 	String userHomeBack;
 
 	@Bean(type = BindingType.Service)
@@ -50,49 +50,6 @@ public abstract class UserSelfDefinePage extends PageBase {
 		return "OK";
 	}
 
-/*	@Override
-	public void updateModel(Object value) {
-
-		Map<String, String> map = (Map<String, String>) value;
-		if (map.containsKey("userPic")) {
-			String userPic = map.get("userPic");
-			curUsrPic = userPic;
-			registerBean("userPic", userPic);
-		}
-
-		if (map.containsKey("userHomeBack")) {
-			String userHomeBack = map.get("userHomeBack");
-			curUsrHomeBack = userHomeBack;
-			registerBean("userHomeBack", userHomeBack);
-		}
-
-		if (map.containsKey("selectPic")) {
-			String userSelPic = map.get("selectPic");
-			modifiedUPic = userSelPic;
-			registerBean("userPic", userSelPic);
-		}
-
-		if (map.containsKey("selectHomePic")) {
-			String userHomePic = map.get("selectHomePic");
-			modifiedUHome = userHomePic;
-			registerBean("userHomeBack", userHomePic);
-		}
-	}*/
-
-/*	@Command(commandName = "setHomeBack", navigations = { @Navigation(on = "OK", showPage = "userHomeSet", params = { @Parameter(name = "add2BackStack", value = "false") }) })
-	CommandResult setHomeBack(InputEvent event) {
-
-		CommandResult result = null;
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			result = new CommandResult();
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("userHomeBack", curUsrHomeBack);
-			result.setPayload(map);
-			result.setResult("OK");
-		}
-		return result;
-	}*/
-	
 	@Command(commandName = "setHomeBack", navigations = { @Navigation(on = "OK", showPage = "userHomeSet") })
 	String setHomeBack(InputEvent event) {
 		return "OK";

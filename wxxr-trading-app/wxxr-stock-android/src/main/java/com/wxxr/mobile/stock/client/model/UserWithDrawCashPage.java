@@ -3,8 +3,6 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.R.bool;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -162,8 +160,8 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	}
 	
 	@Command(
-				commandName="withDrawCashRules",
-				navigations={@Navigation(on="OK", showPage="articleBodyPage")}
+			commandName="withDrawCashRules",
+			navigations={@Navigation(on="OK", showPage="articleBodyPage")}
 			)
 	
 	CommandResult withDrawCashRules(InputEvent event) { 

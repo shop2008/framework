@@ -3,11 +3,16 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 
 
 /**
@@ -20,10 +25,16 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 
 	
 	GainBean accountBean;
+	
+	/**交易盘类型  0-模拟盘；1-实盘*/
+	@Field(valueKey="enabled",binding="${accountBean!=null?accountBean.virtual==false?true:false:false}")
+	boolean type;
 	/**
 	 * 股票名称
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockName:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockName:'--'}",
+			attributes={@Attribute(name = "textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")}
+		   )
 	String stock_name;
 	
     /**
@@ -35,20 +46,41 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 额度
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.sum:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.sum:'--'}", converter="stock2SConvertor",
+			attributes={@Attribute(name = "textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")}
+			)
 	String challenge_amount;
 	
 	/**
 	 * 盈亏
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.userGain:'--'}", attributes={@Attribute(name="textColor", value="${accountBean.userGain>0?'resourceId:color/red':'resourceId:color/green'}")})
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.userGain:'--'}", 
+			attributes={@Attribute(name ="textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED') ? 'resourceId:color/gray': (accountBean.userGain > 0 ? 'resourceId:color/red' : (accountBean.userGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
+			},
+			converter="f2SConvertor"
+			)
 	String profit_loss_amount;
 	
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}", converter="lt2SConvertor")
 	String trade_date;
+	
+	@Convertor(
+			params={@Parameter(name="format", value="MM-dd")}
+			)
+	LongTime2StringConvertor lt2SConvertor;
+	
+	@Convertor(
+			params={@Parameter(name="format", value="%+10.2f元")}
+			)
+	Float2StringConvertor f2SConvertor;
+	
+	@Convertor(
+			params={@Parameter(name="format", value="%10.0f")}
+			)
+	StockLong2StringAutoUnitConvertor stock2SConvertor;
 	
 	@Override
 	public void updateModel(Object value) {
