@@ -50,12 +50,10 @@ public abstract class OtherUserBuyInPage extends PageBase implements IModelUpdat
 	TradingAccountBean tradingAccount;
 	
 	
-	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日"),
-			@Parameter(name = "append", value = "买入") })
+	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日买入")})
 	LongTime2StringConvertor lt2BuySConvertor;
 
-	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日"),
-			@Parameter(name = "append", value = "卖出") })
+	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日卖出")})
 	LongTime2StringConvertor lt2SellSConvertor;
 	@Convertor(params = { @Parameter(name = "format", value = "%10.2f") })
 	StockLong2StringAutoUnitConvertor autoUnitConvertor;
@@ -63,17 +61,15 @@ public abstract class OtherUserBuyInPage extends PageBase implements IModelUpdat
 	@Convertor(params = { @Parameter(name = "format", value = "%10.2f") })
 	StockLong2StringConvertor stockL2StrConvertor;
 
-	@Convertor(params = { @Parameter(name = "format", value = "%10.2f"),
-			@Parameter(name = "append", value = "元")
-	})
+	@Convertor(params = { @Parameter(name = "format", value = "%10.2f元") })
 	Float2StringConvertor float2StringConvertor;
 	
 	/**买入日期  */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:0}", converter="lt2BuySConvertor")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:'--月--日买入'}", converter="lt2BuySConvertor")
 	String buyDay;  
 	
 	/**卖出日期 */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:0}", converter="lt2SellSConvertor")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:'--月--日卖出'}", converter="lt2SellSConvertor")
 	String sellDay;  
 	
 	/**申购金额*/

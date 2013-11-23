@@ -67,7 +67,7 @@ public abstract class UserLoginPage extends PageBase {
 //			if(usrService != null)
 //				usrService.login(mobileNum, password);
 //		}
-		this.callback.done(false);
+		//this.callback.done(false);
 		usrService.login(this.callback.getUserName(), this.callback.getPassword());
 		hide();
 		return null;
@@ -85,7 +85,7 @@ public abstract class UserLoginPage extends PageBase {
 //			//处理后退事件
 //			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 //		}
-		this.callback.done(true);
+		//this.callback.done(true);
 		hide();
 		return null;
 	}
@@ -128,7 +128,7 @@ public abstract class UserLoginPage extends PageBase {
 	 */
 	@Command(commandName="findPasswordBack", navigations={@Navigation(on="OK", showPage="userFindPswPage",closeCurrentView=true)})
 	String findPasswordBack(InputEvent event) {
-		this.callback.done(true);
+		//this.callback.done(true);
 		return "OK";
 	}
 	
@@ -140,14 +140,14 @@ public abstract class UserLoginPage extends PageBase {
 
 	@Command(commandName="quickRegister", navigations={@Navigation(on="OK", showPage="userRegPage",closeCurrentView=true)})
 	String quickRegister(InputEvent event) {
-		this.callback.done(true);
+	//	this.callback.done(true);
 		return "OK";
 	}
 	
 	@OnShow
 	void clearCallback() {
 		if(this.callback != null){
-			this.callback.clear();
+			//this.callback.clear();
 		}
 	}
 }
