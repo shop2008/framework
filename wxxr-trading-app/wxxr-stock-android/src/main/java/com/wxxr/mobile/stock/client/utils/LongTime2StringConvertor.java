@@ -14,12 +14,14 @@ import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
+ * Long时间转字符串，根据自己传入的时间格式转换
+ * 
  * @author dz
- *
- */
+ **/
 public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	private String format = "yyyy-MM-dd HH:mm:ss";
+
 	@Override
 	public void destroy() {
 	}
@@ -36,14 +38,14 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	@Override
 	public void init(IWorkbenchRTContext ctx, Map<String, Object> map) {
-		if(map.containsKey("format")){
-			this.format = (String)map.get("format");
+		if (map.containsKey("format")) {
+			this.format = (String) map.get("format");
 		}
 	}
 
 	@Override
 	public Long toSourceTypeValue(String s) throws ValidationException {
-		if(StringUtils.isBlank(s)){
+		if (StringUtils.isBlank(s)) {
 			return null;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -58,7 +60,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	@Override
 	public String toTargetTypeValue(Long val) {
-		if(val == null){
+		if (val == null) {
 			return null;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);

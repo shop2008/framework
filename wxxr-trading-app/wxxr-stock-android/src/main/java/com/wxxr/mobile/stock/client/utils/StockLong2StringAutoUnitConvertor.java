@@ -11,19 +11,24 @@ import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
- * @author dz
+ * Long转货币单位型字符串
  * 
- */
+ * format:必须float型格式化 formatUnit:需要添加的单位
+ * 
+ * * @author dz
+ **/
 public class StockLong2StringAutoUnitConvertor implements
 		IValueConvertor<Long, String> {
 
 	private String format = "%10.2f";
-	private String formatDefault = "%d";
-	
+	// private String formatDefault = "%d";
+	private String formatUnit = "";
+
 	private static String UNIT_100M = "亿";
 	private static String UNIT_10T = "万";
 
 	private static String UNIT_DEFAULT = "元";
+
 	@Override
 	public void destroy() {
 	}
@@ -43,8 +48,11 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (map.containsKey("format")) {
 			this.format = (String) map.get("format");
 		}
-		if (map.containsKey("formatDefault")) {
-			this.formatDefault = (String) map.get("formatDefault");
+		// if (map.containsKey("formatDefault")) {
+		// this.formatDefault = (String) map.get("formatDefault");
+		// }
+		if (map.containsKey("formatUnit")) {
+			this.formatUnit = (String) map.get("formatUnit");
 		}
 	}
 
@@ -63,6 +71,11 @@ public class StockLong2StringAutoUnitConvertor implements
 			if (index > 0)
 				s = s.substring(0, index);
 			return (long) (Float.parseFloat(s) * 1E4);
+		} else if (s.contains(formatUnit)) {
+			int index = s.indexOf(formatUnit);
+			if (index > 0)
+				s = s.substring(0, index);
+			return (long) (Float.parseFloat(s));
 		} else if (s.contains(UNIT_DEFAULT)) {
 			int index = s.indexOf(UNIT_DEFAULT);
 			if (index > 0)
@@ -86,9 +99,12 @@ public class StockLong2StringAutoUnitConvertor implements
 			multiple = (float) 1E4;
 			unit = UNIT_10T;
 		} else {
-			return String.format(this.formatDefault, val) + UNIT_DEFAULT;
+			return String.format("%d", val)
+					+ (StringUtils.isEmpty(this.formatUnit) ? UNIT_DEFAULT
+							: formatUnit);
 		}
-		return String.format(this.format, val / multiple) + unit;
+		return String.format(this.format, val / multiple) + unit
+				+ (StringUtils.isEmpty(this.formatUnit) ? "" : formatUnit);
 	}
 
 }
