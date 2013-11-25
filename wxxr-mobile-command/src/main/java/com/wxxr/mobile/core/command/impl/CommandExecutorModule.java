@@ -82,6 +82,7 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			ICommandHandler handler) {
 		synchronized(this.handlers){
 			this.handlers.put(cmdName, handler);
+			handler.init(cmdCtx);
 		}
 		return this;
 	}
@@ -95,6 +96,7 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			ICommandHandler old = this.handlers.get(cmdName);
 			if(old == handler){
 				this.handlers.remove(cmdName);
+				handler.destroy();
 			}
 		}
 		return this;
@@ -154,6 +156,18 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 		if(this.taskQueue != null){
 			this.taskQueue.clear();
 			this.taskQueue = null;
+		}
+		synchronized(this.validators){
+			for (ICommandValidator validator : this.validators) {
+				validator.destroy();
+			}
+			this.validators.clear();
+		}
+		synchronized(this.handlers){
+			for (ICommandHandler handler : this.handlers.values()) {
+				handler.destroy();
+			}
+			this.handlers.clear();
 		}
 	}
 
