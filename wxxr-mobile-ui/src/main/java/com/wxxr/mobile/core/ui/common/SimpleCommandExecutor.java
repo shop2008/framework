@@ -32,6 +32,7 @@ import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.UIConstants;
@@ -335,17 +336,12 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 		}
 		INavigationDescriptor nav = null;
 		if(payload instanceof Throwable){
-			Class<?> clazz = payload.getClass();
-			String clazzName = clazz.getSimpleName();
-			while(true){
-				nav = findMatchNavigation(clazzName, navigationInfos);
-				if(nav != null){
-					break;
-				}else if("Throwable".equals(clazzName)){
-					break;
-				}else{
-					clazz = clazz.getSuperclass();
-					clazzName = clazz.getSimpleName();
+			nav = findMatchExceptionHandler((Throwable)payload, navigationInfos);
+			if(nav == null){
+				IWorkbenchDescriptor wbDesc = this.context.getWorkbenchManager().getWorkbenchDescriptor();
+				INavigationDescriptor[] defaultNavs = wbDesc.getDefaultNavigations();
+				if((defaultNavs != null)&&(defaultNavs.length > 0)){
+					nav = findMatchExceptionHandler((Throwable)payload, defaultNavs);
 				}
 			}
 			if(nav == null){
@@ -360,6 +356,30 @@ public class SimpleCommandExecutor implements IUICommandExecutor {
 			}
 		}else{
 			nav = findMatchNavigation(status, navigationInfos);
+		}
+		return nav;
+	}
+	/**
+	 * @param payload
+	 * @param navigationInfos
+	 * @param nav
+	 * @return
+	 */
+	protected INavigationDescriptor findMatchExceptionHandler(Throwable payload,
+			INavigationDescriptor[] navigationInfos) {
+		INavigationDescriptor nav = null;
+		Class<?> clazz = payload.getClass();
+		String clazzName = clazz.getSimpleName();
+		while(true){
+			nav = findMatchNavigation(clazzName, navigationInfos);
+			if(nav != null){
+				break;
+			}else if("Throwable".equals(clazzName)){
+				break;
+			}else{
+				clazz = clazz.getSuperclass();
+				clazzName = clazz.getSimpleName();
+			}
 		}
 		return nav;
 	}
