@@ -3,20 +3,13 @@
  */
 package com.wxxr.mobile.stock.client.module;
 
-import java.util.HashMap;
-
-import android.content.Intent;
-
-import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
-import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
-import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
 import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
@@ -74,27 +67,4 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		DeclarativePModelProvider.updatePModel(context);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule#doCreateWorkbench()
-	 */
-	@Override
-	protected IWorkbench doCreateWorkbench() {
-		return new WorkbenchBase(uiContext) {
-			
-			@Override
-			public String[] getPageIds() {
-				return manager.getAllRegisteredPageIds();
-			}
-
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.ui.common.WorkbenchBase#showHomePage()
-			 */
-			@Override
-			public void showHomePage() {
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put(IAndroidPageNavigator.PARAM_KEY_INTENT_FLAG, String.valueOf(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-				super.showPage(HOME_PAGE_ID,map,null);
-			}
-		};
-	}
 }
