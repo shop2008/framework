@@ -19,7 +19,6 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.ExecAsyncException;
-import com.wxxr.mobile.core.ui.api.IAsyncCallback;
 import com.wxxr.mobile.core.ui.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -36,6 +35,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbenchDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.UIConstants;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.core.util.ICancellable;
 import com.wxxr.mobile.core.util.StringUtils;
 

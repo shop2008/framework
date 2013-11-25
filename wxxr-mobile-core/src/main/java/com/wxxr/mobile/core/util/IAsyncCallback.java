@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.core.ui.api;
+package com.wxxr.mobile.core.util;
 
 /**
  * @author neillin
