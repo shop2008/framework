@@ -78,6 +78,7 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
       {
          // create a new one
          providerFactory = new ResteasyProviderFactory();
+         ResteasyProviderFactory.setInstance(providerFactory);
          RegisterBuiltin.register(providerFactory);
       }
       return providerFactory;
@@ -202,8 +203,7 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 	
 	protected void startup(IKernelContext ctx) {
 		this.application = ctx;
-		ResteasyProviderFactory factory = new ResteasyProviderFactory();
-		ResteasyProviderFactory.setInstance(factory);
+		ResteasyProviderFactory factory = getProviderFactory();
 		factory.register(ByteArrayProvider.class).
 			register(DocumentProvider.class).
 			register(FileProvider.class).
@@ -212,7 +212,6 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 			register(JaxrsFormProvider.class).
 			register(SerializableProvider.class).
 			register(StreamingOutputProvider.class);
-		this.providerFactory = factory;
 		try {
 			httpEngine = new HttpRpcClientEngine(this.application.getService(HttpRpcService.class));
 			application.registerService(IRestProxyService.class, ResteasyRestClientService.this);
