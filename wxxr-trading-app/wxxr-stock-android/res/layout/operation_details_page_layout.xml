@@ -6,6 +6,7 @@
     android:orientation="vertical" 
     android:background="@color/page_background_color">
     
+    
      <RadioGroup
          android:id="@+id/radioGroup1"
          android:layout_width="fill_parent"
