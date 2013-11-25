@@ -33,24 +33,24 @@ public class ${model.name} extends AbstractWorkbenchDescriptor {
         SimpleNavigationDescriptor navDesc = null;
 #if(${model.navigations})
 #foreach($nav in ${model.navigations}) 
-    navDesc = new SimpleNavigationDescriptor().setResult("${nav.result}");
+        navDesc = new SimpleNavigationDescriptor().setResult("${nav.result}");
 #if(${nav.toPage})
-    navDesc.setToPage("${nav.toPage}");
+        navDesc.setToPage("${nav.toPage}");
 #end
 #if(${nav.toView})
-    navDesc.setToView("${nav.toView}");
+        navDesc.setToView("${nav.toView}");
 #end
 #if(${nav.toDialog})
-    navDesc.setToDialog("${nav.toDialog}");
+        navDesc.setToDialog("${nav.toDialog}");
 #end
 #if(${nav.message})
-    navDesc.setMessage("${nav.message}");
+        navDesc.setMessage("${nav.message}");
 #end
-    navDesc.setCloseCurrentView(${nav.closeCurrentView});
-    navDesc.setKeepMenuOpen(${nav.keepMenuOpen});
+        navDesc.setCloseCurrentView(${nav.closeCurrentView});
+        navDesc.setKeepMenuOpen(${nav.keepMenuOpen});
 #if(${nav.params})
 #foreach($p in $nav.params)
-    navDesc.addParameter("${p.name}","${p.value}");
+        navDesc.addParameter("${p.name}","${p.value}");
 #end
 #end
         addNavigation(navDesc);
