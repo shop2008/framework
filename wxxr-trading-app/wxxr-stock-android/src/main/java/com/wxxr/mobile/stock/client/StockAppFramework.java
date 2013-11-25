@@ -21,6 +21,7 @@ import com.wxxr.mobile.android.preference.PreferenceManagerModule;
 import com.wxxr.mobile.android.security.DummySiteSecurityModule;
 import com.wxxr.mobile.android.ui.module.AndroidI10NServiceModule;
 import com.wxxr.mobile.android.validation.ValidationMessageInterpolator;
+import com.wxxr.mobile.core.command.impl.CommandExecutorModule;
 import com.wxxr.mobile.core.event.api.EventRouterImpl;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -102,6 +103,9 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		rest.getClient().register(XStreamProvider.class);
 		rest.getClient().register(GSONProvider.class);
 		registerKernelModule(rest);
+		CommandExecutorModule<IStockAppContext> cmdExecutor = new CommandExecutorModule<IStockAppContext>();
+		CommandIntializer.initBizCommand(cmdExecutor);
+		registerKernelModule(cmdExecutor);
 		registerKernelModule(new WorkbenchManagerModule());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		
