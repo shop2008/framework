@@ -25,6 +25,8 @@ import com.wxxr.mobile.core.event.api.EventRouterImpl;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
+import com.wxxr.mobile.core.rest.provider.GSONProvider;
+import com.wxxr.mobile.core.rest.provider.XStreamProvider;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
@@ -96,7 +98,10 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		m.setEnablegzip(false);
 		m.setConnectionPoolSize(30);
 		registerKernelModule(m);
-		registerKernelModule(new RestEasyClientModule<IStockAppContext>());
+		RestEasyClientModule<IStockAppContext> rest = new RestEasyClientModule<IStockAppContext>();
+		rest.getClient().register(XStreamProvider.class);
+		rest.getClient().register(GSONProvider.class);
+		registerKernelModule(rest);
 		registerKernelModule(new WorkbenchManagerModule());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		
