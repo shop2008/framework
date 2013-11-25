@@ -81,10 +81,6 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 			return new AndroidPageNavigator(uiContext);
 		}
 
-		@Override
-		protected IWorkbench createWorkbench() {
-			return doCreateWorkbench();
-		}
 	};
 
 
@@ -152,19 +148,5 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		super.notifyKernelStarted();
 		manager.notifyUIInitEvent();
 	}
-
-	/**
-	 * @return
-	 */
-	protected IWorkbench doCreateWorkbench() {
-		return new WorkbenchBase(uiContext) {
-			
-			@Override
-			public String[] getPageIds() {
-				return manager.getAllRegisteredPageIds();
-			}
-		};
-	}
-
 
 }
