@@ -164,8 +164,9 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 	public void destroy(){
 		//destroy children
 		if(this.children != null){
-			for (T ui : this.children) {
-				handleDestroy(ui);
+			Object[] vals = this.children.toArray();
+			for (Object ui : vals) {
+				handleDestroy((T)ui);
 			}
 			this.children.clear();
 			this.children = null;
