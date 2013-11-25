@@ -39,7 +39,7 @@ public class ViewModelClass extends AbstractClassModel {
 	private Map<String, ExpressionModel> expressions;
 	private Map<String, BeanBindingModel> beanBindings;
 	boolean traceRequired,toolbarRequired;
-	private String applicationId;
+	private String applicationId,defaultName;
 	private String id;
 	private boolean isPage,singleton, provideSelection;
 	private String description;
@@ -514,6 +514,20 @@ public class ViewModelClass extends AbstractClassModel {
 	 */
 	public void setProvideSelection(boolean provideSelection) {
 		this.provideSelection = provideSelection;
+	}
+
+	/**
+	 * @return the defaultName
+	 */
+	public String getDefaultName() {
+		return defaultName;
+	}
+
+	/**
+	 * @param defaultName the defaultName to set
+	 */
+	public void setDefaultName(String defaultName) {
+		this.defaultName = defaultName;
 	}
 
 //	/**

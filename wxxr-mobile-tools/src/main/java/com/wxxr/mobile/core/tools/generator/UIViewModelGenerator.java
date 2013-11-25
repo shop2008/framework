@@ -3,43 +3,35 @@
  */
 package com.wxxr.mobile.core.tools.generator;
 
-import static com.wxxr.mobile.tools.model.ViewModelUtils.addField;
-import static com.wxxr.mobile.tools.model.ViewModelUtils.addMethod;
+import static com.wxxr.mobile.tools.model.ViewModelUtils.createViewModelClass;
+import static com.wxxr.mobile.tools.model.ViewModelUtils.createWorkbenchModel;
 
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.source.tree.ImportTree;
-import com.sun.source.util.TreePath;
-import com.wxxr.mobile.android.ui.BindableActivity;
 import com.wxxr.mobile.android.ui.BindableFragment;
 import com.wxxr.mobile.android.ui.BindableFragmentActivity;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.tools.AbstractCodeGenerator;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.annotation.Workbench;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.tools.model.PModeProviderClass;
 import com.wxxr.mobile.tools.model.TargetUIClass;
 import com.wxxr.mobile.tools.model.ViewDescriptorClass;
 import com.wxxr.mobile.tools.model.ViewModelClass;
+import com.wxxr.mobile.tools.model.WorkbenchModel;
 
 /**
  * @author neillin
@@ -53,6 +45,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 	private static final Logger log = LoggerFactory.getLogger(UIViewModelGenerator.class);
 	
 	private PModeProviderClass provider;
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.tools.AbstractCodeGenerator#doCodeGeneration(java.util.Set, com.wxxr.mobile.core.tools.ICodeGenerationContext)
 	 */
@@ -65,90 +58,24 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 		int cnt = 0;
 		for (Element element : elements) {
 			View ann = element.getAnnotation(View.class);
-			if(ann != null){
-				cnt++;
-				String pkg = null; //
-				TypeElement typeElem = (TypeElement)element;
-//				UIViewModelSourceScanner scanner = new UIViewModelSourceScanner();
-				String elementFQN = typeElem.getQualifiedName().toString();
-//				log.warn("Class source :"+context.getTrees().getTree(element));
-//				scanner.scan(treePath, context);
-				int idx = elementFQN.lastIndexOf('.');
-				String defaultPkg ="";
-				String defaultName = elementFQN;
-				if(idx > 0){
-					defaultPkg = elementFQN.substring(0,idx);
-					defaultName = elementFQN.substring(idx+1);
-				}
-				if(StringUtils.isBlank(pkg)){
-					pkg = defaultPkg;
-				}
-				if(pkg.endsWith(".model")){
-					pkg = pkg.substring(0,pkg.length()-6);
-				}
+			Workbench wbAnn = element.getAnnotation(Workbench.class);
+			if(wbAnn != null){
+				WorkbenchModel model = createWorkbenchModel(context,(TypeElement)element,wbAnn);
 				if(provider == null){
 					provider = new PModeProviderClass();
-					provider.setPkgName(pkg+".view");
+					provider.setPkgName(model.getPkgName());
 					provider.setName("DeclarativePModelProvider");
 				}
-				ViewModelClass model = new ViewModelClass(context);
-				model.setApplicationId(pkg);
-				model.setPkgName(pkg+".view");
-				model.setName(defaultName+"Model");
-				if(StringUtils.isNotBlank(ann.description())){
-					model.setDescription(ann.description());
-				}
-				if((ann.alias() != null)&&(ann.alias().length > 0)){
-					model.setAlias(ann.alias());
-				}
-				model.setToolbarRequired(ann.withToolbar());
-				model.setSingleton(ann.singleton());
-				model.setProvideSelection(ann.provideSelection());
-				if(StringUtils.isNotBlank(ann.name())){
-					model.setId(StringUtils.trimToNull(ann.name()));
-				}else{
-					model.setId(defaultName);
-				}
-				TreePath treePath = context.getTrees().getPath(context.getProcessingEnvironment().getElementUtils().getTypeElement(elementFQN));
-				List<? extends ImportTree> imports = treePath.getCompilationUnit().getImports();
-				if(imports != null){
-					for (ImportTree importTree : imports) {
-						String importClass = importTree.getQualifiedIdentifier().toString();
-						TypeElement importElem = context.getProcessingEnvironment().getElementUtils().getTypeElement(importClass);
-						if((importElem != null)&&(importElem.getKind() == ElementKind.ANNOTATION_TYPE)){
-							continue;
-						}
-						model.addImport(importClass);
-					}
-				}
-				TypeMirror superClass = typeElem.getSuperclass();
-				Types util = context.getProcessingEnvironment().getTypeUtils();
-				TypeMirror type = typeElem.asType();
-				TypeMirror pageType = context.getProcessingEnvironment().getElementUtils().getTypeElement(IPage.class.getCanonicalName()).asType();
-				model.setPage(util.isAssignable(type, pageType));
-				if(!util.isSameType(util.getNoType(TypeKind.NONE),superClass)){
-					model.setSuperClass(((TypeElement)util.asElement(superClass)).getQualifiedName().toString());
-				}else{
-					model.setSuperClass(PageBase.class.getCanonicalName());
-				}
-				List<? extends TypeMirror> interfaces = typeElem.getInterfaces();
-				if(interfaces != null){
-					for (TypeMirror typeMirror : interfaces) {
-						model.addInterface(((TypeElement)util.asElement(typeMirror)).getQualifiedName().toString());
-					}
-				}
-				List<? extends Element> children = typeElem.getEnclosedElements();
-				if(children != null){
-					for (Element child : children) {
-						switch(child.getKind()){
-						case FIELD:
-							addField(context,model,child);
-							break;
-						case METHOD:
-							addMethod(context,model, child);
-							break;
-						}
-					}
+				provider.setWorkbenchDescriptor(model.getClassName());
+				generateWorkbenchDescriptor(context,model,filer);
+			}else if(ann != null){
+				cnt++;
+				TypeElement typeElem = (TypeElement)element;
+				ViewModelClass model = createViewModelClass(context,typeElem,ann);
+				if(provider == null){
+					provider = new PModeProviderClass();
+					provider.setPkgName(model.getApplicationId()+".view");
+					provider.setName("DeclarativePModelProvider");
 				}
 				model.prepare(context);
 				Map<String, Object> attributes = new HashMap<String, Object>();
@@ -185,8 +112,8 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 					if(vmFile != null){
 						targetUI = new TargetUIClass();
 						targetUI.setViewModel(model);
-						targetUI.setName(defaultName);
-						targetUI.setPkgName(pkg+".ui");
+						targetUI.setName(model.getDefaultName());
+						targetUI.setPkgName(model.getApplicationId()+".ui");
 						String className = StringUtils.trimToNull(binding.superClassName());
 						if(className != null){
 							targetUI.setSuperClass(className);
@@ -292,6 +219,23 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 			log.error("Failed to generate UI class for :"+descriptor.getPkgName()+"."+descriptor.getName(),e);
 		}
 	}
+	
+	protected void generateWorkbenchDescriptor(ICodeGenerationContext context,WorkbenchModel model,Filer filer) {
+		Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("model", model);
+		String vmFile = "WorkbenchDescriptor.vm";
+		try {
+			String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/"+vmFile, attributes);
+			JavaFileObject file = filer.createSourceFile(model.getPkgName()+"."+model.getName());
+			log.info("Generate java class file : {}",file.toUri());
+			Writer w = file.openWriter();
+			w.write(text);
+			w.close();
+		} catch (Throwable e) {
+			log.error("Failed to generate Workbench descriptor for :"+model.getPkgName()+"."+model.getName(),e);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.tools.AbstractCodeGenerator#finishProcessing(com.wxxr.mobile.core.tools.ICodeGenerationContext)
 	 */

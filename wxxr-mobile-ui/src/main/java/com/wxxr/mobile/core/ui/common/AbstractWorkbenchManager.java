@@ -29,6 +29,7 @@ import com.wxxr.mobile.core.ui.api.IValidationErrorHandler;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
+import com.wxxr.mobile.core.ui.api.IWorkbenchDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.UISystemInitEvent;
@@ -38,6 +39,8 @@ import com.wxxr.mobile.core.ui.api.UISystemInitEvent;
  *
  */
 public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
+	
+	private IWorkbenchDescriptor workbenchDescriptor;
 	
 	private GenericContainer<IViewDescriptor> viewContainer;
 	
@@ -273,7 +276,12 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	
 	protected abstract IPageNavigator createPageNavigator();
 	
-	protected abstract IWorkbench createWorkbench();
+	protected IWorkbench createWorkbench() {
+		if(this.workbenchDescriptor == null){
+			this.workbenchDescriptor = new DefaultWorkenchDescriptor();
+		}
+		return this.workbenchDescriptor.createWorkbench(context);
+	}
 
 
 	/* (non-Javadoc)
@@ -330,5 +338,24 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	@Override
 	public IValidationErrorHandler getValidationErrorHandler() {
 		return null;
+	}
+
+
+	/**
+	 * @return the workbenchDescriptor
+	 */
+	public IWorkbenchDescriptor getWorkbenchDescriptor() {
+		return workbenchDescriptor;
+	}
+
+
+	/**
+	 * @param workbenchDescriptor the workbenchDescriptor to set
+	 */
+	public void setWorkbenchDescriptor(IWorkbenchDescriptor workbenchDescriptor) {
+		if(this.workbench != null){
+			throw new IllegalStateException("Workbench was created, it's not right time to set workbench description at this time !");
+		}
+		this.workbenchDescriptor = workbenchDescriptor;
 	}
 }

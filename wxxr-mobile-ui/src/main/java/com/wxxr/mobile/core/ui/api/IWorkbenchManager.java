@@ -12,6 +12,8 @@ import com.wxxr.javax.validation.Validator;
  *
  */
 public interface IWorkbenchManager {
+	IWorkbenchDescriptor getWorkbenchDescriptor();
+	void setWorkbenchDescriptor(IWorkbenchDescriptor workbenchDescriptor);
 	IWorkbench getWorkbench();
 	IPageNavigator getPageNavigator();
 	IUICommandExecutor getCommandExecutor();

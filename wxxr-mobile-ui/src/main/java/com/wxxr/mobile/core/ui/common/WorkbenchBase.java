@@ -167,6 +167,14 @@ public abstract class WorkbenchBase implements IWorkbench {
 	@Override
 	public ISelectionService getSelectionService() {
 		return this.selectionService;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getPageIds()
+	 */
+	@Override
+	public String[] getPageIds() {
+		return this.uiContext.getWorkbenchManager().getAllRegisteredPageIds();
 	}	
 
 }

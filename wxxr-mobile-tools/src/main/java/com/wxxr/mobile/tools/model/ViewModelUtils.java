@@ -3,6 +3,9 @@
  */
 package com.wxxr.mobile.tools.model;
 
+import static com.wxxr.mobile.tools.model.ViewModelUtils.addField;
+import static com.wxxr.mobile.tools.model.ViewModelUtils.addMethod;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -18,7 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.ext.DeclHandler;
 
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
@@ -40,8 +45,11 @@ import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
+import com.wxxr.mobile.core.ui.annotation.Workbench;
 import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
@@ -51,6 +59,7 @@ import com.wxxr.mobile.core.ui.common.DomainValueChangedEventImpl;
 import com.wxxr.mobile.core.ui.common.ELAttributeValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ModelUtils;
+import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.ui.common.SimpleProgressGuard;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -62,6 +71,150 @@ import com.wxxr.mobile.core.util.StringUtils;
 public abstract class ViewModelUtils {
 	private static final Logger log = LoggerFactory.getLogger(UIViewModelGenerator.class);
  
+	public static WorkbenchModel createWorkbenchModel(ICodeGenerationContext context,TypeElement typeElem,Workbench ann){
+		WorkbenchModel model = new WorkbenchModel();
+		String pkg = null;
+		String elementFQN = typeElem.getQualifiedName().toString();
+		model.setWorkbenchClass(elementFQN);
+		int idx = elementFQN.lastIndexOf('.');
+		String defaultPkg ="";
+		String defaultName = elementFQN;
+		if(idx > 0){
+			defaultPkg = elementFQN.substring(0,idx);
+			defaultName = elementFQN.substring(idx+1);
+		}
+		if(StringUtils.isBlank(pkg)){
+			pkg = defaultPkg;
+		}
+		if(pkg.endsWith(".model")){
+			pkg = pkg.substring(0,pkg.length()-6);
+		}
+		model.setPkgName(pkg+".view");
+		model.setName(defaultName+"Descriptor");
+		if(StringUtils.isNotBlank(ann.description())){
+			model.setDescription(ann.description());
+		}
+		if(StringUtils.isNotBlank(ann.title())){
+			model.setTitle(ann.title());
+		}
+		Navigation[] navs = ann.defaultNavigations();
+		log.info("Found workbench default navigations , size :"+(navs != null ? navs.length : 0));
+		if(navs != null){
+			for (Navigation nav : navs) {
+				NavigationModel nModel = new NavigationModel();
+				nModel.setResult(nav.on());
+				if(!StringUtils.isBlank(nav.message())){
+					nModel.setMessage(nav.message());
+				}
+				if(!StringUtils.isBlank(nav.showPage())){
+					nModel.setToPage(nav.showPage());
+				}
+				if(!StringUtils.isBlank(nav.showView())){
+					nModel.setToView(nav.showView());
+				}
+				if(!StringUtils.isBlank(nav.showDialog())){
+					nModel.setToDialog(nav.showDialog());
+				}
+				nModel.setCloseCurrentView(nav.closeCurrentView());
+				nModel.setKeepMenuOpen(nav.keepMenuOpen());
+				Parameter[] params = nav.params();
+				if(params != null){
+					for (int i = 0; i < params.length; i++) {
+						com.wxxr.mobile.tools.model.Parameter p = new com.wxxr.mobile.tools.model.Parameter();
+						p.setName(params[i].name());
+						p.setValue(params[i].value());
+						nModel.addParameter(p);
+					}
+				}
+				model.addNavigation(nModel);
+			}
+		}
+		return model;
+	}
+	
+	public static ViewModelClass createViewModelClass(ICodeGenerationContext context,TypeElement typeElem,View ann) {
+		String pkg = null; //
+//		
+//		UIViewModelSourceScanner scanner = new UIViewModelSourceScanner();
+		ViewModelClass model = new ViewModelClass(context);
+		String elementFQN = typeElem.getQualifiedName().toString();
+//		log.warn("Class source :"+context.getTrees().getTree(element));
+//		scanner.scan(treePath, context);
+		int idx = elementFQN.lastIndexOf('.');
+		String defaultPkg ="";
+		String defaultName = elementFQN;
+		if(idx > 0){
+			defaultPkg = elementFQN.substring(0,idx);
+			defaultName = elementFQN.substring(idx+1);
+		}
+		if(StringUtils.isBlank(pkg)){
+			pkg = defaultPkg;
+		}
+		if(pkg.endsWith(".model")){
+			pkg = pkg.substring(0,pkg.length()-6);
+		}
+		model.setApplicationId(pkg);
+		model.setPkgName(pkg+".view");
+		model.setDefaultName(defaultName);
+		model.setName(defaultName+"Model");
+		if(StringUtils.isNotBlank(ann.description())){
+			model.setDescription(ann.description());
+		}
+		if((ann.alias() != null)&&(ann.alias().length > 0)){
+			model.setAlias(ann.alias());
+		}
+		model.setToolbarRequired(ann.withToolbar());
+		model.setSingleton(ann.singleton());
+		model.setProvideSelection(ann.provideSelection());
+		if(StringUtils.isNotBlank(ann.name())){
+			model.setId(StringUtils.trimToNull(ann.name()));
+		}else{
+			model.setId(defaultName);
+		}
+		TreePath treePath = context.getTrees().getPath(context.getProcessingEnvironment().getElementUtils().getTypeElement(elementFQN));
+		List<? extends ImportTree> imports = treePath.getCompilationUnit().getImports();
+		if(imports != null){
+			for (ImportTree importTree : imports) {
+				String importClass = importTree.getQualifiedIdentifier().toString();
+				TypeElement importElem = context.getProcessingEnvironment().getElementUtils().getTypeElement(importClass);
+				if((importElem != null)&&(importElem.getKind() == ElementKind.ANNOTATION_TYPE)){
+					continue;
+				}
+				model.addImport(importClass);
+			}
+		}
+		TypeMirror superClass = typeElem.getSuperclass();
+		Types util = context.getProcessingEnvironment().getTypeUtils();
+		TypeMirror type = typeElem.asType();
+		TypeMirror pageType = context.getProcessingEnvironment().getElementUtils().getTypeElement(IPage.class.getCanonicalName()).asType();
+		model.setPage(util.isAssignable(type, pageType));
+		if(!util.isSameType(util.getNoType(TypeKind.NONE),superClass)){
+			model.setSuperClass(((TypeElement)util.asElement(superClass)).getQualifiedName().toString());
+		}else{
+			model.setSuperClass(PageBase.class.getCanonicalName());
+		}
+		List<? extends TypeMirror> interfaces = typeElem.getInterfaces();
+		if(interfaces != null){
+			for (TypeMirror typeMirror : interfaces) {
+				model.addInterface(((TypeElement)util.asElement(typeMirror)).getQualifiedName().toString());
+			}
+		}
+		List<? extends Element> children = typeElem.getEnclosedElements();
+		if(children != null){
+			for (Element child : children) {
+				switch(child.getKind()){
+				case FIELD:
+					addField(context,model,child);
+					break;
+				case METHOD:
+					addMethod(context,model, child);
+					break;
+				}
+			}
+		}
+		return model;
+	}
+
 
 	public static MethodModel createInitMethod(ICodeGenerationContext context,ViewModelClass model){
 		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
@@ -411,7 +564,7 @@ public abstract class ViewModelUtils {
 	public static FieldModel createDataFieldField(ICodeGenerationContext context,ViewModelClass model, DataFieldModel field){
 		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
 		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
-		log.info("Field Type "+field.getType()+", field name :"+field.getName());
+//		log.info("Field Type "+field.getType()+", field name :"+field.getName());
 		String valType = new TypeModel(field.getType()).getType();
 		if(valType.indexOf('.')<0){
 			TypeKind kind = TypeKind.valueOf(valType.toUpperCase());

@@ -113,4 +113,16 @@ public class NavigationModel {
 	public void setKeepMenuOpen(boolean keepMenuOpen) {
 		this.keepMenuOpen = keepMenuOpen;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "NavigationModel [result=" + result + ", toPage=" + toPage
+				+ ", toView=" + toView + ", message=" + message + ", toDialog="
+				+ toDialog + ", closeCurrentView=" + closeCurrentView
+				+ ", keepMenuOpen=" + keepMenuOpen + ", params=" + params + "]";
+	}
+	
+	
 }

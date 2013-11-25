@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 public class PModeProviderClass extends AbstractClassModel {
 	private LinkedList<String> descriptors = new LinkedList<String>();
 	private Map<String, String> alias;
+	private String workbenchDescriptor;
 	
 	public void addDescriptor(String descriptor){
 		descriptors.add(addImport(descriptor));
@@ -34,5 +35,19 @@ public class PModeProviderClass extends AbstractClassModel {
 	public Entry<String, String>[] getAllAlias() 
 	{
 		return (this.alias != null)&& (this.alias.size() > 0) ? this.alias.entrySet().toArray(new Entry[0]) : null;
+	}
+
+	/**
+	 * @return the workbenchDescriptor
+	 */
+	public String getWorkbenchDescriptor() {
+		return workbenchDescriptor;
+	}
+
+	/**
+	 * @param workbenchDescriptor the workbenchDescriptor to set
+	 */
+	public void setWorkbenchDescriptor(String workbenchDescriptor) {
+		this.workbenchDescriptor = addImport(workbenchDescriptor);
 	}
 }

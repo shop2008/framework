@@ -63,7 +63,7 @@ public abstract class AttributedFieldModel extends FieldModel {
 	}
 
 	public void addAttribute(String key,String value){
-		log.info("add attribute, key :"+key+", value :"+value);
+//		log.info("add attribute, key :"+key+", value :"+value);
 		if(this.attributes == null){
 			this.attributes = new HashMap<String, Parameter>();
 		}
