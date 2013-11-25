@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.core.rpc.rest;
 
-import com.wxxr.mobile.core.api.IApplication;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
@@ -39,6 +38,10 @@ public class RestEasyClientModule<T extends IKernelContext> extends
 	@Override
 	protected void stopService() {
 		service.shutdown();
+	}
+	
+	public ResteasyRestClientService getClient() {
+		return this.service;
 	}
 
 }
