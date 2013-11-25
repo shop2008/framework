@@ -18,4 +18,5 @@ import java.lang.annotation.Target;
 @Documented
 @CommandConstraint(validatedBy={})
 public @interface NetworkConstraint {
+	NetworkConnectionType[] allowConnectionTypes() default {};	// default means any connection is allowed
 }
