@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.command.api.UnsupportedCommandException;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 
 /**
  * @author neillin
@@ -49,7 +50,21 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandExecutor#submitCommand(com.wxxr.mobile.core.command.api.ICommand)
 	 */
-	public <T> Future<T> submitCommand(final ICommand<T> command) {
+	public <V> Future<V> submitCommand(final ICommand<V> command) {
+		final ICommandHandler handler = validateCommand(command);
+		return this.executor.submit(new Callable<V>() {
+
+			public V call() throws Exception {
+				return handler.execute(command);
+			}
+		});
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 */
+	protected <V> ICommandHandler validateCommand(final ICommand<V> command) {
 		final ICommandHandler handler;
 		synchronized(this.handlers){
 			handler = this.handlers.get(command.getCommandName());
@@ -67,12 +82,7 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 				iCommandValidator.checkCommandConstraints(command);
 			}
 		}
-		return this.executor.submit(new Callable<T>() {
-
-			public T call() throws Exception {
-				return handler.execute(command);
-			}
-		});
+		return handler;
 	}
 
 	/* (non-Javadoc)
@@ -211,6 +221,25 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 	 */
 	public void setCommandQueueSize(int commandQueueSize) {
 		this.commandQueueSize = commandQueueSize;
+	}
+
+	public <V> void submitCommand(final ICommand<V> command, final IAsyncCallback callback) {
+		if(callback == null){
+			throw new IllegalArgumentException("Invalid callback NULL !");
+		}
+		final ICommandHandler handler = validateCommand(command);
+		this.executor.submit(new Runnable() {
+			
+			public void run() {
+				try {
+					callback.success(handler.execute(command));
+				}catch(Throwable t){
+					callback.failed(t);
+				}
+				
+			}
+		});
+		
 	}
 
 }
