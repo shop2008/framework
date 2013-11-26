@@ -27,15 +27,18 @@ public class BindableListWrapper<E> implements IBindableBean {
 		this.cache = cache;
 		this.filter = filter;
 		this.comparator = comparator;
+		setupCacheCallback();
 	}
 	
 	public BindableListWrapper(IBindableEntityCache<?, E> cache,IEntityFilter<E> filter){
 		this.cache = cache;
 		this.filter = filter;
+		setupCacheCallback();
 	}
 
 	public BindableListWrapper(IBindableEntityCache<?, E> cache){
 		this.cache = cache;
+		setupCacheCallback();
 	}
 	
 	public BindableListWrapper(IBindableEntityCache<?, E> cache,Comparator<E> comparator){
