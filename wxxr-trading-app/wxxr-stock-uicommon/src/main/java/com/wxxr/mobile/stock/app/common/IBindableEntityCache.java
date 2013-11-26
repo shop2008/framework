@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.app.common;
 
+import java.util.Comparator;
+
 public interface IBindableEntityCache<K, V> {
 
 	void registerCallback(ICacheUpdatedCallback cb);
@@ -19,5 +21,9 @@ public interface IBindableEntityCache<K, V> {
 	int getCacheSize();
 
 	void acceptVisitor(ICacheVisitor<V> visitor);
+	
+	BindableListWrapper<V> getEntities(IEntityFilter<V> filter, Comparator<V> comparator);
+	
+	String getEntityTypeName();
 
 }

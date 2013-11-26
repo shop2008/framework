@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.common;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -319,7 +320,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#acceptVisitor(com.wxxr.mobile.stock.app.common.ICacheVisitor)
 	 */
 	@Override
-	public void acceptVisitor(ICacheVisitor<K, V> visitor){
+	public void acceptVisitor(ICacheVisitor<V> visitor){
 		rlock.lock();
 		try {
 			for (Entry<K, V> entry : this.cache.entrySet()) {
@@ -366,6 +367,23 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	@Override
 	public int getAutoReloadIntervalInSeconds() {
 		return reloadIntervalInSeconds;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getEntities(com.wxxr.mobile.stock.app.common.IEntityFilter, java.util.Comparator)
+	 */
+	@Override
+	public BindableListWrapper<V> getEntities(IEntityFilter<V> filter,
+			Comparator<V> comparator) {
+		return new BindableListWrapper<V>(this,filter,comparator);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getEntityTypeName()
+	 */
+	@Override
+	public String getEntityTypeName() {
+		return this.name;
 	}
 
 }
