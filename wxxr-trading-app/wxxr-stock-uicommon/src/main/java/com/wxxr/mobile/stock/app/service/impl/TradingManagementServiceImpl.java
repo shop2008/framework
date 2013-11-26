@@ -345,7 +345,7 @@ public class TradingManagementServiceImpl extends
 		TradingAccountVO vo  = null;
 		try {
 			vo = fetchDataFromServer(new Callable<TradingAccountVO>() {
-				public TradingAccountVO call() throws Exception {
+				public TradingAccountVO call()  {
 					try {
 						TradingAccountVO _vo = getService(IRestProxyService.class)
 								.getRestService(TradingResourse.class).getAccount(
@@ -358,7 +358,8 @@ public class TradingManagementServiceImpl extends
 						log.warn(String.format(
 								"Error when fetch trading account info[id=%s]",
 								acctID), e);
-						throw new StockAppBizException("网络不给力，请稍候再试");
+//						throw new StockAppBizException("网络不给力，请稍候再试");
+						return null;
 					}
 				}
 			});
@@ -416,7 +417,7 @@ public class TradingManagementServiceImpl extends
 						}
 					} catch (Throwable e) {
 						log.warn("Failed to create trading account", e);
-						throw new StockAppBizException(e.getMessage());
+//						throw new StockAppBizException(e.getMessage());
 					}
 					return _vo;
 				}
@@ -431,7 +432,7 @@ public class TradingManagementServiceImpl extends
 			}
 		} catch (Exception e) {
 			log.warn("Error when fetching create trading account config", e);
-			throw new StockAppBizException("网络不给力，请稍后再试");
+//			throw new StockAppBizException("网络不给力，请稍后再试");
 		}
 		return createTDConfig;
 	}
@@ -822,8 +823,8 @@ public class TradingManagementServiceImpl extends
 				}
 			}
 			myTradingAccounts.setSuccessTradingAccounts(beanList);
-			myTradingAccounts.setVirtualTradingAccounts(vbeanList);
-			myTradingAccounts.setRealTradingAccounts(rbeanList);
+//			myTradingAccounts.setVirtualTradingAccounts(vbeanList);
+//			myTradingAccounts.setRealTradingAccounts(rbeanList);
 		}
 		return myTradingAccounts;
 	}

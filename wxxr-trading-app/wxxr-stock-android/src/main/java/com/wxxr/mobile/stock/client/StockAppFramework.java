@@ -33,9 +33,9 @@ import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.IStockAppFramework;
-import com.wxxr.mobile.stock.app.service.impl.ArticleManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.NewArticleManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
@@ -118,7 +118,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			registerKernelModule(new MockTradingManagementService());
 			registerKernelModule(new MockInfoCenterManagementService());
 		}else{
-			registerKernelModule(new ArticleManagementServiceImpl());//
+			registerKernelModule(new NewArticleManagementServiceImpl());//
 			registerKernelModule(new UserManagementServiceImpl());
 			registerKernelModule(new TradingManagementServiceImpl());
 			registerKernelModule(new InfoCenterManagementServiceImpl());
