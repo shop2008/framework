@@ -122,6 +122,7 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 	public boolean handleCommandResult(List result,
 			IReloadableEntityCache<String, EarnRankItemBean> cache) {
 		List<HomePageVO> volist = (List<HomePageVO>)result;
+		boolean updated = false;
 		for (HomePageVO vo : volist) {
 			String accId = vo.getAccID();
 			
@@ -130,12 +131,12 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 				bean = new EarnRankItemBean();
 				bean.setAcctId(accId);
 				cache.putEntity(accId, bean);
+				updated = true;
 			}
-			bean.setAcctId(vo.getAccID());
 			bean.setImgUrl(vo.getUrl());
 			bean.setTitle(vo.getWordage());
 		}
-		return false;
+		return updated;
 	}
 
 	/* (non-Javadoc)
