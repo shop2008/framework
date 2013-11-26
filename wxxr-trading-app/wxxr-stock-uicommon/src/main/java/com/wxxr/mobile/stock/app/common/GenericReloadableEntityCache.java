@@ -12,10 +12,10 @@ import com.wxxr.mobile.core.microkernel.api.KUtils;
  * @author neillin
  *
  */
-public class GenericReloadableEntityCache<K, V> extends
+public class GenericReloadableEntityCache<K,V,T> extends
 		ReloadableEntityCacheImpl<K, V> {
 	
-	private IEntityLoader entityLoader;
+	private IEntityLoader<K,V,T> entityLoader;
 	private Map<String, Object> commandParameters;
 
 	public GenericReloadableEntityCache(String name, int reloadInterval) {
@@ -26,7 +26,8 @@ public class GenericReloadableEntityCache<K, V> extends
 		super(name);
 	}
 	
-	protected IEntityLoader getEntityLoader() {
+	@SuppressWarnings("unchecked")
+	protected IEntityLoader<K,V,T> getEntityLoader() {
 		if(this.entityLoader == null){
 			this.entityLoader = KUtils.getService(IEntityLoaderRegistry.class).getEntityLoader(getEntityTypeName());
 		}
@@ -44,15 +45,16 @@ public class GenericReloadableEntityCache<K, V> extends
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.ReloadableEntityCacheImpl#processReloadResult(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean processReloadResult(Object result) {
-		return getEntityLoader().handleCommandResult(result, this);
+		return getEntityLoader().handleCommandResult((T)result, this);
 	}
 
 	/**
 	 * @param entityLoader the entityLoader to set
 	 */
-	public void setEntityLoader(IEntityLoader entityLoader) {
+	public void setEntityLoader(IEntityLoader<K,V,T> entityLoader) {
 		this.entityLoader = entityLoader;
 	}
 
