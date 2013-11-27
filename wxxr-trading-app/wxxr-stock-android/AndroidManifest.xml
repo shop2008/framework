@@ -82,6 +82,11 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.StockKLineView"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".ui.UserPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
