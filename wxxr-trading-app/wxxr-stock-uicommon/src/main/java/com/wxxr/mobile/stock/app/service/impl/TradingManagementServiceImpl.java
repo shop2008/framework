@@ -38,6 +38,7 @@ import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -122,7 +123,7 @@ public class TradingManagementServiceImpl extends
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("earnRank", new EarnRankItemLoader());
 		registry.registerEntityLoader("tRank", new TRankItemLoader());
-		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
+		registry.registerEntityLoader("t1Rank", new T1RankItemLoader());
 		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		context.registerService(ITradingManagementService.class, this);
