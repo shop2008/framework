@@ -31,20 +31,26 @@ import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
+import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
-import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
+import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 
 /**
  * @author neillin
@@ -73,6 +79,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	 * 个人主页
 	 */
 	private PersonalHomePageBean myPBean = new PersonalHomePageBean();
+	
+	private UserAssetBean userAssetBean;
+	
+	private IReloadableEntityCache<String,UserAssetBean> userAssetBeanCache;
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -81,6 +91,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void startService() {
+		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
+		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 	}
@@ -427,7 +439,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public ScoreInfoBean getMyUserScoreInfo() {
 		if (context.getApplication().isInDebugMode()) {
-			
 			myScoreInfo = MockDataUtils.mockScoreInfo();
 			return myScoreInfo;
 		}
@@ -635,6 +646,25 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private <T> T getRestService(Class<T> restResouce) {
 		return context.getService(IRestProxyService.class).getRestService(
 				restResouce);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserAssetBean()
+	 */
+	@Override
+	public UserAssetBean getUserAssetBean() {
+		if(userAssetBean==null){
+			if(userAssetBeanCache==null){
+				userAssetBeanCache=new GenericReloadableEntityCache<String, UserAssetBean, UserAssetVO>("userAssetBean");
+			}
+			userAssetBean=userAssetBeanCache.getEntity(UserAssetBean.class.getCanonicalName());
+			if(userAssetBean==null){
+				userAssetBean=new UserAssetBean();
+				userAssetBeanCache.putEntity(UserAssetBean.class.getCanonicalName(), userAssetBean);
+			}
+		}
+		userAssetBeanCache.doReloadIfNeccessay();
+		return userAssetBean;
 	}
 
 

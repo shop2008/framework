@@ -9,6 +9,7 @@ import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
+import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 
 /**
@@ -201,4 +202,10 @@ public interface IUserManagementService {
 	 * @throws Exception
 	 */
 	PersonalHomePageBean getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
+	
+	/**
+	 * 获取自己的账户
+	 * @return
+	 */
+	UserAssetBean getUserAssetBean();
 }

@@ -99,17 +99,19 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	public boolean handleCommandResult(List<GainVO> result,
 			IReloadableEntityCache<Long, GainBean> cache) {
 		boolean updated = false;
-		for (GainVO vo : result) {
-			Long accId = vo.getTradingAccountId();
-			
-			GainBean bean = cache.getEntity(accId);
-			if(bean == null) {
-				bean = new GainBean();
-				ConverterUtils.fromVO(vo);
-				cache.putEntity(accId, bean);
+		if(result!=null && !result.isEmpty()){
+			for (GainVO vo : result) {
+				Long accId = vo.getTradingAccountId();
+				
+				GainBean bean = cache.getEntity(accId);
+				if(bean == null) {
+					bean = new GainBean();
+					ConverterUtils.fromVO(vo);
+					cache.putEntity(accId, bean);
+				}
+				ConverterUtils.fromVO(vo, bean);
+				updated = true;
 			}
-			ConverterUtils.fromVO(vo, bean);
-			updated = true;
 		}
 		return updated;
 	}
