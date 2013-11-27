@@ -47,12 +47,31 @@ public class ViewModelClass extends AbstractClassModel {
 //	private final ViewModelDomainResolver domainResolver;
 	private final ICodeGenerationContext context;
 	private ArrayList<UnresolvedField> unresolvedFields;
+	private LinkedList<NavigationModel> navigations;
+
 	
 	public ViewModelClass(ICodeGenerationContext ctx){
 //		domainResolver = new ViewModelDomainResolver(ctx);
 		this.context = ctx;
 	}
 	
+
+	
+	public void addNavigation(NavigationModel item){
+		if(this.navigations == null){
+			this.navigations = new LinkedList<NavigationModel>();
+		}
+		if(!this.navigations.contains(item)){
+			this.navigations.add(item);
+		}
+	}
+
+	public NavigationModel[] getNavigations() {
+		return this.navigations != null && this.navigations.isEmpty() == false ? 
+				this.navigations.toArray(new NavigationModel[this.navigations.size()]) :
+				null;
+	}
+
 	public List<UICommandModel> getCommands() {
 		return commandModels == null ? null : new ArrayList<UICommandModel>(commandModels.values());
 	}

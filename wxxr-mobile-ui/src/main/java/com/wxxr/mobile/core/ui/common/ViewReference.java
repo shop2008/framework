@@ -327,5 +327,10 @@ public class ViewReference implements IViewReference {
 	 */
 	public IView clearProperties() {
 		return delegate.clearProperties();
+	}
+
+	@Override
+	public <T> T removeAttribute(AttributeKey<T> key) {
+		return delegate.removeAttribute(key);
 	}	
 }

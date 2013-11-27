@@ -27,4 +27,5 @@ public @interface View {
 	String[] alias() default {};
 	boolean singleton() default false;
 	boolean provideSelection() default false;
+	Navigation[] exceptionNavigations() default {};
 }

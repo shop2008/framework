@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
 /**
@@ -129,6 +130,10 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		}catch(Throwable t){
 			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
 			this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
+			IView view = ModelUtils.getView(field);
+			if(view instanceof ViewBase){
+				((ViewBase)view).handleStartupException(t);
+			}
 			return this.field.getValue();
 		}
 	}

@@ -16,8 +16,10 @@ public interface IWorkbenchManager {
 	void setWorkbenchDescriptor(IWorkbenchDescriptor workbenchDescriptor);
 	IWorkbench getWorkbench();
 	IPageNavigator getPageNavigator();
+	
 	IUICommandExecutor getCommandExecutor();
 	
+	IUIExceptionHandler getExceptionHandler();
 	/**
 	 * return Field binder manager which is suitable for specific target UI context
 	 * @param contextType

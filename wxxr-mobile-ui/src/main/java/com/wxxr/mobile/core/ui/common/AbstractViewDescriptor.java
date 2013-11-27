@@ -4,9 +4,11 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
+import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -25,7 +27,8 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 	private boolean isSingleton;
 	private Map<TargetUISystem, IBindingDescriptor> bindingDescriptiors;
 	private IView singleton;
-	
+	private LinkedList<INavigationDescriptor> navs;
+
 	public AbstractViewDescriptor(){
 		init();
 	}
@@ -121,6 +124,31 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 		}
 		return this;
 	}
+	
+	@Override
+	public INavigationDescriptor[] getExceptionNavigations() {
+		return this.navs != null && this.navs.isEmpty() == false ? 
+				this.navs.toArray(new INavigationDescriptor[this.navs.size()]) :
+				new INavigationDescriptor[0];
+	}
+	
+	public AbstractViewDescriptor addExceptionNavigation(INavigationDescriptor nav){
+		if(this.navs == null){
+			this.navs = new LinkedList<INavigationDescriptor>();
+		}
+		if(!this.navs.contains(nav)){
+			this.navs.addLast(nav);
+		}
+		return this;
+	}
+	
+	public AbstractViewDescriptor removeExceptionNavigation(INavigationDescriptor nav){
+		if(this.navs != null){
+			this.navs.remove(nav);
+		}
+		return this;
+	}
+
 
 	protected abstract IView createPModel(IWorkbenchRTContext ctx);
 	

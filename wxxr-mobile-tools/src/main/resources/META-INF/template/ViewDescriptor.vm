@@ -39,6 +39,32 @@ public class ${model.name} extends AbstractViewDescriptor {
 #if(${model.viewModel.description})
 		setViewDescription("${model.viewModel.description}");
 #end
+#if(${model.navigations})
+#foreach($nav in ${model.navigations}) 
+        navDesc = new SimpleNavigationDescriptor().setResult("${nav.result}");
+#if(${nav.toPage})
+        navDesc.setToPage("${nav.toPage}");
+#end
+#if(${nav.toView})
+        navDesc.setToView("${nav.toView}");
+#end
+#if(${nav.toDialog})
+        navDesc.setToDialog("${nav.toDialog}");
+#end
+#if(${nav.message})
+        navDesc.setMessage("${nav.message}");
+#end
+        navDesc.setCloseCurrentView(${nav.closeCurrentView});
+        navDesc.setKeepMenuOpen(${nav.keepMenuOpen});
+#if(${nav.params})
+#foreach($p in $nav.params)
+        navDesc.addParameter("${p.name}","${p.value}");
+#end
+#end
+        addExceptionNavigation(navDesc);
+        
+#end
+#end
 		addBindingDescriptor(TargetUISystem.ANDROID, new IAndroidBindingDescriptor() {
 			
 			@Override

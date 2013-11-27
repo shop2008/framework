@@ -20,5 +20,5 @@ import java.lang.annotation.Target;
 public @interface Workbench {
 	String description() default "";
 	String title() default "";
-	Navigation[] defaultNavigations() default {};
+	Navigation[] exceptionNavigations() default {};
 }

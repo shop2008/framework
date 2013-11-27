@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.IUICommandExecutor;
+import com.wxxr.mobile.core.ui.api.IUIExceptionHandler;
 import com.wxxr.mobile.core.ui.api.IValidationErrorHandler;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
@@ -47,6 +48,8 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	private IWorkbenchRTContext context;
 	
 	private IUICommandExecutor commandExecutor;
+	
+	private IUIExceptionHandler exceptionHandler;
 	
 	private IFieldAttributeManager fieldAttributeManager;
 	
@@ -116,6 +119,18 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 
 
 	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchManager#getExceptionHandler()
+	 */
+	@Override
+	public IUIExceptionHandler getExceptionHandler() {
+		if(this.exceptionHandler == null){
+			createCommandExecutor();
+		}
+		return this.exceptionHandler;
+	}
+
+
+	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchManager#getAllRegisteredViewIds()
 	 */
 	public String[] getAllRegisteredViewIds() {
@@ -176,7 +191,10 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 
 
 	protected IUICommandExecutor createCommandExecutor() {
-		return new SimpleCommandExecutor(context);
+		SimpleCommandExecutor executor = new SimpleCommandExecutor(context);
+		this.commandExecutor = executor;
+		this.exceptionHandler = executor;
+		return executor;
 	}
 	
 	/* (non-Javadoc)

@@ -15,4 +15,6 @@ public interface IViewDescriptor {
 	boolean isSingleton();
 	IBindingDescriptor getBindingDescriptor(TargetUISystem targetSystem);
 	IView createPresentationModel(IWorkbenchRTContext ctx);
+	INavigationDescriptor[] getExceptionNavigations();
+
 }

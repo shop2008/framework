@@ -5,6 +5,8 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +17,7 @@ import com.wxxr.javax.el.ELManager;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
+import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
 import com.wxxr.mobile.core.ui.api.IBinding;
@@ -31,6 +34,7 @@ import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.api.IStructureSelection;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IUIExceptionHandler;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
@@ -219,6 +223,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
+	private LinkedList<Throwable> startupExceptions = new LinkedList<Throwable>();
 	private IEvaluatorContext evalCtx = new IEvaluatorContext() {
 		
 		@Override
@@ -419,6 +424,40 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					((IBindableBean)bean).addPropertyChangeListener(getBeanListener(entry.getKey()));
 				}
 			}
+		}
+		processStartupExceptions();
+	}
+
+	/**
+	 * 
+	 */
+	protected void processStartupExceptions() {
+		if(this.startupExceptions.size() > 0){
+			IUIExceptionHandler handler = getUIContext().getWorkbenchManager().getExceptionHandler();
+			boolean handled = false;
+			if(handler != null){
+				for(Iterator<Throwable> itr = this.startupExceptions.iterator();itr.hasNext();){
+					Throwable t = itr.next();
+					if(t instanceof CommandConstraintViolatedException){
+						itr.remove();
+						if(handler.handleException(this, t)){
+							handled = true;
+							break;
+						}
+					}
+				}
+				if(!handled){
+					for(Iterator<Throwable> itr = this.startupExceptions.iterator();itr.hasNext();){
+						Throwable t = itr.next();
+						itr.remove();
+						if(handler.handleException(this, t)){
+							handled = true;
+							break;
+						}
+					}
+				}
+			}
+			this.startupExceptions.clear();
 		}
 	}
 	

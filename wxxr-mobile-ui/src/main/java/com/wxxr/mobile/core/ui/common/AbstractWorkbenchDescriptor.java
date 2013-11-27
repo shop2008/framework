@@ -22,13 +22,13 @@ public abstract class AbstractWorkbenchDescriptor implements IWorkbenchDescripto
 	}
 	
 	@Override
-	public INavigationDescriptor[] getDefaultNavigations() {
+	public INavigationDescriptor[] getExceptionNavigations() {
 		return this.navs != null && this.navs.isEmpty() == false ? 
 				this.navs.toArray(new INavigationDescriptor[this.navs.size()]) :
 				new INavigationDescriptor[0];
 	}
 	
-	public AbstractWorkbenchDescriptor addNavigation(INavigationDescriptor nav){
+	public AbstractWorkbenchDescriptor addExceptionNavigation(INavigationDescriptor nav){
 		if(this.navs == null){
 			this.navs = new LinkedList<INavigationDescriptor>();
 		}
@@ -38,7 +38,7 @@ public abstract class AbstractWorkbenchDescriptor implements IWorkbenchDescripto
 		return this;
 	}
 	
-	public AbstractWorkbenchDescriptor removeNavigation(INavigationDescriptor nav){
+	public AbstractWorkbenchDescriptor removeExceptionNavigation(INavigationDescriptor nav){
 		if(this.navs != null){
 			this.navs.remove(nav);
 		}

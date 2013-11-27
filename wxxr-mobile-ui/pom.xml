@@ -28,6 +28,11 @@
         </dependency>
         <dependency>
             <groupId>com.wxxr.mobile</groupId>
+            <artifactId>wxxr-mobile-command</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile</groupId>
             <artifactId>wxxr-mobile-validation</artifactId>
             <version>1.0.0</version>
         </dependency>

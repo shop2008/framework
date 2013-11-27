@@ -10,6 +10,6 @@ package com.wxxr.mobile.core.ui.api;
 public interface IWorkbenchDescriptor {
 	String getTitle();
 	String getDescription();
-	INavigationDescriptor[] getDefaultNavigations();
+	INavigationDescriptor[] getExceptionNavigations();
 	IWorkbench createWorkbench(IWorkbenchRTContext ctx);
 }

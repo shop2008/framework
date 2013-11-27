@@ -34,7 +34,7 @@ public class DefaultWorkenchDescriptor implements IWorkbenchDescriptor {
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchDescriptor#getExceptionHandlers()
 	 */
 	@Override
-	public INavigationDescriptor[] getDefaultNavigations() {
+	public INavigationDescriptor[] getExceptionNavigations() {
 		return null;
 	}
 

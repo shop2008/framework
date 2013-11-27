@@ -97,7 +97,7 @@ public abstract class ViewModelUtils {
 		if(StringUtils.isNotBlank(ann.title())){
 			model.setTitle(ann.title());
 		}
-		Navigation[] navs = ann.defaultNavigations();
+		Navigation[] navs = ann.exceptionNavigations();
 		log.info("Found workbench default navigations , size :"+(navs != null ? navs.length : 0));
 		if(navs != null){
 			for (Navigation nav : navs) {
@@ -199,6 +199,39 @@ public abstract class ViewModelUtils {
 				model.addInterface(((TypeElement)util.asElement(typeMirror)).getQualifiedName().toString());
 			}
 		}
+		Navigation[] navs = ann.exceptionNavigations();
+		log.info("Found view exception navigations , size :"+(navs != null ? navs.length : 0));
+		if(navs != null){
+			for (Navigation nav : navs) {
+				NavigationModel nModel = new NavigationModel();
+				nModel.setResult(nav.on());
+				if(!StringUtils.isBlank(nav.message())){
+					nModel.setMessage(nav.message());
+				}
+				if(!StringUtils.isBlank(nav.showPage())){
+					nModel.setToPage(nav.showPage());
+				}
+				if(!StringUtils.isBlank(nav.showView())){
+					nModel.setToView(nav.showView());
+				}
+				if(!StringUtils.isBlank(nav.showDialog())){
+					nModel.setToDialog(nav.showDialog());
+				}
+				nModel.setCloseCurrentView(nav.closeCurrentView());
+				nModel.setKeepMenuOpen(nav.keepMenuOpen());
+				Parameter[] params = nav.params();
+				if(params != null){
+					for (int i = 0; i < params.length; i++) {
+						com.wxxr.mobile.tools.model.Parameter p = new com.wxxr.mobile.tools.model.Parameter();
+						p.setName(params[i].name());
+						p.setValue(params[i].value());
+						nModel.addParameter(p);
+					}
+				}
+				model.addNavigation(nModel);
+			}
+		}
+
 		List<? extends Element> children = typeElem.getEnclosedElements();
 		if(children != null){
 			for (Element child : children) {
