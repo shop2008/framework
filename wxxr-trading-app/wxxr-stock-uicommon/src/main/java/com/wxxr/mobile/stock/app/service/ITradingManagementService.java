@@ -150,7 +150,9 @@ public interface ITradingManagementService {
 	 * @param limit
 	 * @return
 	 */
-	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start,int limit);
+	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit);
+	
+	public void reloadEarnRank(int start, int limit,boolean wait4Finish);
 	/**
 	 * 获取T日排行榜
 	 * 
@@ -159,6 +161,7 @@ public interface ITradingManagementService {
 	 */
 	BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException;
 
+	public void reloadTMegagameRank(boolean wait4Finish);
 	/**
 	 * 获取T+1日排行榜
 	 * 
@@ -167,6 +170,7 @@ public interface ITradingManagementService {
 	 */
 	BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException;
 
+	public void reloadT1MegagameRank(boolean wait4Finish);
 	/**
 	 * 获取实盘券排行榜
 	 * 
@@ -175,6 +179,7 @@ public interface ITradingManagementService {
 	 */
 	BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException;
 
+	public void reloadRegularTicketRank(boolean wait4Finish);
 	/**
 	 * 获取周赛排行榜
 	 * 
@@ -183,6 +188,7 @@ public interface ITradingManagementService {
 	 */
 	BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException;
 
+	public void reloadWeekRank(boolean wait4Finish);
 	/**
 	 * 获取创建交易盘相关参数
 	 * 

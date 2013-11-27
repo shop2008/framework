@@ -4,7 +4,9 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -784,6 +786,46 @@ public class TradingManagementServiceImpl extends
 	private <T> T getRestService(Class<T> restResouce) {
 		return context.getService(IRestProxyService.class).getRestService(
 				restResouce);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadTMegagameRank(boolean)
+	 */
+	@Override
+	public void reloadTMegagameRank(boolean wait4Finish) {
+		tRankCache.forceReload(wait4Finish);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadT1MegagameRank(boolean)
+	 */
+	@Override
+	public void reloadT1MegagameRank(boolean wait4Finish) {
+		t1RankCache.forceReload(wait4Finish);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadRegularTicketRank(boolean)
+	 */
+	@Override
+	public void reloadRegularTicketRank(boolean wait4Finish) {
+		rtRankCache.forceReload(wait4Finish);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadWeekRank(boolean)
+	 */
+	@Override
+	public void reloadWeekRank(boolean wait4Finish) {
+		weekRankCache.forceReload(wait4Finish);
+	}
+
+	@Override
+	public void reloadEarnRank(int start, int limit, boolean wait4Finish) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", start);
+		map.put("limit", limit);
+		this.earnRankCache.forceReload(map, wait4Finish);
 	}
 	
 

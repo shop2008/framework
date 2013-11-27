@@ -1,11 +1,14 @@
 package com.wxxr.mobile.stock.app.common;
 
+import java.util.Map;
+
 public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>{
 
 	void doReloadIfNeccessay();
 
 	void forceReload(boolean wait4Finish);
 
+	void forceReload(Map<String, Object> params, boolean wait4Finish);
 	/**
 	 * @return the lastUpdateTime
 	 */

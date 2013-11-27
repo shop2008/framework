@@ -218,7 +218,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		if(secondsElapsed < minReloadIntervalInSeconds){
 			return;
 		}
-		doReload(false);
+		doReload(false,null);
 	}
 
 	/* (non-Javadoc)
@@ -226,14 +226,14 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 */
 	@Override
 	public void forceReload(boolean wait4Finish) {
-		doReload(wait4Finish);
+		doReload(wait4Finish,null);
 	}
 	
 	/**
 	 * 
 	 */
-	protected void doReload(boolean wait4Finish) {
-		ICommand<?> cmd = getReloadCommand();
+	protected void doReload(boolean wait4Finish,Map<String, Object> params) {
+		ICommand<?> cmd = getReloadCommand(params);
 		if(!wait4Finish){
 			this.inReloading = true;
 			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
@@ -256,7 +256,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}
 	}
 		
-	protected abstract ICommand<?> getReloadCommand();
+	protected abstract ICommand<?> getReloadCommand(Map<String, Object> params);
 	
 	protected abstract boolean processReloadResult(Object result);
 	
@@ -407,6 +407,14 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	@Override
 	public String getEntityTypeName() {
 		return this.name;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#forceReload(java.util.Map, boolean)
+	 */
+	@Override
+	public void forceReload(Map<String, Object> params, boolean wait4Finish) {
+		doReload(wait4Finish,params);
 	}
 
 }

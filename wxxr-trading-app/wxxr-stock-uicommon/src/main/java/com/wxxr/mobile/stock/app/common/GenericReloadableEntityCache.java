@@ -39,8 +39,8 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	 * @see com.wxxr.mobile.stock.app.common.ReloadableEntityCacheImpl#getReloadCommand()
 	 */
 	@Override
-	protected ICommand<?> getReloadCommand() {
-		return getEntityLoader().createCommand(getCommandParameters());
+	protected ICommand<?> getReloadCommand(Map<String, Object> params) {
+		return getEntityLoader().createCommand(params != null ? params : getCommandParameters());
 	}
 
 	/* (non-Javadoc)
