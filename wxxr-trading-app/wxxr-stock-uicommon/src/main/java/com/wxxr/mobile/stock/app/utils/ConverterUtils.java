@@ -9,6 +9,7 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
+import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -16,6 +17,7 @@ import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
+import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 
 /**
@@ -23,7 +25,32 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * 
  */
 public class ConverterUtils {
-	
+    public static  void setfromVO(UserCreateTradAccInfoBean bean,UserCreateTradAccInfoVO vo) {
+        if (vo == null || bean==null) {
+            return ;
+        }
+        bean.setCapitalRate(vo.getCapitalRate());
+        bean.setCostRate(vo.getCostRate());
+        bean.setDepositRate(vo.getDepositRate());
+        bean.setMaxAmount(vo.getMaxAmount());
+        bean.setRateString(vo.getRateString());
+        bean.setUserId(vo.getUserId());
+        bean.setVoucherCostRate(vo.getVoucherCostRate());        
+    }
+    public static UserCreateTradAccInfoBean fromVO(UserCreateTradAccInfoVO vo) {
+        if (vo == null) {
+            return null;
+        }
+        UserCreateTradAccInfoBean bean = new UserCreateTradAccInfoBean();
+        bean.setCapitalRate(vo.getCapitalRate());
+        bean.setCostRate(vo.getCostRate());
+        bean.setDepositRate(vo.getDepositRate());
+        bean.setMaxAmount(vo.getMaxAmount());
+        bean.setRateString(vo.getRateString());
+        bean.setUserId(vo.getUserId());
+        bean.setVoucherCostRate(vo.getVoucherCostRate());        
+        return bean;
+    }
 	public static TradingAccInfoBean fromVO(TradingAccInfoVO vo) {
 		if (vo == null) {
 			return null;

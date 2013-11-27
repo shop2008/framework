@@ -349,8 +349,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@OnShow
 	protected void initData(){
 
-		String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
-		registerBean("CapitalRate", CapitalRate);
 		
 		this.checkedbox = 0;
 		this.checkedbox1 = 0;
@@ -371,6 +369,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		registerBean("rateData2", "--");
 		registerBean("rateData3", "--");	
 		 if(userCreateTradAccInfo!=null){
+		     String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
+		     registerBean("CapitalRate", CapitalRate);
 			 ArrayList<String> money1 = new ArrayList<String>();
 			Long maxAmount = userCreateTradAccInfo.getMaxAmount();
 			if(maxAmount!=null && maxAmount>0){

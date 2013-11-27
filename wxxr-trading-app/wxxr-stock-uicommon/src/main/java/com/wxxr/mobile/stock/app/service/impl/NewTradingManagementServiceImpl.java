@@ -10,8 +10,8 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -23,12 +23,19 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
+import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
+import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
 public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService {
-    //交易账户缓存
-    GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
+    private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
+
+    //
+    protected UserCreateTradAccInfoBean userCreateTradAccInfo;
+    private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
+
     
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
         BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
@@ -56,13 +63,77 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         }, null);
         return t1s;
     }
+    
+    //delete
     @Override
     public TradingAccountListBean getHomePageTradingAccountList() throws StockAppBizException {
         TradingAccountListBean b=new TradingAccountListBean();
-//        b.setT0TradingAccounts(getT0TradingAccountList());
         
         return null;
     }
+    
+   //获取参数
+    @Override
+    public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
+        if(this.userCreateTradAccInfo == null){
+            if(this.userCreateTradAccInfo_Cache == null){
+                this.userCreateTradAccInfo_Cache = new GenericReloadableEntityCache<String, UserCreateTradAccInfoBean, UserCreateTradAccInfoVO>("UserCreateTradAccInfo");
+                this.userCreateTradAccInfo_Cache.putEntity("userId", new UserCreateTradAccInfoBean());
+            }
+            this.userCreateTradAccInfo = this.userCreateTradAccInfo_Cache.getEntity("userId");//todo key 
+        }
+        this.userCreateTradAccInfo_Cache.doReloadIfNeccessay();
+        return this.userCreateTradAccInfo;
+    }
+
+    @Override
+    public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate) throws StockAppBizException {
+        
+    }
+    
+    @Override
+    public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
+        
+    }
+
+    @Override
+    public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
+        
+    }
+    
+    
+    @Override
+    public void cancelOrder(String orderID) {
+        
+    }
+
+    @Override
+    public void clearTradingAccount(String acctID) {
+        
+    }
+    @Override
+    public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
+        
+    }
+    
+
+    //已结算 
+    @Override
+    public DealDetailBean getDealDetail(String accId) {
+        return null;
+    }
+
+    @Override
+    public AuditDetailBean getAuditDetail(String accId) {
+        return null;
+    }
+    
+    //未结算
+    @Override
+    public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
+        return null;
+    }
+    
     @Override
     public TradingAccountListBean getMyAllTradingAccountList(int strat, int limit) {
         return null;
@@ -75,59 +146,21 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
 
 
 
-    @Override
-    public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
-        return null;
-    }
+    
+    
 
-    @Override
-    public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate) throws StockAppBizException {
-        
-    }
+    
 
-    @Override
-    public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        
-    }
+    
 
-    @Override
-    public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        
-    }
+   
 
-    @Override
-    public void cancelOrder(String orderID) {
-        
-    }
-
-    @Override
-    public void clearTradingAccount(String acctID) {
-        
-    }
-
-    @Override
-    public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
-        
-    }
-
-    @Override
-    public DealDetailBean getDealDetail(String accId) {
-        return null;
-    }
-
-    @Override
-    public AuditDetailBean getAuditDetail(String accId) {
-        return null;
-    }
 
   
 
    
 
-    @Override
-    public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
-        return null;
-    }
+    
 
     @Override
     public TradingRecordListBean getTradingAccountRecord(String acctID, int start, int limit) {
@@ -146,8 +179,11 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     @Override
     protected void startService() {
         context.registerService(ITradingManagementService.class, this);
+
+        IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
         tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
+        registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
     }
 
     @Override
@@ -203,6 +239,16 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     public void reloadWeekRank(boolean wait4Finish) {
         // TODO Auto-generated method stub
         
+    }
+    @Override
+    public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public BindableListWrapper<GainBean> getGain(int start, int limit) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
     
