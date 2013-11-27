@@ -30,7 +30,9 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	@SuppressWarnings("unchecked")
 	protected IEntityLoader<K,V,T> getEntityLoader() {
 		if(this.entityLoader == null){
-			this.entityLoader = KUtils.getService(IEntityLoaderRegistry.class).getEntityLoader(getEntityTypeName());
+			@SuppressWarnings("rawtypes")
+			IEntityLoader loader = KUtils.getService(IEntityLoaderRegistry.class).getEntityLoader(getEntityTypeName());
+			this.entityLoader = loader;
 		}
 		return this.entityLoader;
 	}
