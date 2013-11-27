@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.common.IEntityLoader;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.TradingResourse;
@@ -18,10 +22,11 @@ import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
  * @author neillin
  *
  */
-public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBean, MegagameRankVO> {
+public class T1RankItemLoader extends AbstractEntityLoader<String, MegagameRankBean, MegagameRankVO> {
 
-	private static final String COMMAND_NAME = "GetTRankItems";
-	private static class GetTRankItemsCommand implements ICommand<List<MegagameRankVO>> {
+	private final static String COMMAND_NAME = "GetT1RankItems";
+
+	private static class GetT1RankItemsCommand implements ICommand<List<MegagameRankVO>> {
 
 		@Override
 		public String getCommandName() {
@@ -44,7 +49,7 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	@Override
 	public ICommand<List<MegagameRankVO>> createCommand(
 			Map<String, Object> params) {
-		return new GetTRankItemsCommand();
+		return new GetT1RankItemsCommand();
 	}
 
 	@Override
@@ -71,7 +76,7 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 			throws Exception {
 		List<MegagameRankVO> volist = this.cmdCtx.getKernelContext().getService(
 		IRestProxyService.class).getRestService(
-		TradingResourse.class).getTMegagameRank();
+		TradingResourse.class).getTPlusMegagameRank();
 		return volist;
 	}
 
@@ -79,7 +84,6 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	protected String getCommandName() {
 		return COMMAND_NAME;
 	}
-
 
 
 }

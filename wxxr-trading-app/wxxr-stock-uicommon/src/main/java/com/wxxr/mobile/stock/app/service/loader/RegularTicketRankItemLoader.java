@@ -8,20 +8,21 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.TradingResourse;
-import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 
 /**
  * @author neillin
  *
  */
-public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBean, MegagameRankVO> {
+public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, RegularTicketBean, RegularTicketVO> {
 
-	private static final String COMMAND_NAME = "GetTRankItems";
-	private static class GetTRankItemsCommand implements ICommand<List<MegagameRankVO>> {
+	private final static String COMMAND_NAME = "GetRegularTicketItems";
+	
+	private static class GetRegularTicketItemsCommand implements ICommand<List<RegularTicketVO>> {
 
 		@Override
 		public String getCommandName() {
@@ -30,7 +31,7 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
-		public Class<List<MegagameRankVO>> getResultType() {
+		public Class<List<RegularTicketVO>> getResultType() {
 			Class clazz = List.class;
 			return clazz;
 		}
@@ -42,19 +43,19 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	}
 	
 	@Override
-	public ICommand<List<MegagameRankVO>> createCommand(
+	public ICommand<List<RegularTicketVO>> createCommand(
 			Map<String, Object> params) {
-		return new GetTRankItemsCommand();
+		return new GetRegularTicketItemsCommand();
 	}
 
 	@Override
-	public boolean handleCommandResult(List<MegagameRankVO> result,
-			IReloadableEntityCache<String, MegagameRankBean> cache) {
+	public boolean handleCommandResult(List<RegularTicketVO> result,
+			IReloadableEntityCache<String, RegularTicketBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;
-		for (MegagameRankVO vo : result) {
-			String id = String.valueOf(vo.getAcctID());
-			MegagameRankBean bean = cache.getEntity(id);
+		for (RegularTicketVO vo : result) {
+			String id = vo.getNickName();
+			RegularTicketBean bean = cache.getEntity(id);
 			if(bean == null) {
 				bean = ConverterUtils.fromVO(vo);
 				bean.setRankSeq(rankNo++);
@@ -65,13 +66,12 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 		return updated;
 	}
 
-
 	@Override
-	public List<MegagameRankVO> execute(ICommand<List<MegagameRankVO>> command)
+	public List<RegularTicketVO> execute(ICommand<List<RegularTicketVO>> command)
 			throws Exception {
-		List<MegagameRankVO> volist = this.cmdCtx.getKernelContext().getService(
-		IRestProxyService.class).getRestService(
-		TradingResourse.class).getTMegagameRank();
+		List<RegularTicketVO> volist = cmdCtx.getKernelContext().getService(
+				IRestProxyService.class).getRestService(
+				TradingResourse.class).getRegularTicketRank();
 		return volist;
 	}
 
@@ -79,7 +79,6 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	protected String getCommandName() {
 		return COMMAND_NAME;
 	}
-
 
 
 }

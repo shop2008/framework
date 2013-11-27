@@ -6,11 +6,16 @@ package com.wxxr.mobile.stock.app.service;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
+import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
 /**
  * 交易管理模块
@@ -145,14 +150,14 @@ public interface ITradingManagementService {
 	 * @param limit
 	 * @return
 	 */
-	public RankListBean getEarnRank(int start,int limit);
+	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start,int limit);
 	/**
 	 * 获取T日排行榜
 	 * 
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	RankListBean getTMegagameRank() throws StockAppBizException;
+	BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException;
 
 	/**
 	 * 获取T+1日排行榜
@@ -160,7 +165,7 @@ public interface ITradingManagementService {
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	RankListBean getT1MegagameRank() throws StockAppBizException;
+	BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException;
 
 	/**
 	 * 获取实盘券排行榜
@@ -168,7 +173,7 @@ public interface ITradingManagementService {
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	RankListBean getRegularTicketRank() throws StockAppBizException;
+	BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException;
 
 	/**
 	 * 获取周赛排行榜
@@ -176,7 +181,7 @@ public interface ITradingManagementService {
 	 * @return
 	 * @throws StockAppBizException
 	 */
-	RankListBean getWeekRank() throws StockAppBizException;
+	BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException;
 
 	/**
 	 * 获取创建交易盘相关参数

@@ -19,7 +19,6 @@ import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -29,8 +28,16 @@ import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
+import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
@@ -58,10 +65,25 @@ public class TradingManagementServiceImpl extends
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	// =========================beans =======================
+	
+	private IReloadableEntityCache<String, EarnRankItemBean> earnRankCache;
+	private IReloadableEntityCache<String, MegagameRankBean> tRankCache;
+	private IReloadableEntityCache<String, MegagameRankBean> t1RankCache;
+	private IReloadableEntityCache<String, WeekRankBean> weekRankCache;
+	private IReloadableEntityCache<String, RegularTicketBean> rtRankCache;
 	/**
 	 * 排行榜列表
 	 */
-	protected RankListBean rank = new RankListBean();
+	protected BindableListWrapper<EarnRankItemBean> earnRank;
+	
+	protected BindableListWrapper<MegagameRankBean> tRank;
+	
+	protected BindableListWrapper<MegagameRankBean> t1Rank;
+	
+	protected BindableListWrapper<WeekRankBean> weekRank;
+	
+	protected BindableListWrapper<RegularTicketBean> rtRank;
+
 	/**
 	 * 我的交易盘列表
 	 */
@@ -90,10 +112,17 @@ public class TradingManagementServiceImpl extends
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
+		addRequiredService(IEntityLoaderRegistry.class);
 	}
 
 	@Override
 	protected void startService() {
+		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
+		registry.registerEntityLoader("earnRank", new EarnRankItemLoader());
+		registry.registerEntityLoader("tRank", new TRankItemLoader());
+		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
+		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
+		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -154,186 +183,67 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	//赚钱榜
-	public RankListBean getEarnRank(final int start, final int limit) {
+	public BindableListWrapper<EarnRankItemBean> getEarnRank(final int start, final int limit) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
 		}
-		List<HomePageVO> volist = null;
-		try {
-			volist = fetchDataFromServer(new Callable<List<HomePageVO>>() {
-				public List<HomePageVO> call() throws Exception {
-					try {
-						List<HomePageVO> _volist = getService(
-								IRestProxyService.class).getRestService(
-								TradingResourse.class).getHomeList(start, limit);
-						return _volist;
-					} catch (Throwable e) {
-						log.warn("Error when fetching earn rank", e);
-						throw new StockAppBizException(e.getMessage());
-
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Error when fetching earn rank", e);
-		}
-		if (volist != null && volist.size() > 0) {
-			List<EarnRankItemBean> beanList = new ArrayList<EarnRankItemBean>();
-			for (HomePageVO vo : volist) {
-				EarnRankItemBean bean = new EarnRankItemBean();
-				bean.setAcctId(vo.getAccID());
-				bean.setImgUrl(vo.getUrl());
-				bean.setTitle(vo.getWordage());
-				beanList.add(bean);
+		if(this.earnRank == null){
+			if(this.earnRankCache == null){
+				this.earnRankCache = new GenericReloadableEntityCache<String, EarnRankItemBean, HomePageVO>("earnRank");
 			}
-			rank.setEarnRankBeans(beanList);
+			this.earnRank = this.earnRankCache.getEntities(null, null);
 		}
-		return rank;
+		this.earnRankCache.doReloadIfNeccessay();
+		return this.earnRank;
 	}
 
-	public RankListBean getTMegagameRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
-			rank.setTRankBeans(MockDataUtils.mockRankData("T"));
-			return rank;
-		}
-		try {
-			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
-				public List<MegagameRankVO> call() throws Exception {
-					try {
-						List<MegagameRankVO> volist = getService(
-								IRestProxyService.class).getRestService(
-								TradingResourse.class).getTMegagameRank();
-						return volist;
-					} catch (Throwable e) {
-						log.warn("Error when fetching T+1 rank from server", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-			if (volist != null && volist.size() > 0) {
-				List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
-				int rankNo = 1;
-				for (MegagameRankVO vo : volist) {
-					MegagameRankBean bean = ConverterUtils.fromVO(vo);
-					bean.setRankSeq(rankNo++);
-					beanList.add(bean);
-				}
-				rank.setTRankBeans(beanList);
+	public BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
+		if(this.tRank == null){
+			if(this.tRankCache == null){
+				this.tRankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("tRank");
 			}
-		} catch (Exception e) {
-			log.warn("Error when fetching T+1 rank", e);
+			this.tRank = this.tRankCache.getEntities(null, null);
 		}
-		return rank;
+		this.tRankCache.doReloadIfNeccessay();
+		return this.tRank;
 	}
 
 	@Override
-	public RankListBean getT1MegagameRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
-			rank.setT1RankBeans(MockDataUtils.mockRankData("T1"));
-			return rank;
-		}
-		try {
-			List<MegagameRankVO> volist = fetchDataFromServer(new Callable<List<MegagameRankVO>>() {
-				public List<MegagameRankVO> call() throws Exception {
-					try {
-						List<MegagameRankVO> volist = getService(
-								IRestProxyService.class).getRestService(
-								TradingResourse.class).getTPlusMegagameRank();
-						return volist;
-					} catch (Throwable e) {
-						log.warn("Error when fetching T+1 rank from server", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-			if (volist != null && volist.size() > 0) {
-				List<MegagameRankBean> beanList = new ArrayList<MegagameRankBean>();
-				int rankNo = 1;
-				for (MegagameRankVO vo : volist) {
-					MegagameRankBean bean = ConverterUtils.fromVO(vo);
-					bean.setRankSeq(rankNo++);
-					beanList.add(bean);
-				}
-				rank.setT1RankBeans(beanList);
+	public BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
+		if(this.t1Rank == null){
+			if(this.t1RankCache == null){
+				this.t1RankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("t1Rank");
 			}
-		} catch (Exception e) {
-			log.warn("Error when fetching T+1 rank", e);
+			this.t1Rank = this.t1RankCache.getEntities(null, null);
 		}
-		return rank;
+		this.t1RankCache.doReloadIfNeccessay();
+		return this.t1Rank;
+
 	}
 
 	@Override
-	public RankListBean getRegularTicketRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
-			rank.setRegularTicketBeans(MockDataUtils.mockRegularTicketRank());
-			return rank;
-		}
-		try {
-			List<RegularTicketVO> volist = fetchDataFromServer(new Callable<List<RegularTicketVO>>() {
-				public List<RegularTicketVO> call() throws Exception {
-					try {
-						List<RegularTicketVO> volist = getService(
-								IRestProxyService.class).getRestService(
-								TradingResourse.class).getRegularTicketRank();
-						return volist;
-					} catch (Throwable e) {
-						log.warn("Error when fetching rg rank from server", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-			if (volist != null && volist.size() > 0) {
-				List<RegularTicketBean> beanList = new ArrayList<RegularTicketBean>();
-				int rankNo = 1;
-				for (RegularTicketVO vo : volist) {
-					RegularTicketBean bean = ConverterUtils.fromVO(vo);
-					bean.setRankSeq(rankNo++);
-					beanList.add(bean);
-				}
-				rank.setRegularTicketBeans(beanList);
+	public BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException {
+		if(this.rtRank == null){
+			if(this.rtRankCache == null){
+				this.rtRankCache = new GenericReloadableEntityCache<String, RegularTicketBean, RegularTicketVO>("rtRank");
 			}
-		} catch (Exception e) {
-			log.warn("Error when fetching rg rank", e);
+			this.rtRank = this.rtRankCache.getEntities(null, null);
 		}
-		return rank;
+		this.rtRankCache.doReloadIfNeccessay();
+		return this.rtRank;
 	}
 
 	@Override
-	public RankListBean getWeekRank() throws StockAppBizException {
-		if (context.getApplication().isInDebugMode()) {
-			rank.setWeekRanKBeans(MockDataUtils.mockWeekRank());
-			return rank;
-		}
-		try {
-			List<WeekRankVO> volist = fetchDataFromServer(new Callable<List<WeekRankVO>>() {
-				public List<WeekRankVO> call() throws Exception {
-					try {
-						List<WeekRankVO> volist = getService(
-								IRestProxyService.class).getRestService(
-								TradingResourse.class).getWeekRank();
-						return volist;
-					} catch (Throwable e) {
-						log.warn("Error when fetching week rank", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-			if (volist != null && volist.size() > 0) {
-				List<WeekRankBean> beanList = new ArrayList<WeekRankBean>();
-				int rankNo = 1;
-				for (WeekRankVO weekRankVO : volist) {
-					WeekRankBean bean = ConverterUtils
-							.fromVO(weekRankVO);
-					bean.setRankSeq(rankNo++);
-					beanList.add(bean);
-				}
-				rank.setWeekRanKBeans(beanList);
+	public BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException {
+		if(this.weekRank == null){
+			if(this.weekRankCache == null){
+				this.weekRankCache = new GenericReloadableEntityCache<String, WeekRankBean, WeekRankVO>("weekRank");
 			}
-		} catch (Exception e) {
-			log.warn("Error when fetching week rank", e);
+			this.weekRank = this.weekRankCache.getEntities(null, null);
 		}
-		return rank;
-		
+		this.weekRankCache.doReloadIfNeccessay();
+		return this.weekRank;
+
 	}
 
 	@Override
