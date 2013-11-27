@@ -10,6 +10,7 @@ import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
@@ -24,6 +25,11 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
  * 
  */
 public interface ITradingManagementService {
+    
+    public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList();
+    
+    public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList();
+    
 	/**
 	 * 获取当前用户全部交易盘记录
 	 * 

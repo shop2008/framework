@@ -828,6 +828,18 @@ public class TradingManagementServiceImpl extends
 		map.put("limit", limit);
 		this.earnRankCache.forceReload(map, wait4Finish);
 	}
+
+    @Override
+    public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 	
 
 }

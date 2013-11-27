@@ -57,17 +57,20 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Pojo,express="${tradingService.getHomePageTradingAccountList()}")
 	TradingAccountListBean tradingAccount;
 
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
+//	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
+	@Field(valueKey="options",binding="${tradingService.getT0TradingAccountList().getData()}")
 	List<TradingAccInfoBean> tradingT;
 	
-	@Field(valueKey="visible",visibleWhen="${tradingAccount.t0TradingAccounts!=null?true:false}")
+	@Field(valueKey="visible",visibleWhen="${tradingService.getT0TradingAccountList().getData()!=null?true:false}")
 	boolean isVisibleT;
 	/**获取T+1日数据*/
 
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
+//	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
+	   @Field(valueKey="options",binding="${tradingService.getT1TradingAccountList().getData()}")
 	List<TradingAccInfoBean> tradingT1;
 	
-	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
+//	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
+	@Field(valueKey="visible",visibleWhen="${tradingService.getT1TradingAccountList().getData()!=null?true:false}")
 	boolean isVisibleT1;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
