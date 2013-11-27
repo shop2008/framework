@@ -147,5 +147,24 @@ public class ConverterUtils {
 		return bean;
 	}
 	
-	
+	/**
+	 * @param vo
+	 * @return
+	 */
+	public static void fromVO(GainVO vo,GainBean bean) {
+		if (vo == null) {
+			return;
+		}
+		bean.setCloseTime(vo.getCloseTime());
+		bean.setMaxStockCode(vo.getMaxStockCode());
+		bean.setMaxStockMarket(vo.getMaxStockMarket());
+		bean.setMaxStockName(vo.getMaxStockName());
+		bean.setOver(vo.getOver());
+		bean.setStatus(vo.getStatus());
+		bean.setSum(vo.getSum());
+		bean.setTotalGain(vo.getTotalGain());
+		bean.setTradingAccountId(vo.getTradingAccountId());
+		bean.setUserGain(vo.getUserGain());
+		bean.setVirtual(vo.isVirtual());
+	}
 }

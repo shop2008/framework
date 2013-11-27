@@ -32,12 +32,14 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
 import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
@@ -87,6 +89,18 @@ public class TradingManagementServiceImpl extends
 	
 	protected BindableListWrapper<RegularTicketBean> rtRank;
 
+	private IReloadableEntityCache<String, GainBean> rightTotalGainCache;
+
+	/**
+	 * 首页右侧交易记录-全部操作
+	 */
+	protected BindableListWrapper<GainBean> rightTotalGain;
+
+	/**
+	 * 首页右侧交易记录-成功操作
+	 */
+	protected BindableListWrapper<GainBean> rightGain;
+	
 	/**
 	 * 我的交易盘列表
 	 */
@@ -126,6 +140,7 @@ public class TradingManagementServiceImpl extends
 		registry.registerEntityLoader("t1Rank", new T1RankItemLoader());
 		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
+		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -840,6 +855,42 @@ public class TradingManagementServiceImpl extends
         // TODO Auto-generated method stub
         return null;
     }
-	
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+	 */
+	@Override
+	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
+		if(rightTotalGain==null){
+			this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
+		}
+		this.rightTotalGainCache.doReloadIfNeccessay();
+		return this.rightTotalGain;
+
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+	 */
+	@Override
+	public BindableListWrapper<GainBean> getGain(int start, int limit) {
+		if(rightGain==null){
+			this.rightGain =getRightTotalGainCache().getEntities(new IEntityFilter<GainBean>() {
+				
+				@Override
+				public boolean doFilter(GainBean entity) {
+					return entity.getTotalGain()>0?true:false;
+				}
+			} , null);
+		}
+		this.rightTotalGainCache.doReloadIfNeccessay();
+		return this.rightGain;
+	}
+
+	protected IReloadableEntityCache getRightTotalGainCache() {
+		if(rightTotalGainCache==null){
+			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain");
+		}
+		return rightTotalGainCache;
+	}
 
 }

@@ -7,8 +7,8 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -211,4 +211,19 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	TradingRecordListBean getTradingAccountRecord(String acctID,int start,int limit);
+	
+	/**
+	 * 交易记录-全部操作
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	BindableListWrapper<GainBean> getTotalGain(int start,int limit);
+	/**
+	 * 	 交易记录-成功操作
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	BindableListWrapper<GainBean> getGain(int start,int limit);
 }
