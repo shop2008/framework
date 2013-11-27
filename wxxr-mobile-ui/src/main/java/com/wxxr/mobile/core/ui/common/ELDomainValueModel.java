@@ -4,25 +4,35 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.wxxr.javax.validation.ConstraintViolation;
 import com.wxxr.javax.validation.Validator;
+import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.ValidationError;
-import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
  *
  */
 public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> implements IDomainValueModel<T>{
+	private static final Trace log = Trace.getLogger(ELDomainValueModel.class);
 	
 	private final IDataField<T> field;
 	private Boolean updatable;
+	private boolean updateAsync = false;
+	private int silentInSeconds = 1;
 	
+
 	public ELDomainValueModel(IEvaluatorContext elMgr, String expr, IDataField<T> comp, Class<V> expectedType) {
 		super(elMgr, expr, expectedType);
 		this.field = comp;
@@ -80,9 +90,47 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 	 */
 	@Override
 	public T doEvaluate() {
-		T val = getValue();
-		this.field.setValue(val);
-		return val;
+		this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
+		this.field.removeAttribute(AttributeKeys.valueUpdating);
+		if(!updateAsync){
+			return updateFieldValue();
+		}else{
+			final Future<T> future = KUtils.executeTask(new Callable<T>() {
+
+				@Override
+				public T call() throws Exception {
+					T val = updateFieldValue();
+					field.removeAttribute(AttributeKeys.valueUpdating);
+					return val;
+				}
+			});
+			try {
+				return future.get(1, TimeUnit.SECONDS);
+			}catch(InterruptedException e){
+				return null;
+			}catch(ExecutionException e){
+				return null;
+			}catch(TimeoutException e){
+				this.field.setAttribute(AttributeKeys.valueUpdating, future);
+			}
+			return null;
+		}
+	}
+
+
+	/**
+	 * @return
+	 */
+	protected T updateFieldValue() {
+		try {
+			T val = getValue();
+			this.field.setValue(val);
+			return val;
+		}catch(Throwable t){
+			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
+			this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
+			return this.field.getValue();
+		}
 	}
 
 
@@ -95,6 +143,39 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		super.setConvertor(convertor);
 		return this;
 	}
+
+
+	/**
+	 * @return the silentInSeconds
+	 */
+	public int getSilentInSeconds() {
+		return silentInSeconds;
+	}
+
+
+	/**
+	 * @param silentInSeconds the silentInSeconds to set
+	 */
+	public void setSilentInSeconds(int silentInSeconds) {
+		this.silentInSeconds = silentInSeconds;
+	}
+
+
+	/**
+	 * @return the updateAsync
+	 */
+	public boolean isUpdateAsync() {
+		return updateAsync;
+	}
+
+
+	/**
+	 * @param updateAsync the updateAsync to set
+	 */
+	public void setUpdateAsync(boolean updateAsync) {
+		this.updateAsync = updateAsync;
+	}
+
 
 
 	/* (non-Javadoc)

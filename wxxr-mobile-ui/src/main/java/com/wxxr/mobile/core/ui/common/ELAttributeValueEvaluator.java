@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 
@@ -11,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
  *
  */
 public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,Object> {
+	private static final Trace log = Trace.register(ELAttributeValueEvaluator.class);
 	
 	private final String key;
 	private final IUIComponent component;
@@ -26,9 +28,14 @@ public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,O
 	 */
 	@Override
 	public Object doEvaluate() {
-		Object val = super.doEvaluate();
-		AttributeKeys.updateAttribute(key, component, val);
-		return val;
+		try {
+			Object val = super.doEvaluate();
+			AttributeKeys.updateAttribute(key, component, val);
+			return val;
+		}catch(Throwable t){
+			log.warn("Failed to update attribute :["+key+" of component :"+component.getName(), t);
+			return null;
+		}
 	}
 
 }

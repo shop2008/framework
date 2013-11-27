@@ -1,9 +1,11 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
+import com.wxxr.mobile.core.ui.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.ValidationError;
@@ -48,7 +50,12 @@ public abstract class AttributeKeys {
 	public static final AttributeKey<String> name = new AttributeKey<String>(String.class,"name");
 	
 	public static final AttributeKey<String> webUrl = new AttributeKey<String>(String.class, "webUrl");
-	
+
+	public static final AttributeKey<Throwable> valueUpdatedFailed = new AttributeKey<Throwable>(Throwable.class, "valueUpdatedFailed");
+
+	@SuppressWarnings("rawtypes")
+	public static final AttributeKey<Future> valueUpdating = new AttributeKey<Future>(Future.class, "valueUpdating");
+
 	@SuppressWarnings("rawtypes")
 	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");
 
@@ -72,7 +79,9 @@ public abstract class AttributeKeys {
 			options,
 			textColor,
 			webUrl,
-			checked
+			checked,
+			valueUpdatedFailed,
+			valueUpdating
 	};
 
 	public static AttributeKey<?> getByName(String name){
