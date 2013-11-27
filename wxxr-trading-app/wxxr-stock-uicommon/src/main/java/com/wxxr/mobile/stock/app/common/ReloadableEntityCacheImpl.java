@@ -327,6 +327,19 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 
 	
 	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#clear()
+	 */
+	@Override
+	public void clear() {
+		wlock.lock();
+		try {
+			this.cache.clear();
+		}finally{
+			wlock.unlock();
+		}
+	}
+
+	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getCacheSize()
 	 */
 	@Override

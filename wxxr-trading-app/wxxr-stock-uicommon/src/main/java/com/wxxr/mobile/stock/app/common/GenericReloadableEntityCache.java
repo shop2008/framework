@@ -51,6 +51,15 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean processReloadResult(Object result) {
+		if(result == null){
+			if(getCacheSize() > 0){
+				clear();
+				return true;
+			}else{
+				return false;
+			}
+			
+		}
 		return getEntityLoader().handleCommandResult((List<T>)result, this);
 	}
 

@@ -17,6 +17,8 @@ public interface IBindableEntityCache<K, V> {
 	void putEntity(K key, V value);
 
 	V removeEntity(K key);
+	
+	void clear();
 
 	int getCacheSize();
 
