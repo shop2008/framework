@@ -421,6 +421,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			}
 		}
 	}
+	
+	protected void handleStartupException(Throwable t){
+		
+	}
+	
+	protected void handleCreatingException(Throwable t){
+		
+	}
+
 
 	protected void onShow(IBinding<IView> binding){
 
