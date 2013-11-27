@@ -95,10 +95,15 @@
 #macro(updateBindingBeans $model $bindings)
     private void updateBindingBeans() {
 #foreach($binding in $bindings) 
+    try {
         ${binding.field.simpleType} v_${binding.field.name} = this.${binding.field.name}Updater.doEvaluate();
         this.${binding.field.name} = v_${binding.field.name};
         registerBean("${binding.field.name}", this.${binding.field.name});
-        
+    }catch(Throwable t) {
+        getLog().warn("Caught throwable when updating binding bean :[${binding.field.name}]", t);
+        handleStartupException(t);
+    }
+    
 #end
     }
 #end
