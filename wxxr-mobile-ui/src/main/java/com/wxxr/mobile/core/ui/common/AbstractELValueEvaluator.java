@@ -71,5 +71,14 @@ public class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T> {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "value evaluator express=" + express
+				+ ", expectedType=" + expectedType + "]";
+	}
+
 
 }

@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.ValidationError;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -94,4 +95,17 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		super.setConvertor(convertor);
 		return this;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "value model of field=" + field.getName() + ", express ="
+				+ this.valueExpr.getExpressionString()+", refering beans :["+this.valueExpr.getReferringBeanNames()
+				+"], refering properties :["+this.valueExpr.getReferringPropertyNames()+ "]";
+	}
+	
+	
 }

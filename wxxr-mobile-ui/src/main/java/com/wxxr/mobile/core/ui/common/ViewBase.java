@@ -526,12 +526,22 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	protected void forceValueEvalution() {
 		if(this.domainModels != null){
 			for (IDomainValueModel<?> m : this.domainModels) {
-				m.doEvaluate();
+				try {
+					m.doEvaluate();
+				} catch (Throwable e) {
+					getLog().warn("Failed to update data field value from value model :"+m, e);
+					handleStartupException(e);
+				}
 			}
 		}
 		if(this.evaluators != null){
 			for (IValueEvaluator<?> eval : this.evaluators) {
-				eval.doEvaluate();
+				try {
+					eval.doEvaluate();
+				} catch (Throwable e) {
+					getLog().warn("Failed to update field attribute value from evaludator :"+eval, e);
+					handleStartupException(e);
+				}
 			}
 		}
 	}
