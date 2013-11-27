@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -22,6 +23,7 @@ public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, Re
 
 	private final static String COMMAND_NAME = "GetRegularTicketItems";
 	
+	@NetworkConstraint
 	private static class GetRegularTicketItemsCommand implements ICommand<List<RegularTicketVO>> {
 
 		@Override

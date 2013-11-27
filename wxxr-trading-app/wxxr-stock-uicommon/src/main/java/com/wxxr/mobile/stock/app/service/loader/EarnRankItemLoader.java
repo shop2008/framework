@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
@@ -22,6 +23,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 
 	final static String COMMAND_NAME = "GetEarnRankItems";
 
+	@NetworkConstraint
 	private static class GetEarnRankItemsCommand implements ICommand<List<HomePageVO>> {
 		
 		private int start, limit;
@@ -31,6 +33,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 			return COMMAND_NAME;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Class<List<HomePageVO>> getResultType() {
 			Class clazz = List.class;

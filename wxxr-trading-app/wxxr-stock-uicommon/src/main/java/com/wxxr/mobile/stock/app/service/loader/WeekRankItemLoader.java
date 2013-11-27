@@ -6,13 +6,10 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
-import com.wxxr.mobile.core.command.api.ICommandExecutor;
-import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
-import com.wxxr.mobile.stock.app.common.IEntityLoader;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.TradingResourse;
@@ -26,6 +23,7 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 
 	private static final String COMMAND_NAME = "GetWeekRankItems";
 	
+	@NetworkConstraint
 	private static class GetWeekRankItemsCommand implements ICommand<List<WeekRankVO>> {
 
 		@Override
