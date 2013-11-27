@@ -22,9 +22,9 @@ import com.wxxr.stock.trading.ejb.api.HomePageVO;
  *
  */
 @SuppressWarnings("rawtypes")
-public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean,List>, ICommandHandler<List> {
+public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean,HomePageVO>, ICommandHandler<List<HomePageVO>> {
 	
-	private static class GetEarnRankItemsCommand implements ICommand<List> {
+	private static class GetEarnRankItemsCommand implements ICommand<List<HomePageVO>> {
 		
 		private int start, limit;
 
@@ -34,8 +34,9 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 		}
 
 		@Override
-		public Class<List> getResultType() {
-			return List.class;
+		public Class<List<HomePageVO>> getResultType() {
+			Class clazz = List.class;
+			return clazz;
 		}
 
 		@Override
@@ -80,7 +81,7 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	public List execute(ICommand<List> command) throws Exception {
+	public List<HomePageVO> execute(ICommand<List<HomePageVO>> command) throws Exception {
 		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
 		return cmdCtx.getKernelContext().getService(
 				IRestProxyService.class).getRestService(
@@ -107,7 +108,7 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
-	public ICommand<List> createCommand(Map<String, Object> params) {
+	public ICommand<List<HomePageVO>> createCommand(Map<String, Object> params) {
 		GetEarnRankItemsCommand cmd = new GetEarnRankItemsCommand();
 		cmd.setStart((Integer)params.get("start"));
 		cmd.setLimit((Integer)params.get("limit"));
@@ -119,11 +120,10 @@ public class EarnRankItemLoader implements IEntityLoader<String,EarnRankItemBean
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean handleCommandResult(List result,
+	public boolean handleCommandResult(List<HomePageVO> result,
 			IReloadableEntityCache<String, EarnRankItemBean> cache) {
-		List<HomePageVO> volist = (List<HomePageVO>)result;
 		boolean updated = false;
-		for (HomePageVO vo : volist) {
+		for (HomePageVO vo : result) {
 			String accId = vo.getAccID();
 			
 			EarnRankItemBean bean = (EarnRankItemBean)cache.getEntity(accId);

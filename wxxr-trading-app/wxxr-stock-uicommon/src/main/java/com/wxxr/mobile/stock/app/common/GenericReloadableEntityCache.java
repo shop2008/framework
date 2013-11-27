@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.common;
 
+import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
@@ -48,7 +49,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean processReloadResult(Object result) {
-		return getEntityLoader().handleCommandResult((T)result, this);
+		return getEntityLoader().handleCommandResult((List<T>)result, this);
 	}
 
 	/**
