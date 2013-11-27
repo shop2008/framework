@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -71,10 +70,7 @@ public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, Re
 	@Override
 	public List<RegularTicketVO> execute(ICommand<List<RegularTicketVO>> command)
 			throws Exception {
-		List<RegularTicketVO> volist = cmdCtx.getKernelContext().getService(
-				IRestProxyService.class).getRestService(
-				TradingResourse.class).getRegularTicketRank();
-		return volist;
+		return getRestService(TradingResourse.class).getRegularTicketRank();
 	}
 
 	@Override

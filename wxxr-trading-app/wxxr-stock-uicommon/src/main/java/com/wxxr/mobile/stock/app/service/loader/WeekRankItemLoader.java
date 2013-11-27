@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -72,10 +71,7 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 	@Override
 	public List<WeekRankVO> execute(ICommand<List<WeekRankVO>> command)
 			throws Exception {
-		List<WeekRankVO> volist = cmdCtx.getKernelContext().getService(
-			IRestProxyService.class).getRestService(
-			TradingResourse.class).getWeekRank();
-		return volist;
+		return getRestService(TradingResourse.class).getWeekRank();
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -72,10 +71,7 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	@Override
 	public List<MegagameRankVO> execute(ICommand<List<MegagameRankVO>> command)
 			throws Exception {
-		List<MegagameRankVO> volist = this.cmdCtx.getKernelContext().getService(
-		IRestProxyService.class).getRestService(
-		TradingResourse.class).getTMegagameRank();
-		return volist;
+		return getRestService(TradingResourse.class).getTMegagameRank();
 	}
 
 	@Override
