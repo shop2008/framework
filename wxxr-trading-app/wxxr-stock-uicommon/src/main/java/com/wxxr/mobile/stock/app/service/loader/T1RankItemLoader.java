@@ -69,7 +69,7 @@ public class T1RankItemLoader extends AbstractEntityLoader<String, MegagameRankB
 
 
 	@Override
-	public List<MegagameRankVO> execute(ICommand<List<MegagameRankVO>> command)
+	protected List<MegagameRankVO> executeCommand(ICommand<List<MegagameRankVO>> command)
 			throws Exception {
 		return getRestService(TradingResourse.class).getTPlusMegagameRank();
 	}

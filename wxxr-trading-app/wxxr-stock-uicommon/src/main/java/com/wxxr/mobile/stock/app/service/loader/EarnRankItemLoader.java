@@ -80,7 +80,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	public List<HomePageVO> execute(ICommand<List<HomePageVO>> command) throws Exception {
+	protected List<HomePageVO> executeCommand(ICommand<List<HomePageVO>> command) throws Exception {
 		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
 		return getRestService(TradingResourse.class).getHomeList(cmd.getStart(), cmd.getLimit());
 	}

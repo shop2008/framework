@@ -68,7 +68,7 @@ public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, Re
 	}
 
 	@Override
-	public List<RegularTicketVO> execute(ICommand<List<RegularTicketVO>> command)
+	protected List<RegularTicketVO> executeCommand(ICommand<List<RegularTicketVO>> command)
 			throws Exception {
 		return getRestService(TradingResourse.class).getRegularTicketRank();
 	}

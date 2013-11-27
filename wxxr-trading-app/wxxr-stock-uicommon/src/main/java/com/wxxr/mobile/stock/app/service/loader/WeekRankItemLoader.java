@@ -69,7 +69,7 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 
 
 	@Override
-	public List<WeekRankVO> execute(ICommand<List<WeekRankVO>> command)
+	protected List<WeekRankVO> executeCommand(ICommand<List<WeekRankVO>> command)
 			throws Exception {
 		return getRestService(TradingResourse.class).getWeekRank();
 	}
