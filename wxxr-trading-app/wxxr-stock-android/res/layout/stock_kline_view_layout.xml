@@ -196,8 +196,8 @@
     <com.wxxr.mobile.stock.client.widget.KLineView
         android:layout_width="match_parent"
         android:layout_height="160dip"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="15dip"
         bind:field="dayLineList" >
     </com.wxxr.mobile.stock.client.widget.KLineView>
 

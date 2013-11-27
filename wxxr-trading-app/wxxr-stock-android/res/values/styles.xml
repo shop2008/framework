@@ -16,30 +16,33 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+
     <style name="appBackground">
         <item name="android:background">#0E0E0E</item>
     </style>
-	<style name="wxxr_title_bar">
-	    <item name="android:padding">8dp</item>
-	    <item name="android:background">@drawable/top_bar_bj</item>
-	</style>
-	<style name="top_bar_title_style">
-	    <item name="android:textColor">#AEAEAE</item>
-	    <item name="android:textSize">18sp</item>
-	</style>
-	
-	<!-- 标题栏背景样式-->
-	<style name="style_title_bar_bg">
-	    <item name="android:background">#0000ff</item>
-	</style>
-    
+
+    <style name="wxxr_title_bar">
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@drawable/top_bar_bj</item>
+    </style>
+
+    <style name="top_bar_title_style">
+        <item name="android:textColor">#AEAEAE</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- 标题栏背景样式 -->
+    <style name="style_title_bar_bg">
+        <item name="android:background">#0000ff</item>
+    </style>
+
     <!-- 标题栏样式 -->
     <style name="style_title_bar">
-        <item name="android:layout_width" >match_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/title_bar_height</item>
     </style>
-    
-    <!-- 标题栏左侧按钮样式   -->
+
+    <!-- 标题栏左侧按钮样式 -->
     <style name="style_ib_left">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -48,7 +51,7 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
-    
+
     <!-- 标题栏标题文本样式 -->
     <style name="style_title_text">
         <item name="android:layout_width">wrap_content</item>
@@ -58,22 +61,24 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#7a7a7a</item>
     </style>
-    
+
     <style name="slideMenuStyle">
         <item name="android:textColor">#262628</item>
         <item name="android:textSize">15sp</item>
         <item name="android:paddingLeft">8dp</item>
     </style>
+
     <style name="userMsgStyle">
         <item name="android:textColor">#262628</item>
         <item name="android:textSize">15sp</item>
     </style>
+
     <style name="redTextStyle">
         <item name="android:textColor">#FF0000</item>
         <item name="android:textSize">15sp</item>
         <item name="android:paddingRight">2dp</item>
     </style>
-    
+
     <style name="qsxqTextTitleStyle">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">16sp</item>
@@ -81,51 +86,75 @@
         <item name="android:paddingTop">0dp</item>
         <item name="android:background">@drawable/tip_title_bj</item>
     </style>
-    
-	<style name="qsxqTextTitleStyle_item_tv">
+
+    <style name="qsxqTextTitleStyle_item_tv">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">14sp</item>
-    </style> 
-    
-	<style name="create_buy_radion_button">
-	    <item name="android:background">@drawable/bg_btn_stop_loss</item>
-	    <item name="android:paddingLeft">20dp</item>
-	    <item name="android:paddingTop">8dp</item>
-	    <item name="android:paddingRight">8dp</item>
-	    <item name="android:paddingBottom">8dp</item>
-	    <item name="android:button">@null</item>
-	    <item name="android:gravity">center</item>
-	    <item name="android:textSize">14sp</item>
-	</style>
-	
-	<style name="red_button_style">
-	    <item name="android:background">@drawable/buy_btn_up</item>
-	    <item name="android:textColor">#FFFFFF</item>
-	    <item name="android:textSize">16sp</item>
-	</style>
-	
-	
-	<style name="mListView">
-	    <item name="android:choiceMode">singleChoice</item>
-		<item name="android:dividerHeight">0dp</item>
-		<item name="android:divider">@null</item>
-		<item name="android:scrollbars">none</item>
-		<item name="android:fadingEdge">none</item>
-		<item name="android:cacheColorHint">#00000000</item>
-	</style>
-	
-	<style name="dialog" parent="@android:style/Theme.Dialog">
-     <item name="android:windowIsFloating">true</item>
-     <item name="android:windowIsTranslucent">true</item>
-     <item name="android:windowNoTitle">true</item>
-     <item name="android:windowBackground">@android:color/transparent</item>
-     <item name="android:backgroundDimEnabled">true</item>
-     <item name="android:windowFullscreen">false</item>
-     <item name="android:minHeight">60dp</item>
-     <item name="android:minWidth">90dp</item>
-     <item name="android:maxHeight">80dp</item>
-     <item name="android:maxWidth">120dp</item>
-     
- 	</style>
-	
+    </style>
+
+    <style name="create_buy_radion_button">
+        <item name="android:background">@drawable/bg_btn_stop_loss</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="red_button_style">
+        <item name="android:background">@drawable/buy_btn_up</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="mListView">
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:divider">@null</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:cacheColorHint">#00000000</item>
+    </style>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:minHeight">60dp</item>
+        <item name="android:minWidth">90dp</item>
+        <item name="android:maxHeight">80dp</item>
+        <item name="android:maxWidth">120dp</item>
+    </style>
+    <!-- 软键盘 -->
+    <!-- 股价、股数 -->
+    <style name="num_keyboard_stock_price_number">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">2dip</item>
+    </style>
+
+    <style name="num_keyboard_stock_price_number_ok">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">2dip</item>
+    </style>
+
+    <!-- 市价、%号、全部、比例 -->
+    <style name="num_keyboard_stock_price_number_double">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">2dip</item>
+    </style>
+
 </resources>

@@ -120,7 +120,6 @@ public class MockInfoCenterManagementService extends
 				stockLine.setOpen(o.getLong("open"));
 				day_list.add(stockLine);
 			}
-			Collections.reverse(day_list);
 			lineList.setDay_list(day_list);
 			return lineList;
 		} catch (JSONException e) {

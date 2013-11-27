@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
+import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -77,10 +79,26 @@ public class StockSearchView extends RelativeLayout implements
 		keyboardView.setPreviewEnabled(false);
 		editText.setOnTouchListener(this);
 		listView.setOnTouchListener(this);
-		editText.setInputType(InputType.TYPE_NULL);
+		setEditTextInputNull(editText);
 		deleteImage.setOnClickListener(this);
 	}
-
+	void setEditTextInputNull(EditText et) {
+		int sdkInt = Build.VERSION.SDK_INT;
+		if (sdkInt >= 11) {
+			Class<EditText> cls = EditText.class;
+			try {
+				Method setShowSoftInputOnFocus = cls.getMethod(
+						"setShowSoftInputOnFocus", boolean.class);
+				setShowSoftInputOnFocus.setAccessible(false);
+				setShowSoftInputOnFocus.invoke(et, false);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			et.setInputType(InputType.TYPE_NULL);
+		}
+	}
 	@Override
 	public void onKey(int primaryCode, int[] keyCodes) {
 		// TODO Auto-generated method stub

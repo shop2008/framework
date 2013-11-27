@@ -283,4 +283,31 @@
 	<string name="btn_konwn">知道了</string>
 	<!-- 他人主页 -->
 	<string name="other_user_title_append">的主页</string>
+	<!-- 软件盘 -->
+	<string name="del">del</string>
+    <string name="_002">002</string>
+    <string name="_300">300</string>
+    <string name="abc">ABC</string>
+    <string name="_600">600</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_clean">清 空</string>
+    <string name="_7">7</string>
+    <string name="_search">搜 索</string>
+    <string name="_hide">隐藏</string>
+    <string name="_9">9</string>
+    <string name="_8">8</string>
+    <string name="_00">00</string>
+    <string name="_0">0</string>
+    <string name="name">名称</string>
+    <string name="_ok">完 成</string>
+    <string name="_point">.</string>
+    <string name="market_price">市 价</string>
+    <string name="all">全 部</string>
+    <string name="scale">比 例</string>
+    <string name="txt_buy">买入</string>
 </resources>

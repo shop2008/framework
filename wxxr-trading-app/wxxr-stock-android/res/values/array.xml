@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 第一列 -->
+    <string-array name="head1">
+        <item>+</item>
+        <item>-</item>
+    </string-array>
+    
+    <!-- 第二列 -->
+    <string-array name="head2">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+    
+    <!-- 第三列 -->
+    <string-array name="head3">
+        <item>0</item>
+        <item>5</item>
+    </string-array>
+    
+    <!-- 第二篇章 -->
+    <string-array name="head4">
+        <item>1/2</item>
+        <item>1/3</item>
+        <item>1/4</item>
+        <item>全部</item>
+    </string-array>
+    
+    
+
+</resources>

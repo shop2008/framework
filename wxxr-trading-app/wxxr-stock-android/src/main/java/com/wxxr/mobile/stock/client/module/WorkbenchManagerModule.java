@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
+import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
@@ -24,6 +25,8 @@ import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
+import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
+import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
@@ -45,6 +48,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshView.class, new RefreshViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
 		mgr.registerFieldBinder(UIComponent.class, ArticleBodyView.class, new ArticleBodyFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, BuyStockDetailInputView.class, new BuyStockViewFieldBinder());
 	}
 
 	@Override
@@ -59,7 +63,9 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
 		Pull2RefreshViewKeys.registerKeys(mgr);
 		ArticleBodyViewKeys.registerKeys(mgr);
+		BuyStockViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
+		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());
 	}
 
 	@Override

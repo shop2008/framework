@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_stock_price_keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/numkey_bg_color"
+    android:visibility="gone" >
+
+    <LinearLayout
+        android:id="@+id/left_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:orientation="vertical" >
+
+        <!-- 市价 -->
+
+        <Button
+            android:id="@id/bt_market_price"
+            style="@style/num_keyboard_stock_price_number_double"
+            android:background="@drawable/num_keyboard_deep_selector"
+            android:tag="mPrice"
+            android:text="@string/market_price"
+            android:textColor="@color/numkey_btn_text_color_white" />
+        <!-- %号 -->
+
+        <Button
+            android:id="@id/bt_sign"
+            style="@style/num_keyboard_stock_price_number_double"
+            android:background="@drawable/num_keyboard_deep_selector"
+            android:tag="sign"
+            android:text="%"
+            android:textColor="@color/numkey_btn_text_color_white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/layout_0"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@id/input_btn_1"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_1"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_2"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_2"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_3"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_3"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <ImageButton
+                android:id="@id/input_btn_del"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_deep_selector"
+                android:contentDescription="@string/del"
+                android:src="@drawable/del"
+                android:tag="del" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@id/input_btn_4"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_4"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_5"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_5"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_6"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_6"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_clean"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_deep_selector"
+                android:tag="clean"
+                android:text="@string/_clean"
+                android:textColor="@color/numkey_btn_text_color_white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@id/input_btn_7"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_7"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_8"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_8"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <Button
+                android:id="@id/input_btn_9"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_light_selector"
+                android:text="@string/_9"
+                android:textColor="@color/numkey_btn_text_color_black" />
+
+            <ImageButton
+                android:id="@id/input_btn_hide"
+                style="@style/num_keyboard_stock_price_number"
+                android:background="@drawable/num_keyboard_deep_selector"
+                android:contentDescription="@string/_hide"
+                android:src="@drawable/img_keyboard"
+                android:tag="hide" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <!-- 点 -->
+
+            <LinearLayout
+                android:id="@+id/layout_3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@id/input_btn_point"
+                    style="@style/num_keyboard_stock_price_number"
+                    android:background="@drawable/num_keyboard_light_selector"
+                    android:text="@string/_point"
+                    android:textColor="@color/numkey_btn_text_color_black" />
+
+                <Button
+                    android:id="@id/input_btn_0"
+                    style="@style/num_keyboard_stock_price_number"
+                    android:layout_below="@id/input_btn_8"
+                    android:layout_toRightOf="@id/input_btn_point"
+                    android:background="@drawable/num_keyboard_light_selector"
+                    android:text="@string/_0"
+                    android:textColor="@color/numkey_btn_text_color_black" />
+            </LinearLayout>
+            <!-- 确认键 -->
+
+            <LinearLayout
+                android:id="@+id/layout_4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@id/input_btn_ok"
+                    style="@style/num_keyboard_stock_price_number_ok"
+                    android:background="@drawable/num_keyboard_deep_selector"
+                    android:tag="ok"
+                    android:text="@string/_ok"
+                    android:textColor="@color/numkey_btn_text_color_white" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- 股价软键盘 -->
+
+    <RelativeLayout
+        android:id="@+id/layout_keyboard"
+        android:layout_width="fill_parent"
+        android:layout_height="196dip"
+        android:background="@color/numkey_bg_color"
+        android:visibility="gone" >
+    </RelativeLayout>
+
+</LinearLayout>
