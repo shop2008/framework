@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 
@@ -45,6 +46,7 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 			listAdapter = createAdaptorFromValue(comp);
 		}
 		if(listAdapter != null){
+			listAdapter.updateDataIfNeccessary();
 			((KLineView)getUIControl()).setDataProvider(this);
 		}
 	}
@@ -159,7 +161,8 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	 */
 	@Override
 	protected void updateUI(boolean recursive) {
-		this.listAdapter.updateDataIfNeccessary();
+		if(listAdapter != null)
+			listAdapter.updateDataIfNeccessary();
 		if(this.listener != null){
 			this.listener.dataSetChanged();
 		}
@@ -174,6 +177,12 @@ public class KlineFieldBinding extends BasicFieldBinding implements IObservableL
 	@Override
 	public boolean updateDataIfNeccessary() {
 		return this.listAdapter.updateDataIfNeccessary();
+	}
+
+	@Override
+	public void notifyDataChanged(ValueChangedEvent... events) {
+		// TODO Auto-generated method stub
+		super.notifyDataChanged(events);
 	}
 
 }

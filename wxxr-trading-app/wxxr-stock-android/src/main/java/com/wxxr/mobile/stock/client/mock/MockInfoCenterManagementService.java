@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 
 /**
@@ -28,7 +30,8 @@ import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
  */
 public class MockInfoCenterManagementService extends
 		InfoCenterManagementServiceImpl {
-
+	private StockQuotationBean stockQuotationbean = new StockQuotationBean();
+	
 	@Override
 	protected void startService() {
 		super.startService();
@@ -51,7 +54,16 @@ public class MockInfoCenterManagementService extends
 //		AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
 
 	}
-
+	@Override
+	public StockQuotationBean getStockQuotation(String code, String market) {
+		stockQuotationbean = MockDataUtils.getStockQuotation(code, market);
+		stockQuotationbean.setHandrate(8300L);
+		stockQuotationbean.setLb(165L);
+		stockQuotationbean.setSecuamount(445020L);
+		stockQuotationbean.setCapital(5561000000L);
+			return stockQuotationbean;
+//		return null;
+	}
 	@Override
 	public LineListBean getDayline(String code, String market) {
 //		lineListBean = loadLocalSettings();
@@ -108,6 +120,7 @@ public class MockInfoCenterManagementService extends
 				stockLine.setOpen(o.getLong("open"));
 				day_list.add(stockLine);
 			}
+			Collections.reverse(day_list);
 			lineList.setDay_list(day_list);
 			return lineList;
 		} catch (JSONException e) {

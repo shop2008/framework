@@ -3,12 +3,6 @@ package com.wxxr.mobile.stock.client.widget;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import com.wxxr.mobile.core.ui.api.IDataChangedListener;
-import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
-import com.wxxr.mobile.stock.client.biz.Kline;
-import com.wxxr.mobile.stock.client.biz.Stock;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,10 +11,14 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PathEffect;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.SurfaceHolder.Callback;
+import android.view.View;
+
+import com.wxxr.mobile.core.ui.api.IDataChangedListener;
+import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
+import com.wxxr.mobile.stock.app.bean.StockLineBean;
+import com.wxxr.mobile.stock.client.biz.Kline;
+import com.wxxr.mobile.stock.client.biz.Stock;
 
 
 /**
@@ -28,11 +26,10 @@ import android.view.SurfaceHolder.Callback;
  * @author renwenjie
  *
  */
-public class KLineView extends SurfaceView implements Callback,IDataChangedListener {
+public class KLineView extends View implements IDataChangedListener {
 
 	private SurfaceHolder holder;
 
-	private Stock stock;
 
 	/**
 	 * 手指触摸点横坐标
@@ -59,12 +56,12 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 	 */
 	private int klineType;
 	/**
-	 * 起始点纵度比(自定义的)（点坐标/画板高）
+	 * K线起始点纵度比(自定义的)（点坐标/画板高）
 	 */
 	private final float hBi = (float) 152 / 220;
 
 	/**
-	 * 右上角纵度比(自定义的)（点坐标/画板高）
+	 * K线右上角纵度比(自定义的)（点坐标/画板高）
 	 */
 	private final float tBi = (float) 20 / 220;
 
@@ -82,21 +79,21 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 	public float cWidth;
 	/** 画布的高 */
 	public float cHeight;
-	/** 分时表左下角X点 */
+	/** K线左下角X点 */
 	public float mStartX;
-	/** 分时表左下角Y点 */
+	/** K线左下角Y点 */
 	public float mStartY;
-	/** 分时表右上角X点 */
+	/** K线右上角X点 */
 	public float mEndX;
-	/** 分时表右上角Y点 */
+	/** K线右上角Y点 */
 	public float mEndY;
 	/** 柱状图顶边Y点 */
 	public float zzTopY;
 	/** 柱状图底边Y点 */
 	public float zzBottomY;
-	/** 分时线表的宽 */
+	/** K线表的宽 */
 	public float fenshiWidth;
-	/** 分时线表的高 */
+	/** K线表的高 */
 	public float fenshiHeight;
 
 	private boolean isRender = false;
@@ -153,78 +150,65 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 	}
 
 	private void init(Context context) {
-		holder = getHolder();
-		holder.addCallback(this);
+//		holder = getHolder();
+//		holder.addCallback(this);
 		mPaint = new Paint();
 		df = new DecimalFormat("0.00");
 		isRender = true;
 	}
 
 	
-	public void setStock(Stock stock) {
-		this.stock = stock;
-	}
 	
 	
-
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-
-	}
-
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		this.mHolder = holder;
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		this.mHolder = null;
-	}
+//
+//	@Override
+//	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+//			int height) {
+//
+//	}
+//
+//	@Override
+//	public void surfaceCreated(SurfaceHolder holder) {
+//		this.mHolder = holder;
+//	}
+//
+//	@Override
+//	public void surfaceDestroyed(SurfaceHolder holder) {
+//		this.mHolder = null;
+//	}
+//	
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		touchX = event.getX();
+//		return true;
+//	}
 	
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		touchX = event.getX();
-		return true;
+	public void draw(Canvas canvas) {
+		super.draw(canvas);
+		/**
+		 * 画图
+		 */
+		doDraw(canvas, klineType);
 	}
-	
 
 	public void updateCanvas() {
-		Canvas c = null;
-		try {
-			c = mHolder.lockCanvas(null);
-			/**
-			 *  指定背景
-			 */
-			if (c != null) {
-				c.drawColor(Color.BLACK);
-				/**
-				 * 画图
-				 */
-				doDraw(c, klineType);
-			}
-		} finally {
-			if (c != null)
-				mHolder.unlockCanvasAndPost(c);
-		}
+		postInvalidate();
 	}
 
 	private void doDraw(Canvas c, int klineType) {
-
 		setData(c);
 		drawBgProgram(c);
 		if (dataProvider != null) {
 			drawKline(c);
 		}
-
 	}
 
 	public void setData(Canvas c) {
-		cWidth = c.getWidth();
-		cHeight = c.getHeight();
-		wBi = (float) 65 / cWidth;
-		mStartX = cWidth * wBi;
+		cWidth = c.getWidth(); //画布宽
+		cHeight = c.getHeight(); //画布高
+		wBi = (float) 65 / cWidth; //从逻辑的65开始
+		mStartX = cWidth * wBi; //算实际画布开始位置
 		mStartY = cHeight * hBi;
 		mEndX = cWidth - 1;
 		mEndY = cHeight * tBi;
@@ -241,13 +225,13 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 
 			double temp;
 			for (int i = 0; i < count; i++) {
-				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).high);
+				temp = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));
 				if (maxPrice < temp)
 					maxPrice = temp;
-				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).low);
+				temp = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getLow()));
 				if (minPrice > temp)
 					minPrice = temp;
-				temp = Double.parseDouble(((Kline)dataProvider.getItem(i)).secuvolume);
+				temp = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getSecuvolume()));
 				if (maxSecuvolume < temp)
 					maxSecuvolume = temp;
 			}
@@ -283,11 +267,11 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
-			mPaint.setTextSize(8);
+			mPaint.setTextSize(10);
 		} else if (cWidth >= 330) {
-			mPaint.setTextSize(6);
+			mPaint.setTextSize(10);
 		} else {
-			mPaint.setTextSize(4);
+			mPaint.setTextSize(10);
 		}
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		mPaint.setColor(Color.WHITE);
@@ -318,29 +302,29 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
-			mPaint.setTextSize(8);
+			mPaint.setTextSize(10);
 		} else if (cWidth >= 330) {
-			mPaint.setTextSize(6);
+			mPaint.setTextSize(10);
 		} else {
-			mPaint.setTextSize(4);
+			mPaint.setTextSize(10);
 		}
 		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(Color.WHITE);
-		canvas.drawText(((Kline)dataProvider.getItem(0)).date, mStartX + 31, zzTopY - 1, mPaint);
-		canvas.drawText(((Kline)dataProvider.getItem(count / 2)).date, mStartX + fenshiWidth / 2,
+		canvas.drawText(((StockLineBean)dataProvider.getItem(0)).getDate(), mStartX + 31, zzTopY - 1, mPaint);
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count / 2)).getDate(), mStartX + fenshiWidth / 2,
 				zzTopY - 1, mPaint);
-		canvas.drawText(((Kline)dataProvider.getItem(count - 1)).date, mEndX - 31, zzTopY - 1,
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count - 1)).getDate(), mEndX - 31, zzTopY - 1,
 				mPaint);
 
 		/** 画成交量柱状图的值 */
 		if (cWidth >= 570) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 450) {
-			mPaint.setTextSize(8);
+			mPaint.setTextSize(10);
 		} else if (cWidth >= 330) {
-			mPaint.setTextSize(6);
+			mPaint.setTextSize(10);
 		} else {
-			mPaint.setTextSize(4);
+			mPaint.setTextSize(10);
 		}
 		/** 成交量（万） */
 		mPaint.setTextAlign(Paint.Align.RIGHT);
@@ -369,11 +353,11 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 	
 		for (int i = 0; i < count; i++) {
 
-			double open = Double.parseDouble(((Kline)dataProvider.getItem(i)).open);
-			double high = Double.parseDouble(((Kline)dataProvider.getItem(i)).high);
-			double low = Double.parseDouble(((Kline)dataProvider.getItem(i)).low);
-			double newprice = Double.parseDouble(((Kline)dataProvider.getItem(i)).newprice);
-			double secuvolume = Double.parseDouble(((Kline)dataProvider.getItem(i)).secuvolume);
+			double open = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getOpen()));
+			double high = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));
+			double low = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getLow()));
+			double newprice = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getPrice()));
+			double secuvolume = Double.parseDouble(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getSecuvolume()));
 
 			if (open > newprice) {
 				mPaint.setColor(Color.parseColor("#3C7F00"));
@@ -457,8 +441,9 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 
 	public void drawBgProgram(Canvas canvas) {
 		/** 设置虚线样式 */
-		mPaint.setColor(Color.RED);
+		mPaint.setColor(Color.parseColor("#5b5b5b"));
 		mPaint.setStyle(Paint.Style.STROKE);
+		mPaint.setStrokeWidth(2);
 		// mPaint.setColor(Color.DKGRAY);
 		// Path path = new Path();
 		// path.moveTo(0, 10);
@@ -495,7 +480,7 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 
 		/** 外围边框 */
 		// mPaint.setColor(Color.DKGRAY);
-		mPaint.setColor(Color.RED);
+		mPaint.setColor(Color.parseColor("#5b5b5b"));
 		canvas.drawLine(mStartX, mEndY - 6, mEndX, mEndY - 6, mPaint);// 分时上方横线
 		canvas.drawLine(mStartX, mStartY + 6, mEndX, mStartY + 6, mPaint);// 分时下方横线
 		canvas.drawLine(mStartX, mStartY + 6, mStartX, mEndY - 6, mPaint);// 分时左纵线
@@ -509,11 +494,12 @@ public class KLineView extends SurfaceView implements Callback,IDataChangedListe
 
 	private String formatDouble(double value) {
 
-		if (stock.code.substring(0, 1).equals("9")) {
-			return formatDouble(round(value, 3), 3);
-		} else {
-			return df.format(round(value, 2));
-		}
+//		if (stock.code.substring(0, 1).equals("9")) {
+//			return formatDouble(round(value, 3), 3);
+//		} else {
+//			
+//		}
+		return df.format(round(value, 2));
 	}
 
 	private String formatNum(double value) {
