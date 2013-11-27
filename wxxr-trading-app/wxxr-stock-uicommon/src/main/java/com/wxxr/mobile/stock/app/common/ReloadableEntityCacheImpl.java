@@ -12,14 +12,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.util.IAsyncCallback;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 
 
 /**
@@ -184,6 +188,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected WeakReference<ICacheUpdatedCallback>[] getCallbacks(){
 		rlock.lock();
 		try {
@@ -213,24 +218,42 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		if(secondsElapsed < minReloadIntervalInSeconds){
 			return;
 		}
-		doReload();
+		doReload(false);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#forceReload()
 	 */
 	@Override
-	public void forceReload() {
-		doReload();
+	public void forceReload(boolean wait4Finish) {
+		doReload(wait4Finish);
 	}
 	
 	/**
 	 * 
 	 */
-	protected void doReload() {
+	protected void doReload(boolean wait4Finish) {
 		ICommand<?> cmd = getReloadCommand();
-		this.inReloading = true;
-		KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
+		if(!wait4Finish){
+			this.inReloading = true;
+			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
+		}else{
+			Future<?> future = KUtils.getService(ICommandExecutor.class).submitCommand(cmd);
+			try {
+				processReloadResult(future.get());
+			} catch (InterruptedException e) {
+				return;
+			} catch (ExecutionException e) {
+				Throwable t = e.getCause();
+				if(t instanceof StockAppBizException){
+					throw (StockAppBizException)t;
+				}else if( t instanceof CommandConstraintViolatedException){
+					throw (CommandConstraintViolatedException)t;
+				}else{
+					throw new StockAppBizException("Caught exception when try to reload data for cache :"+getEntityTypeName(),t);
+				}
+			}
+		}
 	}
 		
 	protected abstract ICommand<?> getReloadCommand();

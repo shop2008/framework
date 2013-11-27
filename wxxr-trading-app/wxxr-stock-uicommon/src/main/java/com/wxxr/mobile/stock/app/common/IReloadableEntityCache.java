@@ -4,7 +4,7 @@ public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>
 
 	void doReloadIfNeccessay();
 
-	void forceReload();
+	void forceReload(boolean wait4Finish);
 
 	/**
 	 * @return the lastUpdateTime

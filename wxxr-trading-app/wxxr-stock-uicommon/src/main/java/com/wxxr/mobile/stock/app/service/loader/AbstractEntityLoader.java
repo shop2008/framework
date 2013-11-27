@@ -53,7 +53,9 @@ public abstract class AbstractEntityLoader<K, V, T> implements IEntityLoader<K, 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <R> R execute(ICommand<R> command) throws Exception {
-		Object val = execute(command);
+		@SuppressWarnings("rawtypes")
+		ICommand cmd = command;
+		Object val = executeCommand(cmd);
 		return (R)val;
 	}
 	
