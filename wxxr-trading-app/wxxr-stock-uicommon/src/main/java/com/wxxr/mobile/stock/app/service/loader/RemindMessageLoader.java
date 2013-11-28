@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
-import com.wxxr.stock.restful.resource.MessageRemindResource;
+import com.wxxr.stock.restful.resource.IMessageRemindResource;
 
 /**
  * @author wangyan
@@ -100,7 +100,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	@Override
 	protected List<MessageVO> executeCommand(ICommand<List<MessageVO>> command)
 			throws Exception {
-		return getRestService(MessageRemindResource.class).findById(new MessageVO());
+		return getRestService(IMessageRemindResource.class).findById(new MessageVO());
 	}
 
 }

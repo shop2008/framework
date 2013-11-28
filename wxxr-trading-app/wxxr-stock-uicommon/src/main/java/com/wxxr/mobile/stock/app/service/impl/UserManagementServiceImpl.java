@@ -52,8 +52,8 @@ import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.StockUserResource;
-import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
@@ -527,7 +527,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
 				public PersonalHomePageVO call() throws Exception {
 					try {
-						return getRestService(TradingResourse.class).getSelfHomePage();
+						return getRestService(ITradingProtectedResource.class).getSelfHomePage();
 					} catch (Throwable e) {
 						log.warn("Failed to fetch personal home page",e);
 						throw new StockAppBizException("网络不给力，请稍后再试");

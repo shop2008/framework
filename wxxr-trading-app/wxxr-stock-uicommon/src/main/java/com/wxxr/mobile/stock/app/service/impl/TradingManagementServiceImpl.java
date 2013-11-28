@@ -33,7 +33,6 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
@@ -45,7 +44,8 @@ import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
@@ -199,7 +199,7 @@ public class TradingManagementServiceImpl extends
 						try {
 							List<TradingAccInfoVO> volist = getService(
 									IRestProxyService.class).getRestService(
-									TradingResourse.class)
+									ITradingProtectedResource.class)
 									.getTradingAccountList();
 							return volist;
 						} catch (Throwable e) {
@@ -313,7 +313,7 @@ public class TradingManagementServiceImpl extends
 				public TradingAccountVO call()  {
 					try {
 						TradingAccountVO _vo = getService(IRestProxyService.class)
-								.getRestService(TradingResourse.class).getAccount(
+								.getRestService(ITradingResource.class).getAccount(
 										acctID);
 						if (log.isDebugEnabled()) {
 							log.debug("fetch data:" + _vo);
@@ -375,7 +375,7 @@ public class TradingManagementServiceImpl extends
 					UserCreateTradAccInfoVO _vo = null;
 					try {
 						_vo = context.getService(IRestProxyService.class)
-								.getRestService(TradingResourse.class)
+								.getRestService(ITradingProtectedResource.class)
 								.getCreateStrategyInfo();
 						if (log.isDebugEnabled()) {
 							log.debug("fetch data:" + _vo);
@@ -416,7 +416,7 @@ public class TradingManagementServiceImpl extends
 			DealDetailVO vo = fetchDataFromServer(new Callable<DealDetailVO>() {
 				public DealDetailVO call() throws Exception {
 					try {
-						DealDetailVO vo = getRestService(TradingResourse.class)
+						DealDetailVO vo = getRestService(ITradingResource.class)
 								.getDealDetail(acctID);
 						if (log.isDebugEnabled()) {
 							log.debug("fetch data:" + vo);
@@ -469,7 +469,7 @@ public class TradingManagementServiceImpl extends
 				public AuditDetailVO call() throws Exception {
 					AuditDetailVO vo = null;
 					try {
-						vo = getRestService(TradingResourse.class).getAuditDetail(
+						vo = getRestService(ITradingResource.class).getAuditDetail(
 								acctId);
 						return vo;
 					} catch (Throwable e) {
@@ -513,7 +513,7 @@ public class TradingManagementServiceImpl extends
 		context.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					StockResultVO vo = getRestService(TradingResourse.class)
+					StockResultVO vo = getRestService(ITradingProtectedResource.class)
 							.createTradingAccount(captitalAmount, capitalRate,
 									virtual, depositRate);
 					if (vo != null) {
@@ -550,7 +550,7 @@ public class TradingManagementServiceImpl extends
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class).buyStock(acctID,
+					vo = getRestService(ITradingProtectedResource.class).buyStock(acctID,
 							market, code, cPrice, c_amount);
 					if (vo != null) {
 						if (vo.getSuccOrNot() == 0) {// 表示失败
@@ -585,7 +585,7 @@ public class TradingManagementServiceImpl extends
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class).sellStock(
+					vo = getRestService(ITradingProtectedResource.class).sellStock(
 							acctID, market, code, cPrice, c_amount);
 					if (vo != null) {
 						if (vo.getSuccOrNot() == 0) {// 表示失败
@@ -615,7 +615,7 @@ public class TradingManagementServiceImpl extends
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class).cancelOrder(
+					vo = getRestService(ITradingProtectedResource.class).cancelOrder(
 							orderID);
 					if (vo != null) {
 						if (vo.getSuccOrNot() == 0) {// 表示失败
@@ -652,7 +652,7 @@ public class TradingManagementServiceImpl extends
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class).quickBuy(
+					vo = getRestService(ITradingProtectedResource.class).quickBuy(
 							captitalAmount, _capitalRate, virtual, stockMarket,
 							stockCode, _stockBuyAmount, _depositRate);
 					if (vo != null) {
@@ -684,7 +684,7 @@ public class TradingManagementServiceImpl extends
 			public void run() {
 				StockResultVO vo = null;
 				try {
-					vo = getRestService(TradingResourse.class)
+					vo = getRestService(ITradingProtectedResource.class)
 							.clearTradingAccount(acctID);
 					if (vo != null) {
 						if (vo.getSuccOrNot() == 0) {// 表示失败
@@ -724,7 +724,7 @@ public class TradingManagementServiceImpl extends
 						if (log.isDebugEnabled()) {
 							log.debug("fetch all trading account info...");
 						}
-						List<GainVO> list = getRestService(TradingResourse.class)
+						List<GainVO> list = getRestService(ITradingProtectedResource.class)
 								.getTotalGain(start, limit);
 						return list;
 					} catch (Throwable e) {
@@ -762,7 +762,7 @@ public class TradingManagementServiceImpl extends
 						if (log.isDebugEnabled()) {
 							log.debug("fetch all trading account info...");
 						}
-						List<GainVO> list = getRestService(TradingResourse.class)
+						List<GainVO> list = getRestService(ITradingProtectedResource.class)
 								.getGain(start, limit);
 						return list;
 					} catch (Throwable e) {
@@ -801,7 +801,7 @@ public class TradingManagementServiceImpl extends
 				public List<TradingRecordVO> call() throws Exception {
 					try {
 						List<TradingRecordVO> volist = getRestService(
-								TradingResourse.class).getTradingAccountRecord(
+								ITradingResource.class).getTradingAccountRecord(
 								acctID, start, limit);
 						return volist;
 					} catch (Exception e) {

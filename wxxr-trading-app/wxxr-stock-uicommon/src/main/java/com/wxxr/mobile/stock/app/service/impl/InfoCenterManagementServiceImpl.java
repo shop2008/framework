@@ -3,11 +3,9 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +17,6 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
-import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
@@ -67,13 +64,7 @@ public class InfoCenterManagementServiceImpl extends
 	// ====================interface methods =====================
 	@Override
 	public SearchStockListBean searchStock(final String keyword) {
-		List<StockBaseInfoBean> list = new ArrayList<StockBaseInfoBean>();
-		if (StringUtils.isEmpty(keyword)) {
-			stockListbean.setSearchResult(list);
-			return stockListbean;
-		}
-		getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
-			@Override
+		List<StockBaseInfo> ret = getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
 			public boolean doFilter(StockBaseInfo entity) {
 				if (StringUtils.isBlank(keyword)) {
 					return false;
@@ -81,14 +72,8 @@ public class InfoCenterManagementServiceImpl extends
 				return entity.getAbbr().startsWith(keyword)||entity.getCode().startsWith(keyword);
 			}
 		});
-		List<StockBaseInfoBean> searchList = MockDataUtils
-				.getAllMockDataForSearchStock();
-		for (StockBaseInfoBean bean : searchList) {
-			if (bean.toString().contains(keyword)) {
-				list.add(bean);
-			}
-		}
-		stockListbean.setSearchResult(list);
+		
+		stockListbean.setSearchResult(ret);
 		return this.stockListbean;
 	}
 
