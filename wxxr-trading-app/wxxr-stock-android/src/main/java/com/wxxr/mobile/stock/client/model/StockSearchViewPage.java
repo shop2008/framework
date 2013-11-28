@@ -18,7 +18,6 @@ import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
@@ -32,7 +31,7 @@ import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
  */
 @View(name="stockSearchPage", withToolbar=true, description="搜索股票", provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.stock_search_layout")
-public abstract class StockSearchViewPage extends PageBase implements IModelUpdater {
+public abstract class StockSearchViewPage extends PageBase {
 
 	private static Trace log = Trace.getLogger(StockSearchViewPage.class);
 
@@ -90,7 +89,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	}
 	
 	@Command
-	void handleItemClick(InputEvent event) {
+	String handleItemClick(InputEvent event) {
 		if (event.getProperty("position") instanceof Integer) {
 			List<StockBaseInfo> stocks = (searchListBean != null ? searchListBean
 					.getSearchResult() : null);
@@ -103,7 +102,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 				updateSelection(val);
 				hide();
 			}
-			return;
 		}
+		return null;
 	}
 }

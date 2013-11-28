@@ -244,8 +244,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @return
 	 */
 	@Command(navigations = { @Navigation(on = "*", showPage = "BuyStockDetailPage") })
-	void handleBuyBtnClick(InputEvent event) {
-		return;
+	String handleBuyBtnClick(InputEvent event) {
+		return null;
 	}
 
 	@Override
