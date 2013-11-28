@@ -6,16 +6,24 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 
 @View(name="TradingBuyInfoItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.trading_buy_info_item")
 public abstract class TradingBuyInfoItemView extends ViewBase implements IModelUpdater {
 	final Trace log = Trace.register(TradingBuyInfoItemView.class);
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Bean
 	TradingAccInfoBean trading;
@@ -35,7 +43,7 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	/**额度（申请资金）*/
 	@Field(valueKey="text",binding="${trading!=null?trading.sum:'--'}",attributes={
 			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
-			})
+			},converter="stockLong2StringAutoUnitConvertor")
 	String initCredit;
 	
 	/**总收益*/
