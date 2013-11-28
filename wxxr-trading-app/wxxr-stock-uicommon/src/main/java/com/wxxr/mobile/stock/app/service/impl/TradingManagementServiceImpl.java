@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
@@ -70,6 +70,37 @@ public class TradingManagementServiceImpl extends
 		AbstractModule<IStockAppContext> implements ITradingManagementService {
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
+	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
+		
+		@Override
+		public int compare(MegagameRankBean o1, MegagameRankBean o2) {
+			return o1.getRankSeq() - o2.getRankSeq();
+		}
+	};
+	
+	private static final Comparator<EarnRankItemBean> earnRankComparator = new Comparator<EarnRankItemBean>() {
+		
+		@Override
+		public int compare(EarnRankItemBean o1, EarnRankItemBean o2) {
+			return 0;
+		}
+	};
+		
+	private static final Comparator<WeekRankBean> weekRankComparator = new Comparator<WeekRankBean>() {
+		
+		@Override
+		public int compare(WeekRankBean o1, WeekRankBean o2) {
+			return o1.getRankSeq() - o2.getRankSeq();
+		}
+	};
+	
+	private static final Comparator<RegularTicketBean> rtRankComparator = new Comparator<RegularTicketBean>() {
+		
+		@Override
+		public int compare(RegularTicketBean o1, RegularTicketBean o2) {
+			return o1.getRankSeq() - o2.getRankSeq();
+		}
+	};
 	// =========================beans =======================
 	
 	private IReloadableEntityCache<String, EarnRankItemBean> earnRankCache;
@@ -129,7 +160,6 @@ public class TradingManagementServiceImpl extends
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
-		addRequiredService(ICommand.class);
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 	}
@@ -214,6 +244,7 @@ public class TradingManagementServiceImpl extends
 			this.earnRank = this.earnRankCache.getEntities(null, null);
 		}
 		this.earnRankCache.doReloadIfNeccessay();
+		this.earnRankCache.clear();
 		return this.earnRank;
 	}
 
@@ -222,9 +253,10 @@ public class TradingManagementServiceImpl extends
 			if(this.tRankCache == null){
 				this.tRankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("tRank");
 			}
-			this.tRank = this.tRankCache.getEntities(null, null);
+			this.tRank = this.tRankCache.getEntities(null, tRankComparator);
 		}
 		this.tRankCache.doReloadIfNeccessay();
+		this.tRank.clear();
 		return this.tRank;
 	}
 
@@ -234,9 +266,10 @@ public class TradingManagementServiceImpl extends
 			if(this.t1RankCache == null){
 				this.t1RankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("t1Rank");
 			}
-			this.t1Rank = this.t1RankCache.getEntities(null, null);
+			this.t1Rank = this.t1RankCache.getEntities(null, tRankComparator);
 		}
 		this.t1RankCache.doReloadIfNeccessay();
+		this.t1Rank.clear();
 		return this.t1Rank;
 
 	}
@@ -247,9 +280,10 @@ public class TradingManagementServiceImpl extends
 			if(this.rtRankCache == null){
 				this.rtRankCache = new GenericReloadableEntityCache<String, RegularTicketBean, RegularTicketVO>("rtRank");
 			}
-			this.rtRank = this.rtRankCache.getEntities(null, null);
+			this.rtRank = this.rtRankCache.getEntities(null, rtRankComparator);
 		}
 		this.rtRankCache.doReloadIfNeccessay();
+		this.rtRank.clear();
 		return this.rtRank;
 	}
 
@@ -259,9 +293,10 @@ public class TradingManagementServiceImpl extends
 			if(this.weekRankCache == null){
 				this.weekRankCache = new GenericReloadableEntityCache<String, WeekRankBean, WeekRankVO>("weekRank");
 			}
-			this.weekRank = this.weekRankCache.getEntities(null, null);
+			this.weekRank = this.weekRankCache.getEntities(null, weekRankComparator);
 		}
 		this.weekRankCache.doReloadIfNeccessay();
+		this.weekRank.clear();
 		return this.weekRank;
 
 	}
@@ -845,65 +880,6 @@ public class TradingManagementServiceImpl extends
 		map.put("limit", limit);
 		this.earnRankCache.forceReload(map, wait4Finish);
 	}
-
-    @Override
-    public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
-	 */
-	@Override
-	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
-		if(rightTotalGain==null){
-				this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
-		}
-		rightTotalGainCacheDoReload(start, limit);
-		return this.rightTotalGain;
-
-	}
-
-	protected void rightTotalGainCacheDoReload(int start, int limit) {
-		synchronized (getRightTotalGainCache()) {
-			Map<String,Object> commandParameters=new HashMap<String,Object>();
-			commandParameters.put("start", start);
-			commandParameters.put("limit", limit);
-			getRightTotalGainCache().setCommandParameters(commandParameters);
-
-			getRightTotalGainCache().doReloadIfNeccessay();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
-	 */
-	@Override
-	public BindableListWrapper<GainBean> getGain(int start, int limit) {
-		if(rightGain==null){
-			this.rightGain =getRightTotalGainCache().getEntities(new IEntityFilter<GainBean>() {
-				
-				@Override
-				public boolean doFilter(GainBean entity) {
-					return entity.getTotalGain()>0?true:false;
-				}
-			} , null);
-		}
-		rightTotalGainCacheDoReload(start, limit);
-		return this.rightGain;
-	}
-
-	protected GenericReloadableEntityCache<String, GainBean, GainVO> getRightTotalGainCache() {
-		if(rightTotalGainCache==null){
-			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain");
-		}
-		return rightTotalGainCache;
-	}
+	
 
 }
