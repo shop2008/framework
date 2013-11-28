@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.R;
@@ -50,11 +51,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 	IUICommand left,right,middle;
 	
 	@Command(uiItems={
-			@UIItem(label="If you see it, there's error !",id="left_button",icon="",visibleWhen="false"),
-			@UIItem(label="If you see it, there's error !",id="mid_button",icon="",visibleWhen="false"),
-			@UIItem(label="If you see it, there's error !",id="right_button",icon="",visibleWhen="false")
+			@UIItem(label="resourceId:message/dummy_ok_label",id="left_button",icon="",visibleWhen="false"),
+			@UIItem(label="resourceId:message/dummy_middle_label",id="mid_button",icon="",visibleWhen="false"),
+			@UIItem(label="resourceId:message/dummy_canel_label",id="right_button",icon="",visibleWhen="false")
 	})
 	String dummyClick(InputEvent evt){
+		hide();
 		return null;
 	}
 
@@ -80,14 +82,26 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof IUICommand){
 				this.left = (IUICommand)val;
+			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON)){
+				super.getChild("left_button").setAttribute(AttributeKeys.visible, true);
+			}else{
+				super.getChild("left_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof IUICommand){
 				this.middle = (IUICommand)val;
+			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON)){
+				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true);
+			}else{
+				super.getChild("mid_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
 			if(val instanceof IUICommand){
 				this.right = (IUICommand)val;
+			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON)){
+				super.getChild("right_button").setAttribute(AttributeKeys.visible, true);
+			}else{
+				super.getChild("right_button").setAttribute(AttributeKeys.visible, false);
 			}
 		}
 		
