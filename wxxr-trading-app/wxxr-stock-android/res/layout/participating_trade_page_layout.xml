@@ -78,7 +78,11 @@
             android:id="@+id/tv_trade_rule_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="模拟盘参与规则"
+            android:text="交易规则"
+            bind:field="*"
+            android:enabled="true"
+            android:clickable="true"
+            bind:on_Click="showTradingRulePage"
             android:textSize="14sp"
             android:textColor="@color/red" />
 

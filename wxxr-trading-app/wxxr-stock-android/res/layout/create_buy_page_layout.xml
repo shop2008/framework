@@ -14,21 +14,6 @@
         android:background="@drawable/title_background">
 
         <RadioButton
-            android:id="@+id/radio0"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:checked="true"
-            android:layout_weight="1"
-            android:button="@null"
-            android:gravity="center"
-            bind:field="*"
-            bind:on_Click="showChallengeTradingClick"
-            android:text="挑战交易盘" 
-            android:textSize="15sp"
-            android:background="@drawable/tab_left_btn_background"
-            android:layout_marginBottom="0.5dp"/>
-
-        <RadioButton
             android:id="@+id/radio1"
             android:layout_width="fill_parent"
             android:layout_weight="1"
@@ -37,10 +22,26 @@
             android:gravity="center"
             android:button="@null"
             android:textSize="15sp"
+            android:checked="true"
             bind:field="*"
+            android:background="@drawable/tab_left_btn_background"
             bind:on_Click="showParticipatingTradingClick"
-             android:layout_marginBottom="0.5dp"
-            android:background="@drawable/tab_right_btn_background"/>
+            android:layout_marginBottom="0.5dp"
+            />
+        
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            bind:field="*"
+            bind:on_Click="showChallengeTradingClick"
+            android:text="挑战交易盘" 
+            android:textSize="15sp"
+            android:background="@drawable/tab_right_btn_background"
+            android:layout_marginBottom="0.5dp"/>        
     </RadioGroup>
 
     <FrameLayout

@@ -1,18 +1,13 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
@@ -21,12 +16,11 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -101,9 +95,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	})
 	String rate3;
 	
-//	float _rate1,_rate2,_rate3; //止损
-//	float _deposit1,_deposit2,_deposit3; //保证金
-	
 	/**实盘券综合费用比例,手续费*/
 	float voucherCostRate;	
 	
@@ -165,6 +156,16 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	//冻结余额
 	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
 	String frozen_money;
+	
+	//冻结余额
+	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
+	String jifen_money;
+	
+	@Field(valueKey="visible",visibleWhen="${currentRadioBtnId != 3}")
+	boolean frozen_visibility;
+	
+	@Field(valueKey="visible",visibleWhen="${currentRadioBtnId==3}")
+	boolean jifen_visibility;
 	
 	//切换RadioButtn事件
 	@Command
@@ -241,7 +242,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	private void updataRate3(){
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
-		if(changeMoney>0 && getDeposit2()>0 && costRate>0){
+		if(changeMoney>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", (changeMoney*10000.0))+"元";
 			djMoney = changeMoney*10000;
@@ -268,7 +269,19 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		registerBean("checkedbox1", checkedbox1);
 		return null;
 	}
-	
+	//交易规则
+	@Command(navigations={
+			@Navigation(on = "webPage",showPage="webPage")
+	})
+	CommandResult showTradingRulePage(InputEvent event){
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			CommandResult result = new CommandResult();
+			result.setResult("webPage");
+			return result;
+		}
+		return null;
+		
+	}
 	
 	
 	@Command
@@ -379,7 +392,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		this.djDeposit = "0元";
 		this.changeMoney = 0;
 		this.costRate = 0;
-		this.currentViewId = 0;
+		this.currentViewId = 1;
 		this.currentRadioBtnId = 1;
 		registerBean("zhfzf", zhfzf);
 		registerBean("djDeposit", djDeposit);
@@ -391,46 +404,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		 if(userCreateTradAccInfo!=null){
 		     String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
 		     registerBean("CapitalRate", CapitalRate);
-			 ArrayList<String> money1 = new ArrayList<String>();
-			Long maxAmount = userCreateTradAccInfo.getMaxAmount();
-			
-//			registerBean("moneyData", money1);
-//			dataResolution();
-//			rateData();
 		 }
 	}
-	
-	
-//	private void dataResolution(){
-//		String rateString = userCreateTradAccInfo.getRateString();
-//		if(rateString==null){
-//			return ;
-//		}
-//		String[] data = rateString.split(",");
-//		if(data!=null&&data.length>0){
-//			int index;
-//			index = data[0].indexOf(";");
-//			_rate1= Float.parseFloat(data[0].substring(0, index)); 
-//			_deposit1 = Float.parseFloat(data[0].substring(index+1, data[0].length()));
-//			
-//			index = data[1].indexOf(";");
-//			_rate2 = Float.parseFloat(data[1].substring(0, index)); 
-//			_deposit2 = Float.parseFloat(data[1].substring(index+1, data[1].length()));
-//			
-//			index = data[2].indexOf(";");
-//			_rate3 = Float.parseFloat(data[2].substring(0, index)); 
-//			_deposit3 = Float.parseFloat(data[2].substring(index+1, data[2].length()));
-//		}
-//	}
-//	
-//	private void rateData(){
-//		String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
-//		String rateString2 = "-"+String.format("%.0f", _rate2*100)+"%";
-//		String rateString3 = "-"+String.format("%.0f", _rate3*100)+"%";	
-//		registerBean("rateData1", rateString1);
-//		registerBean("rateData2", rateString2);
-//		registerBean("rateData3", rateString3);				
-//	}
 	
 	@Override
 	public void updateModel(Object value) {

@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -61,7 +62,7 @@ public abstract class TradingMainView extends ViewBase{
 	@Field(valueKey="options",binding="${tradingService.getT0TradingAccountList().getData()}")
 	List<TradingAccInfoBean> tradingT;
 	
-	@Field(valueKey="visible",visibleWhen="${tradingService.getT0TradingAccountList().getData()!=null?true:false}")
+	@Field(valueKey="visible",visibleWhen="${tradingService.getT0TradingAccountList().getData()!=null&&tradingService.getT0TradingAccountList().getData().size()>0?true:false}")
 	boolean isVisibleT;
 	/**获取T+1日数据*/
 
@@ -70,7 +71,7 @@ public abstract class TradingMainView extends ViewBase{
 	List<TradingAccInfoBean> tradingT1;
 	
 //	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
-	@Field(valueKey="visible",visibleWhen="${tradingService.getT1TradingAccountList().getData()!=null?true:false}")
+	@Field(valueKey="visible",visibleWhen="${tradingService.getT1TradingAccountList().getData()!=null&&tradingService.getT1TradingAccountList().getData().size()>0?true:false}")
 	boolean isVisibleT1;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
@@ -139,7 +140,9 @@ public abstract class TradingMainView extends ViewBase{
 	//点击T+1日列表跳转
 		
 	@Command(navigations={
-			@Navigation(on="operationDetails",showPage="OperationDetails"),
+			@Navigation(on="operationDetails",showPage="OperationDetails",params={
+					@Parameter(name = "add2BackStack", value = "false")
+			}),
 			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount")
 			})
 	CommandResult tradingMessageClick(InputEvent event){
