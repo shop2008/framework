@@ -252,7 +252,7 @@
     <string name="header_hint_refresh_time">更新于：</string>
     <string name="footer_hint_load_normal">查看更多</string>
     <string name="footer_hint_load_ready">松开载入更多</string>
-    
+    <string name="default_error_message">默认错误消息</string>
     <!-- 用户管理界面 -->
     <string name="title_user_manager">账号安全</string>
 
@@ -278,6 +278,8 @@
     <string name="title_message_center">消息</string>
     <string name="tab_account_trade_text">账户&amp;交易</string>
 	<string name="tab_info_notice_text">资讯&amp;公告</string>
+	<string name="news_account_is_null_text">无消息记录</string>
+	<string name="notice_infos_is_null_text">无记录</string>
 	<!-- 当前版本 -->
 	<string name="vertion_lastest_text">当前已是最新版本</string>
 	<string name="btn_konwn">知道了</string>
