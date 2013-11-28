@@ -4,7 +4,9 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,6 +29,7 @@ import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
@@ -56,6 +59,7 @@ import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
+import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 
 /**
@@ -97,6 +101,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	private BindableListWrapper<RemindMessageBean> remindMessageBean;
 	private IReloadableEntityCache<String, RemindMessageBean> remindMessageBeanCache;
+	
+	private BindableListWrapper<PullMessageBean> pullMessageBean;
+	private IReloadableEntityCache<Long, PullMessageBean> pullMessageBeanCache;
 
 	//==============  module life cycle =================
 	@Override
@@ -709,7 +716,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getRemindMessageBean()
 	 */
 	@Override
-	public BindableListWrapper getRemindMessageBean() {
+	public BindableListWrapper<RemindMessageBean> getRemindMessageBean() {
 		if(remindMessageBean==null){
 			if(remindMessageBeanCache==null){
 				remindMessageBeanCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
@@ -718,6 +725,25 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}
 		remindMessageBeanCache.doReloadIfNeccessay();
 		return remindMessageBean;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPullMessageBean()
+	 */
+	@Override
+	public BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit) {
+		
+		if(pullMessageBean==null){
+			if(pullMessageBeanCache==null){
+				pullMessageBeanCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean");
+			}
+			pullMessageBean=pullMessageBeanCache.getEntities(null, null);
+		}
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("start", start);
+		params.put("limit", limit);
+		pullMessageBeanCache.forceReload(params, false);
+		return pullMessageBean;
 	}
 
 
