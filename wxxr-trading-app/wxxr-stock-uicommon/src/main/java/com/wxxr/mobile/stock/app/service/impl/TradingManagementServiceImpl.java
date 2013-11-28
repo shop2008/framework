@@ -893,17 +893,53 @@ public class TradingManagementServiceImpl extends
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+	 */
 	@Override
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+		if(rightTotalGain==null){
+				this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
+		}
+		rightTotalGainCacheDoReload(start, limit);
+		return this.rightTotalGain;
+
 	}
 
+	protected void rightTotalGainCacheDoReload(int start, int limit) {
+		synchronized (getRightTotalGainCache()) {
+			Map<String,Object> commandParameters=new HashMap<String,Object>();
+			commandParameters.put("start", start);
+			commandParameters.put("limit", limit);
+			getRightTotalGainCache().forceReload(commandParameters, false);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+	 */
 	@Override
 	public BindableListWrapper<GainBean> getGain(int start, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+		if(rightGain==null){
+			this.rightGain =getRightTotalGainCache().getEntities(new IEntityFilter<GainBean>() {
+				
+				@Override
+				public boolean doFilter(GainBean entity) {
+					return entity.getTotalGain()>0?true:false;
+				}
+			} , null);
+		}
+		rightTotalGainCacheDoReload(start, limit);
+		return this.rightGain;
 	}
+
+	protected GenericReloadableEntityCache<String, GainBean, GainVO> getRightTotalGainCache() {
+		if(rightTotalGainCache==null){
+			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain");
+		}
+		return rightTotalGainCache;
+	}
+
 	
 
 }
