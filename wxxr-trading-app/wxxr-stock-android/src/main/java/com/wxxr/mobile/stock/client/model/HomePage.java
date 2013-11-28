@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -27,7 +28,15 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 /**
  * @author neillin
  */
-@View(name="home",withToolbar=true, description="短线放大镜")
+@View(name="home",withToolbar=true, description="短线放大镜",exceptionNavigations={
+		@Navigation(on="LoginFailedException",message="show login failed message"),
+		@Navigation(on="RequiredNetNotAvailablexception",message="resourceId:message/network_not_available",params={
+				@Parameter(name="title",value="网络异常"),
+				@Parameter(name="autoClosed",type=ValueType.INETGER,value="3")
+		}),
+		@Navigation(on="Throwable", message="Caught unexpecting exception , please call ...")
+	}
+)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;
