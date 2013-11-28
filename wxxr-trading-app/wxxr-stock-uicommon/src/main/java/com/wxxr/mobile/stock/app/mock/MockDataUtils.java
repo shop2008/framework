@@ -18,7 +18,6 @@ import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
-import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
@@ -31,6 +30,7 @@ import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 
 /**
  * @author wangxuyang
@@ -531,66 +531,66 @@ public class MockDataUtils {
 	
 	
 	
-	public static  List<StockBaseInfoBean> getAllMockDataForSearchStock() {
-		List<StockBaseInfoBean> searchList = new ArrayList<StockBaseInfoBean>();
-		StockBaseInfoBean s;
+	public static  List<StockBaseInfo> getAllMockDataForSearchStock() {
+		List<StockBaseInfo> searchList = new ArrayList<StockBaseInfo>();
+		StockBaseInfo s;
 //		for(int i=0;i<10;i++) {
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("招商地产");
 			s.setCode("000024");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中山公用");
 			s.setCode("000685");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中色股份");
 			s.setCode("000758");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("武汉中商");
 			s.setCode("000785");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中水渔业");
 			s.setCode("000798");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("宗申动力");
 			s.setCode("001696");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("招商地产");
 			s.setCode("600024");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中山公用");
 			s.setCode("600685");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中色股份");
 			s.setCode("600758");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("武汉中商");
 			s.setCode("600785");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("中水渔业");
 			s.setCode("600798");
 			searchList.add(s);
 			
-			s = new StockBaseInfoBean();
+			s = new StockBaseInfo();
 			s.setName("宗申动力");
 			s.setCode("601696");
 			searchList.add(s);
