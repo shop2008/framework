@@ -11,6 +11,7 @@ import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.bean.VoucherBean;
 
 /**
  * @author neillin
@@ -208,4 +209,5 @@ public interface IUserManagementService {
 	 * @return
 	 */
 	UserAssetBean getUserAssetBean();
+	VoucherBean getVoucherBean();
 }
