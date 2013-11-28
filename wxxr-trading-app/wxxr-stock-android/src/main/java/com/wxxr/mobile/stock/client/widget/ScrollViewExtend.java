@@ -18,10 +18,14 @@ public class ScrollViewExtend extends ScrollView {
 	}	
 	public ScrollViewExtend(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
 	}
+	
+	
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+    	if(ev.getAction() == MotionEvent.ACTION_MOVE && getParent()!=null){
+    		getParent().requestDisallowInterceptTouchEvent(true);
+    	}
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 xDistance = yDistance = 0f;
@@ -44,4 +48,11 @@ public class ScrollViewExtend extends ScrollView {
         return super.onInterceptTouchEvent(ev);
     }	
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//    	if(ev.getAction() == MotionEvent.ACTION_MOVE && getParent()!=null){
+//    		getParent().requestDisallowInterceptTouchEvent(true);
+//    	}
+//    	return super.onTouchEvent(ev);
+//    }
 }
