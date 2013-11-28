@@ -368,16 +368,16 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 		INavigationDescriptor nav = null;
 		if(payload instanceof Throwable){
 			nav = findExceptionNavigation(view, (Throwable)payload, navigationInfos);
-			if(nav == null){
-				SimpleNavigationDescriptor simnav = new SimpleNavigationDescriptor();
-				simnav.setMessage("resourceId:message/default_error_message");
-				simnav.setResult("Exception");
-				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED, 2);
-				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE, "resourceId:message/default_error_message");
-				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_ICON, "resourceId:image/default_error_icon");
-				simnav.addParameterObject("result", payload);
-				nav = simnav;
-			}
+//			if(nav == null){
+//				SimpleNavigationDescriptor simnav = new SimpleNavigationDescriptor();
+//				simnav.setMessage("resourceId:message/default_error_message");
+//				simnav.setResult("Exception");
+//				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED, 2);
+//				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_TITLE, "resourceId:message/default_error_message");
+//				simnav.addParameter(UIConstants.MESSAGEBOX_ATTRIBUTE_ICON, "resourceId:image/default_error_icon");
+//				simnav.addParameterObject("result", payload);
+//				nav = simnav;
+//			}
 		}else if((navigationInfos == null)||(navigationInfos.length == 0)){
 			return null;
 		}else{
