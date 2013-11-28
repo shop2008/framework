@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_left_btn_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="挑战热股榜"
+            bind:field="actualRankBtn"
+            bind:on_Click="showActualRanks" />
+
+        <RadioButton
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_right_btn_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="参赛热股榜"
+            bind:field="virtualRankBtn"
+            bind:on_Click="showVirtualRanks" />
+    </RadioGroup>
+    
+    
+    <FrameLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+	    <GridView 
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:numColumns="2"
+	        android:horizontalSpacing="10dp"
+	        android:verticalSpacing="5dp"
+	        android:stretchMode="columnWidth"
+	        bind:field="actualRankList"
+	        bind:itemViewId="todayHotRankItemView"
+	        bind:on_ItemClick="actualRankItemClick"
+	        />
+	    
+	    <GridView 
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:numColumns="2"
+	        android:horizontalSpacing="10dp"
+	        android:verticalSpacing="5dp"
+	        android:stretchMode="columnWidth"
+	        bind:field="virtualRankList"
+	        bind:itemViewId="todayHotRankItemView"
+	        bind:on_ItemClick="virtualRankItemClick"
+	        />
+	    
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:textColor="@color/white"
+	        android:text="暂无排行数据"
+	        bind:field="rankListEmpty"
+	        />
+	</FrameLayout>
+</LinearLayout>
