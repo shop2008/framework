@@ -7,6 +7,7 @@ import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
@@ -215,5 +216,5 @@ public interface IUserManagementService {
 	 * 获取提醒
 	 * @return
 	 */
-	BindableListWrapper getRemindMessageBean();
+	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 }
