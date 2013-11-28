@@ -33,18 +33,20 @@ import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
+import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
+import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.restful.resource.TradingResourse;
@@ -83,6 +85,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private UserAssetBean userAssetBean;
 	
 	private IReloadableEntityCache<String,UserAssetBean> userAssetBeanCache;
+	
+	
+	private VoucherBean voucherBean;
+	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
+
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -94,6 +101,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	protected void startService() {
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
+		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 	}
@@ -203,7 +211,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			@Override
 			public void run() {
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
-						"13500001009", "404662");
+						userId, pwd);
 				try {
 					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
 					myUserInfo = new UserBean();
@@ -668,5 +676,24 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return userAssetBean;
 	}
 
-
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getVoucherBean()
+	 */
+	@Override
+	public VoucherBean getVoucherBean() {
+		if(voucherBean==null){
+			if(voucherBeanCache==null){
+				voucherBeanCache=new GenericReloadableEntityCache<String, VoucherBean, ActivityUserVo>("voucherBean");
+			}
+			voucherBean=voucherBeanCache.getEntity(VoucherBean.class.getCanonicalName());
+			if(voucherBean==null){
+				voucherBean=new VoucherBean();
+				voucherBeanCache.putEntity(VoucherBean.class.getCanonicalName(), voucherBean);
+			}
+		}
+		voucherBeanCache.doReloadIfNeccessay();
+		return voucherBean;
+	}
+	
+	
 }
