@@ -25,7 +25,6 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
-import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
@@ -116,11 +115,11 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 			String code = "";
 			String name = "";
 			if (event.getProperty("position") instanceof Integer) {
-				List<StockBaseInfoBean> stocks = (searchListBean != null ? searchListBean
+				List<StockBaseInfo> stocks = (searchListBean != null ? searchListBean
 						.getSearchResult() : null);
 				int position = (Integer) event.getProperty("position");
 				if (stocks != null && stocks.size() > 0) {
-					StockBaseInfoBean bean = stocks
+					StockBaseInfo bean = stocks
 							.get(position);
 					code = bean.getCode();
 					name = bean.getName();

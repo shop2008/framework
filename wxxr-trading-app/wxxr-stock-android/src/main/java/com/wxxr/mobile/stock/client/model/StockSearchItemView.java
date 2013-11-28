@@ -9,7 +9,6 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 
 /**
@@ -31,7 +30,7 @@ public abstract class StockSearchItemView extends ViewBase implements IModelUpda
 	
 	@Override
 	public void updateModel(Object data) {
-		if (data instanceof StockBaseInfoBean) {
+		if (data instanceof StockBaseInfo) {
 			registerBean("stock",data);
 		}		
 	}
