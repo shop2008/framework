@@ -63,6 +63,7 @@
     <string name="tv_creat_trade_explain">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
     <string name="tv_composite_cost_label">交易综合费应支付:</string>
     <string name="tv_assure_cost_label">风险保证金应冻结:</string>
+    <string name="tv_jifen_cost_label">实盘积分应支付:</string>
     <string name="bt_commit_apply_text">提交申请</string>
     <string name="tv_have_read_rule_text">我已阅读并同意《</string>
     <string name="tv_trade_rule_text">交易规则</string>
@@ -285,6 +286,9 @@
 	<!-- 当前版本 -->
 	<string name="vertion_lastest_text">当前已是最新版本</string>
 	<string name="btn_konwn">知道了</string>
+	
+	<string name="error_message">数据加载失败，点击重试</string>
+	<string name="cansai_message">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算</string>
 	<!-- 他人主页 -->
 	<string name="other_user_title_append">的主页</string>
 	<!-- 软件盘 -->

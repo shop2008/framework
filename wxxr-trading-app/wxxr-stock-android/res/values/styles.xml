@@ -95,12 +95,12 @@
     <style name="create_buy_radion_button">
         <item name="android:background">@drawable/bg_btn_stop_loss</item>
         <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="red_button_style">
@@ -108,7 +108,17 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">16sp</item>
     </style>
-
+	<style name="buy_red_button_style">
+	    <item name="android:background">@drawable/buy_button_red_btn</item>
+	    <item name="android:textColor">#FFFFFF</item>
+	    <item name="android:textSize">15sp</item>
+	</style>
+	
+	<style name="buy_bule_button_style">
+	    <item name="android:background">@drawable/buy_button_bule_btn</item>
+	    <item name="android:textColor">#FFFFFF</item>
+	    <item name="android:textSize">15sp</item>
+	</style>
     <style name="mListView">
         <item name="android:choiceMode">singleChoice</item>
         <item name="android:dividerHeight">0dp</item>
