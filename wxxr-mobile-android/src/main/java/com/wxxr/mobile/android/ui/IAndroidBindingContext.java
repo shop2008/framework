@@ -18,5 +18,6 @@ public interface IAndroidBindingContext extends IBindingContext {
 	Context getUIContext();
 	View getBindingControl();
 	boolean isOnShow();
+	void hideView();
 
 }

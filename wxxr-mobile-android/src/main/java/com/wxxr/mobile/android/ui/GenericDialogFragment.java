@@ -152,6 +152,11 @@ public class GenericDialogFragment extends DialogFragment {
 			public boolean isOnShow() {
 				return onShow;
 			}
+
+			@Override
+			public void hideView() {
+				getDialog().dismiss();
+			}
 		}, bDesc);
 		View view = (View)binding.getUIControl();
 		view.setTag(binding);

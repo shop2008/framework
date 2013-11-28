@@ -103,72 +103,84 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				}
 			});
 		}else{
-			Object cmdResult = null;
-			try {
-				cmdResult = cmdHandler.execute(event);
-				if(callback != null){
-					callback.success(cmdResult);
-				}
-			}catch(ExecAsyncException e){
-				final IAsyncTaskControl taskControl = e.getTaskControl();
-				final ICancellable cancellable = taskControl.getCancellable();
-				InvocationMonitor monitor = new InvocationMonitor(context) {
-					
-					@Override
-					protected void handleFailed(Throwable cause) {
-						log.warn("Command :"+cmdName+" executed failed", cause);
-						CommandResult result = new CommandResult();
-						result.setResult("failed");
-						result.setPayload(cause);
-						if(callback != null){
-							callback.failed(cause);
-						}
-						taskControl.unregisterProgressMonitor(this);
-						processCommandResult(view, cmdHandler, result);
-					}
-					
-					@Override
-					protected void handleDone(Object returnVal) {
-						taskControl.unregisterProgressMonitor(this);
-						if(callback != null){
-							callback.success(returnVal);
-						}
-						processCommandResult(view, cmdHandler, returnVal);
-					}
-
-					/* (non-Javadoc)
-					 * @see com.wxxr.mobile.core.ui.common.InvocationMonitor#handleConceled(boolean)
-					 */
-					@Override
-					protected void handleConceled(boolean bool) {
-						taskControl.unregisterProgressMonitor(this);
-						if((cancellable != null)&&(!cancellable.isCancelled())){
-							cancellable.cancel();
-						}
-						if(callback != null){
-							callback.failed(null);
-						}
-					}
-				};
-				
-				monitor.setCancellable(cancellable != null);
-				monitor.setMessage(e.getMessage());
-				monitor.setSilentPeriod(0);
-				monitor.setTitle(e.getTitle());
-				taskControl.registerProgressMonitor(monitor);
-				return;
-			}catch(Throwable t){
-				log.warn("Command :"+cmdName+" executed failed", t);
-				CommandResult result = new CommandResult();
-				result.setResult("failed");
-				result.setPayload(t);
-				cmdResult = result;
-				if(callback != null){
-					callback.failed(t);
-				}
-			}
-			processCommandResult(view, cmdHandler, cmdResult);
+			doExecute(cmdName, view, cmdHandler, event, callback);
 		}
+	}
+	/**
+	 * @param cmdName
+	 * @param view
+	 * @param cmdHandler
+	 * @param event
+	 * @param callback
+	 */
+	protected void doExecute(final String cmdName, final IView view,
+			final IUICommandHandler cmdHandler, final InputEvent event,
+			final IAsyncCallback callback) {
+		Object cmdResult = null;
+		try {
+			cmdResult = cmdHandler.execute(event);
+			if(callback != null){
+				callback.success(cmdResult);
+			}
+		}catch(ExecAsyncException e){
+			final IAsyncTaskControl taskControl = e.getTaskControl();
+			final ICancellable cancellable = taskControl.getCancellable();
+			InvocationMonitor monitor = new InvocationMonitor(context) {
+				
+				@Override
+				protected void handleFailed(Throwable cause) {
+					log.warn("Command :"+cmdName+" executed failed", cause);
+					CommandResult result = new CommandResult();
+					result.setResult("failed");
+					result.setPayload(cause);
+					if(callback != null){
+						callback.failed(cause);
+					}
+					taskControl.unregisterProgressMonitor(this);
+					processCommandResult(view, cmdHandler, result);
+				}
+				
+				@Override
+				protected void handleDone(Object returnVal) {
+					taskControl.unregisterProgressMonitor(this);
+					if(callback != null){
+						callback.success(returnVal);
+					}
+					processCommandResult(view, cmdHandler, returnVal);
+				}
+
+				/* (non-Javadoc)
+				 * @see com.wxxr.mobile.core.ui.common.InvocationMonitor#handleConceled(boolean)
+				 */
+				@Override
+				protected void handleConceled(boolean bool) {
+					taskControl.unregisterProgressMonitor(this);
+					if((cancellable != null)&&(!cancellable.isCancelled())){
+						cancellable.cancel();
+					}
+					if(callback != null){
+						callback.failed(null);
+					}
+				}
+			};
+			
+			monitor.setCancellable(cancellable != null);
+			monitor.setMessage(e.getMessage());
+			monitor.setSilentPeriod(0);
+			monitor.setTitle(e.getTitle());
+			taskControl.registerProgressMonitor(monitor);
+			return;
+		}catch(Throwable t){
+			log.warn("Command :"+cmdName+" executed failed", t);
+			CommandResult result = new CommandResult();
+			result.setResult("failed");
+			result.setPayload(t);
+			cmdResult = result;
+			if(callback != null){
+				callback.failed(t);
+			}
+		}
+		processCommandResult(view, cmdHandler, cmdResult);
 	}
 	
 	/**
@@ -223,6 +235,8 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				IUICommand command = view.getChild(cmdId, IUICommand.class);
 				if(command != null){
 					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON, command);
+				}else{
+					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON, cmdId);
 				}
 			}
 			cmdId = (String)params.remove(UIConstants.MESSAGEBOX_ATTRIBUTE_ON_OK);
@@ -230,6 +244,8 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				IUICommand command = view.getChild(cmdId, IUICommand.class);
 				if(command != null){
 					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, command);
+				}else{
+					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON, cmdId);
 				}
 			}
 			if(payload instanceof Throwable){
@@ -346,12 +362,12 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 	}
 
 	public INavigationDescriptor getNextNavigation(IView view,String status,Object payload,IUICommandHandler command,INavigationDescriptor[] navigationInfos) {
-		if((status == null)||(navigationInfos == null)||(navigationInfos.length == 0)){
+		if(status == null){
 			return null;
 		}
 		INavigationDescriptor nav = null;
 		if(payload instanceof Throwable){
-			nav = findExceptionNavigation(view, payload, navigationInfos);
+			nav = findExceptionNavigation(view, (Throwable)payload, navigationInfos);
 			if(nav == null){
 				SimpleNavigationDescriptor simnav = new SimpleNavigationDescriptor();
 				simnav.setMessage("resourceId:message/default_error_message");
@@ -362,6 +378,8 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				simnav.addParameterObject("result", payload);
 				nav = simnav;
 			}
+		}else if((navigationInfos == null)||(navigationInfos.length == 0)){
+			return null;
 		}else{
 			nav = findMatchNavigation(status, navigationInfos);
 		}
@@ -375,7 +393,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 	 * @return
 	 */
 	protected INavigationDescriptor findExceptionNavigation(IView view,
-			Object payload, INavigationDescriptor[] navigationInfos) {
+			Throwable payload, INavigationDescriptor[] navigationInfos) {
 		INavigationDescriptor nav = null;
 		IPage page = ModelUtils.getPage(view);
 		if(navigationInfos != null) {
@@ -388,7 +406,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				nav = findMatchExceptionHandler((Throwable)payload, defaultNavs);
 			}
 		}
-		if((nav == null)&&(view != page)){
+		if((nav == null)&&(view != page)&&(page != null)){
 			IPageDescriptor pageDesc =  this.context.getWorkbenchManager().getPageDescriptor(page.getName());
 			INavigationDescriptor[] defaultNavs = pageDesc.getExceptionNavigations();
 			if((defaultNavs != null)&&(defaultNavs.length > 0)){

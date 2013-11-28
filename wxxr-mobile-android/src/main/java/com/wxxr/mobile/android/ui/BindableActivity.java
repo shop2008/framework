@@ -60,6 +60,11 @@ public abstract class BindableActivity extends Activity implements IBindableActi
 			public boolean isOnShow() {
 				return onShow;
 			}
+
+			@Override
+			public void hideView() {
+				finish();
+			}
 		}, getBindingDescriptor(getBindingPageId()));
 		setContentView((View)this.androidViewBinding.getUIControl());
 		super.onCreate(savedInstanceState);

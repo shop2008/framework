@@ -6,4 +6,5 @@ public interface IViewBinding extends IBinding<IView> {
 	IMenuHandler getMenuHandler(String menuId);
 	String getBindingViewId();
 	boolean isOnShow();
+	void hide();
 }

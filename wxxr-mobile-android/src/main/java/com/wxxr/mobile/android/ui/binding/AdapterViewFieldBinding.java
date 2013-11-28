@@ -129,6 +129,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			public boolean isOnShow() {
 				return getAndroidBindingContext().isOnShow();
 			}
+
+			@Override
+			public void hideView() {
+				getAndroidBindingContext().hideView();
+				
+			}
 		}, bDesc);
 		View view = (View) binding.getUIControl();
 		view.setTag(binding);

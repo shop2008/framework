@@ -84,6 +84,10 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				public boolean isOnShow() {
 					return onShow;
 				}
+
+				@Override
+				public void hideView() {
+				}
 			}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
 			this.contentRoot = (View)toolbarViewBingding.getUIControl();
 			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
@@ -113,6 +117,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			@Override
 			public boolean isOnShow() {
 				return onShow;
+			}
+
+			@Override
+			public void hideView() {
+				finish();
 			}
 		}, getBindingDescriptor(getBindingPageId()));
 

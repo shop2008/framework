@@ -60,4 +60,9 @@ public class CascadeAndroidBindingCtx implements IAndroidBindingContext {
 		this.ready = ready;
 	}
 
+	@Override
+	public void hideView() {
+		this.parent.hideView();
+	}
+
 }

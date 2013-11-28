@@ -103,6 +103,11 @@ public abstract class BindableFragment extends Fragment {
 			public boolean isOnShow() {
 				return onShow;
 			}
+
+			@Override
+			public void hideView() {
+				((IBindableActivity)getActivity()).hideFragment(getViewId());
+			}
 		}, getBindingDescriptor(getViewId()));
 		return (View)this.androidViewBinding.getUIControl();
 	}

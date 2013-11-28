@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -24,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
@@ -321,6 +323,14 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	protected void hideOrShowView(IView view,boolean add2BackStack, boolean show) {
 		IPage page = getPage(view);
 		final IViewGroup vg = (IViewGroup)view.getParent();
+		if((page == null)||(vg == null)){
+			if(show){
+				createDialog(view, null).show();
+			}else if(view.isActive()){
+				((IViewBinding)view.getBinding()).hide();
+			}
+			return;
+		}
 		IBindableActivity activity = this.activeActivities.get(page.getName());
 		if(activity != null){
 			IViewDescriptor vDesc = context.getWorkbenchManager().getViewDescriptor(view.getName());

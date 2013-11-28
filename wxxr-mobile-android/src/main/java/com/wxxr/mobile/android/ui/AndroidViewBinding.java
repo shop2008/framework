@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -76,6 +77,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					@Override
 					public boolean isOnShow() {
 						return bindingContext.isOnShow();
+					}
+
+					@Override
+					public void hideView() {
+						bindingContext.hideView();
 					}
 				}, fieldName, params);
 				binding.init(runtimeContext);
@@ -158,7 +164,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	private List<IMenuAdaptor> menuAdaptors;
 	private IView model;
 	private IWorkbenchRTContext runtimeContext;
-	private boolean onShow;
+//	private boolean onShow;
 	private IViewCreationCallback callback = new IViewCreationCallback() {
 
 		@Override
@@ -223,6 +229,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 								@Override
 								public boolean isOnShow() {
 									return bindingContext.isOnShow();
+								}
+
+								@Override
+								public void hideView() {
+									bindingContext.hideView();
 								}
 							}, val, cmdName, params);
 							bindings.add(eBinding);
@@ -415,6 +426,14 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	@Override
 	public String getBindingViewId() {
 		return this.viewId;
+	}
+
+
+	@Override
+	public void hide() {
+		if(isOnShow()){
+			this.bindingContext.hideView();
+		}
 	}
 
 }
