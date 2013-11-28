@@ -32,6 +32,7 @@ import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.core.ui.common.UIComponent;
+import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -265,6 +266,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		this.androidViewBinding.destroy();
 		super.onDestroy();
+		if(getBindingPage() instanceof ViewBase){
+			((ViewBase)getBindingPage()).onUIDestroy();
+		}
 		getNavigator().onPageDetroy(getBindingPage());
 		onActivityDestroied();
 		if(log.isDebugEnabled()){

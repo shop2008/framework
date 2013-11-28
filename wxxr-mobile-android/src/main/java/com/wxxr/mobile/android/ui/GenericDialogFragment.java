@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.api.UIConstants;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.ui.common.UICommand;
+import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -196,6 +197,9 @@ public class GenericDialogFragment extends DialogFragment {
 		if(this.binding != null){
 			this.binding.destroy();
 			this.binding = null;
+		}
+		if(view instanceof ViewBase){
+			((ViewBase)view).onUIDestroy();
 		}
 		super.onDestroyView();
 	}

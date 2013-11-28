@@ -66,7 +66,7 @@ public class BasicFieldBinding implements IFieldBinding {
 				public void run() {
 					doUIUpdating();
 				}
-			}, 150, TimeUnit.MILLISECONDS);
+			}, 100, TimeUnit.MILLISECONDS);
 		}
 	}
 	

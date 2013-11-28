@@ -71,6 +71,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 			}else if(ann != null){
 				cnt++;
 				TypeElement typeElem = (TypeElement)element;
+				log.info("processing class :"+typeElem.asType().toString());
 				ViewModelClass model = createViewModelClass(context,typeElem,ann);
 				if(provider == null){
 					provider = new PModeProviderClass();

@@ -349,7 +349,7 @@ public abstract class ViewModelUtils {
 		MethodModel m = new MethodModel();
 		m.setClassModel(model);
 		m.setMethodName("onUIDestroy");
-		m.setModifiers("protected");
+		m.setModifiers("public");
 		m.setReturnType("void");
 		Map<String, Object> attrs = new HashMap<String, Object>();
 		attrs.put("model", model);

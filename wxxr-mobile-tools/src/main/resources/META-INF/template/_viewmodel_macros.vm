@@ -181,7 +181,7 @@
 
 #macro(onUIDestroy $model $methods)
     @Override
-    protected void onUIDestroy() {
+    public void onUIDestroy() {
 #foreach($meth in $methods) 
         ${meth.name}();       
 #end
