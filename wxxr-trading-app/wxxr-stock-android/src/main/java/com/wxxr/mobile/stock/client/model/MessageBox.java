@@ -82,24 +82,24 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof IUICommand){
 				this.left = (IUICommand)val;
-			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON)){
-				super.getChild("left_button").setAttribute(AttributeKeys.visible, true);
+			}else if(val instanceof String){
+				super.getChild("left_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof IUICommand){
 				this.middle = (IUICommand)val;
-			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON)){
-				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true);
+			}else if(val instanceof String){
+				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
 			if(val instanceof IUICommand){
 				this.right = (IUICommand)val;
-			}else if(map.containsKey(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON)){
-				super.getChild("right_button").setAttribute(AttributeKeys.visible, true);
+			}else if(val instanceof String){
+				super.getChild("right_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, false);
 			}
