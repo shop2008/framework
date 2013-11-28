@@ -10,9 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 
 import com.wxxr.javax.el.BeanNameResolver;
 import com.wxxr.javax.el.ELContext;
+import com.wxxr.javax.el.ELException;
 import com.wxxr.javax.el.ELManager;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
@@ -462,11 +464,25 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 	
 	protected void handleStartupException(Throwable t){
-		this.startupExceptions.add(t);
+		handleException(t);
+	}
+
+	/**
+	 * @param t
+	 */
+	protected void handleException(Throwable t) {
+		if(t instanceof ELException){
+			t = ((ELException)t).getCause();
+		}else if(t instanceof ExecutionException) {
+			t = ((ExecutionException)t).getCause();
+		}
+		if(t != null){
+			this.startupExceptions.add(t);
+		}
 	}
 	
 	protected void handleCreatingException(Throwable t){
-		this.startupExceptions.add(t);
+		handleException(t);
 	}
 
 
