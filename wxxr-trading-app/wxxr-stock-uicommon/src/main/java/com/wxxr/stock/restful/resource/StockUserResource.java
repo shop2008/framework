@@ -26,7 +26,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 
-@Path("/rest/user")
+@Path("/secure/user")
 public interface StockUserResource {
 
 	/**
