@@ -16,8 +16,8 @@ import $stmt;
 public class DeclarativePModelProvider {
 	public static void updatePModel(IWorkbenchRTContext ctx){
 		IWorkbenchManager mgr = ctx.getWorkbenchManager();
-#if(${model.workbenchDescritptor})
-    mgr.setWorkbenchDescriptor(new ${model.workbenchDescritptor}());
+#if(${model.workbenchDescriptor})
+    mgr.setWorkbenchDescriptor(new ${model.workbenchDescriptor}());
 #end
 #foreach($desc in $model.descriptors)		
 		mgr.registerView(new ${desc}());

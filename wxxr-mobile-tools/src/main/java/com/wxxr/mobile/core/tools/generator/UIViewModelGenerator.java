@@ -202,6 +202,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				this.provider.addAlias(a, descriptor.getClassName());
 			}
 		}
+		descriptor.prepare();
 		attributes.clear();
 		attributes.put("model", descriptor);
 		String vmFile = "ViewDescriptor.vm";

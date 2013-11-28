@@ -23,7 +23,7 @@ public abstract class AbstractWorkbenchDescriptor implements IWorkbenchDescripto
 	
 	@Override
 	public INavigationDescriptor[] getExceptionNavigations() {
-		return this.navs != null && this.navs.isEmpty() == false ? 
+		return this.navs != null && this.navs.size() > 0 ? 
 				this.navs.toArray(new INavigationDescriptor[this.navs.size()]) :
 				new INavigationDescriptor[0];
 	}

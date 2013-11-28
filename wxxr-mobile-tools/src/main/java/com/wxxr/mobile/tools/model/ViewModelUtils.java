@@ -200,8 +200,8 @@ public abstract class ViewModelUtils {
 			}
 		}
 		Navigation[] navs = ann.exceptionNavigations();
-		log.info("Found view exception navigations , size :"+(navs != null ? navs.length : 0));
-		if(navs != null){
+		if((navs != null)&&(navs.length > 0)){
+			log.info("Found view exception navigations , size :"+(navs != null ? navs.length : 0));
 			for (Navigation nav : navs) {
 				NavigationModel nModel = new NavigationModel();
 				nModel.setResult(nav.on());

@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.tools.model;
 
+import com.wxxr.mobile.core.ui.common.SimpleNavigationDescriptor;
+
 /**
  * @author neillin
  *
@@ -67,5 +69,12 @@ public class ViewDescriptorClass extends AbstractClassModel {
 	 */
 	public void setBindingType(String bindingType) {
 		this.bindingType = bindingType;
+	}
+	
+	public void prepare() {
+		NavigationModel[] navs = this.viewModel.getNavigations();
+		if((navs != null)&&(navs.length > 0)){
+			addImport(SimpleNavigationDescriptor.class.getCanonicalName());
+		}
 	}
 }

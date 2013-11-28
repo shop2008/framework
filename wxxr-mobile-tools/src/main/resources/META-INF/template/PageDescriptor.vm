@@ -6,11 +6,9 @@ package ${model.pkgName};
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.IAndroidBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.common.AbstractPageDescriptor;
-import com.wxxr.mobile.stock.client.ui.HomePage;
 import ${model.viewModel.applicationId}.R;
 #set( $clazz = ${model.addImport($model.viewModel.className)})
 #set( $clazz = ${model.addImport($model.targetUI.className)})
@@ -40,6 +38,34 @@ public class ${model.name} extends AbstractPageDescriptor {
         setViewDescription("${model.viewModel.description}");
 #end
 		setHasToolbar(${model.viewModel.toolbarRequired});
+#if(${model.viewModel.navigations})
+        SimpleNavigationDescriptor navDesc = null;
+#foreach($nav in ${model.viewModel.navigations}) 
+        navDesc = new SimpleNavigationDescriptor().setResult("${nav.result}");
+#if(${nav.toPage})
+        navDesc.setToPage("${nav.toPage}");
+#end
+#if(${nav.toView})
+        navDesc.setToView("${nav.toView}");
+#end
+#if(${nav.toDialog})
+        navDesc.setToDialog("${nav.toDialog}");
+#end
+#if(${nav.message})
+        navDesc.setMessage("${nav.message}");
+#end
+        navDesc.setCloseCurrentView(${nav.closeCurrentView});
+        navDesc.setKeepMenuOpen(${nav.keepMenuOpen});
+#if(${nav.params})
+#foreach($p in $nav.params)
+        navDesc.addParameter("${p.name}","${p.value}");
+#end
+#end
+        addExceptionNavigation(navDesc);
+        
+#end
+#end
+
 		addBindingDescriptor(TargetUISystem.ANDROID, new IAndroidBindingDescriptor() {
 			
 			@Override

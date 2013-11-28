@@ -462,11 +462,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 	
 	protected void handleStartupException(Throwable t){
-		
+		this.startupExceptions.add(t);
 	}
 	
 	protected void handleCreatingException(Throwable t){
-		
+		this.startupExceptions.add(t);
 	}
 
 
