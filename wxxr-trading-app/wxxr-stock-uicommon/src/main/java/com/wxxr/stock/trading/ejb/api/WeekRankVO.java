@@ -12,6 +12,8 @@ public class WeekRankVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@XmlElement(name = "uesrId")
+	private String uesrId;//id
 	@XmlElement(name = "nickName")
 	private String nickName;//昵称
 	@XmlElement(name = "gainCount")
@@ -24,8 +26,7 @@ public class WeekRankVO implements Serializable{
 	private int gainRates;
 	@XmlElement(name = "dates")
 	private String dates;//周期时间
-	@XmlElement(name = "uesrId")
-	private String uesrId;//用户id
+
 	
 	
 	

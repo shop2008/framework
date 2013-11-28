@@ -11,6 +11,8 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class TradingAccInfoVO implements Serializable{
 	
 	private static final long serialVersionUID = -6493252477259626791L;
+	@XmlElement(name = "acctID")
+	private Long acctID;//id
 	@XmlElement(name = "maxStockName")
 	private String maxStockName;//最大持股名称
 	@XmlElement(name = "maxStockCode")
@@ -29,8 +31,7 @@ public class TradingAccInfoVO implements Serializable{
 	private String over; //CLOSED表示已经完结,"UNCLOSE"表示未完结
 	@XmlElement(name = "createDate")
 	private long createDate;// 交易盘创建时间
-	@XmlElement(name = "acctID")
-	private Long acctID;//交易盘ID
+	
 	
 	
 	public String getMaxStockName() {

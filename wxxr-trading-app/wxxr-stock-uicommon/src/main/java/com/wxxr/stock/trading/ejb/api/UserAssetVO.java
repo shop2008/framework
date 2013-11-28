@@ -17,6 +17,7 @@ public class UserAssetVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String userId; //id
 	@XmlElement(name = "bal")
 	private long bal;//余额
 	@XmlElement(name = "usableBal")
@@ -49,6 +50,12 @@ public class UserAssetVO implements Serializable{
 	public String toString() {
 		return "UserAssetVO [bal=" + bal + ", frozen=" + frozen
 				+ ", usableBal=" + usableBal + "]";
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	

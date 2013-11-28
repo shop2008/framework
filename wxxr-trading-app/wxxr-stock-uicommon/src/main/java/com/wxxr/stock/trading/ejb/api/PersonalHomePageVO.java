@@ -10,6 +10,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class PersonalHomePageVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String userId; //id
 	@XmlElement(name = "voucherVol")
 	private Long voucherVol;
 	@XmlElement(name = "totalProfit")
@@ -109,6 +110,12 @@ public class PersonalHomePageVO implements Serializable {
 	public String toString() {
 		return "PersonalHomePageVO [voucherVol=" + voucherVol + ", totalProfit=" + totalProfit + ", actualCount=" + actualCount + ", virtualCount="
 				+ virtualCount + ", actualList=" + actualList + ", virtualList=" + virtualList + "]";
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	

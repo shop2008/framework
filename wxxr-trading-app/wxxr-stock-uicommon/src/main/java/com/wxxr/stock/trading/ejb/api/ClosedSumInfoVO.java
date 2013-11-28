@@ -14,6 +14,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class ClosedSumInfoVO implements Serializable{
 	
 	private static final long serialVersionUID = -4958155134857709147L;
+	private String accId;//id
 	/**清算详情*/
 	@XmlElement(name = "auditDetailVO")
 	private AuditDetailVO auditDetailVO;
@@ -34,6 +35,13 @@ public class ClosedSumInfoVO implements Serializable{
 	}
 	public void setDealDetailVO(DealDetailVO dealDetailVO) {
 		this.dealDetailVO = dealDetailVO;
+	}
+	
+	public String getAccId() {
+		return accId;
+	}
+	public void setAccId(String accId) {
+		this.accId = accId;
 	}
 	@Override
 	public String toString() {

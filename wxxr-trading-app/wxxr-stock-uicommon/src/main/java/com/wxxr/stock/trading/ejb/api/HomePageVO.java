@@ -15,7 +15,7 @@ public class HomePageVO implements Serializable{
 
 	private static final long serialVersionUID = 3846996765680952029L;
 	@XmlElement(name = "accID")
-	private String accID;
+	private String accID;//id
 	@XmlElement(name = "url")
 	private String url;
 	/**文字*/

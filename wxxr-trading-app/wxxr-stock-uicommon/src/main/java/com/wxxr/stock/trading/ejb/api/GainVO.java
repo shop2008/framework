@@ -9,6 +9,9 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class GainVO implements Serializable{
 
 	private static final long serialVersionUID = 7805747658579008536L;
+	/**交易盘唯一标识*/
+	@XmlElement(name = "tradingAccountId")
+	private Long tradingAccountId;//id
 	/**最大持股代码*/
 	@XmlElement(name = "maxStockCode")
 	private String maxStockCode;
@@ -27,9 +30,7 @@ public class GainVO implements Serializable{
 	/**交易盘类型*/
 	@XmlElement(name = "virtual")
 	private boolean virtual; 
-	/**交易盘唯一标识*/
-	@XmlElement(name = "tradingAccountId")
-	private Long tradingAccountId;
+	
 	/**交易盘额度*/
 	@XmlElement(name = "sum")
 	private Long sum;

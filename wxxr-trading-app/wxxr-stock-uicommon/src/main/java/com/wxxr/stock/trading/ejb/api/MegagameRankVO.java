@@ -12,6 +12,8 @@ public class MegagameRankVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@XmlElement(name = "uesrId")
+	private String uesrId;//id
 	/**
 	 * 用户名（手机号），昵称，是否完结，最大持股，交易盘类型，总盈亏率，总盈亏额，交易盘ID，今天还是前一天
 	 */
@@ -31,10 +33,8 @@ public class MegagameRankVO implements Serializable{
 	private String gainRate;//总盈亏率1
 	@XmlElement(name = "gainRates")
 	private int gainRates;
-	@XmlElement(name = "uesrId")
-	private String uesrId;//用户id
 	@XmlElement(name = "acctID")
-	private long acctID;
+	private long acctID;//交易盘Id
 	
 	
 	public long getAcctID() {

@@ -19,7 +19,7 @@ public class StockTradingOrderVO implements Serializable{
 	 */
 	private static final long serialVersionUID = 6528384969149357528L;
 	@XmlElement(name = "id")
-	private Long id;
+	private Long id;//Id
 	@XmlElement(name = "stockCode")
 	private String stockCode;
 	@XmlElement(name = "marketCode")

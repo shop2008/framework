@@ -16,6 +16,7 @@ public class GainPayDetailsVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String id; //id
 	@XmlElement(name = "comment")
 	private String comment;
 	@XmlElement(name = "amount")
@@ -50,6 +51,12 @@ public class GainPayDetailsVO implements Serializable{
 	public String toString() {
 		return "GainPayDetailsVO [comment=" + comment + ", amount=" + amount
 				+ ", time=" + time + "]";
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

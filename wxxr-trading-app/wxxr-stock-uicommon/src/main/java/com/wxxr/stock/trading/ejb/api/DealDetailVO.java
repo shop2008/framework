@@ -18,6 +18,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class DealDetailVO implements Serializable{
 	
 	private static final long serialVersionUID = -8890599201016565210L;
+	private String id;//id
 	/**申请资金*/
 	@XmlElement(name = "fund")
 	private String fund;
@@ -123,6 +124,14 @@ public class DealDetailVO implements Serializable{
 	 */
 	public void setTradingRecords(List<TradingRecordVO> tradingRecords) {
 		this.tradingRecords = tradingRecords;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override

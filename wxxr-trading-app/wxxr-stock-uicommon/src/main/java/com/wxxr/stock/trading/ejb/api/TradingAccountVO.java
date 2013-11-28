@@ -14,7 +14,7 @@ public class TradingAccountVO implements Serializable{
 	 * 交易盘编号
 	 */
 	@XmlElement(name = "id")
-	private long id;
+	private long id;//id
 	/**
 	 * 买入日期  
 	 */

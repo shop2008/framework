@@ -9,6 +9,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class TradingRecordVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private Long id;//id
 	@XmlElement(name = "date")
 	private long date;// 日期
 	@XmlElement(name = "market")
@@ -233,6 +234,14 @@ public class TradingRecordVO implements Serializable {
 				+ date + ", day=" + day + ", describe=" + describe + ", fee="
 				+ fee + ", market=" + market + ", price=" + price + ", tax="
 				+ tax + ", vol=" + vol + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

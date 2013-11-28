@@ -12,6 +12,7 @@ public class RegularTicketVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String userId;//id
 	@XmlElement(name = "nickName")
 	private String nickName;//昵称
 	@XmlElement(name = "regular")
@@ -45,7 +46,10 @@ public class RegularTicketVO implements Serializable{
 		return "RegularTicketVO [nickName=" + nickName + ", regular=" + regular
 				+ ", gainCount=" + gainCount + "]";
 	}
-	
-	
-
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }

@@ -13,7 +13,9 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class AuditDetailVO implements Serializable{
 	
 	private static final long serialVersionUID = -100031906976257734L;
-
+	/**交易盘编号*/
+	@XmlElement(name = "id")
+	private String id;//id
 	/**申请资金*/
 	@XmlElement(name = "fund")
 	private String fund;
@@ -65,9 +67,7 @@ public class AuditDetailVO implements Serializable{
 	/**手续费*/
 	@XmlElement(name = "cost")
 	private String cost;
-	/**交易盘编号*/
-	@XmlElement(name = "id")
-	private String id;
+	
 	/**交易盘类型*/
 	@XmlElement(name = "type")
 	private String type;
