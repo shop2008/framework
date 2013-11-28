@@ -62,6 +62,10 @@ public class BindableListWrapper<E> implements IBindableBean {
 		this.data = null;
 		this.pSupport.firePropertyChange("data", oldVal, null);
 	}
+	
+	public synchronized void clear() {
+		this.data = null;
+	}
 
 	/**
 	 * @param listener
