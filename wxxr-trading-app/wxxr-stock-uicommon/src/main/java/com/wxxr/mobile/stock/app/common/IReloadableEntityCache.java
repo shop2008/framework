@@ -5,6 +5,8 @@ import java.util.Map;
 public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>{
 
 	void doReloadIfNeccessay();
+	
+	void doReloadIfNeccessay(Map<String, Object> params);
 
 	void forceReload(boolean wait4Finish);
 

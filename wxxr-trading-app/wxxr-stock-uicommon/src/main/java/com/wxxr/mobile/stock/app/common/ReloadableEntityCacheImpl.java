@@ -228,7 +228,11 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#doReloadIfNeccessay()
 	 */
 	@Override
-	public void doReloadIfNeccessay() {
+	public void doReloadIfNeccessay(){
+		doReloadIfNeccessay(null);
+	}
+	
+	public void doReloadIfNeccessay(Map<String, Object> params) {
 		if(inReloading){
 			if(getLog().isDebugEnabled()){
 				getLog().debug("cache is still in loading, reloading aborted, cache name :"+getEntityTypeName());
@@ -245,7 +249,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		if(getLog().isDebugEnabled()){
 			getLog().debug("cache is going to be reloaded ...");
 		}
-		doReload(false,null);
+		doReload(false,params);
 	}
 
 	/* (non-Javadoc)
