@@ -501,6 +501,8 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	protected void onDestroy(){
 		
 	}
+	
+	public abstract void onUIDestroy();
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)
