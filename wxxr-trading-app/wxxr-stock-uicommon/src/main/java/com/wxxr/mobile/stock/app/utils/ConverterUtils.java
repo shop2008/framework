@@ -3,6 +3,9 @@
  */
 package com.wxxr.mobile.stock.app.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -35,8 +38,50 @@ public class ConverterUtils {
         bean.setMaxAmount(vo.getMaxAmount());
         bean.setRateString(vo.getRateString());
         bean.setUserId(vo.getUserId());
-        bean.setVoucherCostRate(vo.getVoucherCostRate());        
+        bean.setVoucherCostRate(vo.getVoucherCostRate());
+        if(bean.getMaxAmount()!=null && bean.getMaxAmount()>0){
+            List<String> x=new ArrayList<String>();
+            long max = bean.getMaxAmount()/10000/100;
+            for(int i=0; i<max;i++){
+                x.add(String.valueOf(i+1)+"万");
+            }
+            bean.setRequestamount(x);
+        }
+        
+        dataResolution(bean);
     }
+    
+    public static void dataResolution(UserCreateTradAccInfoBean bean){
+        String rateString = bean.getRateString();
+        if(rateString==null){
+            return ;
+        }
+        String[] data = rateString.split(",");
+        if(data!=null&&data.length>0){
+            int index;
+            index = data[0].indexOf(";");
+            bean.setRateData1(Float.parseFloat(data[0].substring(0, index))); 
+            bean.setRateString1("-"+String.format("%.0f", bean.getRateData1()*100)+"%");
+           bean.setDeposit1(Float.parseFloat(data[0].substring(index+1, data[0].length()))) ;
+//            
+            index = data[1].indexOf(";");
+            bean.setRateData2(Float.parseFloat(data[1].substring(0, index))); 
+            bean.setRateString2("-"+String.format("%.0f", bean.getRateData2()*100)+"%");
+            bean.setDeposit2(Float.parseFloat(data[1].substring(index+1, data[1].length())));
+//            
+            index = data[2].indexOf(";");
+            bean.setRateData3(Float.parseFloat(data[2].substring(0, index))); 
+            bean.setRateString3("-"+String.format("%.0f", bean.getRateData3()*100)+"%");
+          bean.setDeposit3(Float.parseFloat(data[2].substring(index+1, data[2].length())));
+        }
+    }
+    
+//    private void rateData(){
+//        String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
+//        String rateString2 = "-"+String.format("%.0f", _rate2*100)+"%";
+//        String rateString3 = "-"+String.format("%.0f", _rate3*100)+"%"; 
+//                   
+//    }
     public static UserCreateTradAccInfoBean fromVO(UserCreateTradAccInfoVO vo) {
         if (vo == null) {
             return null;

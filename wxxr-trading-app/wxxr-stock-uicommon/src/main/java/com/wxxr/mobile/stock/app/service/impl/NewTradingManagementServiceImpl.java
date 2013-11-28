@@ -3,8 +3,10 @@ package com.wxxr.mobile.stock.app.service.impl;
 import java.util.List;
 
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -12,6 +14,7 @@ import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -26,10 +29,15 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
+import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
+import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
+import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
 public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService {
+    private static final Trace log = Trace.register(NewTradingManagementServiceImpl.class);
+
     private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
 
     //
@@ -82,13 +90,38 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
             }
             this.userCreateTradAccInfo = this.userCreateTradAccInfo_Cache.getEntity("userId");//todo key 
         }
-        this.userCreateTradAccInfo_Cache.doReloadIfNeccessay();
+        this.userCreateTradAccInfo_Cache.forceReload(false);
         return this.userCreateTradAccInfo;
     }
 
     @Override
     public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate) throws StockAppBizException {
-        
+        context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("createTradingAccount fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to create trading account, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Create trading account successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
     }
     
     @Override
@@ -184,6 +217,8 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
+        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
+
     }
 
     @Override

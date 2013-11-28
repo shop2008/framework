@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.model;
 
+import java.util.List;
+
 import com.wxxr.mobile.core.annotation.BindableBean;
 
 
@@ -42,6 +44,35 @@ public class UserCreateTradAccInfo {
 	 */
 	private float voucherCostRate;
 	
+	/**
+     * 止损比例1
+     */
+	private float rateData1;
 	
+	private  String rateString1;
+	/**
+     * 止损比例2
+     */
+	private float rateData2;
+	private  String rateString2;
+
+	/**
+     * 止损比例3
+     */
+	private float rateData3;
+	   private  String rateString3;
+
+	/**
+     * 保证金比例1
+     */
+	private float deposit1;
+	
+	private float deposit2;
+	
+	private float deposit3;
+
+	private List<String> requestamount;
+
+
 	
 }

@@ -81,27 +81,28 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Field(valueKey="text",binding="${'终止止损：-'}${CapitalRate!=null?CapitalRate:'--'}")
 	String capitalRate;
 	
-	
+	////       String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
+
 	/**止损*/
-	@Field(valueKey="text",binding="${'余额创建'}${rateData1!=null?rateData1:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'余额创建'}${userCreateTradAccInfo.rateString1!=null?userCreateTradAccInfo.rateString1:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==1?true:false}")
 	})
 	String rate1;
 	
 	/**止损*/
-	@Field(valueKey="text",binding="${'余额创建'}${rateData2!=null?rateData2:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'余额创建'}${userCreateTradAccInfo.rateString2!=null?userCreateTradAccInfo.rateString2:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==2?true:false}")
 	})
 	String rate2;
 	
 	/**止损*/
-	@Field(valueKey="text",binding="${'积分创建'}${rateData3!=null?rateData3:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'积分创建'}${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==3?true:false}")
 	})
 	String rate3;
 	
-	float _rate1,_rate2,_rate3; //止损
-	float _deposit1,_deposit2,_deposit3; //保证金
+//	float _rate1,_rate2,_rate3; //止损
+//	float _deposit1,_deposit2,_deposit3; //保证金
 	
 	/**实盘券综合费用比例,手续费*/
 	float voucherCostRate;	
@@ -117,7 +118,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	boolean showParticipatingTrading;
 	
 	
-	@Field(valueKey="options",binding="${moneyData!=null?moneyData:null}")
+	@Field(valueKey="options",binding="${userCreateTradAccInfo.requestamount!=null?userCreateTradAccInfo.requestamount:null}")
 	List<String> money;
 	
 	//同意守则-挑战交易盘
@@ -148,8 +149,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	int changeMoney = 0;
 	
-	@Bean
-	List<String> moneyData;
+//	@Bean
+//	List<String> moneyData;
 	
 	int currentViewId = 0;
 	
@@ -194,14 +195,33 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		}
 		return null;
 	}
+	private float getDeposit1(){
+	   return  userCreateTradAccInfo.getDeposit1();
+	}
+	private float getDeposit2(){
+	       return  userCreateTradAccInfo.getDeposit2();
+	}
+	private float getDeposit3(){
+        return  userCreateTradAccInfo.getDeposit2();
+    }
+	
+	private float getRate1(){
+	    return  userCreateTradAccInfo.getRateData1();
+	}
+	private float getRate2(){
+        return  userCreateTradAccInfo.getRateData2();
+    }
+	private float getRate3(){
+        return  userCreateTradAccInfo.getRateData3();
+    }
 	
 	private void updataRate1(){
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
-		if(changeMoney>0 && _deposit1>0 && costRate>0){
+		if(changeMoney>0 && getDeposit1()>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", (changeMoney*10000 * _deposit1))+"元";
-			djMoney = (changeMoney*10000 * _deposit1);
+			djDeposit = String.format("%.0f", (changeMoney*10000 * getDeposit1()))+"元";
+			djMoney = (changeMoney*10000 * getDeposit1());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}		
@@ -210,10 +230,10 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	private void updataRate2(){
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
-		if(changeMoney>0 && _deposit2>0 && costRate>0){
+		if(changeMoney>0 && getDeposit2()>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", ((changeMoney*10000) * _deposit2))+"元";
-			djMoney = ((changeMoney*10000) * _deposit2);
+			djDeposit = String.format("%.0f", ((changeMoney*10000) * getDeposit2()))+"元";
+			djMoney = ((changeMoney*10000) * getDeposit2());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -221,7 +241,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	private void updataRate3(){
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
-		if(changeMoney>0 && _deposit2>0 && costRate>0){
+		if(changeMoney>0 && getDeposit2()>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", (changeMoney*10000.0))+"元";
 			djMoney = changeMoney*10000;
@@ -312,18 +332,18 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 			float _rate = 0.0f;
 			switch(currentRadioBtnId){
 			case 1:
-				if(money>0 && _rate1>0 && djMoney>0 ){
-					_rate = _rate1;
+				if(money>0 && getRate1()>0 && djMoney>0 ){
+					_rate = getRate1();
 				}
 				break;
 			case 2:
-				if(money>0 && _rate2>0 && djMoney>0 ){
-					_rate = _rate2;
+				if(money>0 && getRate2()>0 && djMoney>0 ){
+					_rate = getRate2();
 				}
 				break;
 			case 3:
-				if(money>0 && _rate3>0 && djMoney>0 ){
-					_rate = _rate3;
+				if(money>0 && getRate3()>0 && djMoney>0 ){
+					_rate = getRate3();
 				}
 				break;
 			}
@@ -373,52 +393,48 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		     registerBean("CapitalRate", CapitalRate);
 			 ArrayList<String> money1 = new ArrayList<String>();
 			Long maxAmount = userCreateTradAccInfo.getMaxAmount();
-			if(maxAmount!=null && maxAmount>0){
-				long max = maxAmount/10000/100;
-				for(int i=0; i<max;i++){
-					money1.add(String.valueOf(i+1)+"万");
-				}
-			}
-			registerBean("moneyData", money1);
-			dataResolution();
-			rateData();
+			
+//			registerBean("moneyData", money1);
+//			dataResolution();
+//			rateData();
 		 }
 	}
 	
 	
-	private void dataResolution(){
-		String rateString = userCreateTradAccInfo.getRateString();
-		if(rateString==null){
-			return ;
-		}
-		String[] data = rateString.split(",");
-		if(data!=null&&data.length>0){
-			int index;
-			index = data[0].indexOf(";");
-			_rate1= Float.parseFloat(data[0].substring(0, index)); 
-			_deposit1 = Float.parseFloat(data[0].substring(index+1, data[0].length()));
-			
-			index = data[1].indexOf(";");
-			_rate2 = Float.parseFloat(data[1].substring(0, index)); 
-			_deposit2 = Float.parseFloat(data[1].substring(index+1, data[1].length()));
-			
-			index = data[2].indexOf(";");
-			_rate3 = Float.parseFloat(data[2].substring(0, index)); 
-			_deposit3 = Float.parseFloat(data[2].substring(index+1, data[2].length()));
-		}
-	}
-	
-	private void rateData(){
-		String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
-		String rateString2 = "-"+String.format("%.0f", _rate2*100)+"%";
-		String rateString3 = "-"+String.format("%.0f", _rate3*100)+"%";	
-		registerBean("rateData1", rateString1);
-		registerBean("rateData2", rateString2);
-		registerBean("rateData3", rateString3);				
-	}
+//	private void dataResolution(){
+//		String rateString = userCreateTradAccInfo.getRateString();
+//		if(rateString==null){
+//			return ;
+//		}
+//		String[] data = rateString.split(",");
+//		if(data!=null&&data.length>0){
+//			int index;
+//			index = data[0].indexOf(";");
+//			_rate1= Float.parseFloat(data[0].substring(0, index)); 
+//			_deposit1 = Float.parseFloat(data[0].substring(index+1, data[0].length()));
+//			
+//			index = data[1].indexOf(";");
+//			_rate2 = Float.parseFloat(data[1].substring(0, index)); 
+//			_deposit2 = Float.parseFloat(data[1].substring(index+1, data[1].length()));
+//			
+//			index = data[2].indexOf(";");
+//			_rate3 = Float.parseFloat(data[2].substring(0, index)); 
+//			_deposit3 = Float.parseFloat(data[2].substring(index+1, data[2].length()));
+//		}
+//	}
+//	
+//	private void rateData(){
+//		String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
+//		String rateString2 = "-"+String.format("%.0f", _rate2*100)+"%";
+//		String rateString3 = "-"+String.format("%.0f", _rate3*100)+"%";	
+//		registerBean("rateData1", rateString1);
+//		registerBean("rateData2", rateString2);
+//		registerBean("rateData3", rateString3);				
+//	}
 	
 	@Override
 	public void updateModel(Object value) {
+	   log.debug(value.toString());
 
 	}
 }
