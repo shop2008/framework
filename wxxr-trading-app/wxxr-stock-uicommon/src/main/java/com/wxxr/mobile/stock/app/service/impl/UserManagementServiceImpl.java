@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
@@ -34,11 +35,13 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -48,6 +51,7 @@ import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
+import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.restful.resource.TradingResourse;
 import com.wxxr.stock.trading.ejb.api.GainVO;
@@ -89,6 +93,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	private VoucherBean voucherBean;
 	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
+	
+
+	private BindableListWrapper<RemindMessageBean> remindMessageBean;
+	private IReloadableEntityCache<String, RemindMessageBean> remindMessageBeanCache;
 
 	//==============  module life cycle =================
 	@Override
@@ -102,8 +110,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
+		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
+		
 	}
 
 	@Override
@@ -694,6 +704,23 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		voucherBeanCache.doReloadIfNeccessay();
 		return voucherBean;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getRemindMessageBean()
+	 */
+	@Override
+	public BindableListWrapper getRemindMessageBean() {
+		if(remindMessageBean==null){
+			if(remindMessageBeanCache==null){
+				remindMessageBeanCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
+			}
+			remindMessageBean=remindMessageBeanCache.getEntities(null, null);
+		}
+		remindMessageBeanCache.doReloadIfNeccessay();
+		return remindMessageBean;
+	}
+
+
 	
 	
 }

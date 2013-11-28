@@ -12,6 +12,7 @@ import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
 /**
  * @author neillin
@@ -210,4 +211,9 @@ public interface IUserManagementService {
 	 */
 	UserAssetBean getUserAssetBean();
 	VoucherBean getVoucherBean();
+	/**
+	 * 获取提醒
+	 * @return
+	 */
+	BindableListWrapper getRemindMessageBean();
 }
