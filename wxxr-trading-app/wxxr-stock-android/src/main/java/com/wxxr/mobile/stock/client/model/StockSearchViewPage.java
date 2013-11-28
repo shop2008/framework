@@ -28,6 +28,7 @@ import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
+import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 
 /**
  * 股票搜索页面
@@ -57,7 +58,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	SearchStockListBean searchListBean;
 	
 	@Field(valueKey="options", binding="${searchListBean != null ? searchListBean.searchResult : null}")
-	List<StockBaseInfoBean> searchList;
+	List<StockBaseInfo> searchList;
 
 	private IStockSelectedCallBack onStockSelected;
 	@Command(description="Invoke when a toolbar item was clicked",
