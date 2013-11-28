@@ -9,10 +9,12 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -24,6 +26,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="creataBuyTradePage",withToolbar=true,description="创建")
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.create_buy_page_layout")
@@ -71,12 +74,15 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	int currentRadioBtnId = 1;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	/**止损比例*/
-	@Field(valueKey="text",binding="${'终止止损：-'}${CapitalRate!=null?CapitalRate:'--'}")
+	@Field(valueKey="text",binding="${userCreateTradAccInfo.capitalRate!=null?userCreateTradAccInfo.capitalRate:'--'}",converter="stockLong2StringConvertorSpecial")
 	String capitalRate;
 	
-	////       String rateString1 = "-"+String.format("%.0f", _rate1*100)+"%";
-
 	/**止损*/
 	@Field(valueKey="text",binding="${'余额创建'}${userCreateTradAccInfo.rateString1!=null?userCreateTradAccInfo.rateString1:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==1?true:false}")
@@ -401,10 +407,10 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		registerBean("rateData1", "--");
 		registerBean("rateData2", "--");
 		registerBean("rateData3", "--");	
-		 if(userCreateTradAccInfo!=null){
-		     String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
-		     registerBean("CapitalRate", CapitalRate);
-		 }
+//		 if(userCreateTradAccInfo!=null){
+//		     String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
+//		     registerBean("CapitalRate", CapitalRate);
+//		 }
 	}
 	
 	@Override
