@@ -124,7 +124,7 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			Long acctId = 0L;
 			if (event.getProperty("position") instanceof Integer) {
-				List<TradingAccInfoBean> trading = (tradingAccount!=null?tradingAccount.getT0TradingAccounts():null);
+				List<TradingAccInfoBean> trading = tradingService.getT0TradingAccountList().getData();
 				int position = (Integer) event.getProperty("position");
 				if (trading != null && trading.size() > 0) {
 					TradingAccInfoBean bean = trading.get(position);
@@ -150,7 +150,7 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
-				List<TradingAccInfoBean> tradingList = tradingAccount.getT1TradingAccounts();
+				List<TradingAccInfoBean> tradingList = tradingService.getT1TradingAccountList().getData();
 				if(tradingList!=null && tradingList.size()>0){
 					TradingAccInfoBean tempTradingA = tradingList.get(position);
 					this.type = tempTradingA.getVirtual()?0:1;

@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -14,7 +16,6 @@ import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -28,6 +29,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
@@ -37,9 +39,13 @@ import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
 public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService {
     private static final Trace log = Trace.register(NewTradingManagementServiceImpl.class);
-
+    //交易盘
     private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
 
+    //交易盘详细信息
+    private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
+
+    
     //
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
@@ -161,10 +167,18 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         return null;
     }
     
-    //未结算
+  //未结算
     @Override
     public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
-        return null;
+        if (tradingAccountBean_cache.getEntity(acctID)==null){
+            TradingAccountBean b=new TradingAccountBean();
+            b.setId(Long.valueOf(acctID));
+            tradingAccountBean_cache.putEntity(b.getId(),b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("acctID", acctID);
+        this.tradingAccountBean_cache.forceReload(params,false);
+        return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
     }
     
     @Override
@@ -218,6 +232,8 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
 
     }
 

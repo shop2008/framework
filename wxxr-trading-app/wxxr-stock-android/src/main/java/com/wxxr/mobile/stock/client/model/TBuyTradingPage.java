@@ -79,7 +79,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(stockId)}")
 	TradingAccountBean tradingBean;
 	// 字段
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}", converter = "longTime2StringConvertorBuy")
@@ -166,6 +166,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					} else if(tempt instanceof String) {
 						acctId = (String)tempt;
 					}
+					registerBean("stockId", acctId);
 				}
 			}
 		}

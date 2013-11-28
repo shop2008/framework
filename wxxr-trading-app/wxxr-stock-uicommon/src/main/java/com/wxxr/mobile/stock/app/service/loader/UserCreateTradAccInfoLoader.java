@@ -6,12 +6,10 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.resource.TradingResourse;
-import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
 public class UserCreateTradAccInfoLoader extends AbstractEntityLoader<String, UserCreateTradAccInfoBean, UserCreateTradAccInfoVO>  {
@@ -66,7 +64,7 @@ public class UserCreateTradAccInfoLoader extends AbstractEntityLoader<String, Us
     @Override
     protected List<UserCreateTradAccInfoVO> executeCommand(ICommand<List<UserCreateTradAccInfoVO>> command) throws Exception {
         List<UserCreateTradAccInfoVO> result=new ArrayList<UserCreateTradAccInfoVO>(); 
-        UserCreateTradAccInfoVO vo=getRestService(TradingResourse.class).getCreateStrategyInfo();
+        UserCreateTradAccInfoVO vo=getRestService(ITradingProtectedResource.class).getCreateStrategyInfo();
         if (vo!=null){
             result.add(vo);  
         }
