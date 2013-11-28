@@ -7,15 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import android.R.bool;
-
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.resource.TradingResourse;
-import com.wxxr.stock.trading.ejb.api.GainVO;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 
 /**
@@ -102,7 +97,7 @@ public class UserAssetLoader extends AbstractEntityLoader<String, UserAssetBean,
 	@Override
 	protected List<UserAssetVO> executeCommand(
 			ICommand<List<UserAssetVO>> command) throws Exception {
-		UserAssetVO vo=getRestService(TradingResourse.class).getAcctUsable();
+		UserAssetVO vo=getRestService(ITradingProtectedResource.class).getAcctUsable();
 		List<UserAssetVO> list=new ArrayList<UserAssetVO>();
 		list.add(vo);
 		return list;

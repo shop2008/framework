@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 
 /**
@@ -71,7 +71,7 @@ public class T1RankItemLoader extends AbstractEntityLoader<String, MegagameRankB
 	@Override
 	protected List<MegagameRankVO> executeCommand(ICommand<List<MegagameRankVO>> command)
 			throws Exception {
-		return getRestService(TradingResourse.class).getTPlusMegagameRank();
+		return getRestService(ITradingResource.class).getTPlusMegagameRank();
 	}
 
 	@Override

@@ -6,8 +6,7 @@ import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.stock.app.StockAppBizException;
-import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 public class CreateTradingAccountHandler implements ICommandHandler{
@@ -22,7 +21,7 @@ public class CreateTradingAccountHandler implements ICommandHandler{
         if (command instanceof CreateTradingAccountCommand){
             CreateTradingAccountCommand g=(CreateTradingAccountCommand) command;
             
-            StockResultVO vo = getRestService(TradingResourse.class)
+            StockResultVO vo = getRestService(ITradingProtectedResource.class)
                     .createTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),
                             g.isVirtual(), g.getDepositRate());
           

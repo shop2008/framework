@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.HomePageVO;
 
 /**
  * @author wangyan
@@ -131,7 +129,7 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	protected List<GainVO> executeCommand(ICommand<List<GainVO>> command)
 			throws Exception {
 		GetRightGainCommand cmd=(GetRightGainCommand)command;
-		return getRestService(TradingResourse.class).getGain(cmd.getStart(), cmd.getLimit());
+		return getRestService(ITradingResource.class).getGain(cmd.getStart(), cmd.getLimit());
 	}
 
 }

@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.stock.restful.resource.TradingResourse;
+import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 
 /**
@@ -82,7 +82,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 	@Override
 	protected List<HomePageVO> executeCommand(ICommand<List<HomePageVO>> command) throws Exception {
 		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
-		return getRestService(TradingResourse.class).getHomeList(cmd.getStart(), cmd.getLimit());
+		return getRestService(ITradingResource.class).getHomeList(cmd.getStart(), cmd.getLimit());
 	}
 
 	/* (non-Javadoc)
