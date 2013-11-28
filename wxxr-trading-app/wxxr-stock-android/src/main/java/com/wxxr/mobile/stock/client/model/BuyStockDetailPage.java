@@ -20,14 +20,19 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
@@ -41,7 +46,8 @@ import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
 @View(name = "BuyStockDetailPage", withToolbar = true, description="买入")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
-		IModelUpdater, IStockSelectedCallBack {
+		IModelUpdater, IStockSelectedCallBack,ISelectionChangedListener {
+	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
 	
 	@Bean
@@ -51,7 +57,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	String marketBean;
 	
 	@Bean
-	String stockBean;
+	String nameBean;
 	
 	@Bean
 	String codeBean;
@@ -86,7 +92,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			@Attribute(name = "fund", value = "${fundBean}") })
 	String inputView;
 	
-	@Field(valueKey = "text", binding="${stockBean}${' '}${codeBean}")
+	@Field(valueKey = "text", binding="${nameBean}${' '}${codeBean}")
 	String stock;
 	
 	@Field(valueKey = "text", binding="${orderPriceBean}")
@@ -106,7 +112,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		nameBean = null;
+		codeBean = null;
+		hide();
 		return null;
 	}
 	
@@ -140,23 +148,27 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	public void stockSelected(String code, String name) {
 		log.debug("handlerStockClicked get String : "+code + " name : " + name);
 		registerBean("codeBean", code);
-		registerBean("stockBean", name);
+		registerBean("nameBean", name);
 	}
 	
+	@OnCreate
+	void registerSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("stockSearchPage", this);
+	}
 	@OnCreate
 	protected void initStock() {
 		registerBean("acctIdBean", "11111");
 		registerBean("marketBean", "SH");
-		registerBean("stockBean", "无限新锐");
-		registerBean("codeBean", "600101");
+//		registerBean("nameBean", "无限新锐");
+//		registerBean("codeBean", "600101");
 		registerBean("marketPriceBean", "156");
 		registerBean("amountBean", "");
 		registerBean("fundBean", "100000");
 		
 		acctIdBean = "11111";
 		marketBean = "SH";
-		stockBean = "无限新锐";
-		codeBean = "600101";
+//		nameBean = "无限新锐";
+//		codeBean = "600101";
 		marketPriceBean = "156";
 		amountBean = "";
 		fundBean = "100000";
@@ -175,23 +187,38 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	}
 	
 	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
+		String[] stockInfos = (String[])impl.getSelected();
+		this.codeBean = stockInfos[0];
+		this.nameBean = stockInfos[1];
+		registerBean("codeBean", this.codeBean);
+		registerBean("nameBean", this.nameBean);
+	}
+
+
+	
+	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
 			Map temp = (Map) value;
 			String code = "";
+			String name = "";
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
-				if (tempt != null && "result".equals(key)) {
-					if(tempt instanceof Long) {
-						code = (Long)tempt + "";
-					} else if(tempt instanceof String) {
+				if (tempt != null && "code".equals(key)) {
+					if(tempt instanceof String) {
 						code = (String)tempt;
 					}
-					registerBean("stockCode", code);
+					registerBean("codeBean", code);
+				} else if (tempt != null && "name".equals(key)) {
+					if(tempt instanceof String) {
+						name = (String)tempt;
+					}
+					registerBean("nameBean", name);
 				}
 			}
 		}
-
 	}
 	
 	/**
@@ -208,5 +235,18 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			return "";
 		}
 		return null;
+	}
+	
+	@OnShow
+	void startStockSearch() {
+		if(StringUtils.isBlank(nameBean) && StringUtils.isBlank(codeBean)) {
+			AppUtils.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					getUIContext().getWorkbenchManager().getWorkbench().showPage("stockSearchPage", null, null);
+				}
+			}, 100, TimeUnit.MILLISECONDS);
+		}
 	}
 }

@@ -66,16 +66,16 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}", converter = "longTime2StringConvertor")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'-1'}", converter = "longTime2StringConvertor")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}", converter = "longTime2StringConvertor")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'-1'}", converter = "longTime2StringConvertor")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}", converter = "stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}", converter = "stockLong2StringConvertorSpecial")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}", converter = "stockLong2StringConvertorSpecial")
 	String lossLimit;
 
 	@Menu(items = { "left" })
@@ -83,7 +83,7 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 

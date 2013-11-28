@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,13 +83,13 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(stockId)}")
 	TradingAccountBean tradingBean;
 	// 字段
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}", converter = "longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}", converter = "longTime2StringConvertorSell")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'-1'}", converter = "longTime2StringConvertorSell")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}", converter = "stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:''}", converter = "stockLong2StringAutoUnitConvertor")
@@ -123,7 +124,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Command(description = "Invoke when a toolbar item was clicked", 
 			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 
@@ -215,18 +216,22 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult handleItemClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			String code = "";
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
 				List<StockTradingOrderBean> orders = (tradingBean != null ? tradingBean
 						.getTradingOrders() : null);
 				if (orders != null && orders.size() > 0) {
 					StockTradingOrderBean bean = orders.get(position);
-					code = bean.getMarketCode();
+					String code = bean.getStockCode();
+					String name = bean.getStockName();
+					map.put("code", code);
+					map.put("name", name);
 				}
 			}
 			resutl.setResult("BuyStockDetailPage");
-			resutl.setPayload(code);
+			resutl.setPayload(map);
 			return resutl;
 		}
 		return null;
@@ -238,24 +243,9 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "stockSearchPage") })
-	String handleBuyBtnClick(InputEvent event) {
-		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
-//			CommandResult resutl = new CommandResult();
-//			Long stockId = 0L;
-//			// if (event.getProperty("position") instanceof Integer) {
-//			// int position = (Integer) event.getProperty("position");
-//			// if (tradingOrders != null && tradingOrders.size() > 0) {
-//			// StockTradingOrderBean tempTradingA = tradingOrders.get(position);
-//			// stockId = tempTradingA.getId();
-//			// }
-//			// }
-//			resutl.setResult("stockSearchPage");
-//			resutl.setPayload(stockId);
-//			// return resutl;
-			return "";
-		}
-		return null;
+	@Command(navigations = { @Navigation(on = "*", showPage = "BuyStockDetailPage") })
+	void handleBuyBtnClick(InputEvent event) {
+		return;
 	}
 
 	@Override
