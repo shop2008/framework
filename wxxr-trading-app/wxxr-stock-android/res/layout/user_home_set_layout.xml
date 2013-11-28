@@ -31,7 +31,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/bg_circle_white"
         android:orientation="vertical" >
@@ -45,16 +45,16 @@
             android:text="@string/select_from_system_back_text"
             android:textColor="@color/black" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray" />
-
+        <include layout="@layout/lines"/>
         <GridView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:stretchMode="columnWidth"
+            android:columnWidth="90dp"
             android:choiceMode="singleChoice"
             android:numColumns="2"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="5dp"
             bind:field="systemImages"
             android:cacheColorHint="#00000000"
             bind:itemViewId="imageItemForHomeBack"

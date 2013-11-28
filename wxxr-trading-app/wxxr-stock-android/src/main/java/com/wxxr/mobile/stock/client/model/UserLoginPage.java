@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -23,131 +22,127 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
 	static Trace log = Trace.register(UserLoginPage.class);
-	@Field(valueKey = "text",binding="${callback.userName}")
+	@Field(valueKey = "text", binding = "${callback.userName}")
 	String mobileNum;
 
-	@Field(valueKey = "text",binding="${callback.password}")
+	@Field(valueKey = "text", binding = "${callback.password}")
 	String password;
-	
+
 	@Field(valueKey = "text")
 	String loginBtn;
 
-	
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
+
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
-	
-	
+
 	/**
 	 * 处理登录
+	 * 
 	 * @param event
 	 * @return null
 	 */
-	@Command(navigations={
-			@Navigation(on="LoginFailedException",message="resourceId:message/login_failed_message",params={
-					@Parameter(name="autoClosed",type=ValueType.INETGER,value="2"),
-					@Parameter(name="title",value="resourceId:message/login_failed_title")
-			})
-	})
-	@ExeGuard(title="登录中",message="正在登录，请稍候...",silentPeriod=1)
+	@Command(navigations = { @Navigation(on = "LoginFailedException", message = "resourceId:message/login_failed_message", params = {
+			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+			@Parameter(name = "title", value = "resourceId:message/login_failed_title") }) })
+	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 1)
 	String login(InputEvent event) {
 
-//		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-//			/**手机号码*/
-//			String mobileNum = mobileNumField.getValue();
-//			/**密 码*/
-//			String password = passwordField.getValue();
-//			
-			/*if (log.isDebugEnabled()) {
-				log.debug("login:mobileNum"+this.callback.getUserName());
-				log.debug("login:password"+this.callback.getPassword());
-			}*/
-//			if(usrService != null)
-//				usrService.login(mobileNum, password);
-//		}
-		//this.callback.done(false);
-		usrService.login(null, null);
-		hide();
+		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			/** 手机号码 */
+			// String mobileNum = mobileNumField.getValue();
+			/** 密 码 */
+			// String password = passwordField.getValue();
+
+			if (log.isDebugEnabled()) {
+				log.debug("login:mobileNum" + this.callback.getUserName());
+				log.debug("login:password" + this.callback.getPassword());
+			}
+			usrService.login(this.callback.getUserName(), this.callback.getPassword());
+			hide();
+		}
 		return null;
+
 	}
 
 	/**
 	 * 处理后退
+	 * 
 	 * @param event
 	 * @return
 	 */
 	@Command(commandName = "back")
 	String back(InputEvent event) {
 
-//		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-//			//处理后退事件
-//			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-//		}
-		//this.callback.done(true);
+		// if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+		// //处理后退事件
+		// getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		// }
+		// this.callback.done(true);
 		hide();
 		return null;
 	}
 
-//	/**
-//	 * 手机号码编辑框
-//	 * 
-//	 * @param event
-//	 * @return
-//	 */
-//	@Command(commandName="mnTextChanged")
-//	String mnTextChanged(InputEvent event) {
-//		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-//			String mobileNum = (String) event.getProperty("changedText");
-//			mobileNumField.setValue(mobileNum);
-//		}
-//		return null;
-//	}
-//
-//	
-//	/**
-//	 * 密码编辑框
-//	 * @param event
-//	 * @return
-//	 */
-//	@Command(commandName="pswTextChanged")
-//	String pswTextChanged(InputEvent event) {
-//		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-//			String password = (String) event.getProperty("changedText");
-//			passwordField.setValue(password);
-//		}
-//		return null;
-//	}
-	
-	
+	// /**
+	// * 手机号码编辑框
+	// *
+	// * @param event
+	// * @return
+	// */
+	// @Command(commandName="mnTextChanged")
+	// String mnTextChanged(InputEvent event) {
+	// if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
+	// String mobileNum = (String) event.getProperty("changedText");
+	// mobileNumField.setValue(mobileNum);
+	// }
+	// return null;
+	// }
+	//
+	//
+	// /**
+	// * 密码编辑框
+	// * @param event
+	// * @return
+	// */
+	// @Command(commandName="pswTextChanged")
+	// String pswTextChanged(InputEvent event) {
+	// if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
+	// String password = (String) event.getProperty("changedText");
+	// passwordField.setValue(password);
+	// }
+	// return null;
+	// }
+
 	/**
 	 * 找回密码
+	 * 
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName="findPasswordBack", navigations={@Navigation(on="OK", showPage="userFindPswPage",closeCurrentView=true)})
+	@Command(commandName = "findPasswordBack", navigations = { @Navigation(on = "OK", showPage = "userFindPswPage", closeCurrentView = true) })
 	String findPasswordBack(InputEvent event) {
-		//this.callback.done(true);
+		// this.callback.done(true);
 		return "OK";
 	}
-	
+
 	/**
 	 * 快速注册
+	 * 
 	 * @param event
 	 * @return
 	 */
 
-	@Command(commandName="quickRegister", navigations={@Navigation(on="OK", showPage="userRegPage",closeCurrentView=true)})
+	@Command(commandName = "quickRegister", navigations = { @Navigation(on = "OK", showPage = "userRegPage", closeCurrentView = true) })
 	String quickRegister(InputEvent event) {
-	//	this.callback.done(true);
+		// this.callback.done(true);
 		return "OK";
 	}
-	
+
 	@OnShow
 	void clearCallback() {
-		if(this.callback != null){
-			//this.callback.clear();
+		if (this.callback != null) {
+			// this.callback.clear();
 		}
 	}
 }

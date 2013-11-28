@@ -45,6 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:text="@string/label_define_pic"
+            android:layout_centerInParent="true"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -52,10 +53,20 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/head1"
+            bind:field="userIcon" />
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            bind:field="userIcon" />
+            android:layout_marginRight="5dp"
+            android:background="@drawable/ic_arrow_right"
+            />
     </RelativeLayout>
 
     <RelativeLayout
@@ -95,6 +106,15 @@
 	            android:background="@drawable/back1"
 	            android:scaleType="fitXY"
 	            bind:field="userHomeBack" />
+	        
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_gravity="right|center_vertical"
+	            android:layout_marginRight="5dp"
+	            android:background="@drawable/ic_arrow_right"
+            	/>
         </FrameLayout>
     </RelativeLayout>
 

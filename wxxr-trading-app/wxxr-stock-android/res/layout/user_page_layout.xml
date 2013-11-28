@@ -25,7 +25,7 @@
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:layout_marginTop="20dp" >
 
                     <ImageView
@@ -47,6 +47,16 @@
                         android:text="@string/tv_default_text"
                         bind:field="userNickName" 
                         bind:on_Click="setNickName"
+                        />
+
+                    <Button 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/personal_custom"
+                       	bind:field="*"
+                       	bind:on_Click="personalSet"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
                         />
                 </RelativeLayout>
 
@@ -111,8 +121,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/mid_gray"
+                    android:layout_height="35dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/share"
                     android:padding="8dp" >
 
                     <TextView
@@ -148,22 +159,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" 
-                    android:background="@drawable/title_background"
+                    android:layout_height="30dp" 
+                    android:background="#252324"
                     
                     >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:gravity="center"
                         android:text="@string/label_stock" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
+                    
 
                     <TextView
                         android:layout_width="match_parent"
@@ -172,10 +180,7 @@
                         android:gravity="center"
                         android:text="@string/label_amount" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
+                   
 
                     <TextView
                         android:layout_width="match_parent"
@@ -184,11 +189,7 @@
                         android:gravity="center"
                         android:text="@string/label_profit_loss" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
-
+                   
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -217,7 +218,7 @@
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="45dp"
                             android:gravity="center"
                             android:text="@string/view_more_text"
                             android:background="@drawable/bg_view_more"
@@ -226,10 +227,12 @@
                     </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:textSize="18sp"
+                        android:visibility="visible"
                         android:text="@string/user_no_shared_text"
                         bind:field="cNoSharedVisiable" />
                 </FrameLayout>
@@ -242,8 +245,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/mid_gray"
+                    android:layout_height="35dp"
+                    android:background="@drawable/share"
+                    android:gravity="center_vertical"
                     android:padding="8dp" >
 
                     <TextView
@@ -279,21 +283,16 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" 
-                    android:background="@drawable/title_background"
+                    android:layout_height="30dp" 
+                    android:background="#252324"
                     >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:gravity="center"
                         android:text="@string/label_stock" />
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -302,10 +301,6 @@
                         android:gravity="center"
                         android:text="@string/label_amount" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -313,11 +308,6 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/label_profit_loss" />
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -347,8 +337,8 @@
                             bind:on_ItemClick="joinItemClick" />
 
                         <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
                             android:gravity="center"
                             android:text="@string/view_more_text"
                             bind:field="*"
@@ -359,10 +349,11 @@
                     
                     
                     <TextView 
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
                         android:text="@string/user_no_shared_text"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         bind:field="jNoSharedVisiable"
                         android:textSize="18sp"
                         />

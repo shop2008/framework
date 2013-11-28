@@ -17,8 +17,8 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
-import com.wxxr.mobile.stock.app.bean.MessageInfoListBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
@@ -29,15 +29,18 @@ public abstract class UserNewsPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Bean(type=BindingType.Pojo, express="${usrService.myMessageInfos}")
-	MessageInfoListBean messageList;
+	@Bean(type=BindingType.Pojo, express="${usrService.remindMessageBean}")
+	BindableListWrapper<RemindMessageBean> accountTradeListBean;
+	
+	@Bean(type=BindingType.Pojo, express="${usrService.remindMessageBean}")
+	BindableListWrapper<RemindMessageBean> infoNoticeListBean;
 	
 	/**账户&交易-数据*/
-	@Field(valueKey="options", binding="${messageList!=null?messageList.messageInfos:null}", visibleWhen="${(messageList!=null?messageList.messageInfos!=null?true:false:false)&&(curItemId==0)}")
-	List<MessageInfoBean> accountTradeInfos;
+	@Field(valueKey="options", binding="${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen="${(accountTradeListBean!=null?accountTradeListBean.data!=null?true:false:false)&&(curItemId==0)}")
+	List<RemindMessageBean> accountTradeInfos;
 	
 	/**当账户&交易数据为空时显示*/
-	@Field(valueKey="visible", binding="${(messageList!=null?messageList.messageInfos!=null?false:true:true)&&(curItemId==0)}")
+	@Field(valueKey="visible", binding="${(accountTradeListBean!=null?accountTradeListBean.data!=null?false:true:true)&&(curItemId==0)}")
 	boolean newsAccountNullVisible;
 
 	/**更新RadioButton的选中状态*/
@@ -56,10 +59,10 @@ public abstract class UserNewsPage extends PageBase {
 	
 
 	/**资讯&公告-数据*/
-	@Field(valueKey="options", binding="${messageList!=null?messageList.messageInfos:null}", visibleWhen="${(messageList!=null?messageList.messageInfos!=null?true:false:false)&&(curItemId==1)}")
-	List<MessageInfoBean> noticeInfos;
+	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${(infoNoticeListBean!=null?infoNoticeListBean.data!=null?true:false:false)&&(curItemId==0)}")
+	List<RemindMessageBean> noticeInfos;
 	
-	@Field(valueKey="visible", binding="${(messageList!=null?messageList.messageInfos!=null?false:true:true)&&(curItemId==1)}")
+	@Field(valueKey="visible", binding="${(infoNoticeListBean!=null?infoNoticeListBean.data!=null?false:true:true)&&(curItemId==1)}")
 	boolean noticeInfosNullVisible;
 	
 	@Bean

@@ -82,10 +82,9 @@
                 />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dip"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"

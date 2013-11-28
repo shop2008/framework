@@ -39,13 +39,11 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data!=null?false:true:true}")
 	boolean recordNullVisible;
 
-	@SuppressWarnings("rawtypes")
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(0,10):null}")
-	BindableListWrapper allTradeAccountListBean;
+	BindableListWrapper<GainBean> allTradeAccountListBean;
 
-	@SuppressWarnings("rawtypes")
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,10):null}")
-	BindableListWrapper successTradeAccountListBean;
+	BindableListWrapper<GainBean> successTradeAccountListBean;
 
 	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}")
 	List<GainBean> allRecordsList;

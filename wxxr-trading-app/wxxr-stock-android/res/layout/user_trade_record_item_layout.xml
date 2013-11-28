@@ -62,7 +62,7 @@
 	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:text="--"
-	        android:textSize="14sp"
+	        android:textSize="10sp"
 	        android:gravity="center"
 	        android:textColor="@color/white"
 	        bind:field="initCredit"
@@ -74,9 +74,10 @@
 	        android:layout_weight="1"
 	        android:text="--"
 	        android:textColor="@color/white"
-	        android:textSize="14sp"
+	        android:textSize="10sp"
 	        android:gravity="center"
 	        bind:field="income"
+	        android:singleLine="true"
 	        />
         
         <TextView 
@@ -85,8 +86,9 @@
 	        android:layout_weight="1"
 	        android:text="--"
 	        android:textColor="@color/white"
-	        android:textSize="14sp"
+	        android:textSize="10sp"
 	        android:gravity="center"
+	        android:singleLine="true"
 	        bind:field="date"
 	        />
 	    

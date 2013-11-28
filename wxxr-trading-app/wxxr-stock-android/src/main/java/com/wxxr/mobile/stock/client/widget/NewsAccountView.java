@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.R;
 
 import android.content.Context;
@@ -56,26 +57,24 @@ public class NewsAccountView extends PinnedHeaderListView {
 			handleData(provider);
 		}
 		
-		
-	
 		private void handleData(IObservableListDataProvider provider) {
 			if (provider != null && provider.getItemCounts() > 0) {
 				labels = new ArrayList<String>();
 				labelPositions = new ArrayList<Integer>();
 				int index = 0;
 				boolean isChange = false;
-				MessageInfoBean curMessage = null;
+				RemindMessageBean curMessage = null;
 				for(int i=0;i<provider.getItemCounts();i++) {
 					Object object = provider.getItem(i);
-					if (object instanceof MessageInfoBean) {
-						MessageInfoBean messageInfoBean = (MessageInfoBean) object;
+					if (object instanceof RemindMessageBean) {
+						RemindMessageBean messageInfoBean = (RemindMessageBean) object;
 						if (i==0) {
 							curMessage = messageInfoBean;
-							labels.add(long2Str(curMessage.getDate()));
+							labels.add(long2StrYMD(curMessage.getCreatedDate()));
 							labelPositions.add(index);
 						} else {
-							if (messageInfoBean.getDate() != curMessage.getDate()) {
-								labels.add(long2Str(messageInfoBean.getDate()));
+							if (!long2StrYMD(messageInfoBean.getCreatedDate()).equals(long2StrYMD(curMessage.getCreatedDate()))) {
+								labels.add(long2StrYMD(messageInfoBean.getCreatedDate()));
 								index = i;
 								isChange = true;
 								labelPositions.add(index);
@@ -92,29 +91,21 @@ public class NewsAccountView extends PinnedHeaderListView {
 			}
 		}
 		
-		
-		private String long2Str(long time) {
-			Date date = new Date(time);
+		private String long2StrYMD(String time) {
+			long longTime = Long.parseLong(time);
+			Date date = new Date(longTime);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			return format.format(date);
-			
-			
 		}
 		
-	
-		private int compare(String dateStr1, String dateStr2) throws ParseException {
-			java.text.DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Date date1 = format.parse(dateStr1);
-			Date date2 = format.parse(dateStr2);
-			if (date1.getTime() > date2.getTime()) {
-				return 1;
-			} else if (date1.getTime() < date2.getTime()) {
-				return -1;
-			} else {
-				return 0;
-			}
+		private String long2StrHM(String time) {
+			long longTime = Long.parseLong(time);
+			Date date = new Date(longTime);
+			
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			return format.format(date);
 		}
-
+		
 		@Override
 		public int getCount() {
 			if (dataProvider != null) {
@@ -155,15 +146,15 @@ public class NewsAccountView extends PinnedHeaderListView {
 			}
 			
 			Object object = dataProvider.getItem(position);
-			if(object!=null && object instanceof MessageInfoBean) {
-				MessageInfoBean infoBean = (MessageInfoBean) object;
+			if(object!=null && object instanceof RemindMessageBean) {
+				RemindMessageBean infoBean = (RemindMessageBean) object;
 				TextView news_title = (TextView) convertView.findViewById(R.id.news_title);
 				TextView news_date = (TextView) convertView.findViewById(R.id.news_date);
 				TextView news_content = (TextView) convertView.findViewById(R.id.news_content);
 			
 				news_title.setText(infoBean.getTitle());
 				news_content.setText(infoBean.getContent());
-				news_date.setText("10:20");
+				news_date.setText(long2StrHM(infoBean.getCreatedDate()));
 				return convertView;
 			}
 			

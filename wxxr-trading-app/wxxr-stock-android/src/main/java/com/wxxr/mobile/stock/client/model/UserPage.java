@@ -59,7 +59,7 @@ public abstract class UserPage extends PageBase  {
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.nickName!=null?user.nickName:'--':'--'}")
+	@Field(valueKey = "text", binding="${user!=null?user.nickName!=null?user.nickName:'设置昵称':'设置昵称'}")
 	String userNickName;
 
 	/**
@@ -123,7 +123,7 @@ public abstract class UserPage extends PageBase  {
 			uiItems={
 				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
 			},
-			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
+			navigations={@Navigation(on="OK", showPage="userManagePage")}
 	)
 	String toolbarClickedRight(InputEvent event){
 		return "OK";
@@ -283,6 +283,14 @@ public abstract class UserPage extends PageBase  {
 			}
 		});
 	}*/
+	
+	@Command(
+			commandName="personalSet",
+			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
+			)
+	String personalSet(InputEvent event) {
+		return "OK";
+	}
 	
 	/**
 	 * 设置昵称
