@@ -14,15 +14,13 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
-import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
@@ -39,24 +37,34 @@ public abstract class ChampionShipView extends ViewBase {
 	ITradingManagementService tradingMgr;
 	
 	@Bean(type=BindingType.Pojo,express="${tradingMgr.getTMegagameRank()}")
-	RankListBean ChampionShipBean;
+	BindableListWrapper<MegagameRankBean> tRankListBean;
+	
+	@Bean(type=BindingType.Pojo,express="${tradingMgr.getT1MegagameRank()}")
+	BindableListWrapper<MegagameRankBean> t1RankListBean;
+
+	@Bean(type=BindingType.Pojo,express="${tradingMgr.getWeekRank()}")
+	BindableListWrapper<WeekRankBean> weekRankListBean;
+
+	@Bean(type=BindingType.Pojo,express="${tradingMgr.getRegularTicketRank()}")
+	BindableListWrapper<RegularTicketBean> rtRankListBean;
+
 	//List
-	@Field(valueKey = "options", binding="${ChampionShipBean != null ? ChampionShipBean.TRankBeans:null}", visibleWhen="${currentViewId == 1}",
+	@Field(valueKey = "options", binding="${tRankListBean.data}", visibleWhen="${currentViewId == 1}",
 			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
 						  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<MegagameRankBean> ChampionShip;
 	
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.t1RankBeans:null}", visibleWhen="${currentViewId == 2}",
+	@Field(valueKey = "options", binding="${t1RankListBean.data}", visibleWhen="${currentViewId == 2}",
 			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
 				  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<MegagameRankBean> ChampionT1Ship;
 
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.weekRanKBeans:null}", visibleWhen="${currentViewId == 3}",
+	@Field(valueKey = "options", binding="${weekRankListBean.data}", visibleWhen="${currentViewId == 3}",
 			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
 			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<WeekRankBean> ChampionWeekShip;
 
-	@Field(valueKey = "options", binding="${ChampionShipBean != null?ChampionShipBean.regularTicketBeans:null}", visibleWhen="${currentViewId == 4}",
+	@Field(valueKey = "options", binding="${rtRankListBean.data}", visibleWhen="${currentViewId == 4}",
 			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
 			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<RegularTicketBean> ChampionRegularShip;
@@ -85,8 +93,8 @@ public abstract class ChampionShipView extends ViewBase {
 			})
 	boolean regularTicketBtn;
 	//week Title
-	@Field(valueKey = "text", binding="${ChampionShipBean!=null?(ChampionShipBean.weekRanKBeans!=null?(ChampionShipBean.weekRanKBeans.size()>0?ChampionShipBean.weekRanKBeans.get(0).dates:''):''):''}"
-			,visibleWhen="${currentViewId == 3}")
+	@Field(valueKey = "text", binding="${weekRankListBean.data.size() > 0 ? weekRankListBean.data.get(0).dates : ''}"
+			,visibleWhen="${(currentViewId == 3)&&(weekRankListBean.data.size() > 0)}")
 	String weekDate;
 	
 	@Bean
@@ -98,109 +106,62 @@ public abstract class ChampionShipView extends ViewBase {
 
 	
 	@Command
-	String handleTMegaTopRefresh(InputEvent event) {
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	String reloadTRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMegaTopRefresh");
 		}
+		this.currentViewId = 1;
+		registerBean("currentViewId", this.currentViewId);
 		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		handleTMegaClick(null);
+		tradingMgr.reloadTMegagameRank(true);
 		if (cb != null)
 			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
-	String handleTMega1TopRefresh(InputEvent event) {
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	String reloadT1Rank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMega1TopRefresh");
 		}
+		this.currentViewId = 2;
+		registerBean("currentViewId", this.currentViewId);
 		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		handleTMega1Click(null);
+		tradingMgr.reloadT1MegagameRank(true);
 		if (cb != null)
 			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
-	String handleWeekTopRefresh(InputEvent event) {
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	String reloadWeekRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleWeekTopRefresh");
 		}
+		this.currentViewId = 3;
+		registerBean("currentViewId", this.currentViewId);
 		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		handleWeekClick(null);
+		tradingMgr.reloadWeekRank(true);
 		if (cb != null)
 			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
-	String handleRegularTicketTopRefresh(InputEvent event) {
+	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	String reloadRegularTicketRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleRegularTicketTopRefresh");
 		}
+		this.currentViewId = 4;
+		registerBean("currentViewId", this.currentViewId);
 		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		handleRegularTicketClick(null);
+		tradingMgr.reloadRegularTicketRank(true);
 		if (cb != null)
 			cb.refreshSuccess();
-		return null;
-	}
-
-	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
-	String handleTMegaClick(InputEvent event) {
-		currentViewId = 1;
-		registerBean("currentViewId", currentViewId);
-		try {
-			getUIContext().getKernelContext()
-					.getService(ITradingManagementService.class)
-					.getTMegagameRank();
-		} catch (StockAppBizException e) {
-
-		}
-		return null;
-	}
-
-	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
-	String handleTMega1Click(InputEvent event) {
-		currentViewId = 2;
-		registerBean("currentViewId", currentViewId);
-		try {
-			getUIContext().getKernelContext()
-					.getService(ITradingManagementService.class)
-					.getT1MegagameRank();
-		} catch (StockAppBizException e) {
-
-		}
-		return null;
-	}
-
-	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
-	String handleWeekClick(InputEvent event) {
-		currentViewId = 3;
-		registerBean("currentViewId", currentViewId);
-		try {
-			getUIContext().getKernelContext()
-					.getService(ITradingManagementService.class).getWeekRank();
-		} catch (StockAppBizException e) {
-
-		}
-		return null;
-	}
-
-	@Command
-	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=true)
-	String handleRegularTicketClick(InputEvent event) {
-		currentViewId = 4;
-		registerBean("currentViewId", currentViewId);
-		try {
-			getUIContext().getKernelContext()
-					.getService(ITradingManagementService.class)
-					.getRegularTicketRank();
-		} catch (StockAppBizException e) {
-
-		}
 		return null;
 	}
 

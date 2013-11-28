@@ -11,18 +11,34 @@ import java.util.List;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
+import com.wxxr.mobile.core.log.api.Trace;
 
 /**
  * @author neillin
  *
  */
 public class BindableListWrapper<E> implements IBindableBean {
+	private Trace xlog;
+	
 	private List<E> data;
 	private Comparator<E> comparator;
 	private IEntityFilter<E> filter;
 	private PropertyChangeSupport pSupport = new PropertyChangeSupport(this);
 	private final IBindableEntityCache<?, E> cache;
+	private ICacheUpdatedCallback callback = new ICacheUpdatedCallback() {
+		
+		@Override
+		public void dataChanged(IBindableEntityCache<?, ?> cache) {
+			notifyCacheChanged();
+		}
+	};
 	
+	protected Trace getLog(){
+		if(xlog == null){
+			xlog = Trace.getLogger(getClass().getPackage().getName()+".Cache_list_"+cache.getEntityTypeName());
+		}
+		return xlog;
+	}
 	public BindableListWrapper(IBindableEntityCache<?, E> cache,IEntityFilter<E> filter,Comparator<E> comparator){
 		this.cache = cache;
 		this.filter = filter;
@@ -47,23 +63,23 @@ public class BindableListWrapper<E> implements IBindableBean {
 	}
 	
 	protected void setupCacheCallback() {
-		this.cache.registerCallback(new ICacheUpdatedCallback() {
-			
-			@Override
-			public void dataChanged(IBindableEntityCache<?, ?> cache) {
-				notifyCacheChanged();
-			}
-		});
+		this.cache.registerCallback(callback);
 	}
 
 	
 	protected synchronized void notifyCacheChanged() {
 		Object oldVal = this.data;
 		this.data = null;
+		if(getLog().isDebugEnabled()){
+			getLog().debug("Received cache changed, Clear list data and fire property changed event. ");
+		}
 		this.pSupport.firePropertyChange("data", oldVal, null);
 	}
 	
 	public synchronized void clear() {
+		if(getLog().isDebugEnabled()){
+			getLog().debug("Clear list data ");
+		}
 		this.data = null;
 	}
 
@@ -102,6 +118,9 @@ public class BindableListWrapper<E> implements IBindableBean {
 	
 	public synchronized List<E> getData() {
 		if(this.data == null){
+			if(getLog().isDebugEnabled()){
+				getLog().debug("data is null, going to refill list data ...");
+			}
 			final ArrayList<E> result = new ArrayList<E>();
 			this.cache.acceptVisitor(new ICacheVisitor<E>() {
 
@@ -117,6 +136,9 @@ public class BindableListWrapper<E> implements IBindableBean {
 				Collections.sort(result, comparator);
 			}
 			this.data = result;
+			if(getLog().isDebugEnabled()){
+				getLog().debug("data refilling is done, new size of list data : "+this.data.size());
+			}
 		}
 		return this.data;
 	}

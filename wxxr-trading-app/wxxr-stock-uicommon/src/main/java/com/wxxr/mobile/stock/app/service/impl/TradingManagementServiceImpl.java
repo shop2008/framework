@@ -248,7 +248,7 @@ public class TradingManagementServiceImpl extends
 		return this.earnRank;
 	}
 
-	public BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
+	public synchronized BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
 		if(this.tRank == null){
 			if(this.tRankCache == null){
 				this.tRankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("tRank");
@@ -261,7 +261,7 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	public BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
+	public synchronized BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
 		if(this.t1Rank == null){
 			if(this.t1RankCache == null){
 				this.t1RankCache = new GenericReloadableEntityCache<String, MegagameRankBean, MegagameRankVO>("t1Rank");
@@ -275,7 +275,7 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	public BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException {
+	public synchronized BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException {
 		if(this.rtRank == null){
 			if(this.rtRankCache == null){
 				this.rtRankCache = new GenericReloadableEntityCache<String, RegularTicketBean, RegularTicketVO>("rtRank");
@@ -288,7 +288,7 @@ public class TradingManagementServiceImpl extends
 	}
 
 	@Override
-	public BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException {
+	public synchronized BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException {
 		if(this.weekRank == null){
 			if(this.weekRankCache == null){
 				this.weekRankCache = new GenericReloadableEntityCache<String, WeekRankBean, WeekRankVO>("weekRank");
@@ -879,6 +879,30 @@ public class TradingManagementServiceImpl extends
 		map.put("start", start);
 		map.put("limit", limit);
 		this.earnRankCache.forceReload(map, wait4Finish);
+	}
+
+	@Override
+	public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BindableListWrapper<GainBean> getGain(int start, int limit) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

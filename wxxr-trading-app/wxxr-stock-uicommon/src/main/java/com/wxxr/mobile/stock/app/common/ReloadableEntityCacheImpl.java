@@ -32,6 +32,8 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
  */
 public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntityCache<K, V> {
 	private static final Trace log = Trace.register(ReloadableEntityCacheImpl.class);
+	private Trace cLog;
+	
 	private static Reloader reloader;
 	
 	private static class Reloader extends Thread {
@@ -55,7 +57,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	                	continue;
 	                }
 	                @SuppressWarnings("unchecked")
-					WeakReference<ReloadableEntityCacheImpl<?,?>>[] vals = refs.toArray(new WeakReference[refs.size()]);
+	                WeakReference<ReloadableEntityCacheImpl<?,?>>[] vals = refs.toArray(new WeakReference[refs.size()]);
 	                for(WeakReference<ReloadableEntityCacheImpl<?,?>> ref: vals) {
 	                	ReloadableEntityCacheImpl<?,?> list = ref.get();
 	                    if(list != null){
@@ -77,6 +79,13 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
         	this.refs.add(ref);
         }
     }
+	
+	protected Trace getLog() {
+		if(this.cLog == null){
+			this.cLog = Trace.register(getClass().getPackage().getName()+".Cache_"+getEntityTypeName());
+		}
+		return this.cLog;
+	}
 	
 	/**
 	 * 
@@ -103,11 +112,20 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		
 		@Override
 		public void success(Object result) {
+				if(getLog().isDebugEnabled()){
+					getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? ((List)result).size() : 0));
+				}
 				if(processReloadResult(result)){
 					WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
+					if(getLog().isDebugEnabled()){
+						getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
+					}
 					for (WeakReference<ICacheUpdatedCallback> ref : refs) {
 						ICacheUpdatedCallback cb = ref.get();
 						if(cb != null){
+							if(getLog().isDebugEnabled()){
+								getLog().debug("notify list warpper :"+cb);
+							}
 							cb.dataChanged(ReloadableEntityCacheImpl.this);
 						}
 					}
@@ -138,7 +156,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}
 	}
 	
-	protected WeakReference<ICacheUpdatedCallback> getCallbackReference(ICacheUpdatedCallback cb){
+	private WeakReference<ICacheUpdatedCallback> getCallbackReference(ICacheUpdatedCallback cb){
 		for (WeakReference<ICacheUpdatedCallback> ref : this.callbacks) {
 			if(ref.get() == cb){
 				return ref;
@@ -147,11 +165,14 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		return null;
 	}
 	
-	protected void clearCallbacks(){
+	private void clearCallbacks(){
 		for (Iterator<WeakReference<ICacheUpdatedCallback>> itr = this.callbacks.iterator();itr.hasNext();) {
 			WeakReference<ICacheUpdatedCallback> ref = itr.next();
 			if(ref.get() == null){
 				itr.remove();
+				if(getLog().isDebugEnabled()){
+					getLog().debug("a cache callback was GC, remove it from callback list !");
+				}
 			}
 		}
 	}
@@ -161,14 +182,13 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 */
 	@Override
 	public void registerCallback(ICacheUpdatedCallback cb){
-		wlock.lock();
-		try {
-			clearCallbacks();
+		synchronized(this.callbacks) {
 			if(getCallbackReference(cb) == null){
 				this.callbacks.add(new WeakReference<ICacheUpdatedCallback>(cb));
+				if(getLog().isDebugEnabled()){
+					getLog().debug("cache callback :["+cb+"] was registered !");
+				}
 			}
-		}finally{
-			wlock.unlock();
 		}
 	}
 	
@@ -177,24 +197,22 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 */
 	@Override
 	public void unregisterCallback(ICacheUpdatedCallback cb){
-		wlock.lock();
-		try {
+		synchronized(this.callbacks){
+			if(getLog().isDebugEnabled()){
+				getLog().debug("Going to unregister cache callback :"+cb);
+			}
 			WeakReference<ICacheUpdatedCallback> ref = getCallbackReference(cb);
 			if(ref != null){
 				this.callbacks.remove(ref);
 			}
-		}finally{
-			wlock.unlock();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected WeakReference<ICacheUpdatedCallback>[] getCallbacks(){
-		rlock.lock();
-		try {
-			return this.callbacks.toArray(new WeakReference[0]);
-		}finally{
-			rlock.unlock();
+		synchronized(this.callbacks){
+			clearCallbacks();
+			return this.callbacks.toArray(new WeakReference[this.callbacks.size()]);
 		}
 	}
 
@@ -212,11 +230,20 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	@Override
 	public void doReloadIfNeccessay() {
 		if(inReloading){
+			if(getLog().isDebugEnabled()){
+				getLog().debug("cache is still in loading, reloading aborted, cache name :"+getEntityTypeName());
+			}
 			return;
 		}
 		int secondsElapsed = (int)((System.currentTimeMillis() - lastUpdateTime)/1000L);
 		if(secondsElapsed < minReloadIntervalInSeconds){
+			if(getLog().isDebugEnabled()){
+				getLog().debug("minimum reload interval is ["+this.minReloadIntervalInSeconds+"] seconds, seconds elapsed since last reload :"+secondsElapsed);
+			}
 			return;
+		}
+		if(getLog().isDebugEnabled()){
+			getLog().debug("cache is going to be reloaded ...");
 		}
 		doReload(false,null);
 	}
@@ -226,6 +253,9 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 */
 	@Override
 	public void forceReload(boolean wait4Finish) {
+		if(getLog().isDebugEnabled()){
+			getLog().debug("cache is forced to reload ...");
+		}
 		doReload(wait4Finish,null);
 	}
 	
@@ -240,11 +270,12 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}else{
 			Future<?> future = KUtils.getService(ICommandExecutor.class).submitCommand(cmd);
 			try {
-				processReloadResult(future.get());
+				callback.success(future.get());
 			} catch (InterruptedException e) {
 				return;
 			} catch (ExecutionException e) {
 				Throwable t = e.getCause();
+				handleReloadFailed(t);
 				if(t instanceof StockAppBizException){
 					throw (StockAppBizException)t;
 				}else if( t instanceof CommandConstraintViolatedException){
@@ -370,7 +401,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	}
 	
 	protected void handleReloadFailed(Object cause) {
-		log.warn("Failed to reload list data of :"+name, cause);
+		getLog().warn("Failed to reload list data of :"+name, cause);
 	}
 
 	/* (non-Javadoc)

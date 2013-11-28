@@ -52,6 +52,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	@Override
 	protected boolean processReloadResult(Object result) {
 		if(result == null){
+			getLog().warn("Command return null value, going clear cache.");
 			if(getCacheSize() > 0){
 				clear();
 				return true;
