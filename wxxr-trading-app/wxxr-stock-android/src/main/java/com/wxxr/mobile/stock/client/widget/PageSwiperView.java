@@ -73,12 +73,19 @@ public class PageSwiperView extends LinearLayout {
 	}
 	public void setAdapter(ListAdapter dapter){
 		this.mAdapter = dapter;
-		bindImageList();
+		if(mAdapter!=null){
+			bindImageList();
+		}
 	}
 	public ListAdapter getAdapter(){
 		return mAdapter;
 	}
 	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+    	this.requestDisallowInterceptTouchEvent(true);
+		return super.onInterceptTouchEvent(ev);
+	}
 	
 	private void bindImageList(){
 		if(getAdapter()==null)
@@ -99,7 +106,7 @@ public class PageSwiperView extends LinearLayout {
 					paginationImgView[i].setBackgroundResource(R.drawable.guide_round);
 					paginationImgView[i].setTag(i);
 					if(i==0){
-						paginationImgView[i].setEnabled(false);
+						paginationImgView[0].setEnabled(false);
 					}else{
 						paginationImgView[i].setEnabled(true);
 					}
