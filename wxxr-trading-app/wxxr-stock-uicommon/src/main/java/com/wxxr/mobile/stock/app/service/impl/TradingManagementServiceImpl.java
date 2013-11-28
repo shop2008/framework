@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
@@ -89,7 +90,7 @@ public class TradingManagementServiceImpl extends
 	
 	protected BindableListWrapper<RegularTicketBean> rtRank;
 
-	private IReloadableEntityCache<String, GainBean> rightTotalGainCache;
+	private GenericReloadableEntityCache<String, GainBean,GainVO> rightTotalGainCache;
 
 	/**
 	 * 首页右侧交易记录-全部操作
@@ -128,6 +129,7 @@ public class TradingManagementServiceImpl extends
 	// =================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(ICommand.class);
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 	}
@@ -861,11 +863,22 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
 		if(rightTotalGain==null){
-			this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
+				this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
 		}
-		this.rightTotalGainCache.doReloadIfNeccessay();
+		rightTotalGainCacheDoReload(start, limit);
 		return this.rightTotalGain;
 
+	}
+
+	protected void rightTotalGainCacheDoReload(int start, int limit) {
+		synchronized (getRightTotalGainCache()) {
+			Map<String,Object> commandParameters=new HashMap<String,Object>();
+			commandParameters.put("start", start);
+			commandParameters.put("limit", limit);
+			getRightTotalGainCache().setCommandParameters(commandParameters);
+
+			getRightTotalGainCache().doReloadIfNeccessay();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -882,11 +895,11 @@ public class TradingManagementServiceImpl extends
 				}
 			} , null);
 		}
-		this.rightTotalGainCache.doReloadIfNeccessay();
+		rightTotalGainCacheDoReload(start, limit);
 		return this.rightGain;
 	}
 
-	protected IReloadableEntityCache getRightTotalGainCache() {
+	protected GenericReloadableEntityCache<String, GainBean, GainVO> getRightTotalGainCache() {
 		if(rightTotalGainCache==null){
 			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain");
 		}
