@@ -1,0 +1,188 @@
+package com.wxxr.mobile.stock.client.widget;
+
+import com.wxxr.mobile.core.ui.api.IDataChangedListener;
+import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
+import com.wxxr.mobile.stock.client.binding.IPinHeadViewItemClick;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+public abstract class PinnedHeaderListView extends ListView implements
+		IDataChangedListener {
+
+	public static int FLAG = 0;
+
+	public interface PinnedHeaderAdapter {
+		public static final int PINNED_HEADER_GONE = 0;
+		public static final int PINNED_HEADER_VISIBLE = 1;
+		public static final int PINNED_HEADER_PUSHED_UP = 2;
+
+		int getPinnedHeaderState(int position);
+
+		void configurePinnedHeader(View header, int position, int alpha);
+	}
+
+	private IPinHeadViewItemClick iPinHeadItemClick;
+	private static final int MAX_ALPHA = 255;
+	protected IObservableListDataProvider dataProvider;
+	protected PinnedHeaderAdapter mAdapter;
+	protected View mHeaderView;
+	protected boolean mHeaderViewVisible;
+	protected int mHeaderViewWidth;
+	protected int mHeaderViewHeight;
+
+	public PinnedHeaderListView(Context context) {
+		super(context);
+	}
+
+	public PinnedHeaderListView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	public PinnedHeaderListView(Context context, AttributeSet attrs,
+			int defStyle) {
+		super(context, attrs, defStyle);
+	}
+
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		if (mHeaderView != null) {
+			mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+			configureHeaderView(getFirstVisiblePosition());
+		}
+	}
+
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		if (mHeaderView != null) {
+			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
+			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
+			mHeaderViewHeight = mHeaderView.getMeasuredHeight();
+		}
+	}
+
+	/**
+	 * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
+	 * 
+	 * @param view
+	 *            标题头部的View
+	 */
+	public void setPinnedHeaderView(View view) {
+
+		mHeaderView = view;
+		if (mHeaderView != null) {
+			setFadingEdgeLength(0);
+		}
+		/**
+		 * 重新执行onLayout方法，将列表的第一个标题显示出来
+		 */
+		requestLayout();
+	}
+
+	public void setAdapter(ListAdapter adapter) {
+		super.setAdapter(adapter);
+		mAdapter = (PinnedHeaderAdapter) adapter;
+	}
+
+	/**
+	 * 根据不同位置返回的不同状态，来控制ListView指定条目(position)标题的显示，隐藏和上推下拉效果
+	 * 
+	 * @param position
+	 */
+	public void configureHeaderView(int position) {
+		if (mHeaderView == null) {
+			return;
+		}
+		int state = mAdapter.getPinnedHeaderState(position);
+
+		switch (state) {
+		case PinnedHeaderAdapter.PINNED_HEADER_GONE: {
+			mHeaderViewVisible = false;
+			break;
+		}
+
+		case PinnedHeaderAdapter.PINNED_HEADER_VISIBLE: {
+			mAdapter.configurePinnedHeader(mHeaderView, position, MAX_ALPHA);
+			if (mHeaderView.getTop() != 0) {
+				mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+			}
+			mHeaderViewVisible = true;
+			break;
+		}
+
+		case PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP: {
+			View firstView = getChildAt(0);
+			if(firstView == null)
+				return;
+			
+			int bottom = firstView.getBottom();
+			int headerHeight = mHeaderView.getHeight();
+			int y;
+			int alpha;
+			if (bottom < headerHeight) {
+				y = (bottom - headerHeight);
+				alpha = MAX_ALPHA * (headerHeight + y) / headerHeight;
+			} else {
+				y = 0;
+				alpha = MAX_ALPHA;
+			}
+			mAdapter.configurePinnedHeader(mHeaderView, position, alpha);
+			if (mHeaderView.getTop() != y) {
+				mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight
+						+ y);
+			} else {
+				mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight);
+			}
+			mHeaderViewVisible = true;
+			break;
+		}
+		}
+	}
+
+	/**
+	 * 绘制每个条目的标题
+	 */
+	protected void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
+		if (mHeaderViewVisible) {
+			drawChild(canvas, mHeaderView, getDrawingTime());
+		}
+	}
+
+	public void setDataProvider(IObservableListDataProvider dataProvider) {
+		IObservableListDataProvider oldProv = this.dataProvider;
+		this.dataProvider = dataProvider;
+		if (this.dataProvider != null) {
+			this.dataProvider.registerDataChangedListener(this);
+		} else if (oldProv != null) {
+			oldProv.unregisterDataChangedListener(this);
+		}
+	}
+
+	protected void itemClicked(int position) {
+		if (iPinHeadItemClick != null) {
+			iPinHeadItemClick.onItemClick(position);
+		}
+	}
+	
+	public void setIPinHeaderItemClick(IPinHeadViewItemClick iPinHeadViewItemClick) {
+		this.iPinHeadItemClick = iPinHeadViewItemClick;
+	}
+	
+	@Override
+	public void dataSetChanged() {
+		updateUI();
+	}
+
+	@Override
+	public void dataItemChanged() {
+		updateUI();
+	}
+
+	protected abstract void updateUI();
+}

@@ -5,77 +5,93 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-        <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
-
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/title_message_center" />
-
-        <ImageButton
-            android:id="@id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-    </RelativeLayout>
-    
-        
     <RadioGroup
         android:id="@id/rg_game_rank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
         android:gravity="center"
         android:orientation="horizontal" >
 
         <RadioButton
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/widget_bar_bg"
+            android:background="@drawable/tab_left_btn_background"
             android:button="@null"
             android:gravity="center"
             android:text="@string/tab_account_trade_text"
-            bind:field="*"
+            bind:field="accountTrades"
             bind:on_Click="showAccountTrades" />
-
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="@drawable/abs_divider_hor_btn" />
 
         <RadioButton
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/widget_bar_bg"
+            android:background="@drawable/tab_right_btn_background"
             android:button="@null"
             android:gravity="center"
             android:text="@string/tab_info_notice_text"
-            bind:field="*"
+            bind:field="infoNotices"
             bind:on_Click="showInfoNotices" />
     </RadioGroup>
 
-    <FrameLayout 
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        
-      	<com.wxxr.mobile.stock.client.widget.PinHeaderView
-      	    android:layout_width="match_parent"
-      	    android:layout_height="match_parent"
-      	    bind:field="accountTrades"
-      	    android:visibility="visible"
-      	    />
-       
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <com.wxxr.mobile.stock.client.widget.NewsAccountView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                bind:field="accountTradeInfos" 
+                bind:on_PinItemClick="newsItemClick"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/news_account_is_null_text"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                bind:field="newsAccountNullVisible" 
+                />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                bind:field="noticeRefreshView"
+                bind:on_TopRefresh="handleNoticeTopRefresh" >
+
+                <com.wxxr.mobile.stock.client.widget.InfoNoticesView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    bind:field="noticeInfos" 
+                    bind:on_PinItemClick="noticeItemClick"
+                    />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/notice_infos_is_null_text"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                bind:field="noticeInfosNullVisible" />
+        </FrameLayout>
     </FrameLayout>
+
 </LinearLayout>
