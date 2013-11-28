@@ -10,18 +10,15 @@
 package com.wxxr.stock.restful.resource;
 import java.util.List;
 
+import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
-import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.MediaType;
-import com.wxxr.stock.common.valobject.ResultBaseVO;
-import com.wxxr.stock.hq.ejb.api.StockBaseInfoVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
-import com.wxxr.stock.hq.ejb.api.UNodeDescriptorVO;
 import com.wxxr.stock.restful.json.BaseInfoListVO;
 import com.wxxr.stock.restful.json.ComponentstocksListVO;
 import com.wxxr.stock.restful.json.LineListVO;
@@ -45,6 +42,7 @@ public interface StockResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
+    @Consumes({ "application/json" })
     //@GZIP
     public BaseInfoListVO getAllStockInfo() throws Exception ;
 
@@ -57,6 +55,7 @@ public interface StockResource {
     @POST
     @Path("/quotation")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public QuotationListVO getQuotation(List<ParamVO> list) throws Exception;
 
@@ -69,6 +68,7 @@ public interface StockResource {
     @POST
     @Path("/minuteline")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public StockMinuteKVO getMinuteline(ParamVO paramVO) throws Exception;
     /**
@@ -80,6 +80,7 @@ public interface StockResource {
     @POST
     @Path("/dayline")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public LineListVO getDayline(ParamVO paramVO) throws Exception ;
     /**
@@ -91,6 +92,7 @@ public interface StockResource {
     @POST
     @Path("/fivedayminuteline")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public List<StockMinuteKVO> getFiveDayMinuteline(ParamVO paramVO) throws Exception;
    
@@ -103,6 +105,7 @@ public interface StockResource {
     @POST
     @Path("/blocStockkHQ")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     public List<StockQuotationVO> getStockHQListByBlockId(TaxisVO taxisvo) throws Exception;
     /**
      * 周K线数据接口
@@ -113,6 +116,7 @@ public interface StockResource {
     @POST
     @Path("/weekline")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public LineListVO getWeekline(ParamVO paramVO) throws Exception;
     /**
@@ -124,6 +128,7 @@ public interface StockResource {
     @POST
     @Path("/monthline")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public LineListVO getMonthline(ParamVO paramVO) throws Exception;
 
@@ -136,6 +141,7 @@ public interface StockResource {
     @POST
     @Path("/stocktaxis")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public StockTaxisListVO getStocktaxis(TaxisVO vo) throws Exception;
 
@@ -148,11 +154,13 @@ public interface StockResource {
     @POST
     @Path("/platetaxis")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public PlateTaxisListVO getPlatetaxis(TaxisVO vo) throws Exception ;
     @POST
     @Path("/refBlockHQ")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public PlateTaxisListVO getRefenceBlockHQ(List<ParamVO> list) throws Exception;
     
@@ -165,6 +173,7 @@ public interface StockResource {
     @POST
     @Path("/componentstocks")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public ComponentstocksListVO getComponentstocks(ParamVO paramVO) throws Exception ;
     /**
@@ -176,37 +185,11 @@ public interface StockResource {
     @POST
     @Path("/index")
     @Produces( { "application/json" })
+    @Consumes({ "application/json" })
     //@GZIP
     public StockTaxisListVO getIndexPreview(TaxisVO vo) throws Exception;
   
     
-   //=======================数据同步相关 ========================
-    @GET
-    @Path("/getNodeDescriptor")
-    @Produces( { "application/json" })
-    //@GZIP
-	public UNodeDescriptorVO getNodeDescriptor(@QueryParam("nodePath") String nodePath) throws Exception;
-    @GET
-    @Path("/getStockBaseInfos")
-    @Produces( { "application/json" })
-    //@GZIP
-	public List<StockBaseInfoVO> getStockBaseInfos(@QueryParam("nodePath") String nodePath)throws Exception;
-    @GET
-    @Path("/getDataDigest")
-    @Produces( { "application/json" })
-    //@GZIP
-	public ResultBaseVO getDataDigest(@QueryParam("nodePath") String nodePath) throws Exception;
-    @GET
-    @Path("/isDataChanged")
-    @Produces( { "application/json" })
-    //@GZIP
-	public ResultBaseVO isDataChanged(@QueryParam("nodePath") String nodePath, @QueryParam("digest") String digest) throws Exception;
-    
-    @GET
-    @Path("/getMaxChildrenPerNode")
-    @Produces( { "application/json" })
-    //@GZIP
-	public ResultBaseVO getMaxChildrenPerNode() throws Exception;
-
+  
 
 }
