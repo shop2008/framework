@@ -16,7 +16,7 @@ import com.wxxr.stock.common.valobject.ResultBaseVO;
  * @author wangxuyang
  *
  */
-@Path("/stocksync")
+@Path("/rest/sync")
 public interface ISyncResource {
    
    @POST
