@@ -59,7 +59,7 @@ public abstract class UserHomeBackSetPage extends PageBase {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
-			String selPic = this.systemImages.get(position);
+			String selPic = this.systemImagData.get(position);
 			if (this.user != null) {
 				this.user.setHomeBack(selPic);
 			}

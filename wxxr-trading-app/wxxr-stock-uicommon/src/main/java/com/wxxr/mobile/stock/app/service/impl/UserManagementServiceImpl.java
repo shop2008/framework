@@ -87,6 +87,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
+		addRequiredService(IEntityLoaderRegistry.class);
 	}
 
 	@Override
@@ -202,7 +203,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			@Override
 			public void run() {
 				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
-						userId, pwd);
+						"13500001009", "404662");
 				try {
 					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
 					myUserInfo = new UserBean();

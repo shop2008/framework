@@ -33,6 +33,7 @@ import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.IStockAppFramework;
+import com.wxxr.mobile.stock.app.service.impl.EntityLoaderRegistryImpl;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NewArticleManagementServiceImpl;
@@ -41,8 +42,6 @@ import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
 import com.wxxr.mobile.stock.client.mock.MockArticleManagementService;
 import com.wxxr.mobile.stock.client.mock.MockInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.mock.MockTradingManagementService;
-import com.wxxr.mobile.stock.client.mock.MockUserManagementService;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 
 /**
@@ -91,6 +90,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
+		registerKernelModule(new EntityLoaderRegistryImpl());
+
 		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
@@ -114,8 +115,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new URLLocatorManagementServiceImpl());
 		if (context.getApplication().isInDebugMode()) {
 			registerKernelModule(new MockArticleManagementService());
-			registerKernelModule(new MockUserManagementService());
-			registerKernelModule(new MockTradingManagementService());
+			registerKernelModule(new UserManagementServiceImpl());
+			registerKernelModule(new TradingManagementServiceImpl());
 			registerKernelModule(new MockInfoCenterManagementService());
 		}else{
 			registerKernelModule(new NewArticleManagementServiceImpl());//

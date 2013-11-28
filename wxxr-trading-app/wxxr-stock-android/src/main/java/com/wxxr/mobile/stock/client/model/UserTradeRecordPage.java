@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
@@ -29,25 +30,27 @@ import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 
-	@Bean(type = BindingType.Service)
+	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts!=null?true:false:false}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data!=null?true:false:false}")
 	boolean recordNotNullVisible;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts!=null?false:true:true}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data!=null?false:true:true}")
 	boolean recordNullVisible;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getMyAllTradingAccountList(0,2):null}", nullable = true)
-	TradingAccountListBean allTradeAccountListBean;
+	@SuppressWarnings("rawtypes")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(0,10):null}")
+	BindableListWrapper allTradeAccountListBean;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getMySuccessTradingAccountList(0,2):null}", nullable = true)
-	TradingAccountListBean successTradeAccountListBean;
+	@SuppressWarnings("rawtypes")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,10):null}")
+	BindableListWrapper successTradeAccountListBean;
 
-	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.allTradingAccounts:null}", visibleWhen = "${curItemId==2}")
+	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}")
 	List<GainBean> allRecordsList;
 
-	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.successTradingAccounts:null}", visibleWhen = "${curItemId==1}")
+	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}")
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
@@ -60,7 +63,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 			@Attribute(name = "textColor", value = "${curItemId == 2?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean allRecordBtn;
 
-	@Field(valueKey="visible", binding="${successTradeAccountListBean!=null?(successTradeAccountListBean.successTradingAccounts!=null?false:true):true}")
+	@Field(valueKey="visible", binding="${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?false:true):true}")
 	boolean sucRecordNullVisible;
 	
 	@Menu(items = { "left", "right" })
@@ -88,7 +91,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 		if (successTradeAccountListBean != null)
 			getUIContext().getKernelContext()
 					.getService(ITradingManagementService.class)
-					.getMySuccessTradingAccountList(0, 2);
+					.getGain(0, 20);
 		return null;
 	}
 
@@ -105,7 +108,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 		if (allTradeAccountListBean != null)
 			getUIContext().getKernelContext()
 					.getService(ITradingManagementService.class)
-					.getMyAllTradingAccountList(0, 2);
+					.getTotalGain(0, 20);
 		return null;
 	}
 
@@ -124,7 +127,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 			// 本人
 			if (allTradeAccountListBean != null) {
-				List<GainBean> allTradeList = allTradeAccountListBean.getAllTradingAccounts();
+				List<GainBean> allTradeList = allTradeAccountListBean.getData();
 				if (allTradeList != null && allTradeList.size() > 0) {
 					allBean = allTradeList.get(position);
 				}
@@ -174,7 +177,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 			// 本人
 			if (successTradeAccountListBean != null) {
-				List<GainBean> sucTradeList = successTradeAccountListBean.getSuccessTradingAccounts();
+				List<GainBean> sucTradeList = successTradeAccountListBean.getData();
 				if (sucTradeList != null && sucTradeList.size() > 0) {
 					sucBean = sucTradeList.get(position);
 				}

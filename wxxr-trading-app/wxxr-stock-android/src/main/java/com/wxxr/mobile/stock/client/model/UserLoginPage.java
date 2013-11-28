@@ -60,15 +60,15 @@ public abstract class UserLoginPage extends PageBase {
 //			/**密 码*/
 //			String password = passwordField.getValue();
 //			
-			if (log.isDebugEnabled()) {
+			/*if (log.isDebugEnabled()) {
 				log.debug("login:mobileNum"+this.callback.getUserName());
 				log.debug("login:password"+this.callback.getPassword());
-			}
+			}*/
 //			if(usrService != null)
 //				usrService.login(mobileNum, password);
 //		}
 		//this.callback.done(false);
-		usrService.login(this.callback.getUserName(), this.callback.getPassword());
+		usrService.login(null, null);
 		hide();
 		return null;
 	}
