@@ -9,6 +9,8 @@ import android.content.Intent;
 
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Workbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -19,9 +21,16 @@ import com.wxxr.mobile.core.ui.common.WorkbenchBase;
  *
  */
 @View
-@Workbench(title="Mobile Stock client",description="Mobile Stock client description",defaultNavigations={
-		@Navigation(on="LoginFailedException",message="show login failed message"),
-		@Navigation(on="Thorwable", message="Caught unexpecting exception , please call ...")
+@Workbench(title="Mobile Stock client",description="Mobile Stock client description",exceptionNavigations={
+		@Navigation(on="LoginFailedException",message="resourceId:message/login_required",params={
+				@Parameter(name="title",value="安全验证"),
+				@Parameter(name="onOK",value="确 认"),
+				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")}),
+		@Navigation(on="RequiredNetNotAvailablexception",message="resourceId:message/network_not_available",params={
+				@Parameter(name="title",value="网络异常"),
+				@Parameter(name="onOK",value="确 认"),
+				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")
+		})
 })
 public class StockWorkbench extends WorkbenchBase {
 

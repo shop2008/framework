@@ -28,7 +28,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="network_not_available">你要展示的页面需要从网络下载数据，你需要打开网络连接...</string>
-
+    <string name="login_required">您要求的数据、指令要在您登录才能执行，请登录...</string>
+    
     <!-- left slidingMenu title -->
     <string name="t_home">首页</string>
     <string name="t_dsphb">大赛排行榜</string>
