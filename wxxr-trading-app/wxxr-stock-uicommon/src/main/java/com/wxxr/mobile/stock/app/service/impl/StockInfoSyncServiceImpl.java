@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.api.IDataExchangeCoordinator;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.db.StockInfo;
 import com.wxxr.mobile.stock.app.db.dao.StockInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
@@ -39,8 +40,7 @@ import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
  */
 public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		implements IStockInfoSyncService {
-	private static final Trace log = Trace
-			.register(StockInfoSyncServiceImpl.class);
+	private static final Trace log = Trace.register(StockInfoSyncServiceImpl.class);
 	private StockInfoDao dao;
 
 	protected StockInfoDao getStockInfoDao() {
@@ -417,6 +417,21 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 
 		}
 
+	}
+
+	@Override
+	public List<StockBaseInfo> getStockInfos(IEntityFilter<StockBaseInfo> filter) {
+		List<StockBaseInfo> ret = new ArrayList<StockBaseInfo>();
+		if (filter==null) {
+			ret.addAll(cache.values());
+			return ret;
+		}
+		for (StockBaseInfo stockBaseInfo : cache.values()) {
+			if (filter.doFilter(stockBaseInfo)) {
+				ret.add(stockBaseInfo);
+			}
+		}
+		return ret;
 	}
 
 }

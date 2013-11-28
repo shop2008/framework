@@ -23,8 +23,11 @@ import com.wxxr.mobile.stock.app.bean.StockBaseInfoBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
@@ -63,12 +66,21 @@ public class InfoCenterManagementServiceImpl extends
 
 	// ====================interface methods =====================
 	@Override
-	public SearchStockListBean searchStock(String keyword) {
+	public SearchStockListBean searchStock(final String keyword) {
 		List<StockBaseInfoBean> list = new ArrayList<StockBaseInfoBean>();
 		if (StringUtils.isEmpty(keyword)) {
 			stockListbean.setSearchResult(list);
 			return stockListbean;
 		}
+		getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
+			@Override
+			public boolean doFilter(StockBaseInfo entity) {
+				if (StringUtils.isBlank(keyword)) {
+					return false;
+				}
+				return entity.getAbbr().startsWith(keyword)||entity.getCode().startsWith(keyword);
+			}
+		});
 		List<StockBaseInfoBean> searchList = MockDataUtils
 				.getAllMockDataForSearchStock();
 		for (StockBaseInfoBean bean : searchList) {
