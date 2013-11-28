@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
+import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
@@ -137,7 +138,9 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onDestroyView ...");
 		}
-
+		if(getBindingView() instanceof ViewBase){
+			((ViewBase)getBindingView()).onUIDestroy();
+		}
 		super.onDestroyView();
 	}
 

@@ -43,6 +43,7 @@ import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnMenuHide;
 import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -341,6 +342,23 @@ public abstract class ViewModelUtils {
 		m.setJavaStatement(javaStatement);
 		return m;
 	}
+	
+	public static MethodModel createOnUIDestroyMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onUIDestroy");
+		m.setModifiers("protected");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onUIDestroy", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
 
 	
 	public static MethodModel createOnShowMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
@@ -955,6 +973,8 @@ public abstract class ViewModelUtils {
 			m.setPhase(LifeCyclePhase.OnMenuShow);
 		}else if((elem.getAnnotation(OnMenuHide.class) != null)&&(((m.getParameterTypes() == null))||((m.getParameterTypes().length == 1)&&m.getParameterTypes()[0].equals(String.class.getCanonicalName())))){
 			m.setPhase(LifeCyclePhase.OnMenuHide);
+		}else if((elem.getAnnotation(OnUIDestroy.class) != null)&&(((m.getParameterTypes() == null))||(m.getParameterTypes().length == 0))){
+			m.setPhase(LifeCyclePhase.OnUIDestroy);
 		}
 		model.addMethod(m);
 		processCommandAnnotation(model, elem, m);

@@ -179,6 +179,16 @@
     }
 #end
 
+#macro(onUIDestroy $model $methods)
+    @Override
+    protected void onUIDestroy() {
+#foreach($meth in $methods) 
+        ${meth.name}();       
+#end
+    }
+#end
+
+
 #macro(onDataChanged $model $methods)
     @Override
     protected void onDataChanged(ValueChangedEvent event) {

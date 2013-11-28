@@ -210,6 +210,10 @@ public class ViewModelClass extends AbstractClassModel {
 		return getLifeCycleMethods(LifeCyclePhase.OnHide);
 	}
 	
+	public List<MethodModel> getOnUIDestroyMethods() {
+		return getLifeCycleMethods(LifeCyclePhase.OnUIDestroy);
+	}
+
 	public List<MethodModel> getOnShowMethods() {
 		return getLifeCycleMethods(LifeCyclePhase.OnShow);
 	}
@@ -385,6 +389,13 @@ public class ViewModelClass extends AbstractClassModel {
 			MethodModel m = ViewModelUtils.createOnDestroyMethod(context, this, destroyMethods);
 			addMethod(m);
 		}
+		
+		List<MethodModel> onUIDestroyMethods = getOnUIDestroyMethods();
+		if((onUIDestroyMethods != null)&&(onUIDestroyMethods.size() > 0)){
+			MethodModel m = ViewModelUtils.createOnUIDestroyMethod(context, this, onUIDestroyMethods);
+			addMethod(m);
+		}
+
 
 		List<MethodModel> onShowMethods = getOnShowMethods();
 		if(hasBeanBindings || ((onShowMethods != null)&&(onShowMethods.size() > 0))){
