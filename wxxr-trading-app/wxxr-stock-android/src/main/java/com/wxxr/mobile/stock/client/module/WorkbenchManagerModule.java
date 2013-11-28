@@ -14,7 +14,10 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
+import com.wxxr.mobile.stock.client.binding.IPinHeadItemClickBinder;
+import com.wxxr.mobile.stock.client.binding.InfoNoticesViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.NewsAccountViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshListViewAdapterBinder;
@@ -27,7 +30,9 @@ import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
+import com.wxxr.mobile.stock.client.widget.InfoNoticesView;
 import com.wxxr.mobile.stock.client.widget.KLineView;
+import com.wxxr.mobile.stock.client.widget.NewsAccountView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
@@ -49,6 +54,8 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
 		mgr.registerFieldBinder(UIComponent.class, ArticleBodyView.class, new ArticleBodyFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, BuyStockDetailInputView.class, new BuyStockViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, NewsAccountView.class, new NewsAccountViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, InfoNoticesView.class, new InfoNoticesViewFieldBinder());
 	}
 
 	@Override
@@ -57,6 +64,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("BottomRefresh", new RefreshEventBinder());
 		mgr.registerFieldBinder(InputEvent.EVENT_TYPE_TEXT_CHANGED, new TextChangedEventBinder());
 		mgr.registerFieldBinder("HideDialog", new HideProgressEventBinder());
+		mgr.registerFieldBinder("PinItemClick", new IPinHeadItemClickBinder());
 	}
 
 	@Override
