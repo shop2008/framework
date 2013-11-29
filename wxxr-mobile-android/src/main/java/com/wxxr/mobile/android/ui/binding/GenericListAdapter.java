@@ -4,7 +4,9 @@
 package com.wxxr.mobile.android.ui.binding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -13,16 +15,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
+import com.wxxr.mobile.android.ui.ItemViewSelector;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
+import com.wxxr.mobile.core.ui.api.IReusableUIModel;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.util.LRUList;
 
 /**
  * @author neillin
@@ -36,7 +41,9 @@ public class GenericListAdapter extends BaseAdapter {
 	private final IAndroidBindingContext bindingCtx;
 	private final Context uiContext;
 	private final String itemViewId;
+	private final ItemViewSelector viewSelector;
 	private List<ObserverDataChangedListerWrapper> listeners;
+	private Map<String, LRUList<View>> viewPool = new HashMap<String, LRUList<View>>();
 	
 	public GenericListAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
 		if((ctx == null)||(bCtx == null)||(prov == null)||(viewId == null)){
@@ -51,6 +58,12 @@ public class GenericListAdapter extends BaseAdapter {
 			this.observable = (IObservableListDataProvider)prov;
 		}else{
 			this.observable = null;
+		}
+		IView v = bCtx.getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
+		if(v instanceof ItemViewSelector){
+			this.viewSelector = (ItemViewSelector)v;
+		}else{
+			this.viewSelector = null;
 		}
 	}
 	/* (non-Javadoc)
@@ -76,20 +89,61 @@ public class GenericListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+	
+	protected LRUList<View> getViewPool(String viewItemId, boolean create){
+		LRUList<View> pool = null;
+		synchronized(this.viewPool){
+			pool = this.viewPool.get(viewItemId);
+			if((pool == null)&&create){
+				pool = new LRUList<View>(100);
+				pool.setTimeoutInSeconds(2*60);
+			}
+			this.viewPool.put(viewItemId, pool);
+		}
+		return pool;
+	}
 
-	protected View createUI(IViewDescriptor v){
+	
+	protected View createUI(String viewId){
+		LRUList<View> pool = getViewPool(viewId, false);
+		View view = pool != null ? pool.get() : null;
+		if(view != null){
+			return view;
+		}
+		IViewDescriptor v = this.context.getWorkbenchManager().getViewDescriptor(viewId);
 		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
 		IViewBinder vBinder = this.context.getWorkbenchManager().getViewBinder();
 		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
 		binding = vBinder.createBinding(ctx, bDesc);
 		binding.init(context);
-		View view = (View)binding.getUIControl();
+		view = (View)binding.getUIControl();
 		BindingBag bag = new BindingBag();
 		bag.binding = binding;
 		bag.ctx = ctx;
+		bag.view = this.context.getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
 		view.setTag(bag);
 		return view;
+
+	}
+	
+	protected void poolView(View v){
+		BindingBag bag = (BindingBag)v.getTag();
+		IBinding<IView> binding = bag.binding;
+		CascadeAndroidBindingCtx localCtx = bag.ctx;
+		if(binding != null){
+			binding.deactivate();
+		}
+		IView vModel = bag.view;
+		if(vModel == null){
+			return;
+		}
+		if(vModel instanceof IReusableUIModel){
+			((IReusableUIModel)vModel).reset();
+		}
+		localCtx.setReady(false);
+		LRUList<View> pool = getViewPool(vModel.getName(), true);
+		pool.put(v);
 
 	}
 	/* (non-Javadoc)
@@ -97,27 +151,37 @@ public class GenericListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		IViewDescriptor v = this.context.getWorkbenchManager().getViewDescriptor(itemViewId);
+		String viewId = this.itemViewId;
+		if(this.viewSelector != null){
+			Object data = getItem(position);
+			viewId = this.viewSelector.getItemViewId(data);
+		}
 		boolean existing = false;
 		View view = null;
+		BindingBag bag = null;
 		if(convertView == null){
-			view = createUI(v);
+			view = createUI(viewId);
+			bag = (BindingBag)view.getTag();
 		}else{
 			view = convertView;
-			existing = true;
+			bag = (BindingBag)view.getTag();
+			if((bag.view == null)||(! bag.view.getName().equals(viewId))){
+				poolView(view);
+				view = createUI(viewId);
+				bag = (BindingBag)view.getTag();
+			}else{
+				existing = true;
+			}
 		}
-		BindingBag bag = (BindingBag)view.getTag();
 		IBinding<IView> binding = bag.binding;
 		CascadeAndroidBindingCtx localCtx = bag.ctx;
+		IView vModel = bag.view;
 		if(existing){
 			binding.deactivate();
+			if(vModel instanceof IReusableUIModel){
+				((IReusableUIModel)vModel).reset();
+			}
 			localCtx.setReady(false);
-		}
-		IView vModel = bag.view;
-		if(vModel == null){
-			vModel = v.createPresentationModel(context);
-			vModel.init(context);
-			bag.view = vModel;
 		}
 		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
 		binding.activate(vModel);
