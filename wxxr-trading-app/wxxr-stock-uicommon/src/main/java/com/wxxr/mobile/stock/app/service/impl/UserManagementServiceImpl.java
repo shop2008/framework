@@ -26,7 +26,6 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -37,24 +36,29 @@ import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
+import com.wxxr.mobile.stock.app.bean.UserAttributeBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
+import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
@@ -101,14 +105,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
 	
 
-	private BindableListWrapper<RemindMessageBean> remindMessageBean;
-	private IReloadableEntityCache<String, RemindMessageBean> remindMessageBeanCache;
+	private BindableListWrapper<RemindMessageBean> remindMessages;
+	private IReloadableEntityCache<String, RemindMessageBean> remindMessagesCache;
 	
-	private BindableListWrapper<PullMessageBean> pullMessageBean;
-	private IReloadableEntityCache<Long, PullMessageBean> pullMessageBeanCache;
+	private BindableListWrapper<PullMessageBean> pullMessages;
+	private IReloadableEntityCache<Long, PullMessageBean> pullMessagesCache;
 
 	
-//	private BindableListWrapper<UserAtt>
+	private BindableListWrapper<UserAttributeBean> userAttrbutes;
+	private IReloadableEntityCache<String, UserAttributeBean> userAttributeCache;
 
 	//==============  module life cycle =================
 	@Override
@@ -124,6 +129,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
+		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -420,9 +426,38 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return false;
 	}
 
-	public AuthInfoBean getUserAuthInfo() {
+	public AuthInfo getUserAuthInfo() {
+		if(userAttrbutes==null){
+			if(userAttributeCache==null){
+				userAttributeCache=new GenericReloadableEntityCache<String, UserAttributeBean, UserAttributeVO>("userAttributesBean");
+			}
+			userAttrbutes=userAttributeCache.getEntities(new IEntityFilter<UserAttributeBean>() {
+				@Override
+				public boolean doFilter(UserAttributeBean entity) {
+					return "BANK_POSITION".equals(entity.getName())||"BANK_NUM".equals(entity.getName())||
+							"ACCT_NAME".equals(entity.getName())||"ACCT_BANK".equals(entity.getName());
+				}
+			}, null);
+		}
+		userAssetBeanCache.forceReload(true);
+		if(userAttrbutes.getData()==null){
+			return null;
+		}
 		
-		return null;
+		AuthInfo authinfo=new AuthInfo();
+		for(UserAttributeBean bean:userAttrbutes.getData()){
+			if("BANK_POSITION".equals(bean.getName())){
+				authinfo.setBankAddr(bean.getValue());
+			}else if("BANK_NUM".equals(bean.getName())){
+				authinfo.setBankNum(bean.getValue());
+			}else if("ACCT_NAME".equals(bean.getName())){
+				authinfo.setAccountName(bean.getValue());
+			}else if("ACCT_BANK".equals(bean.getName())){
+				authinfo.setBankName(bean.getValue());
+			}
+			
+		}
+		return authinfo;
 	}
 
 	public String getUserAuthMobileNum(String userId) {
@@ -698,14 +733,14 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	 */
 	@Override
 	public BindableListWrapper<RemindMessageBean> getRemindMessageBean() {
-		if(remindMessageBean==null){
-			if(remindMessageBeanCache==null){
-				remindMessageBeanCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
+		if(remindMessages==null){
+			if(remindMessagesCache==null){
+				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
 			}
-			remindMessageBean=remindMessageBeanCache.getEntities(null, null);
+			remindMessages=remindMessagesCache.getEntities(null, null);
 		}
-		remindMessageBeanCache.doReloadIfNeccessay();
-		return remindMessageBean;
+		remindMessagesCache.doReloadIfNeccessay();
+		return remindMessages;
 	}
 
 	/* (non-Javadoc)
@@ -714,17 +749,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit) {
 		
-		if(pullMessageBean==null){
-			if(pullMessageBeanCache==null){
-				pullMessageBeanCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean");
+		if(pullMessages==null){
+			if(pullMessagesCache==null){
+				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean");
 			}
-			pullMessageBean=pullMessageBeanCache.getEntities(null, null);
+			pullMessages=pullMessagesCache.getEntities(null, null);
 		}
 		Map<String, Object> params=new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		pullMessageBeanCache.doReloadIfNeccessay(params);
-		return pullMessageBean;
+		pullMessagesCache.doReloadIfNeccessay(params);
+		return pullMessages;
 	}
 
 

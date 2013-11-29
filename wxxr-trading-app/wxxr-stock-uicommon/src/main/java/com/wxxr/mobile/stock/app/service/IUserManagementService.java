@@ -5,7 +5,6 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -15,6 +14,7 @@ import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 
 /**
  * @author neillin
@@ -151,9 +151,10 @@ public interface IUserManagementService {
 	
 	/**
 	 * 获取用户认证信息--提现认证
-	 * @return null 未认证， 非空为已认证
+	 * 返回的 AuthInfoBean 如果为空则就是未认证
+	 * @return  
 	 */
-	AuthInfoBean getUserAuthInfo();
+	AuthInfo getUserAuthInfo();
 	
 	
 	/**
