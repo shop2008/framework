@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.service.IURLLocatorManagementService;
 import com.wxxr.mobile.sync.client.impl.MTreeSyncConnector;
