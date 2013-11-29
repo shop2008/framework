@@ -915,7 +915,7 @@ public class TradingManagementServiceImpl extends
 			Map<String,Object> commandParameters=new HashMap<String,Object>();
 			commandParameters.put("start", start);
 			commandParameters.put("limit", limit);
-			getRightTotalGainCache().forceReload(commandParameters, false);
+			getRightTotalGainCache().doReloadIfNeccessay(commandParameters);
 		}
 	}
 
