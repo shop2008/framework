@@ -105,10 +105,10 @@ public class StockLong2StringAutoUnitConvertor implements
 		try {
 			float multi = 1;
 			String unit = "";
-			if (val > 1E8) {
+			if (val >= 1E8) {
 				multi = (float) 1E8;
 				unit = UNIT_100M;
-			} else if (val > 1E4) {
+			} else if (val >= 1E4) {
 				multi = (float) 1E4;
 				unit = UNIT_10T;
 			} else {
