@@ -244,7 +244,10 @@ public class TradingManagementServiceImpl extends
 			}
 			this.earnRank = this.earnRankCache.getEntities(null, null);
 		}
-		this.earnRankCache.doReloadIfNeccessay();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("start", start);
+		params.put("limit", limit);
+		this.earnRankCache.doReloadIfNeccessay(params);
 		this.earnRankCache.clear();
 		return this.earnRank;
 	}
