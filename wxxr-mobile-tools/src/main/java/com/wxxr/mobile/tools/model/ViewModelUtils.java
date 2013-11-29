@@ -349,7 +349,7 @@ public abstract class ViewModelUtils {
 		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
 		MethodModel m = new MethodModel();
 		m.setClassModel(model);
-		m.setMethodName("onUIDestroy");
+		m.setMethodName("onContentViewDestroy");
 		m.setModifiers("public");
 		m.setReturnType("void");
 		Map<String, Object> attrs = new HashMap<String, Object>();
@@ -365,7 +365,7 @@ public abstract class ViewModelUtils {
 		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
 		MethodModel m = new MethodModel();
 		m.setClassModel(model);
-		m.setMethodName("onUICreate");
+		m.setMethodName("onContentViewCreated");
 		m.setModifiers("public");
 		m.setReturnType("void");
 		Map<String, Object> attrs = new HashMap<String, Object>();

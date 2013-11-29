@@ -181,7 +181,7 @@
 
 #macro(onUIDestroy $model $methods)
     @Override
-    public void onUIDestroy() {
+    protected void onContentViewDestroy() {
 #foreach($meth in $methods) 
         ${meth.name}();       
 #end
@@ -190,7 +190,7 @@
 
 #macro(onUICreate $model $methods)
     @Override
-    public void onUICreate() {
+    protected void onContentViewCreated() {
 #foreach($meth in $methods) 
         ${meth.name}();       
 #end
