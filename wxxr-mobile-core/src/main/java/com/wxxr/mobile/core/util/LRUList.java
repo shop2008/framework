@@ -102,7 +102,22 @@ public class LRUList<E> implements Iterable<E>{
     private LinkedList<Element<E>> queue;
     private int timeoutInSeconds;
     
-    private int size;
+    /**
+	 * @return the timeoutInSeconds
+	 */
+	public int getTimeoutInSeconds() {
+		return timeoutInSeconds;
+	}
+
+	/**
+	 * @param timeoutInSeconds the timeoutInSeconds to set
+	 */
+	public void setTimeoutInSeconds(int timeoutInSeconds) {
+		this.timeoutInSeconds = timeoutInSeconds;
+	}
+
+
+	private int size;
     
     public LRUList(int size) {
         super();
