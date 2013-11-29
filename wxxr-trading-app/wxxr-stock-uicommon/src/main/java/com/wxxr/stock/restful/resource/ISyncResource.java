@@ -8,7 +8,7 @@ import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.MediaType;
-import com.wxxr.mobile.stock.app.sync.vo.UNodeDescriptorVO;
+import com.wxxr.mobile.sync.client.dto.UNodeDescriptorVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 
 /**

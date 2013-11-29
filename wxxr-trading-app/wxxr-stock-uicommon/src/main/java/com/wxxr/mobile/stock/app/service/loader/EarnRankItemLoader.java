@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.utils.Utils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 
@@ -113,7 +114,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 				cache.putEntity(accId, bean);
 				updated = true;
 			}
-			bean.setImgUrl(vo.getUrl());
+			bean.setImgUrl(Utils.getAbsoluteURL(vo.getUrl()));
 			bean.setTitle(vo.getWordage());
 		}
 		return updated;

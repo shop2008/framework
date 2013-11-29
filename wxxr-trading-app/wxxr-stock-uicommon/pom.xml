@@ -50,6 +50,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-gson</artifactId>
+			<version>${framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
 			<artifactId>wxxr-mobile-xml</artifactId>
 			<version>${framework.version}</version>
 		</dependency>
@@ -61,6 +66,11 @@
 		<dependency>
 			<groupId>com.wxxr.mobile</groupId>
 			<artifactId>wxxr-mobile-command</artifactId>
+			<version>${framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile</groupId>
+			<artifactId>wxxr-mobile-synclient</artifactId>
 			<version>${framework.version}</version>
 		</dependency>
 		<dependency>

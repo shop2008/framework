@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.wxxr.mobile.core.api.IDataExchangeCoordinator;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -29,10 +31,10 @@ import com.wxxr.mobile.stock.app.db.StockInfo;
 import com.wxxr.mobile.stock.app.db.dao.StockInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
-import com.wxxr.mobile.stock.app.sync.IDataConsumer;
-import com.wxxr.mobile.stock.app.sync.IMTreeDataSyncServerConnector;
-import com.wxxr.mobile.stock.app.sync.impl.MTreeDataSyncClientService;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
+import com.wxxr.mobile.sync.client.api.IDataConsumer;
+import com.wxxr.mobile.sync.client.api.IMTreeDataSyncServerConnector;
+import com.wxxr.mobile.sync.client.impl.MTreeDataSyncClientService;
 
 /**
  * @author wangxuyang
@@ -79,7 +81,11 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	// =================股票信息同步================
-	private MTreeDataSyncClientService syncClient = new MTreeDataSyncClientService();
+	private MTreeDataSyncClientService syncClient = new MTreeDataSyncClientService(){
+		protected boolean isInDebugMode() {
+			return context.getApplication().isInDebugMode();
+		}
+	};
 	private Map<Object, List<String>> datas = new HashMap<Object, List<String>>();
 	private Set<Object> receiving = new HashSet<Object>();
 	private Set<Object> receiveFailed = new HashSet<Object>();
@@ -229,10 +235,14 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	}
 	private void loadLocalDatas() {
 		List<StockInfo> list = getStockInfoDao().loadAll();
-		cache.clear();
-		if (list!=null&&list.size()>0) {
-			for (StockInfo stockInfo : list) {
-				cache.put(stockInfo.getCode(),fromPO(stockInfo));
+		synchronized (cache) {
+			cache.clear();
+			ids.clear();
+			if (list!=null&&list.size()>0) {
+				for (StockInfo stockInfo : list) {
+					cache.put(stockInfo.getCode(),fromPO(stockInfo));
+					ids.put(stockInfo.getCode(), stockInfo.getId());
+				}
 			}
 		}
 		if (log.isDebugEnabled()) {
@@ -432,6 +442,14 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public StockBaseInfo getStockBaseInfoByCode(String code) {
+		if (StringUtils.isBlank(code)) {
+			
+		}
+		return cache.get(code);
 	}
 
 }
