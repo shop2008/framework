@@ -22,6 +22,7 @@ public class StockLong2StringAutoUnitConvertor implements
 		IValueConvertor<Long, String> {
 
 	private String format = "%10.2f";
+	private int multiple = 1;
 	// private String formatDefault = "%d";
 	private String formatUnit = "";
 
@@ -55,6 +56,9 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (map.containsKey("formatUnit")) {
 			this.formatUnit = (String) map.get("formatUnit");
 		}
+		if (map.containsKey("multiple")) {
+			this.multiple = Integer.parseInt((String) map.get("multiple"));
+		}
 	}
 
 	@Override
@@ -67,24 +71,24 @@ public class StockLong2StringAutoUnitConvertor implements
 				int index = s.indexOf(UNIT_100M);
 				if (index > 0)
 					s = s.substring(0, index);
-				return (long) (Float.parseFloat(s) * 1E8);
+				return (long) (Float.parseFloat(s) * 1E8) * multiple;
 			} else if (s.contains(UNIT_10T)) {
 				int index = s.indexOf(UNIT_10T);
 				if (index > 0)
 					s = s.substring(0, index);
-				return (long) (Float.parseFloat(s) * 1E4);
+				return (long) (Float.parseFloat(s) * 1E4) * multiple;
 			} else if (s.contains(formatUnit)) {
 				int index = s.indexOf(formatUnit);
 				if (index > 0)
 					s = s.substring(0, index);
-				return (long) (Float.parseFloat(s));
+				return (long) (Float.parseFloat(s)) * multiple;
 			} else if (s.contains(UNIT_DEFAULT)) {
 				int index = s.indexOf(UNIT_DEFAULT);
 				if (index > 0)
 					s = s.substring(0, index);
-				return (long) (Float.parseFloat(s));
+				return (long) (Float.parseFloat(s)) * multiple;
 			}
-			return (long) (Float.parseFloat(s));
+			return (long) (Float.parseFloat(s)) * multiple;
 		} catch (NumberFormatException e) {
 			throw new ValidationException("Invalid Long value :" + s, e);
 		}
@@ -95,21 +99,24 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (val == null) {
 			return null;
 		}
+		if(multiple == 0)
+			return null;
+		val = val / multiple;
 		try {
-			float multiple = 1;
+			float multi = 1;
 			String unit = "";
 			if (val > 1E8) {
-				multiple = (float) 1E8;
+				multi = (float) 1E8;
 				unit = UNIT_100M;
 			} else if (val > 1E4) {
-				multiple = (float) 1E4;
+				multi = (float) 1E4;
 				unit = UNIT_10T;
 			} else {
 				return String.format("%d", val)
 						+ (StringUtils.isEmpty(this.formatUnit) ? UNIT_DEFAULT
 								: formatUnit);
 			}
-			return String.format(this.format, val / multiple) + unit
+			return String.format(this.format, val / multi) + unit
 					+ (StringUtils.isEmpty(this.formatUnit) ? "" : formatUnit);
 		} catch (NullPointerException e) {
 			return null;
