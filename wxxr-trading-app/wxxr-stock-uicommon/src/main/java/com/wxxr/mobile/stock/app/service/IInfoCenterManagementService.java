@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.stock.app.bean.LineListBean;
@@ -11,6 +12,7 @@ import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
 /**
  * @author wangxuyang
@@ -80,4 +82,12 @@ public interface IInfoCenterManagementService {
 	 * @return
 	 */
 	public StockQuotationBean getStockQuotation(String code,String market);
+	/**
+	 * 
+	 * 获取五日分时数据
+	 * @param code
+	 * @param market
+	 * @return
+	 */
+	public BindableListWrapper<List<StockMinuteKBean>> getFiveDayMinuteline(String code,String market);
 }
