@@ -3,6 +3,7 @@ package com.wxxr.mobile.stock.client.widget;
 import java.lang.reflect.Method;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -12,65 +13,66 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.model.BuyStockDetailPage;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.mobile.stock.client.widget.StockInputKeyboard.OnStockKeyboardActionListener;
 
 public class BuyStockDetailInputView extends RelativeLayout implements
-		OnStockKeyboardActionListener, OnTouchListener, OnCheckedChangeListener {
-	
-	private static final Trace log = Trace.register(BuyStockDetailInputView.class);
-	
-	private Context context;
+		OnStockKeyboardActionListener, OnTouchListener,
+		OnCheckedChangeListener, View.OnKeyListener, ScrollViewListener {
+
+	private static final Trace log = Trace
+			.register(BuyStockDetailInputView.class);
+
+	private Context mContext;
 	private EditText priceEditText;
 	private EditText countEditText;
-	private ScrollView srcollView;
+	private NewScrollView scrollView;
 	private RadioGroup radioGroup;
 	private StockInputKeyboard keyboardView;
-	private GestureDetector gestureDetector;
 
 	private boolean isPrice;
 	private boolean priceKeyboardautoShow;
 	// attribute
 	private String orderPrice;
-	private String marketPrice;
+	// private String marketPrice;
 	private String fund;
 
 	private int maxCountStock;
+
 	public BuyStockDetailInputView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
+		this.mContext = context;
 	}
 
 	public BuyStockDetailInputView(Context context) {
 		super(context);
-		this.context = context;
+		this.mContext = context;
 	}
 
 	public void setOrderPrice(String orderPrice) {
 		this.orderPrice = orderPrice;
 		setCountHint();
-		if(keyboardView != null)
+		if (keyboardView != null)
 			keyboardView.setMaxCountStock(maxCountStock);
 	}
-	
+
 	public void setMarketPrice(String marketPrice) {
-		this.marketPrice = marketPrice;
-		if(keyboardView != null)
+		// this.marketPrice = marketPrice;
+		if (keyboardView != null)
 			keyboardView.setMarketPrice(marketPrice);
 	}
 
@@ -81,37 +83,29 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 	private void initEditView() {
 		priceEditText = (EditText) findViewById(R.id.price);
 		countEditText = (EditText) findViewById(R.id.count);
-		srcollView = (ScrollView) findViewById(R.id.scroll_view);
+		scrollView = (NewScrollView) findViewById(R.id.scroll_view);
 		radioGroup = (RadioGroup) findViewById(R.id.radio_group);
 		keyboardView = (StockInputKeyboard) findViewById(R.id.keyboard_view);
 		initView();
+		priceEditText.setOnKeyListener(this);
+		countEditText.setOnKeyListener(this);
+		scrollView.setScrollViewListener(this);
 	}
 
 	private void setCountHint() {
-		if(StringUtils.isEmpty(orderPrice)||StringUtils.isEmpty(fund))
+		if (StringUtils.isEmpty(orderPrice) || StringUtils.isEmpty(fund))
 			return;
 		try {
 			float price = Float.parseFloat(this.orderPrice);
 			float fund = Float.parseFloat(this.fund);
-			maxCountStock = ((int)(fund/(price*100))*100);
-			countEditText.setHint("输入最大可买股数: "+maxCountStock+"股");
+			// fund,price 都为Long，同时放大100倍；交易数最小值100
+			maxCountStock = ((int) (fund / (price * 100)) * 100);
+			countEditText.setHint("输入最大可买股数: " + maxCountStock + "股");
 			countEditText.setText("");
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 	}
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_BACK:
-//			if (keyboardView.isShown()) {
-//				setKeyboardShow(false);
-//				return true;
-//			}
-//
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
 
 	@Override
 	protected void onFinishInflate() {
@@ -128,11 +122,6 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		setEditTextInputNull(countEditText);
 
 		radioGroup.setOnCheckedChangeListener(this);
-
-//		gestureDetector = new GestureDetector(context,
-//				new KeyboardGestureDetector());
-		srcollView.setOnTouchListener(this);
-
 	}
 
 	void setEditTextInputNull(EditText et) {
@@ -145,7 +134,6 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				setShowSoftInputOnFocus.setAccessible(false);
 				setShowSoftInputOnFocus.invoke(et, false);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -153,15 +141,8 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		}
 	}
 
-	int nx = 0;
-	int ny = 0;
-	int fromY = 0;
-	int toY = 0;
-
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-//		if (v.getId()== R.id.keyboard_view&&gestureDetector.onTouchEvent(event))
-//			return true;
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			switch (v.getId()) {
 			case R.id.price:
@@ -179,26 +160,10 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				showInitCountKeyboard();
 				setKeyboardShow(true);
 				break;
-			case R.id.scroll_view:
-				setKeyboardShow(false);
-				clearEditTextFocus();
-				break;
 			default:
-				setKeyboardShow(false);
 				break;
 			}
 		}
-//		else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//			nx = (int) event.getX();
-//			ny = (int) event.getY();
-//			fromY = (int) event.getY();
-//		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//			toY = (int) event.getY();
-//			if (toY - fromY > 100) {
-//				setKeyboardShow(false);
-//				clearEditTextFocus();
-//			}
-//		}
 		return false;
 	}
 
@@ -206,6 +171,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		switch (checkedId) {
 		case R.id.order_price:
+			priceEditText.setTextColor(Color.WHITE);
 			priceEditText.setEnabled(true);
 			if (priceKeyboardautoShow) {
 				priceKeyboardautoShow = false;
@@ -225,7 +191,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			break;
 		case R.id.market_price:
 			priceEditText.setEnabled(false);
-			priceEditText.setText(marketPrice + "");
+			priceEditText.setTextColor(Color.GRAY);
 			if (isPrice) {
 				setKeyboardShow(false);
 				priceKeyboardautoShow = true;
@@ -277,14 +243,14 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			break;
 		case R.id.bt_all:// 全部
 			countEditable.clear();
-			countEditable.append(maxCountStock+"");
+			countEditable.append(maxCountStock + "");
 			break;
-			
+
 		case R.id.bt_finish:// 价格输完-完成
 			priceEditable.clear();
 			priceEditable.append(keyCodes);
 			break;
-			
+
 		case R.id.bt_sn_finish:// 数量输完
 			countEditable.clear();
 			countEditable.append(keyCodes);
@@ -296,8 +262,10 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			} else {
 				int countInt = getInputCountValue(keyCodes, countEditable,
 						countStart);
-				if(countInt > maxCountStock) {
-					Toast.makeText(context, "买入数量最大不能超过"+maxCountStock+"股", Toast.LENGTH_SHORT).show();
+				if (countInt > maxCountStock) {
+					Toast.makeText(mContext,
+							"买入数量最大不能超过" + maxCountStock + "股",
+							Toast.LENGTH_SHORT).show();
 				} else {
 					countEditable.insert(countStart, keyCodes);
 				}
@@ -306,16 +274,18 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			break;
 		}
 	}
-	/** 输入数据前先判断是否越界*/
+
+	/** 输入数据前先判断是否越界 */
 	private int getInputCountValue(String keyCodes, Editable countEditable,
 			int countStart) {
-		SpannableStringBuilder editable = new SpannableStringBuilder(countEditable);
+		SpannableStringBuilder editable = new SpannableStringBuilder(
+				countEditable);
 		editable.insert(countStart, keyCodes);
 		String count = editable.toString();
 		int countInt = 0;
 		try {
 			countInt = Integer.parseInt(count);
-		}catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 		return countInt;
@@ -328,49 +298,63 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			super.handleMessage(msg);
 			if (msg.what == 0) {
 				int[] location = Utils.getViewRBPoint(keyboardView);
-				srcollView.smoothScrollTo(0, location[1]);
+				scrollView.smoothScrollTo(0, location[1]);
 			} else {
 				keyboardView.setVisibility(View.GONE);
 				keyboardView.allKeyboardGone();
 			}
 		}
 	};
-	/** 键盘延迟，做个动画*/
+
+	/** 键盘延迟，做个动画 */
 	protected void setKeyboardShow(boolean show) {
 		if (show) {
 			keyboardView.setVisibility(View.VISIBLE);
 			handler.sendEmptyMessageDelayed(0, 100);
 		} else {
-			srcollView.smoothScrollTo(0, 0);
+			scrollView.smoothScrollTo(0, 0);
 			handler.sendEmptyMessageDelayed(1, 100);
-
 		}
 	}
-	/** 不是滚轮，则显示键盘*/
+
+	/** 不是滚轮，则显示键盘 */
 	protected void showInitPriceKeyboard() {
 		if (keyboardView != null && !keyboardView.isShowSPWheel())
 			keyboardView.showInitPriceKeyboard();
 	}
-	/** 不是滚轮，则显示键盘*/
+
+	/** 不是滚轮，则显示键盘 */
 	protected void showInitCountKeyboard() {
 		if (keyboardView != null && !keyboardView.isShowSNWheel())
 			keyboardView.showInitCountKeyboard();
 	}
-	/** 清除输入框焦点*/
+
+	/** 清除输入框焦点 */
 	void clearEditTextFocus() {
 		radioGroup.setFocusableInTouchMode(true);
 		radioGroup.setFocusable(true);
 		radioGroup.requestFocus();
 	}
 
-//	class KeyboardGestureDetector extends SimpleOnGestureListener {
-//		@Override
-//		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-//				float velocityY) {
-//			if (e2.getY() > e1.getY()) {
-//				return true;
-//			}
-//			return false;
-//		}
-//	}
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& keyCode == KeyEvent.KEYCODE_BACK) {
+			if (keyboardView.isShown()) {
+				setKeyboardShow(false);
+				clearEditTextFocus();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onScrollChanged(ScrollView scrollView, int x, int y, int oldx,
+			int oldy) {
+		if (keyboardView.isShown() && y < oldy) {
+			setKeyboardShow(false);
+			clearEditTextFocus();
+		}
+	}
 }

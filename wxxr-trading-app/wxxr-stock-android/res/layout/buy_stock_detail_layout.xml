@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         bind:field="inputView" >
 
-        <ScrollView
+        <com.wxxr.mobile.stock.client.widget.NewScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -170,7 +170,9 @@
                             android:gravity="center"
                             android:text="@string/bt_market_price_text"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            bind:field="*"
+                            bind:on_Click="handleMarketBtnClick" />
                     </RadioGroup>
                 </LinearLayout>
 
@@ -212,7 +214,7 @@
                     android:layout_marginTop="10dip" >
                 </com.wxxr.mobile.stock.client.widget.StockInputKeyboard>
             </LinearLayout>
-        </ScrollView>
+        </com.wxxr.mobile.stock.client.widget.NewScrollView>
     </com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView>
 
 </LinearLayout>

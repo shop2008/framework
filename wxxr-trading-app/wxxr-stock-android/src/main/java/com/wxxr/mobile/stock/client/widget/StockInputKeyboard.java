@@ -40,10 +40,10 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 	
 	private boolean showSPWheel;
 	private boolean showSNWheel;
-	//外面传进来
-	private String marketPrice;
+	//外面传进来，放大100倍的值
+	private String marketPrice; //涨跌幅计算
 	private int maxCountStock;
-	//需要传出去
+	//需要传出去，放大100倍的值
 	private String toOrderprice;
 	private String toCount;
 	
@@ -130,9 +130,7 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 //			push_out = AnimationUtils.loadAnimation(context, R.anim.push_out);
 
 		getWheelSign();//%号滚轮
-		
 		getWheelScale();//比例滚轮
-
 	}
 
 	public void findView() {
@@ -339,8 +337,8 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		String value = wv_middle.getCurrentItem() + "." + str_value;
 		try {
 			float p = (1 + sign * Float.parseFloat(value)/100) * Float.parseFloat(marketPrice);
-			toOrderprice = String.format("%.2f", p);
-			tv_stock_price.setText("("+toOrderprice+")");
+			toOrderprice = p+"";
+			tv_stock_price.setText("("+String.format("%.2f", p/100)+")");
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
 		} catch(NullPointerException e) {

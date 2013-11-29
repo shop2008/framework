@@ -20,7 +20,9 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -33,9 +35,10 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
-import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
 
 /**
  * 买入
@@ -46,10 +49,10 @@ import com.wxxr.mobile.stock.client.widget.IStockSelectedCallBack;
 @View(name = "BuyStockDetailPage", withToolbar = true, description="买入")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
-		IModelUpdater, IStockSelectedCallBack,ISelectionChangedListener {
+		IModelUpdater,ISelectionChangedListener {
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
-	
+	private boolean hasShow = false;
 	@Bean
 	String acctIdBean;
 	
@@ -80,6 +83,12 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
+	@Bean(type=BindingType.Service)
+	IInfoCenterManagementService infoCenterService;
+	
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
+	StockQuotationBean stockQuotationBean;
+	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="multiple", value="100.00")
@@ -95,7 +104,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding="${nameBean}${' '}${codeBean}")
 	String stock;
 	
-	@Field(valueKey = "text", binding="${orderPriceBean}")
+	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:''}", converter="stockLong2StringConvertor")
 	String price;
 	
 	@Field(valueKey = "text", binding="${amountBean}")
@@ -112,8 +121,6 @@ public abstract class BuyStockDetailPage extends PageBase implements
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
-		nameBean = null;
-		codeBean = null;
 		hide();
 		return null;
 	}
@@ -131,59 +138,27 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handlerRefreshClicked(InputEvent event) {
-		registerBean("orderPriceBean", marketPriceBean);
+		infoCenterService.getStockQuotation(codeBean, marketBean);
 		return null;
 	}
 	
 	@Command
+	String handleMarketBtnClick(InputEvent envent) {
+		registerBean("orderPriceBean", stockQuotationBean.getClose()*1.1 + "");
+		return null;
+	}
+	@Command
 	String priceTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
 			String key = (String) event.getProperty("changedText");
-			registerBean("orderPriceBean", key);
+			try {
+				String value = Float.parseFloat(key)*100 + "";
+				registerBean("orderPriceBean", value);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void stockSelected(String code, String name) {
-		log.debug("handlerStockClicked get String : "+code + " name : " + name);
-		registerBean("codeBean", code);
-		registerBean("nameBean", name);
-	}
-	
-	@OnCreate
-	void registerSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("stockSearchPage", this);
-	}
-	@OnCreate
-	protected void initStock() {
-		registerBean("acctIdBean", "11111");
-		registerBean("marketBean", "SH");
-//		registerBean("nameBean", "无限新锐");
-//		registerBean("codeBean", "600101");
-		registerBean("marketPriceBean", "156");
-		registerBean("amountBean", "");
-		registerBean("fundBean", "100000");
-		
-		acctIdBean = "11111";
-		marketBean = "SH";
-//		nameBean = "无限新锐";
-//		codeBean = "600101";
-		marketPriceBean = "156";
-		amountBean = "";
-		fundBean = "100000";
-		final Runnable[] tasks = new Runnable[1];
-		tasks[0] = new Runnable() {
-
-			@Override
-			public void run() {
-				registerBean("orderPriceBean", marketPriceBean);
-
-//				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
-			}
-		};
-		AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
-		
 	}
 	
 	@Override
@@ -192,8 +167,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		String[] stockInfos = (String[])impl.getSelected();
 		this.codeBean = stockInfos[0];
 		this.nameBean = stockInfos[1];
+		this.marketBean = stockInfos[2];
 		registerBean("codeBean", this.codeBean);
 		registerBean("nameBean", this.nameBean);
+		registerBean("marketBean", this.marketBean);
+		infoCenterService.getStockQuotation(codeBean, marketBean);
 	}
 
 
@@ -204,6 +182,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			Map temp = (Map) value;
 			String code = "";
 			String name = "";
+			String market = "";
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
 				if (tempt != null && "code".equals(key)) {
@@ -216,6 +195,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 						name = (String)tempt;
 					}
 					registerBean("nameBean", name);
+				} else if (tempt != null && "market".equals(key)) {
+					if(tempt instanceof String) {
+						market = (String)tempt;
+					}
+					registerBean("marketBean", market);
 				}
 			}
 		}
@@ -237,16 +221,73 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		return null;
 	}
 	
+	@OnCreate
+	void registerSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("stockSearchPage", this);
+	}
+	
+	@OnCreate
+	protected void initStock() {
+		registerBean("acctIdBean", "11111");
+//		registerBean("marketBean", "SH");
+//		registerBean("nameBean", "无限新锐");
+//		registerBean("codeBean", "600101");
+		registerBean("marketPriceBean", "156");
+		registerBean("amountBean", "");
+		registerBean("fundBean", "10000000");
+		
+		acctIdBean = "11111";
+//		marketBean = "SH";
+//		nameBean = "无限新锐";
+//		codeBean = "600101";
+		marketPriceBean = "156";
+		amountBean = "";
+		fundBean = "10000000";
+		final Runnable[] tasks = new Runnable[1];
+		tasks[0] = new Runnable() {
+
+			@Override
+			public void run() {
+//				registerBean("orderPriceBean", marketPriceBean);
+
+//				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
+			}
+		};
+		AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
+		
+	}
+	
 	@OnShow
 	void startStockSearch() {
-		if(StringUtils.isBlank(nameBean) && StringUtils.isBlank(codeBean)) {
+		if(hasShow) {
+			if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
+				hide();
+			} else {
+				
+			}
+			return;
+		}
+		if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
 			AppUtils.invokeLater(new Runnable() {
 				
 				@Override
 				public void run() {
 					getUIContext().getWorkbenchManager().getWorkbench().showPage("stockSearchPage", null, null);
+					hasShow = true;
 				}
 			}, 100, TimeUnit.MILLISECONDS);
 		}
+	}
+	
+	@OnUIDestroy
+	void destroyData() {
+		hasShow = false;
+		marketBean = null;
+		codeBean = null;
+	}
+	
+	@OnDestroy
+	void removeSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
 	}
 }
