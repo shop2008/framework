@@ -20,6 +20,7 @@ import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
@@ -137,6 +138,13 @@ public class InfoCenterManagementServiceImpl extends
 		stockQuotationbean = MockDataUtils.getStockQuotation(code, market); 
 			return stockQuotationbean;
 //		return null;
+	}
+
+	@Override
+	public BindableListWrapper<List<StockMinuteKBean>> getFiveDayMinuteline(
+			String code, String market) {
+		
+		return null;
 	}
 
 }

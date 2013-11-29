@@ -15,5 +15,5 @@ import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 public interface IStockInfoSyncService {
 	
 	List<StockBaseInfo> getStockInfos(IEntityFilter<StockBaseInfo> filter);
-
+	StockBaseInfo getStockBaseInfoByCode(String code);
 }
