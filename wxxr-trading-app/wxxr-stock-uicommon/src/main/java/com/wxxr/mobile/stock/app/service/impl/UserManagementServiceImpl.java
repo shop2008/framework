@@ -12,8 +12,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import android.R.bool;
-
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
@@ -46,7 +44,6 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
-import com.wxxr.mobile.stock.app.model.ResultBase;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
@@ -110,7 +107,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindableListWrapper<PullMessageBean> pullMessageBean;
 	private IReloadableEntityCache<Long, PullMessageBean> pullMessageBeanCache;
 
-	private IReloadableEntityCache<String, ResultBase> resultBaseCache=new GenericReloadableEntityCache<String, ResultBase, ResultBaseVO>("resultBase");
+	
+//	private BindableListWrapper<UserAtt>
+
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -422,7 +421,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	public AuthInfoBean getUserAuthInfo() {
-
+		
 		return null;
 	}
 
