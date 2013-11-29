@@ -40,7 +40,7 @@ public interface ITradingProtectedResource{
 	public List<GainVO> getGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
 	@Path("/getList")
-	@Produces({ "application/json; charset=utf-8" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
 	public List<TradingAccInfoVO> getTradingAccountList() throws Exception;
 	@GET
