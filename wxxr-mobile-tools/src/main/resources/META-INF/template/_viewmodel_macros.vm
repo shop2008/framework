@@ -188,6 +188,15 @@
     }
 #end
 
+#macro(onUICreate $model $methods)
+    @Override
+    public void onUICreate() {
+#foreach($meth in $methods) 
+        ${meth.name}();       
+#end
+    }
+#end
+
 
 #macro(onDataChanged $model $methods)
     @Override

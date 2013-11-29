@@ -15,5 +15,6 @@ public enum LifeCyclePhase {
 	OnDataChanged,
 	OnMenuShow,
 	OnMenuHide,
-	OnUIDestroy
+	OnUIDestroy,
+	OnUICreate
 }

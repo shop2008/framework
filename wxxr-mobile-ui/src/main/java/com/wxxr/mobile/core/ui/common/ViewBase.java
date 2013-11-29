@@ -506,6 +506,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		
 	}
 	
+	public void onUICreate() {
+		
+	}
+
+	
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doUnbinding(com.wxxr.mobile.core.ui.api.IBinding)

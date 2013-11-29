@@ -110,6 +110,10 @@ public abstract class BindableFragment extends Fragment {
 				((IBindableActivity)getActivity()).hideFragment(getViewId());
 			}
 		}, getBindingDescriptor(getViewId()));
+		
+		if(getBindingView() instanceof ViewBase){
+			((ViewBase)getBindingView()).onUICreate();
+		}		
 		return (View)this.androidViewBinding.getUIControl();
 	}
 

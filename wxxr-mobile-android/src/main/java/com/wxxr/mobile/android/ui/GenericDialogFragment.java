@@ -121,6 +121,9 @@ public class GenericDialogFragment extends DialogFragment {
 		         });
 		    }
 	    }
+		if(view instanceof ViewBase){
+			((ViewBase)view).onUICreate();
+		}
 	    return builder.create();
 	}
 	

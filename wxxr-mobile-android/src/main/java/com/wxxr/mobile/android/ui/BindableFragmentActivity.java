@@ -133,6 +133,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}else{
 			setContentView((View)this.androidViewBinding.getUIControl());
 		}
+		if(page instanceof ViewBase){
+			((ViewBase)page).onUICreate();
+		}
 		getNavigator().onPageCreate(page, this);
 		onContentViewCreated(savedInstanceState);
 		super.onCreate(savedInstanceState);

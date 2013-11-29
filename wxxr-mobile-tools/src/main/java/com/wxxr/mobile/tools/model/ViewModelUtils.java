@@ -43,6 +43,7 @@ import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnMenuHide;
 import com.wxxr.mobile.core.ui.annotation.OnMenuShow;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUICreate;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -355,6 +356,22 @@ public abstract class ViewModelUtils {
 		attrs.put("model", model);
 		attrs.put("methods", methods);
 		String javaStatement = context.getTemplateRenderer().renderMacro("onUIDestroy", attrs, null);
+		m.setJavaStatement(javaStatement);
+		return m;
+	}
+
+	public static MethodModel createOnUICreateMethod(ICodeGenerationContext context,ViewModelClass model, List<MethodModel> methods){
+		Types typeUtil = context.getProcessingEnvironment().getTypeUtils();
+		Elements elemUtil = context.getProcessingEnvironment().getElementUtils();
+		MethodModel m = new MethodModel();
+		m.setClassModel(model);
+		m.setMethodName("onUICreate");
+		m.setModifiers("public");
+		m.setReturnType("void");
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.put("model", model);
+		attrs.put("methods", methods);
+		String javaStatement = context.getTemplateRenderer().renderMacro("onUICreate", attrs, null);
 		m.setJavaStatement(javaStatement);
 		return m;
 	}
@@ -975,6 +992,8 @@ public abstract class ViewModelUtils {
 			m.setPhase(LifeCyclePhase.OnMenuHide);
 		}else if((elem.getAnnotation(OnUIDestroy.class) != null)&&(((m.getParameterTypes() == null))||(m.getParameterTypes().length == 0))){
 			m.setPhase(LifeCyclePhase.OnUIDestroy);
+		}else if((elem.getAnnotation(OnUICreate.class) != null)&&(((m.getParameterTypes() == null))||(m.getParameterTypes().length == 0))){
+			m.setPhase(LifeCyclePhase.OnUICreate);
 		}
 		model.addMethod(m);
 		processCommandAnnotation(model, elem, m);
