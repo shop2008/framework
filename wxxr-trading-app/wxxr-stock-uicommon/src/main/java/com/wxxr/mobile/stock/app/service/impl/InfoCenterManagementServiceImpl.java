@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -21,10 +22,12 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
-import com.wxxr.mobile.stock.app.mock.MockDataUtils;
+import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
@@ -48,13 +51,17 @@ public class InfoCenterManagementServiceImpl extends
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
+        addRequiredService(IEntityLoaderRegistry.class);
 
 	}
 
 	@Override
 	protected void startService() {
+	    
 		context.registerService(IInfoCenterManagementService.class, this);
-
+        IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
+        stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List>("StockQuotation");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockQuotation", new StockQuotationLoader());
 	}
 
 	@Override
@@ -82,18 +89,35 @@ public class InfoCenterManagementServiceImpl extends
 		return context.getService(IRestProxyService.class).getRestService(
 				restResouce);
 	}
-
+	//分钟线
 	@Override
 	public StockMinuteKBean getMinuteline(Map<String, String> params) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
+	//K线
 	@Override
 	public LineListBean getDayline(String code, String market) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//交易盘详细信息
+    private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
+	//查询股票行情
+	@Override
+    public StockQuotationBean getStockQuotation(String code, String market) {
+	    String mc=market+code;
+	    if (stockQuotationBean_cache.getEntity(market+code)==null){
+	        StockQuotationBean b=new StockQuotationBean();
+            stockQuotationBean_cache.putEntity(mc,b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("code", code);
+        params.put("market", market);
+
+        this.stockQuotationBean_cache.forceReload(params,false);
+        return stockQuotationBean_cache.getEntity(mc);
+       
+    }
 //=====================beans =====================
 	private StockTaxisListBean stockList = new StockTaxisListBean();
 	private QuotationListBean quotationListBean = new QuotationListBean();
@@ -132,13 +156,8 @@ public class InfoCenterManagementServiceImpl extends
 		}
 		return quotationListBean;
 	}
-
-	@Override
-	public StockQuotationBean getStockQuotation(String code, String market) {
-		stockQuotationbean = MockDataUtils.getStockQuotation(code, market); 
-			return stockQuotationbean;
-//		return null;
-	}
+	
+	
 
 	@Override
 	public BindableListWrapper<List<StockMinuteKBean>> getFiveDayMinuteline(

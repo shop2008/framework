@@ -9,12 +9,14 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
@@ -30,7 +32,67 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * 
  */
 public class ConverterUtils {
-
+    public static void updatefromVOtoBean(StockQuotationBean b,StockQuotationVO vo){
+        b.setCode(vo.getCode());
+        b.setMarket(vo.getMarket());
+        b.setDatetime(vo.getDatetime());
+        b.setClose(vo.getClose());
+        b.setOpen(vo.getOpen());
+        b.setHigh(vo.getHigh());
+        b.setLow(vo.getLow());
+        b.setNewprice(vo.getClose());
+        b.setAverageprice(vo.getAverageprice());
+        b.setSecuamount(vo.getSecuamount());
+        b.setSecuvolume(vo.getSecuvolume());
+        b.setLb(vo.getLb());
+        b.setProfitrate(vo.getProfitrate());
+        b.setHandrate(vo.getHandrate());
+        b.setRisefallrate(vo.getRisefallrate());
+        b.setMarketvalue(vo.getMarketvalue());
+        b.setCapital(vo.getCapital());
+        
+        b.setBuyprice1(vo.getBuyprice1());
+        b.setBuyprice2(vo.getBuyprice2());
+        b.setBuyprice3(vo.getBuyprice3());
+        b.setBuyprice4(vo.getBuyprice4());
+        b.setBuyprice5(vo.getBuyprice5());
+       
+        b.setBuyvolume1(vo.getBuyvolume1());
+        b.setBuyvolume2(vo.getBuyvolume2());
+        b.setBuyvolume3(vo.getBuyvolume3());
+        b.setBuyvolume4(vo.getBuyvolume4());
+        b.setBuyvolume5(vo.getBuyvolume5());
+        
+        b.setSellprice1(vo.getSellprice1());
+        b.setSellprice2(vo.getSellprice2());
+        b.setSellprice3(vo.getSellprice3());
+        b.setSellprice4(vo.getSellprice4());
+        b.setSellprice5(vo.getSellprice5());
+        
+        b.setSellvolume1(vo.getSellvolume1());
+        b.setSellvolume2(vo.getSellvolume2());
+        b.setSellvolume3(vo.getSellvolume3());
+        b.setSellvolume4(vo.getSellvolume4());
+        b.setSellvolume5(vo.getSellvolume5());
+        
+        b.setPpjs(vo.getPpjs());
+        b.setSzjs(vo.getSzjs());
+        b.setXdjs(vo.getXdjs());
+        
+        b.setSellsum(vo.getSellsum());
+        b.setBuysum(vo.getBuysum());
+        b.setStatus(vo.getStatus());
+        b.setChange(vo.getChange());
+    }
+    public static StockQuotationBean fromVO(StockQuotationVO vo){
+        if (vo == null) {
+            return null;
+        }
+        StockQuotationBean b=new StockQuotationBean();
+        updatefromVOtoBean(b,vo);
+        return b;
+    } 
+    
     public static TradingAccountBean fromVO(TradingAccountVO vo) {
         if (vo == null) {
             return null;
