@@ -106,7 +106,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	
 	
-	
 	@Field(valueKey="visible",visibleWhen="${currentViewId==0}")
 	boolean showChallengeTrading;
 	
@@ -223,12 +222,13 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
     }
 	
 	private void updataRate1(){
+		//金钱以分为单位:
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && getDeposit1()>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", (changeMoney*10000 * getDeposit1()))+"元";
-			djMoney = (changeMoney*10000 * getDeposit1());
+			zhfzf = String.format("%.2f", ((changeMoney * 10000 * 100) * costRate))+"元";
+			djDeposit = String.format("%.0f", ((changeMoney* 10000 * 100)* getDeposit1()))+"元";
+			djMoney = ((changeMoney*10000 * 100) * getDeposit1());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}		
@@ -238,9 +238,9 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && getDeposit2()>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", ((changeMoney*10000) * getDeposit2()))+"元";
-			djMoney = ((changeMoney*10000) * getDeposit2());
+			zhfzf = String.format("%.2f", ((changeMoney * 10000 * 100) * costRate))+"元";
+			djDeposit = String.format("%.0f", ((changeMoney*10000 * 100) * getDeposit2()))+"元";
+			djMoney = ((changeMoney*10000 * 100) * getDeposit2());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -249,9 +249,9 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", (changeMoney*10000.0))+"元";
-			djMoney = changeMoney*10000;
+			zhfzf = String.format("%.2f", ((changeMoney*10000 * 100) * costRate))+"元";
+			djDeposit = String.format("%.0f", (changeMoney*10000 * 100))+"元";
+			djMoney = changeMoney*10000*100;
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -347,7 +347,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Command
 	String submitDataClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			long money = changeMoney * 10000;
+			long money = changeMoney * 10000 * 100;
 			float _rate = 0.0f;
 			switch(currentRadioBtnId){
 			case 1:
