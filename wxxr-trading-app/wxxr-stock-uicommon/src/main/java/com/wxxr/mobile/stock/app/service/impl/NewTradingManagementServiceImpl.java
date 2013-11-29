@@ -31,8 +31,14 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
+import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
+import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
+import com.wxxr.mobile.stock.trade.command.QuickBuyStockCommand;
+import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
+import com.wxxr.mobile.stock.trade.command.SellStockCommand;
+import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
@@ -132,12 +138,62 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     
     @Override
     public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        
+        context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("createTradingAccount fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to buyStock, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("buyStock successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
     }
 
     @Override
     public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        
+        context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("sellStock fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed sellStock, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Create sellStock successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
     }
     
     
@@ -152,7 +208,32 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     }
     @Override
     public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
-        
+        context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("quickBuy fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed quickBuy, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("quickBuy successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
     }
     
 
@@ -231,9 +312,13 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
-        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
+        
+        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
 
     }
 

@@ -3,6 +3,7 @@ package com.wxxr.mobile.stock.trade.entityloader;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -12,6 +13,8 @@ import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 
 public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAccInfoBean,TradingAccInfoVO>{
+    
+    @NetworkConstraint(allowConnectionTypes={})
     public class GetTradingAccInfoCommand implements ICommand<List<TradingAccInfoVO>> {
         public final static String Name="GetTradingAccInfoCommand";
         @Override

@@ -444,7 +444,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		return ret;
 	}
 
-	@Override
+
 	public StockBaseInfo getStockBaseInfoByCode(String code) {
 		if (StringUtils.isBlank(code)) {
 			

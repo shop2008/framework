@@ -25,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
@@ -54,24 +55,28 @@ public abstract class TradingMainView extends ViewBase{
 	/**获取T日数据*/
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
-	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getHomePageTradingAccountList()}")
-	TradingAccountListBean tradingAccount;
+//	
+//	@Bean(type=BindingType.Pojo,express="${tradingService.getHomePageTradingAccountList()}")
+//	TradingAccountListBean tradingAccount;
 
+	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}")
+	BindableListWrapper t0TradingAccountList;
+	
 //	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
-	@Field(valueKey="options",binding="${tradingService.getT0TradingAccountList().getData()}")
+	@Field(valueKey="options",binding="${t0TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT;
 	
-	@Field(valueKey="visible",visibleWhen="${tradingService.getT0TradingAccountList().getData()!=null&&tradingService.getT0TradingAccountList().getData().size()>0?true:false}")
+	@Field(valueKey="visible",visibleWhen="${t0TradingAccountList.getData()!=null&&t0TradingAccountList.getData().size()>0?true:false}")
 	boolean isVisibleT;
 	/**获取T+1日数据*/
-
+	@Bean(type=BindingType.Pojo,express="${tradingService.getT1TradingAccountList()}")
+    BindableListWrapper t1TradingAccountList;
 //	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
-	   @Field(valueKey="options",binding="${tradingService.getT1TradingAccountList().getData()}")
+	   @Field(valueKey="options",binding="${t1TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT1;
-	
+	   
 //	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
-	@Field(valueKey="visible",visibleWhen="${tradingService.getT1TradingAccountList().getData()!=null&&tradingService.getT1TradingAccountList().getData().size()>0?true:false}")
+	@Field(valueKey="visible",visibleWhen="${t1TradingAccountList.getData()!=null&&t1TradingAccountList.getData().size()>0?true:false}")
 	boolean isVisibleT1;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
@@ -124,7 +129,7 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			Long acctId = 0L;
 			if (event.getProperty("position") instanceof Integer) {
-				List<TradingAccInfoBean> trading = tradingService.getT0TradingAccountList().getData();
+				List<TradingAccInfoBean> trading = t0TradingAccountList.getData();
 				int position = (Integer) event.getProperty("position");
 				if (trading != null && trading.size() > 0) {
 					TradingAccInfoBean bean = trading.get(position);
@@ -150,7 +155,7 @@ public abstract class TradingMainView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
-				List<TradingAccInfoBean> tradingList = tradingService.getT1TradingAccountList().getData();
+				List<TradingAccInfoBean> tradingList = t1TradingAccountList.getData();
 				if(tradingList!=null && tradingList.size()>0){
 					TradingAccInfoBean tempTradingA = tradingList.get(position);
 					this.type = tempTradingA.getVirtual()?0:1;
