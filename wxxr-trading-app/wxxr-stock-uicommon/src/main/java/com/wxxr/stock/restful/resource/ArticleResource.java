@@ -16,12 +16,12 @@ public interface ArticleResource  {
 
 	@POST
     @Path("/getnewarticle")
-	@Produces({"application/json"})
+	@Produces({"application/json;charset=utf-8"})
 	@Consumes({ "application/json"})
     public List<ArticleVO> getNewArticle(NewsQueryBO query) throws Exception ;
 	@GET
     @Path("/getPullMessage")
-    @Produces({ "application/json"})
+    @Produces({ "application/json;charset=utf-8"})
 	@Consumes
 	public List<PullMessageVO> getPullMessage(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 }
