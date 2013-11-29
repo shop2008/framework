@@ -8,12 +8,73 @@
  */
 package com.wxxr.mobile.core.util;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+
+import com.wxxr.mobile.core.log.api.Trace;
 
 
 public class LRUList<E> implements Iterable<E>{
-    
+	private static final Trace log = Trace.register(LRUList.class);
+	private static ExpirationProcessor exProcessor;
+	
+	private static class ExpirationProcessor extends Thread {
+        
+        private List<WeakReference<LRUList<?>>> refs ;
+                
+        public ExpirationProcessor(){
+            super("LRU Expiration Processor");
+            super.setDaemon(true);
+            refs = Collections.synchronizedList(new ArrayList<WeakReference<LRUList<?>>>());
+        }
+        
+        public void run(){
+            while(true){
+                try {
+                    Thread.sleep(10*1000);		// check for every 10 seconds
+                } catch (InterruptedException e) {
+                }
+                try {
+	                if(refs.isEmpty()){
+	                	continue;
+	                }
+	                @SuppressWarnings("unchecked")
+					WeakReference<LRUList<?>>[] vals = refs.toArray(new WeakReference[refs.size()]);
+	                for(WeakReference<LRUList<?>> ref: vals) {
+	                    LRUList<?> list = ref.get();
+	                    if(list != null){
+	                    	list.checkTimeout();
+	                    }else{
+	                    	refs.remove(ref);
+	                    }
+					}
+                }catch(Throwable t){
+                	log.error("Caught throwable inside expiration processor of LRUMap", t);
+                }
+            }
+        }
+        
+        public void addLRUList(LRUList<?> list) {
+        	WeakReference<LRUList<?>> ref = new WeakReference<LRUList<?>>(list);
+        	this.refs.add(ref);
+        }
+    }
+
+	/**
+	 * 
+	 */
+	protected static synchronized void startExpireProcessor() {
+		if(exProcessor == null){
+			exProcessor = new ExpirationProcessor();
+			exProcessor.start();
+		}
+	}
+
+
 	private static class Element<E> {
 		private E object;
 		private long timestamp;
@@ -39,7 +100,7 @@ public class LRUList<E> implements Iterable<E>{
 	
     
     private LinkedList<Element<E>> queue;
-    private long timeout;
+    private int timeoutInSeconds;
     
     private int size;
     
@@ -50,12 +111,12 @@ public class LRUList<E> implements Iterable<E>{
         }
         this.size = size;   
         queue = new LinkedList<Element<E>>();   
+        startExpireProcessor();
+        exProcessor.addLRUList(this);
     }
     
     public LRUList() {
-        super();
-        this.size = 0;   
-        queue = new LinkedList<Element<E>>();   
+        this(0);   
     }
 
 
@@ -227,33 +288,20 @@ public class LRUList<E> implements Iterable<E>{
 		return size;
 	}
 	
-	private void checkTimeout(){
-		if(timeout == 0L){
+	private synchronized void checkTimeout(){
+		if(timeoutInSeconds == 0L){
 			return;
 		}
 		Element<E> elem = null;
 		while(!queue.isEmpty()){
 			elem = queue.removeFirst();
-			if((elem != null)&&(System.currentTimeMillis() - elem.timestamp)<timeout){
+			if((elem != null)&&(System.currentTimeMillis() - elem.timestamp)<(timeoutInSeconds*1000L)){
 				queue.addFirst(elem);
 				break;
 			}
 		}
 	}
 
-	/**
-	 * @return the timeout
-	 */
-	public long getTimeout() {
-		return timeout;
-	}
-
-	/**
-	 * @param timeout the timeout to set
-	 */
-	public void setTimeout(long timeout) {
-		this.timeout = timeout;
-	}
 
 	public Iterator<E> iterator() {
 		return new Iterator<E>() {
