@@ -9,17 +9,19 @@ import com.wxxr.mobile.sync.client.impl.MTreeSyncConnector;
 
 /**
  * @author wangxuyang
- *
+ * 
  */
 public class SyncConnector extends MTreeSyncConnector<IStockAppContext> {
 
 	@Override
 	protected String getServerUrl() {
-		return context.getService(IURLLocatorManagementService.class).getServerURL();
+		return context.getService(IURLLocatorManagementService.class)
+				.getServerURL();
 	}
+
 	@Override
-	protected synchronized void addRequiredService(Class<?> serviceInterface) {
-		super.addRequiredService(serviceInterface);
+	protected void initServiceDependency() {
+		super.initServiceDependency();
 		addRequiredService(IURLLocatorManagementService.class);
 	}
 }
