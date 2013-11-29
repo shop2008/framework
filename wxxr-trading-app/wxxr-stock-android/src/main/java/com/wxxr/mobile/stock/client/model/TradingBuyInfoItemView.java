@@ -21,7 +21,8 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	final Trace log = Trace.register(TradingBuyInfoItemView.class);
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f")
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
