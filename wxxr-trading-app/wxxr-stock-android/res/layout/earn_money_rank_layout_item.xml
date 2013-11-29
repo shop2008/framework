@@ -32,22 +32,17 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             bind:field="isClose"
-             android:enabled="false"
+            android:enabled="false"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/attrows_style" />
     </LinearLayout>
-       <ImageView
+    <ImageView
         android:id="@+id/imageView2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         bind:field="imageUrl"
         bind:on_Click="earnRankItemClick"
-        android:visibility="visible"/> 
-	<View android:layout_width="fill_parent"
-	    android:layout_height="0.5dp"
-	    android:background="#1f1f1f"/>
-	<View android:layout_width="fill_parent"
-	    android:layout_height="0.5dp"
-	    android:background="#403f3f"/>
+        android:visibility="gone"/> 
+	<include layout="@layout/hlines"/>
 </LinearLayout>
