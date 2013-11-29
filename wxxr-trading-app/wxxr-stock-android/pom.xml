@@ -14,7 +14,7 @@
         <platform.version>2.2.1</platform.version>
         <wxxr.tools.version>1.0.0</wxxr.tools.version>
         <framework.version>1.0.0</framework.version>
-        <android.sdk.path>/Users/neillin/android-sdks</android.sdk.path>
+        <android.sdk.path>D:/tool</android.sdk.path>
     </properties>
 
 	<dependencies>
@@ -88,6 +88,11 @@
              <dependency>
               <groupId>com.wxxr.mobile</groupId>
               <artifactId>wxxr-stock-uicommon</artifactId>
+                <version>${framework.version}</version>
+            </dependency>
+             <dependency>
+              <groupId>com.wxxr.mobile</groupId>
+              <artifactId>wxxr-mobile-synclient</artifactId>
                 <version>${framework.version}</version>
             </dependency>
             <dependency>
