@@ -32,12 +32,15 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	@Field(valueKey="text",binding="${earnRank!=null?earnRank.title:'--'}")
 	String text;
 	
-	@Field(valueKey="imageURI",binding="${earnRank!=null?earnRank.imgUrl:null}")
+	@Field(valueKey="imageURI",binding="${earnRank!=null?earnRank.imgUrl:null}",visibleWhen="${isVisible == 0}")
 	String imageUrl;
 	
 	int postion = 0;
 	
-	@Field(valueKey="enabled")
+	@Bean
+	int isVisible = -1;
+	
+	@Field(valueKey="enabled",enableWhen="${isVisible == 0}")
 	boolean isClose;
 	
 	@Override
@@ -45,11 +48,19 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 		if(value instanceof EarnRankItemBean){
 			registerBean("earnRank", value);
 		}
+		registerBean("isVisible", this.isVisible);
 	}
 	
 	@Command(description="点击文本事件")
 	String showItemView(InputEvent event){
-
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			if(this.isVisible == -1){
+				this.isVisible = 0;
+			}else{
+				this.isVisible = -1;
+			}
+			registerBean("isVisible", this.isVisible);
+		}
 		return null;
 	}
 	
