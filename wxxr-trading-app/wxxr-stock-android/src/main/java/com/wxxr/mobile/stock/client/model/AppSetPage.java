@@ -21,10 +21,10 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked", binding="${user!=null?user.messagePushSettingOn==true?true:false:false}",visibleWhen="${user!=null?user.login==true?true:false:false}")
+	@Field(valueKey="checked", binding="${user!=null?user.messagePushSettingOn==true?true:false:false}",visibleWhen="${user!=null?true:false}")
 	boolean pushEnabled;
 	
-	@Field(valueKey="visible", binding="${user!=null?user.login==true?false:true:true}")
+	@Field(valueKey="visible", binding="${user!=null?false:true}")
 	boolean notLoginText;
 	
 	@Bean(type=BindingType.Service)
