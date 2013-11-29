@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +52,10 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     //交易盘详细信息
     private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
 
-    
-    //
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
 
-    
+    //获取我的T日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
         BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
@@ -67,9 +66,10 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
                 return false;
             }
             
-        }, null);
+        }, new  TradingAccInfoBeanComparator());
         return t0s;
     }
+    //获取我的T+1日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList(){
         BindableListWrapper<TradingAccInfoBean> t1s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
@@ -80,10 +80,20 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
                 return false;
             }
             
-        }, null);
+        }, new TradingAccInfoBeanComparator());
         return t1s;
     }
-    
+    //根据交易盘创建时间排序
+    class TradingAccInfoBeanComparator implements Comparator<TradingAccInfoBean> {
+        
+        @Override
+        public int compare(TradingAccInfoBean b1, TradingAccInfoBean b2) {
+            if (b1!=null && b2!=null){
+                return b1.getCreateDate()>b2.getCreateDate()?-1:1;
+            }
+            return 0;
+        }
+    }
     //delete
     @Override
     public TradingAccountListBean getHomePageTradingAccountList() throws StockAppBizException {
@@ -328,62 +338,50 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     }
     @Override
     public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit) {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public void reloadEarnRank(int start, int limit, boolean wait4Finish) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public BindableListWrapper<MegagameRankBean> getTMegagameRank() throws StockAppBizException {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public void reloadTMegagameRank(boolean wait4Finish) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public BindableListWrapper<MegagameRankBean> getT1MegagameRank() throws StockAppBizException {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public void reloadT1MegagameRank(boolean wait4Finish) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public BindableListWrapper<RegularTicketBean> getRegularTicketRank() throws StockAppBizException {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public void reloadRegularTicketRank(boolean wait4Finish) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public BindableListWrapper<WeekRankBean> getWeekRank() throws StockAppBizException {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public void reloadWeekRank(boolean wait4Finish) {
-        // TODO Auto-generated method stub
         
     }
     @Override
     public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public BindableListWrapper<GainBean> getGain(int start, int limit) {
-        // TODO Auto-generated method stub
         return null;
     }
     
