@@ -164,7 +164,7 @@ public interface StockUserResource {
 
 	@GET
 	@Path("/getUser")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public UserVO getUser() throws Exception;
 
