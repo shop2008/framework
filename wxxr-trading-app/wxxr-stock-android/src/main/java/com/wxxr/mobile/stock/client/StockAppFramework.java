@@ -39,10 +39,10 @@ import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NewArticleManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.SyncConnector;
 import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
-import com.wxxr.mobile.stock.app.sync.impl.MTreeSyncConnector;
 import com.wxxr.mobile.stock.client.mock.MockArticleManagementService;
 import com.wxxr.mobile.stock.client.mock.MockInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
@@ -115,7 +115,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		
 		// register service
 		registerKernelModule(new DBServiceImpl());
-		registerKernelModule(new MTreeSyncConnector());
+		registerKernelModule(new SyncConnector());
 		registerKernelModule(new StockInfoSyncServiceImpl());
 		registerKernelModule(new NetworkCheckServiceImpl());
 		registerKernelModule(new URLLocatorManagementServiceImpl());

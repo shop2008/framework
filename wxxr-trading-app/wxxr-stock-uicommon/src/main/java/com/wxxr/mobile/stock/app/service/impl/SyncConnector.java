@@ -1,0 +1,26 @@
+/**
+ * 
+ */
+package com.wxxr.mobile.stock.app.service.impl;
+
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.service.IURLLocatorManagementService;
+import com.wxxr.mobile.sync.client.impl.MTreeSyncConnector;
+
+/**
+ * @author wangxuyang
+ *
+ */
+public class SyncConnector extends MTreeSyncConnector<IStockAppContext> {
+
+	@Override
+	protected String getServerUrl() {
+		return context.getService(IURLLocatorManagementService.class).getServerURL();
+	}
+	@Override
+	protected synchronized void addRequiredService(Class<?> serviceInterface) {
+		super.addRequiredService(serviceInterface);
+		addRequiredService(IURLLocatorManagementService.class);
+	}
+}
