@@ -40,6 +40,7 @@ import com.wxxr.mobile.core.ui.api.IUIExceptionHandler;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
@@ -502,14 +503,31 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		
 	}
 	
-	public void onUIDestroy() {
-		
+	public final void onUIDestroy() {
+		onContentViewDestroy();
 	}
 	
-	public void onUICreate() {
+	public final void onUICreate() {
+		resetViewGroups();
+		onContentViewCreated();
+	}
+	
+	protected void onContentViewDestroy(){
 		
 	}
 
+	protected void onContentViewCreated(){
+		
+	}
+	
+	protected void resetViewGroups(){
+		List<IViewGroup> vgs = getChildren(IViewGroup.class);
+		if((vgs != null)&&(vgs.size() > 0)){
+			for (IViewGroup vg : vgs) {
+				vg.resetViewStack();
+			}
+		}
+	}
 	
 
 	/* (non-Javadoc)
