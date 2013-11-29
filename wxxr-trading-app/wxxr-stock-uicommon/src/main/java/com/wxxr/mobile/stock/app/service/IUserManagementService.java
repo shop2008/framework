@@ -66,9 +66,10 @@ public interface IUserManagementService {
 	 * 修改密码
 	 * @param oldPwd - 旧密码
 	 * @param newPwd - 新密码
+	 * @param newPwd2 重复新密码
 	 * @throws StockAppBizException
 	 */
-	void updatePassword(String oldPwd,String newPwd) throws StockAppBizException;
+	void updatePassword(String oldPwd,String newPwd,String newPwd2) throws StockAppBizException;
 	/**
 	 * 检查用户是否登陆，如果用户未登录则会弹出登陆框
 	 * @return

@@ -12,10 +12,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import android.R.bool;
+
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
@@ -43,14 +46,16 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
+import com.wxxr.mobile.stock.app.model.ResultBase;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
+import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
-import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
@@ -105,11 +110,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindableListWrapper<PullMessageBean> pullMessageBean;
 	private IReloadableEntityCache<Long, PullMessageBean> pullMessageBeanCache;
 
+	private IReloadableEntityCache<String, ResultBase> resultBaseCache=new GenericReloadableEntityCache<String, ResultBase, ResultBaseVO>("resultBase");
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
+		addRequiredService(ICommandExecutor.class);
 	}
 
 	@Override
@@ -118,6 +125,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
+		context.getService(ICommandExecutor.class).registerCommandHandler("UpPwdHandler", new UpPwdHandler());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		
@@ -312,47 +320,21 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public void updatePassword(final String oldPwd, final String newPwd)
-			throws StockAppBizException {
-		Future<StockAppBizException> future = context.getExecutor().submit(
-				new Callable<StockAppBizException>() {
-					@Override
-					public StockAppBizException call() throws Exception {
-						try {
-							UpdatePwdVO vo = new UpdatePwdVO();
-							vo.setOldPwd(oldPwd);
-							vo.setPassword(newPwd);
-							ResultBaseVO ret = context
-									.getService(IRestProxyService.class)
-									.getRestService(StockUserResource.class)
-									.updatePwd(vo);
-							if (ret != null && ret.getResulttype() == 0) {
-								if (ret.getResulttype() != 0) {
-									return new StockAppBizException(ret
-											.getResultInfo());
-								}
-								return null;
-							}
-							return new StockAppBizException("更新失败");
-						} catch (RestBizException e) {
-							return new StockAppBizException("更新失败");
-						}
-					}
-				});
-		if (future != null) {
-			try {
-				StockAppBizException e = future.get(1, TimeUnit.SECONDS);
-				if (e != null) {
-					if (log.isDebugEnabled()) {
-						log.debug("Register error", e);
-					}
-					throw e;
-				}
-			} catch (Exception e) {
-				throw new StockAppBizException("网络连接超时，请稍后再试");
+	public  void updatePassword(String oldPwd,String newPwd,String newPwd2) throws StockAppBizException {
+		
+		UpPwdCommand cmd=new UpPwdCommand();
+		cmd.setOldPwd(oldPwd);
+		cmd.setNewPwd(newPwd);
+		cmd.setNewPwd2(newPwd2);
+		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+		try {
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
 			}
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
 		}
-
 	}
 
 	@Override
@@ -742,7 +724,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		Map<String, Object> params=new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		pullMessageBeanCache.forceReload(params, false);
+		pullMessageBeanCache.doReloadIfNeccessay(params);
 		return pullMessageBean;
 	}
 
