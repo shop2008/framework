@@ -39,7 +39,7 @@ public interface StockUserResource {
 	 */
 	@GET
 	@Path("/regUser")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public SimpleResultVo register(@QueryParam("phone") String phoneNum)
 			throws RestBizException;
@@ -54,7 +54,7 @@ public interface StockUserResource {
 	 */
 	@GET
 	@Path("/resetPass")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public Response resetPassword(@QueryParam("phone") String phoneNum)
 			throws RestBizException;
@@ -67,7 +67,7 @@ public interface StockUserResource {
 	 */
 	@GET
 	@Path("/bindApp")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public Response bindApp() throws RestBizException;
 
@@ -79,7 +79,7 @@ public interface StockUserResource {
 	 */
 	@GET
 	@Path("/unbindApp")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public Response unbindApp() throws RestBizException;
 
@@ -91,74 +91,74 @@ public interface StockUserResource {
 	 */
 	@GET
 	@Path("/isBindApp")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public SimpleResultVo isBindApp() throws RestBizException;
 
 	@POST
 	@Path("/regist")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public Response regist(RegistVO query) throws RestBizException;
 
 	@GET
 	@Path("/info")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public UserBaseInfoVO info() throws RestBizException;
 
 	@POST
 	@Path("/updatePwd")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException;
 
 	@GET
 	@Path("/getuserpermis")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public UserPermisVO getUserPermis() throws RestBizException;
 
 	@POST
 	@Path("/bindmobile")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
 
 	@POST
 	@Path("/changebindmobile")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo)
 			throws RestBizException;
 
 	@POST
 	@Path("/verify")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO verifyUser(VerifyVO vo) throws RestBizException;
 
 	@GET
 	@Path("/token")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO token() throws RestBizException;
 
 	@POST
 	@Path("/pollAndPushToken")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException;
 
 	@GET
 	@Path("/getmobile")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public UserBaseInfoVO getMobile() throws RestBizException;
 
 	@POST
 	@Path("/updateNickName")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO updateNickName(UserParamVO vo);
 
@@ -170,25 +170,25 @@ public interface StockUserResource {
 
 	@GET
 	@Path("/getActivityUser")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ActivityUserVo getActivityUser() throws Exception;
 
 	@POST
 	@Path("/userAttrIdentify")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO userAttributeIdentify(UserAuthenticaVO vo);
 
 	@POST
 	@Path("/updateAttrIdentify")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO updateAttributeIdentify(UserAuthenticaVO vo);
 
 	@GET
 	@Path("/getUserAttributes")
-	@Produces({ "application/json" })
+	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public List<UserAttributeVO> getUserAttributes() throws Exception;
 }

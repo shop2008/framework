@@ -20,6 +20,6 @@ import com.wxxr.stock.notification.ejb.api.MessageVO;
 public interface IMessageRemindResource {
 	@POST
 	@Path("/findById")
-	@Produces( { "application/json" })
+	@Produces( { "application/json;charset=utf-8" })
 	public List<MessageVO> findById(MessageVO vo) throws Exception ;
 }
