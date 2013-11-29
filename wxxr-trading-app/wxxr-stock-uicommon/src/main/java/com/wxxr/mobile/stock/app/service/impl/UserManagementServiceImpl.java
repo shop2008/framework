@@ -125,7 +125,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
-		context.getService(ICommandExecutor.class).registerCommandHandler("UpPwdHandler", new UpPwdHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		
