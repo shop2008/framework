@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
@@ -73,7 +74,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f")
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
@@ -215,7 +217,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Command(navigations = { @Navigation(on = "BuyStockDetailPage", showPage = "BuyStockDetailPage") })
 	CommandResult handleItemClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
-			CommandResult resutl = new CommandResult();
+			CommandResult result = new CommandResult();
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			if (event.getProperty("position") instanceof Integer) {
@@ -226,13 +228,16 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					StockTradingOrderBean bean = orders.get(position);
 					String code = bean.getStockCode();
 					String name = bean.getStockName();
+					String market = bean.getMarketCode();
 					map.put("code", code);
 					map.put("name", name);
+					map.put("market", market);
+					map.put("acctId", this.acctId);
 				}
 			}
-			resutl.setResult("BuyStockDetailPage");
-			resutl.setPayload(map);
-			return resutl;
+			result.setResult("BuyStockDetailPage");
+			result.setPayload(map);
+			return result;
 		}
 		return null;
 	}
@@ -243,9 +248,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "BuyStockDetailPage") })
-	String handleBuyBtnClick(InputEvent event) {
-		return "";
+	@Command(navigations = { @Navigation(on = "BuyStockDetailPage", showPage = "BuyStockDetailPage") })
+	CommandResult handleBuyBtnClick(InputEvent event) {
+		CommandResult result = new CommandResult();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("acctId", this.acctId);
+		result.setResult("BuyStockDetailPage");
+		result.setPayload(map);
+		return result;
 	}
 
 	@Override

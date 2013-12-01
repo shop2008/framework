@@ -187,6 +187,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			String code = "";
 			String name = "";
 			String market = "";
+			String acctId = "";
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
 				if (tempt != null && "code".equals(key)) {
@@ -204,6 +205,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 						market = (String)tempt;
 					}
 					registerBean("marketBean", market);
+				} else if (tempt != null && "acctId".equals(key)) {
+					if(tempt instanceof String) {
+						acctId = (String)tempt;
+					}
+					registerBean("acctIdBean", acctId);
 				}
 			}
 		}
@@ -229,7 +235,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@OnCreate
 	protected void initStock() {
-		registerBean("acctIdBean", "11111");
+//		registerBean("acctIdBean", "11111");
 //		registerBean("marketBean", "SH");
 //		registerBean("nameBean", "无限新锐");
 //		registerBean("codeBean", "600101");
@@ -237,7 +243,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		registerBean("amountBean", "");
 		registerBean("fundBean", "10000000");
 		
-		acctIdBean = "11111";
+//		acctIdBean = "11111";
 //		marketBean = "SH";
 //		nameBean = "无限新锐";
 //		codeBean = "600101";
