@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         bind:field="earnRankList"
         bind:itemViewId="earnRankListItemView"
+        bind:on_ItemClick="handleItemClick"
         style="@style/mListView">
     </ListView>
 

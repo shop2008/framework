@@ -28,7 +28,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             bind:field="tMegaBtn"
-            bind:on_Click="handleTMegaClick" />
+            bind:on_Click="reloadTRank" />
 
         <RadioButton
             android:id="@+id/textView2"
@@ -45,7 +45,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             bind:field="t1MegaBtn"
-            bind:on_Click="handleTMega1Click" />
+            bind:on_Click="reloadT1Rank" />
 
         <RadioButton
             android:id="@+id/textView3"
@@ -62,7 +62,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             bind:field="weekBtn"
-            bind:on_Click="handleWeekClick" />
+            bind:on_Click="reloadWeekRank" />
 
         <RadioButton
             android:id="@+id/textView4"
@@ -79,7 +79,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             bind:field="regularTicketBtn"
-            bind:on_Click="handleRegularTicketClick" />
+            bind:on_Click="reloadRegularTicketRank" />
     </RadioGroup>
 
     <FrameLayout
@@ -94,8 +94,8 @@
             android:visibility="visible"
             bind:field="ChampionShip"
             bind:itemViewId="ChampionShipItemView"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh"
-            bind:on_TopRefresh="handleTMegaTopRefresh" >
+            bind:on_BottomRefresh="reloadTRank"
+            bind:on_TopRefresh="reloadTRank" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
@@ -106,8 +106,8 @@
             android:visibility="invisible"
             bind:field="ChampionT1Ship"
             bind:itemViewId="ChampionShipItemView"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh"
-            bind:on_TopRefresh="handleTMega1TopRefresh" >
+            bind:on_BottomRefresh="reloadT1Rank"
+            bind:on_TopRefresh="reloadT1Rank" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
         <LinearLayout
@@ -133,8 +133,8 @@
                 android:visibility="invisible"
                 bind:field="ChampionWeekShip"
                 bind:itemViewId="ChampionWeekShipItemView"
-                bind:on_BottomRefresh="handleTMegaBottomRefresh"
-                bind:on_TopRefresh="handleWeekTopRefresh" >
+                bind:on_BottomRefresh="reloadWeekRank"
+                bind:on_TopRefresh="reloadWeekRank" >
             </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
         </LinearLayout>
 
@@ -146,8 +146,8 @@
             android:visibility="invisible"
             bind:field="ChampionRegularShip"
             bind:itemViewId="ChampionRegularShipItemView"
-            bind:on_BottomRefresh="handleTMegaBottomRefresh"
-            bind:on_TopRefresh="handleRegularTicketTopRefresh" >
+            bind:on_BottomRefresh="reloadRegularTicketRank"
+            bind:on_TopRefresh="reloadRegularTicketRank" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
     </FrameLayout>
 
