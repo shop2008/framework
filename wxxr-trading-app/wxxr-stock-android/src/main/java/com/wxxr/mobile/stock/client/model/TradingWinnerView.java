@@ -45,7 +45,7 @@ public abstract class TradingWinnerView extends ViewBase {
 	}
 	
 	@Command
-	String handleItemClient(InputEvent event){
+	String handleItemClick(InputEvent event){
 		Integer position = (Integer)event.getProperty("position");
 		if(position != null){
 			updateSelection(position);

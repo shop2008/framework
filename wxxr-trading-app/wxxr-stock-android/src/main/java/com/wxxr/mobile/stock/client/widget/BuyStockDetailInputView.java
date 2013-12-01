@@ -47,7 +47,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 	private boolean isPrice;
 	private boolean priceKeyboardautoShow;
 	// attribute
-	private String orderPrice;
+	private String orderPrice; //计算最大购买数
 	// private String marketPrice;
 	private String fund;
 
@@ -96,11 +96,16 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		if (StringUtils.isEmpty(orderPrice) || StringUtils.isEmpty(fund))
 			return;
 		try {
-			float price = Float.parseFloat(this.orderPrice);
+			// fund放大100倍,price放大1000倍；交易数最小值100
+			float price = Float.parseFloat(this.orderPrice) / 10;
 			float fund = Float.parseFloat(this.fund);
-			// fund,price 都为Long，同时放大100倍；交易数最小值100
-			maxCountStock = ((int) (fund / (price * 100)) * 100);
-			countEditText.setHint("输入最大可买股数: " + maxCountStock + "股");
+			
+			if(price == 0) {
+				countEditText.setHint("输入最大可买股数");
+			} else {
+				maxCountStock = ((int) (fund / (price * 100)) * 100);
+				countEditText.setHint("输入最大可买股数: " + maxCountStock + "股");
+			}
 			countEditText.setText("");
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

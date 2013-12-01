@@ -78,7 +78,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	String amountBean;
 	
 	@Bean
-	String fundBean;
+	String avalibleFeeBean;
 	
 	@Bean
 	String orderPriceBean;
@@ -97,14 +97,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertor;
 	
 	@Field(valueKey = "text", attributes = {
 			@Attribute(name = "orderPrice", value = "${orderPriceBean}"),
 			@Attribute(name = "marketPrice", value = "${marketPriceBean}"),
-			@Attribute(name = "fund", value = "${fundBean}") })
+			@Attribute(name = "fund", value = "${avalibleFeeBean}") })
 	String inputView;
 	
 	@Field(valueKey = "text", binding="${nameBean}${' '}${codeBean}")
@@ -144,7 +144,12 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handlerRefreshClicked(InputEvent event) {
+		//需要回调
 		infoCenterService.getStockQuotation(codeBean, marketBean);
+		orderPriceBean = stockQuotationBean.getNewprice() + "";
+		marketPriceBean = stockQuotationBean.getNewprice() + "";
+		registerBean("orderPriceBean", orderPriceBean);
+		registerBean("marketPriceBean", marketPriceBean);
 		return null;
 	}
 	
@@ -160,13 +165,15 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		String key = (String) event.getProperty("changedText");
 		String value = "0";
 		try {
-			if(StringUtils.isEmpty(key))
-				value = (long) Utils.roundUp(Float.parseFloat(key) * 100, 0) + "";
+			if(!StringUtils.isEmpty(key))
+				value = (long) Utils.roundUp(Float.parseFloat(key) * 1000, 0) + "";
 			orderPriceBean = value;
 			registerBean("orderPriceBean", value);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
+		marketPriceBean = stockQuotationBean.getNewprice() + "";
+		registerBean("marketPriceBean", marketPriceBean);
 		return null;
 	}
 	
@@ -200,6 +207,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			String name = "";
 			String market = "";
 			String acctId = "";
+			String avalibleFee = "";
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
 				if (tempt != null && "code".equals(key)) {
@@ -226,6 +234,12 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					}
 					acctIdBean = acctId;
 					registerBean("acctIdBean", acctId);
+				} else if (tempt != null && "avalibleFee".equals(key)) {
+					if(tempt instanceof String) {
+						avalibleFee = (String)tempt;
+					}
+					avalibleFeeBean = avalibleFee;
+					registerBean("avalibleFeeBean", avalibleFee);
 				}
 			}
 		}
@@ -255,28 +269,28 @@ public abstract class BuyStockDetailPage extends PageBase implements
 //		registerBean("marketBean", "SH");
 //		registerBean("nameBean", "无限新锐");
 //		registerBean("codeBean", "600101");
-		registerBean("marketPriceBean", "156");
-		registerBean("amountBean", "");
-		registerBean("fundBean", "10000000");
+//		registerBean("marketPriceBean", "156");
+//		registerBean("amountBean", "");
+//		registerBean("fundBean", "10000000");
 		
 //		acctIdBean = "11111";
 //		marketBean = "SH";
 //		nameBean = "无限新锐";
 //		codeBean = "600101";
-		marketPriceBean = "156";
-		amountBean = "";
-		fundBean = "10000000";
-		final Runnable[] tasks = new Runnable[1];
-		tasks[0] = new Runnable() {
-
-			@Override
-			public void run() {
-//				registerBean("orderPriceBean", marketPriceBean);
-
-//				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
-			}
-		};
-		AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
+//		marketPriceBean = "156";
+//		amountBean = "";
+//		fundBean = "10000000";
+//		final Runnable[] tasks = new Runnable[1];
+//		tasks[0] = new Runnable() {
+//
+//			@Override
+//			public void run() {
+////				registerBean("orderPriceBean", marketPriceBean);
+//
+////				AppUtils.runOnUIThread(tasks[0], 10, TimeUnit.SECONDS);
+//			}
+//		};
+//		AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
 		
 	}
 	

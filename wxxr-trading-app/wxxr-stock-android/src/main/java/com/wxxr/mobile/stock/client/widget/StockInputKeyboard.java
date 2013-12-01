@@ -336,8 +336,8 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		tv_third.setText(str_value + "%");
 		String value = wv_middle.getCurrentItem() + "." + str_value;
 		try {
-			float p = (1 + sign * Float.parseFloat(value)/100) * Float.parseFloat(marketPrice);
-			toOrderprice = p+"";
+			float p = (1 + sign * Float.parseFloat(value)/100) * Float.parseFloat(marketPrice) / 10;
+			toOrderprice = p * 10 + "";
 			tv_stock_price.setText("("+String.format("%.2f", p/100)+")");
 		} catch(NumberFormatException e) {
 			e.printStackTrace();

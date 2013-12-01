@@ -41,7 +41,7 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	String imageUrl;
 	
 	@Bean
-	boolean isOpen = true;
+	boolean isOpen = false;
 	
 	
 	int postion = 0;
@@ -52,6 +52,7 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	@Override
 	public void updateModel(Object value) {
 		if(value instanceof EarnRankItemBean){
+			earnRank = (EarnRankItemBean) value;
 			registerBean("earnRank", value);
 		}
 	}
@@ -72,7 +73,7 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("isVirtual", true);
 				map.put("accid", accid);
-				updateSelection(accid);
+//				updateSelection(accid);
 				result.setPayload(map);
 				result.setResult("operationDetails");
 				return result;

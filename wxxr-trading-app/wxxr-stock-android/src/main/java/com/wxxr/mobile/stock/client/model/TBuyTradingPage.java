@@ -254,6 +254,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("acctId", this.acctId);
+		map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
 		result.setResult("BuyStockDetailPage");
 		result.setPayload(map);
 		return result;
