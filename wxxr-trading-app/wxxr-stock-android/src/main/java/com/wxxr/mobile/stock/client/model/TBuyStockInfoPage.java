@@ -23,9 +23,9 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * 模拟盘详情
@@ -52,10 +52,9 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f%%"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="format",value="-%.0f")
 	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	Float2PercentStringConvertor float2PercentStringConvertor;
 	
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
@@ -75,7 +74,7 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}", converter = "stockLong2StringConvertorSpecial")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}", converter = "float2PercentStringConvertor")
 	String lossLimit;
 
 	@Menu(items = { "left" })

@@ -69,7 +69,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple",value="100")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
