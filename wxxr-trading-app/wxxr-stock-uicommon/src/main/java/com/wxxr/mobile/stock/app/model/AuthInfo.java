@@ -1,9 +1,5 @@
 package com.wxxr.mobile.stock.app.model;
 
-import com.wxxr.mobile.core.annotation.BindableBean;
-
-import android.R.string;
-@BindableBean(pkg="com.wxxr.mobile.stock.app.bean",className="AuthInfoBean")
 public class AuthInfo {
 
 	/**用户名*/
@@ -17,4 +13,62 @@ public class AuthInfo {
 	
 	/**银行卡号*/
 	private String bankNum;
+
+	/**
+	 * @return the accountName
+	 */
+	public String getAccountName() {
+		return accountName;
+	}
+
+	/**
+	 * @param accountName the accountName to set
+	 */
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	/**
+	 * @return the bankName
+	 */
+	public String getBankName() {
+		return bankName;
+	}
+
+	/**
+	 * @param bankName the bankName to set
+	 */
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	/**
+	 * @return the bankAddr
+	 */
+	public String getBankAddr() {
+		return bankAddr;
+	}
+
+	/**
+	 * @param bankAddr the bankAddr to set
+	 */
+	public void setBankAddr(String bankAddr) {
+		this.bankAddr = bankAddr;
+	}
+
+	/**
+	 * @return the bankNum
+	 */
+	public String getBankNum() {
+		return bankNum;
+	}
+
+	/**
+	 * @param bankNum the bankNum to set
+	 */
+	public void setBankNum(String bankNum) {
+		this.bankNum = bankNum;
+	}
+	
+	
 }
