@@ -19,7 +19,7 @@ import com.wxxr.stock.restful.resource.StockUserResource;
  */
 public class UpPwdHandler implements ICommandHandler{
 
-	public static String COMMAND_NAME="UpPwdCommand";
+	public final static String COMMAND_NAME="UpPwdCommand";
 	private ICommandExecutionContext context;
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#destroy()

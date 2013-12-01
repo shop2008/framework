@@ -18,7 +18,7 @@ import com.wxxr.stock.restful.resource.StockUserResource;
 public class UpdateAuthHandler implements ICommandHandler{
 	
 	private ICommandExecutionContext context;
-	public static String COMMAND_NAME="UpdateAuthComand";
+	public final static String COMMAND_NAME="UpdateAuthComand";
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#destroy()
 	 */

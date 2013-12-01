@@ -18,7 +18,7 @@ import com.wxxr.stock.restful.resource.StockUserResource;
 public class SumitAuthHandler implements ICommandHandler{
 	
 	private ICommandExecutionContext context;
-	public static String COMMAND_NAME="SumitAuthComand";
+	public static final String COMMAND_NAME="SumitAuthComand";
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#destroy()
 	 */
