@@ -15,6 +15,8 @@
 	        android:id="@+id/scrollView1"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content" 
+	        android:scrollbars="none"
+	        android:fadingEdge="none"
 	        >
 	        <LinearLayout
 	            android:layout_width="match_parent"
@@ -28,7 +30,7 @@
 			        android:id="@id/lv_help_center_detail"
 			        bind:itemViewId="helpCenterItemView"
 				    bind:field="helpArticles"
-			        bind:on_itemClick="goWebPageOnItemClick"
+			        bind:on_ItemClick="goWebPageOnItemClick"
 			        style="@style/mListView"
 			        >
 			    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>	            

@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
@@ -29,7 +30,7 @@ import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
  */
 @View(name="helpCenter", description="帮助中心")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
-public abstract class HelpCenterView extends ViewBase {
+public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	static Trace log = Trace.getLogger(HelpCenterView.class);
 	
 	@Bean(type=BindingType.Service)
@@ -73,10 +74,16 @@ public abstract class HelpCenterView extends ViewBase {
 					}
 				}
 			}
-			result.setPayload("web");
+			result.setResult("web");
 			return result;
 		}
 		return null;
+	}
+	
+	@Override
+	public void updateModel(Object value) {
+		// TODO Auto-generated method stub
+		
 	}
 }
  
