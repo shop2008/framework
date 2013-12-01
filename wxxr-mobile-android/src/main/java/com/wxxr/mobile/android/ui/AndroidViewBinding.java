@@ -47,6 +47,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		private IFieldBinding binding;
 		
 		FieldBindingCreator(View v, String name, Map<String, String> map){
+			if((v == null)||(name == null)){
+				throw new IllegalArgumentException("Neither view nor field name could be NULL, view :"+v+", name :"+name);
+			}
 			this.view = v;
 			this.fieldName = name;
 			this.params = map;
@@ -54,6 +57,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		
 		public void createNActivateBinding(IView vmodel){
 			IUIComponent field = vmodel.getChild(fieldName);
+			if(field == null){
+				throw new IllegalArgumentException("Cannot find field of :["+fieldName+"] from view :"+vmodel.getName());
+			}
 			if(binding == null){
 				IFieldBinderManager mgr = bindingContext.getWorkbenchManager().getFieldBinderManager();
 				IFieldBinder binder = mgr.getFieldBinder(field.getClass(),view.getClass());
