@@ -149,20 +149,29 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handleMarketBtnClick(InputEvent envent) {
+		orderPriceBean = stockQuotationBean.getClose()*1.1 + "";
 		registerBean("orderPriceBean", stockQuotationBean.getClose()*1.1 + "");
+		
 		return null;
 	}
 	@Command
 	String priceTextChanged(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String key = (String) event.getProperty("changedText");
-			try {
-				String value = Float.parseFloat(key)*100 + "";
-				registerBean("orderPriceBean", value);
-			} catch(NumberFormatException e) {
-				e.printStackTrace();
-			}
+		String key = (String) event.getProperty("changedText");
+		try {
+			String value = Float.parseFloat(key) * 100 + "";
+			orderPriceBean = value;
+			registerBean("orderPriceBean", value);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	@Command
+	String countTextChanged(InputEvent event) {
+		String key = (String) event.getProperty("changedText");
+		amountBean = key;
+		registerBean("amountBean", key);
 		return null;
 	}
 	
@@ -194,21 +203,25 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					if(tempt instanceof String) {
 						code = (String)tempt;
 					}
+					codeBean = code;
 					registerBean("codeBean", code);
 				} else if (tempt != null && "name".equals(key)) {
 					if(tempt instanceof String) {
 						name = (String)tempt;
 					}
+					nameBean = name;
 					registerBean("nameBean", name);
 				} else if (tempt != null && "market".equals(key)) {
 					if(tempt instanceof String) {
 						market = (String)tempt;
 					}
+					marketBean = market;
 					registerBean("marketBean", market);
 				} else if (tempt != null && "acctId".equals(key)) {
 					if(tempt instanceof String) {
 						acctId = (String)tempt;
 					}
+					acctIdBean = acctId;
 					registerBean("acctIdBean", acctId);
 				}
 			}
