@@ -460,7 +460,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				throw new StockAppBizException(vo.getResultInfo());
 			}
 		} catch (Exception e) {
-			new StockAppBizException("系统错误");
+			throw new StockAppBizException("系统错误");
 		}
 	}
 
@@ -478,7 +478,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				throw new StockAppBizException(vo.getResultInfo());
 			}
 		} catch (Exception e) {
-			new StockAppBizException("系统错误");
+			throw new StockAppBizException("系统错误");
 		}
 	}
 
