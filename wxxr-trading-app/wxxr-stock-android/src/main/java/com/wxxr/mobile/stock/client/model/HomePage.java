@@ -39,13 +39,13 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean userInfo;
 	
-	@Menu(items={"home","page1","page2","page3","page4"})
+	@Menu(items={"home","page1","page2","page3","page4","page5","page6"})
 	private IMenu leftMenu;
 	
 	@Menu(items={"left","right","search"})
 	private IMenu toolbar;
 	
-	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","helpCenter"})
+	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","todayHotRankView","masterRankView","helpCenter"})
 	private IViewGroup contents;
 	
 	
@@ -106,7 +106,10 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="page1",label="赚钱榜",icon="resourceId:drawable/zpb"),
 				@UIItem(id="page2",label="行情中心",icon="resourceId:drawable/hqzx"),
 				@UIItem(id="page3",label="大赛排行榜",icon="resourceId:drawable/dsphb"),
-				@UIItem(id="page4",label="帮助中心",icon="resourceId:drawable/help")
+				@UIItem(id="page4",label="今日热股榜",icon="resourceId:drawable/rgb"),
+				@UIItem(id="page5",label="高手榜",icon="resourceId:drawable/gsb"),
+				@UIItem(id="page6",label="帮助中心",icon="resourceId:drawable/help")
+			
 			},
 			navigations={
 				@Navigation(on="home",showView="tradingMain",params={
@@ -116,7 +119,9 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="page1",showView="tradingWinner"),
 				@Navigation(on="page2",showView="infoCenter"),
 				@Navigation(on="page3",showView="championShip"),
-				@Navigation(on="page4",showView="helpCenter")
+				@Navigation(on="page4",showView="todayHotRankView"),
+				@Navigation(on="page5",showView="masterRankView"),
+				@Navigation(on="page6",showView="helpCenter")
 			}
 	)
 	@ExeGuard(title="测试1111",message="2222 55长时间调用，进度弹出框...",silentPeriod=1,cancellable=true)
@@ -126,7 +131,7 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
 			}
-			if("page4".equals(name)){
+			if("page6".equals(name)){
 				try {
 					Thread.sleep(5000L);
 				} catch (InterruptedException e) {

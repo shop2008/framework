@@ -13,8 +13,10 @@ import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
 import com.wxxr.mobile.stock.client.binding.IPinHeadItemClickBinder;
+import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.InfoNoticesViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.NewsAccountViewFieldBinder;
@@ -30,6 +32,7 @@ import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
+import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
 import com.wxxr.mobile.stock.client.widget.InfoNoticesView;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.NewsAccountView;
@@ -56,6 +59,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, BuyStockDetailInputView.class, new BuyStockViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, NewsAccountView.class, new NewsAccountViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, InfoNoticesView.class, new InfoNoticesViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, GuideSwiperView.class, new GuideSwiperViewFieldBinder());
 	}
 
 	@Override
@@ -65,6 +69,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(InputEvent.EVENT_TYPE_TEXT_CHANGED, new TextChangedEventBinder());
 		mgr.registerFieldBinder("HideDialog", new HideProgressEventBinder());
 		mgr.registerFieldBinder("PinItemClick", new IPinHeadItemClickBinder());
+		mgr.registerFieldBinder("SelCallBack", new IViewPagerSelEventBinder());
 	}
 
 	@Override

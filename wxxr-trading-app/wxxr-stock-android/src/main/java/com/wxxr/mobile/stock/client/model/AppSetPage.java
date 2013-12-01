@@ -60,12 +60,10 @@ public abstract class AppSetPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "useInstruction", description = "Back To Last UI")
+	@Command(commandName = "useInstruction", description = "Back To Last UI",
+			navigations={@Navigation(on="OK", showPage="guidePage")})
 	String useInstruction(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 新手指引
-		}
-		return null;
+		return "OK";
 	}
 	
 	/**

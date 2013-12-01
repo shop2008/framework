@@ -45,10 +45,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,10):null}")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
-	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}")
+	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
+			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<GainBean> allRecordsList;
 
-	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}")
+	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}",
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
+			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {

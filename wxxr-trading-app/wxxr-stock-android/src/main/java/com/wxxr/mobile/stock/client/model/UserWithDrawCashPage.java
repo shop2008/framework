@@ -17,9 +17,9 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.ColorUtils;
 
@@ -42,8 +42,8 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	@Bean(type=BindingType.Pojo, express="${user!=null?user.userAsset:null}")
 	UserAssetBean userAssetBean;
 	
-	@Bean(type=BindingType.Pojo, express="${user!=null?user.bankInfo:null}")
-	AuthInfoBean authInfoBean;
+	@Bean(type=BindingType.Pojo, express="${usrService.userAuthInfo}")
+	AuthInfo authInfoBean;
 	
 	@Field(valueKey="text", binding="${userAssetBean!=null?userAssetBean.usableBal:'--'}")
 	String avaliCashAmount;

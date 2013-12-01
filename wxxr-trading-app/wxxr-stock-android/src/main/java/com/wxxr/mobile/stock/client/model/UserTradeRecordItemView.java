@@ -64,6 +64,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	
 	@Convertor(params={@Parameter(name="format", value="MM月dd日")})
 	LongTime2StringConvertor longT2StrConvertor;
+	
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof GainBean) {

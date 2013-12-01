@@ -19,14 +19,9 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 @View(name="articleBodyPage", withToolbar=true, description="文章正文")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.article_body_layout")
 public abstract class ArticleBodyPage extends PageBase implements IModelUpdater {
-
-	
-	
 	
 	@Field(valueKey="visible",binding="${true}",attributes={@Attribute(name="loadUrl", value="${url}")})
 	boolean articleBodyVisible;
-	
-	
 	
 	@Bean
 	String url = "";

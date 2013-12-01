@@ -3,43 +3,48 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.model.UserRegCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.utils.ColorUtils;
 @View(name = "userRegPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
 public abstract class UserRegPage extends PageBase {
 
 	static Trace log = Trace.register(UserRegPage.class);
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", binding="${callback.userName}")
 	String mobileNum;
-	DataField<String> mobileNumField;
 	
-	@Field(valueKey="text")
+	@Field(
+			valueKey="text", 
+			enableWhen="${checked}", 
+			attributes={@Attribute(name="enabled", value="${checked}")}
+		    )
 	String registerBtn;
 	
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 
+	
+	@Bean
+	UserRegCallback callback = new UserRegCallback();
+	
+	@Bean
+	boolean checked = true;
 	/**
 	 * 是否阅读了《注册条款》
 	 */
-	@Field(valueKey="checked")
+	@Field(valueKey="checked", binding="${checked}")
 	boolean readChecked;
 	
-	DataField<Boolean> readCheckedField;
-	
-	DataField<String> registerBtnField;
 	/**
 	 * 处理后退
 	 * @param event
@@ -54,28 +59,13 @@ public abstract class UserRegPage extends PageBase {
 		return null;
 	}
 	
-	
-	/**
-	 * 手机号码编辑框
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName="mnTextChanged")
-	String mnTextChanged(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String mobileNum = (String) event.getProperty("changedText");
-			mobileNumField.setValue(mobileNum);
-		}
-		return null;
-	}
-
 	/**
 	 * 将密码发送到手机
 	 * @param event
 	 * @return
 	 */
 	@Command(commandName = "sendMsg")
+	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 1)
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -84,9 +74,10 @@ public abstract class UserRegPage extends PageBase {
 			if (log.isDebugEnabled()) {
 				log.debug("register:Send Message To Mobile");
 			}
-			if(usrService != null)
-				usrService.register(mobileNumField.getValue());
-				
+			
+			if (usrService != null) {
+				usrService.register(this.callback.getUserName());
+			}
 		}
 		return null;
 	}
@@ -114,27 +105,9 @@ public abstract class UserRegPage extends PageBase {
 	String setReadChecked(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
-			if (this.readChecked == true) {
-				this.readChecked = false;
-				this.readCheckedField.setValue(false);
-				
-				this.registerBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_GRAY);
-				this.registerBtnField.setAttribute(AttributeKeys.enabled, false);
-			} else {
-				this.readChecked = true;
-				this.readCheckedField.setValue(true);
-				
-				this.registerBtnField.setAttribute(AttributeKeys.textColor, ColorUtils.STOCK_WHITE);
-				this.registerBtnField.setAttribute(AttributeKeys.enabled, true);
-			}
+			checked = !checked;
+			registerBean("checked", checked);
 		}
 		return null;
-	}
-	
-	@OnShow
-	protected void initData() {
-		this.readChecked = true;
-		this.readCheckedField.setValue(true);
 	}
 }

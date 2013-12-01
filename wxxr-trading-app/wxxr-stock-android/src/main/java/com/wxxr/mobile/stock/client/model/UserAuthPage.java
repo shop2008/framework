@@ -21,8 +21,8 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
 
@@ -41,8 +41,8 @@ public abstract class UserAuthPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean user;
 	
-	@Bean(type=BindingType.Pojo,express="${user!=null?user.bankInfo!=null?user.bankInfo:null:null}")
-	AuthInfoBean authBean;
+	@Bean(type=BindingType.Pojo,express="${usrMgr.userAuthInfo}")
+	AuthInfo authBean;
 	
 	/**
 	 * 认证手机号
