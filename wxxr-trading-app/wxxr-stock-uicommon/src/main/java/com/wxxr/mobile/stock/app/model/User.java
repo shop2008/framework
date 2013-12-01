@@ -4,8 +4,6 @@
 package com.wxxr.mobile.stock.app.model;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
-import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 
 
 /**
@@ -89,13 +87,6 @@ public class User {
 	 * 是否登陆
 	 */
 	private boolean login = false;
-	/**
-	 * 用户资产信息
-	 */
-	private UserAssetBean userAsset;
-	/**
-	 * 银行卡信息	 
-	 */
-	private AuthInfoBean bankInfo;
+
 //	private List<TradingAccountBean> tradeInfos;
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
-import com.wxxr.mobile.stock.app.bean.AuthInfoBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -447,18 +446,9 @@ public class MockDataUtils {
 			userBean.setLogin(true);
 			userBean.setMessagePushSettingOn(true);
 			
-			UserAssetBean usrAsset = new UserAssetBean();
-			usrAsset.setBalance(2000L);
-			usrAsset.setFrozen(200);
-			usrAsset.setUsableBal(1800L);
-			userBean.setUserAsset(usrAsset);
+
 			
-			AuthInfoBean bankInfo = new AuthInfoBean();
-			bankInfo.setAccountName("李四");
-			bankInfo.setBankNum("6222565412512124234");
-			bankInfo.setBankAddr("北京市海淀区");
-			bankInfo.setBankName("工商银行");
-			userBean.setBankInfo(bankInfo);
+
 		}
 		return userBean;
 	}
