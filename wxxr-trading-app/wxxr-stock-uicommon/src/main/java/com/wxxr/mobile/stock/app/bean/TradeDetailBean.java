@@ -16,7 +16,7 @@ public class TradeDetailBean implements IBindableBean {
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
 	private String tradeCatagory;
 	private String tradeDate;
-	private String tradeAmount;
+	private float tradeAmount;
 
 	/**
 	 * @param listener
@@ -86,15 +86,15 @@ public class TradeDetailBean implements IBindableBean {
 	/**
 	 * @return the tradeAmount
 	 */
-	public String getTradeAmount() {
+	public float getTradeAmount() {
 		return tradeAmount;
 	}
 
 	/**
 	 * @param tradeAmount the tradeAmount to set
 	 */
-	public void setTradeAmount(String tradeAmount) {
-		String old = this.tradeAmount;
+	public void setTradeAmount(float tradeAmount) {
+		float old = this.tradeAmount;
 		this.tradeAmount = tradeAmount;
 		this.emitter.firePropertyChange("tradeAmount", old, this.tradeAmount);
 	}

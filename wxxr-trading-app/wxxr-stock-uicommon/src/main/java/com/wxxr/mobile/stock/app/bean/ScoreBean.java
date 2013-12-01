@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class ScoreBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
-	private String amount;
+	private float amount;
 	private String catagory;
 	private String date;
 
@@ -54,15 +54,15 @@ public class ScoreBean implements IBindableBean {
 	/**
 	 * @return the amount
 	 */
-	public String getAmount() {
+	public float getAmount() {
 		return amount;
 	}
 
 	/**
 	 * @param amount the amount to set
 	 */
-	public void setAmount(String amount) {
-		String old = this.amount;
+	public void setAmount(float amount) {
+		float old = this.amount;
 		this.amount = amount;
 		this.emitter.firePropertyChange("amount", old, this.amount);
 	}

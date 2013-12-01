@@ -16,10 +16,10 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class TradingAccountListBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
-	private List<TradingAccountBean> virtualTradingAccounts;
+	private List<GainBean> virtualTradingAccounts;
 	private List<TradingAccInfoBean> t1TradingAccounts;
 	private List<GainBean> successTradingAccounts;
-	private List<TradingAccountBean> realTradingAccounts;
+	private List<GainBean> realTradingAccounts;
 	private List<TradingAccInfoBean> t0TradingAccounts;
 	private List<GainBean> allTradingAccounts;
 
@@ -59,18 +59,18 @@ public class TradingAccountListBean implements IBindableBean {
 	/**
 	 * @return the virtualTradingAccounts
 	 */
-	public List<TradingAccountBean> getVirtualTradingAccounts() {
+	public List<GainBean> getVirtualTradingAccounts() {
 		return virtualTradingAccounts;
 	}
 
 	/**
 	 * @param virtualTradingAccounts the virtualTradingAccounts to set
 	 */
-	public void setVirtualTradingAccounts(List<TradingAccountBean> virtualTradingAccounts) {
-		List<TradingAccountBean> old = this.virtualTradingAccounts;
+	public void setVirtualTradingAccounts(List<GainBean> virtualTradingAccounts) {
+		List<GainBean> old = this.virtualTradingAccounts;
 		this.virtualTradingAccounts = virtualTradingAccounts;
 		if(this.virtualTradingAccounts != null){
-            this.virtualTradingAccounts = new ListDecorator<TradingAccountBean>("virtualTradingAccounts", this.emitter,this.virtualTradingAccounts);
+            this.virtualTradingAccounts = new ListDecorator<GainBean>("virtualTradingAccounts", this.emitter,this.virtualTradingAccounts);
         }
 		this.emitter.firePropertyChange("virtualTradingAccounts", old, this.virtualTradingAccounts);
 	}
@@ -116,18 +116,18 @@ public class TradingAccountListBean implements IBindableBean {
 	/**
 	 * @return the realTradingAccounts
 	 */
-	public List<TradingAccountBean> getRealTradingAccounts() {
+	public List<GainBean> getRealTradingAccounts() {
 		return realTradingAccounts;
 	}
 
 	/**
 	 * @param realTradingAccounts the realTradingAccounts to set
 	 */
-	public void setRealTradingAccounts(List<TradingAccountBean> realTradingAccounts) {
-		List<TradingAccountBean> old = this.realTradingAccounts;
+	public void setRealTradingAccounts(List<GainBean> realTradingAccounts) {
+		List<GainBean> old = this.realTradingAccounts;
 		this.realTradingAccounts = realTradingAccounts;
 		if(this.realTradingAccounts != null){
-            this.realTradingAccounts = new ListDecorator<TradingAccountBean>("realTradingAccounts", this.emitter,this.realTradingAccounts);
+            this.realTradingAccounts = new ListDecorator<GainBean>("realTradingAccounts", this.emitter,this.realTradingAccounts);
         }
 		this.emitter.firePropertyChange("realTradingAccounts", old, this.realTradingAccounts);
 	}
