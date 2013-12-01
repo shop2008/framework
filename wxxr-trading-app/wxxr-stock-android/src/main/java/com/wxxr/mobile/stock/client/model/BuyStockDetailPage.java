@@ -26,11 +26,13 @@ import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
@@ -46,10 +48,13 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  * @author duzhen
  * 
  */
-@View(name = "BuyStockDetailPage", withToolbar = true, description="买入")
+@View(name = "BuyStockDetailPage", withToolbar = true, description="买入", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
+	
+	@ViewGroup(viewIds={"StockQuotationView", "StockKLineView"})
+	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
 	private boolean hasShow = false;
@@ -172,10 +177,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		registerBean("nameBean", this.nameBean);
 		registerBean("marketBean", this.marketBean);
 		infoCenterService.getStockQuotation(codeBean, marketBean);
+		updateSelection((Object)stockInfos);
 	}
 
-
-	
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
@@ -211,14 +215,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "StockQuotationView") })
+	@Command(navigations = { @Navigation(on = "page", showView = "StockKLineView") })
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String handleBuyBtnClick(InputEvent event) {
-		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			tradingService.buyStock(acctIdBean, marketBean, codeBean, orderPriceBean, amountBean);
-			return "";
-		}
-		return null;
+		return "page";
 	}
 	
 	@OnCreate

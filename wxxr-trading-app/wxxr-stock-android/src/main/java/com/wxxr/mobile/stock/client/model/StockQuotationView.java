@@ -9,20 +9,23 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
+import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockQuotationView")
-@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_quotation_view_layout")
-public abstract class StockQuotationView extends PageBase implements
-		IModelUpdater {
+@View(name = "StockQuotationView", description="买入")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_quotation_view_layout")
+public abstract class StockQuotationView extends ViewBase implements ISelectionChangedListener {
 
 	@Bean
 	String nameBean;
@@ -175,12 +178,30 @@ public abstract class StockQuotationView extends PageBase implements
 	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean==null}")
 	String dataFailed;
 	
-	@Override
-	public void updateModel(Object value) {
+	@OnShow
+	void initBeans() {
 		// TODO Auto-generated method stub
-		registerBean("nameBean", "鸿达兴业");
-		registerBean("codeBean", "100100");
-		registerBean("marketBean", "SH");
+//		registerBean("nameBean", "鸿达兴业");
+//		registerBean("codeBean", "100100");
+//		registerBean("marketBean", "SH");
 		registerBean("timeBean", new Date().getTime());
+	}
+	
+	@OnCreate
+	void registerSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("BuyStockDetailPage", this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
+		String[] stockInfos = (String[])impl.getSelected();
+		this.codeBean = stockInfos[0];
+		this.nameBean = stockInfos[1];
+		this.marketBean = stockInfos[2];
+		registerBean("codeBean", this.codeBean);
+		registerBean("nameBean", this.nameBean);
+		registerBean("marketBean", this.marketBean);
+		infoCenterService.getStockQuotation(codeBean, marketBean);
 	}
 }

@@ -5,17 +5,19 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.ArticleBean;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
+import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -25,8 +27,8 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "StockKLineView", withToolbar=true, description="买入")
-@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_kline_view_layout")
-public abstract class StockKLineView extends PageBase implements IModelUpdater {
+@AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
+public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
 	
 	@Bean
 	String nameBean;
@@ -116,14 +118,32 @@ public abstract class StockKLineView extends PageBase implements IModelUpdater {
 	String secuamount;
 	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.capital:'0'}", converter = "stockLong2StringAutoUnitConvertor")
 	String capital;
+//	@Override
+//	public void updateModel(Object data) {
+//		if (data instanceof ArticleBean) {
+//			registerBean("nameBean", "鸿达兴业");
+//			registerBean("codeBean", "100100");
+//			registerBean("marketBean", "SH");
+//			registerBean("timeBean", new Date().getTime());
+//		}
+//	}
+	
+	@OnCreate
+	void registerSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("BuyStockDetailPage", this);
+	}
+	
 	@Override
-	public void updateModel(Object data) {
-		if (data instanceof ArticleBean) {
-			registerBean("nameBean", "鸿达兴业");
-			registerBean("codeBean", "100100");
-			registerBean("marketBean", "SH");
-			registerBean("timeBean", new Date().getTime());
-		}
+	public void selectionChanged(String providerId, ISelection selection) {
+		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
+		String[] stockInfos = (String[])impl.getSelected();
+		this.codeBean = stockInfos[0];
+		this.nameBean = stockInfos[1];
+		this.marketBean = stockInfos[2];
+		registerBean("codeBean", this.codeBean);
+		registerBean("nameBean", this.nameBean);
+		registerBean("marketBean", this.marketBean);
+		infoCenterService.getStockQuotation(codeBean, marketBean);
 	}
 	
 	@OnShow
