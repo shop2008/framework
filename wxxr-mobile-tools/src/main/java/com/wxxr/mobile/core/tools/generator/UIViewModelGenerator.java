@@ -110,29 +110,29 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 					case VIEW:
 						break;
 					}
-					if(vmFile != null){
-						targetUI = new TargetUIClass();
-						targetUI.setViewModel(model);
-						targetUI.setName(model.getDefaultName());
-						targetUI.setPkgName(model.getApplicationId()+".ui");
-						String className = StringUtils.trimToNull(binding.superClassName());
-						if(className != null){
-							targetUI.setSuperClass(className);
-						}else{
-							switch(binding.type()){
-							case ACTIVITY:
-								targetUI.setSuperClass(BindableFragmentActivity.class.getCanonicalName());
-								break;
-							case FRAGMENT:
-								targetUI.setSuperClass(BindableFragment.class.getCanonicalName());
-								break;
-							case FRAGMENT_ACTIVITY:
-								targetUI.setSuperClass(BindableFragmentActivity.class.getCanonicalName());
-								break;
-							case VIEW:
-								break;
-							}
+					targetUI = new TargetUIClass();
+					targetUI.setViewModel(model);
+					targetUI.setName(model.getDefaultName());
+					targetUI.setPkgName(model.getApplicationId()+".ui");
+					String className = StringUtils.trimToNull(binding.superClassName());
+					if(className != null){
+						targetUI.setSuperClass(className);
+					}else{
+						switch(binding.type()){
+						case ACTIVITY:
+							targetUI.setSuperClass(BindableFragmentActivity.class.getCanonicalName());
+							break;
+						case FRAGMENT:
+							targetUI.setSuperClass(BindableFragment.class.getCanonicalName());
+							break;
+						case FRAGMENT_ACTIVITY:
+							targetUI.setSuperClass(BindableFragmentActivity.class.getCanonicalName());
+							break;
+						case VIEW:
+							break;
 						}
+					}
+					if(vmFile != null){
 						attributes.clear();
 						attributes.put("model", targetUI);
 						try {
@@ -191,11 +191,11 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 			Map<String, Object> attributes, AndroidBinding binding,
 			TargetUIClass targetUI,Filer filer) {
 		ViewDescriptorClass descriptor = new ViewDescriptorClass();
-		descriptor.setTargetUI(targetUI);
 		descriptor.setViewModel(model);
 		descriptor.setName(name+"Descriptor");
 		descriptor.setPkgName(model.getApplicationId()+".view");
 		if(binding != null){
+			descriptor.setTargetUI(targetUI);
 			descriptor.setLayoutId(binding.layoutId());
 			descriptor.setBindingType(binding.type().name());
 		}
