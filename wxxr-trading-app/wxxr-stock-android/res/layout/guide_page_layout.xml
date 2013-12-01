@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/guide4"
+    >
+
+    <com.wxxr.mobile.stock.client.widget.GuideSwiperView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        bind:field="guideImages"
+        bind:on_SelCallBack="selected"
+        bind:itemViewId="guideSwiperItemView"
+        />
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="6dp"
+        bind:field="*"
+        bind:on_Click="tryClick"
+        android:background="@android:color/transparent" >
+    </LinearLayout>
+
+</RelativeLayout>
