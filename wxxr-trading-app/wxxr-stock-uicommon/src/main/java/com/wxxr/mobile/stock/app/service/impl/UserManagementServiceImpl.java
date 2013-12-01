@@ -16,6 +16,7 @@ import com.wxxr.javax.ws.rs.NotAuthorizedException;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
+import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -47,6 +48,8 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
+import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
@@ -137,6 +140,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(SubmitPushMesasgeHandler.COMMAND_NAME, new SubmitPushMesasgeHandler());
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -287,7 +291,14 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public void pushMessageSetting(boolean on) {
-
+		SubmitPushMesasgeCommand command=new SubmitPushMesasgeCommand();
+		command.setBinding(on);
+		Future<Boolean> future=context.getService(ICommandExecutor.class).submitCommand(command);
+		try {
+			future.get(30,TimeUnit.SECONDS);
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
 	}
 
 	@Override
@@ -338,13 +349,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		cmd.setOldPwd(oldPwd);
 		cmd.setNewPwd(newPwd);
 		cmd.setNewPwd2(newPwd2);
-		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
 		try {
+			Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+
 			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
 			if(vo.getResulttype()!=1){
 				throw new StockAppBizException(vo.getResultInfo());
 			}
-		} catch (Exception e) {
+		}catch(CommandException e){
+			new StockAppBizException(e.getMessage());
+		}catch (Exception e) {
 			new StockAppBizException("系统错误");
 		}
 	}
