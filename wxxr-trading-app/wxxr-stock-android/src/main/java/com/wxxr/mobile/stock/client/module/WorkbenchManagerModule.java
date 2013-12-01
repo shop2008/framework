@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.client.module;
 
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
@@ -27,7 +28,6 @@ import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
-import com.wxxr.mobile.stock.client.view.DeclarativePModelProvider;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
@@ -83,7 +83,11 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initPresentationModels(IWorkbenchRTContext context) {
-		DeclarativePModelProvider.updatePModel(context);
+		try {
+			Class.forName("com.wxxr.mobile.stock.client.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null);
+		}catch(Throwable t){
+			Trace.getLogger(WorkbenchManagerModule.class).fatal("Failed to load in presentation model !!!",t);
+		}
 	}
 
 }
