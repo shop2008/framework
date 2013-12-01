@@ -84,7 +84,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	@Override
 	protected void initPresentationModels(IWorkbenchRTContext context) {
 		try {
-			Class.forName("com.wxxr.mobile.stock.client.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null);
+			Class.forName("com.wxxr.mobile.stock.client.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null, context);
 		}catch(Throwable t){
 			Trace.getLogger(WorkbenchManagerModule.class).fatal("Failed to load in presentation model !!!",t);
 		}

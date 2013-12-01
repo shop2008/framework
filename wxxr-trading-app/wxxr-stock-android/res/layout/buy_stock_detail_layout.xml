@@ -152,7 +152,8 @@
                     android:inputType="number"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    bind:field="count" />
+                    bind:field="count"
+                    bind:on_TextChanged="countTextChanged" />
 
                 <Button
                     android:id="@+id/buy_btn"

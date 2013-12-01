@@ -41,6 +41,7 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * 买入
@@ -149,16 +150,18 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handleMarketBtnClick(InputEvent envent) {
-		orderPriceBean = stockQuotationBean.getClose()*1.1 + "";
-		registerBean("orderPriceBean", stockQuotationBean.getClose()*1.1 + "");
+		orderPriceBean = (long) Utils.roundUp(stockQuotationBean.getClose()*1.1f, 0) + "";
+		registerBean("orderPriceBean", stockQuotationBean);
 		
 		return null;
 	}
 	@Command
 	String priceTextChanged(InputEvent event) {
 		String key = (String) event.getProperty("changedText");
+		String value = "0";
 		try {
-			String value = Float.parseFloat(key) * 100 + "";
+			if(StringUtils.isEmpty(key))
+				value = (long) Utils.roundUp(Float.parseFloat(key) * 100, 0) + "";
 			orderPriceBean = value;
 			registerBean("orderPriceBean", value);
 		} catch (NumberFormatException e) {
