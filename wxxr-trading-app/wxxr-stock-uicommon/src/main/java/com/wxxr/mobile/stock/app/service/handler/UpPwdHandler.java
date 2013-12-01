@@ -121,7 +121,10 @@ public class UpPwdHandler implements ICommandHandler{
 		 */
 		@Override
 		public void validate() {
-			if(StringUtils.isBlank(newPwd)||StringUtils.isBlank(newPwd2)){
+			if(StringUtils.isBlank(oldPwd)){
+				throw new CommandException("旧密码不能为空");
+			}
+			if(StringUtils.isBlank(newPwd)){
 				throw new CommandException("新密码不能为空");
 			}
 			if(!newPwd.equals(newPwd2)){

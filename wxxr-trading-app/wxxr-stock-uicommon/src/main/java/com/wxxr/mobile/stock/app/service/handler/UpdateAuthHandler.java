@@ -3,10 +3,12 @@
  */
 package com.wxxr.mobile.stock.app.service.handler;
 
+import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.security.vo.UserAuthenticaVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
@@ -127,7 +129,15 @@ public class UpdateAuthHandler implements ICommandHandler{
 		 */
 		@Override
 		public void validate() {
-			
+			if(StringUtils.isBlank(bankName)){
+				throw new CommandException("开户行不能为空");
+			}
+			if(StringUtils.isBlank(bankAddr)){
+				throw new CommandException("开户行所在地不能为空");
+			}
+			if(StringUtils.isBlank(bankNum)){
+				throw new CommandException("银行卡号不能为空");
+			}
 		}
 		
 	}

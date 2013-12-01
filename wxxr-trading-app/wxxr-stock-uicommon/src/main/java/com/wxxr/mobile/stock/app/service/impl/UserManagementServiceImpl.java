@@ -453,14 +453,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		cmd.setBankName(bankName);
 		cmd.setBankNum(bankNum);
 		cmd.setBankAddr(bankAddr);
+		try{
 		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-		try {
-			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
-			if(vo.getResulttype()!=1){
-				throw new StockAppBizException(vo.getResultInfo());
+			try {
+				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+				if(vo.getResulttype()!=1){
+					throw new StockAppBizException(vo.getResultInfo());
+				}
+			} catch (Exception e) {
+				new StockAppBizException("系统错误");
 			}
-		} catch (Exception e) {
-			throw new StockAppBizException("系统错误");
+		}catch(CommandException e){
+			throw new StockAppBizException(e.getMessage());
 		}
 	}
 
@@ -471,15 +475,20 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		cmd.setBankName(bankName);
 		cmd.setBankNum(bankNum);
 		cmd.setBankAddr(bankAddr);
-		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-		try {
-			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
-			if(vo.getResulttype()!=1){
-				throw new StockAppBizException(vo.getResultInfo());
+		try{
+			Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+			try {
+				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+				if(vo.getResulttype()!=1){
+					throw new StockAppBizException(vo.getResultInfo());
+				}
+			} catch (Exception e) {
+				new StockAppBizException("系统错误");
 			}
-		} catch (Exception e) {
-			throw new StockAppBizException("系统错误");
+		}catch(CommandException e){
+			throw new StockAppBizException(e.getMessage());
 		}
+		
 	}
 
 	public AuthInfo getUserAuthInfo() {
