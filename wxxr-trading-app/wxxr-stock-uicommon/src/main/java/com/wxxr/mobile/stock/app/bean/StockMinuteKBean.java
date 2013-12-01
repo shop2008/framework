@@ -16,7 +16,9 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
 public class StockMinuteKBean implements IBindableBean {
 	
 	private final PropertyChangeSupport emitter = new PropertyChangeSupport(this);
+	private String market;
 	private List<StockMinuteLineBean> list;
+	private String code;
 	private String date;
 	private String close;
 
@@ -54,6 +56,22 @@ public class StockMinuteKBean implements IBindableBean {
 
 
 	/**
+	 * @return the market
+	 */
+	public String getMarket() {
+		return market;
+	}
+
+	/**
+	 * @param market the market to set
+	 */
+	public void setMarket(String market) {
+		String old = this.market;
+		this.market = market;
+		this.emitter.firePropertyChange("market", old, this.market);
+	}
+
+	/**
 	 * @return the list
 	 */
 	public List<StockMinuteLineBean> getList() {
@@ -70,6 +88,22 @@ public class StockMinuteKBean implements IBindableBean {
             this.list = new ListDecorator<StockMinuteLineBean>("list", this.emitter,this.list);
         }
 		this.emitter.firePropertyChange("list", old, this.list);
+	}
+
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(String code) {
+		String old = this.code;
+		this.code = code;
+		this.emitter.firePropertyChange("code", old, this.code);
 	}
 
 	/**
@@ -110,7 +144,9 @@ public class StockMinuteKBean implements IBindableBean {
     @Override   
     public String toString() {
         return "StockMinuteKBean ["+
-                "list=" + this.list +
+                "market=" + this.market +
+                " , list=" + this.list +
+                " , code=" + this.code +
                 " , date=" + this.date +
                 " , close=" + this.close +
         "]";
