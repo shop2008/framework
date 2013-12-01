@@ -226,8 +226,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && getDeposit1()>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney * 10000 * 100) * costRate))+"元";
-			djDeposit = String.format("%.0f", ((changeMoney* 10000 * 100)* getDeposit1()))+"元";
+			zhfzf = String.format("%.2f", ((changeMoney * 10000) * costRate))+"元";
+			djDeposit = String.format("%.0f", ((changeMoney* 10000)* getDeposit1()))+"元";
 			djMoney = ((changeMoney*10000 * 100) * getDeposit1());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
@@ -238,8 +238,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && getDeposit2()>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney * 10000 * 100) * costRate))+"元";
-			djDeposit = String.format("%.0f", ((changeMoney*10000 * 100) * getDeposit2()))+"元";
+			zhfzf = String.format("%.2f", ((changeMoney * 10000) * costRate))+"元";
+			djDeposit = String.format("%.0f", ((changeMoney*10000) * getDeposit2()))+"元";
 			djMoney = ((changeMoney*10000 * 100) * getDeposit2());
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
@@ -249,8 +249,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(userCreateTradAccInfo!=null)
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && costRate>0){
-			zhfzf = String.format("%.2f", ((changeMoney*10000 * 100) * costRate))+"元";
-			djDeposit = String.format("%.0f", (changeMoney*10000 * 100))+"元";
+			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
+			djDeposit = String.format("%.0f", (changeMoney*10000))+"元";
 			djMoney = changeMoney*10000*100;
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
