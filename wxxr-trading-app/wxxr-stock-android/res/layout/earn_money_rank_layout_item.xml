@@ -10,9 +10,6 @@
         android:layout_height="wrap_content" 
         android:padding="8dp"
         android:gravity="center"
-        bind:field="*"
-        android:focusable="true"
-        bind:on_Click="showItemView"
         android:background="@drawable/listview_selected_item">
 
         <TextView
@@ -34,7 +31,7 @@
             android:enabled="false"
             android:background="@drawable/attrows_style" />
     </LinearLayout>
-    <ImageView
+       <ImageView
         android:id="@+id/imageView2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

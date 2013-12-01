@@ -25,6 +25,41 @@ public class StockLineBean implements IBindableBean {
 	private Long low;
 	private String date;
 	private Long close;
+	private String market;//市场
+    private String code;//股票代码
+
+
+	/**
+	 * @return the market
+	 */
+	public String getMarket() {
+		return market;
+	}
+
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
+
+	/**
+	 * @param market the market to set
+	 */
+	public void setMarket(String market) {
+		String old = this.market;
+		this.market = market;
+		this.emitter.firePropertyChange("market", old, this.market);
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(String code) {
+		String old = this.code;
+		this.code = code;
+		this.emitter.firePropertyChange("code", old, this.code);
+	}
 
 	/**
 	 * @param listener

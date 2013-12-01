@@ -93,8 +93,6 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
-		registerKernelModule(new EntityLoaderRegistryImpl());
-
 		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
@@ -111,6 +109,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		CommandIntializer.initBizCommand(cmdExecutor);
 		registerKernelModule(cmdExecutor);
 		registerKernelModule(new WorkbenchManagerModule());
+		registerKernelModule(new EntityLoaderRegistryImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		
 		// register service

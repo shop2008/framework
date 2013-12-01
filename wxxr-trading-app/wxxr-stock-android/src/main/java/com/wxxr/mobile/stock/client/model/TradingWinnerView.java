@@ -9,13 +9,16 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.RankListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 /**
@@ -23,27 +26,30 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
  * @author neillin
  *
  */
-@View(name="tradingWinner", description="赚钱榜")
+@View(name="tradingWinner", description="赚钱榜",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.earn_money_rank_layout")
-public abstract class TradingWinnerView extends ViewBase implements IModelUpdater{
+public abstract class TradingWinnerView extends ViewBase {
 	
 	
-	@Bean(type = BindingType.Service)
-	ITradingManagementService earnRankService;
+	@Bean(type=BindingType.Service)
+	ITradingManagementService service;
 
-	@Bean(type = BindingType.Pojo, express = "${earnRankService.getEarnRank(0,20)}")
-	RankListBean rankBean;
+	@Bean(express = "${service.getEarnRank(0,20)}")
+	BindableListWrapper<EarnRankItemBean> rankBean;
 	
-	@Field(valueKey="options",binding="${rankBean!=null?rankBean.earnRankBeans:null}")
+	@Field(valueKey="options",binding="${rankBean.data}")
 	List<EarnRankItemBean> earnRankList;
 	
 	@OnShow	
 	protected void updateEarnRankList() {
 	}
 	
-	
-	@Override
-	public void updateModel(Object value) {
-		
+	@Command
+	String handleItemClient(InputEvent event){
+		Integer position = (Integer)event.getProperty("position");
+		if(position != null){
+			updateSelection(position);
+		}
+		return null;
 	}
 }
