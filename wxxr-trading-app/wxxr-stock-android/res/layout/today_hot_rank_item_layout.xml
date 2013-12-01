@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_today_hot_rank_item"
+    android:background="@drawable/custom_btn"
     android:gravity="center"
     android:layout_gravity="center"
     android:orientation="vertical" >
@@ -61,6 +61,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textColor="@color/white"
             bind:field="curPrice"
             android:text="5.67元"
             />
@@ -68,7 +69,7 @@
         <View 
             android:layout_width="0.5dp"
             android:layout_height="wrap_content"
-            android:background="@color/mid_gray"
+            android:background="#4C4A4A"
             />
         
         <TextView 
@@ -77,6 +78,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="465200股"
+            android:textColor="@color/white"
             bind:field="buyStockNum"
             />
     </LinearLayout>
