@@ -47,8 +47,10 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
+import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
@@ -414,16 +416,39 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return otherUserInfo;
 	}
 
-	public boolean switchBankCard(String accountName, String bankName,
+	public void switchBankCard(String bankName,
 			String bankAddr, String bankNum) {
-		// TODO Auto-generated method stub
-		return false;
+		UpdateAuthCommand cmd=new UpdateAuthCommand();
+		cmd.setBankName(bankName);
+		cmd.setBankNum(bankNum);
+		cmd.setBankAddr(bankAddr);
+		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+		try {
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
+			}
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
 	}
 
-	public boolean withDrawCashAuth(String accountName, String bankName,
+	public void withDrawCashAuth(String accountName, String bankName,
 			String bankAddr, String bankNum) {
-		// TODO Auto-generated method stub
-		return false;
+		SubmitAuthCommand cmd=new SubmitAuthCommand();
+		cmd.setAccountName(accountName);
+		cmd.setBankName(bankName);
+		cmd.setBankNum(bankNum);
+		cmd.setBankAddr(bankAddr);
+		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+		try {
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
+			}
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
 	}
 
 	public AuthInfo getUserAuthInfo() {

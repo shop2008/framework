@@ -136,7 +136,8 @@ public interface IUserManagementService {
 	
 	ScoreInfoBean fetchUserScoreInfo(String userId);
 	
-	boolean switchBankCard(String accountName, String bankName, String bankAddr,String bankNum);
+	
+	void switchBankCard(String bankName, String bankAddr,String bankNum);
 	
 	/**
 	 * 提现认证
@@ -146,7 +147,7 @@ public interface IUserManagementService {
 	 * @param bankNum 银行账号
 	 * @return true 认证成功， false 认证失败
 	 */
-	boolean withDrawCashAuth(String accountName, String bankName, String bankAddr,String bankNum);
+	void withDrawCashAuth(String accountName, String bankName, String bankAddr,String bankNum);
 
 	
 	/**
@@ -157,11 +158,6 @@ public interface IUserManagementService {
 	AuthInfo getUserAuthInfo();
 	
 	
-	/**
-	 * 获取认证手机号
-	 * @return 认证的手机号码
-	 */
-	String getUserAuthMobileNum(String userId);
 	
 	
 	/**
