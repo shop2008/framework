@@ -48,10 +48,8 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
     private static final Trace log = Trace.register(NewTradingManagementServiceImpl.class);
     //交易盘
     private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
-
     //交易盘详细信息
     private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
-
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
 
@@ -205,17 +203,6 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
             }
         });
     }
-    
-    
-    @Override
-    public void cancelOrder(String orderID) {
-        
-    }
-
-    @Override
-    public void clearTradingAccount(String acctID) {
-        
-    }
     @Override
     public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
         context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate), new IAsyncCallback() {
@@ -245,19 +232,6 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
             }
         });
     }
-    
-
-    //已结算 
-    @Override
-    public DealDetailBean getDealDetail(String accId) {
-        return null;
-    }
-
-    @Override
-    public AuditDetailBean getAuditDetail(String accId) {
-        return null;
-    }
-    
   //未结算
     @Override
     public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
@@ -271,6 +245,49 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         this.tradingAccountBean_cache.forceReload(params,false);
         return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
     }
+    
+    
+    
+    @Override
+    protected void startService() {
+        context.registerService(ITradingManagementService.class, this);
+
+        IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
+        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
+        registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
+        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
+
+    }
+    @Override
+    public void cancelOrder(String orderID) {
+        
+    }
+
+    @Override
+    public void clearTradingAccount(String acctID) {
+        
+    }
+   
+    
+
+    //已结算 
+    @Override
+    public DealDetailBean getDealDetail(String accId) {
+        return null;
+    }
+
+    @Override
+    public AuditDetailBean getAuditDetail(String accId) {
+        return null;
+    }
+    
+  
     
     @Override
     public TradingAccountListBean getMyAllTradingAccountList(int strat, int limit) {
@@ -314,23 +331,7 @@ public class NewTradingManagementServiceImpl extends AbstractModule<IStockAppCon
         
     }
 
-    @Override
-    protected void startService() {
-        context.registerService(ITradingManagementService.class, this);
-
-        IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
-        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
-        registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
-        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
-        
-        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
-        context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
-        context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
-        context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
-
-    }
+    
 
     @Override
     protected void stopService() {

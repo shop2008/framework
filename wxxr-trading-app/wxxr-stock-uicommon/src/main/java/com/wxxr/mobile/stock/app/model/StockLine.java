@@ -21,89 +21,14 @@ public class StockLine {
 	private Long start;//开始
 	private Long limit;//偏移量
 	
-	public Long getClose() {
-		return close;
-	}
-	public void setClose(Long close) {
-		this.close = close;
-	}
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
-	public Long getHigh() {
-		return high;
-	}
-	public void setHigh(Long high) {
-		this.high = high;
-	}
+	private String market;//市场
+    private String code;//股票代码
+
 	
-	public Long getLow() {
-		return low;
-	}
-	public void setLow(Long low) {
-		this.low = low;
-	}
+    @Override
+    public String toString() {
+        return "StockLine [date=" + date + ", time=" + time + ", close=" + close + ", open=" + open + ", high=" + high + ", low=" + low + ", price=" + price + ", secuvolume=" + secuvolume + ", secuamount=" + secuamount + ", start=" + start + ", limit=" + limit + ", market=" + market + ", code="
+                + code + "]";
+    }
 	
-	public Long getOpen() {
-		return open;
-	}
-	public void setOpen(Long open) {
-		this.open = open;
-	}
-	
-	public Long getPrice() {
-		return price;
-	}
-	public void setPrice(Long price) {
-		this.price = price;
-	}
-	
-	public Long getSecuamount() {
-		return secuamount;
-	}
-	public void setSecuamount(Long secuamount) {
-		this.secuamount = secuamount;
-	}
-	
-	public Long getSecuvolume() {
-		return secuvolume;
-	}
-	public void setSecuvolume(Long secuvolume) {
-		this.secuvolume = secuvolume;
-	}
-	
-	public String getTime() {
-		return time;
-	}
-	public void setTime(String time) {
-		this.time = time;
-	}
-	
-	public Long getStart() {
-		return start;
-	}
-	public void setStart(Long start) {
-		this.start = start;
-	}
-	
-	public Long getLimit() {
-		return limit;
-	}
-	public void setLimit(Long limit) {
-		this.limit = limit;
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "StockLineVO [date=" + date + ", time=" + time + ", close="
-				+ close + ", open=" + open + ", high=" + high + ", low=" + low
-				+ ", price=" + price + ", secuvolume=" + secuvolume
-				+ ", secuamount=" + secuamount + ", start=" + start
-				+ ", limit=" + limit + "]";
-	}
 }

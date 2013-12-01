@@ -77,7 +77,7 @@ public class StockQuotationVO implements Serializable {
 	private Long sellprice4;// 卖4
 	@XmlElement(name = "sellprice5")
 	private Long sellprice5;// 卖5
-	@XmlElement(name = "sellprice5")
+	@XmlElement(name = "sellvolume1")
 	private Long sellvolume1;// 卖1量
 	@XmlElement(name = "sellvolume2")
 	private Long sellvolume2;// 卖2量

@@ -12,7 +12,11 @@ import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
-
+/**
+ * 实时行情
+ * @author zhengjincheng
+ *
+ */
 public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuotationBean, StockQuotationVO> {
     public final static String Name = "GetStockQuotationCommand";
 
@@ -86,13 +90,7 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
     @Override
     protected List<StockQuotationVO> executeCommand(ICommand<List<StockQuotationVO>> command) throws Exception {
         GetStockQuotationCommand cmd = (GetStockQuotationCommand)command;
-        ParamVO vo=new  ParamVO();
-        vo.setCode(cmd.getCode());
-        vo.setMarket(cmd.getMarket());
-        List<ParamVO> ps= new ArrayList<ParamVO>();
-        ps.add(vo);
-        QuotationListVO svos= getRestService(StockResource.class).getQuotation(ps);
-        
+        QuotationListVO svos= getRestService(StockResource.class).getQuotation(cmd.getMarket(),cmd.getCode());
         if (svos!=null && svos.getList()!=null){
             return svos.getList();
         }

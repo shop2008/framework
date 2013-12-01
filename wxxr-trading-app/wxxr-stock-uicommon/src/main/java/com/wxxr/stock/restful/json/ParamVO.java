@@ -3,6 +3,8 @@
  */
 package com.wxxr.stock.restful.json;
 
+import java.io.Serializable;
+
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
@@ -11,7 +13,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement(name = "param")
-public class ParamVO {
+public class ParamVO implements Serializable{
 	@XmlElement(name = "code")
 	private String code; // 股票代码
 	@XmlElement(name = "market")

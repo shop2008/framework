@@ -60,7 +60,7 @@ public class InfoCenterManagementServiceImpl extends
 	    
 		context.registerService(IInfoCenterManagementService.class, this);
         IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
-        stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List>("StockQuotation");
+        stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List>("StockQuotation",30);
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockQuotation", new StockQuotationLoader());
 	}
 

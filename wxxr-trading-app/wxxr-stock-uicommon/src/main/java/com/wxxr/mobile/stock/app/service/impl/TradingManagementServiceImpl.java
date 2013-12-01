@@ -12,9 +12,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -38,13 +40,25 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.impl.NewTradingManagementServiceImpl.TradingAccInfoBeanComparator;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
 import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
+import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
+import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
+import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
+import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
+import com.wxxr.mobile.stock.trade.command.QuickBuyStockCommand;
+import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
+import com.wxxr.mobile.stock.trade.command.SellStockCommand;
+import com.wxxr.mobile.stock.trade.command.SellStockHandler;
+import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
@@ -158,7 +172,17 @@ public class TradingManagementServiceImpl extends
 	 * 交易订单记录
 	 */
 	protected TradingRecordListBean recordsBean = new TradingRecordListBean();
+	
+	//交易盘
+    private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
+    //交易盘详细信息
+    private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
+    protected UserCreateTradAccInfoBean userCreateTradAccInfo;
+    private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
+
 	// =================module life cycle methods=============================
+	
+	
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
@@ -174,6 +198,17 @@ public class TradingManagementServiceImpl extends
 		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
+		
+        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
+        registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
+        registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
+        registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
+        context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
+        
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -183,53 +218,7 @@ public class TradingManagementServiceImpl extends
 	}
 
 	// =================interface method =====================================
-	@Override
-	//首页交易盘列表
-	public TradingAccountListBean getHomePageTradingAccountList()
-			throws StockAppBizException {
-		/*
-		 * if (context.getApplication().isInDebugMode()) {
-		 * myTradingAccounts.setT1TradingAccounts(MockDataUtils.mockData(1));
-		 * myTradingAccounts.setT0TradingAccounts(MockDataUtils.mockData(0));
-		 * return myTradingAccounts; }
-		 */
-		Future<List<TradingAccInfoVO>> future = context.getExecutor().submit(
-				new Callable<List<TradingAccInfoVO>>() {
-					@Override
-					public List<TradingAccInfoVO> call() throws Exception {
-						try {
-							List<TradingAccInfoVO> volist = getService(
-									IRestProxyService.class).getRestService(
-									ITradingProtectedResource.class)
-									.getTradingAccountList();
-							return volist;
-						} catch (Throwable e) {
-							log.error("fetch data error", e);
-						}
-						return null;
-					}
-				});
-		List<TradingAccInfoVO> volist = null;
-		try {
-			volist = future.get();
-			if (volist != null && volist.size() > 0) {
-				List<TradingAccInfoBean> t0_list = new ArrayList<TradingAccInfoBean>();
-				List<TradingAccInfoBean> t1_list = new ArrayList<TradingAccInfoBean>();
-				for (TradingAccInfoVO vo : volist) {
-					if (vo.getStatus() == 1) {
-						t0_list.add(ConverterUtils.fromVO(vo));
-					} else {
-						t1_list.add(ConverterUtils.fromVO(vo));
-					}
-				}
-				myTradingAccounts.setT0TradingAccounts(t0_list);
-				myTradingAccounts.setT1TradingAccounts(t1_list);
-			}
-		} catch (Exception e) {
-			log.warn("Error when fetching home page data", e);
-		}
-		return myTradingAccounts;
-	}
+	
 
 
 	@Override
@@ -305,106 +294,9 @@ public class TradingManagementServiceImpl extends
 
 	}
 
-	@Override
-	public TradingAccountBean getTradingAccountInfo(final String acctID)
-			throws StockAppBizException {
-		if (log.isDebugEnabled()) {
-			log.debug("Get trading account info for id:" + acctID);
-		}
-		TradingAccountVO vo  = null;
-		try {
-			vo = fetchDataFromServer(new Callable<TradingAccountVO>() {
-				public TradingAccountVO call()  {
-					try {
-						TradingAccountVO _vo = getService(IRestProxyService.class)
-								.getRestService(ITradingResource.class).getAccount(
-										acctID);
-						if (log.isDebugEnabled()) {
-							log.debug("fetch data:" + _vo);
-						}
-						return _vo;
-					} catch (Exception e) {
-						log.warn(String.format(
-								"Error when fetch trading account info[id=%s]",
-								acctID), e);
-//						throw new StockAppBizException("网络不给力，请稍候再试");
-						return null;
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn(String.format(
-					"Error when fetch trading account info[id=%s]",
-					acctID), e);
-		}
-		if (vo != null) {
-			myTradingAccount.setId(vo.getId());
-			myTradingAccount.setApplyFee(vo.getApplyFee());
-			myTradingAccount.setAvalibleFee(vo.getAvalibleFee());
-			myTradingAccount.setBuyDay(vo.getBuyDay());
-			myTradingAccount.setFrozenVol(vo.getFrozenVol());
-			myTradingAccount.setGainRate(vo.getGainRate());
-			myTradingAccount.setLossLimit(vo.getLossLimit());
-			myTradingAccount.setMaxStockCode(vo.getMaxStockCode());
-			myTradingAccount.setMaxStockMarket(vo
-					.getMaxStockMarket());
-			myTradingAccount.setOver(vo.getOver());
-			myTradingAccount.setSellDay(vo.getSellDay());
-			myTradingAccount.setStatus(vo.getStatus());
-			myTradingAccount.setTotalGain(vo.getTotalGain());
-			myTradingAccount.setType(vo.getType());
-			List<StockTradingOrderVO> orderVos = vo
-					.getTradingOrders();
-			if (orderVos != null) {
-				List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
-				for (StockTradingOrderVO order : orderVos) {
-					list.add(ConverterUtils.fromVO(order));
-				}
-				myTradingAccount.setTradingOrders(list);
-			}
-			myTradingAccount.setUsedFee(vo.getUsedFee());
-			myTradingAccount.setVirtual(vo.isVirtual());
-		}
-		
-		if (log.isDebugEnabled()) {
-			log.debug(myTradingAccount.toString());
-		}
-		return myTradingAccount;
-	}
 	
-	public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
-		try {
-			UserCreateTradAccInfoVO vo = fetchDataFromServer(new Callable<UserCreateTradAccInfoVO>() {
-				public UserCreateTradAccInfoVO call() throws Exception {
-					UserCreateTradAccInfoVO _vo = null;
-					try {
-						_vo = context.getService(IRestProxyService.class)
-								.getRestService(ITradingProtectedResource.class)
-								.getCreateStrategyInfo();
-						if (log.isDebugEnabled()) {
-							log.debug("fetch data:" + _vo);
-						}
-					} catch (Throwable e) {
-						log.warn("Failed to create trading account", e);
-//						throw new StockAppBizException(e.getMessage());
-					}
-					return _vo;
-				}
-			});
-			if (vo != null) {
-				createTDConfig.setCapitalRate(vo.getCapitalRate());
-				createTDConfig.setCostRate(vo.getCostRate());
-				createTDConfig.setDepositRate(vo.getDepositRate());
-				createTDConfig.setMaxAmount(vo.getMaxAmount());
-				createTDConfig.setRateString(vo.getRateString());
-				createTDConfig.setVoucherCostRate(vo.getVoucherCostRate());
-			}
-		} catch (Exception e) {
-			log.warn("Error when fetching create trading account config", e);
-//			throw new StockAppBizException("网络不给力，请稍后再试");
-		}
-		return createTDConfig;
-	}
+	
+	
 	
 	@Override
 	public DealDetailBean getDealDetail(final String acctID) {
@@ -510,178 +402,8 @@ public class TradingManagementServiceImpl extends
 		return auditDetailBean;
 	}
 	
-	@Override
-	public void createTradingAccount(final Long captitalAmount,
-			final float capitalRate, final boolean virtual,
-			final float depositRate) throws StockAppBizException {
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StockResultVO vo = getRestService(ITradingProtectedResource.class)
-							.createTradingAccount(captitalAmount, capitalRate,
-									virtual, depositRate);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to create trading account, caused by "
-										+ vo.getCause());
-							
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {
-							if (log.isDebugEnabled()) {
-								log.debug("Create trading account successfully.");
-							}
-						}
-					}
-				} catch (Throwable e) {
-					log.warn("Failed to create trading account", e);
-					throw new StockAppBizException(e.getMessage());
-				}
 
-			}
-		}, 1, TimeUnit.SECONDS);
 
-	}
-	@Override
-	public void buyStock(final String acctID, final String market,
-			final String code, String price, String amount)
-			throws StockAppBizException {
-		final long cPrice = Long.valueOf(price);// 需要判断处理
-		final long c_amount = Long.valueOf(amount);
-		context.invokeLater(new Runnable() {
-			public void run() {
-				StockResultVO vo = null;
-				try {
-					vo = getRestService(ITradingProtectedResource.class).buyStock(acctID,
-							market, code, cPrice, c_amount);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {// 表示失败
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to buy stock, caused by "
-										+ vo.getCause());
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {// 表示成功
-							if (log.isDebugEnabled()) {
-								log.debug("Buy stock successfully.");
-							}
-						}
-					}
-				} catch (Exception e) {
-					log.warn("Failed to buy stock", e);
-					throw new StockAppBizException(e.getMessage());
-				}
-
-			}
-		}, 1, TimeUnit.SECONDS);
-
-	}
-	@Override
-	public void sellStock(final String acctID, final String market,
-			final String code, String price, String amount)
-			throws StockAppBizException {
-		final long cPrice = Long.valueOf(price);// 需要判断处理
-		final long c_amount = Long.valueOf(amount);
-		context.invokeLater(new Runnable() {
-			public void run() {
-				StockResultVO vo = null;
-				try {
-					vo = getRestService(ITradingProtectedResource.class).sellStock(
-							acctID, market, code, cPrice, c_amount);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {// 表示失败
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to sell stock, caused by "
-										+ vo.getCause());
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {// 表示成功
-							if (log.isDebugEnabled()) {
-								log.debug("Sell stock successfully.");
-							}
-						}
-					}
-				} catch (Exception e) {
-					log.warn("Failed to sell stock", e);
-					throw new StockAppBizException(e.getMessage());
-				}
-
-			}
-		}, 1, TimeUnit.SECONDS);
-	}
-	@Override
-	public void cancelOrder(final String orderID) throws StockAppBizException {
-		context.invokeLater(new Runnable() {
-			public void run() {
-				StockResultVO vo = null;
-				try {
-					vo = getRestService(ITradingProtectedResource.class).cancelOrder(
-							orderID);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {// 表示失败
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to cancel order, caused by "
-										+ vo.getCause());
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {// 表示成功
-							if (log.isDebugEnabled()) {
-								log.debug("Cancel order successfully.");
-							}
-						}
-					}
-				} catch (Exception e) {
-					log.warn("Failed to cancel order", e);
-					throw new StockAppBizException(e.getMessage());
-				}
-
-			}
-		}, 1, TimeUnit.SECONDS);
-	}
-	@Override
-	public void quickBuy(final Long captitalAmount, String capitalRate,
-			final boolean virtual, final String stockMarket,
-			final String stockCode, String stockBuyAmount, String depositRate)
-			throws StockAppBizException {
-
-		final float _capitalRate = Float.valueOf(capitalRate);
-		final long _stockBuyAmount = Long.valueOf(stockBuyAmount);
-		final float _depositRate = Float.valueOf(depositRate);
-		context.invokeLater(new Runnable() {
-			public void run() {
-				StockResultVO vo = null;
-				try {
-					vo = getRestService(ITradingProtectedResource.class).quickBuy(
-							captitalAmount, _capitalRate, virtual, stockMarket,
-							stockCode, _stockBuyAmount, _depositRate);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {// 表示失败
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to cancel order, caused by "
-										+ vo.getCause());
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {// 表示成功
-							if (log.isDebugEnabled()) {
-								log.debug("Cancel order successfully.");
-							}
-						}
-					}
-				} catch (Throwable e) {
-					log.warn("Failed to cancel order", e);
-					throw new StockAppBizException(e.getMessage());
-				}
-
-			}
-		}, 1, TimeUnit.SECONDS);
-
-	}
 	@Override
 	public void clearTradingAccount(final String acctID) {
 		context.invokeLater(new Runnable() {
@@ -885,17 +607,7 @@ public class TradingManagementServiceImpl extends
 		this.earnRankCache.forceReload(map, wait4Finish);
 	}
 
-	@Override
-	public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
@@ -943,7 +655,204 @@ public class TradingManagementServiceImpl extends
 		}
 		return rightTotalGainCache;
 	}
+  
+    //获取我的T日交易盘
+    public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
+        BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
+            @Override
+            public boolean doFilter(TradingAccInfoBean entity) {
+                if (entity.getStatus()==1){
+                    return true;
+                }
+                return false;
+            }
+            
+        }, new  TradingAccInfoBeanComparator());
+        return t0s;
+    }
+    //获取我的T+1日交易盘
+    public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList(){
+        BindableListWrapper<TradingAccInfoBean> t1s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
+            @Override
+            public boolean doFilter(TradingAccInfoBean entity) {
+                if (entity.getStatus()!=1){
+                    return true;
+                }
+                return false;
+            }
+            
+        }, new TradingAccInfoBeanComparator());
+        return t1s;
+    }
+    //根据交易盘创建时间排序
+    class TradingAccInfoBeanComparator implements Comparator<TradingAccInfoBean> {
+        
+        @Override
+        public int compare(TradingAccInfoBean b1, TradingAccInfoBean b2) {
+            if (b1!=null && b2!=null){
+                return b1.getCreateDate()>b2.getCreateDate()?-1:1;
+            }
+            return 0;
+        }
+    }
+    //delete
+    @Override
+    public TradingAccountListBean getHomePageTradingAccountList() throws StockAppBizException {
+        TradingAccountListBean b=new TradingAccountListBean();
+        
+        return null;
+    }
+    
+   //获取参数
+    @Override
+    public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
+        if(this.userCreateTradAccInfo == null){
+            if(this.userCreateTradAccInfo_Cache == null){
+                this.userCreateTradAccInfo_Cache = new GenericReloadableEntityCache<String, UserCreateTradAccInfoBean, UserCreateTradAccInfoVO>("UserCreateTradAccInfo");
+                this.userCreateTradAccInfo_Cache.putEntity("userId", new UserCreateTradAccInfoBean());
+            }
+            this.userCreateTradAccInfo = this.userCreateTradAccInfo_Cache.getEntity("userId");//todo key 
+        }
+        this.userCreateTradAccInfo_Cache.forceReload(false);
+        return this.userCreateTradAccInfo;
+    }
 
+    @Override
+    public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate) throws StockAppBizException {
+        context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("createTradingAccount fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to create trading account, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Create trading account successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
+    }
+    
+    @Override
+    public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
+        context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("createTradingAccount fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to buyStock, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("buyStock successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
+    }
+
+    @Override
+    public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
+        context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("sellStock fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed sellStock, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Create sellStock successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
+    }
+    @Override
+    public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
+        context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("quickBuy fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed quickBuy, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("quickBuy successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
+    }
+  //未结算
+    @Override
+    public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
+        if (tradingAccountBean_cache.getEntity(acctID)==null){
+            TradingAccountBean b=new TradingAccountBean();
+            b.setId(Long.valueOf(acctID));
+            tradingAccountBean_cache.putEntity(b.getId(),b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("acctID", acctID);
+        this.tradingAccountBean_cache.forceReload(params,false);
+        return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
+    }
+
+    @Override
+    public void cancelOrder(String orderID) {
+        
+    }
 	
 
 }

@@ -15,6 +15,7 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
+import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.MediaType;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
@@ -54,10 +55,16 @@ public interface StockResource {
      */
     @POST
     @Path("/quotation")
-    @Produces( { "application/json" })
+    @Produces({ "application/json;charset=utf-8" })
     @Consumes({ "application/json" })
     //@GZIP
     public QuotationListVO getQuotation(List<ParamVO> list) throws Exception;
+    @GET
+    @Path("/quo")
+    @Produces({ "application/json;charset=utf-8" })
+    @Consumes({ "application/json" })   
+    public QuotationListVO getQuotation(@QueryParam("market")  String market,@QueryParam("code") String code) throws Exception;
+    
 
     /**
      * 分时线数据接口
