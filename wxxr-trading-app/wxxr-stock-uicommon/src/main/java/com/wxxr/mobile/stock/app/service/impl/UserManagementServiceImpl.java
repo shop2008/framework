@@ -47,9 +47,11 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
+import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
@@ -133,6 +135,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
+
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		
