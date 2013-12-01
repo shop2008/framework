@@ -96,6 +96,10 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 				AndroidBinding binding = element.getAnnotation(AndroidBinding.class);
 				TargetUIClass targetUI = null;
 				if(binding != null){
+					targetUI = new TargetUIClass();
+					targetUI.setViewModel(model);
+					targetUI.setName(model.getDefaultName());
+					targetUI.setPkgName(model.getApplicationId()+".ui");
 					String vmFile = null;
 					switch(binding.type()){
 					case ACTIVITY:
@@ -108,12 +112,9 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						vmFile = "ActivityUI.vm";
 						break;
 					case VIEW:
+						targetUI.setName(null);
 						break;
 					}
-					targetUI = new TargetUIClass();
-					targetUI.setViewModel(model);
-					targetUI.setName(model.getDefaultName());
-					targetUI.setPkgName(model.getApplicationId()+".ui");
 					String className = StringUtils.trimToNull(binding.superClassName());
 					if(className != null){
 						targetUI.setSuperClass(className);
