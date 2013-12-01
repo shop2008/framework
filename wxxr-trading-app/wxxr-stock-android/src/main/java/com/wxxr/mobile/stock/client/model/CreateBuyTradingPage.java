@@ -162,9 +162,9 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
 	String frozen_money;
 	
-	//冻结余额
-	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
-	String jifen_money;
+//	//冻结余额
+//	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
+//	String jifen_money;
 	
 	@Field(valueKey="visible",visibleWhen="${currentRadioBtnId != 3}")
 	boolean frozen_visibility;
@@ -208,7 +208,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	       return  userCreateTradAccInfo.getDeposit2();
 	}
 	private float getDeposit3(){
-        return  userCreateTradAccInfo.getDeposit2();
+        return  userCreateTradAccInfo.getDeposit3();
     }
 	
 	private float getRate1(){
@@ -250,7 +250,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		costRate = userCreateTradAccInfo.getCostRate();
 		if(changeMoney>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
-			djDeposit = String.format("%.0f", (changeMoney*10000))+"元";
+			djDeposit = String.format("%.0f", changeMoney*10000.0)+"元";
 			djMoney = changeMoney*10000*100;
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);

@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="3dp" 
-            bind:field="frozen_visibility">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,8 +127,17 @@
                 android:text="@string/tv_assure_cost_label"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/black" 
-                android:textSize="14sp"/>
-
+                android:textSize="14sp"
+                bind:field="frozen_visibility"/>
+			<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="实盘积分应支付:"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                android:visibility="gone"
+                bind:field="jifen_visibility"/>
             <TextView
                 android:id="@+id/tv_assure_cost"
                 android:layout_width="wrap_content"
@@ -136,32 +145,6 @@
                 android:text="0元"
                 android:textSize="14sp"
                 bind:field="frozen_money"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/black" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:layout_marginTop="3dp"
-            android:visibility="gone"
-            bind:field="jifen_visibility">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="实盘积分应支付:"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/black" 
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/tv_assure_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0元"
-                android:textSize="14sp"
-                bind:field="jifen_money"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black" />
         </RelativeLayout>
