@@ -48,6 +48,8 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
+import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
@@ -141,6 +143,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SubmitPushMesasgeHandler.COMMAND_NAME, new SubmitPushMesasgeHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -303,6 +306,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public boolean getPushMessageSetting() {
+		GetPushMessageSettingCommand cmd=new GetPushMessageSettingCommand();
+		Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+		try {
+			SimpleResultVo result=future.get(30,TimeUnit.SECONDS);
+			boolean bind=result.getResult()==1;
+			return bind;
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
 		return false;
 	}
 
