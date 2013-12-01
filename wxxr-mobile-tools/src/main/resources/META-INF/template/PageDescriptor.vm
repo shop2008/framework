@@ -65,7 +65,7 @@ public class ${model.name} extends AbstractPageDescriptor {
         
 #end
 #end
-
+#if(${model.targetUI})
 		addBindingDescriptor(TargetUISystem.ANDROID, new IAndroidBindingDescriptor() {
 			
 			@Override
@@ -92,6 +92,7 @@ public class ${model.name} extends AbstractPageDescriptor {
 				return AndroidBindingType.${model.bindingType};
 			}
 		});
+#end
 	}
 
 }

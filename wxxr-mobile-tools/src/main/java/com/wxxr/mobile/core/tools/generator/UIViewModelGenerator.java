@@ -147,10 +147,10 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						}
 
 					}
-					
-					generateViewDescriptor(model.getName(),context, model,
-							attributes, binding, targetUI,filer);
 				}
+				
+				generateViewDescriptor(model.getName(),context, model,
+						attributes, binding, targetUI,filer);
 //				if((!model.isPage())&&(model.getAlias() != null)){
 //					for (String aliasName : model.getAlias()) {
 //						generateViewDescriptor(aliasName,context, model,
@@ -195,8 +195,10 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 		descriptor.setViewModel(model);
 		descriptor.setName(name+"Descriptor");
 		descriptor.setPkgName(model.getApplicationId()+".view");
-		descriptor.setLayoutId(binding.layoutId());
-		descriptor.setBindingType(binding.type().name());
+		if(binding != null){
+			descriptor.setLayoutId(binding.layoutId());
+			descriptor.setBindingType(binding.type().name());
+		}
 		this.provider.addDescriptor(descriptor.getClassName());
 		if(model.getAlias() != null){
 			for (String a : model.getAlias()) {
