@@ -147,10 +147,10 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						}
 
 					}
+					
+					generateViewDescriptor(model.getName(),context, model,
+							attributes, binding, targetUI,filer);
 				}
-				
-				generateViewDescriptor(model.getName(),context, model,
-						attributes, binding, targetUI,filer);
 //				if((!model.isPage())&&(model.getAlias() != null)){
 //					for (String aliasName : model.getAlias()) {
 //						generateViewDescriptor(aliasName,context, model,
