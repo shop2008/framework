@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.common.AbstractPageDescriptor;
 import ${model.viewModel.applicationId}.R;
 #set( $clazz = ${model.addImport($model.viewModel.className)})
-#if(${model.targetUI})
+#if(${model.targetUI.name})
 #set( $clazz = ${model.addImport($model.targetUI.className)})
 #end
 #foreach($stmt in $model.imports)
