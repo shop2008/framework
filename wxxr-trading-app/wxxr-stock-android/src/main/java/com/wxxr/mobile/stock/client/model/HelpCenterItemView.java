@@ -2,12 +2,10 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 
@@ -16,31 +14,21 @@ import com.wxxr.mobile.stock.app.bean.ArticleBean;
 public abstract class HelpCenterItemView extends ViewBase implements
 		IModelUpdater {
 
-	@Field(valueKey = "text")
-	String title;
-	@Field(valueKey = "text")
-	String abstractInfo;
-
-	String articleUrl;
-	DataField<String> titleField;
-	DataField<String> abstractInfoField;
-
+	@Bean
+	ArticleBean article;
 	
-	@Command(commandName="handleItemClick")
-	String handleItemClick(InputEvent event){
-		return null;
-	} 
+	@Field(valueKey = "text",binding="${article!=null?article.title:'--'}")
+	String title;
+	
+	@Field(valueKey = "text",binding="${article!=null?article.abstractInfo:'--'}")
+	String abstractInfo;
+	
 	
 	@Override
 	public void updateModel(Object data) {
 		if (data instanceof ArticleBean) {
 			ArticleBean article = (ArticleBean) data;
-			this.title = article.getTitle();
-			this.titleField.setValue(this.title);
-			this.abstractInfo = article.getAbstractInfo();
-			this.abstractInfoField.setValue(this.abstractInfo);
-			this.articleUrl = article.getArticleUrl();
+			registerBean("article", article);
 		}
 	}
-
 }
