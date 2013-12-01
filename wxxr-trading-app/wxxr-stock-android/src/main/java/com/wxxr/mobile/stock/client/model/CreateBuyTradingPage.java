@@ -377,7 +377,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		@Command(navigations={@Navigation(on="home",showPage="home")})
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				userCreateService.createTradingAccount(100000l, userCreateTradAccInfo.getCapitalRate(), true, 0);
+				userCreateService.createTradingAccount(10000000l, userCreateTradAccInfo.getCapitalRate(), true, 0);
 			}
 			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			return "home";
