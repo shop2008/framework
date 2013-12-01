@@ -14,5 +14,7 @@ public class StockMinuteK  {
     private String date; //日期时间
     private String close;//昨收
     private List<StockMinuteLineBean> list; //
+    private String market;
+    private String code;
 
 }

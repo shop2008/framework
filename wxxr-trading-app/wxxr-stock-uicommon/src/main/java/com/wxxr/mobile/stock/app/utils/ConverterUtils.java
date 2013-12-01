@@ -9,6 +9,8 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -16,6 +18,8 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
+import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -338,4 +342,44 @@ public class ConverterUtils {
         bean.setUserGain(vo.getUserGain());
         bean.setVirtual(vo.isVirtual());
     }
+    public static StockMinuteKBean fromVO(StockMinuteKVO vo) {
+        if (vo!=null){
+            return null;
+        }
+        StockMinuteKBean b=new StockMinuteKBean();
+        b.setClose(vo.getClose());
+        b.setDate(vo.getDate());
+        List<StockMinuteLineVO> mvos=vo.getList();
+        if (mvos!=null && !mvos.isEmpty()){
+            List< StockMinuteLineBean> smlbs=new ArrayList< StockMinuteLineBean>();
+            for  (StockMinuteLineVO item:mvos){
+                StockMinuteLineBean smlb=fromVO(item);
+                smlbs.add(smlb);
+            }
+            b.setList(smlbs);
+        }
+        return b;
+    }
+    private static StockMinuteLineBean fromVO(StockMinuteLineVO vo) {
+        if (vo!=null){
+            return null;
+        }
+        StockMinuteLineBean bean = new StockMinuteLineBean();
+        bean.setAvgChangeRate(bean.getAvgChangeRate());
+        bean.setAvprice(bean.getAvprice());
+        bean.setHqTime(bean.getHqTime());
+        bean.setPrice(bean.getPrice());
+        bean.setSecuamount(bean.getSecuamount());
+        bean.setSecuvolume(bean.getSecuvolume());
+        return bean;
+    }
+    public static void updatefromVOtoBean(StockMinuteKBean bean, StockMinuteKBean b) {
+        bean.setClose(b.getClose());
+        bean.setDate(b.getDate());
+        bean.setMarket(b.getMarket());
+        bean.setCode(b.getCode());
+        List<StockMinuteLineBean> mvos=b.getList();
+        bean.setList(mvos);
+    }
+    
 }

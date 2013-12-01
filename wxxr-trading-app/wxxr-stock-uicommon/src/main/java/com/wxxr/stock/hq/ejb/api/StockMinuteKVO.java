@@ -2,6 +2,7 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 /**
@@ -16,6 +17,7 @@ public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
     private String date; //
     @XmlElement(name="minute")
     private String close;//昨收
+    @XStreamImplicit(itemFieldName="list")
     private List<StockMinuteLineVO> list; //
     
     public String getDate() {

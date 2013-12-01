@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
@@ -62,6 +63,10 @@ public class InfoCenterManagementServiceImpl extends
         IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
         stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List>("StockQuotation",30);
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockQuotation", new StockQuotationLoader());
+        
+        
+        stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("StockMinuteK");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
 	}
 
 	@Override
@@ -92,7 +97,23 @@ public class InfoCenterManagementServiceImpl extends
 	//分钟线
 	@Override
 	public StockMinuteKBean getMinuteline(Map<String, String> params) {
-		return null;
+	   String market= params.get("market");
+	   String code= params.get("code");
+	   if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
+	       return null;
+	   }
+	    String mc=market+code;
+        if (stockMinuteKBean_cache.getEntity(mc)==null){
+            StockMinuteKBean b=new StockMinuteKBean();
+            b.setMarket(market);
+            b.setCode(code);
+            stockMinuteKBean_cache.putEntity(mc,b);
+        }
+        Map<String, Object> p=new HashMap<String, Object>(); 
+        p.put("code", code);
+        p.put("market", market);
+        this.stockMinuteKBean_cache.forceReload(p,false);
+        return stockMinuteKBean_cache.getEntity(mc);
 	}
 	//K线
 	@Override
@@ -100,8 +121,10 @@ public class InfoCenterManagementServiceImpl extends
 		return null;
 	}
 	
-	//交易盘详细信息
+	//行情信息
     private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
+    //分钟线信息
+    private GenericReloadableEntityCache<String,StockMinuteKBean,List> stockMinuteKBean_cache;
 	//查询股票行情
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
