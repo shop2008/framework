@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
@@ -82,7 +83,7 @@ import com.wxxr.stock.trading.ejb.api.UserAssetVO;
  * 
  */
 public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
-		implements IUserManagementService, IUserAuthManager {
+		implements IUserManagementService, IUserAuthManager,IUserIdentityManager {
 	private static final Trace log = Trace
 			.register(UserManagementServiceImpl.class);
 
@@ -90,7 +91,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 //	private static final String KEY_PASSWORD = "P";
 //	private static final String KEY_UPDATE_DATE = "UD";
 	private IPreferenceManager prefManager;
-	private UsernamePasswordCredential UsernamePasswordCredential4Login;
+	private UsernamePasswordCredential usernamePasswordCredential4Login;
 	// ==================beans =============================
 	private UserBean myUserInfo ;
 	private TradingAccountListBean myTradingAccountListBean = new TradingAccountListBean();
@@ -147,11 +148,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
+		context.registerService(IUserIdentityManager.class, this);
 		
 	}
 
 	@Override
 	protected void stopService() {
+		context.unregisterService(IUserIdentityManager.class, this);
 		context.unregisterService(IUserManagementService.class, this);
 		context.unregisterService(IUserAuthManager.class, this);
 	}
@@ -169,7 +172,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 //		if (!mgr.hasPreference(getModuleName())
 //				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
 //			if (UsernamePasswordCredential4Login != null) {
-				return UsernamePasswordCredential4Login;
+				return usernamePasswordCredential4Login;
 //			}
 //			
 //			
@@ -254,7 +257,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		Future<?> future = context.getExecutor().submit(new Runnable() {
 			@Override
 			public void run() {
-				UsernamePasswordCredential4Login = new UsernamePasswordCredential(
+				usernamePasswordCredential4Login = new UsernamePasswordCredential(
 						userId, pwd);
 				try {
 					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
@@ -265,11 +268,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					myUserInfo.setUserPic(vo.getIcon());
 				} catch (NotAuthorizedException e) {
 					log.warn("Failed to login user due to invalid user name and/or password",e);
-					UsernamePasswordCredential4Login = null;
+					usernamePasswordCredential4Login = null;
 					throw new LoginFailedException("用户名或密码错误");
 				} catch (Throwable e) {
 					log.warn("Failed to login user due to unexpected exception",e);
-					UsernamePasswordCredential4Login = null;
+					usernamePasswordCredential4Login = null;
 					throw new LoginFailedException("登录失败，请稍后再试...");
 				}
 			}
@@ -825,6 +828,21 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		params.put("limit", limit);
 		pullMessagesCache.doReloadIfNeccessay(params);
 		return pullMessages;
+	}
+
+	@Override
+	public boolean isUserAuthenticated() {
+		return myUserInfo != null;
+	}
+
+	@Override
+	public String getUserId() {
+		return myUserInfo.getPhoneNumber();
+	}
+
+	@Override
+	public boolean usrHasRoles(String... roles) {
+		return false;
 	}
 
 
