@@ -58,9 +58,11 @@ public class BindableViewFactory implements Factory {
 			nameBuilder.append("android.view.");
 		else if("WebView".equals(tagName))
 			nameBuilder.append("android.webkit.");
+		else if ("ViewPager".equals(tagName))
+			nameBuilder.append("android.support.v4.view.");
 		else if (!viewNameIsFullyQualified(tagName))
 			nameBuilder.append("android.widget.");
-
+		
 		nameBuilder.append(tagName);
 		return nameBuilder.toString();
 	}

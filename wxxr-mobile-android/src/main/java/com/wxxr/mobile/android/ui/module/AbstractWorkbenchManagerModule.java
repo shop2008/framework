@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.android.ui.module;
 
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +20,7 @@ import com.wxxr.mobile.android.ui.binding.ItemClickEventBinder;
 import com.wxxr.mobile.android.ui.binding.SimpleFieldBinder;
 import com.wxxr.mobile.android.ui.binding.UICommandButtonBinder;
 import com.wxxr.mobile.android.ui.binding.ViewGroupFieldBinder;
+import com.wxxr.mobile.android.ui.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.android.ui.updater.BackgroundColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.BackgroupImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;
@@ -121,6 +123,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerFieldBinder(UIComponent.class,AdapterView.class, new AdapterViewFieldBinder());
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewGroup.class, new ViewGroupFieldBinder());
 		mgr.registerFieldBinder(UICommand.class,Button.class, new UICommandButtonBinder());
+		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 	}
 	
 	protected void initDefaultEventBinders(IEventBinderManager mgr){
