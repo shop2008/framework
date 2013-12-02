@@ -14,7 +14,8 @@
 	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:orientation="vertical"
-	        android:gravity="center"
+	        android:gravity="center|left"
+	        android:paddingLeft="20dp"
 	        >
 	        <TextView 
 	            android:id="@id/tv_stock_name_price"
