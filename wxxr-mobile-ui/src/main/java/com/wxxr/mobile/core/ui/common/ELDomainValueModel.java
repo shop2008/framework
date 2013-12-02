@@ -91,6 +91,10 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 	 */
 	@Override
 	public T doEvaluate() {
+		if(log.isDebugEnabled()){
+			log.debug("Going to evaluate expr :["+express+"] for data field:/["+field+"]");
+		}
+
 		this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
 		this.field.removeAttribute(AttributeKeys.valueUpdating);
 		if(!updateAsync){

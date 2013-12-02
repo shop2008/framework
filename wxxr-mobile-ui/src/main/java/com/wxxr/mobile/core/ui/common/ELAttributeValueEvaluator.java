@@ -28,6 +28,9 @@ public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,O
 	 */
 	@Override
 	public Object doEvaluate() {
+		if(log.isDebugEnabled()){
+			log.debug("Going to evaluate expr :["+express+"] for attribute :"+key+"/["+component+"]");
+		}
 		try {
 			Object val = super.doEvaluate();
 			AttributeKeys.updateAttribute(key, component, val);
