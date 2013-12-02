@@ -21,6 +21,8 @@ import com.wxxr.mobile.core.util.StringUtils;
 public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 
 	private String format = "yyyy-MM-dd HH:mm:ss";
+	private String nullString;
+	private Long nullLong;
 
 	@Override
 	public void destroy() {
@@ -41,12 +43,18 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		if (map.containsKey("format")) {
 			this.format = (String) map.get("format");
 		}
+		if (map.containsKey("nullString")) {
+			this.nullString = (String) map.get("nullString");
+		}
+		if (map.containsKey("nullLong")) {
+			this.nullLong = (Long) map.get("nullLong");
+		}		
 	}
 
 	@Override
 	public Long toSourceTypeValue(String s) throws ValidationException {
 		if (StringUtils.isBlank(s)) {
-			return null;
+			return nullLong;
 		}
 		SimpleDateFormat sdf;
 		try {
@@ -68,7 +76,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 	@Override
 	public String toTargetTypeValue(Long val) {
 		if (val == null) {
-			return null;
+			return nullString;
 		}
 		if (val < 0)
 			return null;
