@@ -38,13 +38,11 @@ import com.wxxr.mobile.stock.app.service.impl.EntityLoaderRegistryImpl;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NewArticleManagementServiceImpl;
-import com.wxxr.mobile.stock.app.service.impl.NewTradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.SyncConnector;
 import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
-import com.wxxr.mobile.stock.client.mock.MockInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 
 /**
@@ -121,7 +119,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		if (context.getApplication().isInDebugMode()) {
 			registerKernelModule(new NewArticleManagementServiceImpl());
 			registerKernelModule(new UserManagementServiceImpl());
-			registerKernelModule(new NewTradingManagementServiceImpl());
+			registerKernelModule(new TradingManagementServiceImpl());
 			registerKernelModule(new InfoCenterManagementServiceImpl());
 		}else{
 			registerKernelModule(new NewArticleManagementServiceImpl());//
