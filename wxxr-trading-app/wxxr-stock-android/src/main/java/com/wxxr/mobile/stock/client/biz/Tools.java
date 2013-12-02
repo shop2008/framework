@@ -45,8 +45,14 @@ public class Tools
 
 	public static String formatDouble(double value)
 	{
+		try{
+			return df.format(NMath.round(value, 2));
+			
+		}catch(NumberFormatException e){
+			
+		}
 
-		return df.format(NMath.round(value, 2));
+		return null;
 	}
 
 	public static String formatDouble3(double value)
@@ -438,4 +444,32 @@ public class Tools
 		
 	}
 	
+	
+	
+	public static String formatNumber(Float val,int n){
+		String data = null;
+		if(val > 10000000000.0){
+			if(n==1){
+				data = String.format("%.1f亿", val/10000000000.0);
+			}
+			if(n==2){
+				data = String.format("%.1f亿", val/10000000000.0/2);
+			}
+		}else if(val > 1000000.0){
+			if(n==1){
+				data = String.format("%.1f万", val/1000000.0);
+			}
+			if(n==2){
+				data = String.format("%.1f万", val/1000000.0/2);
+			}
+		}else{
+			if(n==1){
+				data = String.format("%.0f", val/100);
+			}
+			if(n==2){
+				data = String.format("%.0f", val/200);
+			}
+		}
+		return data;
+	}
 }
