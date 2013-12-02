@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_background_color">
+    android:background="@color/page_background_color"
+    android:orientation="vertical">
 
     <LinearLayout 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginBottom="50dp">
+        >
 	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content" 
@@ -41,10 +43,26 @@
 	            android:textSize="15sp"/>
 	
 	    </LinearLayout>
-	
+		<LinearLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:padding="8dp"
+		    android:layout_margin="4dp"
+		    android:visibility="gone"
+		    android:background="@drawable/bu_message_radius">
+
+			<TextView
+			    android:id="@+id/textView8"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="14:00 10.00挂单买入平安银行2000股" 
+			    android:textColor="@color/black"
+			    android:textSize="12sp"/>
+		    
+		</LinearLayout>
 		<com.wxxr.mobile.stock.client.widget.PullToRefreshView
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
+		    android:layout_height="wrap_content"
 		    android:layout_above="@id/buy_btn"
 		    android:layout_below="@id/date_layout"
 		    android:orientation="vertical"
@@ -53,7 +71,7 @@
 		
 			 <ScrollView
 			     android:layout_width="match_parent"
-			     android:layout_height="match_parent" >
+			     android:layout_height="wrap_content" >
 			     <LinearLayout android:layout_width="fill_parent"
 			         android:layout_height="wrap_content"
 			         android:orientation="vertical">
@@ -246,7 +264,8 @@
 				        android:layout_height="wrap_content" 
 				        style="@style/mListView"
 				        bind:field="stockTradingOrder"
-				        bind:itemViewId="sellTradingStockOrder">
+				        bind:itemViewId="sellTradingStockOrder"
+				        bind:on_ItemClick="sellStockItemClick">
 				    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>				    
 		    	    <TextView android:layout_width="match_parent"
 				        android:layout_height="match_parent"
@@ -265,42 +284,56 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
          >
 
-        <Button
-            android:id="@+id/button1"
+        
+        <LinearLayout 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="卖出" 
-            android:background="@drawable/blue_btn_back"
+            android:background="@drawable/buy_button_bule_btn"
             android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="15sp"
             android:gravity="center"
-            android:layout_marginRight="5dp"
-            bind:filed="isEmpty"
+            bind:field="isEmpty"
+            android:clickable="true"
             bind:on_Click="sellTradingAction"
-            />
-
-        <Button
-            android:id="@+id/button2"
+            android:layout_marginRight="4dp"
+            >
+			 <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/sell_buy"/>
+            <TextView 
+                android:text="卖出"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+        
+        <LinearLayout 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="清仓" 
-            android:background="@drawable/blue_btn_back"
+            android:background="@drawable/buy_button_bule_btn"
             android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="15sp"
             android:gravity="center"
-            bind:filed="isEmpty"
+            bind:field="isEmpty"
             bind:on_Click="cleanTradingAction"
-            android:layout_marginLeft="5dp"/>
-
+            android:layout_marginLeft="4dp"
+            >
+            <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/clean_icon"/>
+            <TextView 
+                android:text="清仓"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
     </LinearLayout>
-    
-</RelativeLayout>
+</LinearLayout>

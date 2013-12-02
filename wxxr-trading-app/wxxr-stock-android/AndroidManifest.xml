@@ -239,6 +239,42 @@
             android:screenOrientation="portrait" />
         
         <activity
+            android:name=".ui.SellStockPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.ShiPanBuyStockInfoPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".ui.SHzhiShuPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+         <activity
+            android:name=".ui.SZzhiShuPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+         
+         <activity
+            android:name=".ui.GeGuStockPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+         <activity
+            android:name=".ui.QuickBuyStockPage"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+                 
+        <activity
             android:name=".ui.GuidePage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"

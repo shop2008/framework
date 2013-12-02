@@ -23,9 +23,9 @@ public class ScrollViewExtend extends ScrollView {
 	
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-    	if(ev.getAction() == MotionEvent.ACTION_MOVE && getParent()!=null){
-    		getParent().requestDisallowInterceptTouchEvent(true);
-    	}
+//    	if(ev.getAction() == MotionEvent.ACTION_MOVE && getParent()!=null){
+//    		getParent().requestDisallowInterceptTouchEvent(true);
+//    	}
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 xDistance = yDistance = 0f;

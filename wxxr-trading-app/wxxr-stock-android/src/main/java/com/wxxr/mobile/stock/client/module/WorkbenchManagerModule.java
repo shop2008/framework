@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
+import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.HideProgressEventBinder;
@@ -20,6 +21,7 @@ import com.wxxr.mobile.stock.client.binding.IPinHeadItemClickBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.InfoNoticesViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.NewsAccountViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
@@ -35,6 +37,8 @@ import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
 import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
 import com.wxxr.mobile.stock.client.widget.InfoNoticesView;
 import com.wxxr.mobile.stock.client.widget.KLineView;
+import com.wxxr.mobile.stock.client.widget.MinuteLineView;
+import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 import com.wxxr.mobile.stock.client.widget.NewsAccountView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
@@ -55,6 +59,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, TextSpinnerView.class, new TextSpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshView.class, new RefreshViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
+		mgr.registerFieldBinder(UIComponent.class, MinuteLineView.class, new MinuteLineViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, ArticleBodyView.class, new ArticleBodyFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, BuyStockDetailInputView.class, new BuyStockViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, NewsAccountView.class, new NewsAccountViewFieldBinder());
@@ -75,16 +80,18 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager mgr) {
 		Pull2RefreshViewKeys.registerKeys(mgr);
+		MinuteLineViewKeys.registerKeys(mgr);
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
+		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());
 	}
 
 	@Override
 	protected void initPresentationModels(IWorkbenchRTContext context) {
 		try {
-			Class.forName("com.wxxr.mobile.stock.client.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null, context);
+			Class.forName("com.wxxr.mobile.stock.client.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null,context);
 		}catch(Throwable t){
 			Trace.getLogger(WorkbenchManagerModule.class).fatal("Failed to load in presentation model !!!",t);
 		}
