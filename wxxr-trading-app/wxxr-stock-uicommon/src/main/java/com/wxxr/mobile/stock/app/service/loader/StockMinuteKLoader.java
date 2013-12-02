@@ -66,6 +66,7 @@ public class StockMinuteKLoader extends AbstractEntityLoader<String, StockMinute
             for (StockMinuteKBean vo : result) {
                 StockMinuteKBean bean=cache.getEntity(vo.getMarket()+vo.getCode());
                 if(bean == null) {
+                    cache.putEntity(vo.getMarket()+vo.getCode(), vo);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
