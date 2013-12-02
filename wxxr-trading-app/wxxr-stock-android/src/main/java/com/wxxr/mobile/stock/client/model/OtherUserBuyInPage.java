@@ -27,7 +27,6 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
-import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -50,19 +49,29 @@ public abstract class OtherUserBuyInPage extends PageBase implements IModelUpdat
 	TradingAccountBean tradingAccount;
 	
 	
-	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日买入")})
+	@Convertor(params = { @Parameter(name="format",value="M月d日买入")})
 	LongTime2StringConvertor lt2BuySConvertor;
 
-	@Convertor(params = { @Parameter(name = "format", value = "MM月dd日卖出")})
+	@Convertor(params = { @Parameter(name="format",value="M月d日卖出")})
 	LongTime2StringConvertor lt2SellSConvertor;
-	@Convertor(params = { @Parameter(name = "format", value = "%10.2f") })
-	StockLong2StringAutoUnitConvertor autoUnitConvertor;
-
-	@Convertor(params = { @Parameter(name = "format", value = "%10.2f") })
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
 	StockLong2StringConvertor stockL2StrConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple",value="100")
+	})
+	StockLong2StringAutoUnitConvertor autoUnitConvertor;
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f元"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor float2StringConvertor;
 
-	@Convertor(params = { @Parameter(name = "format", value = "%10.2f元") })
-	Float2StringConvertor float2StringConvertor;
 	
 	/**买入日期  */
 	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:'--月--日买入'}", converter="lt2BuySConvertor")
