@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -15,6 +16,7 @@ import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAccInfoBean,TradingAccInfoVO>{
     
     @NetworkConstraint(allowConnectionTypes={})
+    @SecurityConstraint(allowRoles={})
     public class GetTradingAccInfoCommand implements ICommand<List<TradingAccInfoVO>> {
         public final static String Name="GetTradingAccInfoCommand";
         @Override
