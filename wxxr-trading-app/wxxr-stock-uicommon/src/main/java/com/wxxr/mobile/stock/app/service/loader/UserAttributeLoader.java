@@ -73,7 +73,7 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, UserAttrib
 					bean.setName(vo.getAttrName());
 					cache.putEntity(bean.getName(), bean);
 				}
-				bean.setValue(bean.getValue());
+				bean.setValue(vo.getAttrValue());
 				updated = true;
 			}
 		}

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "UserAuthenVO")
+@XmlRootElement(name = "UserAuthVO")
 public class UserAuthenticaVO implements Serializable{
 	
 	private static final long serialVersionUID = -3628688505113496679L;
