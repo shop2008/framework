@@ -47,7 +47,8 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	LongTime2StringConvertor longTime2StringConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f")
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	

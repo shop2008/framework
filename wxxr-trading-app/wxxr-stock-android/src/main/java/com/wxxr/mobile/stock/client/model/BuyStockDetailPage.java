@@ -59,6 +59,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
 	private boolean hasShow = false;
+	private boolean isMarket = false;
+	String orderPriceInput = "";
+	
 	@Bean
 	String acctIdBean;
 	
@@ -152,12 +155,29 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		registerBean("marketPriceBean", marketPriceBean);
 		return null;
 	}
-	
+	/**
+	 * 市价点中
+	 * @param envent
+	 * @return
+	 */
 	@Command
 	String handleMarketBtnClick(InputEvent envent) {
 		orderPriceBean = (long) Utils.roundUp(stockQuotationBean.getClose()*1.1f, 0) + "";
 		registerBean("orderPriceBean", stockQuotationBean);
+		isMarket = true;
+		return null;
+	}
+	/**
+	 * 挂单点中
+	 * @param envent
+	 * @return
+	 */
+	@Command
+	String handleOrderBtnClick(InputEvent envent) {
+		orderPriceBean = orderPriceInput;
+		registerBean("orderPriceBean", orderPriceBean);
 		
+		isMarket = false;
 		return null;
 	}
 	@Command
@@ -168,6 +188,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			if(!StringUtils.isEmpty(key))
 				value = (long) Utils.roundUp(Float.parseFloat(key) * 1000, 0) + "";
 			orderPriceBean = value;
+			orderPriceInput = value;
 			registerBean("orderPriceBean", value);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -241,6 +262,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					avalibleFeeBean = avalibleFee;
 					registerBean("avalibleFeeBean", avalibleFee);
 				}
+				log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
 			}
 		}
 	}
@@ -254,8 +276,17 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Command(navigations = { @Navigation(on = "page", showView = "StockKLineView") })
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String handleBuyBtnClick(InputEvent event) {
-			tradingService.buyStock(acctIdBean, marketBean, codeBean, orderPriceBean, amountBean);
-		return "page";
+		String price = "0";
+		if(!isMarket) {
+			try {
+				price = Long.parseLong(orderPriceBean)/10 + "";
+			}catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
+		hide();
+		return null;
 	}
 	
 	@OnCreate
