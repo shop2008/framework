@@ -33,6 +33,7 @@ public class StockInfo {
 	private Long capital;// 总股本
 	@Column
 	private Long marketCapital;// 流通盘
+	@Column
 	private Long eps;//
 	@Column
 	private Date eps_report_date;//报告时间

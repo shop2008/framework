@@ -31,10 +31,10 @@ import com.wxxr.mobile.stock.app.db.StockInfo;
 import com.wxxr.mobile.stock.app.db.dao.StockInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
-import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.mobile.sync.client.api.IDataConsumer;
 import com.wxxr.mobile.sync.client.api.IMTreeDataSyncServerConnector;
 import com.wxxr.mobile.sync.client.impl.MTreeDataSyncClientService;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * @author wangxuyang
@@ -447,7 +447,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 
 	public StockBaseInfo getStockBaseInfoByCode(String code) {
 		if (StringUtils.isBlank(code)) {
-			
+			return null;
 		}
 		return cache.get(code);
 	}
