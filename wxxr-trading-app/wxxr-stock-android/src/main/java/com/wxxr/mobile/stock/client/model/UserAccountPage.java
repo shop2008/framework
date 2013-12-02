@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -55,8 +56,12 @@ public abstract class UserAccountPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
-	@Bean(type=BindingType.Pojo, express="${usrService!=null?usrService.userAssetBean:null}")
+	@Bean(type=BindingType.Pojo, express="${usrService.userAssetBean}")
 	UserAssetBean userAssetBean;
+	
+	@Bean(type=BindingType.Pojo, express="${usrService.userAuthInfo}")
+	AuthInfo authBean;
+	
 	
 	@Convertor(
 			params={
@@ -79,24 +84,25 @@ public abstract class UserAccountPage extends PageBase {
 			commandName="drawCash",
 			navigations={
 					@Navigation(on="WITHDRAW", showPage="userWithDrawCashPage"),
-					@Navigation(on="ALERTBIND", showDialog="unBindCardDialog")
+					@Navigation(
+							on="ALERTBIND", 
+							showDialog="unBindCardDialog", params={
+						    @Parameter(name="1", value="1")
+						    })
 					}
 			)
 	String drawCash(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			boolean isBindCard = usrService.isBindCard();
-			System.out.println("*****"+isBindCard);
-			
-			return "WITHDRAW";
+			if (authBean == null) {
+				return "ALERTBIND";
+			} else {
+				return "WITHDRAW";
+			}
 		}
 		return null;
 	}
 	
-	private void showDialog() {
-		getUIContext().getWorkbenchManager().getWorkbench().showPage("unBindCardDialog", null, null);
-	}
-
 	/**
 	 * 进入收支明细业务界面
 	 * @param event

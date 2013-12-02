@@ -1,41 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_circle_white" >
+    android:layout_width="240dp"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:background="@color/gray"
+    >
 
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="请先绑定银行卡"
-        android:textColor="@color/black" />
-
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="请先绑定银行卡"
+	        android:textSize="18sp"
+	        android:gravity="center"
+	        android:textColor="@color/black" />
+	</LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        >
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_left_bottom"
+            android:background="@drawable/bg_left_btn"
             android:text="确定"
+            android:textColor="@color/white"
             bind:field="*"
-            bind:on_Click="done" />
+            bind:on_Click="showAuthPage"
+             />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_right_bottom"
+            android:background="@drawable/bg_right_btn"
             android:text="取消"
+            android:textColor="@color/white"
             bind:field="*"
-            bind:on_Click="cancel" />
+            bind:on_Click="cancel"
+            />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

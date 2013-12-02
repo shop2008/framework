@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
@@ -59,9 +60,17 @@ public abstract class UserAlterPswPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName="done",navigations = { @Navigation(on = "StockAppBizException", message = "修改密码失败", params = {
-			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-			@Parameter(name = "title", value = "错误") }) })
+	@Command(commandName="done",navigations = { 
+			@Navigation(
+					on = "StockAppBizException", 
+					message = "%m%n", 
+					params = {
+							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "title", value = "错误")
+							}
+					) 
+			}
+	)
 	@ExeGuard(title = "修改密码", message = "正在处理，请稍候...", silentPeriod = 1)
 	String done(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -71,5 +80,12 @@ public abstract class UserAlterPswPage extends PageBase {
 			hide();
 		}
 		return null;
+	}
+	
+	@OnUIDestroy
+	protected void clearData() {
+		callback.setOldPassword("");
+		callback.setNewPassword("");
+		callback.setNewPasswordAgain("");
 	}
 }

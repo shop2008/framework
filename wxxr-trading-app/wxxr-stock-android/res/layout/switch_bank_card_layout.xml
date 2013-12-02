@@ -76,13 +76,12 @@
             android:singleLine="true"
             android:textSize="15sp" 
             bind:field="bankName"
-            bind:on_TextChanged="bankNameTextChanged"
+            bind:on_TextChanged="_updateValue"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <EditText
             android:id="@+id/et_switch_account_bank_addr"
@@ -94,13 +93,12 @@
             android:hint="@string/hint_switch_account_bank_addr"
             android:textSize="15sp" 
             bind:field="bankAddr"
-            bind:on_TextChanged="bankAddrTextChanged"
+            bind:on_TextChanged="_updateValue"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <EditText
             android:id="@+id/et_switch_account_number"
@@ -113,7 +111,7 @@
             android:inputType="number"
             android:textSize="15sp" 
             bind:field="bankNum"
-            bind:on_TextChanged="bankNumTextChanged"
+            bind:on_TextChanged="_updateValue"
             />
     </LinearLayout>
 

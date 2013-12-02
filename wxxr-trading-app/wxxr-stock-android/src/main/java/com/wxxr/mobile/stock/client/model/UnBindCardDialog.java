@@ -9,31 +9,22 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 
 @View(name = "unBindCardDialog")
-@AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.unbind_card_dialog_layout")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.unbind_card_dialog_layout")
 public abstract class UnBindCardDialog extends ViewBase {
 
-	/**
-	 * 绑定-跳转到"提现认证"界面
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "done", navigations = { @Navigation(on = "SUCCESS", showPage = "withDrawCashAuthPage") })
-	String done(InputEvent event) {
-		return "SUCCESS";
+	@Command(
+			navigations={@Navigation(on="*",showPage="withDrawCashAuthPage")}
+			)
+	String showAuthPage(InputEvent event) {
+		
+		return "*";
 	}
-
-	/**
-	 * 取消绑定
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "cancel")
+	
+	@Command
 	String cancel(InputEvent event) {
-
-		/** 取消 */
 		hide();
 		return null;
 	}
+	
+	
 }

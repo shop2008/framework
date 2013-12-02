@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    >
-    
-    <ImageView 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bind:field="userHomeBack"
-        android:scaleType="fitXY"
-        android:background="@drawable/back1"
-        />
-</LinearLayout>
+    android:layout_width="120dp"
+    android:layout_height="80dp"
+    bind:field="userHomeBack"
+    />

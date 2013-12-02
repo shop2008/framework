@@ -50,13 +50,12 @@
             android:singleLine="true"
             android:textSize="15sp" 
             bind:field="accountName"
-            bind:on_TextChanged="accountNameChanged"
+            bind:on_TextChanged="_updateValue"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <EditText
             android:layout_width="match_parent"
@@ -68,13 +67,12 @@
             android:singleLine="true"
             android:textSize="15sp" 
             bind:field="bankName"
-            bind:onTextChanged="bankNameChanged"
+            bind:on_TextChanged="_updateValue"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <EditText
             android:layout_width="match_parent"
@@ -85,13 +83,12 @@
             android:hint="@string/hint_account_bank_addr"
             android:textSize="15sp" 
             bind:field="bankAddr"
-            bind:on_TextChanged="bankAddrChanged"
+            bind:on_TextChanged="_updateValue"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#1b1b1b" />
+        <include 
+            layout="@layout/lines"
+            />
 
         <EditText
             android:layout_width="match_parent"
@@ -103,7 +100,7 @@
             android:inputType="number"
             android:textSize="15sp" 
             bind:field="bankNum"
-            bind:on_TextChanged="bankNumChanged"
+            bind:on_TextChanged="_updateValue"
             />
     </LinearLayout>
 

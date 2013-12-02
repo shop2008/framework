@@ -43,9 +43,18 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return null
 	 */
-	@Command(navigations = { @Navigation(on = "LoginFailedException", message = "resourceId:message/login_failed_message", params = {
+	@Command(navigations = { @Navigation(on = "loginfailedexception", message = "resourceId:message/login_failed_message", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-			@Parameter(name = "title", value = "resourceId:message/login_failed_title") }) })
+			@Parameter(name = "title", value = "resourceId:message/login_failed_title") }),
+			
+			@Navigation(on="stockappbizexception", message="resourceId:message/login_failed_message",params={
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "resourceId:message/login_failed_title")
+					
+			})
+	}
+	
+			)
 	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 1)
 	String login(InputEvent event) {
 

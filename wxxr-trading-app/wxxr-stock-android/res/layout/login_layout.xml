@@ -66,6 +66,7 @@
                 android:background="@null"
                 bind:field="mobileNum"
                 bind:on_TextChanged="_updateValue"
+                android:text="13987654321"
                 />
 
             <TextView
@@ -113,6 +114,7 @@
                 android:background="@null"
                 bind:field="password"
                 bind:on_TextChanged="_updateValue"
+                android:text="1111111"
                 />
 
             <TextView

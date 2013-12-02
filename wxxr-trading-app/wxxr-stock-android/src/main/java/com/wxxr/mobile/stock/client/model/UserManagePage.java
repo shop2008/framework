@@ -4,6 +4,7 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -48,8 +49,10 @@ public abstract class UserManagePage extends PageBase {
 	}
 
 	@Command
+	@ExeGuard(title = "登出", message = "正在退出，请稍候...", silentPeriod = 1)
 	String loginOut(InputEvent event) {
 		usrService.logout();
+		hide();
 		return null;
 	}
 }

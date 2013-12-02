@@ -30,7 +30,7 @@ import com.wxxr.mobile.stock.client.utils.ColorUtils;
  */
 @View(name="userWithDrawCashPage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.withdraw_cath_page_layout")
-public abstract class UserWithDrawCashPage extends PageBase {
+public abstract class UserWithDrawCashPage extends PageBase{
 
 	
 	@Bean(type = BindingType.Service)

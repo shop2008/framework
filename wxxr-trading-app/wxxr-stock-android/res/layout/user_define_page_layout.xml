@@ -55,7 +55,7 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/head1"
             bind:field="userIcon" />
         
@@ -65,7 +65,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/ic_arrow_right"
+            android:background="@drawable/arrow"
             />
     </RelativeLayout>
 
@@ -82,7 +82,7 @@
             android:id="@+id/tv_home_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:text="@string/label_user_home_back"
             android:textColor="@color/black"
@@ -90,32 +90,43 @@
             android:textStyle="bold" />
 
         
-        <FrameLayout 
+        <RelativeLayout 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tv_home_back"
             android:layout_marginBottom="10dp"
             >
+	        
+	        
 	        <ImageView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_centerHorizontal="true"
-	           	android:layout_margin="5dp"
+	            android:id="@+id/iv_home_back"
+	            android:layout_width="120dp"
+	            android:layout_height="80dp"
+	           	android:layout_marginLeft="20dp"
+	           	android:layout_marginRight="30dp"
+	           	android:layout_centerVertical="true"
 	            android:layout_gravity="center"
 	            bind:on_Click="setHomeBack"
 	            android:background="@drawable/back1"
-	            android:scaleType="fitXY"
 	            bind:field="userHomeBack" />
-	        
-	        <ImageView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_gravity="right|center_vertical"
+
+	        <LinearLayout
+	            android:layout_width="20dp"
+	            android:layout_height="20dp"
 	            android:layout_marginRight="5dp"
-	            android:background="@drawable/ic_arrow_right"
-            	/>
-        </FrameLayout>
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:gravity="center"
+	            android:orientation="vertical" >
+
+	            <ImageView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="right|center_vertical"
+	                android:background="@drawable/arrow" />
+	        </LinearLayout>
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

@@ -44,6 +44,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/imageView1"
                         android:paddingLeft="10dp"
+                        android:textColor="@color/white"
                         android:text="@string/tv_default_text"
                         bind:field="userNickName" 
                         bind:on_Click="setNickName"
