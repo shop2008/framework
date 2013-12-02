@@ -22,7 +22,6 @@ import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
-import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
@@ -33,8 +32,8 @@ import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
-import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
 
