@@ -246,7 +246,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         bind:field="stockTradingOrder"
-                        bind:itemViewId="sellTradingStockOrder" >
+                        bind:itemViewId="TBuyTradingItemView" >
                     </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
 
                     <TextView
