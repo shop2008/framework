@@ -24,6 +24,8 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 	private String format = "%+10.2f";
 	private float multiple = 1.00f;
 	private String formatUnit = "";
+	private String nullString;
+	private Long nullLong;
 
 	@Override
 	public void destroy() {
@@ -50,12 +52,18 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 		if (map.containsKey("formatUnit")) {
 			this.formatUnit = (String) map.get("formatUnit");
 		}
+		if (map.containsKey("nullString")) {
+			this.nullString = (String) map.get("nullString");
+		}
+		if (map.containsKey("nullLong")) {
+			this.nullLong = (Long) map.get("nullLong");
+		}
 	}
 
 	@Override
 	public Long toSourceTypeValue(String s) throws ValidationException {
 		if (StringUtils.isBlank(s)) {
-			return null;
+			return nullLong;
 		}
 		if (s.contains(formatUnit)) {
 			int index = s.indexOf(formatUnit);
@@ -72,7 +80,7 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 	@Override
 	public String toTargetTypeValue(Long val) {
 		if (val == null) {
-			return null;
+			return nullString;
 		}
 		try {
 			return String.format(this.format, val / multiple) + formatUnit;
