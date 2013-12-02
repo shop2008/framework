@@ -4,7 +4,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement(name = "newsquery")
+@XmlRootElement(name = "NewsQueryVO")
 public class NewsQueryBO /*extends AuditableLKeyObject*/ {
 	@XmlElement(name = "start")
 	private int start;
