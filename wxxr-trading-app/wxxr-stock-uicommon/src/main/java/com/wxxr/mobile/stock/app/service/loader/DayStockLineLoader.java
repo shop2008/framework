@@ -72,7 +72,7 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
             for (StockLineBean vo : result) {
                 StockLineBean bean=cache.getEntity(vo.getMarket()+vo.getCode());
                 if(bean == null) {
-                    cache.putEntity(vo.getMarket()+vo.getCode(), bean);
+                    cache.putEntity(vo.getMarket()+vo.getCode(), vo);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
