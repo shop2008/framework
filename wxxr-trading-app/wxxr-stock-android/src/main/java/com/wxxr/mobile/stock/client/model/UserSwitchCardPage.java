@@ -76,6 +76,7 @@ public abstract class UserSwitchCardPage extends PageBase implements
 				usrService.switchBankCard(callBack.getBankName(),
 						callBack.getBankAddr(), callBack.getBankNum());
 		}
+		hide();
 		return null;
 	}
 
