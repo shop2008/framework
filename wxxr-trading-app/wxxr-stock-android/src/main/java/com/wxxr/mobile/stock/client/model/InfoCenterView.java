@@ -143,7 +143,6 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	@Field(valueKey="text",enableWhen="${direction}",visibleWhen="${showArrows==0}")
 	String isRisefallrate;
 	
-	
 	@OnShow
 	protected void updateInfo() {
 
@@ -193,7 +192,7 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	 * 事件处理- 单击涨跌幅标题（股票列表排序-按涨跌幅）
 	 * 
 	 * */
-	@Command()
+	@Command
 	String risefallrateOrderByClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String directionValue = "desc";
@@ -217,7 +216,7 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	 * 事件处理- 单击最新价格标题（股票列表排序-按当前价）
 	 * 
 	 * */
-	@Command()
+	@Command
 	String newPriceOrderByClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String directionValue = "desc";
