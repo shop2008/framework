@@ -6,7 +6,7 @@ package com.wxxr.mobile.stock.app.model;
 import java.util.List;
 
 import com.wxxr.mobile.core.annotation.BindableBean;
-import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * @author wangxuyang

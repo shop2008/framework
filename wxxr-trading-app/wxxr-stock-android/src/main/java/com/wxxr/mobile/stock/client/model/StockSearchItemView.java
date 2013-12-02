@@ -9,7 +9,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * 股票搜索 Item
