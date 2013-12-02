@@ -71,8 +71,8 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'2196378'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'20131125'}"),
+			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
+			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name = "stockType", value = "0"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
 			@Attribute(name = "stockUpColor",value="#BA2514"),

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.util.AttributeSet;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IDataChangedListener;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
@@ -14,6 +15,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 
 public class MinuteLineView extends BasicLineView  implements IDataChangedListener  {
 	
+	private static Trace log = Trace.getLogger(MinuteLineView.class);
 	private String stockType = "1";
 	private IObservableListDataProvider dataProvider;
 	private Paint mPaint;
@@ -44,6 +46,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/**昨收价*/
 	public void setStockClose(String val){
+		if(val!=null)
 		this.yesterdayClose = Float.parseFloat(val);
 	}
 	
@@ -90,7 +93,8 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		float newprice; //最新价
 		float minprice = 0; //最低价
 		float maxprice = 0; //最高价
-		if(dataProvider==null){
+		if(dataProvider==null && yesterdayClose == 0){
+			log.info("MinuteLineView dataProvider="+dataProvider + "yesterdayClose="+yesterdayClose);
 			return;
 		}
 		if(stockType.equals("0")){

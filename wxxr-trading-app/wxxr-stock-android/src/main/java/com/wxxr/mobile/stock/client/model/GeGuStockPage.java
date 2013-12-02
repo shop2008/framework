@@ -150,8 +150,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	String marketvalue;// 市值
 	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'10060'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'20131125'}"),
+			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
+			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
 			@Attribute(name = "stockUpColor",value="#BA2514"),
 			@Attribute(name = "stockDownColor",value="#3C7F00"),
