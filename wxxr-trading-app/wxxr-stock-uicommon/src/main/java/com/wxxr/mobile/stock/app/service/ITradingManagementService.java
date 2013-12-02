@@ -70,11 +70,12 @@ public interface ITradingManagementService {
 	 *            - 是否为虚拟盘 - true表示虚拟盘；false表示实盘
 	 * @param depositRate
 	 *            - 保证金
+	 * @param  资产类型         
 	 * @throws StockAppBizException
 	 *             业务异常（网络异常）
 	 */
 	void createTradingAccount(Long captitalAmount, float capitalRate,
-			boolean virtual, float depositRate) throws StockAppBizException;
+			boolean virtual, float depositRate,String assetType) throws StockAppBizException;
 
 	/**
 	 * 买入股票

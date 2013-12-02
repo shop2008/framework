@@ -11,13 +11,18 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
     private float capitalRate;
     private boolean virtual;
     private float depositRate;
+    private String assetType;
     
-    public CreateTradingAccountCommand(Long captitalAmount, float capitalRate, boolean virtual, float depositRate) {
+    
+
+    public CreateTradingAccountCommand(Long captitalAmount, float capitalRate, boolean virtual, float depositRate,String assetType) {
         super();
         this.captitalAmount = captitalAmount;
         this.capitalRate = capitalRate;
         this.virtual = virtual;
         this.depositRate = depositRate;
+        this.assetType = assetType;
+
     }
 
     @Override
@@ -65,6 +70,13 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
 
     public void setDepositRate(float depositRate) {
         this.depositRate = depositRate;
+    }
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
     }
 
 }
