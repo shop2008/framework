@@ -80,7 +80,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	/**止损比例*/
-	@Field(valueKey="text",binding="${userCreateTradAccInfo.capitalRate!=null?userCreateTradAccInfo.capitalRate:'--'}",converter="stockLong2StringConvertorSpecial")
+	@Field(valueKey="text",binding="${userCreateTradAccInfo.capitalRate!=null?userCreateTradAccInfo.capitalRate:'--'}")
 	String capitalRate;
 	
 	/**止损*/
@@ -251,7 +251,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(changeMoney>0 && costRate>0){
 			zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 			djDeposit = String.format("%.0f", changeMoney*10000.0)+"元";
-			djMoney = changeMoney*10000*100;
+			djMoney = (changeMoney*10000*100)*getDeposit3();
 			registerBean("zhfzf", zhfzf);
 			registerBean("djDeposit", djDeposit);
 		}	
@@ -349,24 +349,32 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			long money = changeMoney * 10000 * 100;
 			float _rate = 0.0f;
+			float _depositRate = 0.0f;
+			String assetType= "VOUCHER";
 			switch(currentRadioBtnId){
 			case 1:
-				if(money>0 && getRate1()>0 && djMoney>0 ){
+				if(money>0 && getRate1()>0 && getDeposit1()>0 ){
 					_rate = getRate1();
+					_depositRate = getDeposit1();
 				}
+				assetType = "CASH"; // 现金
 				break;
 			case 2:
 				if(money>0 && getRate2()>0 && djMoney>0 ){
 					_rate = getRate2();
+					_depositRate = getDeposit2();
 				}
+				assetType = "CASH";
 				break;
 			case 3:
 				if(money>0 && getRate3()>0 && djMoney>0 ){
 					_rate = getRate3();
+					_depositRate = getDeposit3();
 				}
+				assetType= "VOUCHER"; //积分
 				break;
 			}
-			userCreateService.createTradingAccount(money, _rate, false, djMoney);
+			userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
 			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return "home";
@@ -377,7 +385,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		@Command(navigations={@Navigation(on="home",showPage="home")})
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				userCreateService.createTradingAccount(10000000l, userCreateTradAccInfo.getCapitalRate(), true, 0);
+				userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
 			}
 			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			return "home";
