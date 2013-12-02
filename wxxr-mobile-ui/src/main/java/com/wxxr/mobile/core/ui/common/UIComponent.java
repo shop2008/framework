@@ -146,6 +146,9 @@ public abstract class UIComponent implements IUIComponent {
 	
 	@SuppressWarnings("unchecked")
 	public <T> T removeAttribute(AttributeKey<T> key){
+		if(!hasAttribute(key)){
+			return null;
+		}
 		T val = this.attrs != null ? (T)this.attrs.remove(key) : null;
 		fireDataChangedEvent(key);
 		return val;
