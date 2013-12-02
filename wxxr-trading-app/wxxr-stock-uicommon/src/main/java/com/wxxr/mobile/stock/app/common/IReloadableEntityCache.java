@@ -31,5 +31,7 @@ public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>
 	 * @return -1 if this cache is not auto-reloading
 	 */
 	int getAutoReloadIntervalInSeconds();
+	
+	int getNumberOfActiveClient();
 
 }

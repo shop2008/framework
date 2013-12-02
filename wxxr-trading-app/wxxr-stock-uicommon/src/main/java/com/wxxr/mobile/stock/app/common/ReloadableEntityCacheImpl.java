@@ -61,7 +61,10 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	                for(WeakReference<ReloadableEntityCacheImpl<?,?>> ref: vals) {
 	                	ReloadableEntityCacheImpl<?,?> list = ref.get();
 	                    if(list != null){
-	                    	if((System.currentTimeMillis() - list.lastUpdateTime) >= list.reloadIntervalInSeconds){
+	                    	int numOfActiveClient = list.getNumberOfActiveClient();
+	                    	if(list.isStopAutoReloadIfNotActiveClient() && (numOfActiveClient == 0)){
+	                    		continue;
+	                    	}else if((System.currentTimeMillis() - list.lastUpdateTime) >= list.reloadIntervalInSeconds){
 	                    		list.doReloadIfNeccessay();
 	                    	}
 	                    }else{
@@ -107,6 +110,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	private int minReloadIntervalInSeconds = 10;
 	private List<WeakReference<ICacheUpdatedCallback>> callbacks = new ArrayList<WeakReference<ICacheUpdatedCallback>>();
 	private volatile boolean inReloading = false;
+	private boolean stopAutoReloadIfNotActiveClient = true;
 	
 	private IAsyncCallback callback = new IAsyncCallback() {
 		
@@ -217,6 +221,10 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	}
 
 
+	public int getNumberOfActiveClient() {
+		WeakReference<ICacheUpdatedCallback>[] cbs = getCallbacks();
+		return cbs != null ? cbs.length : 0;
+	}
 
 	protected void init() {
 		this.rwLock = new ReentrantReadWriteLock();
@@ -468,5 +476,21 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	public void forceReload(Map<String, Object> params, boolean wait4Finish) {
 		doReload(wait4Finish,params);
 	}
+
+	/**
+	 * @return the stopAutoReloadIfNotActiveClient
+	 */
+	public boolean isStopAutoReloadIfNotActiveClient() {
+		return stopAutoReloadIfNotActiveClient;
+	}
+
+	/**
+	 * @param stopAutoReloadIfNotActiveClient the stopAutoReloadIfNotActiveClient to set
+	 */
+	public void setStopAutoReloadIfNotActiveClient(
+			boolean stopAutoReloadIfNotActiveClient) {
+		this.stopAutoReloadIfNotActiveClient = stopAutoReloadIfNotActiveClient;
+	}
+
 
 }
