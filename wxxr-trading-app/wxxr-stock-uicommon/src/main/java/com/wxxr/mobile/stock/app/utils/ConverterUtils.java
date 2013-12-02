@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -23,6 +24,7 @@ import com.wxxr.stock.hq.ejb.api.StockLineVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
+import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
@@ -419,6 +421,24 @@ public class ConverterUtils {
         bean.setStart(vo.getStart());
         bean.setTime(vo.getTime());
         return bean;
+    }
+    public static StockTaxisBean fromVO(StockTaxisVO vo) {
+        if (vo!=null){
+            return null;
+        }
+        StockTaxisBean b=new StockTaxisBean();
+        b.setCode(vo.getCode());
+        b.setHandrate(vo.getHandrate());
+        b.setLb(vo.getLb());
+        b.setMarket(vo.getMarket());
+        b.setMarketvalue(vo.getMarketvalue());
+        b.setName(vo.getName());
+        b.setNewprice(vo.getNewprice());
+        b.setProfitrate(vo.getProfitrate());
+        b.setRisefallrate(vo.getRisefallrate());
+        b.setSecuamount(vo.getSecuamount());
+        b.setSecuvolume(vo.getSecuvolume());
+        return b;
     }
     
 }

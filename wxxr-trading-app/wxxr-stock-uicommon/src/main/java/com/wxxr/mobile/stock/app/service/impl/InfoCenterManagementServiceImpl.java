@@ -22,20 +22,21 @@ import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
-import com.wxxr.mobile.stock.app.model.StockLine;
+import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
-import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl.TradingAccInfoBeanComparator;
 import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
+import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
+import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
@@ -77,7 +78,7 @@ public class InfoCenterManagementServiceImpl extends
         
         dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List>("DayStockLine");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("DayStockLine", new DayStockLineLoader());
-
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("stockTaxis", new StockTaxisLoader());
 	}
 
 	@Override
@@ -129,9 +130,7 @@ public class InfoCenterManagementServiceImpl extends
 	//K线
 	@Override
 	public LineListBean getDayline(String code, String market) {
-	    
-	        
-//	        return dayStockLineBean_cache.getEntity(mc);
+     
 		return null;
 	}
 	 public BindableListWrapper<StockLineBean> getDayStockline(final String code, final String market){
@@ -209,6 +208,23 @@ public class InfoCenterManagementServiceImpl extends
 			}
 		}, 1, TimeUnit.SECONDS);
 		return null;
+	}
+	private BindableListWrapper<StockTaxisBean> stockTaxis;
+	private IReloadableEntityCache<String, StockTaxisBean> stockTaxisCache;
+
+	public BindableListWrapper<StockTaxisBean> getStockTaxis(String taxis, String orderby, long start, long limit){
+        if(this.stockTaxis == null){
+            if(this.stockTaxisCache == null){
+                this.stockTaxisCache = new GenericReloadableEntityCache<String, StockTaxisBean, StockTaxisVO>("stockTaxis");
+            }
+            this.stockTaxis = this.stockTaxisCache.getEntities(null, null);
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("start", start);
+        params.put("limit", limit);
+        this.stockTaxisCache.doReloadIfNeccessay(params);
+        this.stockTaxisCache.clear();
+        return this.stockTaxis;
 	}
 
 	@Override
