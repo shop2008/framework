@@ -48,6 +48,67 @@ public class InfoCenterManagementServiceImpl extends
 
 	private static final Trace log = Trace
 			.register(InfoCenterManagementServiceImpl.class);
+	private static class StockTaxisComparator implements Comparator<StockTaxisBean> {
+
+		private String fieldName,order;
+
+		/**
+		 * @return the fieldName
+		 */
+		public String getFieldName() {
+			return fieldName;
+		}
+
+		/**
+		 * @return the order
+		 */
+		public String getOrder() {
+			return order;
+		}
+
+		/**
+		 * @param fieldName the fieldName to set
+		 */
+		public void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
+		}
+
+		/**
+		 * @param order the order to set
+		 */
+		public void setOrder(String order) {
+			this.order = order;
+		}
+
+		public StockTaxisComparator(String name, String order){
+			this.fieldName = name;
+			this.order = order;
+		}
+
+		@Override
+		public int compare(StockTaxisBean o1, StockTaxisBean o2) {
+			Long v1 = null;
+			Long v2 = null;
+			if("newprice".equals(this.fieldName)){
+				v1 = o1.getNewprice();
+				v2 = o2.getNewprice();
+			}else if("risefallrate".equals(this.fieldName)){
+				v1 = o1.getRisefallrate();
+				v2 = o2.getRisefallrate();
+			}
+			if(v1 == null){
+				v1 = 0L;
+			}
+			if(v2 == null){
+				v2 = 0L;
+			}
+			if("desc".equals(order)){
+				return v2.compareTo(v1);
+			}else{
+				return v1.compareTo(v2);
+			}
+		}
+	}
 	private SearchStockListBean stockListbean = new SearchStockListBean();
 	private StockQuotationBean stockQuotationbean = new StockQuotationBean();
 	protected LineListBean lineListBean = new LineListBean();
@@ -170,6 +231,7 @@ public class InfoCenterManagementServiceImpl extends
 	//查询股票行情
     private GenericReloadableEntityCache<String,StockTaxisBean,StockTaxisVO> stockTaxis_cache;
     
+    private BindableListWrapper<StockTaxisBean> stockTaxisList;
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
 	    String mc=market+code;
@@ -186,47 +248,49 @@ public class InfoCenterManagementServiceImpl extends
     }
 	
 //=====================beans =====================
-	private StockTaxisListBean stockList = new StockTaxisListBean();
 	private QuotationListBean quotationListBean = new QuotationListBean();
+	
+	@Override
+	public void reloadStocktaxis(String taxis, String orderby,long start, long limit){
+		if(stockTaxis_cache == null){
+			this.stockTaxis_cache = new GenericReloadableEntityCache<String, StockTaxisBean, StockTaxisVO>("StockTaxis");
+		}
+		if(this.stockTaxisList == null){
+			this.stockTaxisList = this.stockTaxis_cache.getEntities(null, new StockTaxisComparator(taxis,orderby));
+		}else{
+			StockTaxisComparator comp = (StockTaxisComparator)this.stockTaxisList.getComparator();
+			comp.setFieldName(taxis);
+			comp.setOrder(orderby);
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("taxis",taxis);
+		params.put("orderby", orderby);
+		params.put("start", (long)start);
+		params.put("limit", (long)limit);
+		this.stockTaxis_cache.forceReload(params, true);
+	}
+	
+	
 	@Override
 	public BindableListWrapper<StockTaxisBean> getStocktaxis(final String taxis, final String orderby,
 			long start, long limit) {
 		if(stockTaxis_cache == null){
 			this.stockTaxis_cache = new GenericReloadableEntityCache<String, StockTaxisBean, StockTaxisVO>("StockTaxis");
 		}
-		BindableListWrapper<StockTaxisBean> result = this.stockTaxis_cache.getEntities(null, new Comparator<StockTaxisBean>() {
-			
-			@Override
-			public int compare(StockTaxisBean o1, StockTaxisBean o2) {
-				Long v1 = null;
-				Long v2 = null;
-				if("newprice".equals(taxis)){
-					v1 = o1 != null ? o1.getNewprice() : null;
-					v2 = o2 != null ? o2.getNewprice() : null;
-				}else if("risefallrate".equals(taxis)){
-					v1 = o1 != null ? o1.getRisefallrate() : null;
-					v2 = o2 != null ? o2.getRisefallrate() : null;
-				}
-				if(v1 == null){
-					v1 = Long.MIN_VALUE;
-				}
-				if(v2 == null){
-					v2 = Long.MIN_VALUE;
-				}
-				if("desc".equals(orderby)){
-					return v1.compareTo(v2);
-				}else{
-					return v2.compareTo(v1);
-				}
-			}
-		});
+		if(this.stockTaxisList == null){
+			this.stockTaxisList = this.stockTaxis_cache.getEntities(null, new StockTaxisComparator(taxis,orderby));
+		}else{
+			StockTaxisComparator comp = (StockTaxisComparator)this.stockTaxisList.getComparator();
+			comp.setFieldName(taxis);
+			comp.setOrder(orderby);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("taxis",taxis);
 		params.put("orderby", orderby);
 		params.put("start", (long)start);
 		params.put("limit", (long)limit);
 		this.stockTaxis_cache.doReloadIfNeccessay(params);
-		return result;
+		return this.stockTaxisList;
 	}
 
 	@Override

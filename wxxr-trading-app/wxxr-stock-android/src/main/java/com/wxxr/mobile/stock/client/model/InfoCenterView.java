@@ -13,19 +13,16 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
-import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -42,7 +39,7 @@ public abstract class InfoCenterView extends ViewBase {
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('newprice','desc',0,20)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('risefallrate','desc',0,20)}")
 	BindableListWrapper<StockTaxisBean> stockTaxis;
 	
 	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('000001','SH')}")
@@ -60,7 +57,7 @@ public abstract class InfoCenterView extends ViewBase {
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="format",value="(%.2f%%)"),
 			@Parameter(name="multiple", value="100.00"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -122,6 +119,18 @@ public abstract class InfoCenterView extends ViewBase {
 	@Field(valueKey = "options",binding="${stockTaxis.data}")
 	List<StockTaxisBean> stockInfos;
 
+	@Bean
+	String orderBy = "risefallrate";
+	
+	@Bean
+	String direction = "desc";
+	
+	@Field(valueKey="text",enableWhen="${direction == 'asc'}",visibleWhen="${orderBy == 'newprice'}")
+	String isNewPrice;
+	
+	@Field(valueKey="text",enableWhen="${direction == 'asc'}",visibleWhen="${orderBy == 'risefallrate'}")
+	String isRisefallrate;
+
 	
 	/**
 	 * 事件处理-单击深证指数 
@@ -167,22 +176,36 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 事件处理- 单击涨跌幅标题（股票列表排序-按涨跌幅）
 	 * 
 	 * */
-	@Command(description="",commandName="orderByPercent")
-	String orderByPercent(InputEvent event){
-		//TODO
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	@Command
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=1)
+	String orderByRisefallrate(InputEvent event){
+		if("risefallrate".equals(this.orderBy)){
+			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
+		}else{
+			this.orderBy = "risefallrate";
+			this.direction = "desc";
 		}
+		registerBean("orderBy", this.orderBy);
+		registerBean("direction", this.direction);
+		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
 		return null;
 	}
 	/**
-	 * 事件处理- 单击涨跌幅标题（股票列表排序-按当前价）
+	 * 事件处理- 单击当前价标题（股票列表排序-按当前价）
 	 * 
 	 * */
-	@Command(description="",commandName="orderByPrice")
-	String orderByPrice(InputEvent event){
-		//TODO
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	@Command
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=1)
+	String orderByNewPrice(InputEvent event){
+		if("newprice".equals(this.orderBy)){
+			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
+		}else{
+			this.orderBy = "newprice";
+			this.direction = "desc";
 		}
+		registerBean("orderBy", this.orderBy);
+		registerBean("direction", this.direction);
+		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
 		return null;
 	}
 	

@@ -8,12 +8,15 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * @author wangxuyang
@@ -32,15 +35,30 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.code:'--'}")
 	String stockCode;//股票代码
 	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.newprice:'--'}",attributes={
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.newprice:null}",converter="stockLong2StringConvertor",attributes={
 			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String stockPrice;//股票最新价
 	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.risefallrate:'--'}",attributes={
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.risefallrate:null}",converter="stockLong2StringConvertorSpecial",attributes={
 			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String stockDeltaPercent;//股票涨跌幅
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="1000f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertor;
+
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="1000f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+
 	
 	@Override
 	public void updateModel(Object data) {

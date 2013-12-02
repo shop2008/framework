@@ -181,7 +181,7 @@
 		    android:gravity="center"
 		    android:background="@drawable/title_background"
 		    bind:field="*"
-		    bind:on_Click="newPriceOrderByClick"
+		    bind:on_Click="orderByNewPrice"
 		    >
 		    <TextView 
 		        android:layout_width="wrap_content"
@@ -214,7 +214,7 @@
 		    android:gravity="center"
 		    android:background="@drawable/title_background"
 		    bind:field="*"
-		    bind:on_Click="risefallrateOrderByClick">
+		    bind:on_Click="orderByRisefallrate">
 		    <TextView 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"

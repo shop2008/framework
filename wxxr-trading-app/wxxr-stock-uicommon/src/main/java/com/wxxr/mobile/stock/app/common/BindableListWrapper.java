@@ -22,6 +22,19 @@ public class BindableListWrapper<E> implements IBindableBean {
 	
 	private List<E> data;
 	private Comparator<E> comparator;
+	/**
+	 * @return the comparator
+	 */
+	public Comparator<E> getComparator() {
+		return comparator;
+	}
+	/**
+	 * @return the filter
+	 */
+	public IEntityFilter<E> getFilter() {
+		return filter;
+	}
+
 	private IEntityFilter<E> filter;
 	private PropertyChangeSupport pSupport = new PropertyChangeSupport(this);
 	private final IBindableEntityCache<?, E> cache;

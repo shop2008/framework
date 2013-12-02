@@ -71,6 +71,9 @@ public interface IInfoCenterManagementService {
 	 */
 	public BindableListWrapper<StockTaxisBean> getStocktaxis(String orderby, String direction,long start, long limit);
 	
+	
+	public void reloadStocktaxis(String orderby, String direction,long start, long limit);
+	
 	/**
 	 * 获取指数行情数据
 	 */
