@@ -54,7 +54,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
 	
-	@ViewGroup(viewIds={"StockQuotationView", "StockKLineView"})
+	@ViewGroup(viewIds={"StockKLineView", "StockQuotationView"})
 	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
@@ -163,7 +163,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Command
 	String handleMarketBtnClick(InputEvent envent) {
 		orderPriceBean = (long) Utils.roundUp(stockQuotationBean.getClose()*1.1f, 0) + "";
-		registerBean("orderPriceBean", stockQuotationBean);
+		registerBean("orderPriceBean", orderPriceBean);
 		isMarket = true;
 		return null;
 	}
@@ -334,6 +334,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 				
 			}
 			return;
+		} else {
+			if (!StringUtils.isEmpty(codeBean)
+					&& !StringUtils.isEmpty(nameBean)
+					&& !StringUtils.isEmpty(marketBean)) {
+				String[] stockInfos = new String[] { codeBean, nameBean,
+						marketBean };
+				updateSelection((Object) stockInfos);
+			}
 		}
 		if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
 			AppUtils.invokeLater(new Runnable() {

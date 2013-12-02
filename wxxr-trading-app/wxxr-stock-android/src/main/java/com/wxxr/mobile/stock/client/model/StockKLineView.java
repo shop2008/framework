@@ -18,15 +18,15 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockKLineView", withToolbar=true, description="买入")
+@View(name = "StockKLineView", description="买入", singleton=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
 public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
 	
@@ -79,10 +79,10 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Bean(type=BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayline(codeBean, marketBean)}")
-	LineListBean lineListBean;
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayStockline(codeBean, marketBean)}")
+	BindableListWrapper<StockLineBean> lineListBean;
 	//K 线
-	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.day_list : null}")
+	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.data : null}")
 	List<StockLineBean> dayLineList;
 	//Title数据
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
@@ -144,11 +144,12 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		registerBean("nameBean", this.nameBean);
 		registerBean("marketBean", this.marketBean);
 		infoCenterService.getStockQuotation(codeBean, marketBean);
+		infoCenterService.getDayStockline(codeBean, marketBean);
 	}
 	
 	@OnShow
 	void initStockData() {
-		registerBean("nameBean", "鸿达兴业");
+//		registerBean("nameBean", "鸿达兴业");
 		registerBean("type", 1);
 //		registerBean("marketBean", "SH");
 		registerBean("timeBean", new Date().getTime());

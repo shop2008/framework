@@ -23,7 +23,7 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockQuotationView", description="买入")
+@View(name = "StockQuotationView", description="买入", singleton=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_quotation_view_layout")
 public abstract class StockQuotationView extends ViewBase implements ISelectionChangedListener {
 

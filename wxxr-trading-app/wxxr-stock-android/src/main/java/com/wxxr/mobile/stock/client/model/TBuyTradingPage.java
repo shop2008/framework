@@ -234,6 +234,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					map.put("name", name);
 					map.put("market", market);
 					map.put("acctId", this.acctId);
+					map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
 				}
 			}
 			result.setResult("BuyStockDetailPage");
