@@ -507,7 +507,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				}
 			}, null);
 		}
-		userAssetBeanCache.forceReload(true);
+		userAttributeCache.forceReload(true);
 		if(userAttrbutes.getData()==null ||userAttrbutes.getData().size()==0){
 			return null;
 		}
