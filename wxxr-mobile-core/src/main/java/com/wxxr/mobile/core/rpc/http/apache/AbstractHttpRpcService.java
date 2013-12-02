@@ -212,9 +212,13 @@ public class AbstractHttpRpcService implements HttpRpcService {
 					@Override
 					public void releaseConnection(ManagedClientConnection conn,
 							long validDuration, TimeUnit timeUnit) {
-						super.releaseConnection(conn, validDuration, timeUnit);
-						if(log.isDebugEnabled()){
-							log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.connInUsing.decrementAndGet());
+						try {
+							super.releaseConnection(conn, validDuration, timeUnit);
+							if(log.isDebugEnabled()){
+								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.connInUsing.decrementAndGet());
+							}
+						}catch(RuntimeException e){
+							log.info("caught runtime exception when release connection", e);
 						}
 					}
 
