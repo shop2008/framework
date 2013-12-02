@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black" >
+    android:background="@color/page_background_color" >
 
     <RelativeLayout
         android:id="@+id/edit_box"
@@ -46,10 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/edit_box"
-        android:cacheColorHint="#00000000"
-        android:divider="@color/gray"
-        android:dividerHeight="0.5dip"
-        android:scrollbars="none"
+        style="@style/mListView"
         bind:field="searchList"
         bind:itemViewId="StockSearchItemView"
         bind:on_ItemClick="handleItemClick" >
