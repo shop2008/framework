@@ -154,4 +154,31 @@ public class Utils {
 			BigDecimal one = new BigDecimal("1");
 			return b.divide(one, scale, BigDecimal.ROUND_UP).floatValue();
 		}
+	
+	public static String formatNumber(Float val,int n){
+		String data = null;
+		if(val > 10000000000.0){
+			if(n==1){
+				data = String.format("%.1f亿", val/10000000000.0);
+			}
+			if(n==2){
+				data = String.format("%.1f亿", val/10000000000.0/2);
+			}
+		}else if(val > 1000000.0){
+			if(n==1){
+				data = String.format("%.1f万", val/1000000.0);
+			}
+			if(n==2){
+				data = String.format("%.1f万", val/1000000.0/2);
+			}
+		}else{
+			if(n==1){
+				data = String.format("%.0f", val/100);
+			}
+			if(n==2){
+				data = String.format("%.0f", val/200);
+			}
+		}
+		return data;
+	}	
 }

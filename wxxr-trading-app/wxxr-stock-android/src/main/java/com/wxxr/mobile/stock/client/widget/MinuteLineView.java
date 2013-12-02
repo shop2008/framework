@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import com.wxxr.mobile.core.ui.api.IDataChangedListener;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
-import com.wxxr.mobile.stock.client.biz.Tools;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 public class MinuteLineView extends BasicLineView  implements IDataChangedListener  {
 	
@@ -406,8 +406,8 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		mPaint.setColor(getStockCloseColor());
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setTextAlign(Paint.Align.RIGHT);
-		canvas.drawText(Tools.formatNumber(maxSecuvolume, 1),zStartX - 5, zStartY+(textLineHeight/2), mPaint);
-		canvas.drawText(Tools.formatNumber(maxSecuvolume, 2), zStartX - 5,zStopY - lineHeight+10, mPaint);
+		canvas.drawText(Utils.formatNumber(maxSecuvolume, 1),zStartX - 5, zStartY+(textLineHeight/2), mPaint);
+		canvas.drawText(Utils.formatNumber(maxSecuvolume, 2), zStartX - 5,zStopY - lineHeight+10, mPaint);
 		mPaint.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText("单位:手", zStopX + 5, zStopY, mPaint);
 	}
