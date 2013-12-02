@@ -268,6 +268,10 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 */
 	protected void doReload(boolean wait4Finish,Map<String, Object> params) {
 		ICommand<?> cmd = getReloadCommand(params);
+		if(cmd == null){
+			log.info("Not reload will be performanced since getReloadCommand() return null !");
+			return;
+		}
 		if(!wait4Finish){
 			this.inReloading = true;
 			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
