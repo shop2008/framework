@@ -96,13 +96,18 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
         vo.setMarket(cmd.getMarket());
         List<ParamVO> ps= new ArrayList<ParamVO>();
         ps.add(vo);
+        vo.setStart(0L);
+        vo.setLimit(50L);
         LineListVO svos= getRestService(StockResource.class).getDayline(vo);
         
         if (svos!=null && svos.getList()!=null){
+            List<StockLineBean> result=new ArrayList<StockLineBean>();
             List<StockLineVO> stockLineVOs=svos.getList();
             for (StockLineVO item:stockLineVOs ){
                 StockLineBean bean=ConverterUtils.fromVO(item);
+                result.add(bean);
             }
+            return result;
         }
         return null;
     }
