@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
@@ -211,7 +212,7 @@ public interface ITradingManagementService {
 	 * @param limit
 	 * @return
 	 */
-	TradingRecordListBean getTradingAccountRecord(String acctID,int start,int limit);
+	public BindableListWrapper<TradingRecordBean> getTradingAccountRecord(String acctID,int start,int limit);
 	
 	/**
 	 * 交易记录-全部操作

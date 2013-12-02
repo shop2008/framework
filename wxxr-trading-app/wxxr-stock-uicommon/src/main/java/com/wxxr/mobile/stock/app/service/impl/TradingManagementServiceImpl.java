@@ -45,6 +45,7 @@ import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
 import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
+import com.wxxr.mobile.stock.app.service.loader.TradingRecordLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -194,11 +195,15 @@ public class TradingManagementServiceImpl extends
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
 		
-        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
+        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo");
         tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
+        
+        tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
+        registry.registerEntityLoader("tradingRecordBean", new TradingRecordLoader());
+
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
@@ -514,35 +519,29 @@ public class TradingManagementServiceImpl extends
 		}
 		return myTradingAccounts;
 	}
-	public TradingRecordListBean getTradingAccountRecord(final String acctID,
-			final int start, final int limit) {
-		List<TradingRecordVO> volist = null;
-		try {
-			volist = fetchDataFromServer(new Callable<List<TradingRecordVO>>() {
-				public List<TradingRecordVO> call() throws Exception {
-					try {
-						List<TradingRecordVO> volist = getRestService(
-								ITradingResource.class).getTradingAccountRecord(
-								acctID, start, limit);
-						return volist;
-					} catch (Exception e) {
-						log.warn("Error when getting trading record", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Error when getting trading record", e);
-		}
-		if (volist != null && volist.size() > 0) {
-			List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
-			for (TradingRecordVO vo : volist) {
-				TradingRecordBean bean = ConverterUtils.fromVO(vo);
-				beans.add(bean);
-			}
-			recordsBean.setRecords(beans);
-		}
-		return recordsBean;
+	//交易记录
+    private GenericReloadableEntityCache<Long,TradingRecordBean,List> tradingRecordBean_cache;
+
+	public BindableListWrapper<TradingRecordBean> getTradingAccountRecord(final String acctID,
+            final int start, final int limit){
+        BindableListWrapper<TradingRecordBean> tradingRecordBeans = tradingRecordBean_cache.getEntities(new IEntityFilter<TradingRecordBean>(){
+               @Override
+               public boolean doFilter(TradingRecordBean entity) {
+                   if ( entity.getAcctID().equals(acctID)){
+                       return true;
+                   }
+                   return false;
+               }
+               
+           }, null);
+        
+         Map<String, Object> p=new HashMap<String, Object>(); 
+         p.put("acctID", acctID);
+         p.put("start", start);
+         p.put("limit", limit);
+         tradingRecordBean_cache.forceReload(p,false);
+         tradingRecordBean_cache.setCommandParameters(p);
+	    return tradingRecordBeans;
 	}
 	// =================private method =======================================
 	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
@@ -663,6 +662,7 @@ public class TradingManagementServiceImpl extends
             }
             
         }, new  TradingAccInfoBeanComparator());
+        tradingAccInfo_cache.doReloadIfNeccessay();
         return t0s;
     }
     //获取我的T+1日交易盘
@@ -677,6 +677,7 @@ public class TradingManagementServiceImpl extends
             }
             
         }, new TradingAccInfoBeanComparator());
+        tradingAccInfo_cache.doReloadIfNeccessay();
         return t1s;
     }
     //根据交易盘创建时间排序
@@ -848,6 +849,8 @@ public class TradingManagementServiceImpl extends
     public void cancelOrder(String orderID) {
         
     }
+
+    
 	
 
 }
