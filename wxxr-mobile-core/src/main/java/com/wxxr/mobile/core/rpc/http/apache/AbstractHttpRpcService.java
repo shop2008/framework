@@ -218,7 +218,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.connInUsing.decrementAndGet());
 							}
 						}catch(RuntimeException e){
-							log.info("caught runtime exception when release connection", e);
+							log.debug("caught runtime exception when release connection, message :"+e.getMessage());
 						}
 					}
 
