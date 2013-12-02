@@ -28,6 +28,8 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="SHZhiShuPage",withToolbar=true,description="指数界面")
@@ -60,7 +62,6 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	@Bean
 	Map<String, String> map;
 	
-	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
@@ -74,67 +75,99 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	List<StockMinuteLineBean> stockMinuteData;
 	
 	@Convertor(params={
-			@Parameter(name="multiple",value="100.00"),
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="multiple",value="1000.00"),
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="--")
+	})
+	LongTime2StringConvertor longTime2StringConvertorBuy;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="(%.2f%%)"),
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="formatUnit",value="手"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor convertorSecuvolume;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor convertorSecuamount;
 	
 	@Bean
 	String stockName;
 	
+	/**股票名称*/
 	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
 	String name;
 	
 	/**股票或指数 代码*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.code:'--'}${'.'}${shBean!=null?shBean.market:'--'}")
+	@Field(valueKey="text",binding="${'('}${shBean!=null?shBean.code:'--'}${'.'}${shBean!=null?shBean.market:'--'}${')'}")
 	String codeAndmarket;
 	
 //	/**市场代码： SH，SZ各代表上海，深圳。*/
 //	@Field(valueKey="text",binding="${shBean!=null?shBean.market:'--'}")
 //	String market;
 	
+	/**箭头*/
+	@Field(valueKey="text",enableWhen="${shBean!=null && shBean.newprice > shBean.close}",visibleWhen="${shBean!=null && shBean.newprice != shBean.close}")
+	String arrows;
+	
 	/**涨跌额*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.change:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.change:null}",converter="stockLong2StringAutoUnitConvertor")
 	String change;
 	
 	/**涨跌幅*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.risefallrate:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial")
 	String risefallrate;
 	
 	/**时间。*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.datetime:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.datetime:null}",converter="longTime2StringConvertorBuy")
 	String datetime;
 	
 	/**最新*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.newprice:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
 	String newprice;
 	
 	/**昨收*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.close:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
 	String close;
 	
 	/**开盘*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.open:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.open:null}",converter="stockLong2StringAutoUnitConvertor")
 	String open;
 	
 	/**最高*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.high:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.high:null}",converter="stockLong2StringAutoUnitConvertor")
 	String high;
 	
 	/**最底*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.low:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.low:null}",converter="stockLong2StringAutoUnitConvertor")
 	String low;
 	
 	/**成交量*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.secuvolume:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.secuvolume:null}",converter="convertorSecuvolume")
 	String secuvolume;
 	
 	/**成交额*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.secuamount:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.secuamount:'--'}",converter="convertorSecuamount")
 	String secuamount;
 	
 	/**量比*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.lb:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.lb:'--'}")
 	String lb;
 	
 	/**平盘家数*/

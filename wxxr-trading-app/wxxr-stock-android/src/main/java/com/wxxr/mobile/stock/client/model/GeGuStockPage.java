@@ -29,6 +29,8 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="GeGuStockPage",withToolbar=true,description="个股界面")
@@ -55,16 +57,37 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	StockMinuteKBean minute;
 	
 	@Convertor(params={
-			@Parameter(name="multiple",value="100.00"),
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="multiple",value="1000.00"),
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="--")
 	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	LongTime2StringConvertor longTime2StringConvertorBuy;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="(%.2f%%)"),
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="formatUnit",value="手"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor convertorSecuvolume;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor convertorSecuamount;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
@@ -95,59 +118,81 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	@Bean
 	String stockName;
 	
+	/**箭头*/
+	@Field(valueKey="text",enableWhen="${quotationBean!=null && quotationBean.newprice > quotationBean.close}",visibleWhen="${quotationBean!=null && quotationBean.newprice != quotationBean.close}")
+	String arrows;	
+	
+	/**股票名称*/
 	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
 	String name;
 	
+	/**股票代码+市场代码*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.code!=null)?quotationBean.code:'--'}${'.'}${(quotationBean!=null && quotationBean.market!=null)?quotationBean.market:'--'}")
 	String codeAndmarket;
 	
+	/**涨跌幅*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:'--'}")
 	String risefallrate;
 	
+	/**涨跌额*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:'--'}",converter="stockLong2StringAutoUnitConvertor")
 	String change;
 	
+	/**最新价*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:'--'}",converter="stockLong2StringAutoUnitConvertor")
 	String newprice;
 	
+	/**时间*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:'--'}")
 	String datetime;
 	
+	/**昨收*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.close:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String close;// 昨收
+	String close;
 	
+	/**开盘*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.open:'--'}",converter="stockLong2StringAutoUnitConvertor" )
-	String open;// 开盘
+	String open;
 	
+	/**最高*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.high:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String high;// 最高
+	String high;
 	
+	/**最底*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.low:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String low;// 最低
+	String low;
 	
+	/**均价*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.averageprice:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String averageprice;// 均价
+	String averageprice;
 	
+	/**市盈率*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.profitrate:'--'}")
-	String profitrate;// 市盈率
+	String profitrate;
 	
+	/**量比*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.lb:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String lb;// 量比
+	String lb;
 	
+	/**换手率*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.handrate:'--'}")
-	String handrate;// 换手率
+	String handrate; 
 	
+	/**成交量*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuvolume:'--'}")
-	String secuvolume;// 成交量
+	String secuvolume;
 	
+	/**成交额*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuamount:'--'}")
-	String secuamount;// 成交额
+	String secuamount;
 	
+	/**流通盘*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.capital:'--'}")
-	String capital;// 流通盘
+	String capital;
 	
+	/**市值*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.marketvalue:'--'}")
-	String marketvalue;// 市值
+	String marketvalue;
 	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
@@ -201,6 +246,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 		if(quotationBean!=null){
 			tempMap.put("code", quotationBean.getCode());
 			tempMap.put("market", quotationBean.getMarket());
+			tempMap.put("name", this.stockName);
 		}
 		return tempMap;
 	}
@@ -227,7 +273,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 					registerBean("stockName", this.stockName);
 				}
 				if(this.codeValue!=null && this.marketCode!=null){
-					tempMap.put(this.codeValue, this.marketCode);
+					tempMap.put("market", this.marketCode);
+					tempMap.put("code",this.codeValue);
 					registerBean("map", tempMap);
 				}
 	        }
