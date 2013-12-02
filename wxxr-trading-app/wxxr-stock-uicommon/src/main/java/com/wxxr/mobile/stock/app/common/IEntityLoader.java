@@ -15,7 +15,7 @@ import com.wxxr.mobile.core.command.api.ICommandExecutor;
  */
 public interface IEntityLoader<K,V,T> {
 	ICommand<List<T>> createCommand(Map<String, Object> params);
-	boolean handleCommandResult(List<T> result, IReloadableEntityCache<K, V> cache);
+	boolean handleCommandResult(ICommand<?> cmd,List<T> result, IReloadableEntityCache<K, V> cache);
 	void registerCommandHandler(ICommandExecutor executor);
 	void unregisterCommandHandler(ICommandExecutor executor);
 }

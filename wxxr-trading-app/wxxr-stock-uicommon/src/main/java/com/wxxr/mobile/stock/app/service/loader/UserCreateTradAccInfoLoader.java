@@ -40,7 +40,7 @@ public class UserCreateTradAccInfoLoader extends AbstractEntityLoader<String, Us
     }
 
     @Override
-    public boolean handleCommandResult(List<UserCreateTradAccInfoVO> result, IReloadableEntityCache<String, UserCreateTradAccInfoBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<UserCreateTradAccInfoVO> result, IReloadableEntityCache<String, UserCreateTradAccInfoBean> cache) {
         boolean updated = false;
         for (UserCreateTradAccInfoVO vo : result) {
 //            String id = String.valueOf(vo.getUserId());

@@ -61,7 +61,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<MessageVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<MessageVO> result,
 			IReloadableEntityCache<String, RemindMessageBean> cache) {
 		boolean updated = false;
 		if(result!=null && !result.isEmpty()){

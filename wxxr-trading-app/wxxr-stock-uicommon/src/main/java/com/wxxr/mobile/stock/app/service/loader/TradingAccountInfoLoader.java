@@ -51,7 +51,7 @@ public class TradingAccountInfoLoader extends AbstractEntityLoader<String, Tradi
     }
 
     @Override
-    public boolean handleCommandResult(List<TradingAccountVO> result, IReloadableEntityCache<String, TradingAccountBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<TradingAccountVO> result, IReloadableEntityCache<String, TradingAccountBean> cache) {
         boolean updated = false;
         for (TradingAccountVO vo : result) {
             String accId = String.valueOf(vo.getId());

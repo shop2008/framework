@@ -60,7 +60,7 @@ public class StockMinuteKLoader extends AbstractEntityLoader<String, StockMinute
     }
 
     @Override
-    public boolean handleCommandResult(List<StockMinuteKBean> result, IReloadableEntityCache<String, StockMinuteKBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<StockMinuteKBean> result, IReloadableEntityCache<String, StockMinuteKBean> cache) {
         boolean updated = false;
         if(result!=null && !result.isEmpty()){
             for (StockMinuteKBean vo : result) {

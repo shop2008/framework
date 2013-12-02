@@ -50,7 +50,7 @@ public class T1RankItemLoader extends AbstractEntityLoader<String, MegagameRankB
 	}
 
 	@Override
-	public boolean handleCommandResult(List<MegagameRankVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<MegagameRankVO> result,
 			IReloadableEntityCache<String, MegagameRankBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;

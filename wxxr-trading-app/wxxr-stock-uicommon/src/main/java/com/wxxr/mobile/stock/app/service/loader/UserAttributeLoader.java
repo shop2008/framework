@@ -62,7 +62,7 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, UserAttrib
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<UserAttributeVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<UserAttributeVO> result,
 			IReloadableEntityCache<String, UserAttributeBean> cache) {
 		boolean updated = false;
 		if(result!=null && !result.isEmpty()){

@@ -66,13 +66,13 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
     }
 
     @Override
-    public boolean handleCommandResult(List<StockLineBean> result, IReloadableEntityCache<String, StockLineBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<StockLineBean> result, IReloadableEntityCache<String, StockLineBean> cache) {
         boolean updated = false;
         if(result!=null && !result.isEmpty()){
             for (StockLineBean vo : result) {
                 StockLineBean bean=cache.getEntity(vo.getMarket()+vo.getCode());
                 if(bean == null) {
-//                    cache.putEntity(vo.getMarket()+vo.getCode(), bean);
+                    cache.putEntity(vo.getMarket()+vo.getCode(), bean);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }

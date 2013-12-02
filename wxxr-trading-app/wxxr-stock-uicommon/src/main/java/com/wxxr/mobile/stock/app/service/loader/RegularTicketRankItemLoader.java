@@ -50,7 +50,7 @@ public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, Re
 	}
 
 	@Override
-	public boolean handleCommandResult(List<RegularTicketVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<RegularTicketVO> result,
 			IReloadableEntityCache<String, RegularTicketBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;

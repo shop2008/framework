@@ -50,7 +50,7 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 	}
 
 	@Override
-	public boolean handleCommandResult(List<WeekRankVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<WeekRankVO> result,
 			IReloadableEntityCache<String, WeekRankBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;

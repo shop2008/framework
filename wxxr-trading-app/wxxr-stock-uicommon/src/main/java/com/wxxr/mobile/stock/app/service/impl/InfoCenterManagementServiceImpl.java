@@ -19,22 +19,18 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
-import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
-import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
-import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
-import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
-import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
+import com.wxxr.mobile.stock.app.service.loader.StockTaxisVOLoader;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
@@ -74,11 +70,7 @@ public class InfoCenterManagementServiceImpl extends
         
         stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("StockMinuteK");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
-        
-        
-        dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List>("DayStockLine");
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("DayStockLine", new DayStockLineLoader());
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("stockTaxis", new StockTaxisLoader());
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockTaxisVO", new StockTaxisVOLoader());
 	}
 
 	@Override
@@ -130,47 +122,16 @@ public class InfoCenterManagementServiceImpl extends
 	//K线
 	@Override
 	public LineListBean getDayline(String code, String market) {
-     
 		return null;
 	}
-	 public BindableListWrapper<StockLineBean> getDayStockline(final String code, final String market){
-	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
-             return null;
-         }
-	     BindableListWrapper<StockLineBean> dayline = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
-	            @Override
-	            public boolean doFilter(StockLineBean entity) {
-	                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
-	                    return true;
-	                }
-	                return false;
-	            }
-	            
-	        }, new  StockLineBeanComparator());
-	     
-          Map<String, Object> p=new HashMap<String, Object>(); 
-          p.put("code", code);
-          p.put("market", market);
-          this.dayStockLineBean_cache.forceReload(p,false);
-          dayStockLineBean_cache.setCommandParameters(p);
-          return dayline;
-
-	 }
-	class StockLineBeanComparator implements Comparator<StockLineBean>{
-        @Override
-        public int compare(StockLineBean b1, StockLineBean b2) {
-           //todo
-            return 0;
-        }
-	}
+	
 	//行情信息
     private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
     //分钟线信息
     private GenericReloadableEntityCache<String,StockMinuteKBean,List> stockMinuteKBean_cache;
-    //日K
-    private GenericReloadableEntityCache<String,StockLineBean,List> dayStockLineBean_cache;
-    
 	//查询股票行情
+    private GenericReloadableEntityCache<String,StockTaxisVO,StockTaxisVO> stockTaxisVO_cache;
+    
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
 	    String mc=market+code;
@@ -181,9 +142,8 @@ public class InfoCenterManagementServiceImpl extends
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("code", code);
         params.put("market", market);
-        
+
         this.stockQuotationBean_cache.forceReload(params,false);
-        this.stockQuotationBean_cache.setCommandParameters(params);
         return stockQuotationBean_cache.getEntity(mc);
        
     }
@@ -191,40 +151,38 @@ public class InfoCenterManagementServiceImpl extends
 	private StockTaxisListBean stockList = new StockTaxisListBean();
 	private QuotationListBean quotationListBean = new QuotationListBean();
 	@Override
-	public StockTaxisListBean getStocktaxis(String taxis, String orderby,
+	public BindableListWrapper<StockTaxisVO> getStocktaxis(final String taxis, final String orderby,
 			long start, long limit) {
-		final TaxisVO vo = new TaxisVO();
-		vo.setLimit(limit);
-		vo.setStart(start);
-		vo.setOrderby(orderby);
-		
-		context.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					getRestService(StockResource.class).getStocktaxis(vo);
-				} catch (Exception e) {
-					log.warn("Error when fetch stock list", e);
+		if(stockTaxisVO_cache == null){
+			this.stockTaxisVO_cache = new GenericReloadableEntityCache<String, StockTaxisVO, StockTaxisVO>("StockTaxisVO");
+		}
+		BindableListWrapper<StockTaxisVO> result = this.stockTaxisVO_cache.getEntities(null, new Comparator<StockTaxisVO>() {
+			
+			@Override
+			public int compare(StockTaxisVO o1, StockTaxisVO o2) {
+				Long v1 = null;
+				Long v2 = null;
+				if("newprice".equals(taxis)){
+					v1 = o1.getNewprice();
+					v2 = o2.getNewprice();
+				}else if("risefallrate".equals(taxis)){
+					v1 = o1.getRisefallrate();
+					v2 = o2.getRisefallrate();
+				}
+				if("desc".equals(orderby)){
+					return v1.compareTo(v2);
+				}else{
+					return v2.compareTo(v1);
 				}
 			}
-		}, 1, TimeUnit.SECONDS);
-		return null;
-	}
-	private BindableListWrapper<StockTaxisBean> stockTaxis;
-	private IReloadableEntityCache<String, StockTaxisBean> stockTaxisCache;
-
-	public BindableListWrapper<StockTaxisBean> getStockTaxis(String taxis, String orderby, long start, long limit){
-        if(this.stockTaxis == null){
-            if(this.stockTaxisCache == null){
-                this.stockTaxisCache = new GenericReloadableEntityCache<String, StockTaxisBean, StockTaxisVO>("stockTaxis");
-            }
-            this.stockTaxis = this.stockTaxisCache.getEntities(null, null);
-        }
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("start", start);
-        params.put("limit", limit);
-        this.stockTaxisCache.doReloadIfNeccessay(params);
-        this.stockTaxisCache.clear();
-        return this.stockTaxis;
+		});
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("taxis",taxis);
+		params.put("orderby", orderby);
+		params.put("start", (long)start);
+		params.put("limit", (long)limit);
+		this.stockTaxisVO_cache.doReloadIfNeccessay(params);
+		return result;
 	}
 
 	@Override

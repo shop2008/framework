@@ -97,7 +97,7 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<PullMessageVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<PullMessageVO> result,
 			IReloadableEntityCache<Long, PullMessageBean> cache) {
 		boolean updated = false;
 		if(result!=null && !result.isEmpty()){

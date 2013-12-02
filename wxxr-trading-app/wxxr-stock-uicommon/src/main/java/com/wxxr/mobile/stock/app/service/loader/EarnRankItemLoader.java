@@ -101,7 +101,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.lang.Object, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<HomePageVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<HomePageVO> result,
 			IReloadableEntityCache<String, EarnRankItemBean> cache) {
 		boolean updated = false;
 		for (HomePageVO vo : result) {

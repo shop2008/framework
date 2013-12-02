@@ -39,7 +39,7 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
     }
 
     @Override
-    public boolean handleCommandResult(List<TradingAccInfoVO> result, IReloadableEntityCache<String, TradingAccInfoBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<TradingAccInfoVO> result, IReloadableEntityCache<String, TradingAccInfoBean> cache) {
         boolean updated = false;
         for (TradingAccInfoVO vo : result) {
             String accId = String.valueOf(vo.getAcctID());

@@ -50,7 +50,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected boolean processReloadResult(Object result) {
+	protected boolean processReloadResult(ICommand<?> cmd,Object result) {
 		if(result == null){
 			getLog().warn("Command return null value, going clear cache.");
 			if(getCacheSize() > 0){
@@ -61,7 +61,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 			}
 			
 		}
-		return getEntityLoader().handleCommandResult((List<T>)result, this);
+		return getEntityLoader().handleCommandResult(cmd,(List<T>)result, this);
 	}
 
 	/**

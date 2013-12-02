@@ -113,37 +113,6 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	private volatile boolean inReloading = false;
 	private boolean stopAutoReloadIfNotActiveClient = true;
 	
-	private IAsyncCallback callback = new IAsyncCallback() {
-		
-		@Override
-		public void success(Object result) {
-				if(getLog().isDebugEnabled()){
-					getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? ((List)result).size() : 0));
-				}
-				if(processReloadResult(result)){
-					WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
-					if(getLog().isDebugEnabled()){
-						getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
-					}
-					for (WeakReference<ICacheUpdatedCallback> ref : refs) {
-						ICacheUpdatedCallback cb = ref.get();
-						if(cb != null){
-							if(getLog().isDebugEnabled()){
-								getLog().debug("notify list warpper :"+cb);
-							}
-							cb.dataChanged(ReloadableEntityCacheImpl.this);
-						}
-					}
-				}
-				inReloading = false;
-		}
-		
-		@Override
-		public void failed(Object cause) {
-				handleReloadFailed(cause);
-				inReloading = false;
-		}
-	};
 	
 	public ReloadableEntityCacheImpl(String name){
 		this.name = name;
@@ -276,11 +245,42 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	 * 
 	 */
 	protected void doReload(boolean wait4Finish,Map<String, Object> params) {
-		ICommand<?> cmd = getReloadCommand(params);
+		final ICommand<?> cmd = getReloadCommand(params);
 		if(cmd == null){
 			log.info("Not reload will be performanced since getReloadCommand() return null !");
 			return;
 		}
+		IAsyncCallback callback = new IAsyncCallback() {
+			
+			@Override
+			public void success(Object result) {
+					if(getLog().isDebugEnabled()){
+						getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? ((List)result).size() : 0));
+					}
+					if(processReloadResult(cmd,result)){
+						WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
+						if(getLog().isDebugEnabled()){
+							getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
+						}
+						for (WeakReference<ICacheUpdatedCallback> ref : refs) {
+							ICacheUpdatedCallback cb = ref.get();
+							if(cb != null){
+								if(getLog().isDebugEnabled()){
+									getLog().debug("notify list warpper :"+cb);
+								}
+								cb.dataChanged(ReloadableEntityCacheImpl.this);
+							}
+						}
+					}
+					inReloading = false;
+			}
+			
+			@Override
+			public void failed(Object cause) {
+					handleReloadFailed(cmd,cause);
+					inReloading = false;
+			}
+		};
 		if(!wait4Finish){
 			this.inReloading = true;
 			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
@@ -292,7 +292,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 				return;
 			} catch (ExecutionException e) {
 				Throwable t = e.getCause();
-				handleReloadFailed(t);
+				handleReloadFailed(cmd,t);
 				if(t instanceof StockAppBizException){
 					throw (StockAppBizException)t;
 				}else if( t instanceof CommandConstraintViolatedException){
@@ -306,7 +306,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		
 	protected abstract ICommand<?> getReloadCommand(Map<String, Object> params);
 	
-	protected abstract boolean processReloadResult(Object result);
+	protected abstract boolean processReloadResult(ICommand<?> cmd,Object result);
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getEntity(java.lang.Object)
@@ -417,7 +417,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}
 	}
 	
-	protected void handleReloadFailed(Object cause) {
+	protected void handleReloadFailed(ICommand<?> cmd,Object cause) {
 		getLog().warn("Failed to reload list data of :"+name, cause);
 	}
 

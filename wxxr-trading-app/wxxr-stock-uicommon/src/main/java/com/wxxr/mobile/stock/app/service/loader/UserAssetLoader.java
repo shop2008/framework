@@ -62,7 +62,7 @@ public class UserAssetLoader extends AbstractEntityLoader<String, UserAssetBean,
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<UserAssetVO> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<UserAssetVO> result,
 			IReloadableEntityCache<String, UserAssetBean> cache) {
 
 		boolean updated = false;

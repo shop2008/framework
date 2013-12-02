@@ -68,7 +68,7 @@ public class VoucherLoader extends AbstractEntityLoader<String, VoucherBean, Act
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(List<ActivityUserVo> result,
+	public boolean handleCommandResult(ICommand<?> cmd,List<ActivityUserVo> result,
 			IReloadableEntityCache<String, VoucherBean> cache) {
 		boolean updated = false;
 		if (result != null && !result.isEmpty()) {

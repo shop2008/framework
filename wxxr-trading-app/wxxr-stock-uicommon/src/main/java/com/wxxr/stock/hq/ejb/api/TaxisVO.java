@@ -63,6 +63,30 @@ public class TaxisVO implements Serializable  {
 		this.blockId = blockId;
 	}
 
+	
+	public boolean hasSameSearchConditions(TaxisVO other) {
+		if (this == other)
+			return true;
+		if (other == null)
+			return false;
+		if (blockId == null) {
+			if (other.blockId != null)
+				return false;
+		} else if (!blockId.equals(other.blockId))
+			return false;
+		if (orderby == null) {
+			if (other.orderby != null)
+				return false;
+		} else if (!orderby.equals(other.orderby))
+			return false;
+		if (taxis == null) {
+			if (other.taxis != null)
+				return false;
+		} else if (!taxis.equals(other.taxis))
+			return false;
+		return true;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

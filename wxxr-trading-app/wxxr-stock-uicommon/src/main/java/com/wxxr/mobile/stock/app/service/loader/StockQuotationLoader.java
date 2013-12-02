@@ -68,7 +68,7 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
     }
 
     @Override
-    public boolean handleCommandResult(List<StockQuotationVO> result, IReloadableEntityCache<String, StockQuotationBean> cache) {
+    public boolean handleCommandResult(ICommand<?> cmd,List<StockQuotationVO> result, IReloadableEntityCache<String, StockQuotationBean> cache) {
         boolean updated = false;
         if(result!=null && !result.isEmpty()){
             for (StockQuotationVO vo : result) {

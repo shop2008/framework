@@ -9,11 +9,11 @@ import java.util.Map;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
-import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 
 /**
  * @author wangxuyang
@@ -60,7 +60,7 @@ public interface IInfoCenterManagementService {
 	 * @return
 	 */
 	LineListBean getDayline(String code, String market);
-	BindableListWrapper<StockLineBean> getDayStockline( String code,  String market);
+
 	/**
 	 * 涨跌排序接口,默认按涨跌幅降序
 	 * @param orderby 排序字段名称，即按什么排序 ：“newprice”-按最新价；“risefallrate”-按涨跌幅
@@ -69,7 +69,7 @@ public interface IInfoCenterManagementService {
 	 * @param limit - 最多可取条数
 	 * @return
 	 */
-	public StockTaxisListBean getStocktaxis(String orderby, String direction,long start, long limit);
+	public BindableListWrapper<StockTaxisVO> getStocktaxis(String orderby, String direction,long start, long limit);
 	
 	/**
 	 * 获取指数行情数据
