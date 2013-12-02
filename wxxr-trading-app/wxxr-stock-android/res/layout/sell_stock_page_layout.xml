@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
+
+    
+	<ScrollView android:layout_width="fill_parent"
+	      android:layout_height="wrap_content"
+	      android:scrollbars="none"
+	      android:fadingEdge="none">
+		<LinearLayout android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical">
+		<LinearLayout android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    >
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical" 
+		        android:background="@drawable/stock_chart_bj"
+		        >
+				<include layout="@layout/common_stock_header_layout"/>
+		       <com.wxxr.mobile.stock.client.widget.MinuteLineView 
+		            android:layout_width="match_parent"
+		            android:layout_height="160dp"
+		            bind:field="minute1"
+		            />
+		        
+		        <LinearLayout android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:gravity="center"
+		            >
+
+		            <ImageView android:src="@drawable/s_on"
+		                android:layout_width="8dp"
+		                android:layout_height="8dp"
+		                android:layout_marginRight="3dp"/>
+		            <ImageView android:src="@drawable/s_off"
+		                android:layout_width="8dp"
+		                android:layout_height="8dp"
+		                android:layout_marginLeft="3dp"
+		                android:layout_marginRight="3dp"/>
+		            <ImageView android:src="@drawable/s_off"
+		                android:layout_width="8dp"
+		                android:layout_height="8dp"
+		                android:layout_marginLeft="3dp"/>
+		        </LinearLayout>
+
+		        
+
+		    </LinearLayout>
+		    
+<!-- 		    <TextView android:layout_width="fill_parent" -->
+<!-- 		        android:layout_height="fill_parent" -->
+<!-- 		        android:text="数据加载失败，点击重试" -->
+<!-- 		        android:textColor="@color/white" -->
+<!-- 		        android:textSize="14sp" -->
+<!-- 		        android:enabled="true" -->
+<!-- 		        android:clickable="true" -->
+<!-- 		        android:visibility="gone" -->
+<!-- 		        bind:field="isLoadingState" -->
+<!-- 		        bind:on_Click="retryLoadingClick"/> -->
+		    
+	        <View android:layout_width="fill_parent"
+	            android:layout_height="0.5dp"
+	            android:background="#212121"/>
+		</LinearLayout>
+	    
+		<View android:layout_width="fill_parent"
+		    android:layout_height="0.5dp"
+		    android:background="#4e4e4c"
+		    android:visibility="gone"
+	        />	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:padding="8dp"
+	        
+	        >
+	        <com.wxxr.mobile.stock.client.widget.TextSpinnerView
+		        android:id="@+id/spinner1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:textSize="14sp"
+		        android:paddingLeft="8dp"
+		        android:clickable="true"
+		        android:enabled="true"
+		        bind:field="sellStockOrder"
+		        android:textColor="@color/white"
+		        android:background="@drawable/inpunt_bj"
+		        android:drawableRight="@drawable/inpunt_arrows"
+		        android:drawablePadding="0dp"
+		        bind:itemViewId="challengeTradeMoneyItem"
+		        bind:on_TextChanged="stockChanged"/>
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:layout_marginTop="8dp">
+	
+		        <LinearLayout android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1">
+					<EditText
+			            android:id="@+id/editText1"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1"
+			            android:background="@drawable/inpunt_2"
+			            android:ems="10"
+			            android:inputType="number"
+			            android:textColor="@color/white"
+			            bind:field="priceEdit"
+			            android:textSize="14sp" 
+			            android:paddingLeft="8dp">
+			        </EditText>	 
+			        <FrameLayout
+	                        android:id="@+id/refresh_layout"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:background="@drawable/inpunt_right_btn" >
+	
+	                    <ImageView
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_gravity="center"
+	                        android:src="@drawable/refresh" />
+	
+	                    <ProgressBar
+	                        style="?android:attr/progressBarStyleSmall"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_gravity="center"
+	                        android:visibility="gone" />
+	                </FrameLayout>           
+		        </LinearLayout>
+		        
+	           <RadioGroup
+	                  android:layout_width="fill_parent"
+	                  android:layout_height="wrap_content"
+	                  android:layout_marginLeft="6dip"
+	                  android:layout_weight="1"
+	                  android:orientation="horizontal" >
+	
+	                  <RadioButton
+	                      android:layout_width="fill_parent"
+	                      android:layout_height="wrap_content"
+	                      android:layout_weight="1"
+	                      android:background="@drawable/on_off_radiobuttn_left"
+	                      android:button="@null"
+	                      android:gravity="center"
+	                      bind:field="isChecked"
+	                      bind:on_Click="GuaDanOnClick"
+	                      android:text="@string/bt_hang_order_text"
+	                      android:textColor="@color/white"
+	                      android:textSize="14sp" />
+	
+	                  <RadioButton
+	                      android:layout_width="fill_parent"
+	                      android:layout_height="wrap_content"
+	                      android:layout_weight="1"
+	                      android:background="@drawable/on_off_radiobuttn_right"
+	                      android:button="@null"
+	                      android:gravity="center"
+	                      bind:field="isChecked1"
+	                      bind:on_Click="ShiJiaOnClick"
+	                      android:text="@string/bt_market_price_text"
+	                      android:textColor="@color/white"
+	                      android:textSize="14sp" />
+	              </RadioGroup>
+		    </LinearLayout>
+		    <EditText
+		        android:id="@+id/editText2"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:ems="10"
+		        android:hint="输入最大可买股数"
+		        android:textSize="14sp"
+		        android:paddingLeft="8dp"
+		        android:background="@drawable/inpunt_bj"
+		        android:inputType="number" 
+		        android:textColor="@color/white"
+		        android:layout_marginTop="8dp"/>
+		    
+		    <Button
+		        android:id="@+id/button1"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="下单卖出" 
+		        android:layout_marginTop="8dp"
+		        android:textColor="@color/white"
+	            android:textSize="14sp"
+	            android:padding="0dp"
+		        android:background="@drawable/bule_button_bj"
+		        />
+	    </LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

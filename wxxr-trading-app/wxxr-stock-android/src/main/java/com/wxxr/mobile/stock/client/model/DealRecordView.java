@@ -23,7 +23,7 @@ import com.wxxr.mobile.stock.app.model.TradingRecord;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 
-@View(name="readRecord", description="模拟盘")
+@View(name="DealRecordView", description="模拟盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.deal_record_layout")
 public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 
@@ -31,7 +31,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tempId=selection;tradingService.getDealDetail(tempId)}")
+	@Bean(type=BindingType.Pojo,express="${stockId=selection;tradingService.getDealDetail(stockId)}")
 	DealDetailBean dealDetail;
 	
 	@Field(valueKey="text",binding="${selection!=null?selection:null}")
@@ -92,8 +92,6 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 		String result = "hangqing";
 		return result;
 	}
-	
-	
 	
 	/**转让操作盘详情界面*/
 	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })

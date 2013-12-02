@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -28,7 +29,7 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
-	@ViewGroup(viewIds={"readRecord","auditDetail","mnAuditDetail"},defaultViewId="readRecord")
+	@ViewGroup(viewIds={"DealRecordView","auditDetail","mnAuditDetail"})
 	private IViewGroup contents;
 
 	@Command(description="Invoke when a toolbar item was clicked",
@@ -64,7 +65,9 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 		contents.resetViewStack();
 	}
 	
-	@Command(navigations={@Navigation(on="readRecord",showView="readRecord")})
+	@Command(navigations={
+			@Navigation(on="readRecord",showView="DealRecordView",params={@Parameter(name = "add2BackStack", value = "false")})
+	})
 	String readRecordClick(InputEvent event){
 		return "readRecord";
 	}
@@ -72,8 +75,8 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	
 	
 	@Command(navigations={
-			@Navigation(on="Audit",showView="auditDetail"),
-			@Navigation(on="mnAudit",showView="mnAuditDetail")
+			@Navigation(on="Audit",showView="auditDetail",params={@Parameter(name = "add2BackStack", value = "false")}),
+			@Navigation(on="mnAudit",showView="mnAuditDetail",params={@Parameter(name = "add2BackStack", value = "false")})
 			})
 	CommandResult tabSelectedClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
@@ -108,27 +111,6 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	        registerBean("accid", accid);
 		}
 	}
-	
-	
-//	/**
-//	 * 订单详情点击
-//	 * 
-//	 * @param event
-//	 * @return
-//	 */
-//	@Command(description = "Invoke when a toolbar item was clicked", 
-//			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
-//			navigations = { @Navigation(on = "ecordsPage", showPage = "TradingRecordsPage") })
-//	CommandResult toolbarClickedRight(InputEvent event) {
-//		CommandResult resutlt = new CommandResult();
-//		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-//			if (accid != null) {
-//				resutlt.setResult("ecordsPage");
-//				resutlt.setPayload(accid);
-//			}
-//		}
-//		return resutlt;
-//	}
 	
 	
 	/**

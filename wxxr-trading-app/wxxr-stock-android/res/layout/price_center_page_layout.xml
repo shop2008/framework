@@ -8,12 +8,14 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
-        <LinearLayout 
-            android:layout_width="fill_parent"
+        <LinearLayout android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            >
+            android:layout_weight="1"
+            android:orientation="vertical"
+            bind:field="*"
+            bind:on_Click="handleSHClick">
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -21,38 +23,15 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                bind:field="sh_market"
+                android:textStyle="bold"
                 android:paddingTop="8dp"
             	android:paddingBottom="8dp"/>
-            
-            <View android:layout_width="0.5dp"
-			    android:layout_height="fill_parent"
+            <View android:layout_width="fill_parent"
+			    android:layout_height="0.5dp"
 			    android:background="#303030"/>
-            
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="深圳成指"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/white"
-                bind:field="sz_market"
-                android:paddingTop="8dp"
-            	android:paddingBottom="8dp"/>
-            
-        </LinearLayout>
-        <View android:layout_width="fill_parent"
-		    android:layout_height="0.5dp"
-		    android:background="#303030"/>
-        <LinearLayout 
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            >
-            
-            <LinearLayout 
+			<LinearLayout 
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingTop="8dp"
             	android:paddingBottom="8dp">
@@ -94,12 +73,33 @@
                     bind:field="shType"
                     android:layout_marginLeft="8dp"
                     />
-            </LinearLayout>
-            
-            <View android:layout_width="0.5dp"
+            </LinearLayout>            
+        </LinearLayout>
+        
+        <View android:layout_width="0.5dp"
 			    android:layout_height="fill_parent"
 			    android:background="#303030"/>
-            <LinearLayout 
+        
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            bind:field="*"
+            bind:on_Click="handleSZClick">
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="深圳成指"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+            	android:paddingBottom="8dp"/>
+           <View android:layout_width="fill_parent"
+			    android:layout_height="0.5dp"
+			    android:background="#303030"/>
+			<LinearLayout 
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -145,7 +145,8 @@
                     bind:field="szType"
                     android:layout_marginLeft="8dp"
                     />
-            </LinearLayout>
+            </LinearLayout>            
+            
         </LinearLayout>
     </LinearLayout>
     <LinearLayout 
@@ -204,12 +205,14 @@
 
     </LinearLayout>
 
-    <com.wxxr.mobile.stock.client.widget.RefreshListView
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         bind:itemViewId="infoCenterItemView"
-	    bind:field="stockInfos">
-    </com.wxxr.mobile.stock.client.widget.RefreshListView>
+	    bind:field="stockInfos"
+	    style="@style/mListView"
+	    bind:on_ItemClick="gotoPageItemClick">
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
 </LinearLayout>

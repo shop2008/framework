@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:padding="6dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="--" 
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            bind:field="name"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView3"
+            android:text="--" 
+            bind:field="codeMarket"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:id="@+id/middleLayout"
+            android:layout_centerHorizontal="true" 
+            android:gravity="left">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="换手:" 
+                android:textColor="@color/white"
+            	android:textSize="10sp"/>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--" 
+                bind:field="handrate"
+                android:textColor="@color/white"
+            	android:textSize="10sp"/>
+        </LinearLayout>
+        
+		<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" 
+            android:layout_below="@+id/middleLayout"
+            android:gravity="left">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="量比:" 
+            	android:textSize="10sp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--" 
+                bind:field="lb"
+                android:textColor="@color/white"
+            	android:textSize="10sp"/>
+        </LinearLayout>
+		<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" 
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+	                android:id="@+id/textView2"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="成交额:" 
+	            	android:textSize="10sp"
+	                android:textColor="@color/white"/>
+
+	            <TextView
+	                android:id="@+id/textView1"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="--" 
+	                bind:field="secuamount"
+	                android:textColor="@color/white"
+	            	android:textSize="10sp"/>
+            </LinearLayout>
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+	                android:id="@+id/textView2"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="流通盘:" 
+	            	android:textSize="10sp"
+	                android:textColor="@color/white"/>
+
+	            <TextView
+	                android:id="@+id/textView1"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="--" 
+	                bind:field="capital"
+	                android:textColor="@color/white"
+	            	android:textSize="10sp"/>
+            </LinearLayout>
+       </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

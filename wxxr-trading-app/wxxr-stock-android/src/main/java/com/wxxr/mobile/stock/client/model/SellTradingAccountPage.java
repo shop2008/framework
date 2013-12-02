@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +14,12 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -28,9 +31,12 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
-@View(name="sellTradingAccount",withToolbar=true, description="--")
+@View(name="sellTradingAccount",withToolbar=true, description="实盘/模拟")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.sell_trading_account_info_page_layout")
 public abstract class SellTradingAccountPage extends PageBase implements IModelUpdater {
 
@@ -61,33 +67,65 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
 	TradingAccountBean tradingAccount;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="M月d日买入")
+	})
+	LongTime2StringConvertor longTime2StringConvertorBuy;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="M月d日卖出")
+	})
+	LongTime2StringConvertor longTime2StringConvertorSell;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f元"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorYuan;	
+
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
 	/** 交易盘编号*/
 	private long id;
 	
 	/**买入日期  */
-	@Field(valueKey="text",binding="${tradingAccount!=null?utils.getDate(tradingAccount.buyDay):'--'}${'买入'}")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;  
 	
 	/**卖出日期 */
-	@Field(valueKey="text",binding="${tradingAccount!=null?utils.getDate(tradingAccount.sellDay):'--'}${'卖出'}")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:'-1'}", converter = "longTime2StringConvertorSell")
 	String sellDay;  
 	
 	/**申购金额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.applyFee:'--'}${'万'}")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.applyFee:'--'}",converter="stockLong2StringAutoUnitConvertor")
 	String applyFee;
 	
 	/**可用资金*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:'--'}${'元'}")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:'--'}",converter="stockLong2StringAutoUnitConvertor")
 	String avalibleFee;
 	
 	/**总盈亏率*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.gainRate:'--'}",attributes={
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.gainRate:'--'}",converter="stockLong2StringConvertorSpecial",attributes={
 			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.gainRate>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.gainRate<0)?'resourceId:color/green':'resourceId:color/white')}")
 			})
 	String gainRate;  
 	
 	/**总盈亏额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.totalGain:'--'}${'元'}",attributes={
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.totalGain:'--'}", converter = "stockLong2StringConvertorYuan" ,attributes={
 			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.totalGain>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.totalGain<0)?'resourceId:color/green':'resourceId:color/white')}")
 			})
 	String totalGain;
@@ -99,8 +137,10 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 为空：按钮不可用
 	 * 非空：按钮可用
 	 * */
-	@Field(valueKey="enabled",binding="${stockTradingOrder!=null?true:false}")
-	boolean isEmpty;
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "enabled", value = "${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)?true:false}")
+	})
+	String isEmpty;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
@@ -140,7 +180,10 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
+			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage")
+			})
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		Long stockId = 0L;
@@ -157,17 +200,23 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	}
 	
 	
-	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })
+	@Command(navigations = { 
+			@Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
+			@Navigation(on = "ShiPanBuyStockInfoPage", showPage = "ShiPanBuyStockInfoPage") 
+			})
 	CommandResult handleStockClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
 			if (tradingAccount != null) {
 				resutl.setPayload(tradingAccount.getId());
+				if(tradingAccount.getVirtual()){
+					resutl.setResult("TBuyStockInfoPage");
+				}else{
+					resutl.setResult("ShiPanBuyStockInfoPage");
+				}
+				return resutl;
 			}
-			resutl.setResult("TBuyStockInfoPage");
-			return resutl;
 		}
-
 		return null;
 	}
 	
@@ -203,14 +252,75 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		return null;
 	}
 	
-	
 	//卖出
-	@Command(navigations={@Navigation(on="sell",showPage="sellTrading")})
+	@Command(navigations={@Navigation(on="SellStockPage",showPage="SellStockPage")})
+	CommandResult sellStockItemClick(InputEvent event){
+		String stockCode = null; //订单id
+		Long id = null; //股票代码
+		String stockName = null; //股票名称
+		String stockMarketCode = null; //市场代码
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
+			if (event.getProperty("position") instanceof Integer) {
+				int position = (Integer) event.getProperty("position");
+				if(tradingAccount!=null){
+					List<StockTradingOrderBean> stockOrder = tradingAccount.getTradingOrders();
+					if(stockOrder!=null && stockOrder.size()>0){
+						StockTradingOrderBean stockTrading = stockOrder.get(position);
+						id= stockTrading.getId(); 
+						stockCode = stockTrading.getStockCode(); 
+						stockName = stockTrading.getStockName(); 
+						stockMarketCode = stockTrading.getMarketCode(); 
+						//交易盘id
+						if(id!=null)
+						map.put("orderId", id);
+						if(stockName!=null)
+						map.put("stockName", stockName);
+						if(stockCode!=null)
+						map.put("stockCode", stockCode);
+						if(stockMarketCode!=null)
+						map.put("stockMarketCode", stockMarketCode);
+						if(accid!=null)
+						map.put("accid", accid);
+					}
+				}
+				log.info("SellTradingAccountPage sellStockItemClick: orderId="+id+" stockName="+stockName+" stockCode="+stockCode+" stockMarketCode="+stockMarketCode+" Accid="+accid);
+				CommandResult result = new CommandResult();
+				if(map!=null && map.size()>0){
+					result.setPayload(map);
+				}
+				result.setResult("SellStockPage");
+				return result;
+			}
+		}
+		return null;
+	}
+	
+	
+	@Command(navigations={@Navigation(on="SellStockPage",showPage="SellStockPage")})
 	CommandResult sellTradingAction(InputEvent event){
-		Toast.makeText(AppUtils.getFramework().getAndroidApplication(), "确定需要卖出吗？", Toast.LENGTH_SHORT).show();
-		CommandResult result = new CommandResult();
-		result.setResult("sell");
-		return result;
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			CommandResult result = new CommandResult();
+			if(tradingAccount!=null){
+				List<StockTradingOrderBean> stockOrder = tradingAccount.getTradingOrders();
+				if(stockOrder!=null && stockOrder.size()>0){
+					StockTradingOrderBean order = stockOrder.get(0);
+					if(order!=null){
+						String code = order.getStockCode();
+						String name = order.getStockName();
+						map.put("stockName", name);
+						map.put("stockCode", code);
+					}
+				}
+			}
+			if(accid!=null)
+				map.put("accid", accid);
+			result.setPayload(map);
+			result.setResult("SellStockPage");
+			return result;
+		}
+		return null;
 	}
 	//清仓
 	@Command

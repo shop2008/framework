@@ -8,19 +8,24 @@ import java.util.Map;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * 模拟盘详情
@@ -42,28 +47,45 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
 	TradingAccountBean tradingBean;
 
+	@Convertor(params={
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+	})
+	LongTime2StringConvertor longTime2StringConvertorBuy;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple", value="100")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	
 	/*** 交易盘编号*/
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
 	/*** 买入日期  */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}",converter="longTime2StringConvertorBuy")
 	String buyDay;
 	
 	/*** 卖出日期 */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}",converter="longTime2StringConvertorBuy")
 	String sellDay;
 
 	/*** 申购金额*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
 	/*** 交易综合费*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
 	String usedFee;
 	
 	/*** 冻结资金*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
 	String frozenVol;
 	
 	/*** 止损*/

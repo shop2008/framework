@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding">
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:padding="6dp"
+	    android:gravity="center"
+	    >
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_weight="1">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:textColor="@color/white"
+	            android:textSize="15sp"
+	            bind:field="name"/>
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:textColor="@color/white"
+	            android:textSize="12sp"
+	            bind:field="codeAndmarket"/>
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:gravity="center">
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="--"
+	            android:textSize="20sp"
+	            bind:field="newprice"
+	            android:textStyle="bold"/>
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="4dp"
+	            android:background="@drawable/risefallrate_stype"/>
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_weight="1"
+	        android:gravity="right">
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content">
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="--"
+	                android:textSize="10sp"
+	                android:textColor="@color/white"
+	                bind:field="change"/>
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="(--)"
+	                bind:field="risefallrate"
+	                android:textColor="@color/white"
+	                android:textSize="10sp"/>
+	        </LinearLayout>
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content">
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="--"
+	                bind:field="datetime"
+	                android:textColor="@color/white"
+	                android:textSize="10sp"/>
+	        </LinearLayout>
+	    </LinearLayout>
+	</LinearLayout>
+</LinearLayout>

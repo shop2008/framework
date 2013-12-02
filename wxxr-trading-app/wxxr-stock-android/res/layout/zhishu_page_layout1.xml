@@ -33,11 +33,18 @@
 				<LinearLayout 
 				    android:layout_width="fill_parent"
 				    android:layout_height="wrap_content">
-				    <com.wxxr.mobile.stock.client.widget.MinuteLineView
+				    <com.wxxr.mobile.stock.client.widget.MinuteLineView 
 			            android:layout_width="match_parent"
 			            android:layout_height="160dp"
 			            bind:field="stockMinuteData"
 			            />
+				    <TextView android:layout_width="fill_parent"
+				        android:layout_height="fill_parent"
+				        android:text="@string/error_message"
+				        android:gravity="center"
+				        android:textColor="@color/white"
+				        android:textSize="14sp"
+				        android:visibility="gone"/>
 				</LinearLayout>	
 				
 				<LinearLayout android:layout_width="fill_parent"
@@ -218,7 +225,7 @@
 				         android:padding="8dp">
 				         <TextView android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
-				             android:text="深市平盘："
+				             android:text="沪市平盘："
 				             android:textSize="14sp"
 				             android:textColor="@color/tv_gray_color"
 				             android:layout_alignParentLeft="true"/>
@@ -242,7 +249,7 @@
 				         android:padding="8dp">
 				         <TextView android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
-				             android:text="深市上涨："
+				             android:text="沪市上涨："
 				             android:textSize="14sp"
 				             android:textColor="@color/red"
 				             android:layout_alignParentLeft="true"/>
@@ -261,7 +268,7 @@
 				         android:padding="8dp">
 				         <TextView android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
-				             android:text="深市下跌："
+				             android:text="沪市下跌："
 				             android:textColor="@color/green"
 				             android:textSize="14sp"
 				             android:layout_alignParentLeft="true"/>
