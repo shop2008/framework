@@ -51,6 +51,8 @@ import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
 import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
+import com.wxxr.mobile.stock.trade.command.CancelOrderCommand;
+import com.wxxr.mobile.stock.trade.command.CancelOrderHandler;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
 import com.wxxr.mobile.stock.trade.command.QuickBuyStockCommand;
@@ -208,7 +210,8 @@ public class TradingManagementServiceImpl extends
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
-        
+        context.getService(ICommandExecutor.class).registerCommandHandler(CancelOrderCommand.Name, new CancelOrderHandler());
+
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -847,7 +850,32 @@ public class TradingManagementServiceImpl extends
 
     @Override
     public void cancelOrder(String orderID) {
-        
+        context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("cancelOrder fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to cancelOrder, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("cancelOrder successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
     }
 
     
