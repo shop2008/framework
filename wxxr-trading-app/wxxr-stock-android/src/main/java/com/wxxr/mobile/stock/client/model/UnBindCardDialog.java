@@ -16,7 +16,7 @@ public abstract class UnBindCardDialog extends ViewBase {
 			navigations={@Navigation(on="*",showPage="withDrawCashAuthPage")}
 			)
 	String showAuthPage(InputEvent event) {
-		
+		hide();
 		return "*";
 	}
 	
