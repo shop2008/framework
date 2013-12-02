@@ -26,6 +26,7 @@ import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -35,42 +36,33 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  */
 @View(name = "infoCenter", description = "行情中心")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.price_center_page_layout")
-public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
+public abstract class InfoCenterView extends ViewBase {
 	
 	
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getQuotations()}")
-	QuotationListBean quotationBean;
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('newprice','desc',0,20)}")
+	BindableListWrapper<StockTaxisBean> stockTaxis;
 	
-	/**
-	 * 涨跌排序接口,默认按涨跌幅降序
-	 * @param orderby 排序字段名称，即按什么排序 ：“newprice”-按最新价；“risefallrate”-按涨跌幅
-	 * @param direction - 排序方向：升序or降序：“asc”-升序，"desc"-降序
-	 * @param start - 起始条目
-	 * @param limit - 最多可取条数
-	 * @return
-	 */
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('risefallrate','desc',0,20)}")
-	StockTaxisListBean stockTaxis;
-	
-	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.shBean:null}")
+	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('000001','SH')}")
 	StockQuotationBean shBean;
 	
-	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.szBean:null}")
+	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('399001','SZ')}")
 	StockQuotationBean szBean;
 	
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="100.00"),
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	/**-------上证指数 上海*/
@@ -80,20 +72,20 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	String shType;
 	
 	// 涨跌幅
-	@Field(valueKey="text",binding="${shBean!=null?shBean.risefallrate:'--'}",attributes={
+	@Field(valueKey="text",binding="${shBean!=null?shBean.risefallrate:null}",attributes={
 			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sh_risefallrate;
 	// 市场代码： SH，SZ各代表上海，深圳。
-	@Field(valueKey="text",binding="${shBean!=null?shBean.market:'--'}")
+	@Field(valueKey="text",binding="${shBean!=null?shBean.market:null}")
 	String sh_market;
 	// 最新
-	@Field(valueKey="text",binding="${shBean!=null?shBean.newprice:'--'}",attributes={
+	@Field(valueKey="text",binding="${shBean!=null?shBean.newprice:null}",attributes={
 			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor")
 	String sh_newprice;
 	// 涨跌额
-	@Field(valueKey="text",binding="${shBean!=null?shBean.change:'--'}",attributes={
+	@Field(valueKey="text",binding="${shBean!=null?shBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sh_change;
@@ -105,49 +97,32 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 		String szType;
 	
 	// 涨跌幅
-	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:'--'}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sz_risefallrate;
 	
 	// 市场代码： SH，SZ各代表上海，深圳。
-	@Field(valueKey="text",binding="${szBean!=null?szBean.market:'--'}")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.market:null}")
 	String sz_market;
 	
 	// 最新
-	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:'--'}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor")
 	String sz_newprice;
 	
 	// 涨跌额
-	@Field(valueKey="text",binding="${szBean!=null?szBean.change:'--'}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sz_change;
 	
 	// 股票列表
-	@Field(valueKey = "options",binding="${(stockTaxis!=null&&stockTaxis.list!=null)?stockTaxis.list:null}")
+	@Field(valueKey = "options",binding="${stockTaxis.data}")
 	List<StockTaxisBean> stockInfos;
 
-	@Bean
-	int showArrows = 0;
 	
-	@Bean
-	boolean direction = false; //默认：“desc”-升序
-	
-	
-	@Field(valueKey="text",enableWhen="${direction}",visibleWhen="${showArrows==1}")
-	String isNewPrice;
-	
-	@Field(valueKey="text",enableWhen="${direction}",visibleWhen="${showArrows==0}")
-	String isRisefallrate;
-	
-	@OnShow
-	protected void updateInfo() {
-
-	}
-
 	/**
 	 * 事件处理-单击深证指数 
 	 * 
@@ -192,47 +167,21 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	 * 事件处理- 单击涨跌幅标题（股票列表排序-按涨跌幅）
 	 * 
 	 * */
-	@Command
-	String risefallrateOrderByClick(InputEvent event){
+	@Command(description="",commandName="orderByPercent")
+	String orderByPercent(InputEvent event){
+		//TODO
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			String directionValue = "desc";
-			this.showArrows = 0;
-			registerBean("showArrows", this.showArrows);
-			if(direction){
-				this.direction = false; //降序
-				directionValue = "desc";
-			}else{
-				this.direction = true; // 升序
-				directionValue = "asc";
-			}
-			registerBean("direction", this.direction);
-			if(infoCenterService!=null){
-				infoCenterService.getStocktaxis("risefallrate", directionValue, 0, 20);
-			}
 		}
 		return null;
 	}
 	/**
-	 * 事件处理- 单击最新价格标题（股票列表排序-按当前价）
+	 * 事件处理- 单击涨跌幅标题（股票列表排序-按当前价）
 	 * 
 	 * */
-	@Command
-	String newPriceOrderByClick(InputEvent event){
+	@Command(description="",commandName="orderByPrice")
+	String orderByPrice(InputEvent event){
+		//TODO
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			String directionValue = "desc";
-			this.showArrows = 1;
-			registerBean("showArrows", this.showArrows);
-			if(direction){
-				this.direction = false; //降序
-				directionValue = "desc";
-			}else{
-				this.direction = true; // 升序
-				directionValue = "asc";
-			}
-			registerBean("direction", this.direction);
-			if(infoCenterService!=null){
-				infoCenterService.getStocktaxis("newprice", directionValue, 0, 20);
-			}
 		}
 		return null;
 	}
@@ -249,7 +198,7 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 			int position = (Integer) event.getProperty("position");
 			CommandResult result = new CommandResult();
 			if(stockTaxis!=null){
-				List<StockTaxisBean> taxis = stockTaxis.getList();
+				List<StockTaxisBean> taxis = stockTaxis.getData();
 				if(taxis!=null && taxis.size()>0){
 					StockTaxisBean stockTaxis = taxis.get(position);
 					String code = stockTaxis.getCode();
@@ -267,11 +216,5 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void updateModel(Object value) {
-		// TODO Auto-generated method stub
-		
 	}
 }

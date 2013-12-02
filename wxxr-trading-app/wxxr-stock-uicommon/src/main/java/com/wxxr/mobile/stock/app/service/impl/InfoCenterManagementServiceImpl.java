@@ -181,10 +181,10 @@ public class InfoCenterManagementServiceImpl extends
         params.put("code", code);
         params.put("market", market);
 
-        this.stockQuotationBean_cache.forceReload(params,false);
+        this.stockQuotationBean_cache.forceReload(params,true);
         return stockQuotationBean_cache.getEntity(mc);
-       
     }
+	
 //=====================beans =====================
 	private StockTaxisListBean stockList = new StockTaxisListBean();
 	private QuotationListBean quotationListBean = new QuotationListBean();
@@ -201,11 +201,17 @@ public class InfoCenterManagementServiceImpl extends
 				Long v1 = null;
 				Long v2 = null;
 				if("newprice".equals(taxis)){
-					v1 = o1.getNewprice();
-					v2 = o2.getNewprice();
+					v1 = o1 != null ? o1.getNewprice() : null;
+					v2 = o2 != null ? o2.getNewprice() : null;
 				}else if("risefallrate".equals(taxis)){
-					v1 = o1.getRisefallrate();
-					v2 = o2.getRisefallrate();
+					v1 = o1 != null ? o1.getRisefallrate() : null;
+					v2 = o2 != null ? o2.getRisefallrate() : null;
+				}
+				if(v1 == null){
+					v1 = Long.MIN_VALUE;
+				}
+				if(v2 == null){
+					v2 = Long.MIN_VALUE;
 				}
 				if("desc".equals(orderby)){
 					return v1.compareTo(v2);
