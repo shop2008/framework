@@ -89,8 +89,8 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	String C_buyNum; // 参赛交易盘买入数量
 	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'10060'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'20131125'}"),
+			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
+			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
 			@Attribute(name = "stockUpColor",value="#BA2514"),
 			@Attribute(name = "stockDownColor",value="#3C7F00"),
@@ -136,7 +136,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	List<String> money;
 
 	/**参数交易盘-中止止损*/
-	@Field(valueKey="text",binding="${userCreateTradAccInfo.capitalRate!=null?userCreateTradAccInfo.capitalRate:'--'}")
+	@Field(valueKey="text",binding="${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}")
 	String capitalRate;
 	
 	/**止损*/
@@ -230,6 +230,27 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 		}
 		return null;
 	}	
+
+	private float getDeposit1(){
+		   return  userCreateTradAccInfo.getDeposit1();
+		}
+		private float getDeposit2(){
+		       return  userCreateTradAccInfo.getDeposit2();
+		}
+		private float getDeposit3(){
+	        return  userCreateTradAccInfo.getDeposit3();
+	    }
+		
+		private float getRate1(){
+		    return  userCreateTradAccInfo.getRateData1();
+		}
+		private float getRate2(){
+	        return  userCreateTradAccInfo.getRateData2();
+	    }
+		private float getRate3(){
+	        return  userCreateTradAccInfo.getRateData3();
+	    }	
+	
 	private void updataRate1(){
 		if(userCreateTradAccInfo!=null){
 			costRate = userCreateTradAccInfo.getCostRate();
@@ -306,7 +327,54 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			}
 		}
 		return null;
-	}	
+	}
+	
+	/**参赛交易盘买人*/
+	@Command
+	String CanSaiBuyStockClick(InputEvent event){
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
+		}
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		return "home";	}
+	
+	/**挑战交易盘买人*/
+	@Command
+	String TiaoZhanBuyStockClick(InputEvent event){
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			long money = changeMoney * 10000 * 100;
+			float _rate = 0.0f;
+			float _depositRate = 0.0f;
+			String assetType = "VOUCHER";
+			switch(currentRadioBtnId){
+			case 1:
+				if(money>0 && getRate1()>0 && getDeposit1()>0 ){
+					_rate = getRate1();
+					_depositRate = getDeposit1();
+				}
+				assetType = "CASH"; // 现金
+				break;
+			case 2:
+				if(money>0 && getRate2()>0 && djMoney>0 ){
+					_rate = getRate2();
+					_depositRate = getDeposit2();
+				}
+				assetType = "CASH";
+				break;
+			case 3:
+				if(money>0 && getRate3()>0 && djMoney>0 ){
+					_rate = getRate3();
+					_depositRate = getDeposit3();
+				}
+				assetType= "VOUCHER"; //积分
+				break;
+			}
+			userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		}
+		return "home";		
+	}
+	
 	@Override
 	public void updateModel(Object value) {
 		if(value instanceof Map){

@@ -96,6 +96,8 @@
         android:textColor="@color/white"
         android:textSize="15sp"
         android:background="@drawable/button_up"
+        bind:field="*"
+        bind:on_Click="TiaoZhanBuyStockClick"
         />
  	<TextView
         android:id="@+id/textView3"

@@ -54,6 +54,8 @@
         android:textSize="15sp"
         android:background="@drawable/bule_button_bj"
         android:layout_marginTop="8dp"
+        bind:field="*"
+        bind:on_Click="CanSaiBuyStockClick"
         />
 	<LinearLayout
         android:layout_width="match_parent"
