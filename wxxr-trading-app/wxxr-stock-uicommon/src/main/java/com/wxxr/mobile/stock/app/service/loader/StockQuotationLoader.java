@@ -58,6 +58,9 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
 
     @Override
     public ICommand<List<StockQuotationVO>> createCommand(Map<String, Object> params) {
+        if (params==null){
+            return null;
+        }
         GetStockQuotationCommand cmd = new GetStockQuotationCommand();
         cmd.setCode((String) params.get("code"));
         cmd.setMarket((String) params.get("market"));

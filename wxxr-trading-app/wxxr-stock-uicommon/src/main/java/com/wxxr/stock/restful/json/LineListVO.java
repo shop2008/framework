@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 import com.wxxr.stock.hq.ejb.api.StockLineVO;
@@ -19,7 +20,7 @@ public class LineListVO  implements Serializable{
      * 
      */
     private static final long serialVersionUID = 1L;
-    @XmlElement(name="list")
+    @XStreamImplicit(itemFieldName="list")
     private List<StockLineVO> list = new ArrayList<StockLineVO>();
 
     /**

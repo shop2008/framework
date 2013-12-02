@@ -56,6 +56,9 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
 
     @Override
     public ICommand<List<StockLineBean>> createCommand(Map<String, Object> params) {
+        if (params==null){
+            return null;
+        }
         GetDayStockLineCommand cmd = new GetDayStockLineCommand();
         cmd.setCode((String) params.get("code"));
         cmd.setMarket((String) params.get("market"));
@@ -69,9 +72,9 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
             for (StockLineBean vo : result) {
                 StockLineBean bean=cache.getEntity(vo.getMarket()+vo.getCode());
                 if(bean == null) {
-                    cache.putEntity(vo.getMarket()+vo.getCode(), bean);
+//                    cache.putEntity(vo.getMarket()+vo.getCode(), bean);
                 }else{
-//                    ConverterUtils.updatefromVOtoBean(bean, vo);
+                    ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
                 updated = true;
             }
@@ -98,7 +101,7 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
         if (svos!=null && svos.getList()!=null){
             List<StockLineVO> stockLineVOs=svos.getList();
             for (StockLineVO item:stockLineVOs ){
-//                StockLineBean bean=ConverterUtils.fromVO(bean, item);
+                StockLineBean bean=ConverterUtils.fromVO(item);
             }
         }
         return null;
