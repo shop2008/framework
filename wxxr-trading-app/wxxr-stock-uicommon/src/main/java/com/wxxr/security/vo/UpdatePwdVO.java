@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "UpdatePwdVO")
+@XmlRootElement(name = "UpdatePassVO")
 public class UpdatePwdVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
