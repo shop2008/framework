@@ -44,7 +44,15 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getQuotations()}")
 	QuotationListBean quotationBean;
 	
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('newprice','desc',0,20)}")
+	/**
+	 * 涨跌排序接口,默认按涨跌幅降序
+	 * @param orderby 排序字段名称，即按什么排序 ：“newprice”-按最新价；“risefallrate”-按涨跌幅
+	 * @param direction - 排序方向：升序or降序：“asc”-升序，"desc"-降序
+	 * @param start - 起始条目
+	 * @param limit - 最多可取条数
+	 * @return
+	 */
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('risefallrate','desc',0,20)}")
 	StockTaxisListBean stockTaxis;
 	
 	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.shBean:null}")
@@ -122,6 +130,19 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	@Field(valueKey = "options",binding="${(stockTaxis!=null&&stockTaxis.list!=null)?stockTaxis.list:null}")
 	List<StockTaxisBean> stockInfos;
 
+	@Bean
+	int showArrows = 0;
+	
+	@Bean
+	boolean direction = false; //默认：“desc”-升序
+	
+	
+	@Field(valueKey="text",enableWhen="${direction}",visibleWhen="${showArrows==1}")
+	String isNewPrice;
+	
+	@Field(valueKey="text",enableWhen="${direction}",visibleWhen="${showArrows==0}")
+	String isRisefallrate;
+	
 	
 	@OnShow
 	protected void updateInfo() {
@@ -172,21 +193,47 @@ public abstract class InfoCenterView extends ViewBase implements IModelUpdater{
 	 * 事件处理- 单击涨跌幅标题（股票列表排序-按涨跌幅）
 	 * 
 	 * */
-	@Command(description="",commandName="orderByPercent")
-	String orderByPercent(InputEvent event){
-		//TODO
+	@Command()
+	String risefallrateOrderByClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			String directionValue = "desc";
+			this.showArrows = 0;
+			registerBean("showArrows", this.showArrows);
+			if(direction){
+				this.direction = false; //降序
+				directionValue = "desc";
+			}else{
+				this.direction = true; // 升序
+				directionValue = "asc";
+			}
+			registerBean("direction", this.direction);
+			if(infoCenterService!=null){
+				infoCenterService.getStocktaxis("risefallrate", directionValue, 0, 20);
+			}
 		}
 		return null;
 	}
 	/**
-	 * 事件处理- 单击涨跌幅标题（股票列表排序-按当前价）
+	 * 事件处理- 单击最新价格标题（股票列表排序-按当前价）
 	 * 
 	 * */
-	@Command(description="",commandName="orderByPrice")
-	String orderByPrice(InputEvent event){
-		//TODO
+	@Command()
+	String newPriceOrderByClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			String directionValue = "desc";
+			this.showArrows = 1;
+			registerBean("showArrows", this.showArrows);
+			if(direction){
+				this.direction = false; //降序
+				directionValue = "desc";
+			}else{
+				this.direction = true; // 升序
+				directionValue = "asc";
+			}
+			registerBean("direction", this.direction);
+			if(infoCenterService!=null){
+				infoCenterService.getStocktaxis("newprice", directionValue, 0, 20);
+			}
 		}
 		return null;
 	}

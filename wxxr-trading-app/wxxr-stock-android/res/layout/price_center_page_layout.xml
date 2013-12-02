@@ -173,35 +173,64 @@
             android:src="@drawable/title_line"
             android:paddingBottom="0.5dp"
             />
-        <Button 
-            android:id="@+id/btn_latest_price"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="最新价格"
-            android:textSize="15sp"
-            bind:on_ItemClick="orderByPercent"
-            android:background="@drawable/title_background"
-            android:textColor="#ffffff"
-            />
+        
+        <LinearLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:background="@drawable/title_background"
+		    bind:field="*"
+		    bind:on_Click="newPriceOrderByClick"
+		    >
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="最新价格"
+		        android:textSize="15sp"
+		        android:textColor="#ffffff" 
+		        />
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/orderby_attrows"
+		        android:layout_marginLeft="4dp"
+		        android:enabled="true"
+		        bind:field="isNewPrice"
+		        android:visibility="gone"
+		        />
+		</LinearLayout>
 		<ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/title_line"
             android:paddingBottom="0.5dp"
             />
-        <Button
-            android:id="@+id/btn_up_down_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:drawableRight="@drawable/up_arrows"
-            android:textSize="15sp"
-            android:text="涨跌幅"
-            bind:on_ItemClick="orderByPercent"
-            android:textColor="#ffffff" 
-            />
+		
+		<LinearLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:background="@drawable/title_background"
+		    bind:field="*"
+		    bind:on_Click="risefallrateOrderByClick">
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="涨跌幅"
+		        android:textSize="15sp"
+		        android:textColor="#ffffff" 
+		        />
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:background="@drawable/orderby_attrows"
+		        android:layout_marginLeft="4dp"
+		        android:enabled="true"
+		        bind:field="isRisefallrate"
+		        />
+		</LinearLayout>
 
     </LinearLayout>
 
