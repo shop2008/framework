@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.StockTaxisListVO;
@@ -18,7 +20,7 @@ import com.wxxr.stock.restful.resource.StockResource;
  * @author neillin
  *
  */
-public class StockTaxisVOLoader extends AbstractEntityLoader<String, StockTaxisVO, StockTaxisVO> {
+public class StockTaxisLoader extends AbstractEntityLoader<String, StockTaxisBean, StockTaxisVO> {
 
 	private static final String COMMAND_NAME = "GetStockTaxisVOs";
 	
@@ -91,7 +93,7 @@ public class StockTaxisVOLoader extends AbstractEntityLoader<String, StockTaxisV
 
 	@Override
 	public boolean handleCommandResult(ICommand<?> cmd,List<StockTaxisVO> result,
-			IReloadableEntityCache<String, StockTaxisVO> cache) {
+			IReloadableEntityCache<String, StockTaxisBean> cache) {
 		TaxisVO criteria = ((GetStockTaxisVOsCommand)cmd).getTaxis();
 		boolean updated = false;
 		if(!criteria.hasSameSearchConditions(previousSearchCriteria)){
@@ -102,7 +104,7 @@ public class StockTaxisVOLoader extends AbstractEntityLoader<String, StockTaxisV
 		if(result != null){
 			for (StockTaxisVO vo : result) {
 				String key = vo.getCode()+vo.getMarket();
-				cache.putEntity(key, vo);
+				cache.putEntity(key, ConverterUtils.fromVO(vo));
 				updated = true;
 			}
 		}

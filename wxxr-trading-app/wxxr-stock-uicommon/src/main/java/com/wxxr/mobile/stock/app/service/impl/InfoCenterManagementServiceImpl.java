@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -19,8 +18,10 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
@@ -28,12 +29,12 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
-import com.wxxr.mobile.stock.app.service.loader.StockTaxisVOLoader;
+import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
 import com.wxxr.mobile.stock.sync.model.StockBaseInfo;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
-import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
 
@@ -70,7 +71,11 @@ public class InfoCenterManagementServiceImpl extends
         
         stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("StockMinuteK");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockTaxisVO", new StockTaxisVOLoader());
+        
+        
+        dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List>("DayStockLine");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("DayStockLine", new DayStockLineLoader());
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockTaxis", new StockTaxisLoader());
 	}
 
 	@Override
@@ -122,15 +127,48 @@ public class InfoCenterManagementServiceImpl extends
 	//K线
 	@Override
 	public LineListBean getDayline(String code, String market) {
+     
 		return null;
 	}
-	
+	 public BindableListWrapper<StockLineBean> getDayStockline(final String code, final String market){
+	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
+             return null;
+         }
+	     BindableListWrapper<StockLineBean> dayline = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
+	            @Override
+	            public boolean doFilter(StockLineBean entity) {
+	                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
+	                    return true;
+	                }
+	                return false;
+	            }
+	            
+	        }, new  StockLineBeanComparator());
+	     
+          Map<String, Object> p=new HashMap<String, Object>(); 
+          p.put("code", code);
+          p.put("market", market);
+          this.dayStockLineBean_cache.forceReload(p,false);
+          dayStockLineBean_cache.setCommandParameters(p);
+          return dayline;
+
+	 }
+	class StockLineBeanComparator implements Comparator<StockLineBean>{
+        @Override
+        public int compare(StockLineBean b1, StockLineBean b2) {
+           //todo
+            return 0;
+        }
+	}
 	//行情信息
     private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
     //分钟线信息
     private GenericReloadableEntityCache<String,StockMinuteKBean,List> stockMinuteKBean_cache;
+    //日K
+    private GenericReloadableEntityCache<String,StockLineBean,List> dayStockLineBean_cache;
+    
 	//查询股票行情
-    private GenericReloadableEntityCache<String,StockTaxisVO,StockTaxisVO> stockTaxisVO_cache;
+    private GenericReloadableEntityCache<String,StockTaxisBean,StockTaxisVO> stockTaxis_cache;
     
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
@@ -151,15 +189,15 @@ public class InfoCenterManagementServiceImpl extends
 	private StockTaxisListBean stockList = new StockTaxisListBean();
 	private QuotationListBean quotationListBean = new QuotationListBean();
 	@Override
-	public BindableListWrapper<StockTaxisVO> getStocktaxis(final String taxis, final String orderby,
+	public BindableListWrapper<StockTaxisBean> getStocktaxis(final String taxis, final String orderby,
 			long start, long limit) {
-		if(stockTaxisVO_cache == null){
-			this.stockTaxisVO_cache = new GenericReloadableEntityCache<String, StockTaxisVO, StockTaxisVO>("StockTaxisVO");
+		if(stockTaxis_cache == null){
+			this.stockTaxis_cache = new GenericReloadableEntityCache<String, StockTaxisBean, StockTaxisVO>("StockTaxis");
 		}
-		BindableListWrapper<StockTaxisVO> result = this.stockTaxisVO_cache.getEntities(null, new Comparator<StockTaxisVO>() {
+		BindableListWrapper<StockTaxisBean> result = this.stockTaxis_cache.getEntities(null, new Comparator<StockTaxisBean>() {
 			
 			@Override
-			public int compare(StockTaxisVO o1, StockTaxisVO o2) {
+			public int compare(StockTaxisBean o1, StockTaxisBean o2) {
 				Long v1 = null;
 				Long v2 = null;
 				if("newprice".equals(taxis)){
@@ -181,7 +219,7 @@ public class InfoCenterManagementServiceImpl extends
 		params.put("orderby", orderby);
 		params.put("start", (long)start);
 		params.put("limit", (long)limit);
-		this.stockTaxisVO_cache.doReloadIfNeccessay(params);
+		this.stockTaxis_cache.doReloadIfNeccessay(params);
 		return result;
 	}
 

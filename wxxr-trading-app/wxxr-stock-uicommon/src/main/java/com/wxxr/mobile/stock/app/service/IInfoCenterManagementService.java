@@ -11,9 +11,8 @@ import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
-import com.wxxr.mobile.stock.app.bean.StockTaxisListBean;
+import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
-import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 
 /**
  * @author wangxuyang
@@ -69,7 +68,7 @@ public interface IInfoCenterManagementService {
 	 * @param limit - 最多可取条数
 	 * @return
 	 */
-	public BindableListWrapper<StockTaxisVO> getStocktaxis(String orderby, String direction,long start, long limit);
+	public BindableListWrapper<StockTaxisBean> getStocktaxis(String orderby, String direction,long start, long limit);
 	
 	/**
 	 * 获取指数行情数据
