@@ -6,7 +6,6 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 
 
