@@ -26,6 +26,28 @@ public class TradingRecordBean implements IBindableBean {
 	private int day;
 	private String code;
 	private long date;
+	private long id;
+    private String acctID;
+
+	public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        long old = this.id;
+        this.id = id;
+        this.emitter.firePropertyChange("id", old, this.id);
+    }
+
+    public String getAcctID() {
+        return acctID;
+    }
+
+    public void setAcctID(String acctID) {
+        String old = this.acctID;
+        this.acctID = acctID;
+        this.emitter.firePropertyChange("acctID", old, this.acctID);    }
+
 
 	/**
 	 * @param listener
