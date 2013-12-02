@@ -159,7 +159,7 @@ public abstract class UIComponent implements IUIComponent {
 			return;
 		}
 		if(log.isDebugEnabled()){
-			log.debug("Going to fire ComponentValueChangedEvent for :"+this.toString()+", key :"+StringUtils.join(keys,','));
+			log.debug("Going to fire ComponentValueChangedEvent for :"+this.toString()+", key :"+StringUtils.join(keys,',')+", callback = "+this.callback);
 		}
 		if(this.callback != null){
 			this.callback.valueChanged(this, keys);
@@ -216,6 +216,14 @@ public abstract class UIComponent implements IUIComponent {
 	@Override
 	public void setValueChangedCallback(IBindingValueChangedCallback cb) {
 		this.callback = cb;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+" [name=" + name + "]";
 	}
 		
 }
