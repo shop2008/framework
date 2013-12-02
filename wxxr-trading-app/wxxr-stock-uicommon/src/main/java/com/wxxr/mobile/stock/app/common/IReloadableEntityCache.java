@@ -33,5 +33,9 @@ public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>
 	int getAutoReloadIntervalInSeconds();
 	
 	int getNumberOfActiveClient();
+	
+	boolean isStopAutoReloadIfNotActiveClient();
+	
+	void setStopAutoReloadIfNotActiveClient(boolean bool);
 
 }
