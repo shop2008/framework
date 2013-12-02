@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 import com.wxxr.stock.hq.ejb.api.PlateTaxisVO;
@@ -15,7 +16,7 @@ import com.wxxr.stock.hq.ejb.api.PlateTaxisVO;
  */
 @XmlRootElement(name = "list")
 public class PlateTaxisListVO  implements Serializable{
-	@XmlElement(name="list")
+    @XStreamImplicit(itemFieldName="list")
 	private List<PlateTaxisVO> list = new ArrayList<PlateTaxisVO>();
 
     /**
