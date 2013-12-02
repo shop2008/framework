@@ -22,8 +22,8 @@ public class CreateTradingAccountHandler implements ICommandHandler{
             CreateTradingAccountCommand g=(CreateTradingAccountCommand) command;
             
             StockResultVO vo = getRestService(ITradingProtectedResource.class)
-                    .createTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),
-                            g.isVirtual(), g.getDepositRate());
+                    .mulCreateTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),
+                            g.isVirtual(), g.getDepositRate(),g.getAssetType());
           
                 return (T) vo;
         }
