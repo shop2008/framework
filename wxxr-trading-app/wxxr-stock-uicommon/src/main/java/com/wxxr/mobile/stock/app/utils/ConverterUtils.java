@@ -9,6 +9,7 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -18,6 +19,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.stock.hq.ejb.api.StockLineVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
@@ -96,12 +98,7 @@ public class ConverterUtils {
         updatefromVOtoBean(b,vo);
         return b;
     } 
-    
-    public static TradingAccountBean fromVO(TradingAccountVO vo) {
-        if (vo == null) {
-            return null;
-        }
-        TradingAccountBean b=new TradingAccountBean();
+    public static void  UpdatefromVO(TradingAccountBean b,TradingAccountVO vo){
         b.setId(vo.getId());
         b.setApplyFee(vo.getApplyFee());
         b.setAvalibleFee(vo.getAvalibleFee());
@@ -127,6 +124,14 @@ public class ConverterUtils {
             b.setTradingOrders(list);
         }
         
+    }
+    
+    public static TradingAccountBean fromVO(TradingAccountVO vo) {
+        if (vo == null) {
+            return null;
+        }
+        TradingAccountBean b=new TradingAccountBean();
+        UpdatefromVO(b,vo);
         return b;
     }
 
@@ -214,6 +219,7 @@ public class ConverterUtils {
         bean.setSum(vo.getSum());
         bean.setTotalGain(vo.getTotalGain());
         bean.setVirtual(vo.isVirtual());
+        
         return bean;
     }
 
@@ -380,6 +386,39 @@ public class ConverterUtils {
         bean.setCode(b.getCode());
         List<StockMinuteLineBean> mvos=b.getList();
         bean.setList(mvos);
+    }
+    public static void updatefromVOtoBean(StockLineBean bean, StockLineBean vo) {
+        bean.setClose(vo.getClose());
+        bean.setCode(vo.getCode());
+        bean.setDate(vo.getDate());
+        bean.setHigh(vo.getHigh());
+        bean.setLimit(vo.getLimit());
+        bean.setLow(vo.getLow());
+        bean.setMarket(vo.getMarket());
+        bean.setOpen(vo.getOpen());
+        bean.setPrice(vo.getPrice());
+        bean.setSecuamount(vo.getSecuamount());
+        bean.setSecuvolume(vo.getSecuvolume());
+        bean.setStart(vo.getStart());
+        bean.setTime(vo.getTime());
+    }
+    public static StockLineBean fromVO(StockLineVO vo) {
+        if (vo!=null){
+            return null;
+        }
+        StockLineBean bean=new StockLineBean();
+        bean.setClose(vo.getClose());
+        bean.setDate(vo.getDate());
+        bean.setHigh(vo.getHigh());
+        bean.setLimit(vo.getLimit());
+        bean.setLow(vo.getLow());
+        bean.setOpen(vo.getOpen());
+        bean.setPrice(vo.getPrice());
+        bean.setSecuamount(vo.getSecuamount());
+        bean.setSecuvolume(vo.getSecuvolume());
+        bean.setStart(vo.getStart());
+        bean.setTime(vo.getTime());
+        return bean;
     }
     
 }

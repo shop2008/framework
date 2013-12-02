@@ -61,22 +61,7 @@ public class TradingAccountInfoLoader extends AbstractEntityLoader<String, Tradi
                 cache.putEntity(accId, bean);
                 updated = true;
             }else{
-                bean.setId(vo.getId());
-                bean.setApplyFee(vo.getApplyFee());
-                bean.setAvalibleFee(vo.getAvalibleFee());
-                bean.setBuyDay(vo.getBuyDay());
-                bean.setFrozenVol(vo.getFrozenVol());
-                bean.setGainRate(vo.getGainRate());
-                bean.setLossLimit(vo.getLossLimit());
-                bean.setMaxStockCode(vo.getMaxStockCode());
-                bean.setMaxStockMarket(vo.getMaxStockMarket());
-                bean.setOver(vo.getOver());
-                bean.setSellDay(vo.getSellDay());
-                bean.setStatus(vo.getStatus());
-                bean.setTotalGain(vo.getTotalGain());
-                bean.setType(vo.getType());
-                bean.setUsedFee(vo.getUsedFee());
-                bean.setVirtual(vo.isVirtual());
+                ConverterUtils.UpdatefromVO(bean, vo);
                 updated = true;
             }
         }
