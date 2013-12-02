@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -148,10 +149,10 @@ public abstract class UserLoginPage extends PageBase {
 		return "OK";
 	}
 
-	@OnShow
-	void clearCallback() {
-		if (this.callback != null) {
-			// this.callback.clear();
-		}
+	
+	@OnUIDestroy
+	protected void clearData() {
+		callback.setPassword("");
+		callback.setUserName("");
 	}
 }

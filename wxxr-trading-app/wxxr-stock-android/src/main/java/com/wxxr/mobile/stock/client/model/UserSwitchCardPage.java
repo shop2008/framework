@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -90,5 +91,12 @@ public abstract class UserSwitchCardPage extends PageBase implements
 		if (!TextUtils.isEmpty(accountName)) {
 			registerBean("accountName", accountName);
 		}
+	}
+	
+	@OnUIDestroy
+	protected void clearData() {
+		callBack.setBankAddr("");
+		callBack.setBankName("");
+		callBack.setBankNum("");
 	}
 }

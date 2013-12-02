@@ -11,9 +11,11 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -25,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 
 /**
  * @author neillin
@@ -65,11 +68,18 @@ public abstract class UserAuthPage extends PageBase {
 	boolean notAuthBodyVisible;
 	
 	
+	@Convertor(
+			params={
+				@Parameter(name="replace", value="X")
+			}
+			)
+	String2StringConvertor s2sConvertor;
+	
 	/**
 	 * 银行卡用户名
 	 */
 	
-	@Field(valueKey="text", binding="${authBean!=null?authBean.accountName:null}")
+	@Field(valueKey="text", binding="${authBean!=null?authBean.accountName:null}", converter="s2sConvertor")
 	String accountName;
 	
 	/**

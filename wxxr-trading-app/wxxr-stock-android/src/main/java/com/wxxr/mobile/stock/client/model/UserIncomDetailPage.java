@@ -5,6 +5,7 @@ import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -31,7 +32,8 @@ public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
 	
-	@Field(valueKey = "options", binding="${tradeDetailList!=null?tradeDetailList.tradeDetails:null}")
+	@Field(valueKey = "options", binding="${tradeDetailList!=null?tradeDetailList.tradeDetails:null}",attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<TradeDetailBean> incomeDetails;
 	
 	@Bean(type=BindingType.Service)

@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 
 @View(name="tradeRecordItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_trade_record_item_layout")
@@ -44,7 +45,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 			},converter="stockL2StrConvertor")	
 	String income;
 	
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",converter="longT2StrConvertor")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",converter="stringT2StrConvertor")
 	String date;
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
@@ -62,8 +63,8 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	)
 	StockLong2StringConvertor stockL2StrConvertor;
 	
-	@Convertor(params={@Parameter(name="format", value="MM月dd日")})
-	LongTime2StringConvertor longT2StrConvertor;
+	@Convertor(params={@Parameter(name="format", value="M月d日")})
+	StringTime2StringConvertor stringT2StrConvertor;
 	
 	@Override
 	public void updateModel(Object value) {

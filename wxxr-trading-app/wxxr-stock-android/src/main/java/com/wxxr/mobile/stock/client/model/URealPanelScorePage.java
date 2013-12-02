@@ -6,6 +6,7 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
@@ -30,7 +31,8 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Bean(type=BindingType.Pojo,express="${userService!=null?userService.myUserScoreInfo:null}")
 	ScoreInfoBean scoreInfoBean;
 	
-	@Field(valueKey="options", binding="${scoreInfoBean!=null?scoreInfoBean.scores:null}")
+	@Field(valueKey="options", binding="${scoreInfoBean!=null?scoreInfoBean.scores:null}",attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<ScoreBean> actualScores;
 	
 	@Menu(items = { "left" })
@@ -44,6 +46,11 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		return null;
+	}
+	
+	@Command
+	String refreshTopData(InputEvent event) {
 		return null;
 	}
 }

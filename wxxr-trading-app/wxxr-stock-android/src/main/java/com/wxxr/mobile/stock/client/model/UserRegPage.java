@@ -9,6 +9,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -109,5 +110,10 @@ public abstract class UserRegPage extends PageBase {
 			registerBean("checked", checked);
 		}
 		return null;
+	}
+	
+	@OnUIDestroy
+	protected void clearData() {
+		callback.setUserName("");
 	}
 }
