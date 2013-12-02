@@ -351,7 +351,7 @@ public class ConverterUtils {
         bean.setVirtual(vo.isVirtual());
     }
     public static StockMinuteKBean fromVO(StockMinuteKVO vo) {
-        if (vo!=null){
+        if (vo == null){
             return null;
         }
         StockMinuteKBean b=new StockMinuteKBean();
@@ -369,7 +369,7 @@ public class ConverterUtils {
         return b;
     }
     private static StockMinuteLineBean fromVO(StockMinuteLineVO vo) {
-        if (vo!=null){
+        if (vo == null){
             return null;
         }
         StockMinuteLineBean bean = new StockMinuteLineBean();
@@ -405,7 +405,7 @@ public class ConverterUtils {
         bean.setTime(vo.getTime());
     }
     public static StockLineBean fromVO(StockLineVO vo) {
-        if (vo!=null){
+        if (vo == null){
             return null;
         }
         StockLineBean bean=new StockLineBean();
@@ -423,7 +423,7 @@ public class ConverterUtils {
         return bean;
     }
     public static StockTaxisBean fromVO(StockTaxisVO vo) {
-        if (vo!=null){
+        if (vo == null){
             return null;
         }
         StockTaxisBean b=new StockTaxisBean();
