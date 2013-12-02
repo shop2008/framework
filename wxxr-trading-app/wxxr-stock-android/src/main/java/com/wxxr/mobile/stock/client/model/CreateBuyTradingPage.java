@@ -79,8 +79,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 			@Parameter(name="multiple", value="100.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
-	/**止损比例*/
-	@Field(valueKey="text",binding="${userCreateTradAccInfo.capitalRate!=null?userCreateTradAccInfo.capitalRate:'--'}")
+	/**止损比例 - 参赛交易盘*/
+	@Field(valueKey="text",binding="${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}")
 	String capitalRate;
 	
 	/**止损*/
@@ -350,7 +350,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 			long money = changeMoney * 10000 * 100;
 			float _rate = 0.0f;
 			float _depositRate = 0.0f;
-			String assetType= "VOUCHER";
+			String assetType = "VOUCHER";
 			switch(currentRadioBtnId){
 			case 1:
 				if(money>0 && getRate1()>0 && getDeposit1()>0 ){
