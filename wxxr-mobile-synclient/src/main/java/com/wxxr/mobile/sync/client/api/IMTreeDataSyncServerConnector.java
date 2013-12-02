@@ -12,7 +12,13 @@ import java.io.IOException;
 public interface IMTreeDataSyncServerConnector {
 	String KEY_WIFI_NETWORK_CHECK_INTERVAL = "WIFI_NETWORK_CHECK_INTERVAL";
 	String KEY_NON_WIFI_NETWORK_CHECK_INTERVAL = "NON_WIFI_NETWORK_CHECK_INTERVAL";
-	
+	/**
+	 * 获取指定数据节点的数据
+	 * @param key
+	 * @param nodePath
+	 * @return
+	 * @throws IOException
+	 */
 	byte[] getNodeData(String key,String nodePath) throws IOException;
 	
 	/**
