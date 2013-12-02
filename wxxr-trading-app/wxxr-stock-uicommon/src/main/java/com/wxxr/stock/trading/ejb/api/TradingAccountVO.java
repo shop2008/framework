@@ -3,6 +3,7 @@ package com.wxxr.stock.trading.ejb.api;
 import java.io.Serializable;
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
@@ -78,7 +79,7 @@ public class TradingAccountVO implements Serializable{
 	/**
 	 * 交易订单
 	 */
-	@XmlElement(name = "tradingOrders")
+	@XStreamImplicit(itemFieldName = "tradingOrders")
 	private List<StockTradingOrderVO> tradingOrders;//
 	/**
 	 * 交易盘状态 CLOSED-已结算；UNCLOSE-未结算,CLEARING-正在结算
