@@ -43,7 +43,7 @@ public interface StockResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/all")
-    @Consumes({ "application/json" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public BaseInfoListVO getAllStockInfo() throws Exception ;
 
@@ -56,13 +56,13 @@ public interface StockResource {
     @POST
     @Path("/quotation")
     @Produces({ "application/json;charset=utf-8" })
-    @Consumes({ "application/json" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public QuotationListVO getQuotation(List<ParamVO> list) throws Exception;
     @GET
     @Path("/quo")
     @Produces({ "application/json;charset=utf-8" })
-    @Consumes({ "application/json" })   
+    @Consumes({ "application/json;charset=utf-8" })   
     public QuotationListVO getQuotation(@QueryParam("market")  String market,@QueryParam("code") String code) throws Exception;
     
 
@@ -74,8 +74,8 @@ public interface StockResource {
      */
     @POST
     @Path("/minuteline")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public StockMinuteKVO getMinuteline(ParamVO paramVO) throws Exception;
     /**
@@ -86,8 +86,8 @@ public interface StockResource {
      */
     @POST
     @Path("/dayline")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public LineListVO getDayline(ParamVO paramVO) throws Exception ;
     /**
@@ -98,8 +98,8 @@ public interface StockResource {
      */
     @POST
     @Path("/fivedayminuteline")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public List<StockMinuteKVO> getFiveDayMinuteline(ParamVO paramVO) throws Exception;
    
@@ -111,8 +111,8 @@ public interface StockResource {
      */
     @POST
     @Path("/blocStockkHQ")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     public List<StockQuotationVO> getStockHQListByBlockId(TaxisVO taxisvo) throws Exception;
     /**
      * 周K线数据接口
@@ -122,8 +122,8 @@ public interface StockResource {
      */
     @POST
     @Path("/weekline")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public LineListVO getWeekline(ParamVO paramVO) throws Exception;
     /**
@@ -134,8 +134,8 @@ public interface StockResource {
      */
     @POST
     @Path("/monthline")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public LineListVO getMonthline(ParamVO paramVO) throws Exception;
 
@@ -147,8 +147,8 @@ public interface StockResource {
      */
     @POST
     @Path("/stocktaxis")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public StockTaxisListVO getStocktaxis(TaxisVO vo) throws Exception;
 
@@ -160,14 +160,14 @@ public interface StockResource {
      */
     @POST
     @Path("/platetaxis")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public PlateTaxisListVO getPlatetaxis(TaxisVO vo) throws Exception ;
     @POST
     @Path("/refBlockHQ")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public PlateTaxisListVO getRefenceBlockHQ(List<ParamVO> list) throws Exception;
     
@@ -179,8 +179,8 @@ public interface StockResource {
      */
     @POST
     @Path("/componentstocks")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public ComponentstocksListVO getComponentstocks(ParamVO paramVO) throws Exception ;
     /**
@@ -191,8 +191,8 @@ public interface StockResource {
      */
     @POST
     @Path("/index")
-    @Produces( { "application/json" })
-    @Consumes({ "application/json" })
+    @Produces( { "application/json;charset=utf-8" })
+    @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
     public StockTaxisListVO getIndexPreview(TaxisVO vo) throws Exception;
   
