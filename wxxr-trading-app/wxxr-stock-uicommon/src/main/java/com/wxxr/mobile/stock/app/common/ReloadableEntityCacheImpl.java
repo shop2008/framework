@@ -61,10 +61,11 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	                for(WeakReference<ReloadableEntityCacheImpl<?,?>> ref: vals) {
 	                	ReloadableEntityCacheImpl<?,?> list = ref.get();
 	                    if(list != null){
-	                    	int numOfActiveClient = list.getNumberOfActiveClient();
-	                    	if(list.isStopAutoReloadIfNotActiveClient() && (numOfActiveClient == 0)){
-	                    		continue;
-	                    	}else if((System.currentTimeMillis() - list.lastUpdateTime) >= list.reloadIntervalInSeconds){
+	                    	if((System.currentTimeMillis() - list.lastUpdateTime) >= list.reloadIntervalInSeconds){
+		                    	int numOfActiveClient = list.getNumberOfActiveClient();
+	                    		if(list.isStopAutoReloadIfNotActiveClient() && (numOfActiveClient == 0)){
+		                    		continue;
+		                    	}
 	                    		list.doReloadIfNeccessay();
 	                    	}
 	                    }else{
