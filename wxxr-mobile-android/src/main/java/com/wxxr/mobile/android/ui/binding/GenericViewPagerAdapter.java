@@ -31,7 +31,14 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 	}
 
 	public void destroy() {
-		
+		for (int i = 0; i < getCount(); i++) {
+			View view = (View)viewPagerProvider.getViewItem(i);
+
+			BindingBag bag = null;
+			bag = (BindingBag) view.getTag();
+			IBinding<IView> binding = bag.binding;
+			binding.deactivate();
+		}
 	}
 	public void active() {
 		// TODO Auto-generated method stub
@@ -58,11 +65,6 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 		View view = (View)viewPagerProvider.getViewItem(position);
 //		IView v = (IView) viewPagerProvider.getItem(position);
 //		View view = createUI(v.getName());
-
-		BindingBag bag = null;
-		bag = (BindingBag) view.getTag();
-		IBinding<IView> binding = bag.binding;
-		binding.deactivate();
 
 		container.removeView(view);// 删除页卡
 	}

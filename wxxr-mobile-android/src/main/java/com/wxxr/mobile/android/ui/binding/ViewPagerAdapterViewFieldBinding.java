@@ -207,9 +207,9 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 	@Override
 	public void destroy() {
 		if (this.viewPagerAdapter != null) {
-			setupAdapter(null);
 			this.viewPagerAdapter.destroy();
 			this.viewPagerAdapter = null;
+			setupAdapter(null);
 		}
 		super.destroy();
 	}
