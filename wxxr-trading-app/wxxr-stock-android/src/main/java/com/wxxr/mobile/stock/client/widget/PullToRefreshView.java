@@ -49,6 +49,7 @@ public class PullToRefreshView extends LinearLayout {
 	 * 最终y点坐标，用于计算划过距离
 	 */
 	private int mLastMotionY;
+	private int mLastMotionX;
 	
 	/**
 	 * 头部下拉刷新控件
@@ -300,15 +301,18 @@ public class PullToRefreshView extends LinearLayout {
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent e) {
 		int y = (int) e.getRawY();
+		int x = (int) e.getRawX();
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			// 首先拦截down事件,记录y坐标
 			mLastMotionY = y;
+			mLastMotionX = x;
 			break;
 		case MotionEvent.ACTION_MOVE:
 			// deltaY > 0 是向下运动,< 0是向上运动
 			int deltaY = y - mLastMotionY;
-			if (isRefreshViewScroll(deltaY)) {
+			int deltaX = x - mLastMotionX;
+			if (isRefreshViewScroll(deltaY) && Math.abs(deltaY) > Math.abs(deltaX)) {
 				return true;
 			}
 			break;
