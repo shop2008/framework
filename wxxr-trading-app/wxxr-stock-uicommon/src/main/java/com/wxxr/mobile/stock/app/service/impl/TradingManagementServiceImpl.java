@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -39,6 +38,7 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
@@ -53,6 +53,8 @@ import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
 import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.CancelOrderCommand;
 import com.wxxr.mobile.stock.trade.command.CancelOrderHandler;
+import com.wxxr.mobile.stock.trade.command.ClearTradingAccountCommand;
+import com.wxxr.mobile.stock.trade.command.ClearTradingAccountHandler;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
 import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
 import com.wxxr.mobile.stock.trade.command.QuickBuyStockCommand;
@@ -63,13 +65,11 @@ import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
-import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 
@@ -177,6 +177,9 @@ public class TradingManagementServiceImpl extends
     private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
+    
+    private GenericReloadableEntityCache<String,DealDetailBean,List> dealDetailBean_cache;
+
 
 	// =================module life cycle methods=============================
 	
@@ -205,12 +208,14 @@ public class TradingManagementServiceImpl extends
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
         registry.registerEntityLoader("tradingRecordBean", new TradingRecordLoader());
+        registry.registerEntityLoader("dealDetailBean", new DealDetailLoader());
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(SellStockCommand.Name, new SellStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(CancelOrderCommand.Name, new CancelOrderHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(ClearTradingAccountCommand.Name, new ClearTradingAccountHandler());
 
 		context.registerService(ITradingManagementService.class, this);
 	}
@@ -303,51 +308,14 @@ public class TradingManagementServiceImpl extends
 	
 	@Override
 	public DealDetailBean getDealDetail(final String acctID) {
-		if (context.getApplication().isInDebugMode()) {
-			dealDetailBean.setFund("10万");
-			dealDetailBean.setPlRisk(0.001f);
-			dealDetailBean.setUserGain(1000);
-			dealDetailBean.setImgUrl(new String[] { "#" });
-			dealDetailBean.setTradingRecords(MockDataUtils.mockTradingRecord());
-			return dealDetailBean;
-		}
-		try {
-			DealDetailVO vo = fetchDataFromServer(new Callable<DealDetailVO>() {
-				public DealDetailVO call() throws Exception {
-					try {
-						DealDetailVO vo = getRestService(ITradingResource.class)
-								.getDealDetail(acctID);
-						if (log.isDebugEnabled()) {
-							log.debug("fetch data:" + vo);
-						}
-						return vo;
-					} catch (Throwable e) {
-						log.warn("Failed to fetch deal detail", e);
-						throw new StockAppBizException(e);
-					}
-				}
-			});
-			if (vo != null) {
-				dealDetailBean.setFund(vo.getFund());
-
-				dealDetailBean.setPlRisk(Float.valueOf(vo.getPlRisk()));
-				dealDetailBean.setUserGain(Float.valueOf(vo
-						.getUserGain()));
-				dealDetailBean.setImgUrl(vo.getImgUrl());
-				List<TradingRecordVO> volist = vo.getTradingRecords();
-				if (volist != null && volist.size() > 0) {
-					List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
-					for (TradingRecordVO tradingRecordVO : volist) {
-						beans.add(ConverterUtils
-								.fromVO(tradingRecordVO));
-					}
-					dealDetailBean.setTradingRecords(beans);
-				}
-			}
-		} catch (Exception e) {
-			log.warn("Error when fetch deal detail", e);
-		}
-		return dealDetailBean;
+	    if (dealDetailBean_cache.getEntity(acctID)==null){
+	        DealDetailBean b=new DealDetailBean();
+            dealDetailBean_cache.putEntity(acctID,b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("acctID", acctID);
+        this.dealDetailBean_cache.forceReload(params,false);
+        return dealDetailBean_cache.getEntity(acctID);
 	}
 	
 	public AuditDetailBean getAuditDetail(final String acctId) {
@@ -409,33 +377,32 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public void clearTradingAccount(final String acctID) {
-		context.invokeLater(new Runnable() {
-			public void run() {
-				StockResultVO vo = null;
-				try {
-					vo = getRestService(ITradingProtectedResource.class)
-							.clearTradingAccount(acctID);
-					if (vo != null) {
-						if (vo.getSuccOrNot() == 0) {// 表示失败
-							if (log.isDebugEnabled()) {
-								log.debug("Failed to clear trading account, caused by "
-										+ vo.getCause());
-							}
-							throw new StockAppBizException(vo.getCause());
-						}
-						if (vo.getSuccOrNot() == 1) {// 表示成功
-							if (log.isDebugEnabled()) {
-								log.debug("Clear trading account successfully.");
-							}
-						}
-					}
-				} catch (Throwable e) {
-					log.warn("Failed to cancel order", e);
-					throw new StockAppBizException(e.getMessage());
-				}
-
-			}
-		}, 1, TimeUnit.SECONDS);
+	    context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID), new IAsyncCallback() {
+            @Override
+            public void failed(Object cause) {
+                log.error("clearTradingAccount fail" + cause.toString());
+            }
+            @Override
+            public void success(Object result) {
+                if (result != null && result instanceof StockResultVO) {
+                    StockResultVO vo=(StockResultVO) result;
+                   
+                        if (vo.getSuccOrNot() == 0) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Failed to clearTradingAccount, caused by "
+                                        + vo.getCause());
+                            }
+                            throw new StockAppBizException(vo.getCause());
+                        }
+                        if (vo.getSuccOrNot() == 1) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("clearTradingAccount successfully.");
+                            }
+                        }
+                    }
+               
+            }
+        });
 
 	}
 	@Override

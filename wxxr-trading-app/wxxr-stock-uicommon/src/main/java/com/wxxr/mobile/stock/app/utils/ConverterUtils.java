@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -25,6 +26,7 @@ import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
+import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
@@ -439,6 +441,28 @@ public class ConverterUtils {
         b.setRisefallrate(vo.getRisefallrate());
         b.setSecuamount(vo.getSecuamount());
         b.setSecuvolume(vo.getSecuvolume());
+        return b;
+    }
+    public static  void updatefromVOtoBean(DealDetailBean b,DealDetailVO vo){
+        b.setFund(vo.getFund());
+        b.setPlRisk(Float.valueOf(vo.getPlRisk()));
+        b.setUserGain(Float.valueOf(vo.getUserGain()));
+        b.setImgUrl(vo.getImgUrl());
+        List<TradingRecordVO> volist = vo.getTradingRecords();
+        if (volist != null && volist.size() > 0) {
+            List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
+            for (TradingRecordVO tradingRecordVO : volist) {
+                beans.add(fromVO(tradingRecordVO));
+            }
+            b.setTradingRecords(beans);
+        }
+    }
+    public static DealDetailBean fromVO(DealDetailVO vo) {
+        if (vo == null){
+            return null;
+        }
+        DealDetailBean b=new DealDetailBean();
+        updatefromVOtoBean(b,vo);
         return b;
     }
     
