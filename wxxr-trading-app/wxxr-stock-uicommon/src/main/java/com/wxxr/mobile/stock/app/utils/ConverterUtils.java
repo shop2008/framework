@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -26,6 +27,7 @@ import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
+import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -464,6 +466,35 @@ public class ConverterUtils {
         DealDetailBean b=new DealDetailBean();
         updatefromVOtoBean(b,vo);
         return b;
+    }
+    public static AuditDetailBean fromVO(AuditDetailVO vo) {
+        if (vo == null){
+            return null;
+        }
+        AuditDetailBean b=new AuditDetailBean();
+        updatefromVOtoBean(b,vo);
+        return b;
+    }
+    public static  void updatefromVOtoBean(AuditDetailBean b,AuditDetailVO vo) {
+        b.setAccountPay(vo.getAccountPay());
+        b.setBuyDay(vo.getBuyDay());
+        b.setBuyAverage(vo.getBuyAverage());
+        b.setCapitalRate(vo.getCapitalRate());
+        b.setCost(vo.getCost());
+        b.setDeadline(vo.getDeadline());
+        b.setFrozenAmount(vo.getFrozenAmount());
+        b.setFund(vo.getFund());
+        b.setId(vo.getId());
+        b.setPayOut(vo.getPayOut());
+        b.setPlRisk(vo.getPlRisk());
+        b.setSellAverage(vo.getSellAverage());
+        b.setTotalGain(vo.getTotalGain());
+        b.setTradingCost(vo.getTradingCost());
+        b.setTradingDate(vo.getTradingDate());
+        b.setType(vo.getType());
+        b.setUnfreezeAmount(vo.getFrozenAmount());
+        b.setUserGain(vo.getUserGain());
+        b.setVirtual(vo.isVirtual());    
     }
     
 }

@@ -38,6 +38,7 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
@@ -63,8 +64,6 @@ import com.wxxr.mobile.stock.trade.command.SellStockCommand;
 import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
-import com.wxxr.stock.restful.resource.ITradingResource;
-import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -179,6 +178,8 @@ public class TradingManagementServiceImpl extends
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
     
     private GenericReloadableEntityCache<String,DealDetailBean,List> dealDetailBean_cache;
+    private GenericReloadableEntityCache<String,AuditDetailBean,List> auditDetailBean_cache;
+
 
 
 	// =================module life cycle methods=============================
@@ -202,13 +203,17 @@ public class TradingManagementServiceImpl extends
 		
         tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo");
         tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
-        
         tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
+        dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
+        auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
+        
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
         registry.registerEntityLoader("tradingRecordBean", new TradingRecordLoader());
         registry.registerEntityLoader("dealDetailBean", new DealDetailLoader());
+        registry.registerEntityLoader("auditDetailBean", new AuditDetailLoader());
+
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
@@ -319,58 +324,14 @@ public class TradingManagementServiceImpl extends
 	}
 	
 	public AuditDetailBean getAuditDetail(final String acctId) {
-		if (context.getApplication().isInDebugMode()) {
-			log.info("getAuditDetail: accid= " + acctId);
-			auditDetailBean.setAccountPay("122.3");
-			auditDetailBean.setBuyDay("2013-11-12");
-			auditDetailBean.setDeadline("2013-11-13");
-			auditDetailBean.setBuyAverage("39.9");
-			auditDetailBean.setId("123");
-			auditDetailBean.setFrozenAmount("0");
-			auditDetailBean.setFund("10万");
-			return auditDetailBean;
-		}
-		AuditDetailVO vo = null;
-		try {
-			vo = fetchDataFromServer(new Callable<AuditDetailVO>() {
-				public AuditDetailVO call() throws Exception {
-					AuditDetailVO vo = null;
-					try {
-						vo = getRestService(ITradingResource.class).getAuditDetail(
-								acctId);
-						return vo;
-					} catch (Throwable e) {
-						log.warn("Failed to fetch audit detail info", e);
-						throw new StockAppBizException(e.getMessage());
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch audit detail info", e);
-		}
-		if (vo != null) {
-			auditDetailBean.setAccountPay(vo.getAccountPay());
-			auditDetailBean.setBuyDay(vo.getBuyDay());
-			auditDetailBean.setBuyAverage(vo.getBuyAverage());
-			auditDetailBean.setCapitalRate(vo.getCapitalRate());
-			auditDetailBean.setCost(vo.getCost());
-			auditDetailBean.setDeadline(vo.getDeadline());
-			auditDetailBean.setFrozenAmount(vo.getFrozenAmount());
-			auditDetailBean.setFund(vo.getFund());
-			auditDetailBean.setId(vo.getId());
-			auditDetailBean.setPayOut(vo.getPayOut());
-			auditDetailBean.setPlRisk(vo.getPlRisk());
-			auditDetailBean.setSellAverage(vo.getSellAverage());
-			auditDetailBean.setTotalGain(vo.getTotalGain());
-			auditDetailBean.setTradingCost(vo.getTradingCost());
-			auditDetailBean.setTradingDate(vo.getTradingDate());
-			auditDetailBean.setType(vo.getType());
-			auditDetailBean.setUnfreezeAmount(vo.getFrozenAmount());
-			auditDetailBean.setUserGain(vo.getUserGain());
-			auditDetailBean.setVirtual(vo.isVirtual());
-
-		}
-		return auditDetailBean;
+	    if (auditDetailBean_cache.getEntity(acctId)==null){
+	        AuditDetailBean b=new AuditDetailBean();
+            auditDetailBean_cache.putEntity(acctId,b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("acctID", acctId);
+        this.auditDetailBean_cache.forceReload(params,false);
+        return auditDetailBean_cache.getEntity(acctId);
 	}
 	
 
