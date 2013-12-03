@@ -2,6 +2,7 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -12,16 +13,27 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "StockTaxis")
 public class StockTaxisVO implements Serializable {
+	@XmlElement(name = "name")
 	private String name;// 无限新锐
+	@XmlElement(name = "code")
 	private String code;
+	@XmlElement(name = "market")
 	private String market;
+	@XmlElement(name = "newprice")
 	private Long newprice;// 最新
+	@XmlElement(name = "risefallrate")
 	private Long risefallrate;// 涨跌幅
+	@XmlElement(name = "secuvolume")
 	private Long secuvolume;// 成交量
+	@XmlElement(name = "secuamount")
 	private Long secuamount;// 成交额
+	@XmlElement(name = "profitrate")
 	private Long profitrate;// 市盈率
+	@XmlElement(name = "handrate")
 	private Long handrate;// 换手率
+	@XmlElement(name = "marketvalue")
 	private Long marketvalue;// 市值
+	@XmlElement(name = "lb")
 	private Long lb;// 量比
 
 	public Long getLb() {

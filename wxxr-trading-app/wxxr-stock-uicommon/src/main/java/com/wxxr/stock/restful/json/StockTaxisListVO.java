@@ -14,14 +14,15 @@ import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
  * @author juyao
  *
  */
-@XmlRootElement(name = "list")
+@XmlRootElement(name = "stockTaxises")
 public class StockTaxisListVO  implements Serializable{
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
-    @XStreamImplicit(itemFieldName="list")
-    private List<StockTaxisVO> list = new ArrayList<StockTaxisVO>();
+    
+    @XStreamImplicit(itemFieldName="stockTaxis")
+    private List<StockTaxisVO> list ;
 
     /**
      * 
