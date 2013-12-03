@@ -257,33 +257,39 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 					if(getLog().isDebugEnabled()){
 						getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? ((List)result).size() : 0));
 					}
-					if(processReloadResult(cmd,result)){
-						WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
-						if(getLog().isDebugEnabled()){
-							getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
-						}
-						for (WeakReference<ICacheUpdatedCallback> ref : refs) {
-							ICacheUpdatedCallback cb = ref.get();
-							if(cb != null){
-								if(getLog().isDebugEnabled()){
-									getLog().debug("notify list warpper :"+cb);
+					try {
+						if(processReloadResult(cmd,result)){
+							WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
+							if(getLog().isDebugEnabled()){
+								getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
+							}
+							for (WeakReference<ICacheUpdatedCallback> ref : refs) {
+								ICacheUpdatedCallback cb = ref.get();
+								if(cb != null){
+									if(getLog().isDebugEnabled()){
+										getLog().debug("notify list warpper :"+cb);
+									}
+									cb.dataChanged(ReloadableEntityCacheImpl.this);
 								}
-								cb.dataChanged(ReloadableEntityCacheImpl.this);
 							}
 						}
+					}finally {
+						inReloading = false;
 					}
-					inReloading = false;
 			}
 			
 			@Override
 			public void failed(Object cause) {
+				try {
 					handleReloadFailed(cmd,cause);
+				}finally{
 					inReloading = false;
+				}
 			}
 		};
 		if(!wait4Finish){
-			this.inReloading = true;
 			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
+			this.inReloading = true;
 		}else{
 			Future<?> future = KUtils.getService(ICommandExecutor.class).submitCommand(cmd);
 			try {
