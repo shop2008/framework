@@ -16,5 +16,5 @@ public interface IViewPagerDataProvider {
 	Object getViewItem(int i);
 //	Object getItemId(Object item);
 //	boolean isItemEnabled(Object item);
-	boolean updateDataIfNeccessary();
+	boolean updateDataIfNull();
 }

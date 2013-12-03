@@ -60,7 +60,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 		if(viewPagerAdapter == null) {
 			this.viewPagerAdapter = new GenericViewPagerAdapter(getWorkbenchContext(),
 					getAndroidBindingContext(), viewPagerProvider);
-			this.viewPagerProvider.updateDataIfNeccessary();
+			this.viewPagerProvider.updateDataIfNull();
 			setupAdapter(viewPagerAdapter);
 		} else {
 			viewPagerAdapter.active();
@@ -116,7 +116,9 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 //			}
 
 			@Override
-			public boolean updateDataIfNeccessary() {
+			public boolean updateDataIfNull() {
+				if(viewGroup != null && androidViewGroup!= null && viewIDs!= null)
+					return true;
 				viewGroup = GetViewGroup(comp);
 				if(viewGroup != null)
 					viewIDs = viewGroup.getViewIds();
@@ -193,7 +195,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 	 */
 	@Override
 	protected void updateUI(boolean recursive) {
-		if((this.viewPagerProvider != null) &&this.viewPagerProvider.updateDataIfNeccessary()&&(this.viewPagerAdapter != null)){
+		if((this.viewPagerProvider != null) && (this.viewPagerAdapter != null)){
 			this.viewPagerAdapter.notifyDataSetChanged();
 		}
 		super.updateUI(recursive);
