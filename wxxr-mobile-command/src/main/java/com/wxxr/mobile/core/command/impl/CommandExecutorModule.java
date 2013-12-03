@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
@@ -240,6 +241,18 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			}
 		});
 		
+	}
+
+	public void validationConstraints(ConstraintLiteral... constraints) {
+		ICommandValidator[] valids = null;
+		synchronized(this.validators){
+			valids = this.validators.toArray(new ICommandValidator[0]);
+		}
+		if(valids != null){
+			for (ICommandValidator iCommandValidator : valids) {
+				iCommandValidator.validationConstraints(constraints);
+			}
+		}
 	}
 
 }

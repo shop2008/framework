@@ -4,8 +4,10 @@
 package com.wxxr.mobile.core.command.common;
 
 import com.wxxr.mobile.core.api.IDataExchangeCoordinator;
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.command.annotation.NetworkConnectionType;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraintLiteral;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
@@ -35,12 +37,31 @@ public class NetworkConstaintValidator implements ICommandValidator {
 		if(constraint == null){
 			return;
 		}
-		NetworkConnectionType[] allowedTypes = constraint.allowConnectionTypes();
+		doValidation(NetworkConstraintLiteral.fromAnnotation(constraint));
+	}
+
+	protected NetworkConstraintLiteral getNetworkConstaint(ConstraintLiteral... constraints){
+		if((constraints == null)||(constraints.length == 0)){
+			return null;
+		}
+		for (ConstraintLiteral con : constraints) {
+			if(con instanceof NetworkConstraintLiteral){
+				return (NetworkConstraintLiteral)con;
+			}
+		}
+		return null;
+	}
+	/**
+	 * @param constraint
+	 * @param allowedTypes
+	 */
+	protected void doValidation(NetworkConstraintLiteral constraint) {
 		IDataExchangeCoordinator coordinator = context.getKernelContext().getService(IDataExchangeCoordinator.class);
 		if(coordinator == null){
 			return;
 		}
 		int availableNetwork = coordinator.checkAvailableNetwork();
+		NetworkConnectionType[] allowedTypes = constraint.getAllowConnectionTypes();
 		if((allowedTypes.length == 0)&&(availableNetwork > 0)){
 			return;
 		}
@@ -58,6 +79,14 @@ public class NetworkConstaintValidator implements ICommandValidator {
 	 */
 	public void destroy() {
 		this.context = null;
+	}
+
+	public void validationConstraints(ConstraintLiteral... constraints) {
+		NetworkConstraintLiteral constraint = getNetworkConstaint(constraints);
+		if(constraint != null){
+			doValidation(constraint);
+		}
+		
 	}
 
 }

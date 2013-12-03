@@ -3,7 +3,7 @@
  */
 package com.wxxr.mobile.core.command.api;
 
-import java.lang.annotation.Annotation;
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 
 /**
  * @author neillin
@@ -14,7 +14,7 @@ public class UserNotAuthorizedException extends
 
 	private static final long serialVersionUID = -8042836859630341295L;
 
-	public UserNotAuthorizedException(Annotation ann) {
+	public UserNotAuthorizedException(ConstraintLiteral ann) {
 		super(ann);
 	}
 

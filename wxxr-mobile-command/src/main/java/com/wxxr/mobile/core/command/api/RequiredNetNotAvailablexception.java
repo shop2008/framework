@@ -3,7 +3,7 @@
  */
 package com.wxxr.mobile.core.command.api;
 
-import java.lang.annotation.Annotation;
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 
 /**
  * @author neillin
@@ -14,7 +14,7 @@ public class RequiredNetNotAvailablexception extends
 
 	private static final long serialVersionUID = -4803874472598447075L;
 
-	public RequiredNetNotAvailablexception(Annotation ann) {
+	public RequiredNetNotAvailablexception(ConstraintLiteral ann) {
 		super(ann);
 	}
 

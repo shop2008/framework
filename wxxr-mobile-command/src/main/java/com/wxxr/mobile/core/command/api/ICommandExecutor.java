@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.command.api;
 
 import java.util.concurrent.Future;
 
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.util.IAsyncCallback;
 
 /**
@@ -18,4 +19,5 @@ public interface ICommandExecutor {
 	ICommandExecutor unregisterCommandHandler(String cmdName,ICommandHandler handler);
 	ICommandExecutor registerCommandValidator(ICommandValidator validator);
 	ICommandExecutor unregisterCommandValidator(ICommandValidator validator);
+	void validationConstraints(ConstraintLiteral... constraints);
 }

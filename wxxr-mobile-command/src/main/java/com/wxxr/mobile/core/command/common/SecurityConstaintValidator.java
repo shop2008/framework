@@ -3,7 +3,9 @@
  */
 package com.wxxr.mobile.core.command.common;
 
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraintLiteral;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
@@ -35,7 +37,14 @@ public class SecurityConstaintValidator implements ICommandValidator {
 		if(constraint == null){
 			return;
 		}
-		String[] allowedRoles= constraint.allowRoles();
+		doValidation(SecurityConstraintLiteral.fromAnnotation(constraint));
+	}
+
+	/**
+	 * @param constraint
+	 */
+	protected void doValidation(SecurityConstraintLiteral constraint) {
+		String[] allowedRoles= constraint.getAllowRoles();
 		IUserIdentityManager mgr = context.getKernelContext().getService(IUserIdentityManager.class);
 		if(mgr == null){
 			return;
@@ -51,11 +60,31 @@ public class SecurityConstaintValidator implements ICommandValidator {
 		}
 	}
 
+	protected SecurityConstraintLiteral getSecurityConstraint(ConstraintLiteral... constraints){
+		if((constraints == null)||(constraints.length == 0)){
+			return null;
+		}
+		for (ConstraintLiteral con : constraints) {
+			if(con instanceof SecurityConstraintLiteral){
+				return (SecurityConstraintLiteral)con;
+			}
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandValidator#destroy()
 	 */
 	public void destroy() {
 		this.context = null;
+	}
+
+	public void validationConstraints(ConstraintLiteral... constraints) {
+		SecurityConstraintLiteral constraint = getSecurityConstraint(constraints);
+		if(constraint != null){
+			doValidation(constraint);
+		}
+		
 	}
 
 }
