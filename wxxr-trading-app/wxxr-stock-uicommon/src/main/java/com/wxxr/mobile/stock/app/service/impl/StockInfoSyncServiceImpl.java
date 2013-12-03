@@ -184,6 +184,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			if (bf.hasRemaining()) {
 				byte[] data = new byte[bf.remaining()];
 				try {
+					bf.get(data);
 					list = getLeafPayloadfromBytes(data);
 				} catch (Exception e) {
 					log.warn("Failed to get leaf payload data", e);
@@ -281,6 +282,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		if (stockInfo==null) {
 			stockInfo = new StockInfo();
 		}		
+		
 		stockInfo.setAbbr(info.getAbbr());
 		stockInfo.setCapital(info.getCapital());
 		stockInfo.setCode(info.getCode());
