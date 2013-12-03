@@ -23,6 +23,8 @@ public class StockLong2StringAutoUnitConvertor implements
 
 	private String format = "%10.2f";
 	private int multiple = 1;
+	private String nullString;
+	private Long nullLong;
 	// private String formatDefault = "%d";
 	private String formatUnit = "";
 
@@ -59,12 +61,18 @@ public class StockLong2StringAutoUnitConvertor implements
 		if (map.containsKey("multiple")) {
 			this.multiple = Integer.parseInt((String) map.get("multiple"));
 		}
+		if (map.containsKey("nullString")) {
+			this.nullString = (String) map.get("nullString");
+		}
+		if (map.containsKey("nullLong")) {
+			this.nullLong = (Long) map.get("nullLong");
+		}
 	}
 
 	@Override
 	public Long toSourceTypeValue(String s) throws ValidationException {
 		if (StringUtils.isBlank(s)) {
-			return null;
+			return nullLong;
 		}
 		try {
 			if (s.contains(UNIT_100M)) {
@@ -97,7 +105,7 @@ public class StockLong2StringAutoUnitConvertor implements
 	@Override
 	public String toTargetTypeValue(Long val) {
 		if (val == null) {
-			return null;
+			return nullString;
 		}
 		if(multiple == 0)
 			return null;
