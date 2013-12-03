@@ -21,7 +21,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked", binding="${user!=null?user.messagePushSettingOn==true?true:false:false}",visibleWhen="${user!=null?true:false}")
+	@Field(valueKey="checked", binding="${usrService.pushMessageSetting}", visibleWhen="${user!=null?true:false}")
 	boolean pushEnabled;
 	
 	@Field(valueKey="visible", binding="${user!=null?false:true}")
@@ -30,7 +30,7 @@ public abstract class AppSetPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Bean(type=BindingType.Pojo,express="${usrService!=null?usrService.myUserInfo:null}")
+	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
 	@Menu(items = { "left" })
@@ -86,27 +86,20 @@ public abstract class AppSetPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "setPushMsgEnabled", description = "Back To Last UI")
+	@Command(
+			commandName = "setPushMsgEnabled", description = "Back To Last UI",
+			navigations={@Navigation(on="*", showPage="userLoginPage")}
+			)
 	String setPushMsgEnabled(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
-			if (this.user != null) {
-				boolean isPushMessage = this.user.getMessagePushSettingOn();
-				if (isPushMessage) {
-					this.user.setMessagePushSettingOn(false);
-				} else {
-					this.user.setMessagePushSettingOn(true);
-				}
+			if (user == null) {
+				return "*";
 			}
+			boolean pushEnabled = usrService.getPushMessageSetting();
+			usrService.pushMessageSetting(!pushEnabled);
 		}
 		return null;
 	}
 	
-	@Command(
-			commandName="notLogin",
-			navigations={@Navigation(on="OK", showPage="userLoginPage")}
-			)
-	String notLogin(InputEvent event) {
-		return "OK";
-	}
 }
