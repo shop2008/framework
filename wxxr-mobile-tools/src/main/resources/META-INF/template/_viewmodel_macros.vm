@@ -271,11 +271,11 @@
 #end
 #if(${cmd.securityConstraint})
 #set( $SCType = ${model.addImport("com.wxxr.mobile.core.command.annotation.SecurityConstraintLiteral")})
-    handler.addConstraint(new SecurityConstraintLiteral(#if(${cmd.securityConstraint.allowRoleString}) ${cmd.securityConstraint.allowRoleString} #end ));    
+    handler.addConstraint(new SecurityConstraintLiteral(#if(${cmd.securityConstraint.allowRoleString}) "${cmd.securityConstraint.allowRoleString}" #end ));    
 #end
 #if(${cmd.networkConstraint})
 #set( $SCType = ${model.addImport("com.wxxr.mobile.core.command.annotation.NetworkConstraintLiteral")})
-    handler.addConstraint(new NetworkConstraintLiteral(#if(${cmd.networkConstraint.allowConnectionTypeString}) ${cmd.networkConstraint.allowConnectionTypeString} #end ));    
+    handler.addConstraint(new NetworkConstraintLiteral(#if(${cmd.networkConstraint.allowConnectionTypeString}) "${cmd.networkConstraint.allowConnectionTypeString}" #end ));    
 #end
 #if(${cmd.progressGuard})
     guard = new SimpleProgressGuard();
