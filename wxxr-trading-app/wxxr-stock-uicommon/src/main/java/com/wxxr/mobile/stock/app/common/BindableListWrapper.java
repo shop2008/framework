@@ -9,9 +9,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.wxxr.mobile.core.bean.api.IBindableBean;
-import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
-import com.wxxr.mobile.core.bean.api.PropertyChangeSupport;
+import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
 
 /**
  * @author neillin
@@ -36,7 +36,7 @@ public class BindableListWrapper<E> implements IBindableBean {
 	}
 
 	private IEntityFilter<E> filter;
-	private PropertyChangeSupport pSupport = new PropertyChangeSupport(this);
+	private BindableBeanSupport pSupport = new BindableBeanSupport(this);
 	private final IBindableEntityCache<?, E> cache;
 	private ICacheUpdatedCallback callback = new ICacheUpdatedCallback() {
 		
@@ -100,34 +100,17 @@ public class BindableListWrapper<E> implements IBindableBean {
 	 * @param listener
 	 * @see com.wxxr.mobile.core.bean.api.PropertyChangeSupport#addPropertyChangeListener(com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
+	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		pSupport.addPropertyChangeListener(listener);
 	}
 	/**
 	 * @param listener
 	 * @see com.wxxr.mobile.core.bean.api.PropertyChangeSupport#removePropertyChangeListener(com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
+	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		pSupport.removePropertyChangeListener(listener);
 	}
-	/**
-	 * @param propertyName
-	 * @param listener
-	 * @see com.wxxr.mobile.core.bean.api.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, com.wxxr.mobile.core.bean.api.PropertyChangeListener)
-	 */
-	public void addPropertyChangeListener(String propertyName,
-			PropertyChangeListener listener) {
-		pSupport.addPropertyChangeListener(propertyName, listener);
-	}
-	/**
-	 * @param propertyName
-	 * @param listener
-	 * @see com.wxxr.mobile.core.bean.api.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, com.wxxr.mobile.core.bean.api.PropertyChangeListener)
-	 */
-	public void removePropertyChangeListener(String propertyName,
-			PropertyChangeListener listener) {
-		pSupport.removePropertyChangeListener(propertyName, listener);
-	}
+
 	
 	public synchronized List<E> getData() {
 		if(this.data == null){
