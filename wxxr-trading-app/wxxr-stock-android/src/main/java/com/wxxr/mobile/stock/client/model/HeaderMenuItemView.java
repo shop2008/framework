@@ -60,7 +60,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${voucherBean != null ? voucherBean.balance : '0'}")
 	String integralBalance;
 	
-	@Field(valueKey="text", binding="${assetBean != null ? assetBean.balance : '0.00'}", converter="stockL2StrConvertor")
+	@Field(valueKey="text", binding="${assetBean != null ? assetBean.balance : '0'}", converter="stockL2StrConvertor")
 	String accountBalance;
 	
 	@Convertor(
