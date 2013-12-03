@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.core.command.annotation;
 
+import com.wxxr.mobile.core.util.StringUtils;
+
 /**
  * @author neillin
  *
@@ -17,6 +19,12 @@ public class SecurityConstraintLiteral extends ConstraintLiteral{
 	public SecurityConstraintLiteral(String[] roles){
 		this.allowRoles = roles;
 	}
+	
+	public SecurityConstraintLiteral(String roleString){
+		String[] roles = StringUtils.split(roleString, ',');
+		this.allowRoles = roles;
+	}
+
 
 	/**
 	 * @return the allowRoles
@@ -30,6 +38,13 @@ public class SecurityConstraintLiteral extends ConstraintLiteral{
 	 */
 	public void setAllowRoles(String[] allowRoles) {
 		this.allowRoles = allowRoles;
+	}
+	
+	public String getAllowRoleString() {
+		if((this.allowRoles == null)||(this.allowRoles.length == 0)){
+			return null;
+		}
+		return StringUtils.join(this.allowRoles,',');
 	}
 	
 	public static SecurityConstraintLiteral fromAnnotation(SecurityConstraint constraint){

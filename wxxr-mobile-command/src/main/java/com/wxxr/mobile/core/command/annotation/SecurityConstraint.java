@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE,ElementType.METHOD})
 @Documented
 @CommandConstraint(validatedBy={})
 public @interface SecurityConstraint {

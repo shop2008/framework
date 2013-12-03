@@ -25,6 +25,10 @@ import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraintLiteral;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraintLiteral;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
@@ -1018,6 +1022,21 @@ public abstract class ViewModelUtils {
 			m.setProgressGuard(guard);
 		}
 	}
+
+	protected static void processSecurityConstraint(ViewModelClass model,Element elem, UICommandModel m){
+		SecurityConstraint ann = elem.getAnnotation(SecurityConstraint.class);
+		if(ann != null){
+			m.setSecurityConstraint(SecurityConstraintLiteral.fromAnnotation(ann));
+		}
+	}
+
+	protected static void processNetworkConstraint(ViewModelClass model,Element elem, UICommandModel m){
+		NetworkConstraint ann = elem.getAnnotation(NetworkConstraint.class);
+		if(ann != null){
+			m.setNetworkConstraint(NetworkConstraintLiteral.fromAnnotation(ann));
+		}
+	}
+
 	/**
 	 * @param model
 	 * @param elem
@@ -1045,6 +1064,8 @@ public abstract class ViewModelUtils {
 			}
 			model.addCommandModel(cmdModel);
 			processProgressGuard(model, elem, cmdModel);
+			processSecurityConstraint(model, elem, cmdModel);
+			processNetworkConstraint(model, elem, cmdModel);
 			Navigation[] navs = ann.navigations();
 			if(navs != null){
 				for (Navigation nav : navs) {

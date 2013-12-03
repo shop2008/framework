@@ -5,6 +5,8 @@ package com.wxxr.mobile.tools.model;
 
 import java.util.LinkedList;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraintLiteral;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraintLiteral;
 import com.wxxr.mobile.core.ui.api.IProgressGuard;
 
 
@@ -23,6 +25,8 @@ public class UICommandModel implements JavaModel{
 	private LinkedList<MenuItemModel> menuItems;
 	private LinkedList<NavigationModel> navigations;
 	private IProgressGuard progressGuard;
+	private NetworkConstraintLiteral networkConstraint;
+	private SecurityConstraintLiteral securityConstraint;
 	/**
 	 * @return the commandName
 	 */
@@ -157,5 +161,30 @@ public class UICommandModel implements JavaModel{
 	public void setProgressGuard(IProgressGuard progressGuard) {
 		this.progressGuard = progressGuard;
 	}
+	/**
+	 * @return the networkConstraint
+	 */
+	public NetworkConstraintLiteral getNetworkConstraint() {
+		return networkConstraint;
+	}
+	/**
+	 * @return the securityConstraint
+	 */
+	public SecurityConstraintLiteral getSecurityConstraint() {
+		return securityConstraint;
+	}
+	/**
+	 * @param networkConstraint the networkConstraint to set
+	 */
+	public void setNetworkConstraint(NetworkConstraintLiteral networkConstraint) {
+		this.networkConstraint = networkConstraint;
+	}
+	/**
+	 * @param securityConstraint the securityConstraint to set
+	 */
+	public void setSecurityConstraint(SecurityConstraintLiteral securityConstraint) {
+		this.securityConstraint = securityConstraint;
+	}
 
+	
 }
