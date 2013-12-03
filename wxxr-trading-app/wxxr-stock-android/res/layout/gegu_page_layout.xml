@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/stock_chart_bj">
-                <include layout="@layout/zhishu_gegu_header_layout"/>
+                <include layout="@layout/common_stock_header_layout1"/>
 	            <com.wxxr.mobile.stock.client.widget.MinuteLineView 
 		            android:layout_width="match_parent"
 		            android:layout_height="160dp"
