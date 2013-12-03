@@ -37,7 +37,7 @@ import com.wxxr.stock.restful.json.StockTaxisListVO;
  * @version v1.0
  * @created time 2011-10-14 下午02:01:16
  */
-@Path("/rest/stock")
+@Path("/rest/trading")
 public interface StockResource {
 
     @GET
