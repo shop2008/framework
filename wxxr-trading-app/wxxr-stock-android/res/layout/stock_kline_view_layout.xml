@@ -198,7 +198,6 @@
         android:layout_height="160dip"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="15dip"
-        bind:field="dayLineList" >
-    </com.wxxr.mobile.stock.client.widget.KLineView>
+        bind:field="dayLineList" />
 
 </LinearLayout>

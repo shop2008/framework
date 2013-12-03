@@ -3,7 +3,9 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/black"
+    >
     
     
     <LinearLayout 
@@ -29,7 +31,7 @@
             />
     </LinearLayout>
     
-    <ListView 
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView 
         android:id="@+id/lv_integral_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,6 +39,8 @@
         bind:itemViewId="actualScoreItemView"
         bind:on_ItemClick="itemClicked"
         bind:field="actualScores"
-        >
-    </ListView>
+        bind:on_BottomRefresh="refreshBottomData"
+        bind:on_TopRefresh="refreshTopData"
+        />
+    
 </LinearLayout>
