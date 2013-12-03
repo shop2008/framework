@@ -21,6 +21,7 @@ import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
 import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
@@ -428,7 +429,13 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				}
 			}
 		}
-		processStartupExceptions();
+		KUtils.runOnUIThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				processStartupExceptions();
+			}
+		}, 0, null);
 	}
 
 	/**
