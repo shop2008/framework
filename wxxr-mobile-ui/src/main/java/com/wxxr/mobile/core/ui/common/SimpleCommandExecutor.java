@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
 
+import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.i10n.api.IMessageI10NService;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
@@ -96,7 +98,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				@Override
 				public Object call() throws Exception {
 					try {
-						return cmdHandler.execute(event);
+						return invokeCommandHandler(cmdHandler,event);
 					}catch(ExecAsyncException e){
 						return e.getTaskControl().getFuture().get();
 					}
@@ -106,6 +108,18 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			doExecute(cmdName, view, cmdHandler, event, callback);
 		}
 	}
+	
+	protected Object invokeCommandHandler(IUICommandHandler cmdHandler,InputEvent event) {
+		ConstraintLiteral[] constraints = cmdHandler.getConstraints();
+		if((constraints != null)&&(constraints.length > 0)){
+			ICommandExecutor service = context.getKernelContext().getService(ICommandExecutor.class);
+			if(service != null){
+				service.validationConstraints(constraints);
+			}
+		}
+		return cmdHandler.execute(event);
+	}
+	
 	/**
 	 * @param cmdName
 	 * @param view
@@ -118,7 +132,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			final IAsyncCallback callback) {
 		Object cmdResult = null;
 		try {
-			cmdResult = cmdHandler.execute(event);
+			cmdResult = invokeCommandHandler(cmdHandler,event);
 			if(callback != null){
 				callback.success(cmdResult);
 			}
