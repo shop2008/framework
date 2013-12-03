@@ -23,7 +23,6 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 @View(name = "userTradeRecordPage", withToolbar = true, description = "我的交易记录")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
@@ -215,19 +214,13 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 	@Command
 	String handleSucTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showSucRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
 	String handleAllTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showAllRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 

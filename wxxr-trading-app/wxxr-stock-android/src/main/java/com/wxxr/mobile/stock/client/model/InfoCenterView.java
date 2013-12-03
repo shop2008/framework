@@ -177,7 +177,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=1)
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=200)
 	String orderByRisefallrate(InputEvent event){
 		if("risefallrate".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
@@ -195,7 +195,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=1)
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=200)
 	String orderByNewPrice(InputEvent event){
 		if("newprice".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
@@ -206,6 +206,18 @@ public abstract class InfoCenterView extends ViewBase {
 		registerBean("orderBy", this.orderBy);
 		registerBean("direction", this.direction);
 		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		return null;
+	}
+	
+	@Command
+	String handleTopRefresh(InputEvent event){
+		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		return null;
+	}
+	
+	@Command
+	String handleBottomRefresh(InputEvent event){
+		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 10);
 		return null;
 	}
 	

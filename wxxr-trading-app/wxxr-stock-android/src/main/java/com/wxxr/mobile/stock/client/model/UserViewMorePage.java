@@ -24,7 +24,6 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 @View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_view_more_layout")
@@ -261,19 +260,13 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handleActualTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showActualRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
 	String handleActualBottomRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showActualRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 	
@@ -281,19 +274,13 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handleVirtualBottomRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showVirtualRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
 	@Command
 	String handleVirtualTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		showVirtualRecords(null);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 	

@@ -20,7 +20,6 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 @View(name="userNewsPage", withToolbar=true, description="消息")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_news_center_page_layout")
@@ -118,10 +117,6 @@ public abstract class UserNewsPage extends PageBase {
 	
 	@Command
 	String handleNoticeTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
-		
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 	

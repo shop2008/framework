@@ -30,7 +30,6 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -245,10 +244,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMegaTopRefresh");
 		}
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingService.getTradingAccountInfo(accid);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 	

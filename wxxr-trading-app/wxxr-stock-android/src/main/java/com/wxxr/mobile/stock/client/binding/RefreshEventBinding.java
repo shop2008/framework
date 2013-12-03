@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshViewListener;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
@@ -36,17 +37,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty("callback", new IRefreshCallback() {
+				event.addProperty("callback", new IAsyncCallback() {
 					
 					@Override
-					public void refreshSuccess() {
+					public void success(Object arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onHeaderRefreshComplete();
 						}
 					}
 					
 					@Override
-					public void refreshFailed(String message) {
+					public void failed(Object arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onHeaderRefreshComplete();
 						}
@@ -68,17 +69,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty("callback", new IRefreshCallback() {
+				event.addProperty("callback", new IAsyncCallback() {
 					
 					@Override
-					public void refreshSuccess() {
+					public void success(Object arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
 					}
 					
 					@Override
-					public void refreshFailed(String message) {
+					public void failed(Object arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
@@ -99,17 +100,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty("callback", new IRefreshCallback() {
+				event.addProperty("callback", new IAsyncCallback() {
 					
 					@Override
-					public void refreshSuccess() {
+					public void success(Object arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopRefresh();
 						}
 					}
 					
 					@Override
-					public void refreshFailed(String message) {
+					public void failed(Object arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopRefresh();
 						}
@@ -126,17 +127,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty("callback", new IRefreshCallback() {
+				event.addProperty("callback", new IAsyncCallback() {
 					
 					@Override
-					public void refreshSuccess() {
+					public void success(Object arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopLoadMore();
 						}
 					}
 					
 					@Override
-					public void refreshFailed(String message) {
+					public void failed(Object arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopLoadMore();
 						}

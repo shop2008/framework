@@ -22,7 +22,6 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 /**
  * @author neillin
@@ -113,10 +112,7 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		this.currentViewId = 1;
 		registerBean("currentViewId", this.currentViewId);
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingMgr.reloadTMegagameRank(true);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
@@ -128,10 +124,7 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		this.currentViewId = 2;
 		registerBean("currentViewId", this.currentViewId);
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingMgr.reloadT1MegagameRank(true);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
@@ -143,10 +136,7 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		this.currentViewId = 3;
 		registerBean("currentViewId", this.currentViewId);
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingMgr.reloadWeekRank(true);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 
@@ -158,10 +148,7 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		this.currentViewId = 4;
 		registerBean("currentViewId", this.currentViewId);
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingMgr.reloadRegularTicketRank(true);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 

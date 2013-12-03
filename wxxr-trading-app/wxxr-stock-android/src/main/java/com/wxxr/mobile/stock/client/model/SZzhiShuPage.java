@@ -27,7 +27,6 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -190,10 +189,7 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 		if (log.isDebugEnabled()) {
 			log.debug("SZzhiShuPage : handleTMegaTopRefresh");
 		}
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		infoCenterService.getQuotations();
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}	
 	

@@ -22,7 +22,6 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 /**
  * @author neillin
@@ -48,10 +47,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	
 	@Command
 	String handleTopRefresh(InputEvent event) {
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		articleService.getMyArticles(0, 10, 19);
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}	
 	

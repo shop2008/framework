@@ -26,7 +26,6 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -182,10 +181,7 @@ public abstract class OtherUserBuyInPage extends PageBase implements IModelUpdat
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		tradingService.getTradingAccountInfo(String.valueOf(accId));
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}
 	

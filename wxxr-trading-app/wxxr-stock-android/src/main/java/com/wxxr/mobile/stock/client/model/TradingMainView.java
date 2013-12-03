@@ -8,6 +8,9 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConnectionType;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -28,7 +31,6 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 /**
  * @author neillin
@@ -96,11 +98,8 @@ public abstract class TradingMainView extends ViewBase{
 		if (log.isDebugEnabled()) {
 			log.debug("TradingMainView : handleTMegaTopRefresh");
 		}
-		IRefreshCallback cb = (IRefreshCallback) event.getProperty("callback");
 		articleService.getMyArticles(0, 4, 15);
 		tradingService.getHomePageTradingAccountList();
-		if (cb != null)
-			cb.refreshSuccess();
 		return null;
 	}	
 	
@@ -115,6 +114,8 @@ public abstract class TradingMainView extends ViewBase{
 	@Command(navigations={
 		@Navigation(on="createBuy",showPage="creataBuyTradePage")
 		})
+	@SecurityConstraint(allowRoles={})
+	@NetworkConstraint
 	String createBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			return "createBuy";

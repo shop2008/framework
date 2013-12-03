@@ -19,7 +19,6 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
 
 /**
  * 收支明细界面
@@ -57,11 +56,8 @@ public abstract class UserIncomDetailPage extends PageBase {
 		if(log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMegaTopRefresh");
 		}
-		IRefreshCallback cb = (IRefreshCallback)event.getProperty("callback");
 		//ChampionShip.clear();
 		//handleTMegaClick(null);
-		if(cb!=null)
-			cb.refreshSuccess();
 		return null;
 		
 	}

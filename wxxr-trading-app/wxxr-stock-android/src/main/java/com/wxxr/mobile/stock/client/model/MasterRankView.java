@@ -45,11 +45,11 @@ public abstract class MasterRankView extends ViewBase {
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService!=null?tradingService.getGain(0,10):null}")
+	@Bean(express="${tradingService.getGain(0,10)}")
 	BindableListWrapper<GainBean> masterRankListBean;
 	
 	
-	@Field(valueKey="options", binding="${masterRankListBean!=null?masterRankListBean.data:null}")
+	@Field(valueKey="options", binding="${masterRankListBean.data}")
 	List<GainBean> masterRankList;
 	
 	
