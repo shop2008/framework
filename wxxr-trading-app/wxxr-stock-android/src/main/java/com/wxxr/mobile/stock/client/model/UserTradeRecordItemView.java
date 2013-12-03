@@ -10,7 +10,6 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
@@ -57,7 +56,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	StockLong2StringAutoUnitConvertor stock2StrConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format", value="%+10.2f"),
+			@Parameter(name="format", value="%.2f"),
 			@Parameter(name="formatUnit", value="元")
 			}
 	)

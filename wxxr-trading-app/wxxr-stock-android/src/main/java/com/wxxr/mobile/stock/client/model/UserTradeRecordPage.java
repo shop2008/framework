@@ -21,7 +21,6 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.binding.IRefreshCallback;
@@ -46,13 +45,13 @@ public abstract class UserTradeRecordPage extends PageBase {
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
 	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
-			  @Attribute(name = "enablePullUpRefresh", value="true")})
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<GainBean> allRecordsList;
 
 	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
-			  @Attribute(name = "enablePullUpRefresh", value="true")})
+			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+			  @Attribute(name = "enablePullUpRefresh", value="false")})
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
