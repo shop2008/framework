@@ -83,7 +83,7 @@ public class PageSwiperView extends LinearLayout {
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-    	this.requestDisallowInterceptTouchEvent(true);
+//    	this.requestDisallowInterceptTouchEvent(true);
 		return super.onInterceptTouchEvent(ev);
 	}
 	
