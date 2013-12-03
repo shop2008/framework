@@ -241,6 +241,8 @@
         bind:itemViewId="infoCenterItemView"
 	    bind:field="stockInfos"
 	    style="@style/mListView"
+	    bind:on_TopRefresh="handleTopRefresh"
+		bind:on_BottomRefresh="handleBottomRefresh"
 	    bind:on_ItemClick="gotoPageItemClick">
     </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
