@@ -18,7 +18,7 @@ import com.wxxr.mobile.core.util.ObjectUtils;
  * non-serializable listeners will be skipped during serialization.
  *
  */
-public class PropertyChangeSupport implements IBindableBean {
+public class PropertyChangeSupport {
 
 	private static class DesignatedPropertyChangeListener implements PropertyChangeListener {
 		private final String propertyName;
@@ -87,7 +87,6 @@ public class PropertyChangeSupport implements IBindableBean {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#addPropertyChangeListener(com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
-	@Override
 	public synchronized void addPropertyChangeListener(
 			PropertyChangeListener listener) {
 		if (listener == null) {
@@ -111,7 +110,6 @@ public class PropertyChangeSupport implements IBindableBean {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#removePropertyChangeListener(com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
-	@Override
 	public synchronized void removePropertyChangeListener(
 			PropertyChangeListener listener) {
 		if (listener == null) {
@@ -194,7 +192,6 @@ public class PropertyChangeSupport implements IBindableBean {
 	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#addPropertyChangeListener(java.lang.String, com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
 
-	@Override
 	public synchronized void addPropertyChangeListener(
 			String propertyName,
 			PropertyChangeListener listener) {
@@ -216,7 +213,6 @@ public class PropertyChangeSupport implements IBindableBean {
 	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#removePropertyChangeListener(java.lang.String, com.wxxr.mobile.core.bean.api.PropertyChangeListener)
 	 */
 
-	@Override
 	public synchronized void removePropertyChangeListener(
 			String propertyName,
 			PropertyChangeListener listener) {
