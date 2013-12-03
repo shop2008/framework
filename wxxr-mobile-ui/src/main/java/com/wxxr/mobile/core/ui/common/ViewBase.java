@@ -16,9 +16,9 @@ import com.wxxr.javax.el.BeanNameResolver;
 import com.wxxr.javax.el.ELContext;
 import com.wxxr.javax.el.ELException;
 import com.wxxr.javax.el.ELManager;
+import com.wxxr.mobile.core.bean.api.BindableBeanPropertyChangedEvent;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
-import com.wxxr.mobile.core.bean.api.PropertyChangeEvent;
-import com.wxxr.mobile.core.bean.api.PropertyChangeListener;
+import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
@@ -64,7 +64,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return vLog != null ? vLog : loger;
 	}
 
-	protected class BeanPropertyChangedListener implements PropertyChangeListener {
+	protected class BeanPropertyChangedListener implements IPropertyChangeListener {
 		private final String beanName;
 
 		public BeanPropertyChangedListener(String name){
@@ -72,7 +72,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 
 		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
+		public void propertyChange(BindableBeanPropertyChangedEvent evt) {
 			if(getLog().isDebugEnabled()){
 				getLog().debug("Receiving property changed event from bean :"+beanName+", event :["+evt+"]");
 			}
@@ -83,7 +83,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				}
 				return;
 			}else {
-				fireDataChangedEvent(new DomainValueChangedEventImpl(evt.getSource(), beanName, evt.getPropertyName()));
+				fireDataChangedEvent(new DomainValueChangedEventImpl(evt.getSource(), beanName, evt.getChangedPropertyNames().toArray(new String[0])));
 			}
 		}
 	}
@@ -587,13 +587,6 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			getLog().debug("processing event :", event);
 		}
 		onDataChanged(event);
-		if(this.evaluators != null){
-			for (IValueEvaluator<?> eval : this.evaluators) {
-				if(eval.valueEffectedBy(event)){
-					eval.doEvaluate();
-				}
-			}
-		}
 		if(event instanceof DomainValueChangedEvent){
 			if(this.domainModels != null){
 				for (IDomainValueModel<?> m : this.domainModels) {
@@ -602,15 +595,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					}
 				}
 			}
-//			return;
 		}
-//		if(this.binding != null){
-//			if(this.eventQueue == null){
-//				this.eventQueue = new EventQueue();
-//				this.eventQueue.start();
-//			}
-//			this.eventQueue.addPendingEvent(event);
-//		}
+		if(this.evaluators != null){
+			for (IValueEvaluator<?> eval : this.evaluators) {
+				if(eval.valueEffectedBy(event)){
+					eval.doEvaluate();
+				}
+			}
+		}
 	}
 
 	protected void forceValueEvalution() {
