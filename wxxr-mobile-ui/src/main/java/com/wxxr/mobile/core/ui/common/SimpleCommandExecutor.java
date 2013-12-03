@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
 
+import com.wxxr.mobile.core.api.AbstractProgressMonitor;
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.i10n.api.IMessageI10NService;
@@ -66,6 +67,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			if(log.isDebugEnabled()){
 				log.debug("Command :"+cmdName+" will be executed asynchronously with monitor guard :"+guard);
 			}
+			checkCommandConstraint(cmdHandler);
 			InvocationMonitor monitor = new InvocationMonitor(context) {
 				
 				@Override
@@ -98,18 +100,65 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				@Override
 				public Object call() throws Exception {
 					try {
-						return invokeCommandHandler(cmdHandler,event);
+						return cmdHandler.execute(event);
 					}catch(ExecAsyncException e){
 						return e.getTaskControl().getFuture().get();
 					}
 				}
 			});
+		}else if(callback != null){
+			checkCommandConstraint(cmdHandler);
+			KUtils.executeTask(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						Object val = cmdHandler.execute(event);
+						callback.success(val);
+					}catch(ExecAsyncException e){
+						final IAsyncTaskControl taskControl = e.getTaskControl();
+						taskControl.registerProgressMonitor(new AbstractProgressMonitor() {
+
+							/* (non-Javadoc)
+							 * @see com.wxxr.mobile.core.api.AbstractProgressMonitor#done(java.lang.Object)
+							 */
+							@Override
+							public void done(Object result) {
+								callback.success(result);
+							}
+
+							/* (non-Javadoc)
+							 * @see com.wxxr.mobile.core.api.AbstractProgressMonitor#taskCanceled(boolean)
+							 */
+							@Override
+							public void taskCanceled(boolean arg0) {
+								callback.failed(null);
+							}
+
+							/* (non-Javadoc)
+							 * @see com.wxxr.mobile.core.api.AbstractProgressMonitor#taskFailed(java.lang.Throwable, java.lang.String)
+							 */
+							@Override
+							public void taskFailed(Throwable cause,
+									String message) {
+								callback.failed(cause);
+							}
+						});
+					}catch(Throwable t){
+						log.warn("Command :"+cmdName+" executed failed", t);
+						callback.failed(t);
+					}
+				}
+			});
 		}else{
-			doExecute(cmdName, view, cmdHandler, event, callback);
+			doExecute(cmdName, view, cmdHandler, event);
 		}
 	}
 	
-	protected Object invokeCommandHandler(IUICommandHandler cmdHandler,InputEvent event) {
+	/**
+	 * @param cmdHandler
+	 */
+	protected void checkCommandConstraint(IUICommandHandler cmdHandler) {
 		ConstraintLiteral[] constraints = cmdHandler.getConstraints();
 		if((constraints != null)&&(constraints.length > 0)){
 			ICommandExecutor service = context.getKernelContext().getService(ICommandExecutor.class);
@@ -117,7 +166,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				service.validationConstraints(constraints);
 			}
 		}
-		return cmdHandler.execute(event);
 	}
 	
 	/**
@@ -128,14 +176,11 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 	 * @param callback
 	 */
 	protected void doExecute(final String cmdName, final IView view,
-			final IUICommandHandler cmdHandler, final InputEvent event,
-			final IAsyncCallback callback) {
+			final IUICommandHandler cmdHandler, final InputEvent event) {
+		checkCommandConstraint(cmdHandler);
 		Object cmdResult = null;
 		try {
-			cmdResult = invokeCommandHandler(cmdHandler,event);
-			if(callback != null){
-				callback.success(cmdResult);
-			}
+			cmdResult = cmdHandler.execute(event);
 		}catch(ExecAsyncException e){
 			final IAsyncTaskControl taskControl = e.getTaskControl();
 			final ICancellable cancellable = taskControl.getCancellable();
@@ -147,9 +192,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 					CommandResult result = new CommandResult();
 					result.setResult("failed");
 					result.setPayload(cause);
-					if(callback != null){
-						callback.failed(cause);
-					}
 					taskControl.unregisterProgressMonitor(this);
 					processCommandResult(view, cmdHandler, result);
 				}
@@ -157,9 +199,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				@Override
 				protected void handleDone(Object returnVal) {
 					taskControl.unregisterProgressMonitor(this);
-					if(callback != null){
-						callback.success(returnVal);
-					}
 					processCommandResult(view, cmdHandler, returnVal);
 				}
 
@@ -171,9 +210,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 					taskControl.unregisterProgressMonitor(this);
 					if((cancellable != null)&&(!cancellable.isCancelled())){
 						cancellable.cancel();
-					}
-					if(callback != null){
-						callback.failed(null);
 					}
 				}
 			};
@@ -190,9 +226,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			result.setResult("failed");
 			result.setPayload(t);
 			cmdResult = result;
-			if(callback != null){
-				callback.failed(t);
-			}
 		}
 		processCommandResult(view, cmdHandler, cmdResult);
 	}
