@@ -5,13 +5,12 @@ package com.wxxr.mobile.tools.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.bean.api.ListDecorator;
-import com.wxxr.mobile.core.bean.api.MapDecorator;
-import com.wxxr.mobile.core.bean.api.SetDecorator;
+import com.wxxr.mobile.core.ui.common.ListDecorator;
+import com.wxxr.mobile.core.ui.common.MapDecorator;
+import com.wxxr.mobile.core.ui.common.SetDecorator;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**
