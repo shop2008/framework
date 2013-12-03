@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
 /**
@@ -68,17 +69,21 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	String trade_date;
 	
 	@Convertor(
-			params={@Parameter(name="format", value="MM-dd")}
+			params={@Parameter(name="format", value="M月d日")}
 			)
 	LongTime2StringConvertor lt2SConvertor;
 	
 	@Convertor(
-			params={@Parameter(name="format", value="%+10.2f元")}
+			params={@Parameter(name="format", value="%.2f"),
+					@Parameter(name="formatUnit",value="元"),
+					@Parameter(name="multiple",value="100.0f")
+			}
 			)
-	Float2StringConvertor f2SConvertor;
+	StockLong2StringConvertor f2SConvertor;
 	
 	@Convertor(
-			params={@Parameter(name="format", value="%10.0f")}
+			params={@Parameter(name="format", value="%.0f")
+			}
 			)
 	StockLong2StringAutoUnitConvertor stock2SConvertor;
 	

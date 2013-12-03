@@ -17,7 +17,6 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -74,6 +73,9 @@ public abstract class UserWithDrawCashPage extends PageBase{
 			})
 	StockLong2StringConvertor stockL2StrConvertor;
 	
+	@Convertor(params={@Parameter(name="format", value="%.0f")})
+	String2StringConvertor s2sConvertorBanNum;
+	
 	@Field(valueKey="text")
 	String availCashAmountET;
 	
@@ -83,7 +85,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Bean
 	boolean checked = true;
 	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankNum:'--'}")
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankNum:''}", converter="s2sConvertorBanNum")
 	String bankNum;
 	
 	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankAddr:'--'}")
@@ -92,7 +94,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankName:'--'}")
 	String bankName;
 	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:'--'}", converter="s2sConvertor")
+	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:''}", converter="s2sConvertor")
 	String accountName;
 	/**
 	 * 返回到上一个界面
@@ -103,43 +105,16 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	String back(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 返回到上一个界面
 			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
 
-	@Command(
-			commandName="commit",
-			navigations={
-					@Navigation(on="isNull", showDialog=""),
-					@Navigation(on="notEnough", showDialog=""),
-					@Navigation(on="NotDiv", showDialog=""),
-					@Navigation(on="OK", showPage="")
-					}
-	)
+	@Command
 	String commit(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//String withDrawCashAmount = this.availCashAmountETField.getValue();
-			/*if (withDrawCashAmount == null) {
-				return "isNull";
-			} else {
-				
-				float avaliableAmount = Float.parseFloat(user.getBalance());
-				float drawCashAmount = Float.parseFloat(withDrawCashAmount);
-				if (drawCashAmount > avaliableAmount) {
-					//提示可提现金不足
-					return "notEnough";
-				} else if((((int)drawCashAmount) % 100) != 0) {
-					//提示必须是100的整数倍
-					return "NotDiv";
-				} else {
-					
-					
-					return "OK";
-				}
-			}*/
+			
 		}
 		return null;
 	}

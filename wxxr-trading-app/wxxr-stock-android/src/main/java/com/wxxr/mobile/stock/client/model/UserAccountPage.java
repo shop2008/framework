@@ -65,7 +65,7 @@ public abstract class UserAccountPage extends PageBase {
 	
 	@Convertor(
 			params={
-					@Parameter(name="format", value="%10.2f"),
+					@Parameter(name="format", value="%.2f"),
 					@Parameter(name="formatUnit", value="元"),
 					@Parameter(name="multiple", value="100.0f")
 			})

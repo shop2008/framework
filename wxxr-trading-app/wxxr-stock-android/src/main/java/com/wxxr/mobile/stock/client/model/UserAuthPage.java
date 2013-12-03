@@ -71,7 +71,7 @@ public abstract class UserAuthPage extends PageBase {
 	
 	@Convertor(
 			params={
-				@Parameter(name="replace", value="X")
+				@Parameter(name="replace", value="x")
 			}
 			)
 	String2StringConvertor s2sConvertor;

@@ -35,11 +35,15 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 		}
 		
 		SimpleDateFormat sdf;
+		float f;
 		Long l;
 		String s = null;
 		try {
 			
-			l = Long.parseLong(value);
+			f = Float.parseFloat(value);
+			String ss = String.format("%.0f", f);
+			
+			l = Long.parseLong(ss);
 			if (l != null) {
 				sdf = new SimpleDateFormat(format);
 				Date date = new Date(l);
