@@ -31,10 +31,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data!=null?true:false:false}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?true:false):false):false}")
 	boolean recordNotNullVisible;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data!=null?false:true:true}")
+	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?false:true):true):true}")
 	boolean recordNullVisible;
 
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(0,10):null}")

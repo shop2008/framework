@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 
 @View(name="tradeRecordItemView")
@@ -28,20 +29,21 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	
 	/**股票代码*/
 	@Field(valueKey="text",binding="${accountBean!=null?accountBean.maxStockCode:'--'}",attributes={
-			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}")
-			})
+			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}"
+					)
+			}, converter="stockCodeConvertor")
 	String stockCode;
 	
 	/**额度（申请资金）*/
 	@Field(valueKey="text",binding="${accountBean!=null?accountBean.sum:'--'}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}")
-			}, converter="stock2StrConvertor")
+			}, converter="applyAmountConvertor")
 	String initCredit;
 	
 	/**总收益*/
-	@Field(valueKey="text",binding="${accountBean!=null?accountBean.userGain:'--'}",attributes={
+	@Field(valueKey="text",binding="${accountBean!=null?accountBean.userGain:null}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status == 1 ? 'resourceId:color/gray': (accountBean.userGain > 0 ? 'resourceId:color/red' : (accountBean.userGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
-			},converter="stockL2StrConvertor")	
+			},converter="profitConvertor")	
 	String income;
 	
 	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",converter="stringT2StrConvertor")
@@ -56,14 +58,27 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	StockLong2StringAutoUnitConvertor stock2StrConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format", value="%.2f"),
-			@Parameter(name="formatUnit", value="元")
+			@Parameter(name="format", value="%.0f")
 			}
 	)
-	StockLong2StringConvertor stockL2StrConvertor;
+	StockLong2StringAutoUnitConvertor applyAmountConvertor;
+	
+	
+	@Convertor(params={
+			@Parameter(name="format", value="%.0f"),
+			@Parameter(name="multiple",value="100.00f"),
+			@Parameter(name="formatUnit",value="元"),
+			@Parameter(name="nullString",value="--")
+			}
+	)
+	StockLong2StringConvertor profitConvertor;
 	
 	@Convertor(params={@Parameter(name="format", value="M月d日")})
 	StringTime2StringConvertor stringT2StrConvertor;
+	
+	
+	@Convertor(params={@Parameter(name="format",value="%.0f")})
+	String2StringConvertor stockCodeConvertor;
 	
 	@Override
 	public void updateModel(Object value) {
