@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 
 /**
@@ -75,6 +76,10 @@ public abstract class UserAuthPage extends PageBase {
 			)
 	String2StringConvertor s2sConvertor;
 	
+	
+	@Convertor(params={@Parameter(name="format", value="%.0f")})
+	String2StringConvertor l2StrConvertor;
+	
 	/**
 	 * 银行卡用户名
 	 */
@@ -91,7 +96,7 @@ public abstract class UserAuthPage extends PageBase {
 	/**
 	 * 银行卡号
 	 */
-	@Field(valueKey="text", binding="${authBean!=null?authBean.bankNum:null}")
+	@Field(valueKey="text", binding="${authBean!=null?authBean.bankNum:null}", converter="l2StrConvertor")
 	String bankNum;
 	
 	

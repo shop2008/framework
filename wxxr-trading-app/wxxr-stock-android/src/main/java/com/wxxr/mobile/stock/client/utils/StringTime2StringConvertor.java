@@ -25,8 +25,6 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 
 	@Override
 	public String toSourceTypeValue(String input) throws ValidationException {
-		
-		
 		return null;
 	}
 

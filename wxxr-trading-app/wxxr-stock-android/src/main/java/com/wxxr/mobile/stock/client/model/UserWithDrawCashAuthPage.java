@@ -76,9 +76,12 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	String cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (userService != null) {
-				userService.withDrawCashAuth(callBack.getAccountName(),
-						callBack.getBankName(), callBack.getBankAddr(),
-						callBack.getBankNum());
+				userService.withDrawCashAuth(
+						callBack.getAccountName(),
+						callBack.getBankName(), 
+						callBack.getBankAddr(),
+						callBack.getBankNum()
+						);
 			}
 			hide();
 		}
