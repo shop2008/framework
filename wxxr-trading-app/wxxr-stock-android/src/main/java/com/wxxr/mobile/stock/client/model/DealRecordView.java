@@ -15,6 +15,8 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -25,13 +27,13 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 @View(name="DealRecordView", description="模拟盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.deal_record_layout")
-public abstract class DealRecordView extends ViewBase implements IModelUpdater {
+public abstract class DealRecordView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
 
 	/**注册服务 ITradingManagementService*/
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${stockId=selection;tradingService.getDealDetail(stockId)}")
+	@Bean(type=BindingType.Pojo,express="${accIdTemp=selection;tradingService.getDealDetail(accIdTemp)}")
 	DealDetailBean dealDetail;
 	
 	@Field(valueKey="text",binding="${selection!=null?selection:null}")
@@ -58,31 +60,28 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater {
 			})
 	String totalGain;
 	
-	/**玩家实得收益--没有收益时不显示80%*/
-//	@Field(valueKey="text")
-//	String userGainGain;
 	
 	/**交易图片*/
 	@Field(valueKey="imageURI",binding="${dealDetail!=null?dealDetail.imgUrl[0]:'--'}")
 	String imgUrl;
 	
-
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		String temp = providerId;
+	}
 	
 	/**
 	 * 初始化
 	 * */
 	@OnShow
 	void ininViews(){
-//		registerBean("accId", "${selection}");
 	}
 	
 	@Override
 	public void updateModel(Object value) {
 		if(value instanceof Map){
-			Map tempMap = (Map) value;
-//			for(Object key:tempMap.keySet()){
-//				
-//			}
+			
 		}
 	}
 	

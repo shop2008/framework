@@ -46,22 +46,17 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	}
 	
 	
-	String tempId = "#";
-	int type = 0;
-	
 	@Bean
-	boolean isVirtual;
+	boolean isVirtual = false;
 	
 	@Bean
 	String accid;
-	
+	@Bean
 	Object stockId;
 	
 	
 	@OnShow
 	void showView(){
-		registerBean("isVirtual", false);
-		registerBean("accid", accid);
 		contents.resetViewStack();
 	}
 	
