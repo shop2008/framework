@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.util.IAsyncCallback;
@@ -37,7 +38,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty("callback", new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -69,7 +70,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty("callback", new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -100,7 +101,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty("callback", new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -127,7 +128,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 			IUIComponent field = pModel.getChild(fieldName);
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty("callback", new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
 					
 					@Override
 					public void success(Object arg0) {
