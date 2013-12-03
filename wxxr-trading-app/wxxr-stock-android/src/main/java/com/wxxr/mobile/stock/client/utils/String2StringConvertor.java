@@ -30,9 +30,9 @@ public class String2StringConvertor implements IValueConvertor<String, String> {
 	@Override
 	public String toTargetTypeValue(String value) {
 		if (StringUtils.isBlank(value)) {
-			return null;
+			return "--";
 		}
-		
+	
 		int length = value.length();
 		if (length > 0) {
 			if (!StringUtils.isBlank(this.replace)) {
@@ -50,7 +50,7 @@ public class String2StringConvertor implements IValueConvertor<String, String> {
 				}
 			}
 		}
-		return null;
+		return "--";
 	}
 
 	@Override
