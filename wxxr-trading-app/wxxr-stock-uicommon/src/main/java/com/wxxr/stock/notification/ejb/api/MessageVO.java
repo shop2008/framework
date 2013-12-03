@@ -14,7 +14,7 @@ import java.util.Map;
 
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="message")
+@XmlRootElement(name="MsgQuery")
 public class MessageVO implements Serializable {
 	/** The serialVersionUID */
 	private static final long serialVersionUID = 1L;
