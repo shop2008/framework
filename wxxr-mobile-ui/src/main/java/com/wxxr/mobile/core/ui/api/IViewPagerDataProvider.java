@@ -12,6 +12,8 @@ package com.wxxr.mobile.core.ui.api;
 public interface IViewPagerDataProvider {
 	int getItemCounts();
 	Object getItem(int i);
+	Object getAttributeData();
+	Object getViewItem(int i);
 //	Object getItemId(Object item);
 //	boolean isItemEnabled(Object item);
 	boolean updateDataIfNeccessary();
