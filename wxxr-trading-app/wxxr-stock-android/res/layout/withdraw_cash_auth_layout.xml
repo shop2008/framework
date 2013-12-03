@@ -82,6 +82,7 @@
             android:background="@null"
             android:hint="@string/hint_account_bank_addr"
             android:textSize="15sp" 
+            android:singleLine="true"
             bind:field="bankAddr"
             bind:on_TextChanged="_updateValue"
             />
