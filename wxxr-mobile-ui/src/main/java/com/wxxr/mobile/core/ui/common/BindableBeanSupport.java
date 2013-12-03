@@ -63,7 +63,7 @@ public class BindableBeanSupport implements IBindableBean {
 	}
 
 	
-	protected synchronized void firePropertyChange(String propertyName, 
+	public synchronized void firePropertyChange(String propertyName, 
 			Object oldValue, Object newValue) {
 		if (ObjectUtils.isEquals(oldValue, newValue)) {
 			return;
