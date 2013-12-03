@@ -52,16 +52,47 @@ import com.wxxr.mobile.core.util.StringUtils;
  */
 public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHandler {
 	private static final Trace log = Trace.register(SimpleCommandExecutor.class);
+	
 	private final IWorkbenchRTContext context;
 	
 	public SimpleCommandExecutor(IWorkbenchRTContext ctx){
 		this.context = ctx;
 	}
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IUICommandExecutor#executeCommand(com.wxxr.mobile.core.ui.api.IUICommandHandler, java.lang.Object[])
 	 */
 	public void executeCommand(final String cmdName,final IView view,final IUICommandHandler cmdHandler, final InputEvent event) {
-		final IAsyncCallback callback = event != null ? (IAsyncCallback)event.getProperty(InputEvent.PROPERTY_CALLBACK) : null;
+		final IAsyncCallback cb = event != null ? (IAsyncCallback)event.getProperty(InputEvent.PROPERTY_CALLBACK) : null;
+		final IAsyncCallback callback;
+		if(cb != null){
+			callback = new IAsyncCallback() {
+				
+				@Override
+				public void success(final Object result) {
+					KUtils.runOnUIThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							cb.success(result);
+						}
+					});
+				}
+				
+				@Override
+				public void failed(final Object cause) {
+					KUtils.runOnUIThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							cb.failed(cause);
+						}
+					});
+				}
+			};
+		}else{
+			callback = null;
+		}
 		IProgressGuard guard = cmdHandler.getProgressGuard();
 		if(guard != null){
 			if(log.isDebugEnabled()){
