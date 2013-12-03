@@ -9,12 +9,9 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
-import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
-import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -40,13 +37,13 @@ public abstract class HomePage extends PageBase {
 	UserBean userInfo;
 	
 	@Menu(items={"home","page1","page2","page3","page4","page5","page6"})
-	private IMenu leftMenu;
+	IMenu leftMenu;
 	
 	@Menu(items={"left","right","search"})
-	private IMenu toolbar;
+	IMenu toolbar;
 	
 	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","todayHotRankView","masterRankView","helpCenter"})
-	private IViewGroup contents;
+	IViewGroup contents;
 	
 	
 	@Command(description="Invoke when a toolbar item was clicked",
@@ -112,10 +109,7 @@ public abstract class HomePage extends PageBase {
 			
 			},
 			navigations={
-				@Navigation(on="home",showView="tradingMain",params={
-						@Parameter(name="p1",value="v1"),
-						@Parameter(name="p2",value="v2")
-				}),
+				@Navigation(on="home",showView="tradingMain"),
 				@Navigation(on="page1",showView="tradingWinner"),
 				@Navigation(on="page2",showView="infoCenter"),
 				@Navigation(on="page3",showView="championShip"),
@@ -124,7 +118,6 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="page6",showView="helpCenter")
 			}
 	)
-	@ExeGuard(title="测试1111",message="2222 55长时间调用，进度弹出框...",silentPeriod=1,cancellable=true)
 	String menuClicked(InputEvent event){
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			String name = ((IUICommand)event.getProperty("ItemClicked")).getName();
@@ -153,10 +146,7 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="rpage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="rhome",showPage="userAuthPage",params={
-						@Parameter(name="p1",value="v1"),
-						@Parameter(name="p2",value="v2")
-				}),
+				@Navigation(on="rhome",showPage="userAuthPage"),
 				@Navigation(on="rpage1",showPage="userAccountPage"),
 				@Navigation(on="rpage2",showPage="userTradeRecordPage"),
 				@Navigation(on="rpage3",showPage="appSetPage"),
