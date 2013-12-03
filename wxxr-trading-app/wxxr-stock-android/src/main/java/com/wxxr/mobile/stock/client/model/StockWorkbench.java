@@ -26,6 +26,10 @@ import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 				@Parameter(name="title",value="安全验证"),
 				@Parameter(name="onOK",value="确 认"),
 				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")}),
+		@Navigation(on="UserLoginRequiredException",message="resourceId:message/login_required",params={
+						@Parameter(name="title",value="安全验证"),
+						@Parameter(name="onOK",value="确 认"),
+						@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")}),
 		@Navigation(on="RequiredNetNotAvailablexception",message="resourceId:message/network_not_available",params={
 				@Parameter(name="title",value="网络异常"),
 				@Parameter(name="onOK",value="确 认"),

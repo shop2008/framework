@@ -29,8 +29,8 @@ public class StockApplication extends Application
 		super.onCreate();
 		this.framework = new StockAppFramework(this);
 		if(this.framework.isInDebugMode()){
-//			logConfig.configureLogCatAppender("/",Level.INFO);
-			logConfig.configureLogCatAppender("com.wxxr.mobile",Level.DEBUG);
+			logConfig.configureLogCatAppender("com.wxxr.mobile",Level.INFO);
+			logConfig.configureLogCatAppender("com.wxxr.mobile.stock",Level.DEBUG);
 		}else{
 			logConfig.configureFileAppender("/",Level.WARN);
 			logConfig.configureLogCatAppender("/", Level.WARN);

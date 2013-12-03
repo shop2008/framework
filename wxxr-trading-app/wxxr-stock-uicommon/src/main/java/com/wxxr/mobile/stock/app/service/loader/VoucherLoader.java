@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -21,6 +23,8 @@ public class VoucherLoader extends AbstractEntityLoader<String, VoucherBean, Act
 
 	private static final String COMMAND_NAME = "GetVoucherCommand";
 
+	@NetworkConstraint
+	@SecurityConstraint(allowRoles={})
 	private static class GetVoucherCommand implements ICommand<List<ActivityUserVo>>{
 
 		/* (non-Javadoc)

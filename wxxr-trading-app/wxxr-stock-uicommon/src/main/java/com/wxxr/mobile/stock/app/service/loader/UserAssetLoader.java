@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -21,6 +23,8 @@ public class UserAssetLoader extends AbstractEntityLoader<String, UserAssetBean,
 
 	private static final String COMMAND_NAME = "GetUserAssetCommand";
 
+	@NetworkConstraint
+	@SecurityConstraint(allowRoles={})
 	private static class GetUserAssetCommand implements ICommand<List<UserAssetVO>>{
 
 		/* (non-Javadoc)
