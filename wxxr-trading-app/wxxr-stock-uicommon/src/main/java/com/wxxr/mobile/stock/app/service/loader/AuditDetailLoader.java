@@ -6,17 +6,15 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
-import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 
 public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditDetailVO> {
 
-    private static final String COMMAND_NAME = "GetDealDetailCommand";
+    private static final String COMMAND_NAME = "GetAuditDetailVOsCommand";
     
     private static class GetAuditDetailVOsCommand implements ICommand<List<AuditDetailVO>> {
         private String acctID;
