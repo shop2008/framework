@@ -12,7 +12,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  * @author wangyan
  *设置昵称
  */
-@XmlRootElement(name = "UserParamVO")
+@XmlRootElement(name = "UserInfoQuery")
 public class UserParamVO implements Serializable {
 
 
