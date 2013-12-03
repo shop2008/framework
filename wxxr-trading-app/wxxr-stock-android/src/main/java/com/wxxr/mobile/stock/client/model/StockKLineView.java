@@ -2,9 +2,11 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -14,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
@@ -28,7 +31,9 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "StockKLineView", description="买入", singleton=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
-public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
+public abstract class StockKLineView extends ViewBase implements IModelUpdater, ISelectionChangedListener{
+	
+	private static final Trace log = Trace.register(StockKLineView.class);
 	
 	@Bean
 	String nameBean;
@@ -153,5 +158,33 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		registerBean("type", 1);
 //		registerBean("marketBean", "SH");
 		registerBean("timeBean", new Date().getTime());
+	}
+	
+	@Override
+	public void updateModel(Object value) {
+		if (value instanceof Map) {
+			Map temp = (Map) value;
+			for (Object key : temp.keySet()) {
+				Object tempt = temp.get(key);
+				if (tempt != null && "codeBean".equals(key)) {
+					if (tempt instanceof String) {
+						this.codeBean = (String) tempt;
+					}
+					registerBean("codeBean", this.codeBean);
+				} else if (tempt != null && "nameBean".equals(key)) {
+					if (tempt instanceof String) {
+						this.nameBean = (String) tempt;
+					}
+					registerBean("nameBean", this.nameBean);
+				} else if (tempt != null && "marketBean".equals(key)) {
+					if (tempt instanceof String) {
+						this.marketBean = (String) tempt;
+					}
+					registerBean("marketBean", this.marketBean);
+				}
+				log.debug("updateModel: codeBean:"
+						+ codeBean + "nameBean:" + nameBean + "marketBean:" + marketBean);
+			}
+		}
 	}
 }

@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 /**
@@ -45,10 +46,10 @@ public abstract class TradingRecordsPage extends PageBase implements
 	ITradingManagementService tradingMgr;
 
 	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getTradingAccountRecord(accId,0,100)}")
-	TradingRecordListBean recordListBean;
+	BindableListWrapper<TradingRecordBean> recordListBean;
 	// List
 
-	@Field(valueKey = "options", binding = "${recordListBean != null?recordListBean.getRecords():null}")
+	@Field(valueKey = "options", binding = "${recordListBean != null?recordListBean.data:null}")
 	List<TradingRecordBean> tradingRecordBean;
 	// RadioButton
 
@@ -69,7 +70,7 @@ public abstract class TradingRecordsPage extends PageBase implements
 
 	@OnShow
 	protected void initStockOrders() {
-		registerBean("accId", "");
+		registerBean("accId", "2263");
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public abstract class TradingRecordsPage extends PageBase implements
 			Map map = new HashMap();
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
-				List<TradingRecordBean> record = (recordListBean != null?recordListBean.getRecords():null);
+				List<TradingRecordBean> record = (recordListBean != null?recordListBean.getData():null);
 				if (record != null && record.size() > 0) {
 					TradingRecordBean recordBean = record.get(position);
 					if (recordBean != null) {

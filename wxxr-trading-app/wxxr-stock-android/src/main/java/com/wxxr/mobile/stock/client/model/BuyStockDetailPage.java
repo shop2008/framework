@@ -54,7 +54,10 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
 	
-	@ViewGroup(viewIds={"StockKLineView", "StockQuotationView"})
+	@ViewGroup(viewIds={"StockKLineView", "StockQuotationView"}, attributes={
+			@Attribute(name="codeBean", value="${codeBean}"),
+			@Attribute(name="nameBean", value="${nameBean}"),
+			@Attribute(name="marketBean", value="${marketBean}")})
 	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);

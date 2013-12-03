@@ -22,15 +22,15 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical" >
-
-                <FrameLayout
+       
+				<ViewPager
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:background="@color/black"
                     bind:field="contents" >
-                </FrameLayout>
-
+                </ViewPager>
+                 
                 <TextView
                     android:id="@+id/tv_stock_name"
                     android:layout_width="match_parent"
@@ -120,7 +120,9 @@
                             android:gravity="center"
                             android:text="@string/bt_hang_order_text"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            bind:field="*"
+                            bind:on_Click="handleOrderBtnClick" />
 
                         <RadioButton
                             android:id="@+id/market_price"
@@ -174,7 +176,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginTop="10dip" >
+                    android:layout_marginTop="10dip"
+                    android:visibility="gone" >
                 </com.wxxr.mobile.stock.client.widget.StockInputKeyboard>
             </LinearLayout>
         </com.wxxr.mobile.stock.client.widget.NewScrollView>
