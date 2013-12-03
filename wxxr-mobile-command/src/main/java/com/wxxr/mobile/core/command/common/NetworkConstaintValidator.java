@@ -62,7 +62,7 @@ public class NetworkConstaintValidator implements ICommandValidator {
 		}
 		int availableNetwork = coordinator.checkAvailableNetwork();
 		NetworkConnectionType[] allowedTypes = constraint.getAllowConnectionTypes();
-		if((allowedTypes.length == 0)&&(availableNetwork > 0)){
+		if(((allowedTypes == null)||(allowedTypes.length == 0))&&(availableNetwork > 0)){
 			return;
 		}
 		NetworkConnectionType availableNetworkType = NetworkConnectionType.byId(availableNetwork);

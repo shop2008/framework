@@ -52,7 +52,7 @@ public class SecurityConstaintValidator implements ICommandValidator {
 		if(!mgr.isUserAuthenticated()){
 			throw new UserLoginRequiredException(constraint);
 		}
-		if(allowedRoles.length == 0){
+		if((allowedRoles == null)||(allowedRoles.length == 0)){
 			return;
 		}
 		if(!mgr.usrHasRoles(allowedRoles)){
