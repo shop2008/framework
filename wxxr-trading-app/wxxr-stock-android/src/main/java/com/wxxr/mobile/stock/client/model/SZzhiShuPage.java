@@ -1,7 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -18,16 +17,15 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.QuotationListBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -53,28 +51,16 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.szBean:null}")
 	StockQuotationBean szBean;
 
-	@Bean
-	Map<String, String> map;
-	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
-	StockMinuteKBean minute;	
-	
 	@Convertor(params={
-			@Parameter(name="multiple",value="1000.00"),
+			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
-			@Parameter(name="nullString",value="--")
-	})
-	LongTime2StringConvertor longTime2StringConvertorBuy;
-	
-	@Convertor(params={
 			@Parameter(name="format",value="(%.2f%%)"),
-			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="multiple", value="1000"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
@@ -92,52 +78,16 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	})
 	StockLong2StringAutoUnitConvertor convertorSecuamount;
 	
-	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
-			@Attribute(name = "stockType", value = "0"),
-			@Attribute(name = "stockBorderColor",value="#535353"),
-			@Attribute(name = "stockUpColor",value="#BA2514"),
-			@Attribute(name = "stockDownColor",value="#3C7F00"),
-			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
-			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	})
-	List<StockMinuteLineBean> stockMinuteData;	
 	
 	@Bean
 	String stockName;
+	@Bean
+	String stockCode;
+	@Bean
+	String stockMarket;
 	
-	/**箭头*/
-	@Field(valueKey="text",enableWhen="${shBean!=null && shBean.newprice > shBean.close}",visibleWhen="${shBean!=null && shBean.newprice != shBean.close}")
-	String arrows;
-	
-	/**股票名称*/
-	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
-	String name;
-	
-	/**股票或指数 代码*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.code:'--'}${'.'}${szBean!=null?szBean.market:'--'}")
-	String codeAndmarket;
-	
-	/**涨跌额*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",converter="stockLong2StringAutoUnitConvertor")
-	String change;
-	
-	/**涨跌幅*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial")
-	String risefallrate;
-	
-//	/**市场代码： SH，SZ各代表上海，深圳。*/
-//	@Field(valueKey="text",binding="${szBean!=null?szBean.market:'--'}")
-//	String market;
-	
-	/**时间。*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.datetime:null}",converter="longTime2StringConvertorBuy")
-	String datetime;
-	
-	/**最新*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
-	String newprice;
+	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
+	private IViewGroup contents;
 	
 	/**昨收*/
 	@Field(valueKey="text",binding="${szBean!=null?szBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
@@ -156,15 +106,15 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	String low;
 	
 	/**成交量*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.secuvolume:'--'}")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.secuvolume:null}",converter="convertorSecuvolume")
 	String secuvolume;
 	
 	/**成交额*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.secuamount:'--'}")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.secuamount:null}",converter="convertorSecuamount")
 	String secuamount;
 	
 	/**量比*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.lb:'--'}")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
 	String lb;
 	
 	/**平盘家数*/
@@ -200,19 +150,19 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	
 	@Override
 	public void updateModel(Object value) {
-		String code = null;
-		String market = null;
-		HashMap<String, String> temp = new HashMap<String, String>();
 		if(value instanceof Map){
+			HashMap<String, String>temp = new HashMap<String, String>();
 			Map data = (Map) value;
 			for (Object key : data.keySet()) {
 	            if(key.equals("code")){
 	            	String val = (String)data.get(key);
-	            	code = val;
+	            	this.stockCode = val;
+	            	registerBean("stockCode", this.stockCode);
 	            }
 	            if(key.equals("market")){
 	            	String val = (String)data.get(key);
-	            	market = val;
+	            	this.stockMarket = val;
+	            	registerBean("stockMarket", this.stockMarket);
 	            }
 	            if(key.equals("name")){
 					String name = (String) data.get(key);
@@ -220,8 +170,9 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 					registerBean("stockName", this.stockName);
 				}
 	        }
-			if(code!=null && market!=null){
-				temp.put(code, market);
+			if(this.stockCode!=null && this.stockMarket!=null){
+				temp.put("code", this.stockCode);
+				temp.put("market", this.stockMarket);
 				registerBean("map", temp);
 			}
 		}

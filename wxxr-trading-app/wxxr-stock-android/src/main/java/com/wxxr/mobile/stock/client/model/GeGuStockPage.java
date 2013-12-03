@@ -1,7 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -19,16 +18,15 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -52,31 +50,23 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeValue,marketCode)}")
 	StockQuotationBean quotationBean;
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
-	StockMinuteKBean minute;
-	
 	@Convertor(params={
-			@Parameter(name="multiple",value="1000.00"),
+			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
-			@Parameter(name="nullString",value="--")
-	})
-	LongTime2StringConvertor longTime2StringConvertorBuy;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="(%.2f%%)"),
-			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="1000"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="1000"),
 			@Parameter(name="formatUnit",value="手"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -84,6 +74,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="1000"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor convertorSecuamount;
@@ -113,93 +104,65 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	@Bean
 	String stockName;
-	
-	/**箭头*/
-	@Field(valueKey="text",enableWhen="${quotationBean!=null && quotationBean.newprice > quotationBean.close}",visibleWhen="${quotationBean!=null && quotationBean.newprice != quotationBean.close}")
-	String arrows;	
-	
-	/**股票名称*/
-	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
-	String name;
-	
-	/**股票代码+市场代码*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.code!=null)?quotationBean.code:'--'}${'.'}${(quotationBean!=null && quotationBean.market!=null)?quotationBean.market:'--'}")
-	String codeAndmarket;
-	
-	/**涨跌幅*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:'--'}")
-	String risefallrate;
-	
-	/**涨跌额*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String change;
-	
-	/**最新价*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:'--'}",converter="stockLong2StringAutoUnitConvertor")
-	String newprice;
-	
-	/**时间*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:'--'}")
-	String datetime;
+
+	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
+	private IViewGroup contents;	
 	
 	/**昨收*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.close:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
 	String close;
 	
 	/**开盘*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.open:'--'}",converter="stockLong2StringAutoUnitConvertor" )
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String open;
 	
 	/**最高*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.high:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String high;
 	
 	/**最底*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.low:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String low;
 	
 	/**均价*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.averageprice:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.averageprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String averageprice;
 	
 	/**市盈率*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.profitrate:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.profitrate:null}",converter="stockLong2StringAutoUnitConvertor")
 	String profitrate;
 	
 	/**量比*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.lb:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
 	String lb;
 	
 	/**换手率*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.handrate:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.handrate:null}",converter="stockLong2StringConvertorSpecial")
 	String handrate; 
 	
 	/**成交量*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuvolume:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuvolume:null}",converter="convertorSecuvolume")
 	String secuvolume;
 	
 	/**成交额*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuamount:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuamount:null}",converter="convertorSecuamount")
 	String secuamount;
 	
 	/**流通盘*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.capital:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.capital:null}",converter="convertorSecuamount")
 	String capital;
 	
 	/**市值*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.marketvalue:'--'}")
+	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.marketvalue:null}",converter="convertorSecuamount")
 	String marketvalue;
-	
-	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
-			@Attribute(name = "stockBorderColor",value="#535353"),
-			@Attribute(name = "stockUpColor",value="#BA2514"),
-			@Attribute(name = "stockDownColor",value="#3C7F00"),
-			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
-			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	})
-	List<StockMinuteLineBean> stockMinuteData;
 	
 	@OnShow
 	protected void initData(){
@@ -267,11 +230,6 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 					String name = (String) data.get(key);
 					this.stockName = name;
 					registerBean("stockName", this.stockName);
-				}
-				if(this.codeValue!=null && this.marketCode!=null){
-					tempMap.put("market", this.marketCode);
-					tempMap.put("code",this.codeValue);
-					registerBean("map", tempMap);
 				}
 	        }
 		}

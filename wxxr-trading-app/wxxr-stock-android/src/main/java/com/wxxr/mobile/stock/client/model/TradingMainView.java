@@ -165,7 +165,6 @@ public abstract class TradingMainView extends ViewBase{
 					boolean isVirtual = tempTradingA.getVirtual();
 					Long accid = tempTradingA.getAcctID();
 					String over = tempTradingA.getOver();
-					updateSelection(acctId);
 					resutl.setPayload(isVirtual);
 					HashMap<String, Object> map = new HashMap<String, Object>();
 					map.put("accid", accid);
@@ -173,6 +172,7 @@ public abstract class TradingMainView extends ViewBase{
 					if("CLOSED".equals(over)){
 						resutl.setPayload(map);
 						resutl.setResult("operationDetails");
+						updateSelection(map);
 					}
 					if("UNCLOSE".equals(over)){
 						resutl.setResult("sellTradingAccount");

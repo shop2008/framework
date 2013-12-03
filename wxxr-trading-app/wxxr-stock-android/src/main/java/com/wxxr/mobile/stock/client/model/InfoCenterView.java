@@ -31,7 +31,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  * @author neillin
  * 
  */
-@View(name = "infoCenter", description = "行情中心")
+@View(name = "infoCenter", description = "行情中心",provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.price_center_page_layout")
 public abstract class InfoCenterView extends ViewBase {
 	
@@ -244,6 +244,7 @@ public abstract class InfoCenterView extends ViewBase {
 						map.put("name", name);
 						map.put("market", market);
 						result.setPayload(map);
+						updateSelection(map);
 						result.setResult("GeGuStockPage");
 						return result;
 					}

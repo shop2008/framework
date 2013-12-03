@@ -14,7 +14,7 @@
     bind:field="acctRefreshView"
     android:layout_weight="1"
     bind:on_TopRefresh="handleTopRefresh" >
-    <ScrollView
+    <com.wxxr.mobile.stock.client.widget.ScrollViewExtend
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="fill_parent" 
@@ -30,26 +30,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/stock_chart_bj">
-                <include layout="@layout/common_stock_header_layout1"/>
-	            <com.wxxr.mobile.stock.client.widget.MinuteLineView 
-		            android:layout_width="match_parent"
-		            android:layout_height="160dp"
-		            bind:field="stockMinuteData"
-		            />
-                <LinearLayout 
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:gravity="center">
-                    <ImageView android:src="@drawable/s_on"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginRight="4dp"/>
-                    <ImageView android:src="@drawable/s_off"
-                        android:layout_width="8dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_height="8dp"/>
-                </LinearLayout>
+               <FrameLayout
+                    android:id="@+id/content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    bind:field="contents" >
+                </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -387,7 +373,7 @@
                 <include layout="@layout/hlines"/>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
 </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
     <LinearLayout
         android:layout_width="match_parent"

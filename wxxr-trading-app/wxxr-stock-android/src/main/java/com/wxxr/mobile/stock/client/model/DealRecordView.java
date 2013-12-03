@@ -5,20 +5,22 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.model.TradingRecord;
@@ -27,18 +29,20 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 @View(name="DealRecordView", description="模拟盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.deal_record_layout")
-public abstract class DealRecordView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
+public abstract class DealRecordView extends ViewBase implements IModelUpdater,ISelectionChangedListener{
 
+	static Trace log = Trace.getLogger(DealRecordView.class);
 	/**注册服务 ITradingManagementService*/
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
-	
-	@Bean(type=BindingType.Pojo,express="${accIdTemp=selection;tradingService.getDealDetail(accIdTemp)}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getDealDetail(accId)}")
 	DealDetailBean dealDetail;
 	
-	@Field(valueKey="text",binding="${selection!=null?selection:null}")
+	@Bean
 	String accId;
-	DataField<String> accIdField;
+	
+	@Bean
+	boolean isVirtual = true;
 	
 	/**交易记录*/
 	@Field(valueKey="options",binding="${dealDetail!=null?dealDetail.tradingRecords:null}")
@@ -65,23 +69,49 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	@Field(valueKey="imageURI",binding="${dealDetail!=null?dealDetail.imgUrl[0]:'--'}")
 	String imgUrl;
 	
-	
-	@Override
-	public void selectionChanged(String providerId, ISelection selection) {
-		String temp = providerId;
-	}
-	
 	/**
 	 * 初始化
 	 * */
-	@OnShow
-	void ininViews(){
-	}
 	
 	@Override
 	public void updateModel(Object value) {
 		if(value instanceof Map){
 			
+		}
+	}
+	
+	@OnCreate
+	void registerSelectionListener() {
+		ISelection selection = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection("tradingMain");
+		if(selection!=null){
+			selectionChanged("tradingMain",selection);
+		}
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("tradingMain", this);
+	}
+	@OnDestroy
+	void removeSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("tradingMain", this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		ISimpleSelection impl = (ISimpleSelection)selection;
+		if(impl!=null){
+			if(impl.getSelected() instanceof Map){
+				Map temp = (Map) impl.getSelected();
+				for (Object key : temp.keySet()) {
+					if(key.equals("accid")){
+						String accid = temp.get(key).toString();
+						this.accId = accid;
+						registerBean("accId", this.accId);
+					}
+					if(key.equals("isVirtual")){
+						boolean virtual = (Boolean) temp.get(key);
+						this.isVirtual = virtual;
+						registerBean("isVirtual", this.isVirtual);
+					}
+				}
+			}
 		}
 	}
 	
@@ -93,12 +123,19 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	}
 	
 	/**转让操作盘详情界面*/
-	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })
+	@Command(navigations = { 
+			@Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
+			@Navigation(on="ShiPanStockInfoPage",showPage = "ShiPanBuyStockInfoPage")
+			})
 	CommandResult detailsAction(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			resutl.setPayload(accIdField.getValue());
-			resutl.setResult("TBuyStockInfoPage");
+			if(isVirtual){
+				resutl.setResult("TBuyStockInfoPage");
+			}else{
+				resutl.setResult("ShiPanStockInfoPage");
+			}
+			resutl.setPayload(accId);
 			return resutl;
 		}
 

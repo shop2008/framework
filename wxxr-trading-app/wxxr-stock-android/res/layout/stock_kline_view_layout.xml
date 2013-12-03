@@ -7,7 +7,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dsphb_title_bj"
         android:paddingBottom="5dip"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
