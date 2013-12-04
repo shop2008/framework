@@ -29,6 +29,7 @@ import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -60,6 +61,8 @@ import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
+import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
+import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
@@ -73,6 +76,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 
@@ -122,11 +126,14 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	private BindableListWrapper<UserAttributeBean> userAttrbutes;
 	private IReloadableEntityCache<String, UserAttributeBean> userAttributeCache;
-
+	
+	private BindableListWrapper<GainPayDetailBean> gainPayDetails;
+    private GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO> gainPayDetail_cache;
 	
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> personalHomePageBean_cache;
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> otherpersonalHomePageBean_cache;
 
+    
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -142,6 +149,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
+        registry.registerEntityLoader("gainPayDetailBean", new GainPayDetailLoader());
+        
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
@@ -569,7 +578,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			myTradeDetails = MockDataUtils.mockTradeDetails();
 			return myTradeDetails;
 		}
-		
 		//getRestService(TradingResourse.class).get
 		return null;
 	}
@@ -790,6 +798,21 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	public boolean usrHasRoles(String... roles) {
 		return false;
 	}
+	
+    @Override
+    public BindableListWrapper<GainPayDetailBean> getGPDetails(int start, int limit) {
+        if(gainPayDetails==null){
+            if(gainPayDetails==null){
+                gainPayDetail_cache=new GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO>("gainPayDetailBean");
+            }
+            gainPayDetails=gainPayDetail_cache.getEntities(null, null);
+        }
+        Map<String, Object> params=new HashMap<String, Object>();
+        params.put("start", start);
+        params.put("limit", limit);
+        gainPayDetail_cache.doReloadIfNeccessay(params);
+        return gainPayDetails;
+    }
 
 	@Override
 	public void updateNickName(String nickName) {

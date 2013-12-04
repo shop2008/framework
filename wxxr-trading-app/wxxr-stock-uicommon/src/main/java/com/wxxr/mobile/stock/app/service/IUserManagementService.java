@@ -219,5 +219,11 @@ public interface IUserManagementService {
 	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit);
 	void updateNickName(String nickName);
+	/**
+	 * 收支明细
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
 	BindableListWrapper<GainPayDetailBean> getGPDetails(int start,int limit);
 }
