@@ -31,16 +31,17 @@ public class ArticleResourceTest extends TestCase{
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		// TODO Auto-generated method stub
 		super.setUp();
+		init();
+		
 	}
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
+		articleResource=null;
 	}
 	protected void init() {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
