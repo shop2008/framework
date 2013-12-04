@@ -54,7 +54,7 @@ public class ConverterUtils {
         b.setOpen(vo.getOpen());
         b.setHigh(vo.getHigh());
         b.setLow(vo.getLow());
-        b.setNewprice(vo.getClose());
+        b.setNewprice(vo.getNewprice());
         b.setAverageprice(vo.getAverageprice());
         b.setSecuamount(vo.getSecuamount());
         b.setSecuvolume(vo.getSecuvolume());
