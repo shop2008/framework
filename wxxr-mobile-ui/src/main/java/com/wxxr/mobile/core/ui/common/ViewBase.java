@@ -432,16 +432,26 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 
 	protected void markExceptionHandled(String name){
-		synchronized(this.handledExceptions){
-			if(!this.handledExceptions.contains(name)){
-				this.handledExceptions.add(name);
+		IPage page = ModelUtils.getPage(this);
+		if((page == null)||(page == this)){
+			synchronized(this.handledExceptions){
+				if(!this.handledExceptions.contains(name)){
+					this.handledExceptions.add(name);
+				}
 			}
+		}else{
+			((ViewBase)page).markExceptionHandled(name);
 		}
 	}
 	
 	protected boolean isExceptionHandled(String name){
-		synchronized(this.handledExceptions){
-			return this.handledExceptions.contains(name);
+		IPage page = ModelUtils.getPage(this);
+		if((page == null)||(page == this)){
+			synchronized(this.handledExceptions){
+				return this.handledExceptions.contains(name);
+			}
+		}else{
+			return ((ViewBase)page).isExceptionHandled(name);
 		}
 	}
 	/**
