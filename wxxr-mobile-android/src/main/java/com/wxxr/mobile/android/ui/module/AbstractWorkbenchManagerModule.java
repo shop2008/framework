@@ -123,7 +123,6 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerFieldBinder(UIComponent.class,AdapterView.class, new AdapterViewFieldBinder());
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewGroup.class, new ViewGroupFieldBinder());
 		mgr.registerFieldBinder(UICommand.class,Button.class, new UICommandButtonBinder());
-		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 	}
 	
 	protected void initDefaultEventBinders(IEventBinderManager mgr){
