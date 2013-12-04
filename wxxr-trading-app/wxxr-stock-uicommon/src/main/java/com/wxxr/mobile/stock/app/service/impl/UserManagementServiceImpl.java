@@ -58,6 +58,7 @@ import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
+import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
@@ -123,6 +124,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> personalHomePageBean_cache;
+    private GenericReloadableEntityCache<String,PersonalHomePageBean,List> otherpersonalHomePageBean_cache;
 
 	//==============  module life cycle =================
 	@Override
@@ -146,7 +148,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
 
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
+	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
+        registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -570,46 +574,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
-		PersonalHomePageBean otherPBean= null;
-		/*PersonalHomePageVO vo = null;
-		try {
-			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
-				public PersonalHomePageVO call() throws Exception {
-					try {
-						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
-					} catch (Throwable e) {
-						log.warn("Failed to fetch personal home page",e);
-						throw new StockAppBizException("网络不给力，请稍后再试");
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch personal home page",e);
-		}
-		if (vo!=null) {
-			otherPBean = new PersonalHomePageBean();
-			otherPBean.setActualCount(vo.getActualCount());
-			otherPBean.setVirtualCount(vo.getVirtualCount());
-			otherPBean.setTotalProfit(vo.getTotalProfit());
-			otherPBean.setVoucherVol(vo.getVoucherVol());
-			List<GainVO> volist = vo.getActualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setActualList(bean_list);
-			}
-			volist = vo.getVirtualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setVirtualList(bean_list);
-			}
-		}*/
-		return otherPBean;
+	    String key=userId;
+        if (otherpersonalHomePageBean_cache.getEntity(key)==null){
+            PersonalHomePageBean b=new PersonalHomePageBean();
+            otherpersonalHomePageBean_cache.putEntity(key,b);
+        }
+        Map<String, Object> p=new HashMap<String, Object>(); 
+        p.put("userId", userId);
+        this.otherpersonalHomePageBean_cache.forceReload(p,false);
+        return otherpersonalHomePageBean_cache.getEntity(key);
 	}
 	
 	
