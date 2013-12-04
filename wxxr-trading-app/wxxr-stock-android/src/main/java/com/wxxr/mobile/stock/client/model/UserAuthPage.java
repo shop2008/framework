@@ -96,7 +96,7 @@ public abstract class UserAuthPage extends PageBase {
 	/**
 	 * 银行卡号
 	 */
-	@Field(valueKey="text", binding="${authBean!=null?authBean.bankNum:null}", converter="l2StrConvertor")
+	@Field(valueKey="text", binding="${authBean!=null?authBean.bankNum:null}")
 	String bankNum;
 	
 	

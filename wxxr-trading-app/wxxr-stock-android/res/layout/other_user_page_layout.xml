@@ -3,38 +3,21 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <RelativeLayout
+    android:background="@color/black"
+    android:orientation="vertical" 
+    >
+<RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_bar_bj"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@id/tv_title_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#7a7a7a"
-                android:textSize="20sp"
-                bind:field="otherUserPageTitle" />
-
-            <TextView
-                android:id="@id/tv_title_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/other_user_title_append"
-                android:textColor="#7a7a7a"
-                android:textSize="20sp" />
-        </LinearLayout>
+        <TextView
+            android:id="@id/tv_title_content"
+            style="@style/style_title_text"
+            bind:field="otherUserPageTitle"
+             />
 
         <ImageButton
             android:id="@id/back_btn"
@@ -45,9 +28,10 @@
             android:background="@null"
             android:src="@drawable/back_button"
             bind:field="*"
-            bind:on_Click="back" />
-    </RelativeLayout>
+            bind:on_Click="back" 
+            />
 
+    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,14 +45,14 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="180dp"
-                android:background="@drawable/back1"
+               	bind:field="userHomeBack"
                 android:orientation="vertical"
-                android:padding="8dp"
-                bind:field="userHomeBack" >
+                android:background="@drawable/back1"
+                android:padding="8dp" >
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:layout_marginTop="20dp" >
 
                     <ImageView
@@ -87,9 +71,10 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/imageView1"
                         android:paddingLeft="10dp"
-                        android:text="@string/tv_default_text"
                         android:textColor="@color/white"
-                        bind:field="userNickName" />
+                        android:text="@string/tv_default_text"
+                        bind:field="userNickName" 
+                        />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -153,8 +138,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/mid_gray"
+                    android:layout_height="35dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/share"
                     android:padding="8dp" >
 
                     <TextView
@@ -190,20 +176,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background" >
+                    android:layout_height="30dp" 
+                    android:background="#252324"
+                    
+                    >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:gravity="center"
                         android:text="@string/label_stock" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
+                    
 
                     <TextView
                         android:layout_width="match_parent"
@@ -212,10 +197,7 @@
                         android:gravity="center"
                         android:text="@string/label_amount" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
+                   
 
                     <TextView
                         android:layout_width="match_parent"
@@ -224,11 +206,7 @@
                         android:gravity="center"
                         android:text="@string/label_profit_loss" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
-
+                   
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -240,6 +218,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
+                    
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -257,19 +236,22 @@
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="45dp"
                             android:gravity="center"
                             android:text="@string/view_more_text"
+                            android:background="@drawable/bg_view_more"
                             bind:field="*"
                             bind:on_Click="challengeViewMore" />
                     </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
                         android:layout_gravity="center"
-                        android:text="@string/user_no_shared_text"
+                        android:gravity="center"
                         android:textSize="18sp"
+                        android:visibility="visible"
+                        android:text="@string/user_no_shared_text"
                         bind:field="cNoSharedVisiable" />
                 </FrameLayout>
             </LinearLayout>
@@ -281,8 +263,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/mid_gray"
+                    android:layout_height="35dp"
+                    android:background="@drawable/share"
+                    android:gravity="center_vertical"
                     android:padding="8dp" >
 
                     <TextView
@@ -317,21 +300,17 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background" >
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp" 
+                    android:background="#252324"
+                    >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:gravity="center"
                         android:text="@string/label_stock" />
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -340,10 +319,6 @@
                         android:gravity="center"
                         android:text="@string/label_amount" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -351,11 +326,6 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/label_profit_loss" />
-
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/title_line" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -372,9 +342,10 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:orientation="vertical" 
                         android:visibility="gone"
-                        bind:field="jSharedVisiable" >
+                       	bind:field="jSharedVisiable"
+                        >
 
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
@@ -384,21 +355,26 @@
                             bind:on_ItemClick="joinItemClick" />
 
                         <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
                             android:gravity="center"
                             android:text="@string/view_more_text"
                             bind:field="*"
-                            bind:on_Click="joinViewMore" />
+                            bind:on_Click="joinViewMore" 
+                            android:background="@drawable/bg_view_more"
+                            />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                    
+                    
+                    <TextView 
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
                         android:text="@string/user_no_shared_text"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        bind:field="jNoSharedVisiable"
                         android:textSize="18sp"
-                        bind:field="jNoSharedVisiable" />
+                        />
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>

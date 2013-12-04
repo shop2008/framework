@@ -51,14 +51,6 @@
             android:textSize="15sp" 
             bind:field="avaliCashAmount"
             />
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/unit_yuan"
-            android:textSize="15sp" 
-            />
     </LinearLayout>
 
     <LinearLayout

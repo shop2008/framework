@@ -118,7 +118,7 @@
 
     <!-- 更换银行卡 -->
     <string name="title_switch_bank_card">更换银行卡</string>
-    <string name="tv_account_name_label">户名:</string>
+    <string name="tv_account_name_label">户名：</string>
     <string name="hint_switch_account_bank">开户行</string>
     <string name="hint_switch_account_bank_addr">开户行所在地</string>
     <string name="hint_switch_account_number">银行卡号</string>
@@ -136,10 +136,10 @@
     <string name="tv_not_auth">未认证</string>
     <string name="tv_cash_no_auth_des">经认证后可把实盘收益提现</string>
     <string name="tv_cash_authed_des">银行卡用于提取收益</string>
-    <string name="tv_account_name">户名:</string>
+    <string name="tv_account_name">户名：</string>
     <string name="tv_account_bank">银行：</string>
     <string name="tv_account_number">卡号：</string>
-    <string name="tv_account_bank_addr">所在地:</string>
+    <string name="tv_account_bank_addr">所在地：</string>
     <string name="btn_switch_bank_text">更换银行卡</string>
     <string name="btn_now_auth_text">立即认证</string>
 

@@ -63,7 +63,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 			@Attribute(name = "textColor", value = "${curItemId == 2?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean allRecordBtn;
 
-	@Field(valueKey="visible", binding="${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?false:true):true}")
+	@Field(valueKey="visible", binding="${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true}")
 	boolean sucRecordNullVisible;
 	
 	@Menu(items = { "left", "right" })

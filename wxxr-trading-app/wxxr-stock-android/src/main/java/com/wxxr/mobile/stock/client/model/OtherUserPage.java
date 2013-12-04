@@ -22,7 +22,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "otherUserPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.other_user_page_layout")
@@ -37,7 +37,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo, express = "${usrService.getOtherPersonalHomePage(userId)}")
 	PersonalHomePageBean personalBean;
 
-	@Field(valueKey = "text", binding = "${user!=null?user.nickName:'--'}")
+	@Field(valueKey = "text", binding = "${user!=null?user.nickName:'--'}${'的主页'}")
 	String otherUserPageTitle;
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack:null}")
@@ -56,25 +56,25 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	/**
 	 * 累计实盘积分
 	 */
-	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.voucherVol:'--'}")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.voucherVol:null}", converter="scoreConvertor")
 	String totalScore;
 
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.totalProfit:'--'}", converter = "f2SConvertor")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.totalProfit:null}", converter = "profitConvertor")
 	String totalProfit;
 
 	/**
 	 * 挑战交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.actualCount:'--'}")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.actualCount:null}",converter="shareNumConvertor")
 	String challengeSharedNum;
 
 	/**
 	 * 参赛交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:'--'}")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter="shareNumConvertor")
 	String joinSharedNum;
 
 	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.virtualList:null}")
@@ -83,22 +83,31 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.actualList:null}")
 	List<GainBean> challengeTradeInfos;
 
-	@Field(valueKey = "visible", binding = "${personalBean.actualList!=null?true:false}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean.actualList!=null?false:true}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?false:true):true):true}")
 	boolean cNoSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean.virtualList!=null?true:false}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean.virtualList!=null?false:true}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?false:true):true):true}")
 	boolean jNoSharedVisiable;
 
-	@Convertor(params = { @Parameter(name = "format", value = "%10.2f") })
-	Float2StringConvertor f2SConvertor;
-	/** 其他人用户ID */
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
+			@Parameter(name = "nullString", value = "0") })
+	StockLong2StringConvertor scoreConvertor;
 
+	@Convertor(params = { @Parameter(name = "format", value = "%.2f"),
+			@Parameter(name = "nullString", value = "0.00") })
+	StockLong2StringConvertor profitConvertor;
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
+			@Parameter(name = "nullString", value = "0") })
+	StockLong2StringConvertor shareNumConvertor;
+	
+	/** 其他人用户ID */
 	@Bean
 	String userId;
 
@@ -121,8 +130,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	public void updateModel(Object value) {
 		Map<String, String> map = (Map<String, String>) value;
 		userId = map.get("userId");
-		
-		//TODO 模拟数据，正式环境需改成userId
+
+		//模拟数据，正式环境需改成userId
 		registerBean("userId", "2");
 	}
 
@@ -152,7 +161,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "joinViewMore", description = "To Challenge View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
+	@Command(commandName = "joinViewMore", description = "To Join View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
 
@@ -165,12 +174,10 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		return result;
 	}
 
-	@Command(
-			commandName = "joinItemClick", navigations = {
-					@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-					@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-					@Navigation(on="BuyIn",showPage="otherUserBuyInPage")
-			})
+	@Command(commandName = "joinItemClick", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
+			@Navigation(on = "BuyIn", showPage = "otherUserBuyInPage") })
 	CommandResult joinItemClick(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 
@@ -214,11 +221,10 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		return null;
 	}
 
-	@Command(commandName = "challengeItemClick",navigations = {
+	@Command(commandName = "challengeItemClick", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-			@Navigation(on="BuyIn",showPage="otherUserBuyInPage")
-	})
+			@Navigation(on = "BuyIn", showPage = "otherUserBuyInPage") })
 	CommandResult challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
