@@ -228,4 +228,10 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	BindableListWrapper<GainBean> getGain(int start,int limit);
+
+	/**
+	 * 提取现金
+	 * @param amount
+	 */
+	void applyDrawMoney(long amount);
 }

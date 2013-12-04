@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -38,6 +40,8 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
+import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
@@ -63,6 +67,7 @@ import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.SellStockCommand;
 import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
+import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
@@ -811,6 +816,25 @@ public class TradingManagementServiceImpl extends
             }
         });
     }
+
+	@Override
+	public void applyDrawMoney(long amount) {
+		ApplyDrawMoneyCommand cmd=new ApplyDrawMoneyCommand();
+		cmd.setAmount(amount);
+		try{
+		Future<StockResultVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+			try {
+				StockResultVO vo=future.get(30,TimeUnit.SECONDS);
+				if(vo.getSuccOrNot()!=1){
+					throw new StockAppBizException(vo.getCause());
+				}
+			} catch (Exception e) {
+				throw new StockAppBizException("系统错误");
+			}
+		}catch(CommandException e){
+			throw new StockAppBizException(e.getMessage());
+		}
+	}
 
     
 	
