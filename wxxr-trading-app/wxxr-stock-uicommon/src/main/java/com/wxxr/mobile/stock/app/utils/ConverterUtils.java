@@ -333,7 +333,7 @@ public class ConverterUtils {
         bean.setPrice(vo.getPrice());
         bean.setTax(vo.getTax());
         bean.setVol(vo.getVol());
-        bean.setId(vo.getId());
+//        bean.setId(vo.getId());
         return bean;
     }
 
