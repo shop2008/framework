@@ -188,6 +188,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(this.provider != null){
 			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
 		}
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(page);
 		if(log.isDebugEnabled()){
 			log.debug("Activity started !");
 		}
@@ -239,6 +240,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		this.androidViewBinding.deactivate();
 		getNavigator().onPageHide(getBindingPage());
 		onActivityStopped();
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(this.page);
 		if(log.isDebugEnabled()){
 			log.debug("Activity stopped !");
 		}
@@ -274,6 +276,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		getNavigator().onPageDetroy(getBindingPage());
 		onActivityDestroied();
+		this.page = null;
 		if(log.isDebugEnabled()){
 			log.debug("Activity destroyed !");
 		}

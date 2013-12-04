@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.android.ui.module;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,7 +19,6 @@ import com.wxxr.mobile.android.ui.binding.ItemClickEventBinder;
 import com.wxxr.mobile.android.ui.binding.SimpleFieldBinder;
 import com.wxxr.mobile.android.ui.binding.UICommandButtonBinder;
 import com.wxxr.mobile.android.ui.binding.ViewGroupFieldBinder;
-import com.wxxr.mobile.android.ui.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.android.ui.updater.BackgroundColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.BackgroupImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;

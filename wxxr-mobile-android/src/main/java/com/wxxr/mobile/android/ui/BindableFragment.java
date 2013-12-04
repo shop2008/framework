@@ -35,6 +35,7 @@ public abstract class BindableFragment extends Fragment {
 	private BindableFragmentActivity fragActivity;
 	private boolean onShow;
 	private ISelectionProvider provider;
+	private IView bindingView;
 
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
@@ -70,7 +71,7 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onCreate ...");
 		}
-
+		this.bindingView = getBindingView();
 		super.onCreate(savedInstanceState);
 	}
 
@@ -111,8 +112,8 @@ public abstract class BindableFragment extends Fragment {
 			}
 		}, getBindingDescriptor(getViewId()));
 		
-		if(getBindingView() instanceof ViewBase){
-			((ViewBase)getBindingView()).onUICreate();
+		if(bindingView instanceof ViewBase){
+			((ViewBase)bindingView).onUICreate();
 		}		
 		return (View)this.androidViewBinding.getUIControl();
 	}
@@ -132,6 +133,7 @@ public abstract class BindableFragment extends Fragment {
 		}
 		this.androidViewBinding.destroy();
 		super.onDestroy();
+		this.bindingView = null;
 	}
 
 	/* (non-Javadoc)
@@ -142,8 +144,8 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onDestroyView ...");
 		}
-		if(getBindingView() instanceof ViewBase){
-			((ViewBase)getBindingView()).onUIDestroy();
+		if(bindingView instanceof ViewBase){
+			((ViewBase)bindingView).onUIDestroy();
 		}
 		super.onDestroyView();
 	}
@@ -195,9 +197,6 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onResume ...");
 		}
-		if(this.provider != null){
-			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
-		}
 		if(this.androidViewBinding != null){
 			this.androidViewBinding.refresh();
 		}
@@ -224,10 +223,9 @@ public abstract class BindableFragment extends Fragment {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onStart ...");
 		}
-		IView view = getBindingView();
 		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
 		if(toolbar != null){
-			toolbar.attach(view);
+			toolbar.attach(this.bindingView);
 			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingView().getName());
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
@@ -236,13 +234,15 @@ public abstract class BindableFragment extends Fragment {
 				toolbar.setTitle("",null);
 			}
 		}
-		this.androidViewBinding.activate(view);
+		this.androidViewBinding.activate(this.bindingView);
 		super.onStart();
-		this.provider = view.getSelectionProvider();
+		this.provider = this.bindingView.getSelectionProvider();
 		if(this.provider != null){
 			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
 		}
 		this.onShow = true;
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(bindingView);
+		
 	}
 
 	/* (non-Javadoc)
@@ -259,6 +259,7 @@ public abstract class BindableFragment extends Fragment {
 			toolbar.dettach(getBindingView());
 		}
 		this.androidViewBinding.deactivate();
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(bindingView);
 		super.onStop();
 	}
 

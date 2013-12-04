@@ -178,6 +178,7 @@ public class GenericDialogFragment extends DialogFragment {
 		}
 		super.onStart();
 		this.onShow = true;
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(view);
 	}
 
 	/* (non-Javadoc)
@@ -189,6 +190,7 @@ public class GenericDialogFragment extends DialogFragment {
 		if(this.binding != null){
 			this.binding.deactivate();
 		}
+		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(view);
 		super.onStop();
 	}
 
