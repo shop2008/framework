@@ -582,7 +582,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 * @see com.wxxr.mobile.core.ui.impl.AbstractUIComponent#fireDataChangedEvent(com.wxxr.mobile.core.ui.api.ValueChangedEvent)
 	 */
 	@Override
-	protected void fireDataChangedEvent(ValueChangedEvent event) {
+	protected synchronized void fireDataChangedEvent(ValueChangedEvent event) {
 		if(getLog().isDebugEnabled()){
 			getLog().debug("processing event :", event);
 		}
