@@ -19,7 +19,7 @@ import com.wxxr.mobile.dao.annotation.Table;
 public class StockInfo {
 	@Id
 	private Long id;
-	@Column(unique=true,nullable=false)
+	@Column(nullable=false)
 	private String code;  //股票或指数 代码
 	@Column(unique=true,nullable=false)
 	private String name;//股票或指数 名称
