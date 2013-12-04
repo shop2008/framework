@@ -15,9 +15,9 @@ public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
     private static final long serialVersionUID = 1L;
     @XmlElement(name = "date")
     private String date; //
-    @XmlElement(name="minute")
+    @XmlElement(name="close")
     private String close;//昨收
-    @XStreamImplicit(itemFieldName="list")
+    @XStreamImplicit(itemFieldName="minute")
     private List<StockMinuteLineVO> list; //
     
     public String getDate() {
