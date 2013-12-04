@@ -177,7 +177,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=200)
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=500)
 	String orderByRisefallrate(InputEvent event){
 		if("risefallrate".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
@@ -195,7 +195,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=200)
+	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=500)
 	String orderByNewPrice(InputEvent event){
 		if("newprice".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
