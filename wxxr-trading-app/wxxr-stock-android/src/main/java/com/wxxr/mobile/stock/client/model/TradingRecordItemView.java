@@ -8,16 +8,26 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name = "TradingRecordItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.deal_record_layout_item")
 public abstract class TradingRecordItemView extends ViewBase implements
 		IModelUpdater {
+	// 查股票名称
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(recordBean!=null?recordBean.code:'')}")
+	StockBaseInfo stockInfoBean;
+
 	@Bean
 	TradingRecordBean recordBean;
 	
@@ -38,7 +48,7 @@ public abstract class TradingRecordItemView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${recordBean!=null?recordBean.date:''}", converter = "longTime2StringConvertor")
 	String time;
 
-	@Field(valueKey = "text", binding = "${recordBean!=null?recordBean.market:'--'}")
+	@Field(valueKey = "text", binding = "${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String market;
 	
 	@Field(valueKey = "text", binding = "${recordBean!=null?recordBean.code:'--'}")
