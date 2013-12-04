@@ -15,9 +15,9 @@ import java.util.Map;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="message")
-public class MessageVO implements Serializable {
-
+@XmlRootElement(name="MsgQuery")
+public class MsgQuery implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	@XmlElement(name = "id")
 	String id;// 提醒ID
@@ -34,12 +34,11 @@ public class MessageVO implements Serializable {
 	@XmlElement(name = "attributes")
 	protected Map<String, String> attributes ;
 	
-	public MessageVO() {
-		// FIXME MessageVO constructor
+	public MsgQuery() {
 		super();
 	}
 
-	public MessageVO(String id, String type, String mcode, String qcode,
+	public MsgQuery(String id, String type, String mcode, String qcode,
 			String content,String createdDate) {
 		super();
 		this.id = id;
@@ -126,4 +125,5 @@ public class MessageVO implements Serializable {
 		.append("; Content=")
 		.append(this.getContent()).toString();
 	}
+
 }
