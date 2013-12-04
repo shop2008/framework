@@ -464,7 +464,7 @@ public class TradingManagementServiceImpl extends
                    return false;
                }
                
-           }, null);
+           }, new TradingRecordBeanComparator());
         
          Map<String, Object> p=new HashMap<String, Object>(); 
          p.put("acctID", acctID);
@@ -474,6 +474,12 @@ public class TradingManagementServiceImpl extends
          tradingRecordBean_cache.setCommandParameters(p);
 	    return tradingRecordBeans;
 	}
+	class TradingRecordBeanComparator implements Comparator<TradingRecordBean>{
+        @Override
+        public int compare(TradingRecordBean b1, TradingRecordBean b2) {
+          return b1.getDate()>b2.getDate()?-1:1;
+        }
+    }
 	// =================private method =======================================
 	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
 		Future<T> future = context.getExecutor().submit(task);
