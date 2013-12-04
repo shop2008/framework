@@ -29,16 +29,18 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 		this.viewPagerProvider = prov;
 	}
 
-//	public void destroy() {
-//		for (int i = 0; i < getCount(); i++) {
-//			View view = (View)viewPagerProvider.getViewItem(i);
-//
-//			BindingBag bag = null;
-//			bag = (BindingBag) view.getTag();
-//			IBinding<IView> binding = bag.binding;
-//			binding.deactivate();
-//		}
-//	}
+	public void destroy() {
+		for (int i = 0; i < getCount(); i++) {
+			View view = (View)viewPagerProvider.getItem(i);
+
+			BindingBag bag = null;
+			bag = (BindingBag) view.getTag();
+			IBinding<IView> binding = bag.binding;
+			binding.deactivate();
+			bag.view.doUnbinding(binding);
+			bag.view.destroy();
+		}
+	}
 	public void active() {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < getCount(); i++) {
@@ -94,8 +96,8 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 			BindingBag bag = null;
 			bag = (BindingBag) view.getTag();
 			IBinding<IView> binding = bag.binding;
-			IView vModel = bag.view;
-			binding.activate(vModel);
+//			IView vModel = bag.view;
+			binding.refresh();
 		}
 		super.notifyDataSetChanged();
 	}

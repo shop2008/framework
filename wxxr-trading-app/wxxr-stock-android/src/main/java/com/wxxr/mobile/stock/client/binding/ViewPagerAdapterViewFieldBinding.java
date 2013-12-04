@@ -77,7 +77,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 			int length = viewIDs.length;
 			androidViewGroup = new View[length];
 			for (int i = 0; i < length; i++) {
-				androidViewGroup[i] = createUI(viewIDs[i]);
+				androidViewGroup[i] = createUI(getViewGroup(), viewIDs[i]);
 			}
 			return true;
 		}
@@ -109,7 +109,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 					viewPagerProvider);
 			setupAdapter(viewPagerAdapter);
 		} else {
-			viewPagerAdapter.active();
+//			viewPagerAdapter.active();
 		}
 	}
 
@@ -191,24 +191,29 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 	}
 
 	
-	protected View createUI(String viewId){
+	protected View createUI(ViewGroupBase viewGroup, String viewId){
 		LRUList<View> pool = getViewPool(viewId, false);
 		View view = pool != null ? pool.get() : null;
 		if(view != null){
 			return view;
 		}
-		IViewDescriptor v = getWorkbenchContext().getWorkbenchManager().getViewDescriptor(viewId);
-		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
-		IBinding<IView> binding = null;
-		IViewBinder vBinder = getWorkbenchContext().getWorkbenchManager().getViewBinder();
+		IView v = viewGroup.getView(viewId);
+//		IViewDescriptor v = getWorkbenchContext().getWorkbenchManager().getViewDescriptor(viewId);
+		IBindingDescriptor bDesc = getWorkbenchContext().getWorkbenchManager().getViewDescriptor(viewId).getBindingDescriptor(TargetUISystem.ANDROID);
 		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
-		binding = vBinder.createBinding(ctx, bDesc);
-		binding.init(getWorkbenchContext());
+		IBinding<IView> binding = v.getBinding();
+		if(binding == null) {
+			IViewBinder vBinder = getWorkbenchContext().getWorkbenchManager().getViewBinder();
+			binding = vBinder.createBinding(ctx, bDesc);
+			binding.init(getWorkbenchContext());
+			v.doBinding(binding);
+		}
+		
 		view = (View)binding.getUIControl();
 		BindingBag bag = new BindingBag();
 		bag.binding = binding;
 		bag.ctx = ctx;
-		bag.view = getWorkbenchContext().getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
+		bag.view = v;//getWorkbenchContext().getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
 		view.setTag(bag);
 		return view;
 

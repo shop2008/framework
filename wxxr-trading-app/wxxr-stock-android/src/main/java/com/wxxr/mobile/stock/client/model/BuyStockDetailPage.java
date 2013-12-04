@@ -53,7 +53,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
-	@ViewGroup(viewIds={"StockKLineView", "StockQuotationView"})
+	@ViewGroup(viewIds={"StockQuotationView", "StockKLineView"})
 	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);

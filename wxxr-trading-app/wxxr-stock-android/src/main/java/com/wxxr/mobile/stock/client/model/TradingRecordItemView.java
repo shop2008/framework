@@ -25,7 +25,7 @@ public abstract class TradingRecordItemView extends ViewBase implements
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 
-	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(recordBean!=null?recordBean.code:'')}")
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(recordBean!=null?recordBean.code:'', orderBean!=null?orderBean.marketCode:'')}")
 	StockBaseInfo stockInfoBean;
 
 	@Bean
