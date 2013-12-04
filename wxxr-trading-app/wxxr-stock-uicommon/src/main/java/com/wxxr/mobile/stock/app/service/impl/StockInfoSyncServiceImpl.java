@@ -237,7 +237,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		}
 	}
 
-	private Set<String> loadAllStockCodes() {
+	private Set<String> loadAllStockCodes() {		
 		return cache.keySet();
 	}
 	private void loadLocalDatas() {
@@ -249,12 +249,10 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			log.debug(String.format("%d stock infos in db", list.size()));
 		}
 		synchronized (cache) {
-			cache.clear();
-			ids.clear();
 			if (list!=null&&list.size()>0) {
 				for (StockInfo stockInfo : list) {
-					cache.put(stockInfo.getCode()+"."+stockInfo.getCode(),fromPO(stockInfo));
-					ids.put(stockInfo.getCode()+"."+stockInfo.getCode(), stockInfo.getId());
+					cache.put(getStockKey(stockInfo.getCode(), stockInfo.getMc()),fromPO(stockInfo));
+					ids.put(getStockKey(stockInfo.getCode(), stockInfo.getMc()), stockInfo.getId());
 				}
 			}
 		}
@@ -279,6 +277,9 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		stock.setType(stockInfo.getType());
 		return stock;
 	}
+	private String getStockKey(String code,String marketCode){
+		return code+"."+marketCode;
+	}
 	private void saveOrUpdate(StockBaseInfo info){	
 		if (log.isDebugEnabled()) {
 			log.debug("SaveOrUpdate data:"+info);
@@ -286,7 +287,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		if (info==null) {
 			return ;
 		}
-		Long id = ids.get(info.getCode());
+		Long id = ids.get(getStockKey(info.getCode(), info.getMc()));
 		StockInfo stockInfo = null;
 		if (id!=null) {
 			stockInfo = getStockInfoDao().load(id);
@@ -307,11 +308,11 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		stockInfo.setType(info.getType());
 		id = getStockInfoDao().insertOrReplace(stockInfo);
 		if (id!=-1) {
-			cache.put(info.getCode()+"."+info.getCode(), info);
+			cache.put(getStockKey(info.getCode(), info.getMc()), info);
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Update data for code[%s],db_id[%s],stock info:%s", info.getCode(),id,stockInfo.toString()));
 			}
-			ids.put(info.getCode(), id);
+			ids.put(getStockKey(info.getCode(), info.getMc()), id);
 		}
 	}
 	private void processAllDataReceived() {
@@ -326,7 +327,8 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		}
 		List<String> list = new ArrayList<String>();
 		list.addAll(all_ids);
-		Set<String> local_storage_ids = loadAllStockCodes();
+		Set<String> local_storage_ids = new HashSet<String>();
+		local_storage_ids.addAll(loadAllStockCodes());
 		if (local_storage_ids != null) {
 			local_storage_ids.removeAll(all_ids);// 获取本地有，服务器端没有的集合
 			if (!local_storage_ids.isEmpty()) {
@@ -345,16 +347,16 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			dataChanged = false;
 		}
 	}
-	private void removeStockInfo(String code) {
-		 StockBaseInfo info = cache.remove(code);
-		 Long id = ids.remove(code);
+	private void removeStockInfo(String key) {
+		 StockBaseInfo info = cache.remove(key);
+		 Long id = ids.remove(key);
 		 if (info!=null&&id!=null) {
 			 try {
 				getStockInfoDao().deleteByKey(id);
 			} catch (Exception e) {
 				log.warn("Failed to delete the stock", e);
-				cache.put(code, info);
-				ids.put(code, id);
+				cache.put(key, info);
+				ids.put(key, id);
 			}
 		 }
 	}
@@ -465,7 +467,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		if (StringUtils.isBlank(code)||StringUtils.isBlank(marketCode)) {
 			return null;
 		}
-		return cache.get(code+"."+marketCode);
+		return cache.get(getStockKey(code,marketCode));
 	}
 	
 	
