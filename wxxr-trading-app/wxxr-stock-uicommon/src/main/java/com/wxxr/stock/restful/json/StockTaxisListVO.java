@@ -16,17 +16,12 @@ import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
  */
 @XmlRootElement(name = "stockTaxises")
 public class StockTaxisListVO  implements Serializable{
-    /**
-     * 
-     */
+ 
     private static final long serialVersionUID = 1L;
     
     @XStreamImplicit(itemFieldName="stockTaxis")
     private List<StockTaxisVO> list ;
 
-    /**
-     * 
-     */
     public StockTaxisListVO() {
         super();
         // TODO Auto-generated constructor stub

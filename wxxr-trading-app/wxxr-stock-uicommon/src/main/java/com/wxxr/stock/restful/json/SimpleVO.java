@@ -11,12 +11,15 @@ package com.wxxr.stock.restful.json;
 
 import java.io.Serializable;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "simple")
 public class SimpleVO implements Serializable {
     /** The serialVersionUID */
 	private static final long serialVersionUID = 1L;
+	
+	@XmlElement(name = "data")
 	private String data;
 
 	public SimpleVO() {
