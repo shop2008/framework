@@ -3,7 +3,10 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,7 +219,11 @@ public class InfoCenterManagementServiceImpl extends
 	class StockLineBeanComparator implements Comparator<StockLineBean>{
         @Override
         public int compare(StockLineBean b1, StockLineBean b2) {
-           //todo
+            if (b1.getDate()!=null &&b2.getDate()!=null ){
+                Long d1=Long.valueOf(b1.getDate());
+                Long d2= Long.valueOf(b2.getDate());
+                return d1>d2?-1:1;
+            }
             return 0;
         }
 	}
