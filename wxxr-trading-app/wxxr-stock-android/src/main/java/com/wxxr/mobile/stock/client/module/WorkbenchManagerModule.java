@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.client.module;
 
+import android.support.v4.view.ViewPager;
+
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
@@ -11,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UIComponent;
+import com.wxxr.mobile.core.ui.common.ViewGroupBase;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.ArticleBodyFieldBinder;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
@@ -30,6 +33,7 @@ import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
+import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
@@ -66,6 +70,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, NewsAccountView.class, new NewsAccountViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, InfoNoticesView.class, new InfoNoticesViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GuideSwiperView.class, new GuideSwiperViewFieldBinder());
+		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 	}
 
 	@Override

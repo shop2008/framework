@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -26,9 +27,9 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockQuotationView", description="买入", singleton=true)
+@View(name = "StockQuotationView")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_quotation_view_layout")
-public abstract class StockQuotationView extends ViewBase implements IModelUpdater, ISelectionChangedListener {
+public abstract class StockQuotationView extends ViewBase implements ISelectionChangedListener {
 
 	private static final Trace log = Trace.register(StockQuotationView.class);
 	
@@ -65,7 +66,7 @@ public abstract class StockQuotationView extends ViewBase implements IModelUpdat
 	StockLong2StringConvertor stockLong2StringConvertorNoSign;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%10.2f")
+			@Parameter(name="format",value="%.2f")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
@@ -194,11 +195,17 @@ public abstract class StockQuotationView extends ViewBase implements IModelUpdat
 	
 	@OnCreate
 	void registerSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("BuyStockDetailPage", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		ISelection selection = service.getSelection("BuyStockDetailPage");
+		if(selection != null)
+			selectionChanged("BuyStockDetailPage", selection);
+		service.addSelectionListener("BuyStockDetailPage", this);
 	}
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
+		if(selection == null)
+			return;
 		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
 		String[] stockInfos = (String[])impl.getSelected();
 		this.codeBean = stockInfos[0];
@@ -210,31 +217,31 @@ public abstract class StockQuotationView extends ViewBase implements IModelUpdat
 		infoCenterService.getStockQuotation(codeBean, marketBean);
 	}
 	
-	@Override
-	public void updateModel(Object value) {
-		if (value instanceof Map) {
-			Map temp = (Map) value;
-			for (Object key : temp.keySet()) {
-				Object tempt = temp.get(key);
-				if (tempt != null && "codeBean".equals(key)) {
-					if (tempt instanceof String) {
-						this.codeBean = (String) tempt;
-					}
-					registerBean("codeBean", this.codeBean);
-				} else if (tempt != null && "nameBean".equals(key)) {
-					if (tempt instanceof String) {
-						this.nameBean = (String) tempt;
-					}
-					registerBean("nameBean", this.nameBean);
-				} else if (tempt != null && "marketBean".equals(key)) {
-					if (tempt instanceof String) {
-						this.marketBean = (String) tempt;
-					}
-					registerBean("marketBean", this.marketBean);
-				}
-				log.debug("updateModel: codeBean:"
-						+ codeBean + "nameBean:" + nameBean + "marketBean:" + marketBean);
-			}
-		}
-	}
+//	@Override
+//	public void updateModel(Object value) {
+//		if (value instanceof Map) {
+//			Map temp = (Map) value;
+//			for (Object key : temp.keySet()) {
+//				Object tempt = temp.get(key);
+//				if (tempt != null && "codeBean".equals(key)) {
+//					if (tempt instanceof String) {
+//						this.codeBean = (String) tempt;
+//					}
+//					registerBean("codeBean", this.codeBean);
+//				} else if (tempt != null && "nameBean".equals(key)) {
+//					if (tempt instanceof String) {
+//						this.nameBean = (String) tempt;
+//					}
+//					registerBean("nameBean", this.nameBean);
+//				} else if (tempt != null && "marketBean".equals(key)) {
+//					if (tempt instanceof String) {
+//						this.marketBean = (String) tempt;
+//					}
+//					registerBean("marketBean", this.marketBean);
+//				}
+//				log.debug("updateModel: codeBean:"
+//						+ codeBean + "nameBean:" + nameBean + "marketBean:" + marketBean);
+//			}
+//		}
+//	}
 }

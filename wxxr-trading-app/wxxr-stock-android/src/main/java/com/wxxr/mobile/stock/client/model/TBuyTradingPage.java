@@ -26,7 +26,6 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -36,7 +35,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 /**
  * @author duzhen
  */
-@View(name = "TBuyTradingPage", withToolbar = true, description="模拟盘/实盘")
+@View(name = "TBuyTradingPage", withToolbar = true, description="模拟盘/实盘", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_trading_account_info_page_layout")
 public abstract class TBuyTradingPage extends PageBase implements IModelUpdater {
 
@@ -44,7 +43,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 
 	@Bean
 	String acctId;
-
+	
 	@Convertor(params={
 			@Parameter(name="format",value="M月d日买入")
 	})
@@ -153,7 +152,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@OnShow
 	void initTitleBar() {
 		registerBean("stockId", acctId);
-		getPageToolbar().setTitle("模拟盘", null);
+//		getPageToolbar().setTitle("模拟盘", null);
 		// ((IStockAppToolbar)getAppToolbar()).setTitle("模拟盘", null);
 	}
 
@@ -226,15 +225,19 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					String code = bean.getStockCode();
 					String name = bean.getStockName();
 					String market = bean.getMarketCode();
-					map.put("code", code);
-					map.put("name", name);
-					map.put("market", market);
-					map.put("acctId", this.acctId);
-					map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
+					String avalible = tradingBean.getAvalibleFee() + "";
+//					map.put("code", code);
+//					map.put("name", name);
+//					map.put("market", market);
+//					map.put("acctId", this.acctId);
+//					map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
+					
+					Object val = new String[] { code, name, market, acctId, avalible };
+					updateSelection(val);
 				}
 			}
 			result.setResult("BuyStockDetailPage");
-			result.setPayload(map);
+//			result.setPayload(map);
 			return result;
 		}
 		return null;
@@ -250,17 +253,25 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult handleBuyBtnClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("acctId", this.acctId);
-		map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
+//		map.put("code", "");
+//		map.put("name", "");
+//		map.put("market", "");
+//		map.put("acctId", this.acctId);
+//		map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
+		String avalible = tradingBean.getAvalibleFee() + "";
+		
+		Object val = new String[] { "", "", "", acctId, avalible };
+		updateSelection(val);
+		
 		result.setResult("BuyStockDetailPage");
-		result.setPayload(map);
+//		result.setPayload(map);
 		return result;
 	}
 
-	@Override
-	public void onToolbarCreated(IAppToolbar toolbar) {
-		// TODO Auto-generated method stub
-		super.onToolbarCreated(toolbar);
-		toolbar.setTitle("模拟盘", null);
-	}
+//	@Override
+//	public void onToolbarCreated(IAppToolbar toolbar) {
+//		// TODO Auto-generated method stub
+//		super.onToolbarCreated(toolbar);
+////		toolbar.setTitle("模拟盘", null);
+//	}
 }
