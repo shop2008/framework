@@ -2,6 +2,7 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -11,11 +12,17 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name="PlateTaxis")
 public class PlateTaxisVO implements Serializable {
+	@XmlElement(name="id")
 	private Long id;//板块id
+	@XmlElement(name="code")
 	private String code;
+	@XmlElement(name="name")
 	private String name;// 板块名称
+	@XmlElement(name="risefallrate")
 	private Long risefallrate;// 涨跌幅
+	@XmlElement(name="stockname")
 	private String stockname;//领涨股
+	@XmlElement(name="market")
 	private String market; //领涨股 市场
 	
 	public Long getId() {

@@ -165,7 +165,7 @@ public class StockUserResourceTest extends TestCase{
 		try {
 			UpdatePwdVO vo = new UpdatePwdVO();
 			vo.setPassword("123456");
-			vo.setPassword("123456");
+			vo.setOldPwd("123456");
 			ResultBaseVO info = stockUserResource.updatePwd(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());

@@ -9,11 +9,15 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class StockVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	
+	@XmlElement(name = "stockCode")
 	private String stockCode;
+	@XmlElement(name = "stockName")
 	private String stockName;
+	@XmlElement(name = "tradeDate")
 	private String tradeDate;
+	@XmlElement(name = "highs")
 	private String highs;
+	@XmlElement(name = "achieveDays")
 	private int achieveDays;
 	
 	

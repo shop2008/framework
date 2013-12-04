@@ -2,21 +2,30 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "StrongStock")
 public class StrongStockVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-
+	@XmlElement(name = "stockCode")
 	private String stockCode;
+	@XmlElement(name = "stockName")
 	private String stockName;
+	@XmlElement(name = "tradedate")
 	private String tradedate;
+	@XmlElement(name = "recentHigh")
 	private String recentHigh;
+	@XmlElement(name = "dayHighs")
 	private String dayHighs;
+	@XmlElement(name = "dayChange")
 	private String dayChange;
+	@XmlElement(name = "twentyDaysChange")
 	private String twentyDaysChange;
+	@XmlElement(name = "achieveDays")
 	private int achieveDays;
+	@XmlElement(name = "live")
 	private int live;
 	
 	

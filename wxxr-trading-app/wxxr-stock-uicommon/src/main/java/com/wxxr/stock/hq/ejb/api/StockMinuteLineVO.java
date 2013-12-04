@@ -6,19 +6,24 @@ import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * ��ʱ�����VO
+ * 分时线数据VO
  * 
  * @author juyao
  */
 @XmlRootElement(name = "StockMinuteLine")
 public class StockMinuteLineVO implements Serializable {
-
-	private Long price;// �۸�(���¼�)
-	private Long secuvolume;// �ɽ���
-	private Long secuamount;// �ɽ���
-	private Long avprice;// �ɽ���
-	private String hqTime;//����ʱ�䣬Ϊ�˲���
-	private Long avgChangeRate;//��ָ֤������ڳ�ָ���ƽ���ǵ��
+	@XmlElement(name="price")
+	private Long price;// 价格(最新价)
+	@XmlElement(name="secuvolume")
+	private Long secuvolume;// 成交量
+	@XmlElement(name="secuamount")
+	private Long secuamount;// 成交额
+	@XmlElement(name="avprice")
+	private Long avprice;// 成交额
+	@XmlElement(name="hqTime")
+	private String hqTime;//补充时间，为了测试
+	@XmlElement(name="avgChangeRate")
+	private Long avgChangeRate;//上证指数，和深圳成指数的平均涨跌幅
 	
 	public String getHqTime() {
 		return hqTime;

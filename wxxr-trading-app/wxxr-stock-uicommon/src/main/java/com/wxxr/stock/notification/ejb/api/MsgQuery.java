@@ -10,7 +10,6 @@
 package com.wxxr.stock.notification.ejb.api;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
@@ -20,7 +19,7 @@ public class MsgQuery implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	@XmlElement(name = "id")
-	String id;// 提醒ID
+	String id;//用户id，这个参数没用，历史遗留问题
 	
 	public MsgQuery() {
 		super();

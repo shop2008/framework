@@ -15,11 +15,12 @@ import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
+import com.wxxr.stock.notification.ejb.api.MsgQuery;
 
 @Path("/secure/remind")
 public interface IMessageRemindResource {
 	@POST
 	@Path("/findById")
 	@Produces( { "application/json;charset=utf-8" })
-	public List<MessageVO> findById(MessageVO vo) throws Exception ;
+	public List<MessageVO> findById(MsgQuery vo) throws Exception ;
 }

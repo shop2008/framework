@@ -2,22 +2,31 @@ package com.wxxr.stock.hq.ejb.api;
 
 import java.io.Serializable;
 
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 /**
- * ������ϸ
+ * 交易明细
  * @author zhengjincheng
  *
  */
 @XmlRootElement(name="TradeDetail")
 public class TradeDetailVO implements Serializable {
-	String quotationCode;// ��Ʊ����
+	@XmlElement(name = "quotationCode")
+	String quotationCode;// 股票代码
+	@XmlElement(name = "marketCode")
 	String marketCode;
+	@XmlElement(name = "HqTime")
 	String HqTime;//HHMM
+	@XmlElement(name = "HqDate")
 	String HqDate;
-	int jyfx;//�� 1 (����)��ƽ�� 0����-1�����̣�
-	Long price;//�ɽ���
-	Long buyvol=0L;//���̳ɽ���
-	Long sellvol=0L;//���̳ɽ���
+	@XmlElement(name = "jyfx")
+	int jyfx;//买 1 (外盘)；平盘 0；卖-1（内盘）
+	@XmlElement(name = "price")
+	Long price;//成交价
+	@XmlElement(name = "buyvol")
+	Long buyvol=0L;//买盘成交量
+	@XmlElement(name = "sellvol")
+	Long sellvol=0L;//买盘成交量
 
     
 	public Long getBuyvol() {
