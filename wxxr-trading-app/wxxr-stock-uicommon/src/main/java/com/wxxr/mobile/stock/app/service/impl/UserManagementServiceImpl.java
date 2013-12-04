@@ -29,7 +29,6 @@ import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
-import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -59,11 +58,11 @@ import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
+import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
-import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
@@ -71,10 +70,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
-import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.StockUserResource;
-import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 
@@ -125,6 +121,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindableListWrapper<UserAttributeBean> userAttrbutes;
 	private IReloadableEntityCache<String, UserAttributeBean> userAttributeCache;
 
+	
+    private GenericReloadableEntityCache<String,PersonalHomePageBean,List> personalHomePageBean_cache;
+
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -145,6 +144,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SubmitPushMesasgeHandler.COMMAND_NAME, new SubmitPushMesasgeHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
+
+		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
+        registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -257,8 +259,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		Future<?> future = context.getExecutor().submit(new Runnable() {
 			@Override
 			public void run() {
-				usernamePasswordCredential4Login = new UsernamePasswordCredential(
-						userId, pwd);
+                usernamePasswordCredential4Login = new UsernamePasswordCredential(
+                        userId, pwd);
 				try {
 					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
 					myUserInfo = new UserBean();
@@ -613,44 +615,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
-		PersonalHomePageVO vo = null;
-		try {
-			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
-				public PersonalHomePageVO call() throws Exception {
-					try {
-						return getRestService(ITradingProtectedResource.class).getSelfHomePage();
-					} catch (Throwable e) {
-						log.warn("Failed to fetch personal home page",e);
-						throw new StockAppBizException("网络不给力，请稍后再试");
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch personal home page",e);
-		}
-		if (vo!=null) {
-			myPBean.setActualCount(vo.getActualCount());
-			myPBean.setVirtualCount(vo.getVirtualCount());
-			myPBean.setTotalProfit(vo.getTotalProfit());
-			myPBean.setVoucherVol(vo.getVoucherVol());
-			List<GainVO> volist = vo.getActualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				myPBean.setActualList(bean_list);
-			}
-			volist = vo.getVirtualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				myPBean.setVirtualList(bean_list);
-			}
-		}
-		return myPBean;
+	    String key="PersonalHomePageBean";
+	    if (personalHomePageBean_cache.getEntity(key)==null){
+	        PersonalHomePageBean b=new PersonalHomePageBean();
+	        personalHomePageBean_cache.putEntity(key,b);
+        }
+        this.personalHomePageBean_cache.forceReload(null,false);
+        return personalHomePageBean_cache.getEntity(key);
 	}
 	@Override
 	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,

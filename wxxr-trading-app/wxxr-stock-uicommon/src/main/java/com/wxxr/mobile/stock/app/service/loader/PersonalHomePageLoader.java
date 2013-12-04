@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 
@@ -49,9 +50,17 @@ public class PersonalHomePageLoader extends AbstractEntityLoader<String, Persona
         GetPersonalHomePageVOsCommand command = (GetPersonalHomePageVOsCommand) cmd;
         boolean updated = false;
        
+        
         if(result != null){
             for (PersonalHomePageVO vo : result) {
-                
+                PersonalHomePageBean bean=cache.getEntity("PersonalHomePageVO");
+                if(bean == null) {
+                    bean =ConverterUtils.fromVO(vo);
+                    cache.putEntity("PersonalHomePageVO", bean);
+                }else{
+                    ConverterUtils.updatefromVOtoBean(bean, vo);
+                }
+                updated = true;
             }
         }
         return updated;

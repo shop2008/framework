@@ -10,6 +10,7 @@ import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
@@ -31,6 +32,7 @@ import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
@@ -495,6 +497,36 @@ public class ConverterUtils {
         b.setUnfreezeAmount(vo.getFrozenAmount());
         b.setUserGain(vo.getUserGain());
         b.setVirtual(vo.isVirtual());    
+    }
+    public static PersonalHomePageBean fromVO(PersonalHomePageVO vo) {
+        if (vo == null){
+            return null;
+        }
+        PersonalHomePageBean b=new PersonalHomePageBean();
+        updatefromVOtoBean(b,vo);
+        return b;
+    }
+    public static void updatefromVOtoBean(PersonalHomePageBean b, PersonalHomePageVO vo) {
+        b.setActualCount(vo.getActualCount());
+        b.setVirtualCount(vo.getVirtualCount());
+        b.setTotalProfit(vo.getTotalProfit());
+        b.setVoucherVol(vo.getVoucherVol());
+        List<GainVO> volist = vo.getActualList();
+        if (volist!=null&&volist.size()>0) {
+            List<GainBean> bean_list = new ArrayList<GainBean>(); 
+            for (GainVO acVO : volist) {
+                bean_list.add(ConverterUtils.fromVO(acVO));
+            }
+            b.setActualList(bean_list);
+        }
+        volist = vo.getVirtualList();
+        if (volist!=null&&volist.size()>0) {
+            List<GainBean> bean_list = new ArrayList<GainBean>(); 
+            for (GainVO acVO : volist) {
+                bean_list.add(ConverterUtils.fromVO(acVO));
+            }
+            b.setVirtualList(bean_list);
+        }
     }
     
 }
