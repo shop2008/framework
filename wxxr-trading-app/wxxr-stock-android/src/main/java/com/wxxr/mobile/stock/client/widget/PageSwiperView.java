@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -16,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.stock.client.R;
 
-public class PageSwiperView extends LinearLayout {
-
+public class PageSwiperView extends LinearLayout  {
+	private static final Trace log = Trace.register(PageSwiperView.class);
+	
 	private LinearLayout paginationLayout; //分页布局
 	private View[] paginationImgView; //分页图片
 	private Context mContext;
@@ -28,6 +31,31 @@ public class PageSwiperView extends LinearLayout {
 	private int mViewCount = 0;
 	private int mCurSel = 0;
 	private List<View> viewList = null;
+	private DataSetObserver observer = new DataSetObserver() {
+
+		/* (non-Javadoc)
+		 * @see android.database.DataSetObserver#onChanged()
+		 */
+		@Override
+		public void onChanged() {
+			if(log.isDebugEnabled()){
+				log.debug("Received datset changed event, going to reload all pages");
+			}
+			bindImageList();
+		}
+
+		/* (non-Javadoc)
+		 * @see android.database.DataSetObserver#onInvalidated()
+		 */
+		@Override
+		public void onInvalidated() {
+			if(log.isDebugEnabled()){
+				log.debug("Received datset invalidated event, going to reload all pages");
+			}
+			bindImageList();
+		}
+
+	};
 	
 	private static final String TAG = "PageSwiperView";
     private ListAdapter mAdapter;
@@ -71,10 +99,17 @@ public class PageSwiperView extends LinearLayout {
 		}
 		addView(view);
 	}
-	public void setAdapter(ListAdapter dapter){
-		this.mAdapter = dapter;
+	public void setAdapter(ListAdapter adaptor){
+		if(this.mAdapter == adaptor){
+			return;
+		}
+		if(this.mAdapter != null){
+			this.mAdapter.unregisterDataSetObserver(observer);
+		}
+		this.mAdapter = adaptor;
 		if(mAdapter!=null){
 			bindImageList();
+			this.mAdapter.registerDataSetObserver(observer);
 		}
 	}
 	public ListAdapter getAdapter(){
