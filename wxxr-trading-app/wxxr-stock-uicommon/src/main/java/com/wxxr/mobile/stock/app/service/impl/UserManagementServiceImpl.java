@@ -58,7 +58,8 @@ import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
-import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
+import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler;
+import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
@@ -146,6 +147,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SubmitPushMesasgeHandler.COMMAND_NAME, new SubmitPushMesasgeHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateNickNameHandler.COMMAND_NAME, new UpdateNickNameHandler());
 
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
@@ -789,7 +791,24 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return false;
 	}
 
-
+	@Override
+	public void updateNickName(String nickName) {
+		UpdateNickNameCommand cmd=new UpdateNickNameCommand();
+		cmd.setNickName(nickName);
+		try{
+		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+			try {
+				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+				if(vo.getResulttype()!=1){
+					throw new StockAppBizException(vo.getResultInfo());
+				}
+			} catch (Exception e) {
+				throw new StockAppBizException("系统错误");
+			}
+		}catch(CommandException e){
+			throw new StockAppBizException(e.getMessage());
+		}
+	}
 	
 	
 }

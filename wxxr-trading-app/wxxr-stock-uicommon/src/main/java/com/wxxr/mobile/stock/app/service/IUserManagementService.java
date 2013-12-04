@@ -217,4 +217,5 @@ public interface IUserManagementService {
 	 */
 	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit);
+	void updateNickName(String nickName);
 }
