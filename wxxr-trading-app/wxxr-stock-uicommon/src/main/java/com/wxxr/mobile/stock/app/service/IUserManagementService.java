@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -218,4 +219,5 @@ public interface IUserManagementService {
 	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit);
 	void updateNickName(String nickName);
+	BindableListWrapper<GainPayDetailBean> getGPDetails(int start,int limit);
 }
