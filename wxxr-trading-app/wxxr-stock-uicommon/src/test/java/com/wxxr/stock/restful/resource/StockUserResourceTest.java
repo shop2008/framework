@@ -260,20 +260,20 @@ public class StockUserResourceTest extends TestCase{
 //	public ResultBaseVO userAttributeIdentify(UserAuthenticaVO vo);
 	public void testUserAttributeIdentify(){
 		UserAuthenticaVO vo = new UserAuthenticaVO();
-		vo.setAcctBank("¹¤ÉÌÒøÐÐ");
+		vo.setAcctBank("å·¥å•†é“¶è¡Œ");
 		vo.setAcctName("13800001009");
 		vo.setBankNum("6000045255534477");
-		vo.setBankPosition("Öª´ºÂ··ÖÐÐ");
+		vo.setBankPosition("çŸ¥æ˜¥è·¯åˆ†è¡Œ");
 		ResultBaseVO info = stockUserResource.userAttributeIdentify(vo);
 	}
 
 //	public ResultBaseVO updateAttributeIdentify(UserAuthenticaVO vo);
 	public void testUpdateAttributeIdentify(){
 		UserAuthenticaVO vo = new UserAuthenticaVO();
-		vo.setAcctBank("¹¤ÉÌÒøÐÐ");
+		vo.setAcctBank("å·¥å•†é“¶è¡Œ");
 		vo.setAcctName("13800001009");
 		vo.setBankNum("6000045255534477");
-		vo.setBankPosition("Öª´ºÂ··ÖÐÐ");
+		vo.setBankPosition("çŸ¥æ˜¥è·¯åˆ†è¡Œ");
 		ResultBaseVO info = stockUserResource.updateAttributeIdentify(vo);
 	}
 
