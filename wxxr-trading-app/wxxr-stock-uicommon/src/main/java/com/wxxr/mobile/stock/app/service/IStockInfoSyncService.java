@@ -13,7 +13,17 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
  *
  */
 public interface IStockInfoSyncService {
-	
+	/**
+	 * 按过滤器过滤股票
+	 * @param filter
+	 * @return
+	 */
 	List<StockBaseInfo> getStockInfos(IEntityFilter<StockBaseInfo> filter);
-	StockBaseInfo getStockBaseInfoByCode(String code);
+	/**
+	 * 根据股票代码和市场代码获取股票
+	 * @param code
+	 * @param marketCode
+	 * @return
+	 */
+	StockBaseInfo getStockBaseInfoByCode(String code,String marketCode);
 }

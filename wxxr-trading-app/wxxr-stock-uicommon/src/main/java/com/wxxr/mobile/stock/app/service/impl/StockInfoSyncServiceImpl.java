@@ -61,8 +61,14 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void startService() {
-		context.registerService(IStockInfoSyncService.class, this);
+		if (log.isDebugEnabled()) {
+			log.debug("Loading local stock infos...");
+		}
 		loadLocalDatas();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d stocks loaded.", cache.size()));
+		}
+		context.registerService(IStockInfoSyncService.class, this);
 		context.getExecutor().execute(new Runnable() {
 			public void run() {
 				restartSync();// 启动同步组件
@@ -220,12 +226,12 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	}
 	private void processReceivedData(Object key, List<StockBaseInfo> data) {
 		if (data != null) {
-			List<String> ids = new ArrayList<String>();
 			for (StockBaseInfo stockInfo : data) {
-				ids.add(stockInfo.getCode());
 				saveOrUpdate(stockInfo);
 			}
-			datas.put(key, ids);
+			if (log.isDebugEnabled()) {
+				log.debug("Group info:"+data.toString());
+			}
 		} else {
 			datas.remove(key);
 		}
@@ -235,19 +241,25 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		return cache.keySet();
 	}
 	private void loadLocalDatas() {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d stock infos before load from db", cache.size()));
+		}
 		List<StockInfo> list = getStockInfoDao().loadAll();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d stock infos in db", list.size()));
+		}
 		synchronized (cache) {
 			cache.clear();
 			ids.clear();
 			if (list!=null&&list.size()>0) {
 				for (StockInfo stockInfo : list) {
-					cache.put(stockInfo.getCode(),fromPO(stockInfo));
-					ids.put(stockInfo.getCode(), stockInfo.getId());
+					cache.put(stockInfo.getCode()+"."+stockInfo.getCode(),fromPO(stockInfo));
+					ids.put(stockInfo.getCode()+"."+stockInfo.getCode(), stockInfo.getId());
 				}
 			}
 		}
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("%d stock infos loaded", cache.size()));
+			log.debug(String.format("%d stock infos loaded from db", cache.size()));
 		}
 	}
 	private StockBaseInfo fromPO(StockInfo stockInfo){
@@ -295,13 +307,12 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		stockInfo.setType(info.getType());
 		id = getStockInfoDao().insertOrReplace(stockInfo);
 		if (id!=-1) {
-			cache.put(info.getCode(), info);
+			cache.put(info.getCode()+"."+info.getCode(), info);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Update data for code[%s],db_id[%s],stock info:%s", info.getCode(),id,stockInfo.toString()));
+			}
 			ids.put(info.getCode(), id);
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("Save or upate data:"+stockInfo.toString());
-		}
-		
 	}
 	private void processAllDataReceived() {
 		Set<String> all_ids = new HashSet<String>();
@@ -380,14 +391,17 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 				StockBaseInfo stock = cache.get(code);
 				if (stock!=null) {
 					list.add(stock);
+				}else{					
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("***size***===stock for code[%s] not found",code));
+					}
 				}
 			}
 		}
 		return list;
 	}
 	private boolean isNetworkConnected() {
-		return context.getService(IDataExchangeCoordinator.class)
-				.checkAvailableNetwork() > 0;
+		return context.getService(IDataExchangeCoordinator.class).checkAvailableNetwork() > 0;
 	}
 
 	private void clear() {
@@ -447,11 +461,12 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 
-	public StockBaseInfo getStockBaseInfoByCode(String code) {
-		if (StringUtils.isBlank(code)) {
+	public StockBaseInfo getStockBaseInfoByCode(String code,String marketCode) {
+		if (StringUtils.isBlank(code)||StringUtils.isBlank(marketCode)) {
 			return null;
 		}
-		return cache.get(code);
+		return cache.get(code+"."+marketCode);
 	}
-
+	
+	
 }
