@@ -3,7 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
 /**
  * 文章管理模块
@@ -20,5 +21,7 @@ public interface IArticleManagementService {
 	 * 				15-代表首页文章 ；19-代表帮助中心
 	 * @return
 	 */
-	MyArticlesBean getMyArticles(int start,int limit,int type);
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit);
+	
+	public BindableListWrapper<ArticleBean> getHomeArticles(int start,int limit);
 }

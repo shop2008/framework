@@ -3,22 +3,23 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
-import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
+import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.IURLLocatorManagementService;
+import com.wxxr.mobile.stock.app.service.loader.MyArticleLoader;
 import com.wxxr.stock.article.ejb.api.ArticleVO;
-import com.wxxr.stock.restful.json.NewsQueryBO;
-import com.wxxr.stock.restful.resource.ArticleResource;
 
 /**
  * 文章管理模块
@@ -29,49 +30,29 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		implements IArticleManagementService {
 	private static final Trace log = Trace.register(ArticleManagementServiceImpl.class);
 	
-	private MyArticlesBean articles = new MyArticlesBean();
-	
-	//=================private method =======================================
-	private String getArticleHostURL(){
-		return getService(IURLLocatorManagementService.class).getMagnoliaURL();
-	}
-	private String getAbsoluteURL(String relativeUrl){
-		return getArticleHostURL()+relativeUrl;
-	}
-	private ArticleBean fromVO(ArticleVO vo){
-		if (vo==null) {
-			return null;
-		}
-		ArticleBean article = new ArticleBean();
-		article.setTitle(vo.getTitle());
-		article.setAbstractInfo(vo.getAbstracts());
-		article.setArticleUrl(getAbsoluteURL(vo.getArticleUrl()));
-		article.setImageUrl(getAbsoluteURL(vo.getThumbnails()));
-		return article;
-	}
-	private List<ArticleBean> fromVO(List<ArticleVO> volist){
-		List<ArticleBean> list = null;
-		if (volist!=null&&volist.size()>0) {
-			list = new ArrayList<ArticleBean>();
-			for (ArticleVO article : volist) {
-				list.add(fromVO(article));
-			}
-		}
-		return list;
-	}
-	
 
+	private IReloadableEntityCache<String, ArticleBean> homeArticlesCache;
+	private IReloadableEntityCache<String, ArticleBean> helpArticlesCache;
+	
+	private BindableListWrapper<ArticleBean> homeArticles,helpArticles;
 
 	//=================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IURLLocatorManagementService.class);
 		addRequiredService(IRestProxyService.class);
+		addRequiredService(IEntityLoaderRegistry.class);
 	}
 
 	
 	@Override
 	protected void startService() {
+		MyArticleLoader loader = new MyArticleLoader();
+		loader.setArticleType(15);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("homeArticles", loader);
+		loader = new MyArticleLoader();
+		loader.setArticleType(19);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("helpArticles", loader);
 		context.registerService(IArticleManagementService.class, this);
 	}
 
@@ -82,45 +63,55 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	}
 
 	//=================interface method =====================================
-	@Override
-	public  MyArticlesBean getMyArticles(int start,int limit,int type) {
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("method getNewArticles invoked,param[start=%s,limit=%s,type=%s]", start,limit,type));
+	
+	
+
+	/**
+	 * @return the homeArticles
+	 */
+	public BindableListWrapper<ArticleBean> getHomeArticles(int start,int limit) {
+		if(this.homeArticlesCache == null){
+			this.homeArticlesCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("homeArticles");
 		}
-		final NewsQueryBO query = new NewsQueryBO();
-		query.setLimit(limit);
-		query.setStart(start);
-		query.setType(String.valueOf(type));
-		Future<List<ArticleVO>> future = context.getExecutor().submit(new Callable<List<ArticleVO>>() {
-			public List<ArticleVO> call() throws Exception {
-				try {
-					if (log.isDebugEnabled()) {
-						log.debug("fetching articles...");
-					}
-					return context.getService(IRestProxyService.class).getRestService(ArticleResource.class).getNewArticle(query);
-				} catch (Exception e) {
-					log.warn("Error when fetch articles from server side", e);
-				}	
-				return null;
-			}
-		});
-		List<ArticleVO> list = null;
-		try {
-			list = future.get();
-		}  catch (Exception e) {
-			log.warn(String.format("Error when fetch articles[%s]", query.toString()), e);
+		if(this.homeArticles == null){
+			this.homeArticles = this.homeArticlesCache.getEntities(null, new Comparator<ArticleBean>() {
+			
+				@Override
+				public int compare(ArticleBean o1, ArticleBean o2) {
+					return o1.getPower() - o2.getPower();
+				}
+			});
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("data:"+list);
-		}
-		if (list!=null&&list.size()>0) {
-			if (query.getType().equals("15")) {
-				articles.setHomeArticles(fromVO(list));
-			}
-			if (query.getType().equals("19")) {
-				articles.setHelpArticles(fromVO(list));
-			}
-		}
-		return this.articles;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", start);
+		map.put("limit", limit);
+		this.homeArticlesCache.doReloadIfNeccessay(map);
+		return this.homeArticles;
 	}
+
+
+	/**
+	 * @return the helpArticles
+	 */
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit) {
+		if(this.helpArticlesCache == null){
+			this.helpArticlesCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("helpArticles");
+		}
+		if(this.helpArticles == null){
+			this.helpArticles = this.helpArticlesCache.getEntities(null, new Comparator<ArticleBean>() {
+			
+				@Override
+				public int compare(ArticleBean o1, ArticleBean o2) {
+					return o1.getPower() - o2.getPower();
+				}
+			});
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", start);
+		map.put("limit", limit);
+		this.helpArticlesCache.doReloadIfNeccessay(map);
+		return this.helpArticles;
+	}
+
+
 }
