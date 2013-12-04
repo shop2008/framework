@@ -37,7 +37,7 @@ public class SumitAuthHandler implements ICommandHandler{
 	public <T> T execute(ICommand<T> cmd) throws Exception {
 		SubmitAuthCommand command=(SubmitAuthCommand)cmd;
 		UserAuthenticaVO vo=new UserAuthenticaVO();
-		vo.setAcctBank(command.getBankNum());
+		vo.setAcctBank(command.getBankName());
 		vo.setAcctName(command.getAccountName());
 		vo.setBankNum(command.getBankNum());
 		vo.setBankPosition(command.getBankAddr());
