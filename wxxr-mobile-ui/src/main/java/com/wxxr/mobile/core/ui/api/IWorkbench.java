@@ -19,6 +19,7 @@ public interface IWorkbench {
 	
 	String[] getPageIds();
 	String getActivePageId();
+	IView getActiveView();
 	IPage getPage(String pageId);
 	void showPage(String pageId,Map<String, Object> params,IPageCallback callback);
 	void showHomePage();
@@ -26,4 +27,5 @@ public interface IWorkbench {
 	IView createNInitializedView(String viewId);
 	IDialog createDialog(String viewId, Map<String, Object> params);
 	ISelectionService getSelectionService();
+	IViewLifeContext getViewLifeContext();
 }

@@ -31,5 +31,7 @@ public interface IView extends IUIContainer<IUIComponent>,IBindable<IView>{
 	boolean hasProperty(String name);
 	
 	IView clearProperties();
+	
+	void processStartupExceptions();
 
 }

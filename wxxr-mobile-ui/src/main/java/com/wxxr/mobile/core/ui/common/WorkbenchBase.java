@@ -3,11 +3,15 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
@@ -17,6 +21,7 @@ import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
+import com.wxxr.mobile.core.ui.api.IViewLifeContext;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.UIConstants;
@@ -30,6 +35,72 @@ public abstract class WorkbenchBase implements IWorkbench {
 	
 	private final IWorkbenchRTContext uiContext;
 	private final SelectionServiceSupport selectionService = new SelectionServiceSupport();
+	private Stack<IView> onShowViews = new Stack<IView>();
+	private List<IView> createdViews = new ArrayList<IView>();
+	private IViewLifeContext viewLifeContext = new IViewLifeContext() {
+		
+		@Override
+		public void viewShow(final IView view) {
+			synchronized(onShowViews){
+				onShowViews.remove(view);
+				onShowViews.push(view);
+				KUtils.runOnUIThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						view.processStartupExceptions();
+					}
+				}, 0, null);
+			}
+		}
+		
+		@Override
+		public void viewHidden(IView view) {
+			synchronized(onShowViews){
+				onShowViews.remove(view);
+			}
+		}
+		
+		@Override
+		public void viewDestroy(IView view) {
+			synchronized(createdViews){
+				createdViews.remove(view);
+			}
+		}
+		
+		@Override
+		public void viewCreated(IView view) {
+			synchronized(createdViews){
+				if(!createdViews.contains(view)){
+					createdViews.add(view);
+				}
+			}
+		}
+		
+		@Override
+		public IView getActiveView() {
+			synchronized(onShowViews){
+				return onShowViews.isEmpty() ?  null : onShowViews.peek();
+			}
+		}
+		
+		@Override
+		public IPage getActivePage() {
+			synchronized(onShowViews){
+				if(onShowViews.isEmpty()){
+					return null;
+				}
+				int size = onShowViews.size();
+				for(int i=size-1;i >= 0; i--){
+					IView v = onShowViews.get(i);
+					if(v instanceof IPage){
+						return (IPage)v;
+					}
+				}
+				return null;
+			}
+		}
+	};
 	
 //	private String activePageId;
 	private Map<String, IPage> pages = new HashMap<String, IPage>();
@@ -175,6 +246,22 @@ public abstract class WorkbenchBase implements IWorkbench {
 	@Override
 	public String[] getPageIds() {
 		return this.uiContext.getWorkbenchManager().getAllRegisteredPageIds();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getActiveView()
+	 */
+	@Override
+	public IView getActiveView() {
+		return this.viewLifeContext.getActiveView();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getViewLifeContext()
+	 */
+	@Override
+	public IViewLifeContext getViewLifeContext() {
+		return this.viewLifeContext;
 	}	
 
 }

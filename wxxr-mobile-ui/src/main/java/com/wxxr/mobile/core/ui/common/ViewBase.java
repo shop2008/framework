@@ -21,7 +21,6 @@ import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.DomainValueChangedEvent;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingValueChangedCallback;
@@ -228,6 +227,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private List<IValueEvaluator<?>> evaluators;
 	private List<IDomainValueModel<?>> domainModels;
 	private LinkedList<Throwable> startupExceptions = new LinkedList<Throwable>();
+	private List<String> handledExceptions = new ArrayList<String>();
 	private IEvaluatorContext evalCtx = new IEvaluatorContext() {
 		
 		@Override
@@ -429,28 +429,40 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				}
 			}
 		}
-		KUtils.runOnUIThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				processStartupExceptions();
-			}
-		}, 0, null);
 	}
 
+	protected void markExceptionHandled(String name){
+		synchronized(this.handledExceptions){
+			if(!this.handledExceptions.contains(name)){
+				this.handledExceptions.add(name);
+			}
+		}
+	}
+	
+	protected boolean isExceptionHandled(String name){
+		synchronized(this.handledExceptions){
+			return this.handledExceptions.contains(name);
+		}
+	}
 	/**
 	 * 
 	 */
-	protected void processStartupExceptions() {
+	@Override
+	public void processStartupExceptions() {
 		if(this.startupExceptions.size() > 0){
 			IUIExceptionHandler handler = getUIContext().getWorkbenchManager().getExceptionHandler();
 			boolean handled = false;
 			if(handler != null){
 				for(Iterator<Throwable> itr = this.startupExceptions.iterator();itr.hasNext();){
 					Throwable t = itr.next();
+					String name = t.getClass().getSimpleName();
+					if(isExceptionHandled(name)){
+						continue;
+					}
 					if(t instanceof CommandConstraintViolatedException){
 						itr.remove();
 						if(handler.handleException(this, t)){
+							markExceptionHandled(name);
 							handled = true;
 							break;
 						}
@@ -460,7 +472,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					for(Iterator<Throwable> itr = this.startupExceptions.iterator();itr.hasNext();){
 						Throwable t = itr.next();
 						itr.remove();
+						String name = t.getClass().getSimpleName();
+						if(isExceptionHandled(name)){
+							continue;
+						}
 						if(handler.handleException(this, t)){
+							markExceptionHandled(name);
 							handled = true;
 							break;
 						}
@@ -511,6 +528,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 	
 	public final void onUIDestroy() {
+		this.handledExceptions.clear();
 		onContentViewDestroy();
 	}
 	
