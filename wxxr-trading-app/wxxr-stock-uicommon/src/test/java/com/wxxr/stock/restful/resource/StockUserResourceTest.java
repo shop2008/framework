@@ -1,16 +1,24 @@
 package com.wxxr.stock.restful.resource;
 
+import java.security.KeyStore;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.rpc.rest.ResteasyRestClientService;
+import com.wxxr.mobile.core.api.IUserAuthCredential;
+import com.wxxr.mobile.core.api.IUserAuthManager;
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
+import com.wxxr.mobile.core.security.api.ISiteSecurityService;
+import com.wxxr.mobile.stock.app.MockApplication;
+import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.ChangeBindMobileVO;
-import com.wxxr.security.vo.RegistVO;
-import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.security.vo.UserAuthenticaVO;
 import com.wxxr.security.vo.UserBaseInfoVO;
@@ -22,21 +30,105 @@ import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
-import com.wxxr.stock.hq.ejb.api.TaxisVO;
-import com.wxxr.stock.restful.json.StockTaxisListVO;
 
 
 public class StockUserResourceTest extends TestCase{
-	IRestProxyService restService=new ResteasyRestClientService();
+	StockUserResource stockUserResource;
 	
-	//public SimpleResultVo register(@QueryParam("phone") String phoneNum)throws RestBizException;
-    public void testRegister(){
-		try {
-			SimpleResultVo a = restService.getRestService(StockUserResource.class).register("13800001009");
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
+	
+	
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		init();
 	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		// TODO Auto-generated method stub
+		super.tearDown();
+		stockUserResource=null;
+	}
+
+
+
+
+	protected void init() {
+		AbstractHttpRpcService service = new AbstractHttpRpcService();
+		service.setEnablegzip(false);
+		MockApplication app = new MockApplication(){
+			ExecutorService executor = Executors.newFixedThreadPool(3);
+
+			/* (non-Javadoc)
+			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
+			 */
+			@Override
+			public ExecutorService getExecutorService() {
+				return executor;
+			}
+			
+			@Override
+			protected void initModules() {
+				
+			}
+
+		};
+		IKernelContext context = app.getContext();
+		context.registerService(IUserAuthManager.class, new IUserAuthManager() {
+			@Override
+			public IUserAuthCredential getAuthCredential(String host,
+					String realm) {
+				return new IUserAuthCredential() {
+					
+					@Override
+					public String getUserName() {
+						return "13500001009";
+					}
+					
+					@Override
+					public String getAuthPassword() {
+						return "404662";
+					}
+
+				};
+			}
+		});
+		service.startup(context);
+		context.registerService(ISiteSecurityService.class, new ISiteSecurityService() {
+			
+			@Override
+			public KeyStore getTrustKeyStore() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+						
+			@Override
+			public KeyStore getSiteKeyStore() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public HostnameVerifier getHostnameVerifier() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
+		
+		MockRestClient builder = new MockRestClient();
+		builder.init(context);
+		stockUserResource=builder.getRestService(StockUserResource.class,"http://192.168.123.44:8480/mobilestock2");
+	}
+
 	
 
 	
@@ -62,7 +154,7 @@ public class StockUserResourceTest extends TestCase{
 //	public UserBaseInfoVO info() throws RestBizException;	
 	public void testGetUserInfo(){
 		try {
-			UserBaseInfoVO info = restService.getRestService(StockUserResource.class).info();
+			UserBaseInfoVO info = stockUserResource.info();
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -74,7 +166,7 @@ public class StockUserResourceTest extends TestCase{
 			UpdatePwdVO vo = new UpdatePwdVO();
 			vo.setPassword("123456");
 			vo.setPassword("123456");
-			ResultBaseVO info = restService.getRestService(StockUserResource.class).updatePwd(vo);
+			ResultBaseVO info = stockUserResource.updatePwd(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -83,7 +175,7 @@ public class StockUserResourceTest extends TestCase{
 //	public UserPermisVO getUserPermis() throws RestBizException;
 	public void testGetUserPermis(){
 		try {
-			UserPermisVO info = restService.getRestService(StockUserResource.class).getUserPermis();
+			UserPermisVO info = stockUserResource.getUserPermis();
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -96,7 +188,7 @@ public class StockUserResourceTest extends TestCase{
 			vo.setCode("111");
 			vo.setMobileNum("13900001001");
 			vo.setType("1");
-			ResultBaseVO info = restService.getRestService(StockUserResource.class).bindMobile(vo);
+			ResultBaseVO info = stockUserResource.bindMobile(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -108,7 +200,7 @@ public class StockUserResourceTest extends TestCase{
 			ChangeBindMobileVO vo = new ChangeBindMobileVO();
 			vo.setNewBindMobile("13900001001");
 			vo.setVerifCode("433566");
-			ResultBaseVO info = restService.getRestService(StockUserResource.class).changeBindMobile(vo);
+			ResultBaseVO info = stockUserResource.changeBindMobile(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -119,7 +211,7 @@ public class StockUserResourceTest extends TestCase{
 		try {
 			VerifyVO vo = new VerifyVO();
 			vo.setPasswd("666666");
-			ResultBaseVO info = restService.getRestService(StockUserResource.class).verifyUser(vo);
+			ResultBaseVO info = stockUserResource.verifyUser(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -133,7 +225,7 @@ public class StockUserResourceTest extends TestCase{
 			TokenVO vo = new TokenVO();
 			vo.setPollToken("666666");
 			vo.setPushToken("ccccccc");
-			TokenVO info = restService.getRestService(StockUserResource.class).updateToken(vo);
+			TokenVO info = stockUserResource.updateToken(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -142,7 +234,7 @@ public class StockUserResourceTest extends TestCase{
 //	public UserBaseInfoVO getMobile() throws RestBizException;
 	public void testGetMobile(){
 		try {
-			UserBaseInfoVO info = restService.getRestService(StockUserResource.class).getMobile();
+			UserBaseInfoVO info = stockUserResource.getMobile();
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
@@ -152,17 +244,17 @@ public class StockUserResourceTest extends TestCase{
 	public void testUpdateNickName(){
 		UserParamVO vo = new UserParamVO();
 		vo.setNickName("666666");
-		ResultBaseVO info = restService.getRestService(StockUserResource.class).updateNickName(vo);
+		ResultBaseVO info = stockUserResource.updateNickName(vo);
 	}
 
 //	public UserVO getUser() throws Exception;
 	public void testGetUser()throws Exception{
-		UserVO info = restService.getRestService(StockUserResource.class).getUser();
+		UserVO info = stockUserResource.getUser();
 	}
 	
 //	public ActivityUserVo getActivityUser() throws Exception;
 	public void testGetActivityUser()throws Exception{
-		ActivityUserVo info = restService.getRestService(StockUserResource.class).getActivityUser();
+		ActivityUserVo info = stockUserResource.getActivityUser();
 	}
 
 //	public ResultBaseVO userAttributeIdentify(UserAuthenticaVO vo);
@@ -172,7 +264,7 @@ public class StockUserResourceTest extends TestCase{
 		vo.setAcctName("13800001009");
 		vo.setBankNum("6000045255534477");
 		vo.setBankPosition("知春路分行");
-		ResultBaseVO info = restService.getRestService(StockUserResource.class).userAttributeIdentify(vo);
+		ResultBaseVO info = stockUserResource.userAttributeIdentify(vo);
 	}
 
 //	public ResultBaseVO updateAttributeIdentify(UserAuthenticaVO vo);
@@ -182,11 +274,11 @@ public class StockUserResourceTest extends TestCase{
 		vo.setAcctName("13800001009");
 		vo.setBankNum("6000045255534477");
 		vo.setBankPosition("知春路分行");
-		ResultBaseVO info = restService.getRestService(StockUserResource.class).updateAttributeIdentify(vo);
+		ResultBaseVO info = stockUserResource.updateAttributeIdentify(vo);
 	}
 
 //	public List<UserAttributeVO> getUserAttributes() throws Exception;
 	public void testGetUserAttributes()throws Exception{
-		List<UserAttributeVO> info = restService.getRestService(StockUserResource.class).getUserAttributes();
+		List<UserAttributeVO> info = stockUserResource.getUserAttributes();
 	}
 }

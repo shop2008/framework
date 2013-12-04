@@ -4,6 +4,8 @@
 package com.wxxr.mobile.stock.app;
 
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rest.provider.GSONProvider;
+import com.wxxr.mobile.core.rest.provider.XStreamProvider;
 import com.wxxr.mobile.core.rpc.rest.ResteasyRestClientService;
 
 /**
@@ -13,6 +15,8 @@ import com.wxxr.mobile.core.rpc.rest.ResteasyRestClientService;
 public class MockRestClient extends ResteasyRestClientService{
 	public void init(IKernelContext ctx){
 		startup(ctx);
+		getProviderFactory().register(XStreamProvider.class);
+		getProviderFactory().register(GSONProvider.class);
 	}
 
 }
