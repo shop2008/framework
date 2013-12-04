@@ -132,6 +132,7 @@ public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, A
             return null;
         }
         ArticleBean article = new ArticleBean();
+        article.setId(vo.getId());
         article.setTitle(vo.getTitle());
         article.setAbstractInfo(vo.getAbstracts());
         article.setArticleUrl(getAbsoluteURL(vo.getArticleUrl()));
