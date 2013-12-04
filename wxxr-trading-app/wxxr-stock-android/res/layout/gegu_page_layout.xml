@@ -30,12 +30,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/stock_chart_bj">
-               <FrameLayout
+               <android.support.v4.view.ViewPager
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     bind:field="contents" >
-                </FrameLayout>
+                </android.support.v4.view.ViewPager>
+                
             </LinearLayout>
 
             <LinearLayout
@@ -83,6 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:text="今开：" 
+                            bind:field="openLabel"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -114,6 +116,7 @@
                             android:layout_alignParentLeft="true"
                             android:text="最高："
                             android:textSize="14sp"
+                            bind:field="highLabel"
                             android:textColor="@color/red" />
 
                         <TextView
@@ -138,6 +141,7 @@
                             android:layout_alignParentLeft="true"
                             android:text="最低："
                             android:textSize="14sp"
+                            bind:field="lowLabel"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -168,6 +172,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:text="均价："
+                            bind:field="averagepriceLabel"
                             android:textColor="@color/red" 
                             android:textSize="14sp"/>
 

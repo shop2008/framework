@@ -67,6 +67,7 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="100"),
 			@Parameter(name="formatUnit",value="手"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -94,16 +95,38 @@ public abstract class SZzhiShuPage extends PageBase implements IModelUpdater {
 	String close;
 	
 	/**开盘*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.open:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.open > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.open < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String open;
 	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.open > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.open < szBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")	
+	})
+	String openLabel;
+	
 	/**最高*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.high:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.high > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.high < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String high;
 	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.high > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.high < szBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")	
+	})
+	String highLabel;
+	
 	/**最底*/
-	@Field(valueKey="text",binding="${szBean!=null?szBean.low:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${szBean!=null?szBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.low > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.low < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
 	String low;
+	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.low > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.low < szBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+	})
+	String lowLabel;
+	
 	
 	/**成交量*/
 	@Field(valueKey="text",binding="${szBean!=null?szBean.secuvolume:null}",converter="convertorSecuvolume")

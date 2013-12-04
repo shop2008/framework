@@ -1,6 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -66,7 +67,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple", value="1000"),
+			@Parameter(name="multiple", value="100"),
 			@Parameter(name="formatUnit",value="手"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -104,9 +105,13 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	@Bean
 	String stockName;
+	
+	@Bean
+	List<String> counts;
 
 	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;	
+	
 	
 	/**昨收*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
@@ -114,27 +119,47 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	/**开盘*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.open > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.open < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String open;
 	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.open > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.open < quotationBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+	})
+	String openLabel;
+	
 	/**最高*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.high > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.high < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String high;
 	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.high > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.high < quotationBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+	})
+	String highLabel;
+	
 	/**最底*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.low > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.low < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String low;
 	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.low > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.low < quotationBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")	
+	})
+	String lowLabel;
+	
 	/**均价*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.averageprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.averageprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.averageprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String averageprice;
+	
+	@Field(valueKey="text",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.averageprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.averageprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String averagepriceLabel;
 	
 	/**市盈率*/
 	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.profitrate:null}",converter="stockLong2StringAutoUnitConvertor")
@@ -166,7 +191,6 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	@OnShow
 	protected void initData(){
-		
 	}
 	
 	//挑战交易盘买入

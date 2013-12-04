@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
@@ -42,11 +43,18 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
 	StockMinuteKBean minute;
 	@Convertor(params={
-			@Parameter(name="multiple",value="1000"),
+			@Parameter(name="multiple",value="1000f"),
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="multiple",value="1000f"),
+			@Parameter(name="format",value="%+.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringAutoUnitConvertor1;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
@@ -56,10 +64,17 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Convertor(params={
 			@Parameter(name="format",value="(%.2f%%)"),
-			@Parameter(name="multiple", value="1000"),
+			@Parameter(name="multiple", value="1000f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
+	
+	@Convertor(params={
+			@Parameter(name="format",value="(%+.2f%%)"),
+			@Parameter(name="multiple", value="1000f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial1;	
 	
 	@Bean
 	Map<String, Object> map;
@@ -82,13 +97,13 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	String codeAndmarket;
 	
 	/**涨跌幅*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial",attributes={
+	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial1",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String risefallrate;
 	
 	/**涨跌额*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:null}",converter="stockLong2StringAutoUnitConvertor1",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String change;
@@ -115,15 +130,17 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@OnCreate
 	void registerSelectionListener() {
-		ISelection selection = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection("infoCenter");
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		ISelection selection = service.getSelection("infoCenter");
 		if(selection!=null){
 			selectionChanged("tradingMain",selection);
 		}
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("infoCenter", this);
+		service.addSelectionListener("infoCenter", this);
 	}
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("infoCenter", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener("infoCenter", this);
 	}
 	
 	@Override

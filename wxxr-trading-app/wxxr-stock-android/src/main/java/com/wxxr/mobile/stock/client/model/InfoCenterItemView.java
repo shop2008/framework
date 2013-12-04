@@ -53,7 +53,7 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	StockLong2StringConvertor stockLong2StringConvertor;
 
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="format",value="%+.2f%%"),
 			@Parameter(name="multiple", value="1000f"),
 			@Parameter(name="nullString",value="--")
 	})

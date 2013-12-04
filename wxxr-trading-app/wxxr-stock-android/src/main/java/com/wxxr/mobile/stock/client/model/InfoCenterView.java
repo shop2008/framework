@@ -57,7 +57,14 @@ public abstract class InfoCenterView extends ViewBase {
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="(%.2f%%)"),
+			@Parameter(name="multiple",value="1000f"),
+			@Parameter(name="format",value="%+.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringAutoUnitConvertor1;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="(%+.2f%%)"),
 			@Parameter(name="multiple", value="1000f"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -84,7 +91,7 @@ public abstract class InfoCenterView extends ViewBase {
 	// 涨跌额
 	@Field(valueKey="text",binding="${shBean!=null?shBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.newprice > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.newprice < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
-	},converter="stockLong2StringAutoUnitConvertor")
+	},converter="stockLong2StringAutoUnitConvertor1")
 	String sh_change;
 	
 	/**-----------深圳成指 深圳*/
@@ -112,7 +119,7 @@ public abstract class InfoCenterView extends ViewBase {
 	// 涨跌额
 	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
-	},converter="stockLong2StringAutoUnitConvertor")
+	},converter="stockLong2StringAutoUnitConvertor1")
 	String sz_change;
 	
 	// 股票列表
