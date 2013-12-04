@@ -87,7 +87,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayStockline(codeBean, marketBean)}")
 	BindableListWrapper<StockLineBean> lineListBean;
 	//K 线
-	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.data : null}")
+	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.getData() : null}")
 	List<StockLineBean> dayLineList;
 	//Title数据
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")

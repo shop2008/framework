@@ -16,7 +16,6 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -25,7 +24,6 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
-import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
@@ -40,12 +38,12 @@ public abstract class TradingRecordsPage extends PageBase implements
 	private static final Trace log = Trace.register(TradingRecordsPage.class);
 
 	@Bean
-	String accId;
+	String acctId;
 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingMgr;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getTradingAccountRecord(accId,0,100)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getTradingAccountRecord(acctId,0,100)}")
 	BindableListWrapper<TradingRecordBean> recordListBean;
 	// List
 
@@ -68,11 +66,6 @@ public abstract class TradingRecordsPage extends PageBase implements
 		return null;
 	}
 
-	@OnShow
-	protected void initStockOrders() {
-		registerBean("accId", "2263");
-	}
-
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
@@ -81,10 +74,11 @@ public abstract class TradingRecordsPage extends PageBase implements
 				Object tempt = temp.get(key);
 				if (tempt != null && "result".equals(key)) {
 					if(tempt instanceof Long) {
-						accId = (Long)tempt + "";
+						acctId = (Long)tempt + "";
 					} else if(tempt instanceof String) {
-						accId = (String)tempt;
+						acctId = (String)tempt;
 					}
+					registerBean("acctId", this.acctId);
 				}
 			}
 		}

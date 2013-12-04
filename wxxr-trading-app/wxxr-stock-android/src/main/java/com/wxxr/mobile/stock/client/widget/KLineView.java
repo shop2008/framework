@@ -221,7 +221,9 @@ public class KLineView extends View implements IDataChangedListener {
 		if (dataProvider != null && dataProvider.getItemCounts() > 0) {
 			size = dataProvider.getItemCounts();
 			count = size <= 50 ? size : 50;// 缺省最多取50个蜡烛图
-
+			maxPrice = 0;
+			minPrice = 20000;
+			maxSecuvolume = 0;
 			float temp;
 			for (int i = 0; i < count; i++) {
 				temp = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));
@@ -309,11 +311,11 @@ public class KLineView extends View implements IDataChangedListener {
 		setPaintTextSize(mPaint);
 		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(Color.WHITE);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count/5)).getDate(), mStartX + (fenshiWidth/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*2/5)).getDate(), mStartX + (fenshiWidth*2/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT +(zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*3/5)).getDate(), mStartX + (fenshiWidth*3/5),
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count*4/5)).getDate(), mStartX + (fenshiWidth/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2, mPaint);
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count*3/5)).getDate(), mStartX + (fenshiWidth*2/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT +(zzTopY-mStartY)/2, mPaint);
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count*2/5)).getDate(), mStartX + (fenshiWidth*3/5),
 				 mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*4/5)).getDate(), mStartX + (fenshiWidth*4/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2,
+		canvas.drawText(((StockLineBean)dataProvider.getItem(count/5)).getDate(), mStartX + (fenshiWidth*4/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2,
 				mPaint);
 
 		/** 画成交量柱状图的值 */

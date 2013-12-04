@@ -20,7 +20,6 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
-import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -81,7 +80,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(stockId)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
 	TradingAccountBean tradingBean;
 	// 字段
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'-1'}", converter = "longTime2StringConvertorBuy")
@@ -140,18 +139,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
-		Long stockId = 0L;
-		if (tradingBean != null) {
-			stockId = tradingBean.getId();
-		}
 		resutl.setResult("TradingRecordsPage");
-		resutl.setPayload(stockId);
+		resutl.setPayload(this.acctId);
 		return resutl;
 	}
 
 	@OnShow
 	void initTitleBar() {
-		registerBean("stockId", acctId);
+		registerBean("acctId", acctId);
 //		getPageToolbar().setTitle("模拟盘", null);
 		// ((IStockAppToolbar)getAppToolbar()).setTitle("模拟盘", null);
 	}
@@ -168,7 +163,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					} else if(tempt instanceof String) {
 						acctId = (String)tempt;
 					}
-					registerBean("stockId", acctId);
+					registerBean("acctId", acctId);
 				}
 			}
 		}

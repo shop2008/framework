@@ -23,13 +23,13 @@
                 android:focusableInTouchMode="true"
                 android:orientation="vertical" >
        
-				<FrameLayout
+				<ViewPager
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:background="@color/black"
                     bind:field="contents" >
-                </FrameLayout>
+                </ViewPager>
                  
                 <TextView
                     android:id="@+id/tv_stock_name"

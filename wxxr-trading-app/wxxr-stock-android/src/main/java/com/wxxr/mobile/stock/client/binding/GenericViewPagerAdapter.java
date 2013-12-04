@@ -69,7 +69,7 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 		bag = (BindingBag) view.getTag();
 		IBinding<IView> binding = bag.binding;
 		IView vModel = bag.view;
-//		binding.activate(vModel);
+		binding.activate(vModel);
 
 		return view;
 	}
@@ -94,7 +94,8 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 			BindingBag bag = null;
 			bag = (BindingBag) view.getTag();
 			IBinding<IView> binding = bag.binding;
-			binding.refresh();
+			IView vModel = bag.view;
+			binding.activate(vModel);
 		}
 		super.notifyDataSetChanged();
 	}
