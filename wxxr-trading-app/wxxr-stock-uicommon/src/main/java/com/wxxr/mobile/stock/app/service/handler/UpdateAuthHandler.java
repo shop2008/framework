@@ -37,7 +37,7 @@ public class UpdateAuthHandler implements ICommandHandler{
 	public <T> T execute(ICommand<T> cmd) throws Exception {
 		UpdateAuthCommand command=(UpdateAuthCommand)cmd;
 		UserAuthenticaVO vo=new UserAuthenticaVO();
-		vo.setAcctBank(command.getBankNum());
+		vo.setAcctBank(command.getBankName());
 		vo.setBankNum(command.getBankNum());
 		vo.setBankPosition(command.getBankAddr());
 		ResultBaseVO resultBaseVO=context.getKernelContext().getService(IRestProxyService.class).
