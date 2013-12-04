@@ -88,7 +88,7 @@ public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRec
        
         if(result != null){
             for (TradingRecordVO vo : result) {
-                String key = String.valueOf(vo.getId());
+                String key =vo.getMarket()+vo.getCode()+vo.getDate();
                 TradingRecordBean b=ConverterUtils.fromVO(vo);
                 b.setAcctID(command.getAcctID());
                 cache.putEntity(key,b);
