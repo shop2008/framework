@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -21,6 +22,8 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
+import com.wxxr.mobile.stock.app.model.UserApplyCashCallBack;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
@@ -50,6 +53,10 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Field(valueKey="text", binding="${userAssetBean!=null?userAssetBean.usableBal:''}",converter="stockL2StrConvertor")
 	String avaliCashAmount;
 	
+	
+	@Bean(type=BindingType.Service)
+	ITradingManagementService tradingService;
+	
 	@Field(
 			valueKey="text", 
 			attributes={@Attribute(name="enabled", value="${checked}")}
@@ -76,7 +83,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Convertor(params={@Parameter(name="format", value="%.0f")})
 	String2StringConvertor s2sConvertorBanNum;
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${callBack.applyAmount}")
 	String availCashAmountET;
 	
 	@Field(valueKey="checked", binding="${checked}")
@@ -84,6 +91,9 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	
 	@Bean
 	boolean checked = true;
+	
+	@Bean
+	UserApplyCashCallBack callBack = new UserApplyCashCallBack();
 	
 	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankNum:''}", converter="s2sConvertorBanNum")
 	String bankNum;
@@ -110,11 +120,26 @@ public abstract class UserWithDrawCashPage extends PageBase{
 		return null;
 	}
 
-	@Command
+	@Command(
+			navigations = { 
+					@Navigation(
+							on = "StockAppBizException", 
+							message = "%m%n", 
+							params = {
+									@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+									@Parameter(name = "title", value = "错误")
+									}
+							) 
+					}
+			)
 	String commit(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
+		
+			if (tradingService != null) {
+				tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount()));
+			}
+			hide();
 		}
 		return null;
 	}

@@ -70,8 +70,9 @@
             android:hint="@string/hint_withdraw_cash_text"
             android:singleLine="true"
             android:textSize="15sp"
+            android:inputType="number"
             bind:field="availCashAmountET"
-            bind:on_TextChanged="availCashAmountTextChanged" />
+            bind:on_TextChanged="_updateValue" />
     </LinearLayout>
 
     <LinearLayout
