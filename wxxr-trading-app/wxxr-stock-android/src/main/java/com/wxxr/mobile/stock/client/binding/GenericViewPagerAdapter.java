@@ -43,17 +43,11 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < getCount(); i++) {
 			View view = (View)viewPagerProvider.getItem(i);
-//			IView v = (IView) viewPagerProvider.getItem(i);
-//			View view = createUI(v.getName());
 
 			BindingBag bag = null;
 			bag = (BindingBag) view.getTag();
-
 			IBinding<IView> binding = bag.binding;
 			IView vModel = bag.view;
-//			IModelUpdater updater = vModel.getAdaptor(IModelUpdater.class);
-//			if(updater != null)
-//				updater.updateModel(viewPagerProvider.getAttributeData());
 			binding.activate(vModel);
 		}
 	}
@@ -73,13 +67,9 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 
 		BindingBag bag = null;
 		bag = (BindingBag) view.getTag();
-
 		IBinding<IView> binding = bag.binding;
 		IView vModel = bag.view;
-//		IModelUpdater updater = vModel.getAdaptor(IModelUpdater.class);
-//		if (updater != null)
-//			updater.updateModel(viewPagerProvider.getAttributeData());
-		binding.activate(vModel);
+//		binding.activate(vModel);
 
 		return view;
 	}
@@ -100,21 +90,12 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < getCount(); i++) {
 			View view = (View)viewPagerProvider.getItem(i);
-//			IView v = (IView) viewPagerProvider.getItem(i);
-//			View view = createUI(v.getName());
 			
 			BindingBag bag = null;
 			bag = (BindingBag) view.getTag();
-
 			IBinding<IView> binding = bag.binding;
-			IView vModel = bag.view;
-//			IModelUpdater updater = vModel.getAdaptor(IModelUpdater.class);
-//			if (updater != null)
-//				updater.updateModel(viewPagerProvider.getAttributeData());
-			binding.activate(vModel);
-			// binding.activate(vModel);
+			binding.refresh();
 		}
 		super.notifyDataSetChanged();
 	}
-	
 }

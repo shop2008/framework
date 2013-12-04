@@ -1,7 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -12,10 +11,10 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
@@ -27,7 +26,7 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockQuotationView")
+@View(name = "StockQuotationView", description="买入", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_quotation_view_layout")
 public abstract class StockQuotationView extends ViewBase implements ISelectionChangedListener {
 
@@ -196,10 +195,12 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("BuyStockDetailPage");
+		ISelection selection = service.getSelection("TBuyTradingPage");
 		if(selection != null)
-			selectionChanged("BuyStockDetailPage", selection);
-		service.addSelectionListener("BuyStockDetailPage", this);
+			selectionChanged("TBuyTradingPage", selection);
+		service.addSelectionListener("TBuyTradingPage", this);
+		
+		service.addSelectionListener("stockSearchPage", this);
 	}
 	
 	@Override
@@ -214,7 +215,13 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		registerBean("codeBean", this.codeBean);
 		registerBean("nameBean", this.nameBean);
 		registerBean("marketBean", this.marketBean);
-		infoCenterService.getStockQuotation(codeBean, marketBean);
+//		infoCenterService.getStockQuotation(codeBean, marketBean);
+	}
+	
+	@OnDestroy
+	void removeSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
 	}
 	
 //	@Override

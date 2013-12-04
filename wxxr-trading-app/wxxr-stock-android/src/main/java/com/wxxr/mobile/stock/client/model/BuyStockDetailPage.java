@@ -53,11 +53,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
-	//, "StockKLineView"
-	@ViewGroup(viewIds={"StockQuotationView"}, attributes={
-			@Attribute(name="codeBean", value="${codeBean}"),
-			@Attribute(name="nameBean", value="${nameBean}"),
-			@Attribute(name="marketBean", value="${marketBean}")})
+	@ViewGroup(viewIds={"StockKLineView", "StockQuotationView"})
 	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
@@ -231,8 +227,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
-			infoCenterService.getStockQuotation(codeBean, marketBean);
-			updateSelection((Object)stockInfos);
+//			infoCenterService.getStockQuotation(codeBean, marketBean);
+//			updateSelection((Object)stockInfos);
 		} else if("TBuyTradingPage".equals(providerId)) {
 			SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
 			String[] stockInfos = (String[])impl.getSelected();
@@ -246,8 +242,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			registerBean("marketBean", this.marketBean);
 			registerBean("acctIdBean", this.acctIdBean);
 			registerBean("avalibleFeeBean", this.avalibleFeeBean);
-			infoCenterService.getStockQuotation(codeBean, marketBean);
-			updateSelection((Object)stockInfos);
+//			infoCenterService.getStockQuotation(codeBean, marketBean);
+//			updateSelection((Object)stockInfos);
 			log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
 		}
 	}
@@ -395,5 +391,6 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@OnDestroy
 	void removeSelectionListener() {
 		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
 	}
 }

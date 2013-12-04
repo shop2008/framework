@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -28,7 +29,7 @@ import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "StockKLineView")
+@View(name = "StockKLineView", description="买入", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
 public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
 	
@@ -135,10 +136,12 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("BuyStockDetailPage");
+		ISelection selection = service.getSelection("TBuyTradingPage");
 		if(selection != null)
-			selectionChanged("BuyStockDetailPage", selection);
-		service.addSelectionListener("BuyStockDetailPage", this);
+			selectionChanged("TBuyTradingPage", selection);
+		service.addSelectionListener("TBuyTradingPage", this);
+		
+		service.addSelectionListener("stockSearchPage", this);
 	}
 	
 	@Override
@@ -153,8 +156,8 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		registerBean("codeBean", this.codeBean);
 		registerBean("nameBean", this.nameBean);
 		registerBean("marketBean", this.marketBean);
-		infoCenterService.getStockQuotation(codeBean, marketBean);
-		infoCenterService.getDayStockline(codeBean, marketBean);
+//		infoCenterService.getStockQuotation(codeBean, marketBean);
+//		infoCenterService.getDayStockline(codeBean, marketBean);
 	}
 	
 	@OnShow
@@ -163,6 +166,12 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		registerBean("type", 1);
 //		registerBean("marketBean", "SH");
 		registerBean("timeBean", new Date().getTime());
+	}
+	
+	@OnDestroy
+	void removeSelectionListener() {
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
 	}
 	
 //	@Override

@@ -79,15 +79,6 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 			for (int i = 0; i < length; i++) {
 				androidViewGroup[i] = createUI(viewIDs[i]);
 			}
-			boolean backable =true;
-			String activeViewId = getViewGroup().getActiveViewId();
-			if(activeViewId == null){
-				activeViewId = getViewGroup().getDefaultViewId();
-				backable = false;
-			}
-			if(activeViewId != null){
-				getViewGroup().activateView(activeViewId,backable);
-			}
 			return true;
 		}
 	};
