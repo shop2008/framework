@@ -68,7 +68,7 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	protected UIContainer<C> add(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.add(child);
-		if(getUIContext() != null){
+		if((getUIContext() != null)&&(child.isInitialized() == false)){
 			child.init(getUIContext());
 		}
 		return this;

@@ -62,9 +62,7 @@ public class LazyLoadViewGroup extends ViewGroupBase {
 		}
 		IView v = super.getView(name);
 		if(v == null){
-			IViewDescriptor vDesc = getUIContext().getWorkbenchManager().getViewDescriptor(name);
-			v = vDesc.createPresentationModel(getUIContext());
-			v.init(getUIContext());
+			v = getUIContext().getWorkbenchManager().getWorkbench().createNInitializedView(name);
 			addChild(v);
 		}
 		return v;

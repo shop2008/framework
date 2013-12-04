@@ -6,6 +6,7 @@ package com.wxxr.mobile.core.ui.common;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 
 /**
  * @author neillin
@@ -39,6 +40,20 @@ public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,O
 			log.warn("Failed to update attribute :["+key+" of component :"+component.getName(), t);
 			return null;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.AbstractELValueEvaluator#valueEffectedBy(com.wxxr.mobile.core.ui.api.ValueChangedEvent)
+	 */
+	@Override
+	public boolean valueEffectedBy(ValueChangedEvent event) {
+		if(event instanceof ComponentValueChangedEventImpl){
+			ComponentValueChangedEventImpl evt = (ComponentValueChangedEventImpl)event;
+			if(evt.getComponent() == this.component){
+				return false;
+			}
+		}
+		return super.valueEffectedBy(event);
 	}
 
 }

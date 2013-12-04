@@ -35,7 +35,9 @@ public class BindableBeanSupport implements IBindableBean {
 		if (listeners == null) {
 			listeners = new ArrayList<IPropertyChangeListener>();
 		}
-		listeners.add(listener);
+		if(!listeners.contains(listener)){
+			listeners.add(listener);
+		}
 	}
 
 	/* (non-Javadoc)

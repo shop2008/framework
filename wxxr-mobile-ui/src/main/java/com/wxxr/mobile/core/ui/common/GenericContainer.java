@@ -32,11 +32,15 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 			private int idx = 0;
 			
 			public boolean hasNext() {
-				return children != null && idx < children.size() ? true : false;
+				synchronized(GenericContainer.this){
+					return children != null && idx < children.size() ? true : false;
+				}
 			}
 
 			public T next() {
-				return children.get(idx++);
+				synchronized(GenericContainer.this){
+					return children.get(idx++);
+				}
 			}
 
 			public void remove() {
@@ -65,12 +69,12 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 	}
 
 	
-	public void add(T child){
+	public synchronized void add(T child){
 		addChild(child);
 		this.children.add(child);
 	}
 	
-	public boolean remove(T child){
+	public synchronized boolean remove(T child){
 		boolean val  = this.children.remove(child);
 		this.map.remove(getObjectId(child));
 		if(val){
@@ -79,7 +83,7 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		return val;
 	}
 
-	public boolean remove(String id){
+	public synchronized boolean remove(String id){
 		T obj = this.map.remove(id);
 		if(obj != null){
 			this.children.remove(obj);
@@ -96,7 +100,7 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 //		child.setParent(null);
 //	}
 	 
-	public T getChild(String name){
+	public synchronized T getChild(String name){
 		return this.map != null ? this.map.get(name) : null;
 	}
 
@@ -108,7 +112,11 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 			this.children = new LinkedList<T>();
 			this.map = new HashMap<String,T>();
 		}
-		this.map.put(getObjectId(child), child);
+		String name = getObjectId(child);
+		if(this.map.containsKey(name)){
+			throw new IllegalStateException("UIComponent with name :"+name+" already added in uicontainer :"+this);
+		}
+		this.map.put(name, child);
 		handleAdded(child);
 	}
 
@@ -129,18 +137,18 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 //	}
 
 	
-	public void addFirst(T child){
+	public synchronized void addFirst(T child){
 		addChild(child);
 		this.children.addFirst(child);
 	}
 
-	public void addLast(T child){
+	public synchronized void addLast(T child){
 		addChild(child);
 		this.children.addLast(child);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <C> List<C> getChildren(Class<C> clazz) {
+	public synchronized <C> List<C> getChildren(Class<C> clazz) {
 		if((this.children == null)||this.children.isEmpty()){
 			return Collections.EMPTY_LIST;
 		}
@@ -156,12 +164,12 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		return result == null ? Collections.EMPTY_LIST : result;
 	}
 
-	public <C> C getChild(String name, Class<C> clazz) {
+	public synchronized <C> C getChild(String name, Class<C> clazz) {
 		Object ui = getChild(name);
 		return ui != null && clazz.isAssignableFrom(ui.getClass()) ? clazz.cast(ui) : null;
 	}
 	
-	public void destroy(){
+	public synchronized void destroy(){
 		//destroy children
 		if(this.children != null){
 			Object[] vals = this.children.toArray();
@@ -177,7 +185,7 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		}
 	}
 
-	public void init(IWorkbenchRTContext ctx){
+	public synchronized void init(IWorkbenchRTContext ctx){
 		if(this.children != null){
 			for (T ui : this.children) {
 				handleInit(ui,ctx);
