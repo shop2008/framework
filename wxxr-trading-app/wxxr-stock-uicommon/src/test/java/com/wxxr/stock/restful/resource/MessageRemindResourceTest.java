@@ -28,6 +28,7 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
+import com.wxxr.stock.notification.ejb.api.MsgQuery;
 
 
 public class MessageRemindResourceTest extends TestCase{
@@ -120,7 +121,7 @@ public class MessageRemindResourceTest extends TestCase{
 		messageRemindResource=builder.getRestService(IMessageRemindResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
 	public void testFindById()throws Exception{
-		MessageVO vo = new MessageVO();
+		MsgQuery vo = new MsgQuery();
 		vo.setId("whatever");
 		List<MessageVO> a =messageRemindResource.findById(vo);
 	}
