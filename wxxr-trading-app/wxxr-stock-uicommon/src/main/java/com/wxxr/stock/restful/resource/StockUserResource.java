@@ -100,6 +100,11 @@ public interface StockUserResource {
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException;
+	@POST
+	@Path("/bindmobile")
+	@Produces({ "application/json;charset=utf-8" })
+	@Consumes({ "application/json" })
+	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
 
 	@POST
 	@Path("/pollAndPushToken")
