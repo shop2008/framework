@@ -64,7 +64,7 @@ public class HideProgressEventBinding implements IBinding<IView>{
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		
 	}
 

@@ -201,7 +201,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		
 	}
 

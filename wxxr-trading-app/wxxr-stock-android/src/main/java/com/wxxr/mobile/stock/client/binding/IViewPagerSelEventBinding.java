@@ -60,7 +60,7 @@ public class IViewPagerSelEventBinding implements IBinding<IView> {
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
