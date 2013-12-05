@@ -277,17 +277,6 @@ public class PinHeaderListViewFieldBinding extends BasicFieldBinding {
 		}
 	}
 
-	@Override
-	public void refresh() {
-		if(this.adapter != null){
-			this.adapter.notifyDataSetChanged();
-		}
-		super.refresh();
-		if(pinHeadViewBinding != null) {
-			pinHeadViewBinding.refresh();
-		}
-		
-	}
 	
 	@Override
 	protected void updateUI(boolean recursive) {
@@ -310,10 +299,6 @@ public class PinHeaderListViewFieldBinding extends BasicFieldBinding {
 			pinHeadViewBinding = null;
 		}
 	
-		if(pinHeader != null){
-			pinHeader.destroy();
-			pinHeader = null;
-		}
 		super.destroy();
 	}
 
