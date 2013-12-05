@@ -102,7 +102,7 @@ public class ItemClickEventBinding implements IBinding<IView>,OnItemClickListene
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 	}
 
 }

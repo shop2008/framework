@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,20 +18,21 @@ import android.view.ViewGroup;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.IPageCallback;
 import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
+import com.wxxr.mobile.core.ui.api.IViewNavigationCallback;
+import com.wxxr.mobile.core.ui.api.IViewNavigationListener;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.ui.common.AbstractViewNavigationCallback;
 
 /**
  * @author neillin
@@ -45,9 +47,10 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	private static final int PAGE_ACTIVITY_DESTROY = 4;
 	
 	private Map<String, IBindableActivity> activeActivities = new HashMap<String, IBindableActivity>();
-	private Map<String, List<IPageCallback>> callbacks = new HashMap<String, List<IPageCallback>>();
+	private Map<String, List<IViewNavigationCallback>> callbacks = new HashMap<String, List<IViewNavigationCallback>>();
 	private String currentPageId;
 	private final IWorkbenchRTContext context;
+	private List<IViewNavigationListener> listeners = new ArrayList<IViewNavigationListener>();
 	
 	public AndroidPageNavigator(IWorkbenchRTContext ctx){
 		this.context = ctx;
@@ -66,7 +69,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	 * @see com.wxxr.mobile.core.ui.api.IPageNavigator#showPage(com.wxxr.mobile.core.ui.api.IPage)
 	 */
 	@Override
-	public void showPage(IPage page,IPageCallback cb) {
+	public void showPage(IPage page,IViewNavigationCallback cb) {
 		Application app = AppUtils.getFramework().getAndroidApplication();
 		Activity activity = getCurrentActivity();
 		String pageId = page.getName();
@@ -95,9 +98,9 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			}
 		}
 		if(cb != null){
-			List<IPageCallback> cbs = this.callbacks.get(pageId);
+			List<IViewNavigationCallback> cbs = this.callbacks.get(pageId);
 			if(cbs == null){
-				cbs = new LinkedList<IPageCallback>();
+				cbs = new LinkedList<IViewNavigationCallback>();
 				this.callbacks.put(pageId, cbs);
 			}
 			if(!cbs.contains(cb)){
@@ -197,71 +200,95 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 
 
-	protected void notifyPageCallbacks(IPage page, int activity){
-		List<IPageCallback> cbs = this.callbacks.get(page.getName());
+	protected void notifyNavigationCallbacks(IView view, int activity){
+		List<IViewNavigationCallback> cbs = this.callbacks.get(view.getName());
 		if(cbs != null){
-			for (IPageCallback cb : cbs) {
-				switch(activity){
-				case PAGE_ACTIVITY_CREATE:
-					cb.onCreate(page);
-					break;
-				case PAGE_ACTIVITY_DESTROY:
-					cb.onDestroy(page);
-					break;
-				case PAGE_ACTIVITY_HIDE:
-					cb.onHide(page);
-					break;
-				case PAGE_ACTIVITY_SHOW:
-					cb.onShow(page);
-					break;
+			for (IViewNavigationCallback cb : cbs) {
+				notifyCallback(view, activity, cb);
+			}
+		}
+		IViewNavigationListener[] list = null;
+		synchronized(this.listeners){
+			list = this.listeners.toArray(new IViewNavigationListener[0]);
+		}
+		if(list != null){
+			for (IViewNavigationListener l : list) {
+				if(l.acceptable(view)){
+					notifyCallback(view, activity, l);
 				}
 			}
 		}
 	}
+
+	/**
+	 * @param view
+	 * @param activity
+	 * @param cb
+	 */
+	protected void notifyCallback(IView view, int activity,IViewNavigationCallback cb) {
+		switch(activity){
+		case PAGE_ACTIVITY_CREATE:
+			cb.onCreate(view);
+			break;
+		case PAGE_ACTIVITY_DESTROY:
+			cb.onDestroy(view);
+			break;
+		case PAGE_ACTIVITY_HIDE:
+			cb.onHide(view);
+			break;
+		case PAGE_ACTIVITY_SHOW:
+			cb.onShow(view);
+			break;
+		}
+	}
 	
-	protected void removePageCallback(String pageId,IPageCallback cb) {
-		List<IPageCallback> cbs = this.callbacks.get(pageId);
+	protected void removePageCallback(String pageId,IViewNavigationCallback cb) {
+		List<IViewNavigationCallback> cbs = this.callbacks.get(pageId);
 		if(cbs != null){
 			cbs.remove(cb);
 		}
 	}
 	@Override
-	public void onPageCreate(IPage page, IBindableActivity activity) {
+	public void onViewCreate(IView view, IBindableActivity activity) {
 		if(log.isInfoEnabled()){
-			log.info("Page :"+page.getName()+" is created !");
+			log.info("View :"+view.getName()+" is created !");
 		}
-		this.activeActivities.put(page.getName(), activity);
-		notifyPageCallbacks(page,PAGE_ACTIVITY_CREATE);
+		if(activity != null){
+			this.activeActivities.put(view.getName(), activity);
+		}
+		notifyNavigationCallbacks(view,PAGE_ACTIVITY_CREATE);
 	}
 
 	@Override
-	public void onPageShow(IPage page) {
+	public void onViewShow(IView view) {
 		if(log.isInfoEnabled()){
-			log.info("Page :"+page.getName()+" is on show !");
+			log.info("View :"+view.getName()+" is on show !");
 		}
-		this.currentPageId = page.getName();
-		notifyPageCallbacks(page,PAGE_ACTIVITY_SHOW);
+		if(view instanceof IPage){
+			this.currentPageId = view.getName();
+		}
+		notifyNavigationCallbacks(view,PAGE_ACTIVITY_SHOW);
 	}
 
 	@Override
-	public void onPageHide(IPage page) {
+	public void onViewHide(IView view) {
 		if(log.isInfoEnabled()){
-			log.info("Page :"+page.getName()+" is hidden !");
+			log.info("View :"+view.getName()+" is hidden !");
 		}
-		if(page.getName().equals(currentPageId)){
+		if(view.getName().equals(currentPageId)){
 			this.currentPageId = null;
 		}
-		notifyPageCallbacks(page,PAGE_ACTIVITY_HIDE);
+		notifyNavigationCallbacks(view,PAGE_ACTIVITY_HIDE);
 
 	}
 
 	@Override
-	public void onPageDetroy(IPage page) {
+	public void onViewDetroy(IView view) {
 		if(log.isInfoEnabled()){
-			log.info("Page :"+page.getName()+" is destroyed !");
+			log.info("View :"+view.getName()+" is destroyed !");
 		}
-		this.activeActivities.remove(page.getName());
-		notifyPageCallbacks(page,PAGE_ACTIVITY_DESTROY);
+		this.activeActivities.remove(view.getName());
+		notifyNavigationCallbacks(view,PAGE_ACTIVITY_DESTROY);
 	}
 
 	@Override
@@ -270,18 +297,27 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 	}
 
 	@Override
-	public void showView(final IView view) {
+	public void showView(final IView view,IViewNavigationCallback callback) {
+		if(view instanceof IPage){
+			showPage((IPage)view, callback);
+			return;
+		}
 		IPage page = getPage(view);
+		final IViewGroup vg = (IViewGroup)view.getParent();
+		if((page == null)||(vg == null)){
+			hideOrShowDialog(view, true);
+			return;
+		}
 		IBindableActivity activity = this.activeActivities.get(page.getName());
 		Object val = view.getProperty(IAndroidPageNavigator.PARAM_KEY_ADD2BACKSTACK);
 		final boolean not2BackStack = "false".equalsIgnoreCase(String.valueOf(val));
 		if(activity != null){
 			hideOrShowView(view,(not2BackStack == false), true);
 		}else{
-			 IPageCallback cb = new IPageCallback() {
+			 IViewNavigationCallback cb = new AbstractViewNavigationCallback() {
 				
 				@Override
-				public void onShow(IPage page) {
+				public void onShow(IView page) {
 					removePageCallback(page.getName(), this);
 					AppUtils.getFramework().runOnUIThread(new Runnable() {
 						
@@ -293,20 +329,6 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 					
 				}
 				
-				@Override
-				public void onHide(IPage page) {
-					
-				}
-				
-				@Override
-				public void onDestroy(IPage page) {
-					
-				}
-				
-				@Override
-				public void onCreate(IPage page) {
-					
-				}
 			};
 			showPage(page, cb);
 		}
@@ -314,7 +336,19 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 
 	@Override
 	public void hideView(IView view) {
+		if(view instanceof IPage){
+			hidePage((IPage)view);
+			return;
+		}
 		hideOrShowView(view,false,false);		
+	}
+	
+	protected void hideOrShowDialog(IView view,boolean show){
+		if(show){
+			createDialog(view, null).show();
+		}else if(view.isActive()){
+			((IViewBinding)view.getBinding()).hide();
+		}
 	}
 
 	/**
@@ -324,11 +358,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		IPage page = getPage(view);
 		final IViewGroup vg = (IViewGroup)view.getParent();
 		if((page == null)||(vg == null)){
-			if(show){
-				createDialog(view, null).show();
-			}else if(view.isActive()){
-				((IViewBinding)view.getBinding()).hide();
-			}
+			hideOrShowDialog(view, false);
 			return;
 		}
 		IBindableActivity activity = this.activeActivities.get(page.getName());
@@ -379,6 +409,22 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			return act.createDialog(view,handback);
 		}
 		return null;
+	}
+
+	@Override
+	public void registerNavigationListener(IViewNavigationListener listener) {
+		synchronized(this.listeners){
+			if(!this.listeners.contains(listener)){
+				this.listeners.add(listener);
+			}
+		}
+	}
+
+	@Override
+	public boolean unregisterNavigationListener(IViewNavigationListener listener) {
+		synchronized(this.listeners){
+			return this.listeners.remove(listener);
+		}
 	}
 
 }

@@ -30,8 +30,6 @@ import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-import com.wxxr.mobile.core.ui.common.UICommand;
-import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -136,7 +134,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(page instanceof ViewBase){
 			((ViewBase)page).onUICreate();
 		}
-		getNavigator().onPageCreate(page, this);
+		getNavigator().onViewCreate(page, this);
 		onContentViewCreated(savedInstanceState);
 		super.onCreate(savedInstanceState);
 		if(log.isDebugEnabled()){
@@ -181,14 +179,13 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			}
 		}
 		super.onStart();
-		getNavigator().onPageShow(page);
 		onActivityStarted();
 		this.onShow = true;
 		this.provider = page.getSelectionProvider();
 		if(this.provider != null){
 			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
 		}
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(page);
+		getNavigator().onViewShow(page);
 		if(log.isDebugEnabled()){
 			log.debug("Activity started !");
 		}
@@ -238,9 +235,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.page.onToolbarHide();
 		}
 		this.androidViewBinding.deactivate();
-		getNavigator().onPageHide(getBindingPage());
 		onActivityStopped();
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(this.page);
+		getNavigator().onViewHide(getBindingPage());
 		if(log.isDebugEnabled()){
 			log.debug("Activity stopped !");
 		}
@@ -274,8 +270,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(getBindingPage() instanceof ViewBase){
 			((ViewBase)getBindingPage()).onUIDestroy();
 		}
-		getNavigator().onPageDetroy(getBindingPage());
 		onActivityDestroied();
+		getNavigator().onViewDetroy(page);
 		this.page = null;
 		if(log.isDebugEnabled()){
 			log.debug("Activity destroyed !");
@@ -361,14 +357,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(log.isDebugEnabled()){
 			log.debug("Resuming activity ...");
 		}
-		if(this.provider != null){
-			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
-		}
 		if(this.toolbarViewBingding != null){
-			this.toolbarViewBingding.refresh();
+			this.toolbarViewBingding.doUpdate();
 		}
 		if(this.androidViewBinding != null){
-			this.androidViewBinding.refresh();
+			this.androidViewBinding.doUpdate();
 		}
 		super.onResume();
 	}

@@ -3,8 +3,8 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import static com.wxxr.mobile.android.ui.BindingUtils.getBindingDescriptor;
-import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
+import static com.wxxr.mobile.android.ui.BindingUtils.*;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -73,6 +73,7 @@ public abstract class BindableFragment extends Fragment {
 		}
 		this.bindingView = getBindingView();
 		super.onCreate(savedInstanceState);
+		getNavigator().onViewCreate(bindingView, this.fragActivity);
 	}
 
 	/* (non-Javadoc)
@@ -133,6 +134,7 @@ public abstract class BindableFragment extends Fragment {
 		}
 		this.androidViewBinding.destroy();
 		super.onDestroy();
+		getNavigator().onViewDetroy(bindingView);
 		this.bindingView = null;
 	}
 
@@ -198,7 +200,7 @@ public abstract class BindableFragment extends Fragment {
 			getLogger().debug("onResume ...");
 		}
 		if(this.androidViewBinding != null){
-			this.androidViewBinding.refresh();
+			this.androidViewBinding.doUpdate();
 		}
 		super.onResume();
 	}
@@ -241,8 +243,7 @@ public abstract class BindableFragment extends Fragment {
 			AppUtils.getService(IWorkbenchManager.class).getWorkbench().getSelectionService().registerProvider(this.provider);
 		}
 		this.onShow = true;
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(bindingView);
-		
+		getNavigator().onViewShow(bindingView);		
 	}
 
 	/* (non-Javadoc)
@@ -259,8 +260,8 @@ public abstract class BindableFragment extends Fragment {
 			toolbar.dettach(getBindingView());
 		}
 		this.androidViewBinding.deactivate();
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(bindingView);
 		super.onStop();
+		getNavigator().onViewHide(bindingView);
 	}
 
 	/* (non-Javadoc)

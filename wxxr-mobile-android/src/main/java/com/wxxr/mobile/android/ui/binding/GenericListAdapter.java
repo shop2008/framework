@@ -186,6 +186,7 @@ public class GenericListAdapter extends BaseAdapter {
 		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
 		vModel.setProperty("_item_position", position);
 		binding.activate(vModel);
+		binding.doUpdate();
 		localCtx.setReady(true);
 		return view;
 	}

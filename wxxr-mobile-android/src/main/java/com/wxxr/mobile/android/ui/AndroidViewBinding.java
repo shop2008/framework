@@ -141,9 +141,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		}
 
 		@Override
-		public void refresh() {
+		public void doUpdate() {
 			if(this.binding != null){
-				this.binding.refresh();
+				this.binding.doUpdate();
 			}
 		}
 
@@ -416,9 +416,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		for (IBinding<IView> b : bindings) {
-			b.refresh();
+			b.doUpdate();
 		}
 	}
 

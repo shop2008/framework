@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.android.ui;
 
+import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -51,7 +53,8 @@ public class GenericDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+	    IBindableActivity bActivity = (getActivity() instanceof IBindableActivity) ? (IBindableActivity)getActivity() : null;
+	    getNavigator().onViewCreate(view, bActivity);
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
 	    View v = createUI();
@@ -178,7 +181,7 @@ public class GenericDialogFragment extends DialogFragment {
 		}
 		super.onStart();
 		this.onShow = true;
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewShow(view);
+		getNavigator().onViewShow(view);
 	}
 
 	/* (non-Javadoc)
@@ -190,8 +193,8 @@ public class GenericDialogFragment extends DialogFragment {
 		if(this.binding != null){
 			this.binding.deactivate();
 		}
-		AppUtils.getService(IWorkbenchManager.class).getWorkbench().getViewLifeContext().viewHidden(view);
 		super.onStop();
+		getNavigator().onViewHide(view);
 	}
 
 	/* (non-Javadoc)
@@ -207,6 +210,18 @@ public class GenericDialogFragment extends DialogFragment {
 			((ViewBase)view).onUIDestroy();
 		}
 		super.onDestroyView();
+		getNavigator().onViewDetroy(view);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		if(this.binding != null){
+			this.binding.doUpdate();
+		}
+		super.onResume();
 	}
 
 }

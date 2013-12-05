@@ -41,7 +41,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	protected Map<String, String> bindingAttrs;
 	protected String fieldName;
 	protected IUIComponent field;
-	protected boolean updateUIScheduled;
+	protected boolean updateUIScheduled,active;
 	
 	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
 		this.pComponent = ctx.getBindingControl();
@@ -88,6 +88,9 @@ public class BasicFieldBinding implements IFieldBinding {
 	 * @see com.wxxr.mobile.android.ui.IAndroidBinding#updateUI()
 	 */
 	protected void updateUI(boolean recursive) {
+		if(!active){
+			return;
+		}
 		IUIComponent field = this.viewModel.getChild(getFieldName());
 		Set<AttributeKey<?>> keys = field.getAttributeKeys();
 		if((keys != null)&&(keys.size() > 0)){
@@ -161,7 +164,7 @@ public class BasicFieldBinding implements IFieldBinding {
 				}
 			});
 		}
-		doUpdateUI(true);
+		this.active = true;
 	}
 
 	/* (non-Javadoc)
@@ -169,6 +172,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	 */
 	@Override
 	public void deactivate() {
+		this.active = false;
 		if(this.field != null){
 			this.field.setValueChangedCallback(null);
 			this.field = null;
@@ -285,7 +289,7 @@ public class BasicFieldBinding implements IFieldBinding {
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		doUpdateUI(true);
 	}
 

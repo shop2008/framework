@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.util.LRUMap;
 
 /**
@@ -27,53 +26,55 @@ import com.wxxr.mobile.core.util.LRUMap;
  */
 public abstract class ImageUtils {
 
-	private static Executor executor = Executors.newFixedThreadPool(1);
 	private static final LRUMap<String, Drawable> drawableMap = new LRUMap<String, Drawable>(100,10*60);
 
 	public static void updateViewBackgroupImage(final String val, final View imgV) {
 		if(RUtils.isResourceIdURI(val)){
 			imgV.setBackgroundResource(RUtils.getInstance().getResourceIdByURI(val));
 		}else{
-			executor.execute(new Runnable() {
-				public void run() {
-					fetchDrawable(val);
-					if(drawableMap.containsKey(val)){
-						final Drawable draw = drawableMap.get(val);
-						if(draw!=null){
+			Drawable img = drawableMap.get(val);
+			if(img != null){
+				imgV.setBackgroundDrawable(img);
+			}else{
+				KUtils.executeTask(new Runnable() {
+					public void run() {
+						final Drawable img = fetchDrawable(val);
+						if(img != null){
 							AppUtils.runOnUIThread(new Runnable() {
 								@Override
 								public void run() {
-									imgV.setBackgroundDrawable(draw);
+									imgV.setBackgroundDrawable(img);
 								}
 							});
 						}
 					}
-				}
-			});
+				});
+			}
 		}
-
 	}
 	
 	public static void updateImage(final String val, final ImageView imgV) {
 		if(RUtils.isResourceIdURI(val)){
 			imgV.setImageResource(RUtils.getInstance().getResourceIdByURI(val));
 		}else{
-			executor.execute(new Runnable() {
-				public void run() {
-					fetchDrawable(val);
-					if(drawableMap.containsKey(val)){
-						final Drawable draw = drawableMap.get(val);
-						if(draw!=null){
+			Drawable img = drawableMap.get(val);
+			if(img != null){
+				imgV.setImageDrawable(img);
+			}else{
+				KUtils.executeTask(new Runnable() {
+					public void run() {
+						final Drawable img = fetchDrawable(val);
+						if(img != null){
 							AppUtils.runOnUIThread(new Runnable() {
 								@Override
 								public void run() {
-									imgV.setImageDrawable(draw);
+									imgV.setImageDrawable(img);
 								}
 							});
 						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 

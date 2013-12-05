@@ -23,7 +23,6 @@ import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewBinding;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
-import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
@@ -246,16 +245,16 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#refresh()
 	 */
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		if(this.listAdapter != null){
 			this.listAdapter.notifyDataSetChanged();
 		}
-		super.refresh();
+		super.doUpdate();
 		if(headerBinding != null) {
-			headerBinding.refresh();
+			headerBinding.doUpdate();
 		}
 		if(footerBinding != null) {
-			footerBinding.refresh();
+			footerBinding.doUpdate();
 		}
 	}
 
@@ -285,7 +284,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			headerBinding = null;
 		}
 		if(headerView != null){
-			headerView.destroy();
+			bContext.getWorkbenchManager().getWorkbench().destroyComponent(headerView);
 			headerView = null;
 		}
 		if((list != null)&&(footerItemView != null)){
@@ -297,7 +296,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			footerBinding = null;
 		}
 		if(footerView != null){
-			footerView.destroy();
+			bContext.getWorkbenchManager().getWorkbench().destroyComponent(footerView);
 			footerView = null;
 		}
 		super.destroy();

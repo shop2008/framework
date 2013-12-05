@@ -88,7 +88,7 @@ public class ClickEventBinding implements IBinding<IView>,OnClickListener {
 	}
 
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 	}
 
 }
