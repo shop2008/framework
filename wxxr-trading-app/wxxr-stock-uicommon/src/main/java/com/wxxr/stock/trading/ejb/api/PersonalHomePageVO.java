@@ -3,6 +3,7 @@ package com.wxxr.stock.trading.ejb.api;
 import java.io.Serializable;
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,6 +11,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 public class PersonalHomePageVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@XmlElement(name="userID")
 	private String userId; //id
 	@XmlElement(name = "voucherVol")
 	private Long voucherVol;
@@ -19,9 +21,9 @@ public class PersonalHomePageVO implements Serializable {
 	private long actualCount;
 	@XmlElement(name = "virtualCount")
 	private long virtualCount;
-	@XmlElement(name = "actualList")
+	@XStreamImplicit(itemFieldName="actualList")
 	private List<GainVO> actualList;
-	@XmlElement(name = "virtualList")
+	@XStreamImplicit(itemFieldName= "virtualList")
 	private List<GainVO> virtualList;
 	
 	
