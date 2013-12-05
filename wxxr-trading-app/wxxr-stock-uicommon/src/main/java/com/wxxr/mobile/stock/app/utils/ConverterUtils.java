@@ -9,6 +9,7 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -30,6 +31,7 @@ import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
+import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
@@ -527,6 +529,20 @@ public class ConverterUtils {
             }
             b.setVirtualList(bean_list);
         }
+    }
+    public static GainPayDetailBean fromVO(GainPayDetailsVO vo) {
+        if (vo == null){
+            return null;
+        }
+        GainPayDetailBean b=new GainPayDetailBean();
+        updatefromVOtoBean(b,vo);
+        return null;
+    }
+    public static void updatefromVOtoBean(GainPayDetailBean bean, GainPayDetailsVO vo) {
+        bean.setAmount(vo.getAmount());
+        bean.setId(vo.getId());
+        bean.setTime(vo.getTime());
+        bean.setComment(vo.getComment());
     }
     
 }
