@@ -10,13 +10,13 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
-import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
+import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 
-public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditDetailVO> {
+public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditInfoVO> {
 
     private static final String COMMAND_NAME = "GetAuditDetailVOsCommand";
     
-    private static class GetAuditDetailVOsCommand implements ICommand<List<AuditDetailVO>> {
+    private static class GetAuditDetailVOsCommand implements ICommand<List<AuditInfoVO>> {
         private String acctID;
 
 
@@ -35,7 +35,7 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
-        public Class<List<AuditDetailVO>> getResultType() {
+        public Class<List<AuditInfoVO>> getResultType() {
             Class clazz = List.class;
             return clazz;
         }
@@ -51,7 +51,7 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
     
     
     @Override
-    public ICommand<List<AuditDetailVO>> createCommand(Map<String, Object> params) {
+    public ICommand<List<AuditInfoVO>> createCommand(Map<String, Object> params) {
         if((params == null)||params.isEmpty()){
             return null;
         }
@@ -62,13 +62,13 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<AuditDetailVO> result,
+    public boolean handleCommandResult(ICommand<?> cmd,List<AuditInfoVO> result,
             IReloadableEntityCache<String, AuditDetailBean> cache) {
         GetAuditDetailVOsCommand command = (GetAuditDetailVOsCommand) cmd;
         boolean updated = false;
        
         if(result != null){
-            for (AuditDetailVO vo : result) {
+            for (AuditInfoVO vo : result) {
                 AuditDetailBean bean=cache.getEntity(vo.getId());
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
@@ -88,12 +88,12 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
     }
 
     @Override
-    protected List<AuditDetailVO> executeCommand(
-            ICommand<List<AuditDetailVO>> command) throws Exception {
+    protected List<AuditInfoVO> executeCommand(
+            ICommand<List<AuditInfoVO>> command) throws Exception {
         GetAuditDetailVOsCommand cmd = (GetAuditDetailVOsCommand)command;
-        AuditDetailVO vo = RestUtils.getRestService(ITradingResource.class).getAuditDetail(cmd.getAcctID());
+        AuditInfoVO vo = RestUtils.getRestService(ITradingResource.class).getAuditDetail(cmd.getAcctID());
         if (vo!=null){
-            ArrayList<AuditDetailVO> result=new ArrayList<AuditDetailVO>();
+            ArrayList<AuditInfoVO> result=new ArrayList<AuditInfoVO>();
             result.add(vo);
             return result;
         }

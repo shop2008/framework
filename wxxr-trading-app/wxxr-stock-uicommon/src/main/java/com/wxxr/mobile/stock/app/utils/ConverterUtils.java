@@ -29,14 +29,15 @@ import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
-import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
+import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
+import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
+import com.wxxr.stock.trading.ejb.api.TradeRecordVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
@@ -318,7 +319,7 @@ public class ConverterUtils {
         return bean;
     }
 
-    public static TradingRecordBean fromVO(TradingRecordVO vo) {
+    public static TradingRecordBean fromVO(TradeRecordVO vo) {
         if (vo == null) {
             return null;
         }
@@ -449,21 +450,21 @@ public class ConverterUtils {
         b.setSecuvolume(vo.getSecuvolume());
         return b;
     }
-    public static  void updatefromVOtoBean(DealDetailBean b,DealDetailVO vo){
+    public static  void updatefromVOtoBean(DealDetailBean b,DealDetailInfoVO vo){
         b.setFund(vo.getFund());
         b.setPlRisk(Float.valueOf(vo.getPlRisk()));
         b.setUserGain(Float.valueOf(vo.getUserGain()));
         b.setImgUrl(vo.getImgUrl());
-        List<TradingRecordVO> volist = vo.getTradingRecords();
+        List<TradeRecordVO> volist = vo.getTradingRecords();
         if (volist != null && volist.size() > 0) {
             List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();
-            for (TradingRecordVO tradingRecordVO : volist) {
+            for (TradeRecordVO tradingRecordVO : volist) {
                 beans.add(fromVO(tradingRecordVO));
             }
             b.setTradingRecords(beans);
         }
     }
-    public static DealDetailBean fromVO(DealDetailVO vo) {
+    public static DealDetailBean fromVO(DealDetailInfoVO vo) {
         if (vo == null){
             return null;
         }
@@ -471,7 +472,7 @@ public class ConverterUtils {
         updatefromVOtoBean(b,vo);
         return b;
     }
-    public static AuditDetailBean fromVO(AuditDetailVO vo) {
+    public static AuditDetailBean fromVO(AuditInfoVO vo) {
         if (vo == null){
             return null;
         }
@@ -479,7 +480,7 @@ public class ConverterUtils {
         updatefromVOtoBean(b,vo);
         return b;
     }
-    public static  void updatefromVOtoBean(AuditDetailBean b,AuditDetailVO vo) {
+    public static  void updatefromVOtoBean(AuditDetailBean b,AuditInfoVO vo) {
         b.setAccountPay(vo.getAccountPay());
         b.setBuyDay(vo.getBuyDay());
         b.setBuyAverage(vo.getBuyAverage());
@@ -544,5 +545,25 @@ public class ConverterUtils {
         bean.setTime(vo.getTime());
         bean.setComment(vo.getComment());
     }
-    
+    public static TradingRecordBean fromVO(TradingRecordVO vo) {
+        if (vo == null) {
+            return null;
+        }
+        TradingRecordBean bean = new TradingRecordBean();
+        bean.setAmount(vo.getAmount());
+        bean.setBeDone(vo.isBeDone());
+        bean.setBrokerage(vo.getBrokerage());
+        bean.setCode(vo.getCode());
+        bean.setDate(vo.getDate());
+        bean.setDay(vo.getDay());
+        bean.setDescribe(vo.getDescribe());
+        bean.setFee(vo.getFee());
+        bean.setMarket(vo.getMarket());
+        bean.setPrice(vo.getPrice());
+        bean.setTax(vo.getTax());
+        bean.setVol(vo.getVol());
+//        bean.setId(vo.getId());
+        return bean;
+    }
+
 }

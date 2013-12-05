@@ -10,13 +10,14 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 
-public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBean, DealDetailVO> {
+public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBean, DealDetailInfoVO> {
 
     private static final String COMMAND_NAME = "GetDealDetailCommand";
     
-    private static class GetDealDetailVOsCommand implements ICommand<List<DealDetailVO>> {
+    private static class GetDealDetailVOsCommand implements ICommand<List<DealDetailInfoVO>> {
         private String acctID;
 
 
@@ -35,7 +36,7 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
-        public Class<List<DealDetailVO>> getResultType() {
+        public Class<List<DealDetailInfoVO>> getResultType() {
             Class clazz = List.class;
             return clazz;
         }
@@ -51,7 +52,7 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
     
     
     @Override
-    public ICommand<List<DealDetailVO>> createCommand(Map<String, Object> params) {
+    public ICommand<List<DealDetailInfoVO>> createCommand(Map<String, Object> params) {
         if((params == null)||params.isEmpty()){
             return null;
         }
@@ -62,17 +63,17 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<DealDetailVO> result,
+    public boolean handleCommandResult(ICommand<?> cmd,List<DealDetailInfoVO> result,
             IReloadableEntityCache<String, DealDetailBean> cache) {
         GetDealDetailVOsCommand command = (GetDealDetailVOsCommand) cmd;
         boolean updated = false;
        
         if(result != null){
-            for (DealDetailVO vo : result) {
+            for (DealDetailInfoVO vo : result) {
                 DealDetailBean bean=cache.getEntity(vo.getId());
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
-                    cache.putEntity(vo.getId(), bean);
+                    cache.putEntity(vo.getId()+"", bean);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
@@ -88,12 +89,12 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
     }
 
     @Override
-    protected List<DealDetailVO> executeCommand(
-            ICommand<List<DealDetailVO>> command) throws Exception {
+    protected List<DealDetailInfoVO> executeCommand(
+            ICommand<List<DealDetailInfoVO>> command) throws Exception {
         GetDealDetailVOsCommand cmd = (GetDealDetailVOsCommand)command;
-        DealDetailVO vo = RestUtils.getRestService(ITradingResource.class).getDealDetail(cmd.getAcctID());
+        DealDetailInfoVO vo = RestUtils.getRestService(ITradingResource.class).getDealDetail(cmd.getAcctID());
         if (vo!=null){
-            ArrayList<DealDetailVO> result=new ArrayList<DealDetailVO>();
+            ArrayList<DealDetailInfoVO> result=new ArrayList<DealDetailInfoVO>();
             result.add(vo);
             return result;
         }
