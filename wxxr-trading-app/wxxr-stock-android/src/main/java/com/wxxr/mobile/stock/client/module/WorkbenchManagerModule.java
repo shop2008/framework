@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.NewsAccountViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.PinHeaderListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshListViewAdapterBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
@@ -50,6 +51,7 @@ import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
 import com.wxxr.mobile.stock.client.widget.StockInfoViewKeys;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
+import com.wxxr.mobile.stock.client.widget.wheel.PinnedHeaderListView;
 
 /**
  * @author neillin
@@ -71,6 +73,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, InfoNoticesView.class, new InfoNoticesViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GuideSwiperView.class, new GuideSwiperViewFieldBinder());
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, PinnedHeaderListView.class, new PinHeaderListViewFieldBinder());
 	}
 
 	@Override
