@@ -22,7 +22,7 @@ import com.wxxr.stock.notification.ejb.api.MsgQuery;
 public interface IMessageRemindResource {
 	@POST
 	@Path("/findById")
-	@Produces( { "application/json;charset=utf-8" })
-	@Consumes
+	@Produces( {"application/json;charset=utf-8"})
+	@Consumes({"application/json"})
 	public List<MessageVO> findById(MsgQuery vo) throws Exception ;
 }
