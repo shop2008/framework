@@ -69,9 +69,13 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 		createContainerIfNotExisting();
 		this.container.add(child);
 		if((getUIContext() != null)&&(child.isInitialized() == false)){
-			child.init(getUIContext());
+			getUIContext().getWorkbenchManager().getWorkbench().initComponent(child);
 		}
 		return this;
+	}
+	
+	protected boolean containsChild(IUIComponent child){
+		return container != null ? container.containsChild(child) : false;
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 				
 				@Override
 				protected void handleDestroy(IUIComponent ui) {
-					ui.destroy();
+					getUIContext().getWorkbenchManager().getWorkbench().destroyComponent(ui);
 				}
 				
 				@SuppressWarnings("unchecked")
@@ -105,7 +109,9 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 				@Override
 				protected void handleInit(IUIComponent ui,
 						IWorkbenchRTContext ctx) {
-					ui.init(ctx);
+					if(!ui.isInitialized()){
+						ctx.getWorkbenchManager().getWorkbench().initComponent(ui);
+					}
 				}
 			};
 		}
@@ -128,8 +134,8 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	protected UIContainer<C> addFirst(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.addFirst(child);
-		if(getUIContext() != null){
-			child.init(getUIContext());
+		if((child.isInitialized() == false)&&(getUIContext() != null)){
+			getUIContext().getWorkbenchManager().getWorkbench().initComponent(child);
 		}
 		return this;
 	}
@@ -137,8 +143,8 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	protected UIContainer<C> addLast(IUIComponent child){
 		createContainerIfNotExisting();
 		this.container.addLast(child);
-		if(getUIContext() != null){
-			child.init(getUIContext());
+		if((child.isInitialized() == false)&&(getUIContext() != null)){
+			getUIContext().getWorkbenchManager().getWorkbench().initComponent(child);
 		}
 		return this;
 	}
@@ -152,7 +158,7 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 		return this.container != null ? this.container.getChild(name, clazz) : null;
 	}
 	
-	public void destroy(){
+	protected void destroy(){
 		//destroy children
 		if(this.container != null){
 			this.container.destroy();
@@ -166,7 +172,7 @@ public class UIContainer<C extends IUIComponent> extends UIComponent implements 
 	 * @see com.wxxr.mobile.core.ui.impl.AbstractUIComponent#init(com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
 	 */
 	@Override
-	public void init(IWorkbenchRTContext ctx) {
+	protected void init(IWorkbenchRTContext ctx) {
 		super.init(ctx);
 		if(this.container != null){
 			this.container.init(ctx);

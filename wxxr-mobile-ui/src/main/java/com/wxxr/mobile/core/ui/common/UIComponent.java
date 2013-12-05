@@ -178,11 +178,11 @@ public abstract class UIComponent implements IUIComponent {
 		return this.ctx;
 	}
 	
-	public void init(IWorkbenchRTContext ctx){
+	protected void init(IWorkbenchRTContext ctx){
 		this.ctx = ctx;
 	}
 	
-	public void destroy() {
+	protected void destroy() {
 		if(this.attrs != null){
 			this.attrs.clear();
 			this.attrs = null;

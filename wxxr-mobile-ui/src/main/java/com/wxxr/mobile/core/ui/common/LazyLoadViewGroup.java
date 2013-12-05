@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.util.StringUtils;
 
 /**

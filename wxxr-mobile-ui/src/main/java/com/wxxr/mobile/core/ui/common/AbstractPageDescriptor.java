@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.ui.api.IPageDescriptor;
  * @author neillin
  *
  */
-public abstract class AbstractPageDescriptor extends AbstractViewDescriptor implements
+public abstract class AbstractPageDescriptor<T extends PageBase> extends AbstractViewDescriptor<T> implements
 		IPageDescriptor {
 	
 	private boolean hasToolbar;

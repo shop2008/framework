@@ -15,13 +15,12 @@ import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.IPageCallback;
-import com.wxxr.mobile.core.ui.api.IPageDescriptor;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IViewDescriptor;
-import com.wxxr.mobile.core.ui.api.IViewLifeContext;
+import com.wxxr.mobile.core.ui.api.IViewNavigationCallback;
+import com.wxxr.mobile.core.ui.api.IViewNavigationListener;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.UIConstants;
@@ -37,10 +36,10 @@ public abstract class WorkbenchBase implements IWorkbench {
 	private final SelectionServiceSupport selectionService = new SelectionServiceSupport();
 	private Stack<IView> onShowViews = new Stack<IView>();
 	private List<IView> createdViews = new ArrayList<IView>();
-	private IViewLifeContext viewLifeContext = new IViewLifeContext() {
+	private IViewNavigationListener listener = new IViewNavigationListener() {
 		
 		@Override
-		public void viewShow(final IView view) {
+		public void onShow(final IView view) {
 			synchronized(onShowViews){
 				onShowViews.remove(view);
 				onShowViews.push(view);
@@ -55,51 +54,33 @@ public abstract class WorkbenchBase implements IWorkbench {
 		}
 		
 		@Override
-		public void viewHidden(IView view) {
+		public void onHide(IView view) {
 			synchronized(onShowViews){
 				onShowViews.remove(view);
 			}
 		}
 		
 		@Override
-		public void viewDestroy(IView view) {
+		public void onDestroy(IView view) {
 			synchronized(createdViews){
 				createdViews.remove(view);
 			}
 		}
 		
 		@Override
-		public void viewCreated(IView view) {
+		public void onCreate(IView view) {
 			synchronized(createdViews){
 				if(!createdViews.contains(view)){
 					createdViews.add(view);
 				}
 			}
 		}
-		
+
 		@Override
-		public IView getActiveView() {
-			synchronized(onShowViews){
-				return onShowViews.isEmpty() ?  null : onShowViews.peek();
-			}
+		public boolean acceptable(IView view) {
+			return true;
 		}
 		
-		@Override
-		public IPage getActivePage() {
-			synchronized(onShowViews){
-				if(onShowViews.isEmpty()){
-					return null;
-				}
-				int size = onShowViews.size();
-				for(int i=size-1;i >= 0; i--){
-					IView v = onShowViews.get(i);
-					if(v instanceof IPage){
-						return (IPage)v;
-					}
-				}
-				return null;
-			}
-		}
 	};
 	
 //	private String activePageId;
@@ -108,15 +89,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 		
 	public WorkbenchBase(IWorkbenchRTContext ctx) {
 		this.uiContext = ctx;
+		IPageNavigator nav = ctx.getWorkbenchManager().getPageNavigator();
+		nav.registerNavigationListener(listener);
 		init();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getActivePageId()
-	 */
-	public String getActivePageId() {
-		IPage page = uiContext.getWorkbenchManager().getPageNavigator().getCurrentActivePage();
-		return page != null ? page.getName() : null;
 	}
 
 	/* (non-Javadoc)
@@ -125,10 +100,10 @@ public abstract class WorkbenchBase implements IWorkbench {
 	public IPage getPage(String pageId) {
 		IPage page = this.pages.get(pageId);
 		if(page == null){
-			IPageDescriptor desc = uiContext.getWorkbenchManager().getPageDescriptor(pageId);
+			AbstractPageDescriptor desc = (AbstractPageDescriptor)uiContext.getWorkbenchManager().getPageDescriptor(pageId);
 			if(desc != null){
-				page = (IPage)desc.createPresentationModel(uiContext);
-				page.init(uiContext);
+				page = (PageBase)desc.createPresentationModel(uiContext);
+				((PageBase)page).init(uiContext);
 				this.pages.put(pageId, page);
 			}
 		}
@@ -138,7 +113,7 @@ public abstract class WorkbenchBase implements IWorkbench {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#showPage(java.lang.String)
 	 */
-	public void showPage(String pageId,Map<String, Object> params,IPageCallback callback) {
+	public void showPage(String pageId,Map<String, Object> params,IViewNavigationCallback callback) {
 		if(log.isTraceEnabled()){
 			log.trace("Going to show page :"+pageId);
 		}
@@ -201,9 +176,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 	 */
 	@Override
 	public IView createNInitializedView(String viewId) {
-		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
+		AbstractViewDescriptor<ViewBase> desc = (AbstractViewDescriptor<ViewBase>)getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
 		if(desc != null){
-			IView view = desc.createPresentationModel(getUIContext());
+			ViewBase view = desc.createPresentationModel(getUIContext());
 			if(!view.isInitialized()){
 				view.init(getUIContext());
 			}
@@ -217,9 +192,9 @@ public abstract class WorkbenchBase implements IWorkbench {
 	 */
 	@Override
 	public IDialog createDialog(String viewId, Map<String, Object> params) {
-		IViewDescriptor desc = getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
+		AbstractViewDescriptor<ViewBase> desc = (AbstractViewDescriptor<ViewBase>)getUIContext().getWorkbenchManager().getViewDescriptor(viewId);
 		if(desc != null){
-			IView view = desc.createPresentationModel(getUIContext());
+			ViewBase view = desc.createPresentationModel(getUIContext());
 			if(!view.isInitialized()){
 				view.init(getUIContext());
 			}
@@ -230,6 +205,22 @@ public abstract class WorkbenchBase implements IWorkbench {
 			return getUIContext().getWorkbenchManager().getPageNavigator().createDialog(view,params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK));
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#initComponent(com.wxxr.mobile.core.ui.api.IUIComponent)
+	 */
+	@Override
+	public void initComponent(IUIComponent component) {
+		((UIComponent)component).init(getUIContext());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#destroyComponent(com.wxxr.mobile.core.ui.api.IUIComponent)
+	 */
+	@Override
+	public void destroyComponent(IUIComponent component) {
+		((UIComponent)component).destroy();
 	}
 
 	/* (non-Javadoc)
@@ -248,20 +239,28 @@ public abstract class WorkbenchBase implements IWorkbench {
 		return this.uiContext.getWorkbenchManager().getAllRegisteredPageIds();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getActiveView()
-	 */
 	@Override
 	public IView getActiveView() {
-		return this.viewLifeContext.getActiveView();
+		synchronized(onShowViews){
+			return onShowViews.isEmpty() ?  null : onShowViews.peek();
+		}
 	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IWorkbench#getViewLifeContext()
-	 */
+	
 	@Override
-	public IViewLifeContext getViewLifeContext() {
-		return this.viewLifeContext;
-	}	
+	public String getActivePageId() {
+		synchronized(onShowViews){
+			if(onShowViews.isEmpty()){
+				return null;
+			}
+			int size = onShowViews.size();
+			for(int i=size-1;i >= 0; i--){
+				IView v = onShowViews.get(i);
+				if(v instanceof IPage){
+					return v.getName();
+				}
+			}
+			return null;
+		}
+	}
 
 }

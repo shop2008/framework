@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
-import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
@@ -20,13 +19,13 @@ import com.wxxr.mobile.core.ui.api.ViewType;
  * @author neillin
  *
  */
-public abstract class AbstractViewDescriptor implements IViewDescriptor {
+public abstract class AbstractViewDescriptor<T extends ViewBase> implements IViewDescriptor {
 	
 	private String viewId, viewName, viewDescription;
 	private ViewType viewType;
 	private boolean isSingleton;
 	private Map<TargetUISystem, IBindingDescriptor> bindingDescriptiors;
-	private IView singleton;
+	private T singleton;
 	private LinkedList<INavigationDescriptor> navs;
 
 	public AbstractViewDescriptor(){
@@ -97,7 +96,7 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 		return this.bindingDescriptiors != null ? this.bindingDescriptiors.get(targetSystem) : null;
 	}
 	
-	public IView createPresentationModel(IWorkbenchRTContext ctx) {
+	T createPresentationModel(IWorkbenchRTContext ctx) {
 		if(isSingleton()){
 			if(this.singleton == null){
 				this.singleton = createPModel(ctx);
@@ -132,7 +131,7 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 				new INavigationDescriptor[0];
 	}
 	
-	public AbstractViewDescriptor addExceptionNavigation(INavigationDescriptor nav){
+	public AbstractViewDescriptor<T> addExceptionNavigation(INavigationDescriptor nav){
 		if(this.navs == null){
 			this.navs = new LinkedList<INavigationDescriptor>();
 		}
@@ -142,7 +141,7 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 		return this;
 	}
 	
-	public AbstractViewDescriptor removeExceptionNavigation(INavigationDescriptor nav){
+	public AbstractViewDescriptor<T> removeExceptionNavigation(INavigationDescriptor nav){
 		if(this.navs != null){
 			this.navs.remove(nav);
 		}
@@ -150,7 +149,7 @@ public abstract class AbstractViewDescriptor implements IViewDescriptor {
 	}
 
 
-	protected abstract IView createPModel(IWorkbenchRTContext ctx);
+	protected abstract T createPModel(IWorkbenchRTContext ctx);
 	
 	protected abstract void init();
 

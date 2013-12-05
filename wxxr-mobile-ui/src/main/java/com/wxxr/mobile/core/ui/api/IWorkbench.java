@@ -21,11 +21,12 @@ public interface IWorkbench {
 	String getActivePageId();
 	IView getActiveView();
 	IPage getPage(String pageId);
-	void showPage(String pageId,Map<String, Object> params,IPageCallback callback);
+	void showPage(String pageId,Map<String, Object> params,IViewNavigationCallback callback);
 	void showHomePage();
 	void hidePage(String pageId);
 	IView createNInitializedView(String viewId);
+	void initComponent(IUIComponent component);
+	void destroyComponent(IUIComponent component);
 	IDialog createDialog(String viewId, Map<String, Object> params);
 	ISelectionService getSelectionService();
-	IViewLifeContext getViewLifeContext();
 }

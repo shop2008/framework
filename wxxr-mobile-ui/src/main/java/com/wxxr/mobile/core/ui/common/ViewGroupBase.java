@@ -10,6 +10,8 @@ import java.util.Stack;
 
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
+import com.wxxr.mobile.core.ui.api.IViewNavigationListener;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
 
 /**
@@ -18,6 +20,52 @@ import com.wxxr.mobile.core.ui.api.IViewGroup;
  *
  */
 public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
+
+	private IViewNavigationListener listener = new IViewNavigationListener() {
+		
+		@Override
+		public void onShow(IView view) {
+			String name = view.getName();
+			viewStack.remove(name);
+			viewStack.push(name);		}
+		
+		@Override
+		public void onHide(IView view) {
+			viewStack.remove(view.getName());
+		}
+		
+		@Override
+		public void onDestroy(IView view) {
+			
+		}
+		
+		@Override
+		public void onCreate(IView view) {
+			
+		}
+		
+		@Override
+		public boolean acceptable(IView view) {
+			return containsChild(view);
+		}
+	};
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIContainer#destroy()
+	 */
+	@Override
+	public void destroy() {
+		getUIContext().getWorkbenchManager().getPageNavigator().unregisterNavigationListener(listener);
+		super.destroy();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.common.UIContainer#init(com.wxxr.mobile.core.ui.api.IWorkbenchRTContext)
+	 */
+	@Override
+	public void init(IWorkbenchRTContext ctx) {
+		super.init(ctx);
+		ctx.getWorkbenchManager().getPageNavigator().registerNavigationListener(listener);
+	}
 
 	private Stack<String> viewStack = new Stack<String>();
 	private String defaultViewId;

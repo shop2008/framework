@@ -49,10 +49,13 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		};
 	}
 
+	public synchronized boolean containsChild(Object child){
+		return children != null ? children.contains(child) : false;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IUIContainer#getChildrenCount()
 	 */
-	public int getChildrenCount() {
+	public synchronized int getChildrenCount() {
 		return children != null ? children.size() : 0;
 	}
 
