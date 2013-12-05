@@ -12,7 +12,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  * @author wuzhangyue
  * 
  */
-@XmlRootElement(name = "parameter")
+@XmlRootElement(name = "paramVos")
 public class ParamVO implements Serializable{
 	@XmlElement(name = "code")
 	private String code; // 股票代码
