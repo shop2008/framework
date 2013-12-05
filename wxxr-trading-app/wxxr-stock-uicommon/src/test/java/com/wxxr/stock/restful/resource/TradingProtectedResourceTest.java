@@ -28,12 +28,7 @@ import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
 public class TradingProtectedResourceTest extends TestCase{
 	ITradingProtectedResource tradingProtectedResource;
-	
-	
-	
-/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -46,9 +41,6 @@ public class TradingProtectedResourceTest extends TestCase{
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
-			 */
 			@Override
 			public ExecutorService getExecutorService() {
 				return executor;
@@ -85,19 +77,16 @@ public class TradingProtectedResourceTest extends TestCase{
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
@@ -106,13 +95,8 @@ public class TradingProtectedResourceTest extends TestCase{
 		builder.init(context);
 		tradingProtectedResource=builder.getRestService(ITradingProtectedResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
 		tradingProtectedResource=null;
 	}

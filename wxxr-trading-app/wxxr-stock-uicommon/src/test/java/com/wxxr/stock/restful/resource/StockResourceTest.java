@@ -31,12 +31,7 @@ import com.wxxr.stock.restful.json.StockTaxisListVO;
 public class StockResourceTest  extends TestCase{
 
 	StockResource tradingResource;
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
+
 	@Override
 	protected void setUp() throws Exception {
 		
@@ -46,9 +41,6 @@ public class StockResourceTest  extends TestCase{
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
-			 */
 			@Override
 			public ExecutorService getExecutorService() {
 				return executor;
@@ -85,19 +77,16 @@ public class StockResourceTest  extends TestCase{
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
@@ -107,12 +96,8 @@ public class StockResourceTest  extends TestCase{
 		tradingResource=builder.getRestService(StockResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
 	}
 

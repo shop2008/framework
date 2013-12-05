@@ -35,23 +35,11 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 public class StockUserResourceTest extends TestCase{
 	StockUserResource stockUserResource;
 	
-	
-	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		init();
 	}
-
-
-
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception {
 		// TODO Auto-generated method stub
@@ -59,18 +47,12 @@ public class StockUserResourceTest extends TestCase{
 		stockUserResource=null;
 	}
 
-
-
-
 	protected void init() {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
-			 */
 			@Override
 			public ExecutorService getExecutorService() {
 				return executor;
@@ -107,19 +89,16 @@ public class StockUserResourceTest extends TestCase{
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});

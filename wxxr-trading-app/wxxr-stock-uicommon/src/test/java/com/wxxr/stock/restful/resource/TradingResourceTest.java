@@ -32,9 +32,7 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 public class TradingResourceTest extends TestCase{
 	
 	ITradingResource tradingResource;
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
+
 	@Override
 	protected void setUp() throws Exception {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
@@ -42,9 +40,6 @@ public class TradingResourceTest extends TestCase{
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
-			 */
 			@Override
 			public ExecutorService getExecutorService() {
 				return executor;
@@ -81,19 +76,16 @@ public class TradingResourceTest extends TestCase{
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
@@ -103,9 +95,6 @@ public class TradingResourceTest extends TestCase{
 		tradingResource=builder.getRestService(ITradingResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception {
 
