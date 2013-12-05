@@ -40,8 +40,8 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
-import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
@@ -67,7 +67,6 @@ import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.SellStockCommand;
 import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
-import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
@@ -226,6 +225,7 @@ public class TradingManagementServiceImpl extends
         context.getService(ICommandExecutor.class).registerCommandHandler(QuickBuyStockCommand.Name, new QuickBuyStockHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(CancelOrderCommand.Name, new CancelOrderHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(ClearTradingAccountCommand.Name, new ClearTradingAccountHandler());
+        context.getService(ICommandExecutor.class).registerCommandHandler(ApplyDrawMoneyHandler.COMMAND_NAME, new ApplyDrawMoneyHandler());
 
 		context.registerService(ITradingManagementService.class, this);
 	}
