@@ -45,7 +45,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String stockName;
 	
-	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.buy:'--'}", converter = "stockLong2StringConvertorNoSign")
+	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.buy:'0'}", converter = "stockLong2StringConvertorNoSign")
 	String buy;
 
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.stockCode:'--'}")
@@ -68,6 +68,8 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	
 	@Command
 	String handlerCancelClick(InputEvent event) {
+		if("100".equals(orderBean.getStatus()))
+			return null;
 		manageService.cancelOrder(orderBean.getId()+"");
 		orderBean.setStatus("100");
 		return null;

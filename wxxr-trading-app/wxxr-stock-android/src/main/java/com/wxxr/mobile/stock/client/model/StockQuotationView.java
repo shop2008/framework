@@ -40,12 +40,10 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	String codeBean;
 	@Bean
 	String marketBean;
-	@Bean
-	Long timeBean;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
-			@Parameter(name="nullString",value="${timeBean}")
+			@Parameter(name="nullString",value="--")
 	})
 	BTTime2StringConvertor btTime2StringConvertor;
 	
@@ -198,14 +196,14 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		// registerBean("nameBean", "鸿达兴业");
 		// registerBean("codeBean", "600100");
 		// registerBean("marketBean", "SH");
-		SimpleDateFormat sdf = null;
-		try {
-			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String time = sdf.format(new Date());
-			registerBean("timeBean", time);
-		} catch (NullPointerException e) {
-		} catch (IllegalArgumentException e) {
-		}
+//		SimpleDateFormat sdf = null;
+//		try {
+//			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			String time = sdf.format(new Date());
+//			timeBean = time;
+//		} catch (NullPointerException e) {
+//		} catch (IllegalArgumentException e) {
+//		}
 	}
 	
 	@OnCreate
@@ -275,8 +273,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		service.removeSelectionListener("TBuyTradingPage", this);
 		service.removeSelectionListener("BuyStockDetailPage", this);
 		service.removeSelectionListener("infoCenter", this);
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("infoCenter", this);
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("sellTradingAccount", this);
+		service.removeSelectionListener("sellTradingAccount", this);
 	}
 	
 //	@Override

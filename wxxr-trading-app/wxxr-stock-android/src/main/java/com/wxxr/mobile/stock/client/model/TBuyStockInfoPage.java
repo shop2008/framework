@@ -72,7 +72,7 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'-1'}", converter = "longTime2StringConvertor")
 	String sellDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'0'}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}", converter = "float2PercentStringConvertor")
