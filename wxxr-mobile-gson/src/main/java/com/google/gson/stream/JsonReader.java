@@ -439,7 +439,7 @@ public class JsonReader implements Closeable {
       return JsonToken.STRING;
     case PEEKED_LONG:
     case PEEKED_NUMBER:
-      return JsonToken.STRING;
+      return JsonToken.NUMBER;
     case PEEKED_EOF:
       return JsonToken.END_DOCUMENT;
     default:
@@ -577,10 +577,10 @@ public class JsonReader implements Closeable {
       return result;
     }
 
-//    result = peekNumber();
-//    if (result != PEEKED_NONE) {
-//      return result;
-//    }
+    result = peekNumber();
+    if (result != PEEKED_NONE) {
+      return result;
+    }
 
     if (!isLiteral(buffer[pos])) {
       throw syntaxError("Expected value");
