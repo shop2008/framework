@@ -105,7 +105,8 @@ public class TradingResourceTest extends TestCase{
 //  public TradingAccountVO getAccount(String acctID) throws Exception;
     public void testGetAccount()throws Exception{
     	TradingAccountVO a = tradingResource
-				.getAccount("100");
+				.getAccount("2661");
+    	System.out.println(a);
 	}
 
 //  public List<TradingRecordVO> getTradingAccountRecord( String acctID, int start, int limit) throws Exception ;
