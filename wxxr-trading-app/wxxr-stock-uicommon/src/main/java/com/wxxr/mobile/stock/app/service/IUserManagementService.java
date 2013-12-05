@@ -226,4 +226,6 @@ public interface IUserManagementService {
 	 * @return
 	 */
 	BindableListWrapper<GainPayDetailBean> getGPDetails(int start,int limit);
+	
+	UserBean refreshUserInfo();
 }

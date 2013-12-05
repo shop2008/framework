@@ -51,6 +51,8 @@ import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
+import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
+import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
@@ -157,6 +159,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(SubmitPushMesasgeHandler.COMMAND_NAME, new SubmitPushMesasgeHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateNickNameHandler.COMMAND_NAME, new UpdateNickNameHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(RefresUserInfoHandler.COMMAND_NAME, new RefresUserInfoHandler());
 
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
@@ -831,6 +834,26 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}catch(CommandException e){
 			throw new StockAppBizException(e.getMessage());
 		}
+	}
+
+	@Override
+	public UserBean refreshUserInfo() {
+		RefreshUserInfoCommand cmd=new RefreshUserInfoCommand();
+		try{
+			Future<UserVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+				try {
+					UserVO vo=future.get(30,TimeUnit.SECONDS);
+					myUserInfo.setNickName(vo.getNickName());
+					myUserInfo.setUsername(vo.getUserName());
+					myUserInfo.setPhoneNumber(vo.getMoblie());
+					myUserInfo.setUserPic(vo.getIcon());
+				} catch (Exception e) {
+					throw new StockAppBizException("系统错误");
+				}
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
+			}
+		return null;
 	}
 	
 	
