@@ -113,9 +113,10 @@ public class ArticleResourceTest extends TestCase{
 		NewsQueryBO query = new NewsQueryBO();
 		query.setStart(0);
 		query.setLimit(3);
-		query.setType("16");
+		query.setType("18");
 		query.setUid(0);
 		List<ArticleVO> a = articleResource.getNewArticle(query);
+		assertNotNull(a);
 	}
 	//public List<PullMessageVO> getPullMessage(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	public void testGetPullMessage()throws Exception{

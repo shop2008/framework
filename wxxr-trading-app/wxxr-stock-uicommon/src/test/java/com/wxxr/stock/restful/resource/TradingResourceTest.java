@@ -16,9 +16,9 @@ import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
-import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
-import com.wxxr.stock.trading.ejb.api.ClosedSumInfoVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
+import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
+import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
+import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -134,19 +134,19 @@ public class TradingResourceTest extends TestCase{
 	
 //	public ClosedSumInfoVO getClosedTradingSum( String tradingAccountId)throws Exception;
     public void testGetClosedTradingSum()throws Exception{
-    	ClosedSumInfoVO a = tradingResource
+    	ClosedSummaryVO a = tradingResource
 				.getClosedTradingSum("1000");
 	}
 
 //	public DealDetailVO getDealDetail(String acctID)throws Exception;
     public void testGetDealDetail()throws Exception{
-    	DealDetailVO a = tradingResource
+    	DealDetailInfoVO a = tradingResource
 				.getDealDetail("1000");
 	}
 
 //  public AuditDetailVO getAuditDetail(String acctID)throws Exception;
     public void testGetAuditDetail()throws Exception{
-    	AuditDetailVO a = tradingResource
+    	AuditInfoVO a = tradingResource
 				.getAuditDetail("1000");
 	}
 

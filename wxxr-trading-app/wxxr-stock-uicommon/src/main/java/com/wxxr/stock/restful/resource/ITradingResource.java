@@ -7,8 +7,9 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
-import com.wxxr.stock.trading.ejb.api.AuditDetailVO;
-import com.wxxr.stock.trading.ejb.api.ClosedSumInfoVO;
+import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
+import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
+import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
@@ -42,18 +43,18 @@ public interface ITradingResource{
 	@Path("/getClosedSum")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public ClosedSumInfoVO getClosedTradingSum(@QueryParam("tradingAccountId") String tradingAccountId)throws Exception;
+	public ClosedSummaryVO getClosedTradingSum(@QueryParam("tradingAccountId") String tradingAccountId)throws Exception;
 
 	@GET
 	@Path("/dealDetail")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public DealDetailVO getDealDetail(@QueryParam("acctID")String acctID)throws Exception;
+	public DealDetailInfoVO getDealDetail(@QueryParam("acctID")String acctID)throws Exception;
 	@GET
 	@Path("/auditDetail")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public AuditDetailVO getAuditDetail(@QueryParam("acctID")String acctID)throws Exception;
+	public AuditInfoVO getAuditDetail(@QueryParam("acctID")String acctID)throws Exception;
 	@GET
 	@Path("/totalGain")
 	@Produces({ "application/json;charset=utf-8" })

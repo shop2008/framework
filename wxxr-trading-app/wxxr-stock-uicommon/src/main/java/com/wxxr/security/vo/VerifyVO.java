@@ -5,7 +5,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "VerifyQuery")
 public class VerifyVO {
-	@XmlElement(name = "passwd")
+
 	private String passwd ;
 
 	

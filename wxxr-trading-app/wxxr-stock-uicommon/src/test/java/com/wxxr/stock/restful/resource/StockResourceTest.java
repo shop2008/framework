@@ -136,7 +136,7 @@ public class StockResourceTest  extends TestCase{
 		p.setCode("600000");
 		list.add(p);
 		QuotationListVO a = tradingResource.getQuotation("SH","600000");
-		System.out.println(a);
+		System.out.println(a.getList().get(0));
 	}
 
 	public void testGetMinuteline()throws Exception{
@@ -144,6 +144,7 @@ public class StockResourceTest  extends TestCase{
 		p.setMarket("SH");
 		p.setCode("600000");
 		StockMinuteKVO a = tradingResource.getMinuteline(p);
+		System.out.println(a);
 	}
 	   
 	public void testGetDayline()throws Exception{
@@ -169,7 +170,7 @@ public class StockResourceTest  extends TestCase{
 		p.setOrderby("desc");
 		p.setStart(0L);
 		p.setLimit(10L);
-		p.setBlockId(47503L);
+		p.setBlockId(47513L);
 		p.setTaxis("risefallrate");
 		List<StockQuotationVO> a = tradingResource.getStockHQListByBlockId(p);
 	}

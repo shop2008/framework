@@ -11,6 +11,7 @@ package com.wxxr.stock.restful.resource;
 
 import java.util.List;
 
+import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
@@ -22,5 +23,6 @@ public interface IMessageRemindResource {
 	@POST
 	@Path("/findById")
 	@Produces( { "application/json;charset=utf-8" })
+	@Consumes
 	public List<MessageVO> findById(MsgQuery vo) throws Exception ;
 }
