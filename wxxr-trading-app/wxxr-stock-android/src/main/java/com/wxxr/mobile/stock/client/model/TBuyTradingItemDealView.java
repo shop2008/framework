@@ -61,9 +61,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 			})
 	String currentPirce;
 
-	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.buy:'--'}", converter = "stockLong2StringConvertorYuan", attributes={
-			@Attribute(name = "textColor", value = "${orderBean.status==0?'resourceId:color/gray':'resourceId:color/white'}")
-			})
+	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.buy:'--'}", converter = "stockLong2StringConvertorYuan")
 	String buy;
 
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.gain:'--'}", converter = "stockLong2StringConvertorYuan", attributes={
@@ -71,9 +69,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 			})
 	String gain;
 
-	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.stockCode:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${orderBean.status==0?'resourceId:color/gray':'resourceId:color/gray'}")
-			})
+	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.stockCode:'--'}")
 	String stockCode;
 
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.changeRate:'--'}", converter = "stockLong2StringConvertorSpecial", attributes={
@@ -81,9 +77,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 			})
 	String changeRate;
 
-	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.amount:'--'}${'股'}", attributes={
-			@Attribute(name = "textColor", value = "${orderBean.status==0?'resourceId:color/gray':'resourceId:color/gray'}")
-			})
+	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.amount:'--'}${'股'}")
 	String amount;
 
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.gainRate:'--'}", converter = "stockLong2StringConvertorSpecial", attributes={

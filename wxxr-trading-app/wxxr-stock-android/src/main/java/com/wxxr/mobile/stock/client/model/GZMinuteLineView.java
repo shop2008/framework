@@ -150,11 +150,22 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			selectionChanged("infoCenter",selection);
 		}
 		service.addSelectionListener("infoCenter", this);
+		//买入
+		selection = service.getSelection("TBuyTradingPage");
+		if(selection != null)
+			selectionChanged("TBuyTradingPage", selection);
+		service.addSelectionListener("TBuyTradingPage", this);
+		
+		service.addSelectionListener("stockSearchPage", this);
+		service.addSelectionListener("BuyStockDetailPage", this);
 	}
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
 		service.removeSelectionListener("infoCenter", this);
+		service.removeSelectionListener("TBuyTradingPage", this);
+		service.removeSelectionListener("stockSearchPage", this);
+		service.removeSelectionListener("BuyStockDetailPage", this);
 	}
 	
 	@Override
@@ -187,6 +198,16 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					this.map = minuteMap;
 					registerBean("map", this.map);
 				}
+			} else if ("TBuyTradingPage".equals(providerId)
+					|| "stockSearchPage".equals(providerId)
+					|| "BuyStockDetailPage".equals(providerId)) {
+				String[] stockInfos = (String[]) impl.getSelected();
+				this.codeBean = stockInfos[0];
+				this.nameBean = stockInfos[1];
+				this.marketBean = stockInfos[2];
+				registerBean("codeBean", this.codeBean);
+				registerBean("nameBean", this.nameBean);
+				registerBean("marketBean", this.marketBean);
 			}
 		}
 	}

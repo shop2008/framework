@@ -53,32 +53,33 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	LongTime2StringConvertor longTime2StringConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%+10.2f"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="format",value="%+.2f"),
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="(%+.2f%%)"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorNoSign;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="1000")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	//买入
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="10000.00")
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorBuy;
 	
@@ -143,6 +144,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		service.addSelectionListener("TBuyTradingPage", this);
 		
 		service.addSelectionListener("stockSearchPage", this);
+		service.addSelectionListener("BuyStockDetailPage", this);
 		
 		ISelection selectionInfoCenter = service.getSelection("infoCenter");
 		if(selectionInfoCenter!=null){
@@ -198,8 +200,12 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		
+		service.removeSelectionListener("stockSearchPage", this);
+		service.removeSelectionListener("TBuyTradingPage", this);
+		service.removeSelectionListener("BuyStockDetailPage", this);
+		service.removeSelectionListener("infoCenter", this);
 	}
 	
 //	@Override

@@ -8,16 +8,22 @@ import java.util.Map;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * 模拟盘详情
@@ -29,7 +35,13 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.chengjiao_operation_detail_page_layout")
 public abstract class TradingRecordDoneDetailPage extends PageBase implements
 		IModelUpdater {
+	// 查股票名称
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
 
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	StockBaseInfo stockInfoBean;
+		
 	@Bean
 	String marketBean;
 	@Bean
@@ -51,8 +63,20 @@ public abstract class TradingRecordDoneDetailPage extends PageBase implements
 	@Bean
 	String feeBean;
 
-	@Field(valueKey = "text", binding = "${marketBean}")
-	String market;
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="formatUnit", value="元")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorNoSign;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+	})
+	LongTime2StringConvertor longTime2StringConvertor;
+	
+	@Field(valueKey = "text", binding = "${stockInfoBean!=null?stockInfoBean.name:'--'}")
+	String name;
 
 	@Field(valueKey = "text", binding = "${codeBean}")
 	String code;
@@ -60,25 +84,25 @@ public abstract class TradingRecordDoneDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${describeBean}")
 	String describe;
 
-	@Field(valueKey = "text", binding = "${dateBean}")
+	@Field(valueKey = "text", binding = "${dateBean}", converter="longTime2StringConvertor")
 	String date;
 
-	@Field(valueKey = "text", binding = "${priceBean}")
+	@Field(valueKey = "text", binding = "${priceBean}", converter="stockLong2StringConvertorNoSign")
 	String price;
 
-	@Field(valueKey = "text", binding = "${volBean}")
+	@Field(valueKey = "text", binding = "${volBean}${'股'}")
 	String vol;
 	
-	@Field(valueKey = "text", binding = "${amountBean}")
+	@Field(valueKey = "text", binding = "${amountBean}", converter="stockLong2StringConvertorNoSign")
 	String amount;
 
-	@Field(valueKey = "text", binding = "${brokerageBean}")
+	@Field(valueKey = "text", binding = "${brokerageBean}", converter="stockLong2StringConvertorNoSign")
 	String brokerage;
 
-	@Field(valueKey = "text", binding = "${taxBean}")
+	@Field(valueKey = "text", binding = "${taxBean}", converter="stockLong2StringConvertorNoSign")
 	String tax;
 
-	@Field(valueKey = "text", binding = "${feeBean}")
+	@Field(valueKey = "text", binding = "${feeBean}", converter="stockLong2StringConvertorNoSign")
 	String fee;
 
 	@Menu(items = { "left" })
@@ -88,15 +112,6 @@ public abstract class TradingRecordDoneDetailPage extends PageBase implements
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
-	}
-
-	@OnShow
-	protected void initStockInfo() {
-		// registerBean("idBean", "--");
-		// registerBean("buyDayBean", "--");
-		// registerBean("sellDayBean", "--");
-		// registerBean("applyFeeBean", "--");
-		// registerBean("lossLimitBean", "--");
 	}
 
 	@Override

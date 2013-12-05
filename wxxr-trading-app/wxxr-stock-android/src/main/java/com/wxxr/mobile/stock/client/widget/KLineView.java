@@ -442,7 +442,7 @@ public class KLineView extends View implements IDataChangedListener {
 		mPaint.setAntiAlias(true);
 		mPaint.setColor(Color.parseColor("#5b5b5b"));
 		mPaint.setStyle(Paint.Style.FILL);
-		mPaint.setStrokeWidth(2);
+		mPaint.setStrokeWidth(1);
 		// mPaint.setColor(Color.DKGRAY);
 		// Path path = new Path();
 		// path.moveTo(0, 10);

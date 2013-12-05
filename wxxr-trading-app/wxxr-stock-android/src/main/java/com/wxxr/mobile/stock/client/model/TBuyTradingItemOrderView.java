@@ -22,14 +22,14 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.buy_trading_stock_order_item")
 public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		IModelUpdater {
+	// 交易服务
+	@Bean(type = BindingType.Service)
+	ITradingManagementService manageService;
+	
 	//查股票名称
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 
-	//交易服务
-	@Bean(type = BindingType.Service)
-	ITradingManagementService manageService;
-		
 	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(orderBean!=null?orderBean.stockCode:'', orderBean!=null?orderBean.marketCode:'')}")
 	StockBaseInfo stockInfoBean;
 	
@@ -54,13 +54,14 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.amount:'--'}${'股'}")
 	String amount;
 
-	@Field(valueKey = "text")//, binding = "${orderBean!=null?orderBean.status:'--'}${'股'}")
+	@Field(valueKey = "text", binding = "${orderBean!=null?(orderBean.status=='PROCESSING'?'撤  单':(orderBean.status=='100'?'正在撤单':'正在撤单')):'撤  单'}")
 	String status;
 	
 	
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof StockTradingOrderBean) {
+			orderBean = (StockTradingOrderBean)value;
 			registerBean("orderBean",value);
 		}
 	}
@@ -68,6 +69,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Command
 	String handlerCancelClick(InputEvent event) {
 		manageService.cancelOrder(orderBean.getId()+"");
+		orderBean.setStatus("100");
 		return null;
 	}
 }

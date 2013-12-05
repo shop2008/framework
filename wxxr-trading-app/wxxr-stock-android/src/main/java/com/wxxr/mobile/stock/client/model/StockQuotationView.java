@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -43,19 +44,26 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	Long timeBean;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="${timeBean}")
 	})
-	LongTime2StringConvertor longTime2StringConvertor;
+	BTTime2StringConvertor btTime2StringConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%+10.2f"),
+			@Parameter(name="format",value="%.0f"),
 			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorInt;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%+.2f"),
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="(%+.2f%%)"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="1000.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
@@ -66,7 +74,8 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	StockLong2StringConvertor stockLong2StringConvertorNoSign;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f")
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple", value="100")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
@@ -102,7 +111,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			})
 	String newpriceIcon;
 	
-	@Field(valueKey = "text", binding= "${timeBean}",converter="longTime2StringConvertor")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.datetime:null}", converter="btTime2StringConvertor")
 	String time;
 	//卖
 	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellprice5:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
@@ -126,15 +135,15 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			})
 	String sellPrice1;
 	
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume5:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume5:'0'}", converter="stockLong2StringConvertorInt")
 	String sellVolume5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume4:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume4:'0'}", converter="stockLong2StringConvertorInt")
 	String sellVolume4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume3:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume3:'0'}", converter="stockLong2StringConvertorInt")
 	String sellVolume3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume2:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume2:'0'}", converter="stockLong2StringConvertorInt")
 	String sellVolume2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume1:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellvolume1:'0'}", converter="stockLong2StringConvertorInt")
 	String sellVolume1;
 	//买
 	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyprice5:'0'}", converter = "stockLong2StringConvertorNoSign", attributes={
@@ -158,15 +167,15 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			})
 	String buyPrice1;
 	
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume5:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume5:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume5;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume4:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume4:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume4;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume3:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume3:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume3;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume2:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume2:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume2;
-	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume1:'0'}")
+	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.buyvolume1:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume1;
 	//买卖盘
 	@Field(valueKey = "text", binding= "${stockQuotationBean!=null?stockQuotationBean.sellsum:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
@@ -186,11 +195,17 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@OnShow
 	void initBeans() {
-		// TODO Auto-generated method stub
-//		registerBean("nameBean", "鸿达兴业");
-//		registerBean("codeBean", "100100");
-//		registerBean("marketBean", "SH");
-		registerBean("timeBean", new Date().getTime());
+		// registerBean("nameBean", "鸿达兴业");
+		// registerBean("codeBean", "600100");
+		// registerBean("marketBean", "SH");
+		SimpleDateFormat sdf = null;
+		try {
+			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time = sdf.format(new Date());
+			registerBean("timeBean", time);
+		} catch (NullPointerException e) {
+		} catch (IllegalArgumentException e) {
+		}
 	}
 	
 	@OnCreate
@@ -201,6 +216,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			selectionChanged("TBuyTradingPage", selection);
 		service.addSelectionListener("TBuyTradingPage", this);
 		service.addSelectionListener("stockSearchPage", this);
+		service.addSelectionListener("BuyStockDetailPage", this);
 		ISelection selectionInfoCenter = service.getSelection("infoCenter");
 		if(selectionInfoCenter!=null){
 			selectionChanged("infoCenter", selectionInfoCenter);
@@ -234,7 +250,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 					}
 				}
 			}
-		}else{
+		} else{
 			String[] stockInfos = (String[])impl.getSelected();
 			this.codeBean = stockInfos[0];
 			this.nameBean = stockInfos[1];
@@ -247,8 +263,12 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		
+		service.removeSelectionListener("stockSearchPage", this);
+		service.removeSelectionListener("TBuyTradingPage", this);
+		service.removeSelectionListener("BuyStockDetailPage", this);
+		service.removeSelectionListener("infoCenter", this);
 	}
 	
 //	@Override

@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.android.app.AppUtils;
@@ -53,7 +54,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_stock_detail_layout")
 public abstract class BuyStockDetailPage extends PageBase implements
 		IModelUpdater,ISelectionChangedListener {
-	@ViewGroup(viewIds={"StockQuotationView", "StockKLineView"})
+	@ViewGroup(viewIds={"StockQuotationView", "GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;
 	
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
@@ -152,6 +153,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		marketPriceBean = stockQuotationBean.getNewprice() + "";
 		registerBean("orderPriceBean", orderPriceBean);
 		registerBean("marketPriceBean", marketPriceBean);
+		String[] stockInfos = new String[] { codeBean, nameBean, marketBean };
+		updateSelection((Object) stockInfos);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("code", codeBean);
+		map.put("name", nameBean);
+		map.put("market", marketBean);
+		updateSelection(map);
 		return null;
 	}
 	/**

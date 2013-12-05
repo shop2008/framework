@@ -170,7 +170,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 	@Override
 	public void destroy() {
 		if (this.viewPagerAdapter != null) {
-//			this.viewPagerAdapter.destroy();
+			this.viewPagerAdapter.destroy();
 			this.viewPagerAdapter = null;
 			setupAdapter(null);
 		}
@@ -191,19 +191,20 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 
 	
 	protected View createUI(ViewGroupBase viewGroup, String viewId){
-		LRUList<View> pool = getViewPool(viewId, false);
-		View view = pool != null ? pool.get() : null;
-		if(view != null){
-			return view;
-		}
+//		LRUList<View> pool = getViewPool(viewId, false);
+//		View view = pool != null ? pool.get() : null;
+//		if(view != null){
+//			return view;
+//		}
+		View view = null;
 		IView v = viewGroup.getView(viewId);
 //		IViewDescriptor v = getWorkbenchContext().getWorkbenchManager().getViewDescriptor(viewId);
 		IBindingDescriptor bDesc = getWorkbenchContext().getWorkbenchManager().getViewDescriptor(viewId).getBindingDescriptor(TargetUISystem.ANDROID);
-		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
+//		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
 		IBinding<IView> binding = v.getBinding();
 		if(binding == null) {
 			IViewBinder vBinder = getWorkbenchContext().getWorkbenchManager().getViewBinder();
-			binding = vBinder.createBinding(ctx, bDesc);
+			binding = vBinder.createBinding(bindingCtx, bDesc);
 			binding.init(getWorkbenchContext());
 			v.doBinding(binding);
 		}
@@ -211,7 +212,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 		view = (View)binding.getUIControl();
 		BindingBag bag = new BindingBag();
 		bag.binding = binding;
-		bag.ctx = ctx;
+//		bag.ctx = bindingCtx;
 		bag.view = v;//getWorkbenchContext().getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
 		view.setTag(bag);
 		return view;

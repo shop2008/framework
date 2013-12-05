@@ -24,16 +24,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="股票名称："
-                android:textColor="@color/gray" />
+                android:text="股票名称"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
-                bind:field="market" />
+                android:textColor="@color/black"
+                bind:field="name" />
         </RelativeLayout>
 
         <View
@@ -54,15 +54,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="股票代码："
-                android:textColor="@color/gray" />
+                android:text="股票代码"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 bind:field="code" />
         </RelativeLayout>
     </LinearLayout>
@@ -86,15 +86,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="委托方向："
-                android:textColor="@color/gray" />
+                android:text="委托方向"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 bind:field="describe" />
         </RelativeLayout>
 
@@ -116,15 +116,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="委托时间："
-                android:textColor="@color/gray" />
+                android:text="委托时间"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 bind:field="date" />
         </RelativeLayout>
 
@@ -146,15 +146,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="委托价格："
-                android:textColor="@color/gray" />
+                android:text="委托价格"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 bind:field="price" />
         </RelativeLayout>
 
@@ -176,15 +176,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="委托数量："
-                android:textColor="@color/gray" />
+                android:text="委托数量"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 bind:field="vol" />
         </RelativeLayout>
 
@@ -207,15 +207,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="成交时间："
-                android:textColor="@color/gray" />
+                android:text="成交时间"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="--"
-                android:textColor="@color/gray"/>
+                android:textColor="@color/black"/>
         </RelativeLayout>
     </LinearLayout>
 
