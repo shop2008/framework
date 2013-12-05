@@ -96,53 +96,10 @@ public interface StockUserResource {
 	public SimpleResultVo isBindApp() throws RestBizException;
 
 	@POST
-	@Path("/regist")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public Response regist(RegistVO query) throws RestBizException;
-
-	@GET
-	@Path("/info")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public UserBaseInfoVO info() throws RestBizException;
-
-	@POST
 	@Path("/updatePwd")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException;
-
-	@GET
-	@Path("/getuserpermis")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public UserPermisVO getUserPermis() throws RestBizException;
-
-	@POST
-	@Path("/bindmobile")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
-
-	@POST
-	@Path("/changebindmobile")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo)
-			throws RestBizException;
-
-	@POST
-	@Path("/verify")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public ResultBaseVO verifyUser(VerifyVO vo) throws RestBizException;
-
-	@GET
-	@Path("/token")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public ResultBaseVO token() throws RestBizException;
 
 	@POST
 	@Path("/pollAndPushToken")

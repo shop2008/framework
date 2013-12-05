@@ -130,14 +130,15 @@ public class StockUserResourceTest extends TestCase{
 
 //	public Response regist(RegistVO query) throws RestBizException;
 
+//历史遗留问题，新锐财经使用
 //	public UserBaseInfoVO info() throws RestBizException;	
-	public void testGetUserInfo(){
-		try {
-			UserBaseInfoVO info = stockUserResource.info();
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	public void testGetUserInfo(){
+//		try {
+//			UserBaseInfoVO info = stockUserResource.info();
+//		} catch (RestBizException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 	
 //	public ResultBaseVO updatePwd(UpdatePwdVO vo) throws RestBizException;
 	public void testUpdatePwd(){
@@ -151,50 +152,54 @@ public class StockUserResourceTest extends TestCase{
 		}
 	}
 
+// 新锐财经使用
 //	public UserPermisVO getUserPermis() throws RestBizException;
-	public void testGetUserPermis(){
-		try {
-			UserPermisVO info = stockUserResource.getUserPermis();
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-//	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
-	public void testBindMobile(){
-		try {
-			BindMobileVO vo = new BindMobileVO();
-			vo.setCode("111");
-			vo.setMobileNum("13900001001");
-			vo.setType("1");
-			ResultBaseVO info = stockUserResource.bindMobile(vo);
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	public void testGetUserPermis(){
+//		try {
+//			UserPermisVO info = stockUserResource.getUserPermis();
+//		} catch (RestBizException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 
+//历史遗留问题，新锐财经使用	
+//	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
+//	public void testBindMobile(){
+//		try {
+//			BindMobileVO vo = new BindMobileVO();
+//			vo.setCode("111");
+//			vo.setMobileNum("13900001001");
+//			vo.setType("1");
+//			ResultBaseVO info = stockUserResource.bindMobile(vo);
+//		} catch (RestBizException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
+
+//历史遗留问题，新锐财经使用
 //	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo)	throws RestBizException;
-	public void testChangeBindMobile(){
-		try {
-			ChangeBindMobileVO vo = new ChangeBindMobileVO();
-			vo.setNewBindMobile("13900001001");
-			vo.setVerifCode("433566");
-			ResultBaseVO info = stockUserResource.changeBindMobile(vo);
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	public void testChangeBindMobile(){
+//		try {
+//			ChangeBindMobileVO vo = new ChangeBindMobileVO();
+//			vo.setNewBindMobile("13900001001");
+//			vo.setVerifCode("433566");
+//			ResultBaseVO info = stockUserResource.changeBindMobile(vo);
+//		} catch (RestBizException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 	
+//历史遗留问题，新锐财经使用	
 //	public ResultBaseVO verifyUser(VerifyVO vo) throws RestBizException;
-	public void testVerifyUser(){
-		try {
-			VerifyVO vo = new VerifyVO();
-			vo.setPasswd("666666");
-			ResultBaseVO info = stockUserResource.verifyUser(vo);
-		} catch (RestBizException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	public void testVerifyUser(){
+//		try {
+//			VerifyVO vo = new VerifyVO();
+//			vo.setPasswd("666666");
+//			ResultBaseVO info = stockUserResource.verifyUser(vo);
+//		} catch (RestBizException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 
 //	public ResultBaseVO token() throws RestBizException;
 
@@ -202,8 +207,8 @@ public class StockUserResourceTest extends TestCase{
 	public void testUpdateToken(){
 		try {
 			TokenVO vo = new TokenVO();
-			vo.setPollToken("666666");
-			vo.setPushToken("ccccccc");
+			vo.setPollToken("");
+			vo.setPushToken("");
 			TokenVO info = stockUserResource.updateToken(vo);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());

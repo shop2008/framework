@@ -182,7 +182,7 @@ public class TradingProtectedResourceTest extends TestCase{
 //	public StockResultVO drawMoney( long count);
 	public void testDrawMoney()throws Exception{
 		StockResultVO a = tradingProtectedResource
-				.drawMoney(10);
+				.drawMoney(100);
 	}
 
 //	public UserAssetVO getAcctUsable()throws Exception;
