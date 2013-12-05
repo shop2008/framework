@@ -23,17 +23,15 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name="SHZhiShuPage",withToolbar=true,description="指数界面")
-@AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.zhishu_page_layout1")
-public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
-	static Trace log = Trace.getLogger(SHzhiShuPage.class);
-	
+@View(name="ZhiShuPage",withToolbar=true,description="指数界面")
+@AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.zhishu_page_layout")
+public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
+	static Trace log = Trace.getLogger(ZhiShuPage.class);
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
@@ -46,12 +44,9 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getQuotations()}")
-	QuotationListBean quotationBean;
-	
-	@Bean(type = BindingType.Pojo,express = "${quotationBean!=null?quotationBean.shBean:null}")
-	StockQuotationBean shBean;
-	
+	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation(stockCode,stockMarket)}")
+	StockQuotationBean stockBean;
+
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
@@ -68,17 +63,19 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="formatUnit",value="手"),
 			@Parameter(name="multiple", value="100"),
+			@Parameter(name="formatUnit",value="手"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor convertorSecuvolume;
 	
 	@Convertor(params={
+			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor convertorSecuamount;
+	
 	
 	@Bean
 	String stockName;
@@ -86,79 +83,87 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	String stockCode;
 	@Bean
 	String stockMarket;
-
+	
 	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
-	private IViewGroup contents;		
+	private IViewGroup contents;
+	
+	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='000001'&&stockMarket=='SH')}")
+	boolean showSHLayout = true;
+	
+	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='399001'&&stockMarket=='SZ')}")
+	boolean showSZLayout = false;
 	
 	/**昨收*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.close:null}",converter="stockLong2StringAutoUnitConvertor")
 	String close;
 	
 	/**开盘*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.open > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.open < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.open > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.open < stockBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String open;
 	
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.open > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.open < shBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.open > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.open < stockBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")	
 	})
 	String openLabel;
 	
 	/**最高*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.high > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.high < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.high > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.high < stockBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String high;
 	
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.high > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.high < shBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.high > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.high < stockBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")	
 	})
 	String highLabel;
 	
 	/**最底*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.low > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.low < shBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.low > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.low < stockBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String low;
 	
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${(shBean!=null && shBean.low > shBean.close)?'resourceId:color/red':((shBean!=null && shBean.low < shBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
+			@Attribute(name = "textColor", value = "${(stockBean!=null && stockBean.low > stockBean.close)?'resourceId:color/red':((stockBean!=null && stockBean.low < stockBean.close)?'resourceId:color/green':'resourceId:color/tv_gray_color')}")
 	})
 	String lowLabel;
 	
+	
 	/**成交量*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.secuvolume:null}",converter="convertorSecuvolume")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.secuvolume:null}",converter="convertorSecuvolume")
 	String secuvolume;
 	
 	/**成交额*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.secuamount:'--'}",converter="convertorSecuamount")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.secuamount:null}",converter="convertorSecuamount")
 	String secuamount;
 	
 	/**量比*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
 	String lb;
 	
 	/**平盘家数*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.ppjs:'--'}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.ppjs:'--'}")
 	String ppjs;
 	
 	/**上涨家数*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.szjs:'--'}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.szjs:'--'}")
 	String szjs;
 	
 	/**下跌家数*/
-	@Field(valueKey="text",binding="${shBean!=null?shBean.xdjs:'--'}")
+	@Field(valueKey="text",binding="${stockBean!=null?stockBean.xdjs:'--'}")
 	String xdjs;
 	
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
+	
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		if (log.isDebugEnabled()) {
-			log.debug("SHzhiShuPage : handleTMegaTopRefresh");
+			log.debug("SZzhiShuPage : handleTMegaTopRefresh");
 		}
 		infoCenterService.getQuotations();
 		return null;
@@ -166,6 +171,7 @@ public abstract class SHzhiShuPage extends PageBase implements IModelUpdater {
 	
 	@OnShow
 	protected void initData(){
+		
 	}
 	
 	@Override

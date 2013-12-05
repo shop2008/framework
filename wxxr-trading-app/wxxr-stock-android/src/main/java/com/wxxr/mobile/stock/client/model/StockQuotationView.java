@@ -1,6 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -199,8 +200,12 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		if(selection != null)
 			selectionChanged("TBuyTradingPage", selection);
 		service.addSelectionListener("TBuyTradingPage", this);
-		
 		service.addSelectionListener("stockSearchPage", this);
+		ISelection selectionInfoCenter = service.getSelection("infoCenter");
+		if(selectionInfoCenter!=null){
+			selectionChanged("infoCenter", selectionInfoCenter);
+		}
+		service.addSelectionListener("infoCenter",this);
 	}
 	
 	@Override
@@ -208,14 +213,36 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		if(selection == null)
 			return;
 		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
-		String[] stockInfos = (String[])impl.getSelected();
-		this.codeBean = stockInfos[0];
-		this.nameBean = stockInfos[1];
-		this.marketBean = stockInfos[2];
-		registerBean("codeBean", this.codeBean);
-		registerBean("nameBean", this.nameBean);
-		registerBean("marketBean", this.marketBean);
-//		infoCenterService.getStockQuotation(codeBean, marketBean);
+		if(providerId.equals("infoCenter") && impl!=null){
+			if(impl.getSelected() instanceof Map){
+				Map temp = (Map) impl.getSelected();
+				for (Object key : temp.keySet()) {
+					if(key.equals("code")){
+						String code = (String) temp.get(key);
+						this.codeBean = code;
+						registerBean("codeBean", this.codeBean);
+					}
+					if(key.equals("name")){
+						String name = (String) temp.get(key);
+						this.nameBean = name;
+						registerBean("nameBean", this.nameBean);
+					}
+					if(key.equals("market")){
+						String market = (String) temp.get(key);
+						this.marketBean = market;
+						registerBean("marketBean", this.marketBean);
+					}
+				}
+			}
+		}else{
+			String[] stockInfos = (String[])impl.getSelected();
+			this.codeBean = stockInfos[0];
+			this.nameBean = stockInfos[1];
+			this.marketBean = stockInfos[2];
+			registerBean("codeBean", this.codeBean);
+			registerBean("nameBean", this.nameBean);
+			registerBean("marketBean", this.marketBean);
+		}
 	}
 	
 	@OnDestroy

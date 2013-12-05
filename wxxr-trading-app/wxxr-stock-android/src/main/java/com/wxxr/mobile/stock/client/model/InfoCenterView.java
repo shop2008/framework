@@ -143,7 +143,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 事件处理-单击深证指数 
 	 * 
 	 * */
-	@Command(navigations={@Navigation(on = "SZ_ZhiShuPage",showPage="SZZhiShuPage")})
+	@Command(navigations={@Navigation(on = "SZ_ZhiShuPage",showPage="ZhiShuPage")})
 	CommandResult handleSZClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			CommandResult result = new CommandResult();
@@ -152,6 +152,7 @@ public abstract class InfoCenterView extends ViewBase {
 				temp.put("code", szBean.getCode());
 				temp.put("market", szBean.getMarket());
 				temp.put("name", "深圳成指");
+				updateSelection(temp);
 				result.setPayload(temp);
 			}
 			result.setResult("SZ_ZhiShuPage");
@@ -163,7 +164,7 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 事件处理 -单击上证指数 
 	 * 
 	 * */
-	@Command(navigations={@Navigation(on = "SH_ZhiShuPage",showPage="SHZhiShuPage")})
+	@Command(navigations={@Navigation(on = "SH_ZhiShuPage",showPage="ZhiShuPage")})
 	CommandResult handleSHClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			CommandResult result = new CommandResult();
@@ -172,6 +173,7 @@ public abstract class InfoCenterView extends ViewBase {
 				temp.put("code", shBean.getCode());
 				temp.put("market", shBean.getMarket());
 				temp.put("name", "上证指数");
+				updateSelection(temp);
 				result.setPayload(temp);
 			}
 			result.setResult("SH_ZhiShuPage");

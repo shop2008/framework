@@ -162,91 +162,187 @@
 				     </RelativeLayout>
 				 </LinearLayout>
 			    <include layout="@layout/hlines"/>
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="量比："
-				             android:textSize="14sp"
-				             android:textColor="@color/tv_gray_color"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             bind:field="lb"
-				             android:textSize="14sp"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="深市平盘："
-				             android:textSize="14sp"
-				             android:textColor="@color/tv_gray_color"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             bind:field="ppjs"
-				             android:textSize="14sp"
-				             android:textColor="@color/white"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
-			    <include layout="@layout/hlines"/>
-			    <LinearLayout
-				     android:layout_width="fill_parent"
-				     android:layout_height="wrap_content">
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="深市上涨："
-				             android:textSize="14sp"
-				             android:textColor="@color/red"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             bind:field="szjs"
-				             android:textSize="14sp"
-				             android:textColor="@color/red"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				     <RelativeLayout 
-				         android:layout_width="fill_parent"
-				         android:layout_height="wrap_content"
-				         android:layout_weight="1"
-				         android:padding="8dp">
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="深市下跌："
-				             android:textColor="@color/green"
-				             android:textSize="14sp"
-				             android:layout_alignParentLeft="true"/>
-				         <TextView android:layout_width="wrap_content"
-				             android:layout_height="wrap_content"
-				             android:text="--"
-				             android:textSize="14sp"
-				             bind:field="xdjs"
-				             android:textColor="@color/green"
-				             android:layout_alignParentRight="true"/>
-				     </RelativeLayout>
-				 </LinearLayout>
+			    
+			    <LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        bind:field="showSZLayout">
+				    <LinearLayout
+					     android:layout_width="fill_parent"
+					     android:layout_height="wrap_content">
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="量比："
+					             android:textSize="14sp"
+					             android:textColor="@color/tv_gray_color"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="lb"
+					             android:textSize="14sp"
+					             android:textColor="@color/white"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="深市平盘："
+					             android:textSize="14sp"
+					             android:textColor="@color/tv_gray_color"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="ppjs"
+					             android:textSize="14sp"
+					             android:textColor="@color/white"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					 </LinearLayout>
+				    <include layout="@layout/hlines"/>
+				    <LinearLayout
+					     android:layout_width="fill_parent"
+					     android:layout_height="wrap_content">
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="深市上涨："
+					             android:textSize="14sp"
+					             android:textColor="@color/red"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="szjs"
+					             android:textSize="14sp"
+					             android:textColor="@color/red"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="深市下跌："
+					             android:textColor="@color/green"
+					             android:textSize="14sp"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             android:textSize="14sp"
+					             bind:field="xdjs"
+					             android:textColor="@color/green"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					 </LinearLayout>			        
+			    </LinearLayout>
+				<LinearLayout android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical"
+			        bind:field="showSHLayout">
+				    <LinearLayout
+					     android:layout_width="fill_parent"
+					     android:layout_height="wrap_content">
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="量比："
+					             android:textSize="14sp"
+					             android:textColor="@color/tv_gray_color"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="lb"
+					             android:textSize="14sp"
+					             android:textColor="@color/white"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="沪市平盘："
+					             android:textSize="14sp"
+					             android:textColor="@color/tv_gray_color"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="ppjs"
+					             android:textSize="14sp"
+					             android:textColor="@color/white"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					 </LinearLayout>
+				    <include layout="@layout/hlines"/>
+				    <LinearLayout
+					     android:layout_width="fill_parent"
+					     android:layout_height="wrap_content">
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="沪市上涨："
+					             android:textSize="14sp"
+					             android:textColor="@color/red"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             bind:field="szjs"
+					             android:textSize="14sp"
+					             android:textColor="@color/red"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					     <RelativeLayout 
+					         android:layout_width="fill_parent"
+					         android:layout_height="wrap_content"
+					         android:layout_weight="1"
+					         android:padding="8dp">
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="沪市下跌："
+					             android:textColor="@color/green"
+					             android:textSize="14sp"
+					             android:layout_alignParentLeft="true"/>
+					         <TextView android:layout_width="wrap_content"
+					             android:layout_height="wrap_content"
+					             android:text="--"
+					             android:textSize="14sp"
+					             bind:field="xdjs"
+					             android:textColor="@color/green"
+					             android:layout_alignParentRight="true"/>
+					     </RelativeLayout>
+					 </LinearLayout>				    
+				</LinearLayout>    
 			    <include layout="@layout/hlines"/>
 			</LinearLayout>	        
 	    </LinearLayout>

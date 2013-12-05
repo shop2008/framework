@@ -28,7 +28,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/textView3"
             android:text="--" 
-            bind:field="codeMarket"
+            bind:field="codeAndmarket"
             android:textColor="@color/white"
             android:textSize="12sp"/>
 

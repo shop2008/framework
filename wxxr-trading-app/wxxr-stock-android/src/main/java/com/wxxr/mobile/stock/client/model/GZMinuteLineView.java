@@ -84,6 +84,20 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	String codeBean;
 	@Bean
 	String marketBean;
+	
+	/**
+	 * 0-显示：最新价、涨跌幅、涨跌额
+	 * 1-显示：换手、量比、成交额、liu'tong
+	 * */
+	@Bean
+	int minuteHeaderType = 0; 
+	
+	@Field(valueKey="visible",visibleWhen="${minuteHeaderType == 0}")
+	boolean minuteHeaderOne = true;
+	
+	@Field(valueKey="visible",visibleWhen="${minuteHeaderType == 1}")
+	boolean minuteHeaderTwo = false;
+	
 	/**箭头*/
 	@Field(valueKey="text",enableWhen="${quotationBean!=null && quotationBean.newprice > quotationBean.close}",visibleWhen="${quotationBean!=null && quotationBean.newprice != quotationBean.close}")
 	String arrows;	
@@ -133,7 +147,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
 		ISelection selection = service.getSelection("infoCenter");
 		if(selection!=null){
-			selectionChanged("tradingMain",selection);
+			selectionChanged("infoCenter",selection);
 		}
 		service.addSelectionListener("infoCenter", this);
 	}

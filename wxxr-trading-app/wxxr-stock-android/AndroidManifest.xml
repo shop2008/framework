@@ -251,17 +251,11 @@
             android:screenOrientation="portrait" />
         
         <activity
-            android:name=".ui.SHzhiShuPage"
+            android:name=".ui.ZhiShuPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
         
-         <activity
-            android:name=".ui.SZzhiShuPage"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-         
          <activity
             android:name=".ui.GeGuStockPage"
             android:configChanges="keyboardHidden|orientation"

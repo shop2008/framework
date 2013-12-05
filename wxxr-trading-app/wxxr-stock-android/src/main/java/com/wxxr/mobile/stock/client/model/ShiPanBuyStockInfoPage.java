@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -48,13 +49,15 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	TradingAccountBean tradingBean;
 
 	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="--")
 	})
 	LongTime2StringConvertor longTime2StringConvertorBuy;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple", value="100")
+			@Parameter(name="multiple", value="100"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
@@ -64,32 +67,37 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="-%.0f")
+	})
+	Float2PercentStringConvertor float2PercentStringConvertor;	
+	
 	/*** 交易盘编号*/
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
 	/*** 买入日期  */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'--'}",converter="longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:null}",converter="longTime2StringConvertorBuy")
 	String buyDay;
 	
 	/*** 卖出日期 */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'--'}",converter="longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:null}",converter="longTime2StringConvertorBuy")
 	String sellDay;
 
 	/*** 申购金额*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:null}",converter="stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
 	/*** 交易综合费*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:null}",converter="stockLong2StringAutoUnitConvertorInt")
 	String usedFee;
 	
 	/*** 冻结资金*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:'--'}",converter="stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:null}",converter="stockLong2StringAutoUnitConvertorInt")
 	String frozenVol;
 	
 	/*** 止损*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:'--'}")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}",converter="float2PercentStringConvertor")
 	String lossLimit;
 
 	@Menu(items = { "left" })
