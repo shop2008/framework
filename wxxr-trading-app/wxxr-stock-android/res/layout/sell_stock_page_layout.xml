@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@color/page_background_color">
-
-    
-	<ScrollView android:layout_width="fill_parent"
+	<ScrollView 
+	    android:layout_width="fill_parent"
 	      android:layout_height="wrap_content"
 	      android:scrollbars="none"
 	      android:fadingEdge="none">
@@ -24,48 +23,13 @@
 		        android:orientation="vertical" 
 		        android:background="@drawable/stock_chart_bj"
 		        >
-				<include layout="@layout/common_stock_header_layout"/>
-		       <com.wxxr.mobile.stock.client.widget.MinuteLineView 
-		            android:layout_width="match_parent"
-		            android:layout_height="160dp"
-		            bind:field="minute1"
-		            />
-		        
-		        <LinearLayout android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:gravity="center"
-		            >
-
-		            <ImageView android:src="@drawable/s_on"
-		                android:layout_width="8dp"
-		                android:layout_height="8dp"
-		                android:layout_marginRight="3dp"/>
-		            <ImageView android:src="@drawable/s_off"
-		                android:layout_width="8dp"
-		                android:layout_height="8dp"
-		                android:layout_marginLeft="3dp"
-		                android:layout_marginRight="3dp"/>
-		            <ImageView android:src="@drawable/s_off"
-		                android:layout_width="8dp"
-		                android:layout_height="8dp"
-		                android:layout_marginLeft="3dp"/>
-		        </LinearLayout>
-
-		        
-
+				<android.support.v4.view.ViewPager
+                    android:id="@+id/content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    bind:field="contents" >
+                </android.support.v4.view.ViewPager>
 		    </LinearLayout>
-		    
-<!-- 		    <TextView android:layout_width="fill_parent" -->
-<!-- 		        android:layout_height="fill_parent" -->
-<!-- 		        android:text="数据加载失败，点击重试" -->
-<!-- 		        android:textColor="@color/white" -->
-<!-- 		        android:textSize="14sp" -->
-<!-- 		        android:enabled="true" -->
-<!-- 		        android:clickable="true" -->
-<!-- 		        android:visibility="gone" -->
-<!-- 		        bind:field="isLoadingState" -->
-<!-- 		        bind:on_Click="retryLoadingClick"/> -->
-		    
 	        <View android:layout_width="fill_parent"
 	            android:layout_height="0.5dp"
 	            android:background="#212121"/>
@@ -83,21 +47,16 @@
 	        android:padding="8dp"
 	        
 	        >
-	        <com.wxxr.mobile.stock.client.widget.TextSpinnerView
-		        android:id="@+id/spinner1"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" 
-		        android:textSize="14sp"
-		        android:paddingLeft="8dp"
-		        android:clickable="true"
-		        android:enabled="true"
-		        bind:field="sellStockOrder"
-		        android:textColor="@color/white"
-		        android:background="@drawable/inpunt_bj"
-		        android:drawableRight="@drawable/inpunt_arrows"
-		        android:drawablePadding="0dp"
-		        bind:itemViewId="challengeTradeMoneyItem"
-		        bind:on_TextChanged="stockChanged"/>
+	        <Spinner android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            bind:field="stockTradingOrder"
+	            bind:itemViewId="dropDownMenuItem"
+	            android:popupBackground="@color/page_background_color"
+	            android:spinnerMode="dropdown"
+	            android:background="@drawable/inpunt_bj"
+	            bind:on_SpinnerItemSelected="dropDownMenuListItemClick"
+	            />
+
 		    <LinearLayout
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" 
@@ -115,7 +74,7 @@
 			            android:ems="10"
 			            android:inputType="number"
 			            android:textColor="@color/white"
-			            bind:field="priceEdit"
+			            bind:field="newprice"
 			            android:textSize="14sp" 
 			            android:paddingLeft="8dp">
 			        </EditText>	 
@@ -192,6 +151,8 @@
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:text="下单卖出" 
+		        bind:field="*"
+		        bind:on_Click="sellStock"
 		        android:layout_marginTop="8dp"
 		        android:textColor="@color/white"
 	            android:textSize="14sp"

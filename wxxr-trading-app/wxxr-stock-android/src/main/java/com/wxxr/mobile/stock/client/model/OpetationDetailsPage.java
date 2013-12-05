@@ -1,10 +1,12 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
@@ -63,8 +65,10 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	@Command(navigations={
 			@Navigation(on="readRecord",showView="DealRecordView",params={@Parameter(name = "add2BackStack", value = "false")})
 	})
-	String readRecordClick(InputEvent event){
-		return "readRecord";
+	CommandResult readRecordClick(InputEvent event){
+		CommandResult result = new CommandResult();
+		result.setResult("readRecord");
+		return result;
 	}
 	
 	
@@ -75,12 +79,16 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 			})
 	CommandResult tabSelectedClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			HashMap<String, Object> temp = new HashMap<String, Object>();
 			CommandResult result = new CommandResult();
 			if(isVirtual){
 				result.setResult("mnAudit");
+				
 			}else{
 				result.setResult("Audit");
 			}
+			temp.put("accId", this.accid);
+			result.setPayload(temp);
 			registerBean("isVirtual", this.isVirtual);
 			return result;
 		}

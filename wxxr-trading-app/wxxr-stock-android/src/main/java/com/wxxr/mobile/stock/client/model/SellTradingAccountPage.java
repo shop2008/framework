@@ -35,7 +35,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
-@View(name="sellTradingAccount",withToolbar=true, description="实盘/模拟")
+@View(name="sellTradingAccount",withToolbar=true, description="实盘/模拟",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.sell_trading_account_info_page_layout")
 public abstract class SellTradingAccountPage extends PageBase implements IModelUpdater {
 
@@ -73,19 +73,22 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="M月d日买入")
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple",value="100")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor1;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="M月d日买入"),
+			@Parameter(name="nullString",value="--")
 	})
 	LongTime2StringConvertor longTime2StringConvertorBuy;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="M月d日卖出")
+			@Parameter(name="format",value="M月d日卖出"),
+			@Parameter(name="nullString",value="--")
 	})
 	LongTime2StringConvertor longTime2StringConvertorSell;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.0f")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
@@ -102,11 +105,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	private long id;
 	
 	/**买入日期  */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:'-1'}", converter = "longTime2StringConvertorBuy")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:null}", converter = "longTime2StringConvertorBuy")
 	String buyDay;  
 	
 	/**卖出日期 */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:'-1'}", converter = "longTime2StringConvertorSell")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:null}", converter = "longTime2StringConvertorSell")
 	String sellDay;  
 	
 	/**申购金额*/
@@ -114,7 +117,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	String applyFee;
 	
 	/**可用资金*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:'--'}",converter="stockLong2StringAutoUnitConvertor1")
 	String avalibleFee;
 	
 	/**总盈亏率*/
@@ -136,10 +139,10 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 为空：按钮不可用
 	 * 非空：按钮可用
 	 * */
-	@Field(valueKey="text",attributes={
-			@Attribute(name = "enabled", value = "${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)?true:false}")
-	})
-	String isEmpty;
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	boolean isEmpty;
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	boolean isEmpty1;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
@@ -242,8 +245,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleTMegaTopRefresh");
+			log.debug("sellTradingAccount : handleTMegaTopRefresh");
 		}
+		if(accid!=null)
 		tradingService.getTradingAccountInfo(accid);
 		return null;
 	}
@@ -268,22 +272,27 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						stockName = stockTrading.getStockName(); 
 						stockMarketCode = stockTrading.getMarketCode(); 
 						//交易盘id
-						if(id!=null)
-						map.put("orderId", id);
-						if(stockName!=null)
-						map.put("stockName", stockName);
-						if(stockCode!=null)
-						map.put("stockCode", stockCode);
-						if(stockMarketCode!=null)
-						map.put("stockMarketCode", stockMarketCode);
-						if(accid!=null)
-						map.put("accid", accid);
+						if(id!=null){
+							map.put("orderId", id);
+						}
+						if(accid!=null){
+							map.put("accid", accid);
+						}
+						if(stockName!=null){
+							map.put("name", stockName);
+						}
+						if(stockCode!=null){
+							map.put("code", stockCode);
+						}
+						if(stockMarketCode!=null){
+							map.put("market", stockMarketCode);
+						}
 					}
 				}
-				log.info("SellTradingAccountPage sellStockItemClick: orderId="+id+" stockName="+stockName+" stockCode="+stockCode+" stockMarketCode="+stockMarketCode+" Accid="+accid);
 				CommandResult result = new CommandResult();
 				if(map!=null && map.size()>0){
 					result.setPayload(map);
+					updateSelection(map);
 				}
 				result.setResult("SellStockPage");
 				return result;
@@ -318,10 +327,15 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		}
 		return null;
 	}
-	//清仓
+	/**
+	 * 清算交易盘
+	 * @param acctID - 交易盘Id
+	 */
 	@Command
-	String cleanTradingAction(InputEvent event){
-		Toast.makeText(AppUtils.getFramework().getAndroidApplication(), "确定需要清仓吗？", Toast.LENGTH_SHORT).show();
+	String clearTradingAccount(InputEvent event){
+		if(tradingService!=null && accid!=null){
+			tradingService.clearTradingAccount(accid);
+		}
 		return null;
 	}
 }

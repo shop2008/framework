@@ -12,9 +12,11 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -23,19 +25,17 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.LineListBean;
-import com.wxxr.mobile.stock.app.bean.StockLineBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
 
-@View(name="SellStockPage",withToolbar=true,description="卖出")
+@View(name="SellStockPage",withToolbar=true,description="卖出",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.sell_stock_page_layout")
 public abstract class SellStockPage extends PageBase implements IModelUpdater {
 
@@ -43,9 +43,6 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
-	@ViewGroup(viewIds={"readRecord","auditDetail","mnAuditDetail"},defaultViewId="readRecord")
-	private IViewGroup contents;
-
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
 				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
@@ -67,31 +64,18 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
 	TradingAccountBean tradingAccount;
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(stockCode,stockMarketCode)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(stockCode,stockMarket)}")
 	StockQuotationBean stockQuotation;
-	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayline(stockCode,stockMarketCode)}")
-	LineListBean lineList;
-	
-	@Field(valueKey="options",binding="${lineList!=null?lineList.day_list:null}")
-	List<StockLineBean> dayList;
-	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
-	StockMinuteKBean minute;
-	
-	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'10060'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'20131125'}"),
-			@Attribute(name = "stockBorderColor",value="#ACACAC"),
-			@Attribute(name = "stockUpColor",value="#BA2514"),
-			@Attribute(name = "stockDownColor",value="#3C7F00"),
-			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
-			@Attribute(name = "stockCloseColor",value="#FFFFFF")
+
+	@Convertor(params={
+			@Parameter(name="multiple",value="1000"),
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
 	})
-	List<StockMinuteLineBean> minute1;
+	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;	
 	
-	@Bean
-	Map<String, String> map;
+	@ViewGroup(viewIds={"StockQuotationView","GZMinuteLineView", "StockKLineView"})
+	private IViewGroup contents;	
 	
 	@Bean
 	String stockCode; //股票代码
@@ -100,7 +84,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean
 	String stockName; //股票名称
 	@Bean
-	String stockMarketCode; //市场代码
+	String stockMarket; //市场代码
 	
 	@Bean
 	String accid; //交易盘ID
@@ -123,48 +107,58 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	})
 	String isChecked1;
 	
-	@Field(valueKey="options",binding="${sellStockData!=null?sellStockData:null}",attributes={
-			@Attribute(name = "text", value = "${defStockNameCode!=null?defStockNameCode:'--'}")
-			})
-	List<String> sellStockOrder;
+	/**交易订单列表*/
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}")
+	List<StockTradingOrderBean> stockTradingOrder;
 	
 	@Bean
 	List<String> sellStockData;
 	
+	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
+	String newprice;
+	
 	@Bean
-	String defStockNameCode = "--";
+	String sellPrice;
 	
-	// 股票或指数 代码+市场代码
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.code:'--'}${'.'}${stockQuotation!=null?stockQuotation.market:'--'}")
-	String codeMarket;
+	@Bean
+	String amount;
 	
-	//股票名称
-	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
-	String name;
-	
-	// 换手率
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.handrate:'--'}")
-	String handrate;
-	
-	// 量比
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.lb:'--'}")
-	String lb;
-	
-	//成交额
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.secuamount:'--'}")
-	String secuamount;
-	
-	// 流通盘
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.capital:'--'}")
-	String capital;
-	
-	
+	@Bean
+	String defStockNameCode;
 	
 	@Command()
 	String retryLoadingClick(InputEvent event){
 		return null;
 	}
 	
+	
+	@Command
+	String dropDownMenuListItemClick(InputEvent event){
+		if("SpinnerItemClick".equals(event.getEventType())){
+			if (event.getProperty("position") instanceof Integer) {
+				int position = (Integer) event.getProperty("position");
+			}
+		}
+		return null;
+	}
+	/**
+	 * 卖出股票
+	 * @param acctID -交易盘ID
+	 * @param market -市场代码： SH，SZ各代表上海，深圳
+	 * @param code -股票代码
+	 * @param price -委托价
+	 * @param amount -委托数量
+	 * @throws StockAppBizException
+	 */
+	@Command
+	String sellStock(InputEvent event){
+		if(tradingService!=null){
+			if(accid!=null && stockMarket!=null && stockCode!=null && sellPrice!=null && amount!=null){
+				tradingService.sellStock(accid, stockMarket, stockCode, sellPrice, amount);
+			}
+		}
+		return null;
+	}
 	
 	@OnShow
 	protected void initData(){
@@ -178,7 +172,10 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 					if(tempStock!=null){
 						String code = tempStock.getStockCode();
 						String name = tempStock.getStockName();
-						StockName.add(name+""+code);
+						if(name==null){
+							name = "--";
+						}
+						StockName.add(name+" "+code);
 					}
 				}
 			}
@@ -209,7 +206,10 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Command
 	String stockChanged(InputEvent event){
 		if(InputEvent.EVENT_TYPE_TEXT_CHANGED.equals(event.getEventType())){
-			
+			Object changedText = event.getProperty("changedText");
+			if(changedText instanceof String){
+				
+			}
 		}
 		return null;
 	}
@@ -233,33 +233,28 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		        			registerBean("orderId", this.orderId);
 		        		}
 		        	}
-		        	if("stockName".equals(key)){
+		        	if("name".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.stockName = (String) temp.get(key);
 		        			registerBean("stockName", this.stockName);
 		        		}
 		        	}
-		        	if("stockCode".equals(key)){
+		        	if("code".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.stockCode = (String) temp.get(key);
 		        			registerBean("stockCode", this.stockCode);
 		        		}
 		        	}
-		        	if("stockMarketCode".equals(key)){
+		        	if("market".equals(key)){
 		        		if(temp.get(key) instanceof String){
-		        			this.stockMarketCode = (String) temp.get(key);
-		        			registerBean("stockMarketCode", this.stockMarketCode);
+		        			this.stockMarket = (String) temp.get(key);
+		        			registerBean("stockMarket", this.stockMarket);
 		        		}
 		        	}
 		        }
 				 if(this.stockName!=null && this.stockCode!=null){
 					 this.defStockNameCode = this.stockName+""+this.stockCode;
 					 registerBean("defStockNameCode", defStockNameCode);
-				 }
-				 if(this.stockCode!=null && this.stockMarketCode!=null){
-					 tempMap.put(this.stockCode, this.stockMarketCode);
-					 this.map = tempMap;
-					 registerBean("map", tempMap);
 				 }
 			}
 		}

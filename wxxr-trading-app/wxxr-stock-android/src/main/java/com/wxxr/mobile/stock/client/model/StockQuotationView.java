@@ -222,6 +222,12 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			selectionChanged("infoCenter", selectionInfoCenter);
 		}
 		service.addSelectionListener("infoCenter",this);
+		
+		ISelection selectionSellTrading = service.getSelection("sellTradingAccount");
+		if(selectionSellTrading!=null){
+			selectionChanged("sellTradingAccount", selectionSellTrading);
+		}
+		service.addSelectionListener("sellTradingAccount",this);
 	}
 	
 	@Override
@@ -229,7 +235,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		if(selection == null)
 			return;
 		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
-		if(providerId.equals("infoCenter") && impl!=null){
+		if(impl!=null&&(providerId.equals("infoCenter") || providerId.equals("sellTradingAccount"))){
 			if(impl.getSelected() instanceof Map){
 				Map temp = (Map) impl.getSelected();
 				for (Object key : temp.keySet()) {
@@ -269,6 +275,8 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		service.removeSelectionListener("TBuyTradingPage", this);
 		service.removeSelectionListener("BuyStockDetailPage", this);
 		service.removeSelectionListener("infoCenter", this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("infoCenter", this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("sellTradingAccount", this);
 	}
 	
 //	@Override

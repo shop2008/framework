@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.client.module;
 
 import android.support.v4.view.ViewPager;
+import android.widget.Spinner;
 
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -31,6 +32,8 @@ import com.wxxr.mobile.stock.client.binding.PinHeaderListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshListViewAdapterBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.SpinnerItemClickEventBinder;
+import com.wxxr.mobile.stock.client.binding.SpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
@@ -73,6 +76,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, InfoNoticesView.class, new InfoNoticesViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GuideSwiperView.class, new GuideSwiperViewFieldBinder());
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, Spinner.class, new SpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PinnedHeaderListView.class, new PinHeaderListViewFieldBinder());
 	}
 
@@ -84,6 +88,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("HideDialog", new HideProgressEventBinder());
 		mgr.registerFieldBinder("PinItemClick", new IPinHeadItemClickBinder());
 		mgr.registerFieldBinder("SelCallBack", new IViewPagerSelEventBinder());
+		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());
 	}
 
 	@Override

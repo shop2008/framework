@@ -297,8 +297,7 @@
             android:background="@drawable/buy_button_bule_btn"
             android:layout_weight="1"
             android:gravity="center"
-            bind:field="isEmpty"
-            android:clickable="true"
+            bind:field="isEmpty1"
             bind:on_Click="sellTradingAction"
             android:layout_marginRight="4dp"
             >
