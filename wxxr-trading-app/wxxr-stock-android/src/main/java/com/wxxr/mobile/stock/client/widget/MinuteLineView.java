@@ -313,7 +313,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 				mPaint.setStrokeWidth(1);
 				StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
 				StockMinuteLineBean stockMinute1 = (StockMinuteLineBean)dataProvider.getItem(i+1);
-				if (i <= 239)
+				if (i <= 239 && stockMinute!=null && stockMinute1!=null)
 				{
 					float newprice = stockMinute.getPrice();
 					// (最新价-昨收)*中间到上边框的像素/(昨收*变化量) ==像素变化量
@@ -354,13 +354,15 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 					StockMinuteLineBean stockMinute = (StockMinuteLineBean) dataProvider.getItem(i);
 					StockMinuteLineBean stockMinute1 = (StockMinuteLineBean) dataProvider.getItem(i+1);
-					startX = fStartX + (width*i)+1.0f;
-					stopX = fStartX + (width*(i+1))+1.0f;
-					float avprice = stockMinute.getAvprice();
-					startY = fStopY - ((avprice - lowPrice)/scale);
-					float avprice1 = stockMinute1.getAvprice();
-					stopY = fStopY - ((avprice1 - lowPrice)/scale);
-					canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+					if(stockMinute!=null && stockMinute1!=null){
+						startX = fStartX + (width*i)+1.0f;
+						stopX = fStartX + (width*(i+1))+1.0f;
+						float avprice = stockMinute.getAvprice();
+						startY = fStopY - ((avprice - lowPrice)/scale);
+						float avprice1 = stockMinute1.getAvprice();
+						stopY = fStopY - ((avprice1 - lowPrice)/scale);
+						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+					}
 				}
 			}
 		}
@@ -377,13 +379,15 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 					StockMinuteLineBean stockMinute = (StockMinuteLineBean) dataProvider.getItem(i);
 					StockMinuteLineBean stockMinute1 = (StockMinuteLineBean) dataProvider.getItem(i+1);
-					startX = fStartX + (width*i)+1.0f;
-					stopX = fStartX + (width*(i+1))+1.0f;
-					float tempValue = (middlePrice * (stockMinute.getAvgChangeRate()/100000.0f)+middlePrice);
-					startY = fStopY-((tempValue - lowPrice)/scale);
-					float tempValue1 = (middlePrice * (stockMinute1.getAvgChangeRate()/100000.0f)+middlePrice);
-					stopY = fStopY-((tempValue1 - lowPrice)/scale);
-					canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+					if(stockMinute!=null && stockMinute1!=null){
+						startX = fStartX + (width*i)+1.0f;
+						stopX = fStartX + (width*(i+1))+1.0f;
+						float tempValue = (middlePrice * (stockMinute.getAvgChangeRate()/100000.0f)+middlePrice);
+						startY = fStopY-((tempValue - lowPrice)/scale);
+						float tempValue1 = (middlePrice * (stockMinute1.getAvgChangeRate()/100000.0f)+middlePrice);
+						stopY = fStopY-((tempValue1 - lowPrice)/scale);
+						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+					}
 				}
 			}
 		}
@@ -428,13 +432,13 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 			mPaint.setStrokeWidth(2);
 			StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
 			// 成交量
-			if (i <= 239)
+			if (i <= 239 && stockMinute!=null)
 			{
 				mPaint.setAntiAlias(true);
 				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 //				mPaint.setStrokeWidth(3);
-				float secuvolume =stockMinute.getSecuvolume();
-				if (secuvolume != 0)
+				float secuvolume =stockMinute.getSecuvolume() >= 0 ? stockMinute.getSecuvolume() : 0;
+				if (secuvolume >= 0)
 				{
 					// 柱状图顶点
 					startX = zStartX+ (width*i)+(float)1.0;

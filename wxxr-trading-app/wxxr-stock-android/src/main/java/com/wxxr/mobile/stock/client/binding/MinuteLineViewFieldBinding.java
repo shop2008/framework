@@ -62,7 +62,7 @@ public class MinuteLineViewFieldBinding extends BasicFieldBinding implements IOb
 
 			@Override
 			public Object getItem(int i) {
-				return data[i];
+				return data != null ? data[i] : null;
 			}
 
 			@Override

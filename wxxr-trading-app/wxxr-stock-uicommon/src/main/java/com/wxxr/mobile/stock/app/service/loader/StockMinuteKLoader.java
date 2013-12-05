@@ -90,6 +90,8 @@ public class StockMinuteKLoader extends AbstractEntityLoader<String, StockMinute
         StockMinuteKVO vo= getRestService(StockResource.class).getMinuteline(p);
         if (vo!=null ){
             StockMinuteKBean bean =ConverterUtils.fromVO(vo);
+            bean.setMarket(cmd.getMarket());
+            bean.setCode(cmd.getCode());
             List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
             result.add(bean);
             return result;

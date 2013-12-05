@@ -382,12 +382,12 @@ public class ConverterUtils {
             return null;
         }
         StockMinuteLineBean bean = new StockMinuteLineBean();
-        bean.setAvgChangeRate(bean.getAvgChangeRate());
-        bean.setAvprice(bean.getAvprice());
-        bean.setHqTime(bean.getHqTime());
-        bean.setPrice(bean.getPrice());
-        bean.setSecuamount(bean.getSecuamount());
-        bean.setSecuvolume(bean.getSecuvolume());
+        bean.setAvgChangeRate(vo.getAvgChangeRate());
+        bean.setAvprice(vo.getAvprice());
+        bean.setHqTime(vo.getHqTime());
+        bean.setPrice(vo.getPrice());
+        bean.setSecuamount(vo.getSecuamount());
+        bean.setSecuvolume(vo.getSecuvolume());
         return bean;
     }
     public static void updatefromVOtoBean(StockMinuteKBean bean, StockMinuteKBean b) {
