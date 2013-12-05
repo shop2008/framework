@@ -362,8 +362,10 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		for (IBinding<IView> b : bindings) {
 			b.deactivate();
 		}
-		this.model.doUnbinding(this);
-		this.model = null;
+		if(this.model != null){
+			this.model.doUnbinding(this);
+			this.model = null;
+		}
 
 	}
 	
