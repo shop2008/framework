@@ -162,19 +162,19 @@ public class StockUserResourceTest extends TestCase{
 //		}
 //	}
 
-//历史遗留问题，新锐财经使用	
+//历史遗留问题，新锐财经使用
 //	public ResultBaseVO bindMobile(BindMobileVO vo) throws RestBizException;
-//	public void testBindMobile(){
-//		try {
-//			BindMobileVO vo = new BindMobileVO();
-//			vo.setCode("111");
-//			vo.setMobileNum("13900001001");
-//			vo.setType("1");
-//			ResultBaseVO info = stockUserResource.bindMobile(vo);
-//		} catch (RestBizException e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
+	public void testBindMobile(){
+		try {
+			BindMobileVO vo = new BindMobileVO();
+			vo.setCode("111");
+			vo.setMobileNum("13900001001");
+			vo.setType("1");
+			ResultBaseVO info = stockUserResource.bindMobile(vo);
+		} catch (RestBizException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
 //历史遗留问题，新锐财经使用
 //	public ResultBaseVO changeBindMobile(ChangeBindMobileVO vo)	throws RestBizException;

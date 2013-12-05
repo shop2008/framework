@@ -3,7 +3,7 @@ package com.wxxr.security.vo;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "BindMobileVO")
+@XmlRootElement(name = "BindMobileQuery")
 public class BindMobileVO {
 	@XmlElement(name = "mobileNum")
 	private String mobileNum ; 
