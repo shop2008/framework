@@ -22,7 +22,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	GainBean accountBean;
 	
 	/**股票名称*/
-	@Field(valueKey="text",binding="${accountBean!=null?accountBean.maxStockMarket:'--'}",attributes={
+	@Field(valueKey="text",binding="${accountBean!=null?accountBean.maxStockName:'--'}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockName;
@@ -31,11 +31,11 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	@Field(valueKey="text",binding="${accountBean!=null?accountBean.maxStockCode:'--'}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}"
 					)
-			}, converter="stockCodeConvertor")
+			})
 	String stockCode;
 	
 	/**额度（申请资金）*/
-	@Field(valueKey="text",binding="${accountBean!=null?accountBean.sum:'--'}",attributes={
+	@Field(valueKey="text",binding="${accountBean!=null?accountBean.sum:null}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}")
 			}, converter="applyAmountConvertor")
 	String initCredit;
@@ -58,14 +58,16 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	StockLong2StringAutoUnitConvertor stock2StrConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format", value="%.0f")
+			@Parameter(name="format", value="%.0f"),
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString",value="--")
 			}
 	)
 	StockLong2StringAutoUnitConvertor applyAmountConvertor;
 	
 	
 	@Convertor(params={
-			@Parameter(name="format", value="%.0f"),
+			@Parameter(name="format", value="%.2f"),
 			@Parameter(name="multiple",value="100.00f"),
 			@Parameter(name="formatUnit",value="元"),
 			@Parameter(name="nullString",value="--")

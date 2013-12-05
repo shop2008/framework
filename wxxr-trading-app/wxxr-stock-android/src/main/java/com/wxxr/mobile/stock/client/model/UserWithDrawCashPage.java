@@ -9,6 +9,7 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
@@ -132,6 +133,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 							) 
 					}
 			)
+	@ExeGuard(title = "提取现金", message = "正在处理，请稍候...", silentPeriod = 1)
 	String commit(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -178,6 +180,6 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	
 	@OnUIDestroy
 	protected  void clearData() {
-		
+		callBack.setApplyAmount("");
 	}
 }

@@ -8,7 +8,9 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -87,8 +89,16 @@ public abstract class AppSetPage extends PageBase {
 	 * @return
 	 */
 	@Command(
-			commandName = "setPushMsgEnabled", description = "Back To Last UI",
-			navigations={@Navigation(on="*", showPage="userLoginPage")}
+			commandName = "setPushMsgEnabled", description = "Back To Last UI",navigations = { 
+					@Navigation(
+							on = "StockAppBizException", 
+							message = "%m%n", 
+							params = {
+									@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+									@Parameter(name = "title", value = "错误")
+									}
+							) 
+					}
 			)
 	String setPushMsgEnabled(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {

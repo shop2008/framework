@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             bind:field="newNickName"
-            bind:on_TextChanged="newNickChanged"
+            bind:on_TextChanged="_updateValue"
             android:layout_marginLeft="5dp"
             android:hint="@string/hint_please_input_new_nick"
             />

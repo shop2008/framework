@@ -1,18 +1,22 @@
 package com.wxxr.mobile.stock.client.model;
 
-import android.text.TextUtils;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.model.UserNickSetCallBack;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="userNickSet")
@@ -20,16 +24,20 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 public abstract class UserNickSetPage extends PageBase {
 	
 	
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${callBack.nickName}")
 	String newNickName;
 	
-	DataField<String> newNickNameField;
 	
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;
+	
+	
+	@Bean
+	UserNickSetCallBack callBack = new UserNickSetCallBack();
+	
 	
 	@Command
 	String back(InputEvent event) {
@@ -45,32 +53,32 @@ public abstract class UserNickSetPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command
+	@Command(
+			navigations = { 
+					@Navigation(
+							on = "StockAppBizException", 
+							message = "%m%n", 
+							params = {
+									@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+									@Parameter(name = "title", value = "错误")
+									}
+							) 
+					}
+			)
+	@ExeGuard(title = "修改昵称", message = "正在处理，请稍候...", silentPeriod = 1)
 	String done(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			String newNickName = this.newNickNameField.getValue();
-			if (!TextUtils.isEmpty(newNickName) && this.user != null) {
-				this.user.setNickName(newNickName);
+			if (usrService != null) {
+				usrService.updateNickName(callBack.getNickName());
 			}
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			hide();
 		}
 		return null;
 	}
 	
-	/**
-	 * 当文本框输入的内容不为空的时候，会调用此函数
-	 * @param event InputEvent.EVENT_TYPE_TEXT_CHANGED
-	 * @return null
-	 */
-	@Command(commandName="newNickChanged")
-	String newNickChanged(InputEvent event) {
-		
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-			String changedNick = (String)event.getProperty("changedText");
-			this.newNickName = changedNick;
-			this.newNickNameField.setValue(changedNick);
-		}
-		return null;
+	@OnUIDestroy
+	protected void clearData() {
+		callBack.setNickName("");
 	}
 }
