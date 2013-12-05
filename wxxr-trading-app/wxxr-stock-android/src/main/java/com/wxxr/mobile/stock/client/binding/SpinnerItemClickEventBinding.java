@@ -48,10 +48,6 @@ public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelec
 		this.pModel = null;
 	}
 
-	@Override
-	public void refresh() {
-		
-	}
 
 	@Override
 	public void destroy() {
@@ -89,20 +85,11 @@ public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelec
 	public void onNothingSelected(AdapterView<?> arg0) {
 		
 	}
-	
-	
 
-//	@Override
-//	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-//		IUIComponent field = pModel.getChild(fieldName);
-//		if (field != null) {
-//			SimpleInputEvent event = new SimpleInputEvent("SpinnerItemClick",field);
-//			event.addProperty("position", position);
-//			field.invokeCommand(commandName, event);
-//		} else {
-//			SimpleInputEvent event = new SimpleInputEvent("SpinnerItemClick",pModel);
-//			pModel.invokeCommand(commandName, event);
-//		}
-//	}
 
+	@Override
+	public void doUpdate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

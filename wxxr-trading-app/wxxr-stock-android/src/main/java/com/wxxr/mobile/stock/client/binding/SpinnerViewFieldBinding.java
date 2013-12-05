@@ -114,13 +114,6 @@ public class SpinnerViewFieldBinding extends BasicFieldBinding {
 	}
 	
 	@Override
-	public void refresh() {
-		if(this.listAdapter != null){
-			this.listAdapter.notifyDataSetChanged();
-		}
-		super.refresh();
-	}
-	@Override
 	protected void updateUI(boolean recursive) {
 		if((this.provider != null)&&this.provider.updateDataIfNeccessary()&&(this.listAdapter != null)){
 			this.listAdapter.notifyDataSetChanged();
@@ -131,4 +124,12 @@ public class SpinnerViewFieldBinding extends BasicFieldBinding {
 	public void destroy() {
 		super.destroy();
 	}	
+	
+	@Override
+	public void doUpdate() {
+		if(this.listAdapter != null){
+			this.listAdapter.notifyDataSetChanged();
+		}
+		super.doUpdate();
+	}
 }
