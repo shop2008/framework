@@ -19,7 +19,6 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IReusableUIModel;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
-import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.ViewGroupBase;
@@ -147,11 +146,11 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#refresh()
 	 */
 	@Override
-	public void refresh() {
+	public void doUpdate() {
 		if(this.viewPagerAdapter != null){
 			this.viewPagerAdapter.notifyDataSetChanged();
 		}
-		super.refresh();
+		super.doUpdate();
 	}
 
 	/* (non-Javadoc)

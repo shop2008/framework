@@ -21,6 +21,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 
 /**
@@ -35,10 +36,10 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
-	@Bean(type=BindingType.Pojo,express="${articleService.getMyArticles(0,10,19)}")
-	MyArticlesBean articlesBean;
+	@Bean(type=BindingType.Pojo,express="${articleService.getMyArticles(0,10)}")
+	BindableListWrapper<ArticleBean> articlesBean;
 	
-	@Field(valueKey="options",binding="${articlesBean!=null?articlesBean.helpArticles:null}")
+	@Field(valueKey="options",binding="${articlesBean.data}")
 	List<ArticleBean> helpArticles;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
@@ -47,7 +48,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	
 	@Command
 	String handleTopRefresh(InputEvent event) {
-		articleService.getMyArticles(0, 10, 19);
+		articleService.getHelpArticles(0, 10);
 		return null;
 	}	
 	
@@ -58,7 +59,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
 				if(articlesBean!=null){
-					List<ArticleBean> article = articlesBean.getHelpArticles();
+					List<ArticleBean> article = articlesBean.getData();
 					if(article!=null && article.size()>0){
 						ArticleBean bean = article.get(position);
 						if(bean!=null){

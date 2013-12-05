@@ -21,12 +21,14 @@ import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinding.Bin
 public class GenericViewPagerAdapter extends PagerAdapter {
 
 	private final IListDataProvider viewPagerProvider;
+	private final IWorkbenchRTContext context;
 	
 	public GenericViewPagerAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov) {
 		if((ctx == null)||(bCtx == null)||(prov == null) ) {
 			throw new IllegalArgumentException("All arguments cannot be NULL");
 		}
 		this.viewPagerProvider = prov;
+		this.context = ctx;
 	}
 
 	public void destroy() {
@@ -38,7 +40,7 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 			IBinding<IView> binding = bag.binding;
 			binding.deactivate();
 			bag.view.doUnbinding(binding);
-			bag.view.destroy();
+			context.getWorkbenchManager().getWorkbench().destroyComponent(bag.view);
 		}
 	}
 	public void active() {
@@ -97,7 +99,7 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 			bag = (BindingBag) view.getTag();
 			IBinding<IView> binding = bag.binding;
 //			IView vModel = bag.view;
-			binding.refresh();
+			binding.doUpdate();
 		}
 		super.notifyDataSetChanged();
 	}

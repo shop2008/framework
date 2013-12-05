@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.command.annotation.NetworkConnectionType;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -25,9 +24,7 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
-import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -46,11 +43,11 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
-	@Bean(type=BindingType.Pojo,express="${articleService.getMyArticles(0, 4, 15)}")
-	MyArticlesBean myArticles;
+	@Bean(express="${articleService.getHomeArticles(0, 4)}")
+	BindableListWrapper<ArticleBean> myArticles;
 	
 	/**绑定文章*/
-	@Field(valueKey="options",binding="${myArticles!=null?myArticles.homeArticles:null}")
+	@Field(valueKey="options",binding="${myArticles.data}")
 	List<ArticleBean> articles;
 	
 	
@@ -62,7 +59,7 @@ public abstract class TradingMainView extends ViewBase{
 //	TradingAccountListBean tradingAccount;
 
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}")
-	BindableListWrapper t0TradingAccountList;
+	BindableListWrapper<TradingAccInfoBean> t0TradingAccountList;
 	
 //	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
 	@Field(valueKey="options",binding="${t0TradingAccountList.getData()}")
@@ -72,7 +69,7 @@ public abstract class TradingMainView extends ViewBase{
 	boolean isVisibleT;
 	/**获取T+1日数据*/
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT1TradingAccountList()}")
-    BindableListWrapper t1TradingAccountList;
+    BindableListWrapper<TradingAccInfoBean> t1TradingAccountList;
 //	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
 	   @Field(valueKey="options",binding="${t1TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT1;
@@ -98,7 +95,7 @@ public abstract class TradingMainView extends ViewBase{
 		if (log.isDebugEnabled()) {
 			log.debug("TradingMainView : handleTMegaTopRefresh");
 		}
-		articleService.getMyArticles(0, 4, 15);
+		articleService.getHomeArticles(0, 4);
 		tradingService.getHomePageTradingAccountList();
 		return null;
 	}	
