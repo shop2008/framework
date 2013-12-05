@@ -828,7 +828,9 @@ public class TradingManagementServiceImpl extends
 				if(vo.getSuccOrNot()!=1){
 					throw new StockAppBizException(vo.getCause());
 				}
-			} catch (Exception e) {
+			} catch(StockAppBizException e){
+				throw e;
+			}catch (Exception e) {
 				throw new StockAppBizException("系统错误");
 			}
 		}catch(CommandException e){
