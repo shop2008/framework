@@ -129,7 +129,7 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	protected List<GainVO> executeCommand(ICommand<List<GainVO>> command)
 			throws Exception {
 		GetRightGainCommand cmd=(GetRightGainCommand)command;
-		return getRestService(ITradingResource.class).getGain(cmd.getStart(), cmd.getLimit());
+		return getRestService(ITradingResource.class).getTotalGain(cmd.getStart(), cmd.getLimit());
 	}
 
 }
