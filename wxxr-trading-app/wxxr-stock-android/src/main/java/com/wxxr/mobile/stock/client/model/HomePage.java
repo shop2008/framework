@@ -36,13 +36,13 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean userInfo;
 	
-	@Menu(items={"home","page1","page2","page3","page4","page5","page6"})
+	@Menu(items={"home","page1","page2","page3","page4","page5","page6","page7"})
 	IMenu leftMenu;
 	
 	@Menu(items={"left","right","search"})
 	IMenu toolbar;
 	
-	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","todayHotRankView","masterRankView","helpCenter"})
+	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","todayHotRankView","masterRankView","helpCenter","testPage"})
 	IViewGroup contents;
 	
 	
@@ -105,8 +105,8 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="page3",label="大赛排行榜",icon="resourceId:drawable/dsphb"),
 				@UIItem(id="page4",label="今日热股榜",icon="resourceId:drawable/rgb"),
 				@UIItem(id="page5",label="高手榜",icon="resourceId:drawable/gsb"),
-				@UIItem(id="page6",label="帮助中心",icon="resourceId:drawable/help")
-			
+				@UIItem(id="page6",label="帮助中心",icon="resourceId:drawable/help"),
+				@UIItem(id="page7",label="测试界面",icon="resourceId:drawable/help")
 			},
 			navigations={
 				@Navigation(on="home",showView="tradingMain"),
@@ -115,7 +115,8 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="page3",showView="championShip"),
 				@Navigation(on="page4",showView="todayHotRankView"),
 				@Navigation(on="page5",showView="masterRankView"),
-				@Navigation(on="page6",showView="helpCenter")
+				@Navigation(on="page6",showView="helpCenter"),
+				@Navigation(on="page7",showView="testPage")
 			}
 	)
 	String menuClicked(InputEvent event){

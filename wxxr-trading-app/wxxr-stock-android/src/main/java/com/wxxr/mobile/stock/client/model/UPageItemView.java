@@ -70,7 +70,7 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:null}", converter="s2sTimeConvertor")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}")
 	String trade_date;
 	
 	@Convertor(
@@ -90,10 +90,6 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 			}
 			)
 	StockLong2StringConvertor lossConvertor;
-	
-	
-	@Convertor
-	StringTime2StringConvertor s2sTimeConvertor;
 	/**
 	 * private int multiple = 1;
 	private String nullString;
@@ -104,12 +100,13 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	@Convertor(
 			params={
 					@Parameter(name="format", value="%.0f"),
-					@Parameter(name="multiple", value="100"),
-					@Parameter(name="nullString",value="0元")
+					@Parameter(name="multiple", value="1000000"),
+					@Parameter(name="formatUnit",value="万"),
+					@Parameter(name="nullString",value="0万")
 			
 			}
 			)
-	StockLong2StringAutoUnitConvertor stock2SConvertor;
+	StockLong2StringConvertor stock2SConvertor;
 	
 	
 	@Bean(type = BindingType.Service)
