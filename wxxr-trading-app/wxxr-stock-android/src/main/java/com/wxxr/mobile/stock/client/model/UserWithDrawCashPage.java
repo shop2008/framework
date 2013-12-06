@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
@@ -139,7 +140,12 @@ public abstract class UserWithDrawCashPage extends PageBase{
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 		
 			if (tradingService != null) {
-				tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount()));
+				
+				if (!StringUtils.isBlank(callBack.getApplyAmount())) {
+					tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount())*100);
+				} else {
+					tradingService.applyDrawMoney(-1);
+				}
 			}
 			hide();
 		}

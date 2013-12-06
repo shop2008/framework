@@ -71,6 +71,7 @@ public abstract class UserNickSetPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (usrService != null) {
 				usrService.updateNickName(callBack.getNickName());
+				usrService.refreshUserInfo();
 			}
 			hide();
 		}

@@ -20,6 +20,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.R;
 
@@ -65,18 +66,18 @@ public class InfoNoticesView extends PinnedHeaderListView {
 				labelPositions = new ArrayList<Integer>();
 				int index = 0;
 				boolean isChange = false;
-				RemindMessageBean curMessage = null;
+				PullMessageBean curMessage = null;
 				for(int i=0;i<provider.getItemCounts();i++) {
 					Object object = provider.getItem(i);
-					if (object instanceof RemindMessageBean) {
-						RemindMessageBean messageInfoBean = (RemindMessageBean) object;
+					if (object instanceof PullMessageBean) {
+						PullMessageBean messageInfoBean = (PullMessageBean) object;
 						if (i==0) {
 							curMessage = messageInfoBean;
-							labels.add(long2StrYMD(curMessage.getCreatedDate()));
+							labels.add(long2StrYMD(curMessage.getCreateDate()));
 							labelPositions.add(index);
 						} else {
-							if (!long2StrYMD(messageInfoBean.getCreatedDate()).equals(long2StrYMD(curMessage.getCreatedDate()))) {
-								labels.add(long2StrYMD(messageInfoBean.getCreatedDate()));
+							if (!long2StrYMD(messageInfoBean.getCreateDate()).equals(long2StrYMD(curMessage.getCreateDate()))) {
+								labels.add(long2StrYMD(messageInfoBean.getCreateDate()));
 								index = i;
 								isChange = true;
 								labelPositions.add(index);

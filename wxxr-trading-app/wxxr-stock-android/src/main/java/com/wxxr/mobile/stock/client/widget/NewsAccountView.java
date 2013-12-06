@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
-import com.wxxr.mobile.stock.app.bean.MessageInfoBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.R;
 

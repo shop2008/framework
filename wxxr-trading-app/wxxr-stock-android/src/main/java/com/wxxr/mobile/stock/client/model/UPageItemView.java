@@ -3,6 +3,8 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
+import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -10,10 +12,12 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 
 /**
@@ -33,7 +37,7 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 股票名称
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockName:'--'}",
+	@Field(valueKey="text", binding="${(stockInfoBean!=null&&stockInfoBean.name!=null)?stockInfoBean.name:'无持仓'}",
 			attributes={@Attribute(name = "textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")}
 		   )
 	String stock_name;
@@ -41,13 +45,13 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
     /**
      * 股票代码
      */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.maxStockCode:'--'}")
+	@Field(valueKey="text", binding="${(accountBean!=null&&accountBean.maxStockCode!=null)?accountBean.maxStockCode:'---'}")
 	String stock_code;
 	
 	/**
 	 * 额度
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.sum:'--'}", converter="stock2SConvertor",
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.sum:null}", converter="stock2SConvertor",
 			attributes={@Attribute(name = "textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")}
 			)
 	String challenge_amount;
@@ -55,38 +59,61 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 盈亏
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.userGain:'--'}", 
-			attributes={@Attribute(name ="textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED') ? 'resourceId:color/gray': (accountBean.userGain > 0 ? 'resourceId:color/red' : (accountBean.userGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.totalGain:null}", 
+			attributes={@Attribute(name ="textColor", value = "${(accountBean.over!=null&&accountBean.over=='CLOSED') ? 'resourceId:color/gray': (accountBean.totalGain > 0 ? 'resourceId:color/red' : (accountBean.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
 			},
-			converter="f2SConvertor"
+			converter="lossConvertor"
 			)
 	String profit_loss_amount;
 	
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}", converter="lt2SConvertor")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:null}", converter="lt2SConvertor")
 	String trade_date;
 	
 	@Convertor(
-			params={@Parameter(name="format", value="M月d日")}
+			params={
+					@Parameter(name="format", value="M月d日"),
+					@Parameter(name="nullString", value="--月--日")
+			
+			}
 			)
 	LongTime2StringConvertor lt2SConvertor;
 	
 	@Convertor(
 			params={@Parameter(name="format", value="%.2f"),
 					@Parameter(name="formatUnit",value="元"),
-					@Parameter(name="multiple",value="100.0f")
+					@Parameter(name="multiple",value="100.0f"),
+					@Parameter(name="nullString", value="0.00元")
 			}
 			)
-	StockLong2StringConvertor f2SConvertor;
+	StockLong2StringConvertor lossConvertor;
 	
+	/**
+	 * private int multiple = 1;
+	private String nullString;
+	private Long nullLong;
+	// private String formatDefault = "%d";
+	private String formatUnit = "";
+	 */
 	@Convertor(
-			params={@Parameter(name="format", value="%.0f")
+			params={
+					@Parameter(name="format", value="%.0f"),
+					@Parameter(name="multiple", value="100"),
+					@Parameter(name="nullString",value="0元")
+			
 			}
 			)
 	StockLong2StringAutoUnitConvertor stock2SConvertor;
 	
+	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+	
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(accountBean!=null?accountBean.maxStockCode:'', accountBean!=null?accountBean.maxStockMarket:'')}")
+	StockBaseInfo stockInfoBean;
+
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof GainBean) {

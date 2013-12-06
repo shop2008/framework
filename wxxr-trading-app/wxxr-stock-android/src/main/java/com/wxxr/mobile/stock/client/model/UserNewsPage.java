@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -31,37 +32,36 @@ public abstract class UserNewsPage extends PageBase {
 	@Bean(type=BindingType.Pojo, express="${usrService.remindMessageBean}")
 	BindableListWrapper<RemindMessageBean> accountTradeListBean;
 	
-	@Bean(type=BindingType.Pojo, express="${usrService.remindMessageBean}")
-	BindableListWrapper<RemindMessageBean> infoNoticeListBean;
+	@Bean(type=BindingType.Pojo, express="${usrService.getPullMessageBean(0,10)}")
+	BindableListWrapper<PullMessageBean> infoNoticeListBean;
 	
 	/**账户&交易-数据*/
-	@Field(valueKey="options", binding="${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen="${(accountTradeListBean!=null?accountTradeListBean.data!=null?true:false:false)&&(curItemId==0)}")
+	@Field(valueKey="options", binding="${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen="${((accountTradeListBean!=null?(accountTradeListBean.data!=null?(accountTradeListBean.data>0?true:false):false):false))&&(curItemId==0)}")
 	List<RemindMessageBean> accountTradeInfos;
 	
 	/**当账户&交易数据为空时显示*/
-	@Field(valueKey="visible", binding="${(accountTradeListBean!=null?accountTradeListBean.data!=null?false:true:true)&&(curItemId==0)}")
+	@Field(valueKey="visible", binding="${accountTradeListBean!=null?(accountTradeListBean.data!=null?(accountTradeListBean.data>0?false:true):true):true}")
 	boolean newsAccountNullVisible;
 
 	/**更新RadioButton的选中状态*/
 	@Field(valueKey="checked", attributes = {
-			@Attribute(name = "checked", value = "${curItemId == 0}"),
-			@Attribute(name = "textColor", value = "${curItemId == 0?'resourceId:color/white':'resourceId:color/gray'}") 
+			@Attribute(name = "checked", value = "${curItemId == 0}")
 			})
 	boolean accountTrades;
 	
 	/**更新RadioButton的选中状态*/
 	@Field(valueKey="checked", attributes = {
-			@Attribute(name = "checked", value = "${curItemId == 1}"),
-			@Attribute(name = "textColor", value = "${curItemId == 1?'resourceId:color/white':'resourceId:color/gray'}") })
+			@Attribute(name = "checked", value = "${curItemId == 1}") 
+			})
 	boolean infoNotices;
 	
 	
 
 	/**资讯&公告-数据*/
-	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${(infoNoticeListBean!=null?infoNoticeListBean.data!=null?true:false:false)&&(curItemId==0)}")
-	List<RemindMessageBean> noticeInfos;
+	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${((infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data>0?true:false):false):false))&&(curItemId==0)}")
+	List<PullMessageBean> noticeInfos;
 	
-	@Field(valueKey="visible", binding="${(infoNoticeListBean!=null?infoNoticeListBean.data!=null?false:true:true)&&(curItemId==1)}")
+	@Field(valueKey="visible", binding="${infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data>0?false:true):true):true}")
 	boolean noticeInfosNullVisible;
 	
 	@Bean

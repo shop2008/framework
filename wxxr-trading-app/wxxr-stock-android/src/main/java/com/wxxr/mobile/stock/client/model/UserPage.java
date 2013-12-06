@@ -138,7 +138,8 @@ public abstract class UserPage extends PageBase  {
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="nullString", value="0.00")
+			@Parameter(name="nullString", value="0.00"),
+			@Parameter(name="multiple", value="100.00f")
 		}
 	)
 	StockLong2StringConvertor profitConvertor;

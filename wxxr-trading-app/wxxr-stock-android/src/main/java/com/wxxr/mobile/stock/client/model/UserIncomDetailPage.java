@@ -16,8 +16,8 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.TradeDetailBean;
-import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 /**
@@ -31,16 +31,21 @@ public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
 	
-	@Field(valueKey = "options", binding="${tradeDetailList!=null?tradeDetailList.tradeDetails:null}",attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
+	@Field(valueKey = "options", binding="${gainPayDetailListBean!=null?gainPayDetailListBean.data:null}",
+			visibleWhen="${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?true:false):false):false}",
+				attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
 			  @Attribute(name = "enablePullUpRefresh", value="false")})
-	List<TradeDetailBean> incomeDetails;
+	List<GainPayDetailBean> incomeDetails;
 	
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Bean(type=BindingType.Pojo, express="${usrService!=null?usrService.myTradeDetailInfo:null}")
-	TradeDetailListBean tradeDetailList;
+	@Field(valueKey = "visible", binding = "${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?false:true):true):true}")
+	boolean noDataVisible;
 	
+	
+	@Bean(type=BindingType.Pojo, express="${usrService.getGPDetails(0,15)}")
+	BindableListWrapper<GainPayDetailBean> gainPayDetailListBean;
 	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
@@ -54,10 +59,8 @@ public abstract class UserIncomDetailPage extends PageBase {
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		if(log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleTMegaTopRefresh");
+			log.debug("UserIncomDetailPage : handleTopRefresh");
 		}
-		//ChampionShip.clear();
-		//handleTMegaClick(null);
 		return null;
 		
 	}
