@@ -61,7 +61,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		return dataProvider;
 	}
 
-	/**
+	/** 
 	 * @param dataProvider the dataProvider to set
 	 */
 	public void setDataProvider(IObservableListDataProvider dataProvider) {

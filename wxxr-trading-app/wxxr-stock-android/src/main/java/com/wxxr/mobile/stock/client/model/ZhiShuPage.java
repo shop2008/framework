@@ -33,7 +33,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	static Trace log = Trace.getLogger(ZhiShuPage.class);
 	@Menu(items = { "left" })
-	private IMenu toolbar;
+	private IMenu toolbar; 
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {

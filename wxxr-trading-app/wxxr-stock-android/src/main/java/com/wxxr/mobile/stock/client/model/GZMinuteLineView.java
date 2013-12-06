@@ -35,7 +35,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	static Trace log = Trace.getLogger(GZMinuteLineView.class);
 	
 	@Bean(type = BindingType.Service)
-	IInfoCenterManagementService infoCenterService;
+	IInfoCenterManagementService infoCenterService; 
 	
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeBean,marketBean)}")
 	StockQuotationBean quotationBean;	

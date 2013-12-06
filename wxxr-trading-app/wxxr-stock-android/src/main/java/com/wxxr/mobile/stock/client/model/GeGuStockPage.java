@@ -36,7 +36,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
 	static Trace log = Trace.getLogger(GeGuStockPage.class);
-	@Menu(items = { "left" })
+	@Menu(items = { "left" }) 
 	private IMenu toolbar;
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
