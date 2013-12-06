@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.wxxr.mobile.core.api.IDataExchangeCoordinator;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -94,8 +95,8 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	private Map<Object, List<String>> datas = new HashMap<Object, List<String>>();
 	private Set<Object> receiving = new HashSet<Object>();
 	private Set<Object> receiveFailed = new HashSet<Object>();
-	private Map<String/**code*/,StockBaseInfo> cache = new HashMap<String, StockBaseInfo>();
-	private Map<String/**code*/,Long/**db id*/> ids = new HashMap<String/**code*/,Long/**db id*/>();
+	private Map<String/**code*/,StockBaseInfo> cache = new ConcurrentHashMap<String, StockBaseInfo>();
+	private Map<String/**code*/,Long/**db id*/> ids = new ConcurrentHashMap<String/**code*/,Long/**db id*/>();
 	private boolean syncStarted = false;
 	private boolean dataChanged = false;
 	private IDataConsumer consumer = new IDataConsumer() {
@@ -300,7 +301,6 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		if (stockInfo==null) {
 			stockInfo = new StockInfo();
 		}		
-		
 		stockInfo.setAbbr(info.getAbbr());
 		stockInfo.setCapital(info.getCapital());
 		stockInfo.setCode(info.getCode());
@@ -371,25 +371,24 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	public byte[] toBytes(List<StockBaseInfo> data) {
-		if (data == null) {
-			return null;
-		}
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
-		StockBaseInfo[] infos = data.toArray(new StockBaseInfo[data.size()]);
-		try {
-			oos = new ObjectOutputStream(bos);
-			oos.writeObject(infos);
-			return bos.toByteArray();
-		} catch (IOException e) {
-			log.warn("Error when serilize the stocks", e);
-		} finally {
+		if (data != null&&data.size()>0) {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
+			StockBaseInfo[] infos = data.toArray(new StockBaseInfo[data.size()]);
 			try {
-				if (oos != null) {
-					oos.close();
-				}
-				bos.close();
+				oos = new ObjectOutputStream(bos);
+				oos.writeObject(infos);
+				return bos.toByteArray();
 			} catch (IOException e) {
+				log.warn("Error when serilize the stocks", e);
+			} finally {
+				try {
+					if (oos != null) {
+						oos.close();
+					}
+					bos.close();
+				} catch (IOException e) {
+				}
 			}
 		}
 		return null;
@@ -398,13 +397,13 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		List<StockBaseInfo> list = new LinkedList<StockBaseInfo>();
 		if (codes!=null&&codes.size()>0) {
 			Collections.sort(codes);
-			for (String code : codes) {
-				StockBaseInfo stock = cache.get(code);
+			for (int i = 0; i < codes.size(); i++) {
+			StockBaseInfo stock = cache.get(codes.get(i));
 				if (stock!=null) {
 					list.add(stock);
 				}else{					
 					if (log.isDebugEnabled()) {
-						log.debug(String.format("***size***===stock for code[%s] not found",code));
+						log.debug(String.format("***size***===stock for code[%s] not found",codes.get(i)));
 					}
 				}
 			}
@@ -482,10 +481,11 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public String getStockName(String code, String marketCode) {
 		StockBaseInfo stock = getStockBaseInfoByCode(code, marketCode);
-		if (stock==null) {
-			return null;
+		String stockName = null;
+		if (stock!=null) {
+			stockName = stock.getName();
 		}
-		return stock.getName();
+		return stockName;
 	}
 	
 	

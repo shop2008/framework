@@ -21,7 +21,7 @@ public class StockInfo {
 	private Long id;
 	@Column(nullable=false)
 	private String code;  //股票或指数 代码
-	@Column(unique=true,nullable=false)
+	@Column(nullable=false)
 	private String name;//股票或指数 名称
 	@Column(nullable=false)
 	private String mc;//市场代码： SH，SZ各代表上海，深圳。
