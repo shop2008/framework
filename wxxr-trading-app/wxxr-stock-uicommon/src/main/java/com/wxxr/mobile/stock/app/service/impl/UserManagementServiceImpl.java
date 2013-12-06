@@ -53,6 +53,8 @@ import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
+import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
+import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
@@ -160,6 +162,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetPushMessageSettingHandler.COMMAND_NAME, new GetPushMessageSettingHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateNickNameHandler.COMMAND_NAME, new UpdateNickNameHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RefresUserInfoHandler.COMMAND_NAME, new RefresUserInfoHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(RestPasswordHandler.COMMAND_NAME, new RestPasswordHandler());
 
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
@@ -854,6 +857,22 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				throw new StockAppBizException(e.getMessage());
 			}
 		return null;
+	}
+
+	@Override
+	public void resetPassword(String userName) {
+		RestPasswordCommand command=new RestPasswordCommand();
+		command.setUserName(userName);
+		try{
+			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
+				try {
+					future.get(30,TimeUnit.SECONDS);
+				} catch (Exception e) {
+					throw new StockAppBizException("系统错误");
+				}
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
+			}
 	}
 	
 	

@@ -228,4 +228,6 @@ public interface IUserManagementService {
 	BindableListWrapper<GainPayDetailBean> getGPDetails(int start,int limit);
 	
 	UserBean refreshUserInfo();
+	
+	void resetPassword(String userName);
 }
