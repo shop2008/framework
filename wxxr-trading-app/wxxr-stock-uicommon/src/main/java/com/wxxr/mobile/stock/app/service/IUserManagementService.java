@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
@@ -152,7 +153,7 @@ public interface IUserManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	PersonalHomePageBean getMorePersonalRecords(int start,int limit,boolean virtual);
+	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual);
 	/**
 	 * 获取他人主页更多条数地址
 	 * @param userId 用户ID
@@ -162,7 +163,7 @@ public interface IUserManagementService {
 	 * @return
 	 * @throws Exception
 	 */
-	PersonalHomePageBean getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
+	BindableListWrapper<GainBean> getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
 	
 	/**
 	 * 获取自己的账户

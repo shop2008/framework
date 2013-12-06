@@ -14,7 +14,10 @@ import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
 public class GainBean implements IBindableBean {
 	
 	private final BindableBeanSupport emitter = new BindableBeanSupport(this);
-	private boolean virtual;
+	private String userId;
+	
+
+    private boolean virtual;
 	private String maxStockCode;
 	private String over;
 	private String closeTime;
@@ -25,7 +28,14 @@ public class GainBean implements IBindableBean {
 	private Long sum;
 	private Long userGain;
 	private String maxStockName;
+	
+	public String getUserId() {
+        return userId;
+    }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 	/**
 	 * @param listener
 	 */

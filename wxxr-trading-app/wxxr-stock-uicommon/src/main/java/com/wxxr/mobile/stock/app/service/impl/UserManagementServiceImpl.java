@@ -23,12 +23,14 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
@@ -65,6 +67,7 @@ import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
+import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
 import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
@@ -72,7 +75,6 @@ import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
-import com.wxxr.security.vo.BindMobileVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
@@ -136,6 +138,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> personalHomePageBean_cache;
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> otherpersonalHomePageBean_cache;
+    private GenericReloadableEntityCache<String,GainBean,List> gainBean_cache;
 
     
 	//==============  module life cycle =================
@@ -166,8 +169,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
+	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List> ("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
+        registry.registerEntityLoader("gainBean", new GainBeanLoader());
 
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
@@ -543,95 +548,53 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
         this.personalHomePageBean_cache.forceReload(null,false);
         return personalHomePageBean_cache.getEntity(key);
 	}
-	@Override
-	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
-			boolean virtual) {
-		PersonalHomePageBean otherPBean= null;
-		/*PersonalHomePageVO vo = null;
-		try {
-			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
-				public PersonalHomePageVO call() throws Exception {
-					try {
-						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
-					} catch (Throwable e) {
-						log.warn("Failed to fetch personal home page",e);
-						throw new StockAppBizException("网络不给力，请稍后再试");
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch personal home page",e);
-		}
-		if (vo!=null) {
-			otherPBean = new PersonalHomePageBean();
-			otherPBean.setActualCount(vo.getActualCount());
-			otherPBean.setVirtualCount(vo.getVirtualCount());
-			otherPBean.setTotalProfit(vo.getTotalProfit());
-			otherPBean.setVoucherVol(vo.getVoucherVol());
-			List<GainVO> volist = vo.getActualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setActualList(bean_list);
-			}
-			volist = vo.getVirtualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setVirtualList(bean_list);
-			}
-		}*/
-		return otherPBean;
-	}
-
-	@Override
-	public PersonalHomePageBean getMoreOtherPersonal(String userId, int start,
-			int limit, boolean virtual) {
-		PersonalHomePageBean otherPBean= null;
-		/*PersonalHomePageVO vo = null;
-		try {
-			vo = fetchDataFromServer(new Callable<PersonalHomePageVO>() {
-				public PersonalHomePageVO call() throws Exception {
-					try {
-						return getRestService(TradingResourse.class).getOtherHomeFromTDay(userId);
-					} catch (Throwable e) {
-						log.warn("Failed to fetch personal home page",e);
-						throw new StockAppBizException("网络不给力，请稍后再试");
-					}
-				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch personal home page",e);
-		}
-		if (vo!=null) {
-			otherPBean = new PersonalHomePageBean();
-			otherPBean.setActualCount(vo.getActualCount());
-			otherPBean.setVirtualCount(vo.getVirtualCount());
-			otherPBean.setTotalProfit(vo.getTotalProfit());
-			otherPBean.setVoucherVol(vo.getVoucherVol());
-			List<GainVO> volist = vo.getActualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setActualList(bean_list);
-			}
-			volist = vo.getVirtualList();
-			if (volist!=null&&volist.size()>0) {
-				List<GainBean> bean_list = new ArrayList<GainBean>(); 
-				for (GainVO acVO : volist) {
-					bean_list.add(ConverterUtils.fromVO(acVO));
-				}
-				otherPBean.setVirtualList(bean_list);
-			}
-		}*/
-		return otherPBean;
-	}
+//	@Override
+//	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
+//			boolean virtual) {
+//		return null;
+//	}
+	
+    public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,boolean virtual) {
+        BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+            @Override
+            public boolean doFilter(GainBean entity) {
+                if ( StringUtils.isBlank(entity.getUserId())){
+                    return true;
+                }
+                return false;
+            }
+            
+        }, null);
+     
+      Map<String, Object> p=new HashMap<String, Object>(); 
+      p.put("virtual", virtual);
+      p.put("start", start);
+      p.put("limit", limit);
+      gainBean_cache.forceReload(p,false);
+      gainBean_cache.setCommandParameters(p);
+     return gainBeans;
+    }
+    public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, boolean virtual) {
+        BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+            @Override
+            public boolean doFilter(GainBean entity) {
+                if ( entity.getUserId().equals(userId)){
+                    return true;
+                }
+                return false;
+            }
+            
+        }, null);
+      Map<String, Object> p=new HashMap<String, Object>(); 
+      p.put("virtual", virtual);
+      p.put("start", start);
+      p.put("limit", limit);
+      p.put("userId", limit);
+      gainBean_cache.forceReload(p,false);
+      gainBean_cache.setCommandParameters(p);
+     return gainBeans;
+    }
+	
 	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
 		Future<T> future = context.getExecutor().submit(task);
 		T result = null;

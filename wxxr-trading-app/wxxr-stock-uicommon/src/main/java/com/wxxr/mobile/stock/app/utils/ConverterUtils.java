@@ -316,6 +316,10 @@ public class ConverterUtils {
             return null;
         }
         GainBean bean = new GainBean();
+        updatefromVOtoBean(bean,vo);
+        return bean;
+    }
+    public static void updatefromVOtoBean(GainBean bean, GainVO vo) {
         bean.setCloseTime(vo.getCloseTime());
         bean.setMaxStockCode(vo.getMaxStockCode());
         bean.setMaxStockMarket(vo.getMaxStockMarket());
@@ -333,10 +337,8 @@ public class ConverterUtils {
         bean.setTotalGain(vo.getTotalGain());
         bean.setTradingAccountId(vo.getTradingAccountId());
         bean.setUserGain(vo.getUserGain());
-        bean.setVirtual(vo.isVirtual());
-        return bean;
+        bean.setVirtual(vo.isVirtual());        
     }
-
     public static TradingRecordBean fromVO(TradeRecordVO vo) {
         if (vo == null) {
             return null;
@@ -583,5 +585,6 @@ public class ConverterUtils {
 //        bean.setId(vo.getId());
         return bean;
     }
+    
 
 }
