@@ -54,8 +54,6 @@ public class NewScrollView extends ScrollView {
             
             if(xDistance > yDistance){
                 return false;
-            } else {
-            	return true;
             }
     }
 		return false;

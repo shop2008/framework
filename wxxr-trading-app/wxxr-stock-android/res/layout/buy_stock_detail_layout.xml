@@ -22,15 +22,15 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical" >
-       
-				<ViewPager
+
+                <ViewPager
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:background="@color/black"
                     bind:field="contents" >
                 </ViewPager>
-                 
+
                 <TextView
                     android:id="@+id/tv_stock_name"
                     android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_marginTop="10dip"
-                    android:background="@drawable/text_back"
+                    android:background="@drawable/inpunt_2"
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/white"
@@ -56,18 +56,31 @@
                     android:layout_marginTop="5dip"
                     android:orientation="horizontal" >
 
-                    <RelativeLayout
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/text_back" >
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" >
+
+                        <EditText
+                            android:id="@+id/price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/inpunt_2"
+                            android:hint="最新行情价"
+                            android:inputType="numberDecimal"
+                            android:maxLength="6"
+                            android:paddingLeft="8dp"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            bind:field="price"
+                            bind:on_TextChanged="priceTextChanged" />
 
                         <FrameLayout
                             android:id="@+id/refresh_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/btn_refresh_back" >
+                            android:background="@drawable/inpunt_right_btn" >
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -84,28 +97,12 @@
                                 android:layout_gravity="center"
                                 android:visibility="gone" />
                         </FrameLayout>
-
-                        <EditText
-                            android:id="@+id/price"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@id/refresh_layout"
-                            android:background="@android:color/transparent"
-                            android:gravity="center_vertical"
-                            android:inputType="numberDecimal"
-                            android:maxLength="6"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:hint="最新行情价"
-                            bind:field="price"
-                            bind:on_TextChanged="priceTextChanged" />
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <RadioGroup
                         android:id="@+id/radio_group"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="6dip"
                         android:layout_weight="1"
                         android:orientation="horizontal" >
@@ -113,9 +110,9 @@
                         <RadioButton
                             android:id="@+id/order_price"
                             android:layout_width="0dip"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_left_btn"
+                            android:background="@drawable/on_off_radiobuttn_left"
                             android:button="@null"
                             android:checked="true"
                             android:gravity="center"
@@ -128,9 +125,9 @@
                         <RadioButton
                             android:id="@+id/market_price"
                             android:layout_width="0dip"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_right_btn"
+                            android:background="@drawable/on_off_radiobuttn_right"
                             android:button="@null"
                             android:gravity="center"
                             android:text="@string/bt_market_price_text"
@@ -144,15 +141,16 @@
                 <EditText
                     android:id="@+id/count"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="5dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_marginTop="5dip"
-                    android:background="@drawable/text_back"
+                    android:background="@drawable/inpunt_bj"
                     android:gravity="center_vertical"
                     android:hint="@string/buy_stock_count_hint"
                     android:inputType="number"
+                    android:paddingLeft="8dp"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     bind:field="count"
