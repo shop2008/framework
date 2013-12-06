@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -22,7 +23,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.GainBean;
-import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作")
@@ -31,29 +32,28 @@ public abstract class UserViewMorePage extends PageBase implements
 		IModelUpdater {
 
 	@Bean(type = BindingType.Service)
-	IUserManagementService userService;
+	IUserManagementService usrService;
 
-	/** 其他用户-挑战交易盘-更多 */
-	@Bean(type = BindingType.Pojo, express = "${userService!=null?userService.getMoreOtherPersonal(userId,0,otherHomeALimit,false):null}")
-	PersonalHomePageBean otherActualMoreBean;
+	
+	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,15,false)}")
+	BindableListWrapper<GainBean> myChallengeListBean;
 
-	/** 其他用户-参赛交易盘-更多 */
-	@Bean(type = BindingType.Pojo, express = "${userService!=null?userService.getMoreOtherPersonal(userId,0,otherHomeVLimit,true):null}")
-	PersonalHomePageBean otherVirtualMoreBean;
+	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,15,true)}")
+	BindableListWrapper<GainBean> myJoinListBean;
+	
+	
+	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,15,false)}")
+	BindableListWrapper<GainBean> otherChallengeListBean;
 
-	/** 用户-挑战交易盘-更多 */
-	@Bean(type = BindingType.Pojo, express = "${userService!=null?userService.getMorePersonalRecords(0,myHomeALimit,false):null}")
-	PersonalHomePageBean myActualMoreBean;
+	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,15,true)}")
+	BindableListWrapper<GainBean> otherJoinListBean;
+	
 
-	/** 用户-参赛交易盘-更多 */
-	@Bean(type = BindingType.Pojo, express = "${userService!=null?userService.getMorePersonalRecords(0,myHomeVLimit,true):null}")
-	PersonalHomePageBean myVirtualMoreBean;
-
-	@Field(valueKey = "options", binding = "${userId!=null?(otherActualMoreBean!=null?otherActualMoreBean.actualList:null):(myActualMoreBean!=null?myActualMoreBean.actualList:null)}", 
+	@Field(valueKey = "options", binding = "${userId!=null?(otherChallengeListBean!=null?otherChallengeListBean.data:null):(myChallengeListBean!=null?myChallengeListBean.data:null)}", 
 				visibleWhen="${curItemId == 0}")
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", binding = "${userId!=null?(otherVirtualMoreBean!=null?otherVirtualMoreBean.virtualList:null):(myVirtualMoreBean!=null?myVirtualMoreBean.virtualList:null)}",
+	@Field(valueKey = "options", binding = "${userId!=null?(otherJoinListBean!=null?otherJoinListBean.data:null):(myJoinListBean!=null?myJoinListBean.data:null)}",
 			visibleWhen="${curItemId == 1}"
 			)
 	List<GainBean> virtualRecordsList;
@@ -72,7 +72,7 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	/** 其它用户ID */
 	@Bean
-	String userId;
+	String userId = null;
 
 	/** 用户--参赛交易盘每页初始条目 */
 	@Bean
@@ -111,12 +111,12 @@ public abstract class UserViewMorePage extends PageBase implements
 		registerBean("curItemId", 0);
 		if (StringUtils.isBlank(userId)) {
 			// 用户自己的挑战交易记录
-			if (userService != null) {
-				userService.getMorePersonalRecords(0, 15, false);
+			if (usrService != null) {
+				usrService.getMorePersonalRecords(0, 15, false);
 			}
 		} else {
-			if (userService != null) {
-				userService.getMoreOtherPersonal(userId, 0, 15, false);
+			if (usrService != null) {
+				usrService.getMoreOtherPersonal(userId, 0, 15, false);
 			}
 		}
 		return null;
@@ -133,12 +133,12 @@ public abstract class UserViewMorePage extends PageBase implements
 		registerBean("curItemId", 1);
 		if (StringUtils.isBlank(userId)) {
 			// 用户自己的参赛交易记录
-			if (userService != null) {
-				userService.getMorePersonalRecords(0, 15, true);
+			if (usrService != null) {
+				usrService.getMorePersonalRecords(0, 15, true);
 			}
 		} else {
-			if (userService != null) {
-				userService.getMoreOtherPersonal(userId, 0, 15, true);
+			if (usrService != null) {
+				usrService.getMoreOtherPersonal(userId, 0, 15, true);
 			}
 		}
 		return null;
@@ -155,15 +155,15 @@ public abstract class UserViewMorePage extends PageBase implements
 			GainBean virtualBean = null;
 			if (StringUtils.isBlank(userId)) {
 				//本人
-				if(myVirtualMoreBean!=null) {
-					List<GainBean> virtualList = myVirtualMoreBean.getVirtualList();
+				if(myJoinListBean!=null) {
+					List<GainBean> virtualList = myJoinListBean.getData();
 					if (virtualList!=null && virtualList.size()>0) {
 						virtualBean = virtualList.get(position);
 					}
 				}
 			} else {
-				if(otherVirtualMoreBean!=null) {
-					List<GainBean> otherVirtualList = otherVirtualMoreBean.getVirtualList();
+				if(otherJoinListBean!=null) {
+					List<GainBean> otherVirtualList = otherJoinListBean.getData();
 					if (otherVirtualList!=null && otherVirtualList.size()>0) {
 						virtualBean = otherVirtualList.get(position);
 					}
@@ -212,15 +212,15 @@ public abstract class UserViewMorePage extends PageBase implements
 			GainBean actualBean = null;
 			if (StringUtils.isBlank(userId)) {
 				//本人
-				if(myActualMoreBean!=null) {
-					List<GainBean> actualList = myActualMoreBean.getActualList();
+				if(myChallengeListBean!=null) {
+					List<GainBean> actualList = myChallengeListBean.getData();
 					if (actualList!=null && actualList.size()>0) {
 						actualBean = actualList.get(position);
 					}
 				}
 			} else {
-				if(otherActualMoreBean!=null) {
-					List<GainBean> otherActualList = otherActualMoreBean.getActualList();
+				if(otherChallengeListBean!=null) {
+					List<GainBean> otherActualList = otherChallengeListBean.getData();
 					if (otherActualList!=null && otherActualList.size()>0) {
 						actualBean = otherActualList.get(position);
 					}
@@ -288,12 +288,13 @@ public abstract class UserViewMorePage extends PageBase implements
 	public void updateModel(Object value) {
 		Map<String, Object> map = (Map<String, Object>) value;
 
-		boolean isVirtual = (Boolean) map.get("isVirtual");
-		if (isVirtual == true) {
+		String isVirtual = (String) map.get("isVirtual");
+		if (isVirtual.equals("1")) {
 			registerBean("curItemId", 1);
-		} else {
+		} else if (isVirtual.equals("0")) {
 			registerBean("curItemId", 0);
 		}
+		
 		String uId = (String) map.get("userId");
 		if (!StringUtils.isBlank(uId)) {
 			this.userId = uId;
@@ -304,4 +305,8 @@ public abstract class UserViewMorePage extends PageBase implements
 		}
 	}
 
+	@OnUIDestroy
+	protected void clearData() {
+		this.userId = null;
+	}
 }

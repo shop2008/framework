@@ -74,15 +74,6 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	String trade_date;
 	
 	@Convertor(
-			params={
-					@Parameter(name="format", value="M月d日"),
-					@Parameter(name="nullString", value="--月--日")
-			
-			}
-			)
-	LongTime2StringConvertor lt2SConvertor;
-	
-	@Convertor(
 			params={@Parameter(name="format", value="%.2f"),
 					@Parameter(name="formatUnit",value="元"),
 					@Parameter(name="multiple",value="100.0f"),
@@ -90,13 +81,7 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 			}
 			)
 	StockLong2StringConvertor lossConvertor;
-	/**
-	 * private int multiple = 1;
-	private String nullString;
-	private Long nullLong;
-	// private String formatDefault = "%d";
-	private String formatUnit = "";
-	 */
+	
 	@Convertor(
 			params={
 					@Parameter(name="format", value="%.0f"),

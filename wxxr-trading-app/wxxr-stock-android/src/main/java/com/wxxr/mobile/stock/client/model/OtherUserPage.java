@@ -37,7 +37,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo, express = "${usrService.getOtherPersonalHomePage(userId)}")
 	PersonalHomePageBean personalBean;
 
-	@Field(valueKey = "text", binding = "${user!=null?user.nickName:'--'}${'的主页'}")
+	@Field(valueKey = "text", binding = "${user!=null&&user.nickName!=null?user.nickName:'---'}${'的主页'}")
 	String otherUserPageTitle;
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack:null}")
@@ -99,8 +99,12 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor scoreConvertor;
 
-	@Convertor(params = { @Parameter(name = "format", value = "%.2f"),
-			@Parameter(name = "nullString", value = "0.00") })
+	@Convertor(
+			params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString", value="0.00"),
+			@Parameter(name="multiple", value="100.00f")
+		})
 	StockLong2StringConvertor profitConvertor;
 
 	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
@@ -128,7 +132,6 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Override
 	public void updateModel(Object value) {
-		String userId = "";
 		if (value instanceof Map) {
 			Map temp = (Map) value;
 			for (Object key : temp.keySet()) {
@@ -160,9 +163,9 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 		CommandResult result = new CommandResult();
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", "2");
-		map.put("isVirtual", false);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId);
+		map.put("isVirtual", "0");
 		result.setPayload(map);
 		result.setResult("OK");
 		return result;
@@ -180,8 +183,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		CommandResult result = new CommandResult();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", "1");
-		map.put("isVirtual", true);
+		map.put("userId", this.userId);
+		map.put("isVirtual", "1");
 		result.setPayload(map);
 		result.setResult("OK");
 

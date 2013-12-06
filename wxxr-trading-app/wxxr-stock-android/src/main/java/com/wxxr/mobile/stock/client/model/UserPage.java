@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -48,19 +49,18 @@ public abstract class UserPage extends PageBase  {
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
-
 	@Bean(type=BindingType.Pojo, express="${usrService.myPersonalHomePage}")
 	PersonalHomePageBean personalBean;
 	/**
 	 * 用户形象照
 	 */
-	@Field(valueKey = "imageURI", binding="${user!=null?user.userPic!=null?user.userPic:'resourceId:drawable/head1':'resourceId:drawable/head1'}")
-	String userIcon = "resourceId:drawable/head1";
+	@Field(valueKey = "imageURI", binding="${(user!=null&&user.userPic!=null)?user.userPic:'resourceId:drawable/head1'}")
+	String userIcon;
 
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding="${user!=null?user.nickName!=null?user.nickName:'设置昵称':'设置昵称'}")
+	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'---'}")
 	String userNickName;
 
 	/**
