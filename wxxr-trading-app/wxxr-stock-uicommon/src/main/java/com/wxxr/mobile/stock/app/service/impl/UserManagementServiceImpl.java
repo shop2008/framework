@@ -554,11 +554,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 //		return null;
 //	}
 	
-    public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,boolean virtual) {
+    public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
-                if ( StringUtils.isBlank(entity.getUserId())){
+                if ( StringUtils.isBlank(entity.getUserId()) && entity.getVirtual()==virtual){
                     return true;
                 }
                 return false;
@@ -574,11 +574,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       gainBean_cache.setCommandParameters(p);
      return gainBeans;
     }
-    public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, boolean virtual) {
+    public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
-                if ( entity.getUserId().equals(userId)){
+                if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
                     return true;
                 }
                 return false;
@@ -589,7 +589,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       p.put("virtual", virtual);
       p.put("start", start);
       p.put("limit", limit);
-      p.put("userId", limit);
+      p.put("userId", userId);
       gainBean_cache.forceReload(p,false);
       gainBean_cache.setCommandParameters(p);
      return gainBeans;
