@@ -56,6 +56,14 @@ public class BuyStockViewFieldBinding extends BasicFieldBinding {
 		if(val != null){
 			view.setFund(val);
 		}
+		val = comp.getAttribute(BuyStockViewKeys.sellCount);
+		if(val != null){
+			view.setMaxSellCount(val);
+		}
+		val = comp.getAttribute(BuyStockViewKeys.type);
+		if(val != null){
+			view.setType(val);
+		}
 		super.updateUI(arg0);
 	}
 	

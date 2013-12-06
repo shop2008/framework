@@ -46,6 +46,8 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * 买入
+ * BuyStockDetailInputView需要输入的价格和资金，来计算最大股数setHint；价格在逻辑视图处理*1000传入
+ * StockInputKeyboard需要昨收价计算%和最大股数计算比例
  * 
  * @author duzhen
  * 
@@ -60,6 +62,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	private static final Trace log = Trace.register(BuyStockDetailPage.class);
 	private boolean hasShow = false;
 	private boolean isMarket = false;
+	//记录输入价格记录
 	String orderPriceInput = "";
 	
 	@Bean
@@ -73,16 +76,17 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Bean
 	String codeBean;
-	
+	//传进去，只有StockInputKeyboard键盘计算涨跌幅，传昨收价
 	@Bean
 	String marketPriceBean;
 	
 	@Bean
 	String amountBean;
-	
+	//资金，算能买多少股
 	@Bean
 	String avalibleFeeBean;
 	
+	//键盘输入值和点了市价后改变；传入BuyStockDetailInputView计算可买股数使用
 	@Bean
 	String orderPriceBean;
 	
@@ -105,6 +109,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	StockLong2StringConvertor stockLong2StringConvertor;
 	
 	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "type", value = "0"),
 			@Attribute(name = "orderPrice", value = "${orderPriceBean}"),
 			@Attribute(name = "marketPrice", value = "${marketPriceBean}"),
 			@Attribute(name = "fund", value = "${avalibleFeeBean}") })
@@ -113,7 +118,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding="${nameBean}${' '}${codeBean}")
 	String stock;
 	
-	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:''}", converter="stockLong2StringConvertor")
+	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:null}", converter="stockLong2StringConvertor")
 	String price;
 	
 	@Field(valueKey = "text", binding="${amountBean}")
@@ -150,7 +155,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		//需要回调
 		infoCenterService.getStockQuotation(codeBean, marketBean);
 		orderPriceBean = stockQuotationBean.getNewprice() + "";
-		marketPriceBean = stockQuotationBean.getNewprice() + "";
+		marketPriceBean = stockQuotationBean.getClose() + "";
 		registerBean("orderPriceBean", orderPriceBean);
 		registerBean("marketPriceBean", marketPriceBean);
 		String[] stockInfos = new String[] { codeBean, nameBean, marketBean };
@@ -164,7 +169,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		return null;
 	}
 	/**
-	 * 市价点中
+	 * 市价点中，作收价*1.1传进去计算最大可买股数
 	 * @param envent
 	 * @return
 	 */
@@ -176,7 +181,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		return null;
 	}
 	/**
-	 * 挂单点中
+	 * 挂单点中，将之前输的数值再注册给orderPriceBean,传进keyboard里面，之前传了作收*1.1
 	 * @param envent
 	 * @return
 	 */
@@ -201,7 +206,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		marketPriceBean = stockQuotationBean.getNewprice() + "";
+		marketPriceBean = stockQuotationBean.getClose() + "";
 		registerBean("marketPriceBean", marketPriceBean);
 		return null;
 	}

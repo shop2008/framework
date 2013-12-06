@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
@@ -32,9 +33,17 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 
-
+/**
+ * 卖出
+ * BuyStockDetailInputView需要只需要昨收价和拥有的最大股数
+ * StockInputKeyboard需要昨收价和最大股数
+ * 
+ * @author xijiadeng
+ * 
+ */
 @View(name="SellStockPage",withToolbar=true,description="卖出",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.sell_stock_page_layout")
 public abstract class SellStockPage extends PageBase implements IModelUpdater {
@@ -90,7 +99,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	String accid; //交易盘ID
 	
 	@Bean
-	int isSelected = 0;
+	int isSelected = 0; //1为市价点中，卖出价格为0即为市价卖出
 	
 	@Field(attributes={
 			@Attribute(name = "enabled", value = "${isSelected==0}")
@@ -118,25 +127,70 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	String newprice;
 	
 	@Bean
-	String sellPrice;
+	String sellPrice; //卖出价格，卖出点击使用
 	
 	@Bean
-	String amount;
+	String amount; //卖出数量;
 	
 	@Bean
 	String defStockNameCode;
 	
+	@Bean
+	String maxAmountBean;
+	//输入键盘
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "type", value = "1"),
+			@Attribute(name = "marketPrice", value = "${closePriceBean}"),
+			@Attribute(name = "sellCount", value = "${maxAmountBean}") })
+	String inputView;
+	
+	@Bean
+	String closePriceBean; //作收价格，传入keyboard计算%
+	
 	@Command()
-	String retryLoadingClick(InputEvent event){
+	String retryLoadingClick(InputEvent event) {
+		// 需要回调
+		infoCenterService.getStockQuotation(stockCode, stockMarket);
+		sellPrice = stockQuotation.getNewprice() + "";
+		closePriceBean = stockQuotation.getClose() + "";
+		registerBean("closePriceBean", closePriceBean);
+		registerBean("sellPrice", sellPrice);
+		//刷新viewpager
+		String[] stockInfos = new String[] { stockCode, stockName, stockMarket };
+		updateSelection((Object) stockInfos);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("code", stockCode);
+		map.put("name", stockName);
+		map.put("market", stockMarket);
+		updateSelection(map);
 		return null;
 	}
 	
 	
 	@Command
 	String dropDownMenuListItemClick(InputEvent event){
-		if("SpinnerItemClick".equals(event.getEventType())){
+		if("SpinnerItemSelected".equals(event.getEventType())){
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
+				StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
+				maxAmountBean = stockTrading.getAmount() + "";
+				this.stockCode = stockTrading.getStockCode();
+				this.stockName = stockTrading.getStockName();
+				this.stockMarket = stockTrading.getMarketCode();
+				registerBean("stockCode", this.stockCode);
+				registerBean("stockName", this.stockName);
+				registerBean("stockMarket", this.stockMarket);
+				registerBean("maxAmountBean", this.maxAmountBean);
+				//刷新viewpager
+				String[] stockInfos = new String[] { stockCode, stockName, stockMarket };
+				updateSelection((Object) stockInfos);
+				
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("code", stockCode);
+				map.put("name", stockName);
+				map.put("market", stockMarket);
+				updateSelection(map);
 			}
 		}
 		return null;
@@ -152,9 +206,17 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	 */
 	@Command
 	String sellStock(InputEvent event){
+		String price = "0";
+		if(isSelected == 0) {
+			try {
+				price = Long.parseLong(sellPrice)/10 + "";
+			}catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
 		if(tradingService!=null){
-			if(accid!=null && stockMarket!=null && stockCode!=null && sellPrice!=null && amount!=null){
-				tradingService.sellStock(accid, stockMarket, stockCode, sellPrice, amount);
+			if(accid!=null && stockMarket!=null && stockCode!=null && price!=null && amount!=null){
+				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 			}
 		}
 		return null;
@@ -204,13 +266,26 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	
 	@Command
-	String stockChanged(InputEvent event){
-		if(InputEvent.EVENT_TYPE_TEXT_CHANGED.equals(event.getEventType())){
-			Object changedText = event.getProperty("changedText");
-			if(changedText instanceof String){
-				
-			}
+	String priceTextChanged(InputEvent event) {
+		String key = (String) event.getProperty("changedText");
+		String value = "0";
+		try {
+			if(!StringUtils.isEmpty(key))
+				value = (long) Utils.roundUp(Float.parseFloat(key) * 1000, 0) + "";
+			sellPrice = value;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
+		closePriceBean = stockQuotation.getClose()+ "";
+		registerBean("closePriceBean", closePriceBean);
+		return null;
+	}
+	
+	@Command
+	String countTextChanged(InputEvent event) {
+		String key = (String) event.getProperty("changedText");
+		amount = key;
+		registerBean("amount", key);
 		return null;
 	}
 	
@@ -249,6 +324,12 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		        		if(temp.get(key) instanceof String){
 		        			this.stockMarket = (String) temp.get(key);
 		        			registerBean("stockMarket", this.stockMarket);
+		        		}
+		        	}
+		        	if("amount".equals(key)){
+		        		if(temp.get(key) instanceof Long){
+		        			this.maxAmountBean = temp.get(key) + "";
+		        			registerBean("maxAmountBean", this.maxAmountBean);
 		        		}
 		        	}
 		        }

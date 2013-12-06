@@ -40,13 +40,15 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 	
 	private boolean showSPWheel;
 	private boolean showSNWheel;
-	//外面传进来，放大100倍的值
+	//外面传进来，放大1000倍的值
 	private String marketPrice; //涨跌幅计算
 	private int maxCountStock;
 	//需要传出去，放大100倍的值
 	private String toOrderprice;
 	private String toCount;
-	
+	//区分买入卖出
+	private TextView tv_typeDes;
+	private String type;
 	public StockInputKeyboard(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
@@ -72,6 +74,10 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		this.maxCountStock = maxCountStock;
 //		if(tv_sn_number != null)
 //			tv_sn_number.setText(maxCountStock+"");
+	}
+	
+	public void setKeyBoardType(String type) {
+		this.type = type;
 	}
 	
 	public void setOnKeyboardActionListener(OnStockKeyboardActionListener l) {
@@ -261,6 +267,7 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		tv_third = (TextView) findViewById(R.id.tv_third);
 		tv_stock_price = (TextView) findViewById(R.id.tv_stock_price);
 		
+		tv_typeDes = (TextView)findViewById(R.id.tv_buy_sell);
 		findViewById(R.id.bt_123).setOnClickListener(this);
 		findViewById(R.id.bt_finish).setOnClickListener(this);
 
@@ -337,7 +344,7 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		String value = wv_middle.getCurrentItem() + "." + str_value;
 		try {
 			float p = (1 + sign * Float.parseFloat(value)/100) * Float.parseFloat(marketPrice) / 10;
-			toOrderprice = p * 10 + "";
+			toOrderprice = String.format("%.2f", p/100) + "";
 			tv_stock_price.setText("("+String.format("%.2f", p/100)+")");
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
@@ -345,6 +352,12 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 			e.printStackTrace();
 		} catch(IllegalFormatException e) {
 			e.printStackTrace();
+		}
+		//区分买入卖出
+		if("0".equals(type)) {
+			
+		} else if("1".equals(type)) {
+			
 		}
 		log.debug("setPriceValue toOrderprice : "+ toOrderprice);
 	}

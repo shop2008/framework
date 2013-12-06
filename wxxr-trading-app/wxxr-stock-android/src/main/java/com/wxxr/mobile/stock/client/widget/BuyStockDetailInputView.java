@@ -52,7 +52,10 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 	private String fund;
 
 	private int maxCountStock;
-
+	//拥有的股票数
+	private String maxSellCount;
+	//键盘类型 0：买入，1：卖出
+	private String type = "0";
 	public BuyStockDetailInputView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext = context;
@@ -80,6 +83,25 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		this.fund = fund;
 	}
 
+	public void setType(String type) {
+		this.type = type;
+		if (keyboardView != null)
+			keyboardView.setKeyBoardType(type);
+	}
+	
+	public void setMaxSellCount(String maxSellCount) {
+		this.maxSellCount = maxSellCount;
+		int count = 0;
+		try {
+			count = Integer.parseInt(maxSellCount);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		setSellCountHint(count);
+		if (keyboardView != null)
+			keyboardView.setMaxCountStock(count);
+	}
+	
 	private void initEditView() {
 		priceEditText = (EditText) findViewById(R.id.price);
 		countEditText = (EditText) findViewById(R.id.count);
@@ -112,6 +134,27 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		}
 	}
 
+	private void setSellCountHint(int count) {
+//		if (StringUtils.isEmpty(orderPrice) || StringUtils.isEmpty(fund))
+//			return;
+//		try {
+//			// fund放大100倍,price放大1000倍；交易数最小值100
+//			float price = Float.parseFloat(this.orderPrice) / 10;
+//			float fund = Float.parseFloat(this.fund);
+//			
+//			if(price == 0) {
+//				countEditText.setHint("输入最大可买股数");
+//			} else {
+//				maxCountStock = ((int) (fund / (price * 100)) * 100);
+//				countEditText.setHint("输入最大可买股数: " + maxCountStock + "股");
+//			}
+//			countEditText.setText("");
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		}
+		countEditText.setHint("输入最大可卖股数: " + count + "股");
+	}
+	
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
@@ -222,11 +265,19 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				if (null != priceEditable && priceEditable.length() > 0
 						&& priceStart > 0) {
 					priceEditable.delete(priceStart - 1, priceStart);
+					if (priceEditable instanceof Spannable) {
+						Spannable spanText = (Spannable) priceEditable;
+						Selection.setSelection(spanText, priceStart - 1);
+					}
 				}
 			} else {
 				if (null != countEditable && countEditable.length() > 0
 						&& countStart > 0) {
 					countEditable.delete(countStart - 1, countStart);
+					if (countEditable instanceof Spannable) {
+						Spannable spanText = (Spannable) countEditable;
+						Selection.setSelection(spanText, countStart - 1);
+					}
 				}
 			}
 			break;
@@ -247,10 +298,14 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			radioGroup.findViewById(R.id.market_price).performClick();
 			break;
 		case R.id.bt_all:// 全部
-			countEditable.clear();
-			countEditable.append(maxCountStock + "");
+			if ("0".equals(type)) { // 买入
+				countEditable.clear();
+				countEditable.append(maxCountStock + "");
+			} else if ("1".equals(type)) { // 卖出
+				countEditable.clear();
+				countEditable.append(maxSellCount);
+			}
 			break;
-
 		case R.id.bt_finish:// 价格输完-完成
 			priceEditable.clear();
 			priceEditable.append(keyCodes);
@@ -267,12 +322,28 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			} else {
 				int countInt = getInputCountValue(keyCodes, countEditable,
 						countStart);
-				if (countInt > maxCountStock) {
-					Toast.makeText(mContext,
-							"买入数量最大不能超过" + maxCountStock + "股",
-							Toast.LENGTH_SHORT).show();
-				} else {
-					countEditable.insert(countStart, keyCodes);
+				if ("0".equals(type)) { //买入
+					if (countInt > maxCountStock) {
+						Toast.makeText(mContext,
+								"买入数量最大不能超过" + maxCountStock + "股",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						countEditable.insert(countStart, keyCodes);
+					}
+				} else if ("1".equals(type)) { //卖出
+					int count = 0;
+					try {
+						count = Integer.parseInt(maxSellCount);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (countInt > count) {
+						Toast.makeText(mContext,
+								"卖出数量最大不能超过" + count + "股",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						countEditable.insert(countStart, keyCodes);
+					}
 				}
 			}
 
