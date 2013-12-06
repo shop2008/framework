@@ -150,8 +150,8 @@ public class InfoNoticesView extends PinnedHeaderListView {
 			}
 
 			Object object = dataProvider.getItem(position);
-			if (object != null && object instanceof RemindMessageBean) {
-				RemindMessageBean infoBean = (RemindMessageBean) object;
+			if (object != null && object instanceof PullMessageBean) {
+				PullMessageBean infoBean = (PullMessageBean) object;
 				TextView news_title = (TextView) convertView
 						.findViewById(R.id.notice_title);
 				TextView news_date = (TextView) convertView
@@ -160,8 +160,8 @@ public class InfoNoticesView extends PinnedHeaderListView {
 						.findViewById(R.id.notice_content);
 
 				news_title.setText(infoBean.getTitle());
-				news_content.setText(infoBean.getContent());
-				news_date.setText(long2StrHM(infoBean.getCreatedDate()));
+				news_content.setText(infoBean.getMessage());
+				news_date.setText(infoBean.getCreateDate());
 				return convertView;
 			}
 
