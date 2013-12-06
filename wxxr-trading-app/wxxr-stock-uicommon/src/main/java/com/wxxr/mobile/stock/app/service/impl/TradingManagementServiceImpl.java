@@ -551,7 +551,13 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
 		if(rightTotalGain==null){
-				this.rightTotalGain = getRightTotalGainCache().getEntities(null, null);
+				this.rightTotalGain = getRightTotalGainCache().getEntities(null, new Comparator<GainBean>(){
+					@Override
+					public int compare(GainBean o1, GainBean o2) {
+						return o2.getCloseTime().compareTo(o1.getCloseTime());
+					}
+
+				});
 		}
 		rightTotalGainCacheDoReload(start, limit);
 		return this.rightTotalGain;
@@ -579,7 +585,12 @@ public class TradingManagementServiceImpl extends
 				public boolean doFilter(GainBean entity) {
 					return entity.getTotalGain()>0?true:false;
 				}
-			} , null);
+			} , new Comparator<GainBean>(){
+				@Override
+				public int compare(GainBean o1, GainBean o2) {
+					return o2.getCloseTime().compareTo(o1.getCloseTime());
+				}
+			});
 		}
 		rightTotalGainCacheDoReload(start, limit);
 		return this.rightGain;
@@ -842,3 +853,4 @@ public class TradingManagementServiceImpl extends
 	
 
 }
+

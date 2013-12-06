@@ -67,10 +67,13 @@ import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateNickNameHandler.UpdateNickNameCommand;
+import com.wxxr.mobile.stock.app.service.handler.UpdateTokenHandler;
+import com.wxxr.mobile.stock.app.service.handler.UpdateTokenHandler.UpdateTokenCommand;
 import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
 import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
+import com.wxxr.mobile.stock.app.service.loader.PullMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
@@ -78,6 +81,7 @@ import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
+import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
@@ -155,6 +159,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
+		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
 		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
         registry.registerEntityLoader("gainPayDetailBean", new GainPayDetailLoader());
         
@@ -166,7 +171,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateNickNameHandler.COMMAND_NAME, new UpdateNickNameHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RefresUserInfoHandler.COMMAND_NAME, new RefresUserInfoHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RestPasswordHandler.COMMAND_NAME, new RestPasswordHandler());
-
+		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateTokenHandler.COMMAND_NAME, new UpdateTokenHandler());
+		
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List> ("gainBean");
@@ -177,7 +183,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		context.registerService(IUserIdentityManager.class, this);
-		
+		updateToken();
 	}
 
 	@Override
@@ -341,8 +347,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
 		try {
 			SimpleResultVo result=future.get(30,TimeUnit.SECONDS);
-			boolean bind=result.getResult()==1;
-			return bind;
+			return result.getResult()==1;
 		} catch (Exception e) {
 			new StockAppBizException("系统错误");
 		}
@@ -769,5 +774,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			}
 	}
 	
-	
+	protected void updateToken() {
+		UpdateTokenCommand command=new UpdateTokenCommand();
+		try{
+			Future<TokenVO> future=context.getService(ICommandExecutor.class).submitCommand(command);
+		}catch(Throwable e){
+			log.warn("updatToken error",e);
+		}
+	}
 }
