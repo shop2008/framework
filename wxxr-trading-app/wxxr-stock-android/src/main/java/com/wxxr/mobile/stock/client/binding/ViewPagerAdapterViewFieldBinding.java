@@ -76,7 +76,16 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 			int length = viewIDs.length;
 			androidViewGroup = new View[length];
 			for (int i = 0; i < length; i++) {
-				androidViewGroup[i] = createUI(getViewGroup(), viewIDs[i]);
+				View view = createUI(getViewGroup(), viewIDs[i]);
+				
+				BindingBag bag = null;
+				bag = (BindingBag) view.getTag();
+				IBinding<IView> binding = bag.binding;
+				IView vModel = bag.view;
+				binding.activate(vModel);
+				binding.doUpdate();
+				
+				androidViewGroup[i] = view;
 			}
 			return true;
 		}

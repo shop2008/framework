@@ -69,13 +69,6 @@ public class GenericViewPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup container, int position) { // 这个方法用来实例化页卡
 		View view = (View)viewPagerProvider.getItem(position);
 
-		BindingBag bag = null;
-		bag = (BindingBag) view.getTag();
-		IBinding<IView> binding = bag.binding;
-		IView vModel = bag.view;
-		binding.activate(vModel);
-		binding.doUpdate();
-		
 		container.addView(view, 0);// 添加页卡
 		return view;
 	}

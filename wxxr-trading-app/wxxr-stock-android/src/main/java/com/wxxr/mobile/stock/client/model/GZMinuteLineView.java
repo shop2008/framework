@@ -215,7 +215,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					this.stockType = "0";
 				}
 			}
-		}else if ("TBuyTradingPage".equals(providerId)
+		} else if ("TBuyTradingPage".equals(providerId)
 				|| "stockSearchPage".equals(providerId)
 				|| "BuyStockDetailPage".equals(providerId)) {
 			String[] stockInfos = (String[]) impl.getSelected();
@@ -225,6 +225,13 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
+			
+			if(this.codeBean!=null && this.marketBean!=null){
+				minuteMap.put("code", this.codeBean);
+				minuteMap.put("market", this.marketBean);
+				this.map = minuteMap;
+				registerBean("map", this.map);
+			}
 		}
 	}
 	
