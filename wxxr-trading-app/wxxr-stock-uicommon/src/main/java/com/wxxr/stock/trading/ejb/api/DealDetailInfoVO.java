@@ -171,7 +171,7 @@ public class DealDetailInfoVO{
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DealDetailDTO [id=").append(id).append(", fund=")
+		builder.append("DealDetailInfoVO [id=").append(id).append(", fund=")
 				.append(fund).append(", plRisk=").append(plRisk)
 				.append(", totalGain=").append(totalGain).append(", userGain=")
 				.append(userGain).append(", imgUrl=")

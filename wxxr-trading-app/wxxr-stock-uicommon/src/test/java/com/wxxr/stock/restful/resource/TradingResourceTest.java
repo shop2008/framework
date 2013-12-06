@@ -60,12 +60,12 @@ public class TradingResourceTest extends TestCase{
 					
 					@Override
 					public String getUserName() {
-						return "13500001009";
+						return "13810212581";
 					}
 					
 					@Override
 					public String getAuthPassword() {
-						return "404662";
+						return "939906";
 					}
 
 				};
@@ -131,7 +131,8 @@ public class TradingResourceTest extends TestCase{
 //	public DealDetailVO getDealDetail(String acctID)throws Exception;
     public void testGetDealDetail()throws Exception{
     	DealDetailInfoVO a = tradingResource
-				.getDealDetail("1000");
+				.getDealDetail("2621");
+    	System.out.println(a);
 	}
 
 //  public AuditDetailVO getAuditDetail(String acctID)throws Exception;

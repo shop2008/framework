@@ -205,17 +205,17 @@ public class StockResourceTest  extends TestCase{
 	}
 
 
-    //public ComponentstocksListVO getComponentstocks(ParamVO paramVO) throws Exception ;
-    public void testGetComponentstocks()throws Exception{
-    	//IStockHQManagerService服务竟然没有实现啊！！！！
-    	//成分股接口，貌似没有服务，什么情况。。。。。
-		ParamVO p = new ParamVO();
-		p.setMarket("SH");
-		p.setCode("600000");
-		p.setStart(0L);
-		p.setLimit(10L);
-		ComponentstocksListVO a = tradingResource.getComponentstocks(p);
-	}
+//    //public ComponentstocksListVO getComponentstocks(ParamVO paramVO) throws Exception ;
+//    public void testGetComponentstocks()throws Exception{
+//    	//IStockHQManagerService服务竟然没有实现啊！！！！
+//    	//成分股接口，貌似没有服务，什么情况。。。。。
+//		ParamVO p = new ParamVO();
+//		p.setMarket("SH");
+//		p.setCode("600000");
+//		p.setStart(0L);
+//		p.setLimit(10L);
+//		ComponentstocksListVO a = tradingResource.getComponentstocks(p);
+//	}
 
     //public StockTaxisListVO getIndexPreview(TaxisVO vo) throws Exception;
     public void testGetIndexPreview()throws Exception{

@@ -289,7 +289,7 @@ public class TradeRecordVO{
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("TradingRecordDTO [id=").append(id).append(", date=")
+		builder.append("TradingRecordVO [id=").append(id).append(", date=")
 				.append(date).append(", market=").append(market)
 				.append(", code=").append(code).append(", describe=")
 				.append(describe).append(", price=").append(price)

@@ -211,6 +211,7 @@ public class StockUserResourceTest extends TestCase{
 			vo.setPollToken("");
 			vo.setPushToken("");
 			TokenVO info = stockUserResource.updateToken(vo);
+			System.out.println(info);
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
