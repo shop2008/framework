@@ -17,6 +17,7 @@ import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 
@@ -69,7 +70,7 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:null}", converter="lt2SConvertor")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:null}", converter="s2sTimeConvertor")
 	String trade_date;
 	
 	@Convertor(
@@ -90,6 +91,9 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 			)
 	StockLong2StringConvertor lossConvertor;
 	
+	
+	@Convertor
+	StringTime2StringConvertor s2sTimeConvertor;
 	/**
 	 * private int multiple = 1;
 	private String nullString;
