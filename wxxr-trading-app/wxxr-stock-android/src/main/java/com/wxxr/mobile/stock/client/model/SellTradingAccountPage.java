@@ -233,7 +233,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	        		this.virtual = (Boolean)tempt;
 	        	}
 	        }
-	        log.info("TradingMainView virtual="+virtual+"accid="+accid);
 	        registerBean("virtual", virtual);
 	        registerBean("accid", accid);
 		}
