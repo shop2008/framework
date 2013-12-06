@@ -41,14 +41,7 @@ public interface IUserManagementService {
 	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
 	 */
 	void register(String phoneNumber) throws StockAppBizException;
-	/**
-	 * 注册用户-普通注册方式
-	 * 
-	 * @param userId
-	 * @param password
-	 * @throws StockAppBizException 如果已经注册过，抛出异常-通知客户端已经注册
-	 */
-	 void register(String userId,String password) throws StockAppBizException;
+
 	 
 	/**
 	 * 用户登陆
@@ -71,23 +64,7 @@ public interface IUserManagementService {
 	 * @throws StockAppBizException
 	 */
 	void updatePassword(String oldPwd,String newPwd,String newPwd2) throws StockAppBizException;
-	/**
-	 * 检查用户是否登陆，如果用户未登录则会弹出登陆框
-	 * @return
-	 */
-	void checkLogin();
-	/**
-	 * 手机认证-绑定手机号
-	 * @param phoneNumber - 手机号
-	 * @param vertifyCode - 认证码
-	 */
-	void bindMobile(String phoneNumber,String vertifyCode) throws StockAppBizException;
-	/**
-	 * 更改手机绑定
-	 * @param phoneNumber - 手机号
-	 * @param vertifyCode - 认证码
-	 */
-	void changeBindingMobile(String phoneNumber,String vertifyCode);
+
 	/**
 	 * 设置是否推送消息
 	 * @param on 
@@ -113,26 +90,7 @@ public interface IUserManagementService {
 	void setRegRulesReaded(boolean isRead);
 	
 	
-	/**
-	 * 判断当前用户是否绑定了银行卡
-	 * @return 
-	 *  	true 已绑定
-	 *  	false 未绑定
-	 */
-	boolean isBindCard();
-	
-	
-	/**
-	 * 绑定银行卡
-	 * @param accountName 户名
-	 * @param bankName 开户行
-	 * @param bankAddr 开户行地址
-	 * @param bankNum 银行账号
-	 * @return 
-	 * 		true 绑定成功
-	 *      false 绑定失败
-	 */
-	boolean bindBankCard(String accountName,String bankName,String bankAddr, String bankNum);
+
 
 	
 	ScoreInfoBean fetchUserScoreInfo(String userId);

@@ -348,18 +348,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	}
 
-	@Override
-	public boolean isBindCard() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean bindBankCard(String accountName, String bankName,
-			String bankAddr, String bankNum) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	public ScoreInfoBean fetchUserScoreInfo(String userId) {
 
@@ -401,66 +390,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}
 	}
 
-	@Override
-	public void checkLogin() {
-		getMyUserInfo();
-	}
 
-	@Override
-	public void register(String userId, String password)
-			throws StockAppBizException {
-		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void bindMobile(final String phoneNumber, final String vertifyCode)
-			throws StockAppBizException {
-		Future<StockAppBizException> future = context.getExecutor().submit(
-				new Callable<StockAppBizException>() {
-					@Override
-					public StockAppBizException call() throws Exception {
-						try {
-							BindMobileVO vo = new BindMobileVO();
-							vo.setMobileNum(phoneNumber);
-							vo.setCode(vertifyCode);
-							ResultBaseVO ret = context
-									.getService(IRestProxyService.class)
-									.getRestService(StockUserResource.class)
-									.bindMobile(vo);
-							if (ret != null && ret.getResulttype() == 0) {
-								if (ret.getResulttype() != 0) {
-									return new StockAppBizException(ret
-											.getResultInfo());
-								}
-								return null;
-							}
-							return new StockAppBizException("更新失败");
-						} catch (RestBizException e) {
-							return new StockAppBizException("更新失败");
-						}
-					}
-				});
-		if (future != null) {
-			try {
-				StockAppBizException e = future.get(1, TimeUnit.SECONDS);
-				if (e != null) {
-					if (log.isDebugEnabled()) {
-						log.debug("Register error", e);
-					}
-					throw e;
-				}
-			} catch (Exception e) {
-				throw new StockAppBizException("网络连接超时，请稍后再试");
-			}
-		}
-	}
-
-	@Override
-	public void changeBindingMobile(String phoneNumber, String vertifyCode) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public UserBean getUserInfoById(String userId) {
