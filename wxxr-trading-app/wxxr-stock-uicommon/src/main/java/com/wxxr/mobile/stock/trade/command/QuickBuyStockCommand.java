@@ -13,8 +13,11 @@ public class QuickBuyStockCommand implements ICommand<StockResultVO>{
     private String stockCode;
     private String stockBuyAmount;
     private String depositRate;
+    private  String assetType;
 
-    public QuickBuyStockCommand(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) {
+   
+
+    public QuickBuyStockCommand(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate,String assetType) {
         super();
         this.captitalAmount = captitalAmount;
         this.capitalRate = capitalRate;
@@ -23,6 +26,8 @@ public class QuickBuyStockCommand implements ICommand<StockResultVO>{
         this.stockCode = stockCode;
         this.stockBuyAmount = stockBuyAmount;
         this.depositRate = depositRate;
+        this.assetType = assetType;
+
     }
 
     public Long getCaptitalAmount() {
@@ -84,6 +89,13 @@ public class QuickBuyStockCommand implements ICommand<StockResultVO>{
     @Override
     public String getCommandName() {
         return Name;
+    }
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
     }
 
     @Override

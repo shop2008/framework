@@ -745,8 +745,8 @@ public class TradingManagementServiceImpl extends
         });
     }
     @Override
-    public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate) throws StockAppBizException {
-        context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate), new IAsyncCallback() {
+    public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate,String assetType ) throws StockAppBizException {
+        context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType), new IAsyncCallback() {
             @Override
             public void failed(Object cause) {
                 log.error("quickBuy fail" + cause.toString());

@@ -14,9 +14,9 @@ public class QuickBuyStockHandler extends BasicCommandHandler{
             final long _stockBuyAmount = Long.valueOf(g.getStockBuyAmount());
             final float _depositRate = Float.valueOf(g.getDepositRate());
             
-            StockResultVO vo =  getRestService(ITradingProtectedResource.class).quickBuy(
+            StockResultVO vo =  getRestService(ITradingProtectedResource.class).mulQuickBuy(
                     g.getCaptitalAmount(), _capitalRate, g.isVirtual(), g.getStockMarket(),
-                    g.getStockCode(), _stockBuyAmount, _depositRate);
+                    g.getStockCode(), _stockBuyAmount, _depositRate, g.getAssetType());
             
             return (T) vo;
         }

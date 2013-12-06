@@ -126,13 +126,14 @@ public interface ITradingManagementService {
 	 *            - 是否为虚拟盘 - true表示虚拟盘；false表示实盘
 	 * @param depositRate - 保证金
 	 * @param stockMarket - 市场代码： SH，SZ各代表上海，深圳
+	 * @param assetType 资产类型
 	 * @param stockCode -股票代码
 	 * @param stockBuyAmount -委托价
 	 * @param depositRate -委托数量
 	 * @throws StockAppBizException
 	 */
 	void quickBuy(Long captitalAmount,String capitalRate,boolean virtual,String stockMarket,String stockCode,String
-			stockBuyAmount,String depositRate)throws StockAppBizException;
+			stockBuyAmount,String depositRate,String assetType)throws StockAppBizException;
 	//======================交易部分接口  end =======================
 	/**
 	 * 获取成交详情
