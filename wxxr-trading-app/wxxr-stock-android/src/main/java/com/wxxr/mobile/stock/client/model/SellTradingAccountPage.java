@@ -255,6 +255,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		Long id = null; //股票代码
 		String stockName = null; //股票名称
 		String stockMarketCode = null; //市场代码
+		Long amount = 0L;
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if (event.getProperty("position") instanceof Integer) {
@@ -267,6 +268,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						stockCode = stockTrading.getStockCode(); 
 						stockName = stockTrading.getStockName(); 
 						stockMarketCode = stockTrading.getMarketCode(); 
+						amount = stockTrading.getAmount();
 						//交易盘id
 						if(id!=null){
 							map.put("orderId", id);
@@ -282,6 +284,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						}
 						if(stockMarketCode!=null){
 							map.put("market", stockMarketCode);
+						}
+						if(amount!=null){
+							map.put("amount", amount);
 						}
 					}
 				}
