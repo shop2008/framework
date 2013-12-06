@@ -53,10 +53,10 @@ public class PersonalHomePageLoader extends AbstractEntityLoader<String, Persona
         
         if(result != null){
             for (PersonalHomePageVO vo : result) {
-                PersonalHomePageBean bean=cache.getEntity("PersonalHomePageVO");
+                PersonalHomePageBean bean=cache.getEntity("PersonalHomePageBean");
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
-                    cache.putEntity("PersonalHomePageVO", bean);
+                    cache.putEntity("PersonalHomePageBean", bean);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
