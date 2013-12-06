@@ -28,6 +28,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(orderBean!=null?orderBean.stockCode:'', orderBean!=null?orderBean.marketCode:'')}")
 	StockBaseInfo stockInfoBean;
 	
+	@Bean
 	StockTradingOrderBean orderBean;
 	
 	@Convertor(params={
@@ -87,6 +88,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof StockTradingOrderBean) {
+			orderBean = (StockTradingOrderBean) value;
 			registerBean("orderBean",value);
 		}
 	}

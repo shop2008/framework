@@ -97,6 +97,7 @@
                             android:maxLength="6"
                             android:textColor="@color/white"
                             android:textSize="18sp"
+                            android:hint="最新行情价"
                             bind:field="price"
                             bind:on_TextChanged="priceTextChanged" />
                     </RelativeLayout>

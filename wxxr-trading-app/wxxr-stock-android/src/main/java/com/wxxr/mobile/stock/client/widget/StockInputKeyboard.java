@@ -379,7 +379,7 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 			multi = 100f;
 		}
 		toCount = ((int)(maxCountStock / multi)*100)+"";
-		tv_sn_number.setText(maxCountStock+"");
+		tv_sn_number.setText(maxCountStock+"股");
 		tv_fourth.setText(str_value);
 		log.debug("setSnValue toCount : "+ toCount);
 	}

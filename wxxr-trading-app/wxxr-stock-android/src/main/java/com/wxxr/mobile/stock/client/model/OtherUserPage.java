@@ -128,11 +128,25 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Override
 	public void updateModel(Object value) {
-		Map<String, String> map = (Map<String, String>) value;
-		userId = map.get("userId");
-
-		//模拟数据，正式环境需改成userId
-		registerBean("userId", "2");
+		String userId = "";
+		if (value instanceof Map) {
+			Map temp = (Map) value;
+			for (Object key : temp.keySet()) {
+				Object tempt = temp.get(key);
+				if (tempt != null && "result".equals(key)) {
+					if (tempt instanceof String) {
+						userId = (String) tempt;
+					}
+					registerBean("userId", userId);
+				}
+			}
+		}
+		
+//		Map<String, String> map = (Map<String, String>) value;
+//		userId = map.get("userId");
+//
+//		//模拟数据，正式环境需改成userId
+//		registerBean("userId", "2");
 	}
 
 	/**

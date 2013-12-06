@@ -83,8 +83,8 @@
     </RadioGroup>
 
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
             android:id="@+id/listView1"
@@ -92,10 +92,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
+            android:overScrollMode="never"
             bind:field="ChampionShip"
             bind:itemViewId="ChampionShipItemView"
             bind:on_BottomRefresh="reloadTRank"
-            bind:on_TopRefresh="reloadTRank" >
+            bind:on_TopRefresh="reloadTRank"
+            bind:on_ItemClick="handleChampionShipItemClick" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
@@ -107,7 +109,8 @@
             bind:field="ChampionT1Ship"
             bind:itemViewId="ChampionShipItemView"
             bind:on_BottomRefresh="reloadT1Rank"
-            bind:on_TopRefresh="reloadT1Rank" >
+            bind:on_TopRefresh="reloadT1Rank"
+            bind:on_ItemClick="handleChampionShipT1ItemClick" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
 
         <LinearLayout
@@ -134,7 +137,8 @@
                 bind:field="ChampionWeekShip"
                 bind:itemViewId="ChampionWeekShipItemView"
                 bind:on_BottomRefresh="reloadWeekRank"
-                bind:on_TopRefresh="reloadWeekRank" >
+                bind:on_TopRefresh="reloadWeekRank"
+                bind:on_ItemClick="handleChampionWeekShipItemClick" >
             </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
         </LinearLayout>
 
@@ -147,7 +151,8 @@
             bind:field="ChampionRegularShip"
             bind:itemViewId="ChampionRegularShipItemView"
             bind:on_BottomRefresh="reloadRegularTicketRank"
-            bind:on_TopRefresh="reloadRegularTicketRank" >
+            bind:on_TopRefresh="reloadRegularTicketRank"
+            bind:on_ItemClick="handleChampionRegularShipItemClick" >
         </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
     </FrameLayout>
 

@@ -8,13 +8,13 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dip"
-        android:padding="4dp" >
+        android:layout_height="50dip" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:background="@color/gray"
             android:gravity="center_vertical" >
 
             <TextView
@@ -31,6 +31,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:gravity="center"
                 android:text="--"
                 android:textColor="@color/white"
                 android:textSize="14sp"
@@ -41,7 +42,7 @@
             android:id="@+id/textView2"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2.3"
             android:gravity="center"
             android:text="--"
             android:textColor="@color/white"
@@ -51,7 +52,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2.3"
             android:gravity="center"
             android:text="--"
             android:textColor="#BA2514"
@@ -59,6 +60,6 @@
             bind:field="gainRate" />
     </LinearLayout>
 
-    <include layout="@layout/hlines"/>
+    <include layout="@layout/hlines" />
 
 </LinearLayout>

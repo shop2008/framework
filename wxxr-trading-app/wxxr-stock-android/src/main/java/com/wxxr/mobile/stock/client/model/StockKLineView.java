@@ -26,15 +26,24 @@ import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name = "StockKLineView", description="买入", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
 public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
 	
 	private static final Trace log = Trace.register(StockKLineView.class);
+	
+	// 查股票名称
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	StockBaseInfo stockInfoBean;
 	
 	@Bean
 	String nameBean;
@@ -96,7 +105,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	StockQuotationBean stockQuotationBean;
 	
 	// Title
-	@Field(valueKey = "text", binding = "${nameBean}")
+	@Field(valueKey = "text", binding= "${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String name;
 
 	@Field(valueKey = "text", binding = "${'('}${stockQuotationBean!=null?stockQuotationBean.code:'--'}${'.'}${stockQuotationBean!=null?stockQuotationBean.market:'--'}${')'}")

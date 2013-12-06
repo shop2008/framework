@@ -14,7 +14,9 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -50,7 +52,7 @@ public abstract class ChampionShipView extends ViewBase {
 	//List
 	@Field(valueKey = "options", binding="${tRankListBean.data}", visibleWhen="${currentViewId == 1}",
 			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-						  @Attribute(name = "enablePullUpRefresh", value="false")})
+						  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<MegagameRankBean> ChampionShip;
 	
 	@Field(valueKey = "options", binding="${t1RankListBean.data}", visibleWhen="${currentViewId == 2}",
@@ -151,5 +153,104 @@ public abstract class ChampionShipView extends ViewBase {
 		tradingMgr.reloadRegularTicketRank(true);
 		return null;
 	}
+	
+	/**
+	 * T日列表点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	CommandResult handleChampionShipItemClick(InputEvent event) {
+		CommandResult result = new CommandResult();
 
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			List<MegagameRankBean> championShip = (tRankListBean != null ? tRankListBean
+					.getData() : null);
+			if (championShip != null && championShip.size() > 0
+					&& position < championShip.size()) {
+				String userId = championShip.get(position).getUserId();
+//				updateSelection(userId);
+				result.setPayload(userId);
+			}
+		}
+		result.setResult("");
+		return result;
+	}
+	
+	/**
+	 * T+1日列表点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	CommandResult handleChampionShipT1ItemClick(InputEvent event) {
+		CommandResult result = new CommandResult();
+
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			List<MegagameRankBean> championShip = (t1RankListBean != null ? t1RankListBean
+					.getData() : null);
+			if (championShip != null && championShip.size() > 0
+					&& position < championShip.size()) {
+				String userId = championShip.get(position).getUserId();
+//				updateSelection(userId);
+				result.setPayload(userId);
+			}
+		}
+		result.setResult("");
+		return result;
+	}
+	
+	/**
+	 * Week列表点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	CommandResult handleChampionWeekShipItemClick(InputEvent event) {
+		CommandResult result = new CommandResult();
+
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			List<WeekRankBean> weekShip = (weekRankListBean != null ? weekRankListBean
+					.getData() : null);
+			if (weekShip != null && weekShip.size() > 0
+					&& position < weekShip.size()) {
+				String userId = weekShip.get(position).getUserId();
+//				updateSelection(userId);
+				result.setPayload(userId);
+			}
+		}
+		result.setResult("");
+		return result;
+	}
+	
+	/**
+	 * Regular列表点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	CommandResult handleChampionRegularShipItemClick(InputEvent event) {
+		CommandResult result = new CommandResult();
+
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			List<RegularTicketBean> rtShip = (rtRankListBean != null ? rtRankListBean
+					.getData() : null);
+			if (rtShip != null && rtShip.size() > 0
+					&& position < rtShip.size()) {
+//				String userId = rtShip.get(position).getUserId();
+//				updateSelection(userId);
+//				result.setPayload(userId);
+			}
+		}
+		result.setResult("");
+		return result;
+	}
 }

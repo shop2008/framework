@@ -40,9 +40,11 @@ import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * 买入
@@ -101,7 +103,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
 	StockQuotationBean stockQuotationBean;
-	
+
+	// 查股票名称
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	StockBaseInfo stockInfoBean;
+		
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="multiple", value="1000.00")
@@ -115,7 +124,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			@Attribute(name = "fund", value = "${avalibleFeeBean}") })
 	String inputView;
 	
-	@Field(valueKey = "text", binding="${nameBean}${' '}${codeBean}")
+	@Field(valueKey = "text", binding="${stockInfoBean!=null?stockInfoBean.name:''}${' '}${codeBean}")
 	String stock;
 	
 	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:null}", converter="stockLong2StringConvertor")
@@ -404,7 +413,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("stockSearchPage", this);
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("TBuyTradingPage", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener("stockSearchPage", this);
+		service.removeSelectionListener("TBuyTradingPage", this);
 	}
 }
