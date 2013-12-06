@@ -227,37 +227,31 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.SellStockPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.ShiPanBuyStockInfoPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name=".ui.ZhiShuPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-         <activity
+        <activity
             android:name=".ui.GeGuStockPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        
-         <activity
+        <activity
             android:name=".ui.QuickBuyStockPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-                 
         <activity
             android:name=".ui.GuidePage"
             android:configChanges="keyboardHidden|orientation"
@@ -271,6 +265,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
- <!-- FOR REST ACCESS -->
-
+    <!-- FOR REST ACCESS -->
+    <!-- sdcard文件创建删除权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- sdcard写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
