@@ -4,6 +4,7 @@ package com.wxxr.stock.trading.ejb.api;
 import java.util.Arrays;
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
@@ -32,8 +33,8 @@ public class DealDetailInfoVO{
 	
 	@XmlElement(name = "imgUrl")
 	private String[] imgUrl;
-	
-	@XmlElement(name = "tradingRecords")
+
+	@XStreamImplicit(itemFieldName = "tradingRecords")
 	private List<TradeRecordVO> tradingRecords;
 
 	

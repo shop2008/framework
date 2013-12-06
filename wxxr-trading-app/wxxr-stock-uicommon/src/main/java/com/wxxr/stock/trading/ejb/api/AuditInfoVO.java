@@ -10,6 +10,9 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "AuditInfoVO")
 public class AuditInfoVO{
 
+	/**交易盘编号*/
+	@XmlElement(name = "id")
+	private String id;//id
 	/**申请资金*/
 	@XmlElement(name = "fund")
 	private String fund;
@@ -17,58 +20,54 @@ public class AuditInfoVO{
 	@XmlElement(name = "plRisk")
 	private String plRisk;
 	/**盈亏总额（交易盘，除去费用）*/
-	@XmlElement(name = "")
+	@XmlElement(name = "totalGain")
 	private String totalGain;
 	/**玩家实得收益--没有收益时不显示80%*/
-	@XmlElement(name = "")
+	@XmlElement(name = "userGain")
 	private String userGain;
 	/**补偿交易综合费--总收益<手续费，=总收益（优先补偿)*/
-	@XmlElement(name = "")
+	@XmlElement(name = "tradingCost")
 	private String tradingCost;
 	/**账户管理费--没有收益时不显示20%*/
-	@XmlElement(name = "")
+	@XmlElement(name = "accountPay")
 	private String accountPay;
 	/**止损比例*/
-	@XmlElement(name = "")
+	@XmlElement(name = "capitalRate")
 	private String capitalRate;
 	/**冻结资金*/
-	@XmlElement(name = "")
+	@XmlElement(name = "frozenAmount")
 	private String frozenAmount;
 	/**扣减数*/
-	@XmlElement(name = "")
+	@XmlElement(name = "payOut")
 	private String payOut;
 	/**解冻数量*/
-	@XmlElement(name = "")
+	@XmlElement(name = "unfreezeAmount")
 	private String unfreezeAmount;
 	/**买入均价*/
-	@XmlElement(name = "")
+	@XmlElement(name = "buyAverage")
 	private String buyAverage;
 	/**卖出均价*/
-	@XmlElement(name = "")
+	@XmlElement(name = "sellAverage")
 	private String sellAverage;
 	/**交易结算日期*/
-	@XmlElement(name = "")
+	@XmlElement(name = "tradingDate")
 	private String tradingDate;
 	/**交易盘类型*/
-	@XmlElement(name = "")
+	@XmlElement(name = "virtual")
 	private boolean virtual;
 	/**申请交易盘时间*/
-	@XmlElement(name = "")
+	@XmlElement(name = "buyDay")
 	private String buyDay;
 	/**存续时间*/
-	@XmlElement(name = "")
+	@XmlElement(name = "deadline")
 	private String deadline;
 	/**手续费*/
-	@XmlElement(name = "")
-	private String cost;
-	/**交易盘编号*/
-	@XmlElement(name = "")
-	private String id;
+	@XmlElement(name = "cost")
+	private String cost;	
 	/**交易盘类型*/
-	@XmlElement(name = "")
+	@XmlElement(name = "type")
 	private String type;
 	
-
 	
 	
 	/**
