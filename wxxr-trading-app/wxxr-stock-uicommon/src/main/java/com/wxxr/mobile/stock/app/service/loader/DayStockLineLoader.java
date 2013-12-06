@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -15,7 +16,7 @@ import com.wxxr.stock.restful.resource.StockResource;
 
 public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBean, StockLineBean> {
    public  final static String COMMAND_NAME = "GetDayStockLineCommand";
-
+   @NetworkConstraint
     public class GetDayStockLineCommand implements ICommand<List<StockLineBean>> {
         private String code;
         private String market;

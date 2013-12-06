@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -14,6 +15,7 @@ import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 
 public class OtherPersonalHomePageLoader  extends AbstractEntityLoader<String, PersonalHomePageBean, PersonalHomePageVO> {
     private static final String COMMAND_NAME = "GetOtherPersonalHomePageLoaderCommand";
+    @NetworkConstraint
     private static class GetOtherPersonalHomePageLoader implements ICommand<List<PersonalHomePageVO>> {
         private String userId;
         @Override

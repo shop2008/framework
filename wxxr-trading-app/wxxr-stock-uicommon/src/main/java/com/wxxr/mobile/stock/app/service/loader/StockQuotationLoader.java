@@ -1,15 +1,14 @@
 package com.wxxr.mobile.stock.app.service.loader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
-import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
 import com.wxxr.stock.restful.resource.StockResource;
 /**
@@ -19,7 +18,7 @@ import com.wxxr.stock.restful.resource.StockResource;
  */
 public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuotationBean, StockQuotationVO> {
     public final static String Name = "GetStockQuotationCommand";
-
+    @NetworkConstraint
     public class GetStockQuotationCommand implements ICommand<List<StockQuotationVO>> {
         private String code;
         private String market;

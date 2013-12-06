@@ -1,12 +1,10 @@
 package com.wxxr.mobile.stock.app.service.loader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.javax.ws.rs.QueryParam;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
@@ -18,6 +16,7 @@ import com.wxxr.stock.trading.ejb.api.GainVO;
 public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, GainVO> {
 
     private static final String COMMAND_NAME = "GetGainBeanCommand";
+    @NetworkConstraint
     private  class GetOtherUserGainBeanCommand extends GetGainBeanCommand {
         String userId;
         public String getUserId() {

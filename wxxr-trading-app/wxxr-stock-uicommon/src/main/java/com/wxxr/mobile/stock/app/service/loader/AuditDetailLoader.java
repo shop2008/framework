@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -15,7 +16,7 @@ import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditInfoVO> {
 
     private static final String COMMAND_NAME = "GetAuditDetailVOsCommand";
-    
+    @NetworkConstraint
     private static class GetAuditDetailVOsCommand implements ICommand<List<AuditInfoVO>> {
         private String acctID;
 

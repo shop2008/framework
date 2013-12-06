@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
@@ -24,7 +25,7 @@ import com.wxxr.stock.restful.resource.ArticleResource;
 public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, ArticleVO> {
 
 	private static final String COMMAND_NAME = "GetMyArticles";
-	
+	 @NetworkConstraint
 	private static class GetMyArticlesCommand implements ICommand<List<ArticleVO>> {
 
 		private int start, limit, type;

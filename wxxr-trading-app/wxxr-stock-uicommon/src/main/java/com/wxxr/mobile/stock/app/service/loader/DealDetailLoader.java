@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -11,12 +12,11 @@ import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
 
 public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBean, DealDetailInfoVO> {
 
     private static final String COMMAND_NAME = "GetDealDetailCommand";
-    
+    @NetworkConstraint
     private static class GetDealDetailVOsCommand implements ICommand<List<DealDetailInfoVO>> {
         private String acctID;
 
