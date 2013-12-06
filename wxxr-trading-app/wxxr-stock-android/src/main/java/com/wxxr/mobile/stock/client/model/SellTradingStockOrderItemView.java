@@ -8,11 +8,14 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name="sellTradingStockOrder")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.sell_trading_stock_order_item")
@@ -20,6 +23,12 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 
 	@Bean
 	StockTradingOrderBean stockTradingOrder; 
+	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+		
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(stockTradingOrder!=null?stockTradingOrder.stockCode:'', stockTradingOrder!=null?stockTradingOrder.marketCode:'')}")
+	StockBaseInfo stockInfoBean;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),
@@ -56,12 +65,8 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	String stockCode;
 	
 	/**股票名称*/
-	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.stockName:'--'}")
+	@Field(valueKey="text",binding="${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String stockName;
-	
-//	/**市场代码*/
-//	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.marketCode:'--'}")
-//	String marketCode;
 	
 	/**当前价*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.currentPirce:'--'}",converter = "stockLong2StringConvertorNoSign",attributes={

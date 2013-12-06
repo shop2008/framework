@@ -23,6 +23,8 @@ public abstract class MinuteLineViewKeys {
 	public static final AttributeKey<String> stockDate = new AttributeKey<String>(String.class, "stockDate"); //日期
 	public static final AttributeKey<String> stockType = new AttributeKey<String>(String.class, "stockType"); //股票类型0-指数；1-个股
 	
+	public static final AttributeKey<Integer> count = new AttributeKey<Integer>(Integer.class, "count");
+	public static final AttributeKey<Integer> position = new AttributeKey<Integer>(Integer.class, "position");
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){
 		attrMgr.registerAttribute(stockBorderColor);
@@ -35,5 +37,7 @@ public abstract class MinuteLineViewKeys {
 		attrMgr.registerAttribute(stockDate);
 		attrMgr.registerAttribute(stockType);
 		attrMgr.registerAttribute(background);
+		attrMgr.registerAttribute(count);
+		attrMgr.registerAttribute(position);
 	}
 }

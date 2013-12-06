@@ -10,10 +10,13 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name="TradingBuyInfoItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.trading_buy_info_item")
@@ -30,8 +33,14 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	@Bean
 	TradingAccInfoBean trading;
 	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+		
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(trading!=null?trading.maxStockCode:'', trading!=null?trading.maxStockMarket:'')}")
+	StockBaseInfo stockInfoBean;
+	
 	/**股票名称*/
-	@Field(valueKey="text",binding="${trading!=null&&trading.maxStockName!=null?trading.maxStockName:'无持仓'}",attributes={
+	@Field(valueKey="text",binding="${stockInfoBean!=null&&stockInfoBean.name!=null?stockInfoBean.name:'无持仓'}",attributes={
 			@Attribute(name = "textColor", value = "${(trading.over!=null&&trading.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
 			})
 	String stockName;

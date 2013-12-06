@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" 
     xmlns:bind="http://wxxr.com.cn/binding"
-    android:background="@color/qsxq">
+    android:background="@color/page_background_color">
 
     <ScrollView
         android:id="@+id/scrollView1"

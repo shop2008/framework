@@ -16,12 +16,14 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
+import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 
 public class SpinnerViewFieldBinding extends BasicFieldBinding {
 
 	public static final String SPINNER_ITEM_VIEW_ID = "itemViewId";
 	private IListDataProvider provider;
 	private GenericListAdapter listAdapter;
+	private static final int DEFAULT_POSITION = 0;
 	public SpinnerViewFieldBinding(IAndroidBindingContext ctx,
 			String fieldName, Map<String, String> attrSet) {
 		super(ctx, fieldName, attrSet);
@@ -117,6 +119,12 @@ public class SpinnerViewFieldBinding extends BasicFieldBinding {
 	protected void updateUI(boolean recursive) {
 		if((this.provider != null)&&this.provider.updateDataIfNeccessary()&&(this.listAdapter != null)){
 			this.listAdapter.notifyDataSetChanged();
+		}
+		IUIComponent comp = getField();
+		Spinner view = (Spinner)getUIControl();
+		Integer position = comp.getAttribute(MinuteLineViewKeys.position);
+		if(position!=null){
+			view.setSelection(position, true);
 		}
 		super.updateUI(recursive);
 	}

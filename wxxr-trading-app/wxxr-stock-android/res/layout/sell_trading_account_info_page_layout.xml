@@ -264,7 +264,7 @@
 				        android:layout_height="wrap_content" 
 				        style="@style/mListView"
 				        bind:field="stockTradingOrder"
-				        bind:itemViewId="sellTradingStockOrder"
+				        bind:itemViewId="SellTradingItemView"
 				        bind:on_ItemClick="sellStockItemClick">
 				    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>				    
 		    	    <TextView android:layout_width="match_parent"
@@ -320,7 +320,7 @@
             android:layout_weight="1"
             android:gravity="center"
             bind:field="isEmpty"
-            bind:on_Click="cleanTradingAction"
+            bind:on_Click="clearTradingAccount"
             android:layout_marginLeft="4dp"
             >
             <ImageView android:layout_width="wrap_content"

@@ -170,6 +170,7 @@
                         android:paddingLeft="8dp"
                         android:textColor="@color/white"
                         android:textSize="14sp"
+                        bind:field="*"
                         bind:on_TextChanged="countTextChanged" />
 
                     <Button
@@ -182,7 +183,7 @@
                         android:text="下单卖出"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        bind:field="*"
+                        bind:field="isSellBuyBtn"
                         bind:on_Click="sellStock" />
                 </LinearLayout>
 

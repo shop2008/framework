@@ -100,17 +100,6 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@ViewGroup(viewIds={"StockQuotationView","GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;
 	
-	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
-			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
-			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
-			@Attribute(name = "stockBorderColor",value="#535353"),
-			@Attribute(name = "stockUpColor",value="#BA2514"),
-			@Attribute(name = "stockDownColor",value="#3C7F00"),
-			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
-			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	})
-	List<StockMinuteLineBean> stockMinuteData;
-	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
@@ -118,32 +107,8 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
-	// 股票或指数 代码+市场代码
-	@Field(valueKey="text",binding="${'('}${stockQuotation!=null?stockQuotation.code:'--'}${'.'}${stockQuotation!=null?stockQuotation.market:'--'}${')'}")
-	String codeMarket;
-	
-	//股票名称
-	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}")
-	String name;
-	
 	@Field(valueKey="text",binding="${stockName!=null?stockName:'--'}${' '}${stockQuotation!=null?stockQuotation.code:'--'}")
 	String nameCode;
-	
-	// 换手率
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.handrate:'--'}")
-	String handrate;
-	
-	// 量比
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.lb:'--'}")
-	String lb;
-	
-	//成交额
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.secuamount:'--'}")
-	String secuamount;
-	
-	// 流通盘
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.capital:'--'}")
-	String capital;
 	
 	//最新价
 	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
@@ -363,44 +328,27 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 		return null;
 	}
 	
-	/**参赛交易盘买人*/
+	/**参赛交易盘买人--模拟盘*/
 	@Command
 	String CanSaiBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String market = null;
 			String code = null;
-			String stockBuyAmount = null; //委托价
 			long maxBuyNum = 0; //委托数量
 			long close = 0;
 			if(stockQuotation!=null){
 				market = stockQuotation.getMarket();
 				code = stockQuotation.getCode();
-				stockBuyAmount = String.valueOf(stockQuotation.getNewprice());
 				close = stockQuotation.getClose();
 				maxBuyNum = buyNumber(100000l, close);
 			}
-//			userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
-			userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, stockBuyAmount, String.valueOf(maxBuyNum));
+			if(getRate3()>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && getDeposit3()>0){
+				userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
+			}
 		}
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return "home";	}
 	
-	/**挑战交易盘买人*/
-	/**
-	 * 快速买入
-	  * @param captitalAmount
-	 *            -申请额度
-	 * @param capitalRate
-	 *            -中止止损
-	 * @param virtual
-	 *            - 是否为虚拟盘 - true表示虚拟盘；false表示实盘
-	 * @param depositRate - 保证金
-	 * @param stockMarket - 市场代码： SH，SZ各代表上海，深圳
-	 * @param stockCode -股票代码
-	 * @param stockBuyAmount -委托价
-	 * @param depositRate -委托数量
-	 * @throws StockAppBizException
-	 */
 	@Command
 	String TiaoZhanBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
@@ -412,9 +360,8 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			String market = null;
 			long maxBuyNum = 0; //委托数量
 			String assetType = "VOUCHER";
-			String stockBuyAmount = null; //委托价
 			if(stockQuotation!=null){
-				stockBuyAmount = String.valueOf(stockQuotation.getNewprice());
+//				stockBuyAmount = String.valueOf(stockQuotation.getNewprice());
 				close = stockQuotation.getClose();
 				maxBuyNum = buyNumber(changeMoney * 10000, close);
 				code = stockQuotation.getCode();
@@ -443,7 +390,9 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				assetType= "VOUCHER"; //积分
 				break;
 			}
-			userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, stockBuyAmount, String.valueOf(maxBuyNum));
+			if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
+				userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
+			}
 			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return "home";		

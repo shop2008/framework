@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
@@ -25,6 +26,9 @@ public abstract class DropDownMenuItem extends ViewBase implements IModelUpdater
 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService manageService;
+	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
 		
 	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(orderBean!=null?orderBean.stockCode:'', orderBean!=null?orderBean.marketCode:'')}")
 	StockBaseInfo stockInfoBean;
@@ -37,6 +41,9 @@ public abstract class DropDownMenuItem extends ViewBase implements IModelUpdater
 	
 	@Field(valueKey="text",binding="${orderBean!=null?orderBean.stockCode:'--'}")
 	String code;
+	
+	@Field(valueKey="visible",visibleWhen="${orderBean!=null&&orderBean.status!='PROCESSING'}")
+	boolean processing;
 	
 	@Override
 	public void updateModel(Object value) {

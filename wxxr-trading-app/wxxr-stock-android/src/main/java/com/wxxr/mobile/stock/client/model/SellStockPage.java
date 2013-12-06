@@ -31,9 +31,11 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 
 /**
@@ -66,6 +68,9 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	}	
 	@Bean(type=BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
+	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
 	
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
@@ -117,7 +122,9 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	String isChecked1;
 	
 	/**交易订单列表*/
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}")
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}",attributes={
+			@Attribute(name = "position", value = "${position}")
+	})
 	List<StockTradingOrderBean> stockTradingOrder;
 	
 	@Bean
@@ -131,6 +138,12 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Bean
 	String amount; //卖出数量;
+	
+	@Field(valueKey="enabled",enableWhen="${amount!=null}")
+	boolean isSellBuyBtn = false;
+	
+	@Bean
+	int position=0;
 	
 	@Bean
 	String defStockNameCode;
@@ -174,14 +187,21 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
 				StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
-				maxAmountBean = stockTrading.getAmount() + "";
-				this.stockCode = stockTrading.getStockCode();
-				this.stockName = stockTrading.getStockName();
-				this.stockMarket = stockTrading.getMarketCode();
+				if(stockTrading!=null){
+					maxAmountBean = stockTrading.getAmount() + "";
+					this.stockMarket = stockTrading.getMarketCode();
+					this.stockCode = stockTrading.getStockCode();
+				}
+				if(stockInfoSyncService!=null){
+					StockBaseInfo stockInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.stockCode, this.stockMarket);
+					this.stockName = stockInfo.getName();
+				}
 				registerBean("stockCode", this.stockCode);
 				registerBean("stockName", this.stockName);
 				registerBean("stockMarket", this.stockMarket);
 				registerBean("maxAmountBean", this.maxAmountBean);
+				log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
+				this.infoCenterService.getStockQuotation(stockCode, stockMarket);
 				//刷新viewpager
 				String[] stockInfos = new String[] { stockCode, stockName, stockMarket };
 				updateSelection((Object) stockInfos);
@@ -330,6 +350,12 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		        		if(temp.get(key) instanceof Long){
 		        			this.maxAmountBean = temp.get(key) + "";
 		        			registerBean("maxAmountBean", this.maxAmountBean);
+		        		}
+		        	}
+		        	if("position".equals(key)){
+		        		if(temp.get(key) instanceof Integer){
+		        			this.position = (Integer) temp.get(key);
+		        			registerBean("position", this.position);
 		        		}
 		        	}
 		        }

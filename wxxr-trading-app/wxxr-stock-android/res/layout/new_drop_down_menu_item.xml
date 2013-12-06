@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@drawable/listview_selected_item1"
-    xmlns:bind="http://wxxr.com.cn/binding">
+    xmlns:bind="http://wxxr.com.cn/binding"
+    bind:field="processing">
 
     <LinearLayout android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -192,9 +192,9 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
 		        style="@style/mListView"
-		        bind:itemViewId="tradingRecordDetailItem"
+		        bind:itemViewId="TradingRecordDetailItemView"
 		        bind:field="tradingRecords"
-		        bind:on_ItemClick="stockMarketAction">
+		        bind:on_ItemClick="StockQuotationAction">
 		    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>                        
         </LinearLayout>
    </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>

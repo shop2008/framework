@@ -288,6 +288,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						if(amount!=null){
 							map.put("amount", amount);
 						}
+						map.put("position", position);
 					}
 				}
 				CommandResult result = new CommandResult();
@@ -315,13 +316,16 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 					if(order!=null){
 						String code = order.getStockCode();
 						String name = order.getStockName();
+						Long amount = order.getAmount();
 						map.put("stockName", name);
 						map.put("stockCode", code);
+						map.put("amount", amount);
 					}
 				}
 			}
 			if(accid!=null)
 				map.put("accid", accid);
+			map.put("position", 0);
 			result.setPayload(map);
 			result.setResult("SellStockPage");
 			return result;
