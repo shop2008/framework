@@ -15,29 +15,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
+import com.wxxr.mobile.android.ui.IRefreshableListAdapter;
 import com.wxxr.mobile.android.ui.ItemViewSelector;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
+import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.core.ui.api.IReusableUIModel;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
-import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.util.LRUList;
 
 /**
  * @author neillin
  *
  */
-public class GenericListAdapter extends BaseAdapter {
+public class GenericListAdapter extends BaseAdapter implements IRefreshableListAdapter {
 
 	private final IListDataProvider provider;
 	private final IObservableListDataProvider observable;
-	private final IWorkbenchRTContext context;
 	private final IAndroidBindingContext bindingCtx;
 	private final Context uiContext;
 	private final String itemViewId;
@@ -45,11 +47,10 @@ public class GenericListAdapter extends BaseAdapter {
 	private List<ObserverDataChangedListerWrapper> listeners;
 	private Map<String, LRUList<View>> viewPool = new HashMap<String, LRUList<View>>();
 	
-	public GenericListAdapter(IWorkbenchRTContext ctx, IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
-		if((ctx == null)||(bCtx == null)||(prov == null)||(viewId == null)){
+	public GenericListAdapter(IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
+		if((bCtx == null)||(prov == null)||(viewId == null)){
 			throw new IllegalArgumentException("All arguments cannot be NULL");
 		}
-		this.context = ctx;
 		this.provider = prov;
 		this.itemViewId = viewId;
 		this.bindingCtx = bCtx;
@@ -110,18 +111,17 @@ public class GenericListAdapter extends BaseAdapter {
 		if(view != null){
 			return view;
 		}
-		IViewDescriptor v = this.context.getWorkbenchManager().getViewDescriptor(viewId);
+		IViewDescriptor v = this.bindingCtx.getWorkbenchManager().getViewDescriptor(viewId);
 		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
-		IViewBinder vBinder = this.context.getWorkbenchManager().getViewBinder();
+		IViewBinder vBinder = this.bindingCtx.getWorkbenchManager().getViewBinder();
 		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
 		binding = vBinder.createBinding(ctx, bDesc);
-		binding.init(context);
 		view = (View)binding.getUIControl();
 		BindingBag bag = new BindingBag();
 		bag.binding = binding;
 		bag.ctx = ctx;
-		bag.view = this.context.getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
+		bag.view = this.bindingCtx.getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
 		view.setTag(bag);
 		return view;
 
@@ -256,5 +256,77 @@ public class GenericListAdapter extends BaseAdapter {
 		IView view;
 		CascadeAndroidBindingCtx ctx;
 	}
+
+	@Override
+	public boolean refresh() {
+		if(this.provider.updateDataIfNeccessary()){
+			notifyDataSetChanged();
+			return true;
+		}
+		return false;
+	}
+	
+	public static GenericListAdapter createAdapter(IUIComponent comp,IAndroidBindingContext bCtx, String itemViewId){
+		IListDataProvider provider = comp.getAdaptor(IListDataProvider.class);
+		if (provider == null) {
+			provider = createAdaptorFromValue(comp);
+		}
+		return new GenericListAdapter(bCtx, provider,itemViewId);
+	}
+	
+	/**
+	 * @param provider
+	 * @param val
+	 * @return
+	 */
+	public static IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
+		return new IListDataProvider() {
+			Object[]  data = null;
+			@Override
+			public Object getItemId(Object item) {
+				return null;
+			}
+
+			@Override
+			public int getItemCounts() {
+				return data != null ? data.length : 0;
+			}
+
+			@Override
+			public Object getItem(int i) {
+				return data[i];
+			}
+
+			@Override
+			public boolean isItemEnabled(Object item) {
+				return true;
+			}
+
+			@Override
+			public boolean updateDataIfNeccessary() {
+				data = getListData(comp);
+				return true;
+			}
+		};
+	}
+
+	public static Object[] getListData(IUIComponent comp){
+		if(comp.hasAttribute(AttributeKeys.options)){
+			List<Object> result = comp.getAttribute(AttributeKeys.options);
+			return result != null ? result.toArray() : null;
+		}
+		if (comp instanceof IDataField) {
+			Object val = ((IDataField<?>) comp).getValue();
+			if (val instanceof List){
+				return ((List<Object>)val).toArray();
+			}else if((val != null)&&val.getClass().isArray()){
+				return (Object[])val;
+			}
+		}
+		return null;
+	}
+
+
+
 	
 }

@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.android.ui.binding;
 
-import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -13,10 +12,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
+import com.wxxr.mobile.android.ui.IListAdapterBuilder;
+import com.wxxr.mobile.android.ui.IRefreshableListAdapter;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
-import com.wxxr.mobile.core.ui.api.IDataField;
-import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
@@ -25,7 +24,6 @@ import com.wxxr.mobile.core.ui.api.IViewDescriptor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 
 /**
  * @author neillin
@@ -35,12 +33,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	public static final String LIST_ITEM_VIEW_ID = "itemViewId";
 	public static final String LIST_FOOTER_VIEW_ID = "footerViewId";
 	public static final String LIST_HEADER_VIEW_ID = "headerViewId";
-	private GenericListAdapter listAdapter;
-	private IListDataProvider provider;
+	private IRefreshableListAdapter listAdapter;
 	private IViewBinding headerBinding;
 	private IViewBinding footerBinding;
 	private IView headerView,footerView;
 	private View headItemView, footerItemView;
+	private IListAdapterBuilder adapterBuilder;
 	
 	public AdapterViewFieldBinding(IAndroidBindingContext ctx,
 			String fieldName, Map<String, String> attrSet) {
@@ -68,7 +66,8 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 				footerView = ctx.getWorkbenchManager().getWorkbench().createNInitializedView(footerBinding.getBindingViewId());
 			}
 		}
-
+		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
+		this.adapterBuilder = getWorkbenchContext().getWorkbenchManager().getWorkbench().createNInitializedView(itemViewId).getAdaptor(IListAdapterBuilder.class);
 	}
 
 	/*
@@ -83,13 +82,8 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
-		provider = comp.getAdaptor(IListDataProvider.class);
-		if (provider == null) {
-			provider = createAdaptorFromValue(comp);
-		}
-		this.listAdapter = new GenericListAdapter(getWorkbenchContext(),
-				getAndroidBindingContext(), provider,
-				itemViewId);
+		
+		this.listAdapter = this.adapterBuilder != null ? this.adapterBuilder.buildListAdapter(comp, getAndroidBindingContext(),itemViewId) : GenericListAdapter.createAdapter(comp, context, itemViewId);
 		if((headerBinding != null)&&(headerView != null)){
 			model.addChild(headerView);
 			headerBinding.activate(headerView);
@@ -98,7 +92,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			model.addChild(footerView);
 			footerBinding.activate(footerView);
 		}
-		this.provider.updateDataIfNeccessary();
+		this.listAdapter.refresh();
 		setupAdapter(listAdapter);
 	}
 
@@ -145,58 +139,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		((AbsListView) getUIControl()).setAdapter(adapter);
 	}
 	
-	protected Object[] getListData(IUIComponent comp){
-		if(comp.hasAttribute(AttributeKeys.options)){
-			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			return result != null ? result.toArray() : null;
-		}
-		if (comp instanceof IDataField) {
-			Object val = ((IDataField<?>) comp).getValue();
-			if (val instanceof List){
-				return ((List<Object>)val).toArray();
-			}else if((val != null)&&val.getClass().isArray()){
-				return (Object[])val;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param provider
-	 * @param val
-	 * @return
-	 */
-	protected IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
-		return new IListDataProvider() {
-			Object[]  data = null;
-			@Override
-			public Object getItemId(Object item) {
-				return null;
-			}
-
-			@Override
-			public int getItemCounts() {
-				return data != null ? data.length : 0;
-			}
-
-			@Override
-			public Object getItem(int i) {
-				return data[i];
-			}
-
-			@Override
-			public boolean isItemEnabled(Object item) {
-				return true;
-			}
-
-			@Override
-			public boolean updateDataIfNeccessary() {
-				data = getListData(comp);
-				return true;
-			}
-		};
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -230,7 +172,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	@Override
 	public void notifyDataChanged(ValueChangedEvent... events) {
 		if(this.listAdapter != null){
-			this.listAdapter.notifyDataSetChanged();
+			this.listAdapter.refresh();
 		}
 		super.notifyDataChanged(events);
 		if(headerBinding != null) {
@@ -247,7 +189,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	@Override
 	public void doUpdate() {
 		if(this.listAdapter != null){
-			this.listAdapter.notifyDataSetChanged();
+			this.listAdapter.refresh();
 		}
 		super.doUpdate();
 		if(headerBinding != null) {
@@ -263,8 +205,8 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 */
 	@Override
 	protected void updateUI(boolean recursive) {
-		if((this.provider != null)&&this.provider.updateDataIfNeccessary()&&(this.listAdapter != null)){
-			this.listAdapter.notifyDataSetChanged();
+		if(this.listAdapter != null){
+			this.listAdapter.refresh();
 		}
 		super.updateUI(recursive);
 	}
