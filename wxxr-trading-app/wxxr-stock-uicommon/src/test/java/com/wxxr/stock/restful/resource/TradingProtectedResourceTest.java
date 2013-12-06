@@ -25,8 +25,7 @@ import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
-
-public class TradingProtectedResourceTest extends TestCase{
+public class TradingProtectedResourceTest extends TestCase {
 	ITradingProtectedResource tradingProtectedResource;
 
 	@Override
@@ -34,21 +33,21 @@ public class TradingProtectedResourceTest extends TestCase{
 		super.setUp();
 		init();
 	}
-	
+
 	protected void init() {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
-		MockApplication app = new MockApplication(){
+		MockApplication app = new MockApplication() {
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
 			@Override
 			public ExecutorService getExecutorService() {
 				return executor;
 			}
-			
+
 			@Override
 			protected void initModules() {
-				
+
 			}
 
 		};
@@ -58,12 +57,12 @@ public class TradingProtectedResourceTest extends TestCase{
 			public IUserAuthCredential getAuthCredential(String host,
 					String realm) {
 				return new IUserAuthCredential() {
-					
+
 					@Override
 					public String getUserName() {
 						return "13500001009";
 					}
-					
+
 					@Override
 					public String getAuthPassword() {
 						return "404662";
@@ -73,139 +72,171 @@ public class TradingProtectedResourceTest extends TestCase{
 			}
 		});
 		service.startup(context);
-		context.registerService(ISiteSecurityService.class, new ISiteSecurityService() {
-			
-			@Override
-			public KeyStore getTrustKeyStore() {
-				return null;
-			}
-						
-			@Override
-			public KeyStore getSiteKeyStore() {
-				return null;
-			}
-			
-			@Override
-			public HostnameVerifier getHostnameVerifier() {
-				return null;
-			}
-		});
-		
+		context.registerService(ISiteSecurityService.class,
+				new ISiteSecurityService() {
+
+					@Override
+					public KeyStore getTrustKeyStore() {
+						return null;
+					}
+
+					@Override
+					public KeyStore getSiteKeyStore() {
+						return null;
+					}
+
+					@Override
+					public HostnameVerifier getHostnameVerifier() {
+						return null;
+					}
+				});
+
 		MockRestClient builder = new MockRestClient();
 		builder.init(context);
-		tradingProtectedResource=builder.getRestService(ITradingProtectedResource.class,"http://192.168.123.44:8480/mobilestock2");
+		tradingProtectedResource = builder.getRestService(
+				ITradingProtectedResource.class,
+				"http://192.168.123.44:8480/mobilestock2");
 	}
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		tradingProtectedResource=null;
+		tradingProtectedResource = null;
 	}
 
-	//  public StockResultVO buyStock( String acctID, String market, String code, long price, long amount) throws Exception;
-	public void testBuyStock()throws Exception{
-		StockResultVO a = tradingProtectedResource.buyStock("100","SH","600000",1000,1000);
+	// public StockResultVO buyStock( String acctID, String market, String code,
+	// long price, long amount) throws Exception;
+	public void testBuyStock() throws Exception {
+		StockResultVO a = tradingProtectedResource.buyStock("100", "SH",
+				"600000", 1000, 1000);
+		System.out.println(a);
 	}
 
-//  public StockResultVO sellStock( String acctID, String market, String code, long price, long amount) throws Exception;
-	public void testSellStock()throws Exception{
-		StockResultVO a = tradingProtectedResource.sellStock("100","SH","600000",1000,1000);
+	// public StockResultVO sellStock( String acctID, String market, String
+	// code, long price, long amount) throws Exception;
+	public void testSellStock() throws Exception {
+		StockResultVO a = tradingProtectedResource.sellStock("100", "SH",
+				"600000", 1000, 1000);
+		System.out.println(a);
 	}
-    
-//  public StockResultVO cancelOrder( String orderID) throws Exception;
-	public void testCancelOrder()throws Exception{
+
+	// public StockResultVO cancelOrder( String orderID) throws Exception;
+	public void testCancelOrder() throws Exception {
 		StockResultVO a = tradingProtectedResource.cancelOrder("100");
+		System.out.println(a);
 	}
 
-//	public List<GainVO> getGain( int start, int limit) throws Exception;
-	public void testGetGain()throws Exception{
-		List<GainVO> a = tradingProtectedResource.getGain(0,10);
+	// public List<GainVO> getGain( int start, int limit) throws Exception;
+	public void testGetGain() throws Exception {
+		List<GainVO> a = tradingProtectedResource.getGain(0, 10);
+		System.out.println(a);
 	}
 
-//	public List<TradingAccInfoVO> getTradingAccountList() throws Exception;
-	public void testGetTradingAccountList()throws Exception{
-		List<TradingAccInfoVO> a = tradingProtectedResource.getTradingAccountList();
+	// public List<TradingAccInfoVO> getTradingAccountList() throws Exception;
+	public void testGetTradingAccountList() throws Exception {
+		List<TradingAccInfoVO> a = tradingProtectedResource
+				.getTradingAccountList();
+		System.out.println(a);
 	}
 
-//	public UserCreateTradAccInfoVO getCreateStrategyInfo()throws Exception;
-	public void testGetCreateStrategyInfo()throws Exception{
-		UserCreateTradAccInfoVO a = tradingProtectedResource.getCreateStrategyInfo();
+	// public UserCreateTradAccInfoVO getCreateStrategyInfo()throws Exception;
+	public void testGetCreateStrategyInfo() throws Exception {
+		UserCreateTradAccInfoVO a = tradingProtectedResource
+				.getCreateStrategyInfo();
+		System.out.println(a);
 	}
 
-//	public StockResultVO createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual,float depositRate)throws Exception;
-	public void testCreateTradingAccount()throws Exception{
-		StockResultVO a = tradingProtectedResource
-				.createTradingAccount(100000L,0.05F,true,0.08F);
+	// public StockResultVO createTradingAccount(Long captitalAmount, float
+	// capitalRate, boolean virtual,float depositRate)throws Exception;
+	public void testCreateTradingAccount() throws Exception {
+		StockResultVO a = tradingProtectedResource.createTradingAccount(
+				100000L, 0.05F, true, 0.08F);
+		System.out.println(a);
 	}
 
-//	public StockResultVO mulCreateTradingAccount(Long captitalAmount, float capitalRate, boolean virtual,float depositRate,String assetType)throws Exception;
-	public void testMulCreateTradingAccount()throws Exception{
-		StockResultVO a = tradingProtectedResource
-				.mulCreateTradingAccount(100000L,0.05F,true,0.08F,"CASH");
+	// public StockResultVO mulCreateTradingAccount(Long captitalAmount, float
+	// capitalRate, boolean virtual,float depositRate,String assetType)throws
+	// Exception;
+	public void testMulCreateTradingAccount() throws Exception {
+		StockResultVO a = tradingProtectedResource.mulCreateTradingAccount(
+				100000L, 0.05F, true, 0.08F, "CASH");
+		System.out.println(a);
 	}
 
-//	public StockResultVO quickBuy( Long captitalAmount, float capitalRate, boolean virtual, String stockMarket, String stockCode, long stockBuyAmount,float depositRate)throws Exception;
-	public void testQuickBuy()throws Exception{
-		StockResultVO a = tradingProtectedResource
-				.quickBuy(100000L,0.05F,true,"SH","600000",10000l,0.08F);
+	// public StockResultVO quickBuy( Long captitalAmount, float capitalRate,
+	// boolean virtual, String stockMarket, String stockCode, long
+	// stockBuyAmount,float depositRate)throws Exception;
+	public void testQuickBuy() throws Exception {
+		StockResultVO a = tradingProtectedResource.quickBuy(100000L, 0.05F,
+				true, "SH", "600000", 10000l, 0.08F);
+		System.out.println(a);
 	}
 
-//	public StockResultVO mulQuickBuy( Long captitalAmount, float capitalRate, boolean virtual, String stockMarket, String stockCode, long stockBuyAmount,float depositRate,String assetType) throws Exception;
-	public void testMulQuickBuy()throws Exception{
-		StockResultVO a = tradingProtectedResource
-				.mulQuickBuy(100000L,0.05F,true,"SH","600000",10000l,0.08F,"CASH");
+	// public StockResultVO mulQuickBuy( Long captitalAmount, float capitalRate,
+	// boolean virtual, String stockMarket, String stockCode, long
+	// stockBuyAmount,float depositRate,String assetType) throws Exception;
+	public void testMulQuickBuy() throws Exception {
+		StockResultVO a = tradingProtectedResource.mulQuickBuy(100000L, 0.05F,
+				true, "SH", "600000", 10000l, 0.08F, "CASH");
+		System.out.println(a);
 	}
 
-//	public StockResultVO clearTradingAccount(String acctID)throws Exception;
-	public void testClearTradingAccount()throws Exception{
+	// public StockResultVO clearTradingAccount(String acctID)throws Exception;
+	public void testClearTradingAccount() throws Exception {
 		StockResultVO a = tradingProtectedResource
 				.clearTradingAccount("600000");
+		System.out.println(a);
 	}
 
-//	public List<GainVO> getTotalGain( int start, int limit) throws Exception;
-	public void testGetTotalGain()throws Exception{
-		List<GainVO> a = tradingProtectedResource
-				.getTotalGain(0,10);
+	// public List<GainVO> getTotalGain( int start, int limit) throws Exception;
+	public void testGetTotalGain() throws Exception {
+		List<GainVO> a = tradingProtectedResource.getTotalGain(0, 10);
+		System.out.println(a);
 	}
 
-//	public List<HomePageVO> getHomeImage() throws Exception;
-	public void testGetHomeImage()throws Exception{
-		List<HomePageVO> a = tradingProtectedResource
-				.getHomeImage();
+	// public List<HomePageVO> getHomeImage() throws Exception;
+	public void testGetHomeImage() throws Exception {
+		List<HomePageVO> a = tradingProtectedResource.getHomeImage();
+		System.out.println(a);
 	}
 
-//	public List<HomePageVO> getHomeList( int start, int limit) throws Exception;
-	public void testGetHomeList()throws Exception{
-		List<HomePageVO> a = tradingProtectedResource
-				.getHomeList(0,10);
+	// public List<HomePageVO> getHomeList( int start, int limit) throws
+	// Exception;
+	public void testGetHomeList() throws Exception {
+		List<HomePageVO> a = tradingProtectedResource.getHomeList(0, 10);
+		System.out.println(a);
 	}
 
-//	public StockResultVO drawMoney( long count);
-	public void testDrawMoney()throws Exception{
-		StockResultVO a = tradingProtectedResource
-				.drawMoney(100);
+	// public StockResultVO drawMoney( long count);
+	public void testDrawMoney() throws Exception {
+		StockResultVO a = tradingProtectedResource.drawMoney(100);
+		System.out.println(a);
 	}
 
-//	public UserAssetVO getAcctUsable()throws Exception;
-	public void testGetAcctUsable()throws Exception{
-		UserAssetVO a = tradingProtectedResource
-				.getAcctUsable();
-	}
-	
-//	public List<GainPayDetailsVO> getGPDetails( int start, int limit)throws Exception;
-	public void testGetGPDetails()throws Exception{
-		List<GainPayDetailsVO> a = tradingProtectedResource
-				.getGPDetails(0,10);
+	// public UserAssetVO getAcctUsable()throws Exception;
+	public void testGetAcctUsable() throws Exception {
+		UserAssetVO a = tradingProtectedResource.getAcctUsable();
+		System.out.println(a);
 	}
 
-//	public PersonalHomePageVO getSelfHomePage()throws Exception;
-	public void testGetSelfHomePage()throws Exception{
-		PersonalHomePageVO a = tradingProtectedResource
-				.getSelfHomePage();
+	// public List<GainPayDetailsVO> getGPDetails( int start, int limit)throws
+	// Exception;
+	public void testGetGPDetails() throws Exception {
+		List<GainPayDetailsVO> a = tradingProtectedResource.getGPDetails(0, 10);
+		System.out.println(a);
 	}
 
-//	public List<GainVO> getMorePersonalRecords( int start, int limit, boolean virtual) throws Exception ;
-	public void testGetMorePersonalRecords()throws Exception{
-		List<GainVO> a = tradingProtectedResource
-				.getMorePersonalRecords(0,10,true);
+	// public PersonalHomePageVO getSelfHomePage()throws Exception;
+	public void testGetSelfHomePage() throws Exception {
+		PersonalHomePageVO a = tradingProtectedResource.getSelfHomePage();
+		System.out.println(a);
+	}
+
+	// public List<GainVO> getMorePersonalRecords( int start, int limit, boolean
+	// virtual) throws Exception ;
+	public void testGetMorePersonalRecords() throws Exception {
+		List<GainVO> a = tradingProtectedResource.getMorePersonalRecords(0, 10,
+				true);
+		System.out.println(a);
 	}
 }
