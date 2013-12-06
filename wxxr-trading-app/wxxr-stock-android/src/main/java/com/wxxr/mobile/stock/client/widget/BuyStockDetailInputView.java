@@ -202,12 +202,12 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				isPrice = true;
 				showInitPriceKeyboard();
 				setKeyboardShow(true);
-				break;
+				return true;
 			case R.id.count:
 				isPrice = false;
 				showInitCountKeyboard();
 				setKeyboardShow(true);
-				break;
+				return true;
 			default:
 				break;
 			}
@@ -241,7 +241,8 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			priceEditText.setEnabled(false);
 			priceEditText.setTextColor(Color.GRAY);
 			if (isPrice) {
-				setKeyboardShow(false);
+				if(keyboardView.isShown())
+					setKeyboardShow(false);
 				priceKeyboardautoShow = true;
 				clearEditTextFocus();
 			}
@@ -366,13 +367,14 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		}
 		return countInt;
 	}
-
+	float scraleY = 0;
 	Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == 0) {
+				scraleY = scrollView.getScrollY();
 				int[] location = Utils.getViewRBPoint(keyboardView);
 				scrollView.smoothScrollTo(0, location[1]);
 			} else {
@@ -388,7 +390,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			keyboardView.setVisibility(View.VISIBLE);
 			handler.sendEmptyMessageDelayed(0, 100);
 		} else {
-			scrollView.smoothScrollTo(0, 0);
+			scrollView.smoothScrollTo(0, (int)scraleY);
 			handler.sendEmptyMessageDelayed(1, 100);
 		}
 	}
