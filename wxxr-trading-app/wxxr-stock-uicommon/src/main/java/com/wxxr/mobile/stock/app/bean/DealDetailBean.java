@@ -21,7 +21,7 @@ public class DealDetailBean implements IBindableBean {
 	private float totalGain;
 	private float userGain;
 	private String fund;
-	private float plRisk;
+	private String plRisk;
 
 	/**
 	 * @param listener
@@ -125,15 +125,15 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the plRisk
 	 */
-	public float getPlRisk() {
+	public String getPlRisk() {
 		return plRisk;
 	}
 
 	/**
 	 * @param plRisk the plRisk to set
 	 */
-	public void setPlRisk(float plRisk) {
-		float old = this.plRisk;
+	public void setPlRisk(String plRisk) {
+	    String old = this.plRisk;
 		this.plRisk = plRisk;
 		this.emitter.firePropertyChange("plRisk", old, this.plRisk);
 	}

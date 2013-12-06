@@ -336,7 +336,7 @@ public class ConverterUtils {
         bean.setPrice(vo.getPrice());
         bean.setTax(vo.getTax());
         bean.setVol(vo.getVol());
-//        bean.setId(vo.getId());
+        bean.setId(vo.getId());
         return bean;
     }
 
@@ -452,7 +452,7 @@ public class ConverterUtils {
     }
     public static  void updatefromVOtoBean(DealDetailBean b,DealDetailInfoVO vo){
         b.setFund(vo.getFund());
-        b.setPlRisk(Float.valueOf(vo.getPlRisk()));
+        b.setPlRisk(vo.getPlRisk());
         b.setUserGain(Float.valueOf(vo.getUserGain()));
         b.setImgUrl(vo.getImgUrl());
         List<TradeRecordVO> volist = vo.getTradingRecords();

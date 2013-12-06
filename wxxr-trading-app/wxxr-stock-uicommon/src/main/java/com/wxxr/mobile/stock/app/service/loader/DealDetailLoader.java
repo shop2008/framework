@@ -70,10 +70,11 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
        
         if(result != null){
             for (DealDetailInfoVO vo : result) {
-                DealDetailBean bean=cache.getEntity(vo.getId());
+                String key= String.valueOf(vo.getId());
+                DealDetailBean bean=cache.getEntity(key);
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
-                    cache.putEntity(vo.getId()+"", bean);
+                    cache.putEntity(key, bean);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
