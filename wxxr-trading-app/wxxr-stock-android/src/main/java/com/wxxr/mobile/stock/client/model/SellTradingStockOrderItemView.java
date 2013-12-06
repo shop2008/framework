@@ -19,7 +19,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class SellTradingStockOrderItemView extends ViewBase implements IModelUpdater {
 
 	@Bean
-	StockTradingOrderBean stockTradingOrder;
+	StockTradingOrderBean stockTradingOrder; 
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),

@@ -41,7 +41,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 
 	static Trace log = Trace.getLogger(SellStockPage.class);
 	@Menu(items={"left"})
-	private IMenu toolbar;
+	private IMenu toolbar; 
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={

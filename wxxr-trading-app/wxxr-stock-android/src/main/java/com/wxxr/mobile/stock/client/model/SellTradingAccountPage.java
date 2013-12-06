@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.widget.Toast;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -44,7 +41,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
-
+ 
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
 				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
 			}
