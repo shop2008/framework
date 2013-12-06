@@ -6,6 +6,8 @@ package com.wxxr.mobile.stock.app.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -24,11 +26,13 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.stock.hq.ejb.api.StockLineVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
@@ -224,7 +228,14 @@ public class ConverterUtils {
         bean.setCreateDate(vo.getCreateDate());
         bean.setMaxStockCode(vo.getMaxStockCode());
         bean.setMaxStockMarket(vo.getMaxStockMarket());
-        bean.setMaxStockName(vo.getMaxStockName());
+        String stockName = vo.getMaxStockName();
+        if (StringUtils.isBlank(stockName)) {
+        	StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
+        	if (stock!=null) {
+        		stockName = stock.getName();
+			}
+        }
+        bean.setMaxStockName(stockName);
         bean.setOver(vo.getOver());
         bean.setStatus(vo.getStatus());
         bean.setSum(vo.getSum());
@@ -308,7 +319,14 @@ public class ConverterUtils {
         bean.setCloseTime(vo.getCloseTime());
         bean.setMaxStockCode(vo.getMaxStockCode());
         bean.setMaxStockMarket(vo.getMaxStockMarket());
-        bean.setMaxStockName(vo.getMaxStockName());
+        String stockName = vo.getMaxStockName();
+        if (StringUtils.isBlank(stockName)) {
+        	StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
+        	if (stock!=null) {
+        		stockName = stock.getName();
+			}
+        }
+        bean.setMaxStockName(stockName);
         bean.setOver(vo.getOver());
         bean.setStatus(vo.getStatus());
         bean.setSum(vo.getSum());

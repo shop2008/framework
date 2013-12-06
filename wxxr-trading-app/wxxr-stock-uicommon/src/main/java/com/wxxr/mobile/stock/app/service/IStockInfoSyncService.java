@@ -26,4 +26,11 @@ public interface IStockInfoSyncService {
 	 * @return
 	 */
 	StockBaseInfo getStockBaseInfoByCode(String code,String marketCode);
+	/**
+	 * 根据股票代码和市场代码获取股票名称
+	 * @param code
+	 * @param marketCode
+	 * @return
+	 */
+	String getStockName(String code,String marketCode);
 }

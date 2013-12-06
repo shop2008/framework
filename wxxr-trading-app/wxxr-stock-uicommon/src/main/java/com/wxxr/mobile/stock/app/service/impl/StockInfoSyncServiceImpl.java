@@ -247,9 +247,14 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d stock infos in db", list.size()));
 		}
+		List<String> keys = new ArrayList<String>();
+		keys.addAll(cache.keySet());
 		synchronized (cache) {
 			if (list!=null&&list.size()>0) {
 				for (StockInfo stockInfo : list) {
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("Code[%s] exist.", keys.remove(getStockKey(stockInfo.getCode(), stockInfo.getMc()))));
+					}
 					cache.put(getStockKey(stockInfo.getCode(), stockInfo.getMc()),fromPO(stockInfo));
 					ids.put(getStockKey(stockInfo.getCode(), stockInfo.getMc()), stockInfo.getId());
 				}
@@ -257,6 +262,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		}
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d stock infos loaded from db", cache.size()));
+			log.debug(String.format("lost stocks:[%s]", keys.toString()));
 		}
 	}
 	private StockBaseInfo fromPO(StockInfo stockInfo){
@@ -305,13 +311,17 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		stockInfo.setMc(info.getMc());
 		stockInfo.setName(info.getName());
 		stockInfo.setType(info.getType());
-		id = getStockInfoDao().insertOrReplace(stockInfo);
-		if (id!=-1) {
-			cache.put(getStockKey(info.getCode(), info.getMc()), info);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Update data for code[%s],db_id[%s],stock info:%s", info.getCode(),id,stockInfo.toString()));
+		try {
+			id = getStockInfoDao().insertOrReplace(stockInfo);
+			if (id!=-1) {
+				cache.put(getStockKey(info.getCode(), info.getMc()), info);
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Update data for code[%s],db_id[%s],stock info:%s", info.getCode(),id,stockInfo.toString()));
+				}
+				ids.put(getStockKey(info.getCode(), info.getMc()), id);
 			}
-			ids.put(getStockKey(info.getCode(), info.getMc()), id);
+		} catch (Exception e) {
+			log.warn("Faild to save stock:"+info,e);
 		}
 	}
 	private void processAllDataReceived() {
@@ -467,6 +477,15 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			return null;
 		}
 		return cache.get(getStockKey(code,marketCode));
+	}
+
+	@Override
+	public String getStockName(String code, String marketCode) {
+		StockBaseInfo stock = getStockBaseInfoByCode(code, marketCode);
+		if (stock==null) {
+			return null;
+		}
+		return stock.getName();
 	}
 	
 	
