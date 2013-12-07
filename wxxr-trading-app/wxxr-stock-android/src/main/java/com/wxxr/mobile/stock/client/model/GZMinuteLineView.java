@@ -26,6 +26,7 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -149,35 +150,22 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("infoCenter");
-		if(selection!=null){
-			selectionChanged("infoCenter",selection);
+		String currentProviderId = service.getCurrentProviderId();
+		if(currentProviderId!=null){
+			ISelection selection = service.getSelection(currentProviderId);
+			if(selection!=null){
+				selectionChanged(currentProviderId,selection);
+				service.addSelectionListener(currentProviderId, this);
+			}
 		}
-		service.addSelectionListener("infoCenter", this);
-		
-		ISelection selectionSellTrading = service.getSelection("sellTradingAccount");
-		if(selectionSellTrading!=null){
-			selectionChanged("sellTradingAccount", selectionSellTrading);
-		}
-		service.addSelectionListener("sellTradingAccount",this);
-		
-		//买入
-		selection = service.getSelection("TBuyTradingPage");
-		if(selection != null)
-			selectionChanged("TBuyTradingPage", selection);
-		service.addSelectionListener("TBuyTradingPage", this);
-		
-		service.addSelectionListener("stockSearchPage", this);
-		service.addSelectionListener("BuyStockDetailPage", this);
 	}
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		service.removeSelectionListener("infoCenter", this);
-		service.removeSelectionListener("sellTradingAccount",this);
-		service.removeSelectionListener("TBuyTradingPage", this);
-		service.removeSelectionListener("stockSearchPage", this);
-		service.removeSelectionListener("BuyStockDetailPage", this);
+		String currentProviderId = service.getCurrentProviderId();
+		if(currentProviderId!=null){
+			service.removeSelectionListener(currentProviderId,this);
+		}
 	}
 	
 	@Override
@@ -188,17 +176,17 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			if(impl.getSelected() instanceof Map){
 				Map temp = (Map) impl.getSelected();
 				for (Object key : temp.keySet()) {
-					if(key.equals("code")){
+					if(key.equals(Constants.KEY_CODE_FLAG)){
 						String code = (String) temp.get(key);
 						this.codeBean = code;
 						registerBean("codeBean", this.codeBean);
 					}
-					if(key.equals("name")){
+					if(key.equals(Constants.KEY_NAME_FLAG)){
 						String name = (String) temp.get(key);
 						this.nameBean = name;
 						registerBean("nameBean", this.nameBean);
 					}
-					if(key.equals("market")){
+					if(key.equals(Constants.KEY_MARKET_FLAG)){
 						String market = (String) temp.get(key);
 						this.marketBean = market;
 						registerBean("marketBean", this.marketBean);
@@ -210,7 +198,6 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					this.map = minuteMap;
 					registerBean("map", this.map);
 				}
-				
 				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
 					this.stockType = "0";
 				}
