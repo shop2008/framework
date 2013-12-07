@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -146,62 +147,29 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("TBuyTradingPage");
-		if(selection != null)
-			selectionChanged("TBuyTradingPage", selection);
-		service.addSelectionListener("TBuyTradingPage", this);
-		
-		ISelection selectionInfoCenter = service.getSelection("infoCenter");
-		if(selectionInfoCenter!=null){
-			selectionChanged("infoCenter", selectionInfoCenter);
-		}
-		service.addSelectionListener("infoCenter",this);
-		
-		ISelection selectionSellTrading = service.getSelection("sellTradingAccount");
-		if(selectionSellTrading!=null){
-			selectionChanged("sellTradingAccount", selectionSellTrading);
-		}
-		service.addSelectionListener("sellTradingAccount",this);
-		
-		service.addSelectionListener("stockSearchPage", this);
-		service.addSelectionListener("BuyStockDetailPage", this);
+		selectionChanged(null,service.getSelection(StockSelection.class));
+		service.addSelectionListener(this);
 	}
 	
 
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		
-		service.removeSelectionListener("stockSearchPage", this);
-		service.removeSelectionListener("TBuyTradingPage", this);
-		service.removeSelectionListener("BuyStockDetailPage", this);
-		service.removeSelectionListener("infoCenter", this);
-		service.removeSelectionListener("sellTradingAccount", this);
+		service.removeSelectionListener(this);
 	}
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		if (selection == null)
-			return;
-		ISimpleSelection impl = (ISimpleSelection) selection;
-		Object value = impl.getSelected();
-		if (value instanceof Map) {
-			Map temp = (Map) value;
-			for (Object key : temp.keySet()) {
-				if (key.equals(Constants.KEY_CODE_FLAG)) {
-					String code = (String) temp.get(key);
-					this.codeBean = code;
-					registerBean("codeBean", this.codeBean);
-				} else if (key.equals(Constants.KEY_NAME_FLAG)) {
-					String name = (String) temp.get(key);
-					this.nameBean = name;
-					registerBean("nameBean", this.nameBean);
-				} else if (key.equals(Constants.KEY_MARKET_FLAG)) {
-					String market = (String) temp.get(key);
-					this.marketBean = market;
-					registerBean("marketBean", this.marketBean);
-				}
+		if(selection instanceof StockSelection){
+			StockSelection stockSelection = (StockSelection) selection;
+			if(stockSelection!=null){
+				this.codeBean = stockSelection.getCode();
+				this.nameBean = stockSelection.getName();
+				this.marketBean = stockSelection.getMarket();
 			}
+			registerBean("codeBean", this.codeBean);
+			registerBean("nameBean", this.nameBean);
+			registerBean("marketBean", this.marketBean);
 		}
 	}
 	

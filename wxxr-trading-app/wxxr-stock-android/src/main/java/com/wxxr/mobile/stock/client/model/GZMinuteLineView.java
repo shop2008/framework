@@ -20,13 +20,12 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
-import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.utils.Constants;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -150,79 +149,43 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		String currentProviderId = service.getCurrentProviderId();
-		if(currentProviderId!=null){
-			ISelection selection = service.getSelection(currentProviderId);
-			if(selection!=null){
-				selectionChanged(currentProviderId,selection);
-				service.addSelectionListener(currentProviderId, this);
-			}
-		}
+		selectionChanged("",service.getSelection(StockSelection.class));
+		service.addSelectionListener(this);
 	}
+	
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		String currentProviderId = service.getCurrentProviderId();
-		if(currentProviderId!=null){
-			service.removeSelectionListener(currentProviderId,this);
-		}
+		service.removeSelectionListener(this);
 	}
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		ISimpleSelection impl = (ISimpleSelection)selection;
-		HashMap<String, Object> minuteMap = new HashMap<String, Object>();
-		if(impl!=null && (providerId.equals("sellTradingAccount") || providerId.equals("infoCenter"))){
-			if(impl.getSelected() instanceof Map){
-				Map temp = (Map) impl.getSelected();
-				for (Object key : temp.keySet()) {
-					if(key.equals(Constants.KEY_CODE_FLAG)){
-						String code = (String) temp.get(key);
-						this.codeBean = code;
-						registerBean("codeBean", this.codeBean);
-					}
-					if(key.equals(Constants.KEY_NAME_FLAG)){
-						String name = (String) temp.get(key);
-						this.nameBean = name;
-						registerBean("nameBean", this.nameBean);
-					}
-					if(key.equals(Constants.KEY_MARKET_FLAG)){
-						String market = (String) temp.get(key);
-						this.marketBean = market;
-						registerBean("marketBean", this.marketBean);
-					}
-				}
-				if(this.codeBean!=null && this.marketBean!=null){
-					minuteMap.put("code", this.codeBean);
-					minuteMap.put("market", this.marketBean);
-					this.map = minuteMap;
-					registerBean("map", this.map);
-				}
-				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
-					this.stockType = "0";
-				}
+		if(selection instanceof StockSelection){
+			HashMap<String, Object> minuteMap = new HashMap<String, Object>();
+			StockSelection stockSelection = (StockSelection) selection;
+			if(stockSelection!=null){
+				this.codeBean = stockSelection.getCode();
+				this.nameBean = stockSelection.getName();
+				this.marketBean = stockSelection.getMarket();
 			}
-		} else if ("TBuyTradingPage".equals(providerId)
-				|| "stockSearchPage".equals(providerId)
-				|| "BuyStockDetailPage".equals(providerId)) {
-			String[] stockInfos = (String[]) impl.getSelected();
-			this.codeBean = stockInfos[0];
-			this.nameBean = stockInfos[1];
-			this.marketBean = stockInfos[2];
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
-			
 			if(this.codeBean!=null && this.marketBean!=null){
 				minuteMap.put("code", this.codeBean);
 				minuteMap.put("market", this.marketBean);
 				this.map = minuteMap;
 				registerBean("map", this.map);
 			}
+			if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
+				this.stockType = "0";
+			}			
 		}
 	}
 	
 	@Override
 	public void updateModel(Object value) {
+		
 	}
 }

@@ -25,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
@@ -152,7 +153,7 @@ public abstract class InfoCenterView extends ViewBase {
 				temp.put("code", szBean.getCode());
 				temp.put("market", szBean.getMarket());
 				temp.put("name", "深圳成指");
-				updateSelection(temp);
+				updateSelection(new StockSelection(szBean.getMarket(),szBean.getCode(),"深圳成指"));
 				result.setPayload(temp);
 			}
 			result.setResult("SZ_ZhiShuPage");
@@ -173,7 +174,7 @@ public abstract class InfoCenterView extends ViewBase {
 				temp.put("code", shBean.getCode());
 				temp.put("market", shBean.getMarket());
 				temp.put("name", "上证指数");
-				updateSelection(temp);
+				updateSelection(new StockSelection(shBean.getMarket(),shBean.getCode(),"上证指数"));
 				result.setPayload(temp);
 			}
 			result.setResult("SH_ZhiShuPage");
@@ -253,7 +254,7 @@ public abstract class InfoCenterView extends ViewBase {
 						map.put("name", name);
 						map.put("market", market);
 						result.setPayload(map);
-						updateSelection(map);
+						updateSelection(new StockSelection(market,code,name));
 						result.setResult("GeGuStockPage");
 						return result;
 					}
