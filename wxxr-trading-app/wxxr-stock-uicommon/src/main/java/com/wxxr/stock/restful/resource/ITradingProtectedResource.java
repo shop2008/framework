@@ -7,6 +7,7 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
+import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
@@ -114,4 +115,11 @@ public interface ITradingProtectedResource{
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
 	public List<GainVO> getMorePersonalRecords(@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual) throws Exception ;
+	
+	@GET
+	@Path("/getVouDetails")
+	@Produces({  "application/json;charset=utf-8" })
+	@Consumes
+	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Throwable;
+
 }
