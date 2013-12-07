@@ -26,7 +26,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
-@View(name = "StockQuotationView", description="买入", provideSelection=true)
+@View(name = "StockQuotationView", description="买入")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_quotation_view_layout")
 public abstract class StockQuotationView extends ViewBase implements ISelectionChangedListener {
 

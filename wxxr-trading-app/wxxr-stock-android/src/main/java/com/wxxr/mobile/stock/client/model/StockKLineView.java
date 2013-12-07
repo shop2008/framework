@@ -32,7 +32,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
-@View(name = "StockKLineView", description="买入", provideSelection=true)
+@View(name = "StockKLineView", description="买入")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.stock_kline_view_layout")
 public abstract class StockKLineView extends ViewBase implements ISelectionChangedListener{
 	

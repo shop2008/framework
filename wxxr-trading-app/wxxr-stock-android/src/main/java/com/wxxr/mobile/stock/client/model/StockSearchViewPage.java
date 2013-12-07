@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
