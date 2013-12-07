@@ -67,7 +67,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			}
 		}
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
-		this.adapterBuilder = getWorkbenchContext().getWorkbenchManager().getWorkbench().createNInitializedView(itemViewId).getAdaptor(IListAdapterBuilder.class);
+		this.adapterBuilder = ctx.getWorkbenchManager().getWorkbench().createNInitializedView(itemViewId).getAdaptor(IListAdapterBuilder.class);
 	}
 
 	/*
