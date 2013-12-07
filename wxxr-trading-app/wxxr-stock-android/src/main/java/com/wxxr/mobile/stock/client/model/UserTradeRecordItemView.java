@@ -61,13 +61,16 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	@Convertor(params={@Parameter(name="format", value="%.0f")})
 	StockLong2StringAutoUnitConvertor stock2StrConvertor;
 	
-	@Convertor(params={
-			@Parameter(name="format", value="%.0f"),
-			@Parameter(name="multiple",value="100"),
-			@Parameter(name="nullString",value="--")
-			}
-	)
-	StockLong2StringAutoUnitConvertor applyAmountConvertor;
+	@Convertor(
+			params={
+					@Parameter(name="format", value="%.0f"),
+					@Parameter(name="multiple", value="1000000"),
+					@Parameter(name="formatUnit",value="万"),
+					@Parameter(name="nullString",value="0万")
+			
+				}
+			)
+	StockLong2StringConvertor applyAmountConvertor;
 	
 	
 	@Convertor(params={

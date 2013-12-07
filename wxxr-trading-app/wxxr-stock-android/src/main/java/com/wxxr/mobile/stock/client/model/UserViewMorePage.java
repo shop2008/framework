@@ -69,7 +69,13 @@ public abstract class UserViewMorePage extends PageBase implements
 	boolean virtualRecordBtn;
 
 	
-
+	@Field(valueKey="visible", binding="${(curItemId==1)&&(userId!=null?(otherJoinListBean!=null&&otherJoinListBean.data!=null?(otherJoinListBean.data.size()>0?false:true):true):" +
+													  "(myJoinListBean!=null&&myJoinListBean.data!=null?(myJoinListBean.data.size()>0?false:true):true))}")
+	boolean noMoreVirtualRecordVisible;
+	
+	@Field(valueKey="visible", binding="${(curItemId==0)&&(userId!=null?(otherChallengeListBean!=null&&otherChallengeListBean.data!=null?(otherChallengeListBean.data.size()>0?false:true):true):" +
+													  "(myChallengeListBean!=null&&myChallengeListBean.data!=null?(myChallengeListBean.data.size()>0?false:true):true))}")
+	boolean noMoreActualRecordVisible;
 	/** 其它用户ID */
 	@Bean
 	String userId = null;
@@ -132,7 +138,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	String showVirtualRecords(InputEvent event) {
 		registerBean("curItemId", 1);
 		if (StringUtils.isBlank(userId)) {
-			// 用户自己的参赛交易记录
+			//用户自己的参赛交易记录
 			if (usrService != null) {
 				usrService.getMorePersonalRecords(0, 15, true);
 			}
@@ -154,7 +160,6 @@ public abstract class UserViewMorePage extends PageBase implements
 			int position = (Integer) event.getProperty("position");
 			GainBean virtualBean = null;
 			if (StringUtils.isBlank(userId)) {
-				//本人
 				if(myJoinListBean!=null) {
 					List<GainBean> virtualList = myJoinListBean.getData();
 					if (virtualList!=null && virtualList.size()>0) {
@@ -172,7 +177,6 @@ public abstract class UserViewMorePage extends PageBase implements
 			
 			CommandResult result = null;
 			if (virtualBean != null) {
-				/** 交易盘ID */
 				Long accId = virtualBean.getTradingAccountId();
 				String tradeStatus = virtualBean.getOver();
 				Boolean isVirtual = virtualBean.getVirtual();

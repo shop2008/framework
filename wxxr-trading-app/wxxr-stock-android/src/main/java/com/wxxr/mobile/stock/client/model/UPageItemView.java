@@ -13,17 +13,12 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
-import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 
 /**
  * 个人主页-挑战交易盘每个条目布局
- * @author renwenjie
  */
 @View(name="uPageItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.user_page_item_layout")
