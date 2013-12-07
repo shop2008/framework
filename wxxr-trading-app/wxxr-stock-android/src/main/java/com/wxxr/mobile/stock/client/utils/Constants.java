@@ -21,4 +21,19 @@ public class Constants {
 	 * 模拟盘标记
 	 */
 	public static final String KEY_VIRTUAL_FLAG = "isVirtual";
+	
+	/**
+	 * 股票code
+	 */
+	public static final String KEY_CODE_FLAG = "code";
+	
+	/**
+	 * 股票name
+	 */
+	public static final String KEY_NAME_FLAG = "name";
+	
+	/**
+	 * 市场代码
+	 */
+	public static final String KEY_MARKET_FLAG = "market";
 }
