@@ -26,7 +26,7 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="GZMinuteLineView",description="个股界面")
@@ -60,7 +60,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
 			@Parameter(name="nullString",value="--")
 	})
-	LongTime2StringConvertor longTime2StringConvertorBuy;	
+	BTTime2StringConvertor btTime2StringConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="(%.2f%%)"),
@@ -132,7 +132,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	String newprice;
 	
 	/**时间*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:null}",converter="longTime2StringConvertorBuy")
+	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:null}",converter="btTime2StringConvertor")
 	String datetime;
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
