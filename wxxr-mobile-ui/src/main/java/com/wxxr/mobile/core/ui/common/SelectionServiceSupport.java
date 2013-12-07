@@ -168,4 +168,25 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 		return this.stack.isEmpty() ? null : this.stack.peek().getProviderId();
 	}
 
+	@Override
+	public <T extends ISelection> T getSelection(Class<T> clazz) {
+		for (Object obj : this.map.values()) {
+			if(clazz.isAssignableFrom(obj.getClass())){
+				return clazz.cast(obj);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public <T extends ISelection> List<T> getSelections(Class<T> clazz) {
+		ArrayList<T> result = new ArrayList<T>();
+		for (Object obj : this.map.values()) {
+			if(clazz.isAssignableFrom(obj.getClass())){
+				result.add(clazz.cast(obj));
+			}
+		}
+		return result;
+	}
+
 }
