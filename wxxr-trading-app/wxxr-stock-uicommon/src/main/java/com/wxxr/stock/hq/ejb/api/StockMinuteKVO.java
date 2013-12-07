@@ -18,7 +18,7 @@ public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
     @XmlElement(name="close")
     private String close;//昨收
     @XStreamImplicit(itemFieldName="minute")
-    private List<StockMinuteLineVO> list; //
+    private List<StockMinuteLineVO> minute; //
     
     public String getDate() {
         return date;
@@ -37,11 +37,11 @@ public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
     }
     
     public List<StockMinuteLineVO> getList() {
-        return list;
+        return minute;
     }
 
     public void setList(List<StockMinuteLineVO> list) {
-        this.list = list;
+        this.minute = list;
     }
 
 	/* (non-Javadoc)
@@ -50,7 +50,7 @@ public class StockMinuteKVO /*extends AuditableLKeyObject*/ {
 	@Override
 	public String toString() {
 		return "StockMinuteKVO [date=" + date + ", close=" + close + ", list="
-				+ list + "]";
+				+ minute + "]";
 	}
 
 
