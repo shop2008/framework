@@ -87,7 +87,10 @@
 #macro(initBeanUpdaters $model $bindings)
     private void initBeanUpdaters() {
 #foreach($binding in $bindings) 
-        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", ${binding.field.simpleBoxedType}.class); 
+        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", #if(${binding.enabledWhen}) "${binding.enabledWhen}" #else null #end ,${binding.field.simpleBoxedType}.class);
+        #if(${binding.enabledWhen})
+        this.${binding.field.name}Updater.setDefaultValue(this.${binding.field.name});
+        #end
 #end
     }
 #end

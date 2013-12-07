@@ -896,6 +896,9 @@ public abstract class ViewModelUtils {
 			binding.setField(model);
 			binding.setType(bean.type());
 			binding.setNullable(bean.nullable());
+			if(StringUtils.isNotBlank(bean.enableWhen())){
+				binding.setEnabledWhen(bean.enableWhen());
+			}
 			vModel.addBeanBinding(binding);
 		}
 		return model;

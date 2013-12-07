@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
  *
  */
 public class BeanBindingModel {
-	private String expression;
+	private String expression,enabledWhen;
 	private FieldModel field;
 	private BindingType type;
 	private String javaStatement;
@@ -82,12 +82,26 @@ public class BeanBindingModel {
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
 	}
+	/**
+	 * @return the enabledWhen
+	 */
+	public String getEnabledWhen() {
+		return enabledWhen;
+	}
+	/**
+	 * @param enabledWhen the enabledWhen to set
+	 */
+	public void setEnabledWhen(String enabledWhen) {
+		this.enabledWhen = enabledWhen;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "BeanBindingModel [expression=" + expression + ", field="
-				+ field.getName() + ", type=" + type + ", nullable=" + nullable + "]";
+		return "BeanBindingModel [expression=" + expression + ", enabledWhen="
+				+ enabledWhen + ", field=" + field.getName() + ", type=" + type
+				+ ", javaStatement=" + javaStatement + ", nullable=" + nullable
+				+ "]";
 	}
 }
