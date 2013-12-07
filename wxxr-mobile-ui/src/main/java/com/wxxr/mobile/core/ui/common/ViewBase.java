@@ -175,14 +175,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private LRUMap<String, BeanPropertyChangedListener> beanListeners = new LRUMap<String, BeanPropertyChangedListener>(10, 10*60);
 
 	public ViewBase() {
+		onCreate();
 	}
 
 	public ViewBase(String name) {
 		super(name);
+		onCreate();
 	}
 
 	protected void doInit(){
-		onCreate();
 	}
 
 	public boolean isActive() {
