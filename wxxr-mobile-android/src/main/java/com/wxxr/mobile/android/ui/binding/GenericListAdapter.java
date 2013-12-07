@@ -4,9 +4,7 @@
 package com.wxxr.mobile.android.ui.binding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -17,20 +15,12 @@ import android.widget.BaseAdapter;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.IRefreshableListAdapter;
 import com.wxxr.mobile.android.ui.ItemViewSelector;
-import com.wxxr.mobile.core.ui.api.IBinding;
-import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
-import com.wxxr.mobile.core.ui.api.IReusableUIModel;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IViewBinder;
-import com.wxxr.mobile.core.ui.api.IViewDescriptor;
-import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
-import com.wxxr.mobile.core.util.LRUList;
 
 /**
  * @author neillin
@@ -45,7 +35,7 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 	private final String itemViewId;
 	private final ItemViewSelector viewSelector;
 	private List<ObserverDataChangedListerWrapper> listeners;
-	private Map<String, LRUList<View>> viewPool = new HashMap<String, LRUList<View>>();
+	private ListViewPool viewPool;
 	
 	public GenericListAdapter(IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
 		if((bCtx == null)||(prov == null)||(viewId == null)){
@@ -91,104 +81,16 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 		return position;
 	}
 	
-	protected LRUList<View> getViewPool(String viewItemId, boolean create){
-		LRUList<View> pool = null;
-		synchronized(this.viewPool){
-			pool = this.viewPool.get(viewItemId);
-			if((pool == null)&&create){
-				pool = new LRUList<View>(100);
-				pool.setTimeoutInSeconds(2*60);
-			}
-			this.viewPool.put(viewItemId, pool);
-		}
-		return pool;
-	}
-
 	
-	protected View createUI(String viewId){
-		LRUList<View> pool = getViewPool(viewId, false);
-		View view = pool != null ? pool.get() : null;
-		if(view != null){
-			return view;
-		}
-		IViewDescriptor v = this.bindingCtx.getWorkbenchManager().getViewDescriptor(viewId);
-		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
-		IBinding<IView> binding = null;
-		IViewBinder vBinder = this.bindingCtx.getWorkbenchManager().getViewBinder();
-		CascadeAndroidBindingCtx ctx = new CascadeAndroidBindingCtx(bindingCtx);
-		binding = vBinder.createBinding(ctx, bDesc);
-		view = (View)binding.getUIControl();
-		BindingBag bag = new BindingBag();
-		bag.binding = binding;
-		bag.ctx = ctx;
-		bag.view = this.bindingCtx.getWorkbenchManager().getWorkbench().createNInitializedView(viewId);
-		view.setTag(bag);
-		return view;
-
-	}
-	
-	protected void poolView(View v){
-		BindingBag bag = (BindingBag)v.getTag();
-		IBinding<IView> binding = bag.binding;
-		CascadeAndroidBindingCtx localCtx = bag.ctx;
-		if(binding != null){
-			binding.deactivate();
-		}
-		IView vModel = bag.view;
-		if(vModel == null){
-			return;
-		}
-		if(vModel instanceof IReusableUIModel){
-			((IReusableUIModel)vModel).reset();
-		}
-		localCtx.setReady(false);
-		LRUList<View> pool = getViewPool(vModel.getName(), true);
-		pool.put(v);
-
-	}
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		String viewId = this.itemViewId;
-		if(this.viewSelector != null){
-			Object data = getItem(position);
-			viewId = this.viewSelector.getItemViewId(data);
+		if(this.viewPool == null){
+			this.viewPool = new ListViewPool(bindingCtx, viewSelector);
 		}
-		boolean existing = false;
-		View view = null;
-		BindingBag bag = null;
-		if(convertView == null){
-			view = createUI(viewId);
-			bag = (BindingBag)view.getTag();
-		}else{
-			view = convertView;
-			bag = (BindingBag)view.getTag();
-			if((bag.view == null)||(! bag.view.getName().equals(viewId))){
-				poolView(view);
-				view = createUI(viewId);
-				bag = (BindingBag)view.getTag();
-			}else{
-				existing = true;
-			}
-		}
-		IBinding<IView> binding = bag.binding;
-		CascadeAndroidBindingCtx localCtx = bag.ctx;
-		IView vModel = bag.view;
-		if(existing){
-			binding.deactivate();
-			if(vModel instanceof IReusableUIModel){
-				((IReusableUIModel)vModel).reset();
-			}
-			localCtx.setReady(false);
-		}
-		vModel.getAdaptor(IModelUpdater.class).updateModel(getItem(position));
-		vModel.setProperty("_item_position", position);
-		binding.activate(vModel);
-		binding.doUpdate();
-		localCtx.setReady(true);
-		return view;
+		return this.viewPool.getView(this.itemViewId, convertView, getItem(position), position);
 	}
 	
 	
@@ -251,11 +153,6 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 		return this.provider.isItemEnabled(this.provider.getItem(position));
 	}
 
-	private static class BindingBag {
-		IBinding<IView> binding;
-		IView view;
-		CascadeAndroidBindingCtx ctx;
-	}
 
 	@Override
 	public boolean refresh() {
