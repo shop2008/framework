@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionProvider;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.util.LRUMap;
 
 /**
  * @author neillin
@@ -23,8 +24,18 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 
 	private Map<String, List<ISelectionChangedListener>> listeners;
 	private Stack<ISelectionProvider> stack = new Stack<ISelectionProvider>();
-	private Map<String, ISelection> map = new HashMap<String, ISelection>();
+	private LRUMap<String, ISelection> map;
 	private ISelection currentSelection;
+	private int maxSize = 200;
+	
+	public SelectionServiceSupport(int size){
+		this.maxSize = size;
+		map = new LRUMap<String, ISelection>(this.maxSize);
+	}
+	
+	public SelectionServiceSupport() {
+		map = new LRUMap<String, ISelection>(this.maxSize);
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.ISelectionService#addSelectionListener(com.wxxr.mobile.core.ui.api.ISelectionChangedListener)
 	 */
@@ -170,20 +181,17 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 
 	@Override
 	public <T extends ISelection> T getSelection(Class<T> clazz) {
-		for (Object obj : this.map.values()) {
-			if(clazz.isAssignableFrom(obj.getClass())){
-				return clazz.cast(obj);
-			}
-		}
-		return null;
+		List<T> result = getSelections(clazz);
+		return (result != null)&&(result.size() > 0) ? result.get(0) : null;
 	}
 
 	@Override
 	public <T extends ISelection> List<T> getSelections(Class<T> clazz) {
 		ArrayList<T> result = new ArrayList<T>();
-		for (Object obj : this.map.values()) {
-			if(clazz.isAssignableFrom(obj.getClass())){
-				result.add(clazz.cast(obj));
+		for (String key : this.map.getMRUKeys(this.maxSize)) {
+			Object val = this.map.peek(key);
+			if(clazz.isAssignableFrom(val.getClass())){
+				result.add(clazz.cast(val));
 			}
 		}
 		return result;
