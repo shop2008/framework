@@ -316,8 +316,7 @@ public abstract class UserViewMorePage extends PageBase implements
 						this.userId = userId;
 						registerBean("userId", userId);
 					}
-				}
-				
+				}	
 			}
 		}
 	}

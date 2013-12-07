@@ -216,9 +216,13 @@
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:divider="@null"
+                            android:dividerHeight="0dp"
                             bind:field="challengeTradeInfos"
                             bind:itemViewId="uPageItemView"
-                            bind:on_ItemClick="challengeItemClick" />
+                            bind:on_ItemClick="challengeItemClick" 
+                           	android:footerDividersEnabled="true"
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -336,9 +340,14 @@
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:divider="@null"
+                            android:dividerHeight="0dp"
                             bind:field="joinTradeInfos"
                             bind:itemViewId="uPageItemView"
-                            bind:on_ItemClick="joinItemClick" />
+                            bind:on_ItemClick="joinItemClick" 
+                            android:footerDividersEnabled="true"
+                            
+                            />
 
                         <TextView
                             android:layout_width="match_parent"

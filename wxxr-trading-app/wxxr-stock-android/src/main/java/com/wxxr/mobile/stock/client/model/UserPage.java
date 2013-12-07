@@ -168,6 +168,7 @@ public abstract class UserPage extends PageBase  {
 		CommandResult result = new CommandResult();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isVirtual", false);
+		map.put("isSelf", true);
 		result.setPayload(map);
 		result.setResult("OK");
 		
@@ -189,6 +190,7 @@ public abstract class UserPage extends PageBase  {
 		CommandResult result = new CommandResult();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isVirtual", true);
+		map.put("isSelf", true);
 		result.setPayload(map);
 		result.setResult("OK");
 		return result;

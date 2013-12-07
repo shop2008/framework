@@ -110,6 +110,7 @@
                 android:visibility="visible"
                 bind:field="actualRecordList"
                 bind:itemViewId="tradeRecordMoreItemView"
+                android:scrollbars="none"
                 bind:on_BottomRefresh="handleActualBottomRefresh"
                 bind:on_ItemClick="actualRecordItemClicked"
                 bind:on_TopRefresh="handleActualTopRefresh" >
@@ -121,10 +122,29 @@
                 android:visibility="visible"
                 bind:field="virtualRecordsList"
                 bind:itemViewId="tradeRecordMoreItemView"
+                android:scrollbars="none"
                 bind:on_BottomRefresh="handleVirtualBottomRefresh"
                 bind:on_ItemClick="virtualRecordItemClicked"
                 bind:on_TopRefresh="handleVirtualTopRefresh" >
             </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+            
+            <TextView 
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/black"
+                android:text="@string/no_more_virtual_record"
+                bind:field="noMoreVirtualRecordVisible"
+                />
+            
+            <TextView 
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/black"
+                android:text="@string/no_more_actual_record"
+                bind:field="noMoreActualRecordVisible"
+                />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
