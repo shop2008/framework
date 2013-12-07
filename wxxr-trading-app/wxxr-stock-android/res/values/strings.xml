@@ -243,7 +243,8 @@
 	<string name="tab_whole_operation_text">全部操作</string>
 	<string name="record_null_text">无交易记录数据</string>
 	<string name="sucess_record_null_text">无成功交易记录</string>
-	
+	<string name="no_more_virtual_record">无更多参赛交易记录</string>
+	<string name="no_more_actual_record">无更多挑战交易记录</string>
     <!-- 注册条款 -->
     <string name="tv_title_register_rules">注册条款</string>
     <string name="register_rules_title">短线放大镜客户端注册条款</string>
@@ -282,7 +283,7 @@
     <string name="tab_account_trade_text">账户&amp;交易</string>
 	<string name="tab_info_notice_text">资讯&amp;公告</string>
 	<string name="news_account_is_null_text">无消息记录</string>
-	<string name="notice_infos_is_null_text">无记录</string>
+	<string name="notice_infos_is_null_text">无记录数据</string>
 	<!-- 当前版本 -->
 	<string name="vertion_lastest_text">当前已是最新版本</string>
 	<string name="btn_konwn">知道了</string>
