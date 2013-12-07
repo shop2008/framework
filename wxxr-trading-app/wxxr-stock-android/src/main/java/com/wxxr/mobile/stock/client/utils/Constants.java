@@ -23,6 +23,15 @@ public class Constants {
 	public static final String KEY_VIRTUAL_FLAG = "isVirtual";
 	
 	/**
+	 * 交易盘ID
+	 */
+	public static final String KEY_ACCOUNT_ID_FLAG = "accId";
+	
+	/**
+	 * 用户是否为自己
+	 */
+	public static final String KEY_SELF_FLAG = "isSelf";
+	/**
 	 * 股票code
 	 */
 	public static final String KEY_CODE_FLAG = "code";
