@@ -152,8 +152,8 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command(commandName = "virtualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-			@Navigation(on="BuyIn",showPage="otherUserBuyInPage")
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
 	})
 	CommandResult virtualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
@@ -182,9 +182,13 @@ public abstract class UserViewMorePage extends PageBase implements
 				Boolean isVirtual = virtualBean.getVirtual();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("accId", accId);
+				map.put("accid", accId);
 				map.put("isVirtual", isVirtual);
-				map.put("userId", userId);
+				if (!StringUtils.isBlank(userId)) {
+					map.put("isSelf", false);
+				} else {
+					map.put("isSelf", true);
+				}
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
@@ -207,8 +211,8 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command(commandName = "actualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-			@Navigation(on="BuyIn",showPage="otherUserBuyInPage")
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
 	})
 	CommandResult actualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
@@ -241,7 +245,11 @@ public abstract class UserViewMorePage extends PageBase implements
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accId", accId);
 				map.put("isVirtual", isVirtual);
-				map.put("userId", userId);
+				if (!StringUtils.isBlank(userId)) {
+					map.put("isSelf", false);
+				} else {
+					map.put("isSelf", true);
+				}
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
@@ -290,27 +298,33 @@ public abstract class UserViewMorePage extends PageBase implements
 	
 	@Override
 	public void updateModel(Object value) {
-		Map<String, Object> map = (Map<String, Object>) value;
-
-		String isVirtual = (String) map.get("isVirtual");
-		if (isVirtual.equals("1")) {
-			registerBean("curItemId", 1);
-		} else if (isVirtual.equals("0")) {
-			registerBean("curItemId", 0);
-		}
 		
-		String uId = (String) map.get("userId");
-		if (!StringUtils.isBlank(uId)) {
-			this.userId = uId;
-			registerBean("userId", uId);
-		} else {
-			userId = null;
-			registerBean("userId", null);
+		if (value instanceof Map) {
+			Map temp = (Map) value;
+			for (Object key : temp.keySet()) {
+				Object tempt = temp.get(key);
+				if (tempt != null && "isVirtual".equals(key)) {
+					if (tempt instanceof Boolean) {
+						Boolean isVirtual = (Boolean) tempt;
+						registerBean("curItemId", isVirtual?1:0);
+					}
+				}
+				
+				if (tempt != null && "userId".equals(key)) {
+					if (tempt instanceof String) {
+						String userId = (String) tempt;
+						this.userId = userId;
+						registerBean("userId", userId);
+					}
+				}
+				
+			}
 		}
 	}
 
 	@OnUIDestroy
 	protected void clearData() {
 		this.userId = null;
+		
 	}
 }

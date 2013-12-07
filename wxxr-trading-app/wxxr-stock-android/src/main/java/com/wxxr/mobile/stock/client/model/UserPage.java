@@ -166,8 +166,8 @@ public abstract class UserPage extends PageBase  {
 	CommandResult challengeViewMore(InputEvent event) {
 
 		CommandResult result = new CommandResult();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("isVirtual", "0");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isVirtual", false);
 		result.setPayload(map);
 		result.setResult("OK");
 		
@@ -187,8 +187,8 @@ public abstract class UserPage extends PageBase  {
 			)
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("isVirtual", "1");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isVirtual", true);
 		result.setPayload(map);
 		result.setResult("OK");
 		return result;
@@ -222,6 +222,7 @@ public abstract class UserPage extends PageBase  {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
 				map.put("isVirtual", isVirtual);
+				map.put("isSelf", true);
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
@@ -270,6 +271,7 @@ public abstract class UserPage extends PageBase  {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
 				map.put("isVirtual", isVirtual);
+				map.put("isSelf", true);
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");

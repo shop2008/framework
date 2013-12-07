@@ -163,9 +163,9 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 		CommandResult result = new CommandResult();
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		map.put("isVirtual", "0");
+		map.put("isVirtual", false);
 		result.setPayload(map);
 		result.setResult("OK");
 		return result;
@@ -184,7 +184,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", this.userId);
-		map.put("isVirtual", "1");
+		map.put("isVirtual", true);
 		result.setPayload(map);
 		result.setResult("OK");
 
@@ -193,8 +193,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Command(commandName = "joinItemClick", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-			@Navigation(on = "BuyIn", showPage = "otherUserBuyInPage") })
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
 	CommandResult joinItemClick(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 
@@ -218,6 +218,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
 				map.put("isVirtual", isVirtual);
+				map.put("isSelf", false);
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
@@ -240,8 +241,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Command(commandName = "challengeItemClick", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-			@Navigation(on = "SellOut", showPage = "otherUserSellOutPage"),
-			@Navigation(on = "BuyIn", showPage = "otherUserBuyInPage") })
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
 	CommandResult challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
@@ -266,6 +267,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
 				map.put("isVirtual", isVirtual);
+				map.put("isSelf", false);
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");

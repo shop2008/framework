@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
@@ -28,7 +27,7 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
 	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?true:false):false):false}")
@@ -43,14 +42,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,10):null}")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
-	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="false")})
+	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "false") })
 	List<GainBean> allRecordsList;
 
-	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="false")})
+	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "false") })
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
@@ -63,9 +62,9 @@ public abstract class UserTradeRecordPage extends PageBase {
 			@Attribute(name = "textColor", value = "${curItemId == 2?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean allRecordBtn;
 
-	@Field(valueKey="visible", binding="${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true}")
+	@Field(valueKey = "visible", binding = "${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true}")
 	boolean sucRecordNullVisible;
-	
+
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
@@ -90,8 +89,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 		registerBean("curItemId", curItemId);
 		if (successTradeAccountListBean != null)
 			getUIContext().getKernelContext()
-					.getService(ITradingManagementService.class)
-					.getGain(0, 20);
+					.getService(ITradingManagementService.class).getGain(0, 20);
 		return null;
 	}
 
@@ -112,14 +110,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	@Command(
-			commandName = "allRecordItemClicked",
-			navigations={
-					@Navigation(on="operationDetails", showPage="OperationDetails"),
-					@Navigation(on="SellOut",showPage="sellTradingAccount"),
-					@Navigation(on="BuyIn",showPage="TBuyTradingPage")
-				}
-			)
+	@Command(commandName = "allRecordItemClicked", navigations = { @Navigation(on = "operationDetails", showPage = "OperationDetails") })
 	CommandResult allRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -136,40 +127,26 @@ public abstract class UserTradeRecordPage extends PageBase {
 			if (allBean != null) {
 				/** 交易盘ID */
 				Long accId = allBean.getTradingAccountId();
-				String tradeStatus = allBean.getOver();
 				Boolean isVirtual = allBean.getVirtual();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("accid", accId);
-				map.put("isVirtual", isVirtual);
+				if (accId != null)
+					map.put("accid", accId);
+				if (isVirtual != null)
+					map.put("isVirtual", isVirtual);
 				result.setPayload(map);
-				if ("CLOSED".equals(tradeStatus)) {
-					result.setResult("operationDetails");
-				}
-				if ("UNCLOSE".equals(tradeStatus)) {
-					int status = allBean.getStatus();
-					if (status == 0) {
-						// 进入卖出界面
-						result.setResult("SellOut");
-					} else if (status == 1) {
-						// 进入买入界面
-						result.setResult("BuyIn");
-					}
-				}
+				result.setResult("operationDetails");
+
 			}
 			return result;
 		}
 		return null;
 	}
 
-	@Command(
-			commandName = "sucRecordItemClicked",
-			navigations={
-					@Navigation(on="operationDetails", showPage="OperationDetails"),
-					@Navigation(on="SellOut",showPage="sellTradingAccount"),
-					@Navigation(on="BuyIn",showPage="TBuyTradingPage")
-				}
-			)
+	@Command(commandName = "sucRecordItemClicked", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
 	CommandResult sucRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -177,7 +154,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 			// 本人
 			if (successTradeAccountListBean != null) {
-				List<GainBean> sucTradeList = successTradeAccountListBean.getData();
+				List<GainBean> sucTradeList = successTradeAccountListBean
+						.getData();
 				if (sucTradeList != null && sucTradeList.size() > 0) {
 					sucBean = sucTradeList.get(position);
 				}
@@ -186,26 +164,15 @@ public abstract class UserTradeRecordPage extends PageBase {
 			if (sucBean != null) {
 				/** 交易盘ID */
 				Long accId = sucBean.getTradingAccountId();
-				String tradeStatus = sucBean.getOver();
 				Boolean isVirtual = sucBean.getVirtual();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("accid", accId);
-				map.put("isVirtual", isVirtual);
+				if(accId != null)
+					map.put("accid", accId);
+				if(isVirtual != null)
+					map.put("isVirtual", isVirtual);
 				result.setPayload(map);
-				if ("CLOSED".equals(tradeStatus)) {
-					result.setResult("operationDetails");
-				}
-				if ("UNCLOSE".equals(tradeStatus)) {
-					int status = sucBean.getStatus();
-					if (status == 0) {
-						// 进入卖出界面
-						result.setResult("SellOut");
-					} else if (status == 1) {
-						// 进入买入界面
-						result.setResult("BuyIn");
-					}
-				}
+				result.setResult("operationDetails");
 			}
 			return result;
 		}
