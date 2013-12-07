@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -23,7 +22,6 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
-import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
@@ -95,17 +93,14 @@ public abstract class StockSearchViewPage extends PageBase {
 		if (event.getProperty("position") instanceof Integer) {
 			List<StockBaseInfo> stocks = (searchListBean != null ? searchListBean
 					.getSearchResult() : null);
-			HashMap<String, Object> map = new HashMap<String, Object>();
 			int position = (Integer) event.getProperty("position");
 			if (stocks != null && stocks.size() > 0) {
 				StockBaseInfo bean = stocks.get(position);
 				String code = bean.getCode();
 				String name = bean.getName();
 				String market = bean.getMc();
-				map.put(Constants.KEY_CODE_FLAG, code);
-				map.put(Constants.KEY_NAME_FLAG, name);
-				map.put(Constants.KEY_MARKET_FLAG, market);
-				updateSelection(map);
+				Object val = new String[] { code, name, market };
+				updateSelection(val);
 				hide();
 			}
 		}

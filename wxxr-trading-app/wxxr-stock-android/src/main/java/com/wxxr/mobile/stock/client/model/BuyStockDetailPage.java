@@ -38,12 +38,13 @@ import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.utils.Constants;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -169,11 +170,12 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		marketPriceBean = stockQuotationBean.getClose() + "";
 		registerBean("orderPriceBean", orderPriceBean);
 		registerBean("marketPriceBean", marketPriceBean);
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(Constants.KEY_CODE_FLAG, codeBean);
-		map.put(Constants.KEY_NAME_FLAG, nameBean);
-		map.put(Constants.KEY_MARKET_FLAG, marketBean);
-		updateSelection(map);
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put(Constants.KEY_CODE_FLAG, codeBean);
+//		map.put(Constants.KEY_NAME_FLAG, nameBean);
+//		map.put(Constants.KEY_MARKET_FLAG, marketBean);
+//		updateSelection(map);
+		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean));
 		return null;
 	}
 	/**
@@ -249,35 +251,30 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	public void selectionChanged(String providerId, ISelection selection) {
 		if(selection == null)
 			return;
-		ISimpleSelection impl = (ISimpleSelection)selection;
-		Object value = impl.getSelected();
-		if(value instanceof Map){
-			Map temp = (Map) value;
-			for (Object key : temp.keySet()) {
-				if(key.equals(Constants.KEY_CODE_FLAG)){
-					String code = (String) temp.get(key);
-					this.codeBean = code;
-					registerBean("codeBean", this.codeBean);
-				} else if(key.equals(Constants.KEY_NAME_FLAG)){
-					String name = (String) temp.get(key);
-					this.nameBean = name;
-					registerBean("nameBean", this.nameBean);
-				} else if(key.equals(Constants.KEY_MARKET_FLAG)){
-					String market = (String) temp.get(key);
-					this.marketBean = market;
-					registerBean("marketBean", this.marketBean);
-				} else if(key.equals("acctId")){
-					String acctId = (String) temp.get(key);
-					this.acctIdBean = acctId;
-					registerBean("acctIdBean", this.acctIdBean);
-				} else if(key.equals("avalible")){
-					String avalible = (String) temp.get(key);
-					this.avalibleFeeBean = avalible;
-					registerBean("avalibleFeeBean", this.avalibleFeeBean);
-					log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
-				}
-			}
+		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
+		if("stockSearchPage".equals(providerId) && impl.getSelected() instanceof String[]) {
+			String[] stockInfos = (String[])impl.getSelected();
+			this.codeBean = stockInfos[0];
+			this.nameBean = stockInfos[1];
+			this.marketBean = stockInfos[2];
+			registerBean("codeBean", this.codeBean);
+			registerBean("nameBean", this.nameBean);
+			registerBean("marketBean", this.marketBean);
+		} else if("TBuyTradingPage".equals(providerId) && impl.getSelected() instanceof String[]) {
+			String[] stockInfos = (String[])impl.getSelected();
+			this.codeBean = stockInfos[0];
+			this.nameBean = stockInfos[1];
+			this.marketBean = stockInfos[2];
+			this.acctIdBean = stockInfos[3];
+			this.avalibleFeeBean = stockInfos[4];
+			registerBean("codeBean", this.codeBean);
+			registerBean("nameBean", this.nameBean);
+			registerBean("marketBean", this.marketBean);
+			registerBean("acctIdBean", this.acctIdBean);
+			registerBean("avalibleFeeBean", this.avalibleFeeBean);
+			log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
 		}
+		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean));
 	}
 
 	@Override
@@ -367,15 +364,15 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			}
 			return;
 		} else {
-			if (!StringUtils.isEmpty(codeBean)
-					&& !StringUtils.isEmpty(nameBean)
-					&& !StringUtils.isEmpty(marketBean)) {
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put(Constants.KEY_CODE_FLAG, codeBean);
-				map.put(Constants.KEY_NAME_FLAG, nameBean);
-				map.put(Constants.KEY_MARKET_FLAG, marketBean);
-				updateSelection(map);
-			}
+//			if (!StringUtils.isEmpty(codeBean)
+//					&& !StringUtils.isEmpty(nameBean)
+//					&& !StringUtils.isEmpty(marketBean)) {
+//				HashMap<String, Object> map = new HashMap<String, Object>();
+//				map.put(Constants.KEY_CODE_FLAG, codeBean);
+//				map.put(Constants.KEY_NAME_FLAG, nameBean);
+//				map.put(Constants.KEY_MARKET_FLAG, marketBean);
+//				updateSelection(map);
+//			}
 		}
 		if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
 			AppUtils.invokeLater(new Runnable() {

@@ -27,6 +27,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
@@ -248,19 +249,21 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					name = bean.getStockName();
 					market = bean.getMarketCode();
 					avalible = tradingBean.getAvalibleFee() + "";
+					
 					map.put(Constants.KEY_CODE_FLAG, code);
 					map.put(Constants.KEY_NAME_FLAG, name);
 					map.put(Constants.KEY_MARKET_FLAG, market);
-					map.put("acctId", acctId);
-					map.put("avalible", avalible);
 				}
 				if(isSelf) {
+					Object val = new String[] { code, name, market, acctId, avalible };
+					updateSelection(val); //买入page使用
 					result.setResult("BuyStockDetailPage");
 				} else {
 					result.setResult("GeGuStockPage");
 					result.setPayload(map);
+					//个股的viewPager使用
+					updateSelection(new StockSelection(market,code,name));
 				}
-				updateSelection(map);
 			}
 			return result;
 		}
@@ -277,14 +280,10 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult handleBuyBtnClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(Constants.KEY_CODE_FLAG, "");
-		map.put(Constants.KEY_NAME_FLAG, "");
-		map.put(Constants.KEY_MARKET_FLAG, "");
-		map.put("acctId", this.acctId);
-		if (tradingBean != null)
-			map.put("avalible", tradingBean.getAvalibleFee() + "");
+		String avalible = tradingBean.getAvalibleFee() + "";
 		
-		updateSelection(map);
+		Object val = new String[] { "", "", "", acctId, avalible };
+		updateSelection(val);
 		
 		result.setResult("BuyStockDetailPage");
 //		result.setPayload(map);
