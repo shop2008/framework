@@ -25,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.stock.hq.ejb.api.StockLineVO;
@@ -33,6 +34,7 @@ import com.wxxr.stock.hq.ejb.api.StockMinuteLineVO;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
+import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
@@ -584,6 +586,27 @@ public class ConverterUtils {
         bean.setVol(vo.getVol());
 //        bean.setId(vo.getId());
         return bean;
+    }
+    public static VoucherDetailsBean fromVO(VoucherDetailsVO vo) {
+        if (vo == null) {
+            return null;
+        } 
+        VoucherDetailsBean b=new VoucherDetailsBean();
+        updatefromVOtoBean(b,vo);
+        return b;
+    }
+    public static void updatefromVOtoBean(VoucherDetailsBean bean, VoucherDetailsVO vo) {
+        bean.setAddToday(vo.getAddToday());
+        bean.setBal(vo.getBal());
+        bean.setReduceToday(vo.getReduceToday());
+        if (vo.getList()!=null && !vo.getList().isEmpty()){
+            List<GainPayDetailBean> bs=new ArrayList<GainPayDetailBean> ();
+            for (GainPayDetailsVO item:vo.getList()){
+                GainPayDetailBean b=fromVO(item);
+                bs.add(b);
+            }
+            bean.setList(bs);
+        }
     }
     
 

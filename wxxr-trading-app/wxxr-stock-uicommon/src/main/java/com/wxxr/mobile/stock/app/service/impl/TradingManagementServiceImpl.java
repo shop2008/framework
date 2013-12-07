@@ -32,6 +32,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
@@ -52,6 +53,7 @@ import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.TradingRecordLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
+import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
@@ -183,6 +185,7 @@ public class TradingManagementServiceImpl extends
     
     private GenericReloadableEntityCache<String,DealDetailBean,List> dealDetailBean_cache;
     private GenericReloadableEntityCache<String,AuditDetailBean,List> auditDetailBean_cache;
+    private GenericReloadableEntityCache<String,VoucherDetailsBean,List> voucherDetailsBean_cache;
 
 
 
@@ -210,6 +213,7 @@ public class TradingManagementServiceImpl extends
         tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
         auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
+        voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List>("voucherDetailsBean");
         
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
@@ -217,6 +221,7 @@ public class TradingManagementServiceImpl extends
         registry.registerEntityLoader("tradingRecordBean", new TradingRecordLoader());
         registry.registerEntityLoader("dealDetailBean", new DealDetailLoader());
         registry.registerEntityLoader("auditDetailBean", new AuditDetailLoader());
+        registry.registerEntityLoader("voucherDetailsBean", new VoucherDetailsLoader());
 
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
@@ -849,7 +854,18 @@ public class TradingManagementServiceImpl extends
 		}
 	}
 
-    
+	public VoucherDetailsBean getVoucherDetails(int start, int limit){
+	    String key="key";
+	    if (voucherDetailsBean_cache.getEntity(key)==null){
+	        VoucherDetailsBean b=new VoucherDetailsBean();
+	        voucherDetailsBean_cache.putEntity(key,b);
+        }
+	    Map<String, Object> params = new HashMap<String, Object>();
+        params.put("start", start);
+        params.put("limit", limit);
+        this.voucherDetailsBean_cache.forceReload(params, false);
+        return voucherDetailsBean_cache.getEntity(key);
+	}
 	
 
 }
