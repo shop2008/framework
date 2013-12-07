@@ -93,5 +93,5 @@ public interface IInfoCenterManagementService {
 	 * @param market
 	 * @return
 	 */
-	public BindableListWrapper<List<StockMinuteKBean>> getFiveDayMinuteline(String code,String market);
+	public BindableListWrapper<StockMinuteKBean> getFiveDayMinuteline(String code,String market);
 }

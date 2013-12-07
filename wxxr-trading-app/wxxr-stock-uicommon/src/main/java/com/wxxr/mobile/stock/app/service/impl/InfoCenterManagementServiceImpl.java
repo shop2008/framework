@@ -3,10 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +29,7 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
+import com.wxxr.mobile.stock.app.service.loader.FiveDayStockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
@@ -134,7 +132,8 @@ public class InfoCenterManagementServiceImpl extends
         
         stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("StockMinuteK");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
-        
+        fiveDaystockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("FiveDayStockMinuteK");
+        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("FiveDayStockMinuteK", new FiveDayStockMinuteKLoader());
         
         dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List>("DayStockLine");
         context.getService(IEntityLoaderRegistry.class).registerEntityLoader("DayStockLine", new DayStockLineLoader());
@@ -231,6 +230,8 @@ public class InfoCenterManagementServiceImpl extends
     private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
     //分钟线信息
     private GenericReloadableEntityCache<String,StockMinuteKBean,List> stockMinuteKBean_cache;
+    //5日分钟线信息
+    private GenericReloadableEntityCache<String,StockMinuteKBean,List> fiveDaystockMinuteKBean_cache;
     //日K
     private GenericReloadableEntityCache<String,StockLineBean,List> dayStockLineBean_cache;
     
@@ -317,11 +318,23 @@ public class InfoCenterManagementServiceImpl extends
 	
 	
 
-	@Override
-	public BindableListWrapper<List<StockMinuteKBean>> getFiveDayMinuteline(
-			String code, String market) {
-		
-		return null;
+	public BindableListWrapper<StockMinuteKBean> getFiveDayMinuteline(final String code, final String market) {
+	    BindableListWrapper<StockMinuteKBean> stockMinuteKBeans = fiveDaystockMinuteKBean_cache.getEntities(new IEntityFilter<StockMinuteKBean>(){
+            @Override
+            public boolean doFilter(StockMinuteKBean entity) {
+                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
+                    return true;
+                }
+                return false;
+            }
+            
+        }, null);
+	    
+	        Map<String, Object> p=new HashMap<String, Object>(); 
+	        p.put("code", code);
+	        p.put("market", market);
+	        this.fiveDaystockMinuteKBean_cache.forceReload(p,false);
+		return stockMinuteKBeans;
 	}
 
 }
