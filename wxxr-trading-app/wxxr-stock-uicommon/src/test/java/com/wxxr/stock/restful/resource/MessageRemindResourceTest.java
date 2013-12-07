@@ -11,6 +11,7 @@ package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,6 +23,8 @@ import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
+import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
+import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.rpc.rest.ResteasyRestClientService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
@@ -47,7 +50,18 @@ public class MessageRemindResourceTest extends TestCase{
 		messageRemindResource=null;
 	}
 	protected void init() {
-		AbstractHttpRpcService service = new AbstractHttpRpcService();
+		AbstractHttpRpcService service = new AbstractHttpRpcService(){
+			@Override
+			public HttpRequest createRequest(String endpointUrl, Map<String, Object> params) {
+				HttpRequest request=super.createRequest(endpointUrl, params);
+				request.setHeader("deviceid", "123123123123123123");
+				request.setHeader("deviceType", "Android");
+				request.setHeader("appName", "trading");
+				request.setHeader("appVer", "1.0");
+
+				return request;
+			}
+		};
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication(){
 			ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -61,7 +75,7 @@ public class MessageRemindResourceTest extends TestCase{
 			protected void initModules() {
 				
 			}
-
+			
 		};
 		IKernelContext context = app.getContext();
 		context.registerService(IUserAuthManager.class, new IUserAuthManager() {
@@ -72,12 +86,12 @@ public class MessageRemindResourceTest extends TestCase{
 					
 					@Override
 					public String getUserName() {
-						return "13500001009";
+						return "13810212581";
 					}
 					
 					@Override
 					public String getAuthPassword() {
-						return "404662";
+						return "939906";
 					}
 
 				};
@@ -108,7 +122,8 @@ public class MessageRemindResourceTest extends TestCase{
 	}
 	public void testFindById()throws Exception{
 		MsgQuery vo = new MsgQuery();
-		vo.setId("whatever");
+//		vo.setId("whatever");
 		List<MessageVO> a =messageRemindResource.findById(vo);
+		System.out.println(a);
 	}
 }
