@@ -21,6 +21,7 @@ public @interface Bean {
 	BindingType type() default BindingType.Pojo;
 	String express() default "";
 	boolean nullable() default false;
+	String enableWhen() default "";
 	
 	public enum BindingType {
 		Service,
