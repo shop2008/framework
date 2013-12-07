@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    xmlns:bind="http://wxxr.com.cn/binding">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible"
+        bind:field="blueBtn"
+         >
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy_button_bule_btn"
+            android:layout_weight="1"
+            android:gravity="center"
+            bind:field="isBlueSellBtn"
+            bind:on_Click="sellTradingAction"
+            android:layout_marginRight="4dp"
+            >
+			 <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/sell_buy"/>
+            <TextView 
+                android:text="卖出"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+        
+        
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy_button_bule_btn"
+            android:layout_weight="1"
+            android:gravity="center"
+            bind:field="isBlueCleanBtn"
+            bind:on_Click="clearTradingAccount"
+            android:layout_marginLeft="4dp"
+            >
+            <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/clean_icon"/>
+            <TextView 
+                android:text="清仓"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>    
+    
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        bind:field="redBtn"
+         >
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy_button_red_btn"
+            android:layout_weight="1"
+            android:gravity="center"
+            bind:field="isRedSellBtn"
+            bind:on_Click="sellTradingAction"
+            android:layout_marginRight="4dp"
+            >
+			 <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/sell_buy"/>
+            <TextView 
+                android:text="卖出"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+        
+        
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy_button_red_btn"
+            android:layout_weight="1"
+            android:gravity="center"
+            bind:field="isRedCleanBtn"
+            bind:on_Click="clearTradingAccount"
+            android:layout_marginLeft="4dp"
+            >
+            <ImageView android:layout_width="wrap_content"
+			     android:layout_height="wrap_content"
+			     android:src="@drawable/clean_icon"/>
+            <TextView 
+                android:text="清仓"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+            	android:textSize="15sp"
+            	android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>    
+</LinearLayout>

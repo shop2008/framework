@@ -54,8 +54,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		return null;
 	}	
 	
-	@Bean
-	String accid;
 	
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
@@ -137,9 +135,32 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 非空：按钮可用
 	 * */
 	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
-	boolean isEmpty;
+	boolean isRedSellBtn;
+	
 	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
-	boolean isEmpty1;
+	boolean isRedCleanBtn;
+	
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	boolean isBlueSellBtn;
+	
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	boolean isBlueCleanBtn;
+	
+	@Field(valueKey="enabled",enableWhen="${virtual}")
+	boolean dateTitle;
+	@Bean
+	String accid;
+	@Bean
+	boolean isSelf = true;	
+	@Bean
+	int isBtnState = 0;
+	
+	@Field(valueKey="visible",visibleWhen="${isSelf && isBtnState==0}")
+	boolean blueBtn;
+	
+	@Field(valueKey="visible",visibleWhen="${isSelf && isBtnState==1}")
+	boolean redBtn;
+	
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
@@ -231,10 +252,21 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	        	if("isVirtual".equals(key)){
 	        		Object tempt = temp.get(key);
 	        		this.virtual = (Boolean)tempt;
+	        		if(this.virtual){
+	        			this.isBtnState = 0;
+	        		}else{
+	        			this.isBtnState = 1;
+	        		}
+	        		registerBean("isBtnState", this.isBtnState);
+	        	}
+	        	if("isSelf".equals(key)){
+	        		boolean self = (Boolean) temp.get(key);
+	        		this.isSelf = self;
 	        	}
 	        }
-	        registerBean("virtual", virtual);
-	        registerBean("accid", accid);
+	        registerBean("virtual", this.virtual);
+	        registerBean("accid", this.accid);
+	        registerBean("isSelf", this.isSelf);
 		}
 	}
 	

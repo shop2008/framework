@@ -16,7 +16,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content" 
 	        android:gravity="center"
-	        android:background="@drawable/date_bj"
+	        bind:field="dateTitle"
+	        android:background="@drawable/sell_left_date_background"
 	        >
 	
 	        <TextView
@@ -267,72 +268,10 @@
 				        bind:itemViewId="SellTradingItemView"
 				        bind:on_ItemClick="sellStockItemClick">
 				    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>				    
-		    	    <TextView android:layout_width="match_parent"
-				        android:layout_height="match_parent"
-				        android:text="未买入股票"
-				        android:textColor="@color/white"
-				        android:textSize="15sp"
-				        android:gravity="center"
-				        android:visibility="gone"
-				        bind:field="isEmpty"
-				        />		         
 			     </LinearLayout>
 			</ScrollView>
 		</com.wxxr.mobile.stock.client.widget.PullToRefreshView>	    
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-         >
-
-        
-        <LinearLayout 
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buy_button_bule_btn"
-            android:layout_weight="1"
-            android:gravity="center"
-            bind:field="isEmpty1"
-            bind:on_Click="sellTradingAction"
-            android:layout_marginRight="4dp"
-            >
-			 <ImageView android:layout_width="wrap_content"
-			     android:layout_height="wrap_content"
-			     android:src="@drawable/sell_buy"/>
-            <TextView 
-                android:text="卖出"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-            	android:textSize="15sp"
-            	android:layout_marginLeft="10dp"/>
-        </LinearLayout>
-        
-        <LinearLayout 
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buy_button_bule_btn"
-            android:layout_weight="1"
-            android:gravity="center"
-            bind:field="isEmpty"
-            bind:on_Click="clearTradingAccount"
-            android:layout_marginLeft="4dp"
-            >
-            <ImageView android:layout_width="wrap_content"
-			     android:layout_height="wrap_content"
-			     android:src="@drawable/clean_icon"/>
-            <TextView 
-                android:text="清仓"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-            	android:textSize="15sp"
-            	android:layout_marginLeft="10dp"/>
-        </LinearLayout>
-    </LinearLayout>
+	<include layout="@layout/sell_button_layout"/>
 </LinearLayout>
