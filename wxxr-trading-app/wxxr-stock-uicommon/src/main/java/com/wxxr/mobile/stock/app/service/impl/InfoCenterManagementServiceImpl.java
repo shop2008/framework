@@ -328,7 +328,7 @@ public class InfoCenterManagementServiceImpl extends
                 return false;
             }
             
-        }, null);
+        }, new StockMinuteKBeanComparator());
 	    
 	        Map<String, Object> p=new HashMap<String, Object>(); 
 	        p.put("code", code);
@@ -336,5 +336,16 @@ public class InfoCenterManagementServiceImpl extends
 	        this.fiveDaystockMinuteKBean_cache.forceReload(p,false);
 		return stockMinuteKBeans;
 	}
+	class StockMinuteKBeanComparator implements Comparator<StockMinuteKBean>{
+        @Override
+        public int compare(StockMinuteKBean b1, StockMinuteKBean b2) {
+            if (b1.getDate()!=null &&b2.getDate()!=null ){
+                Long d1=Long.valueOf(b1.getDate());
+                Long d2= Long.valueOf(b2.getDate());
+                return d1>d2?-1:1;
+            }
+            return 0;
+        }
+    }
 
 }
