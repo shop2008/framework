@@ -18,12 +18,13 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
-import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
+import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -200,17 +201,6 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@OnShow
 	void initBeans() {
-		// registerBean("nameBean", "鸿达兴业");
-		// registerBean("codeBean", "600100");
-		// registerBean("marketBean", "SH");
-//		SimpleDateFormat sdf = null;
-//		try {
-//			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			String time = sdf.format(new Date());
-//			timeBean = time;
-//		} catch (NullPointerException e) {
-//		} catch (IllegalArgumentException e) {
-//		}
 	}
 	
 	@OnCreate
@@ -220,8 +210,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		if(selection != null)
 			selectionChanged("TBuyTradingPage", selection);
 		service.addSelectionListener("TBuyTradingPage", this);
-		service.addSelectionListener("stockSearchPage", this);
-		service.addSelectionListener("BuyStockDetailPage", this);
+		
 		ISelection selectionInfoCenter = service.getSelection("infoCenter");
 		if(selectionInfoCenter!=null){
 			selectionChanged("infoCenter", selectionInfoCenter);
@@ -233,43 +222,9 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			selectionChanged("sellTradingAccount", selectionSellTrading);
 		}
 		service.addSelectionListener("sellTradingAccount",this);
-	}
-	
-	@Override
-	public void selectionChanged(String providerId, ISelection selection) {
-		if(selection == null)
-			return;
-		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
-		if(impl!=null&&(providerId.equals("infoCenter") || providerId.equals("sellTradingAccount"))){
-			if(impl.getSelected() instanceof Map){
-				Map temp = (Map) impl.getSelected();
-				for (Object key : temp.keySet()) {
-					if(key.equals("code")){
-						String code = (String) temp.get(key);
-						this.codeBean = code;
-						registerBean("codeBean", this.codeBean);
-					}
-					if(key.equals("name")){
-						String name = (String) temp.get(key);
-						this.nameBean = name;
-						registerBean("nameBean", this.nameBean);
-					}
-					if(key.equals("market")){
-						String market = (String) temp.get(key);
-						this.marketBean = market;
-						registerBean("marketBean", this.marketBean);
-					}
-				}
-			}
-		} else{
-			String[] stockInfos = (String[])impl.getSelected();
-			this.codeBean = stockInfos[0];
-			this.nameBean = stockInfos[1];
-			this.marketBean = stockInfos[2];
-			registerBean("codeBean", this.codeBean);
-			registerBean("nameBean", this.nameBean);
-			registerBean("marketBean", this.marketBean);
-		}
+		
+		service.addSelectionListener("stockSearchPage", this);
+		service.addSelectionListener("BuyStockDetailPage", this);
 	}
 	
 	@OnDestroy
@@ -281,6 +236,32 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 		service.removeSelectionListener("BuyStockDetailPage", this);
 		service.removeSelectionListener("infoCenter", this);
 		service.removeSelectionListener("sellTradingAccount", this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		if (selection == null)
+			return;
+		ISimpleSelection impl = (ISimpleSelection) selection;
+		Object value = impl.getSelected();
+		if (value instanceof Map) {
+			Map temp = (Map) value;
+			for (Object key : temp.keySet()) {
+				if (key.equals(Constants.KEY_CODE_FLAG)) {
+					String code = (String) temp.get(key);
+					this.codeBean = code;
+					registerBean("codeBean", this.codeBean);
+				} else if (key.equals(Constants.KEY_NAME_FLAG)) {
+					String name = (String) temp.get(key);
+					this.nameBean = name;
+					registerBean("nameBean", this.nameBean);
+				} else if (key.equals(Constants.KEY_MARKET_FLAG)) {
+					String market = (String) temp.get(key);
+					this.marketBean = market;
+					registerBean("marketBean", this.marketBean);
+				}
+			}
+		}
 	}
 	
 //	@Override

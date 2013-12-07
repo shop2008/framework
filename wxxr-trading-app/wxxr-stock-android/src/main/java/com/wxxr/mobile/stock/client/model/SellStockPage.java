@@ -33,6 +33,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -169,13 +170,10 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		registerBean("closePriceBean", closePriceBean);
 		registerBean("sellPrice", sellPrice);
 		//刷新viewpager
-		String[] stockInfos = new String[] { stockCode, stockName, stockMarket };
-		updateSelection((Object) stockInfos);
-		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("code", stockCode);
-		map.put("name", stockName);
-		map.put("market", stockMarket);
+		map.put(Constants.KEY_CODE_FLAG, stockCode);
+		map.put(Constants.KEY_NAME_FLAG, stockName);
+		map.put(Constants.KEY_MARKET_FLAG, stockMarket);
 		updateSelection(map);
 		return null;
 	}
@@ -203,13 +201,10 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
 				this.infoCenterService.getStockQuotation(stockCode, stockMarket);
 				//刷新viewpager
-				String[] stockInfos = new String[] { stockCode, stockName, stockMarket };
-				updateSelection((Object) stockInfos);
-				
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("code", stockCode);
-				map.put("name", stockName);
-				map.put("market", stockMarket);
+				map.put(Constants.KEY_CODE_FLAG, stockCode);
+				map.put(Constants.KEY_NAME_FLAG, stockName);
+				map.put(Constants.KEY_MARKET_FLAG, stockMarket);
 				updateSelection(map);
 			}
 		}

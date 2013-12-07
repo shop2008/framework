@@ -28,6 +28,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * @author neillin
@@ -126,16 +127,23 @@ public abstract class TradingMainView extends ViewBase{
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
 			Long acctId = 0L;
+			boolean isVirtual = true;
+			boolean isSelf = true;
 			if (event.getProperty("position") instanceof Integer) {
 				List<TradingAccInfoBean> trading = t0TradingAccountList.getData();
 				int position = (Integer) event.getProperty("position");
 				if (trading != null && trading.size() > 0) {
 					TradingAccInfoBean bean = trading.get(position);
 					acctId = bean.getAcctID();
+					isVirtual = bean.getVirtual();
 				}
 			}
 			resutl.setResult("TBuyTradingPage");
-			resutl.setPayload(acctId);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put(Constants.KEY_ACCOUNT_ID_FLAG, acctId);
+			map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
+			map.put(Constants.KEY_SELF_FLAG, isSelf);
+			resutl.setPayload(map);
 			return resutl;
 		}
 		return null;
@@ -164,8 +172,8 @@ public abstract class TradingMainView extends ViewBase{
 					String over = tempTradingA.getOver();
 					resutl.setPayload(isVirtual);
 					HashMap<String, Object> map = new HashMap<String, Object>();
-					map.put("accid", accid);
-					map.put("isVirtual", isVirtual);
+					map.put(Constants.KEY_ACCOUNT_ID_FLAG, accid);
+					map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 					if("CLOSED".equals(over)){
 						resutl.setPayload(map);
 						resutl.setResult("operationDetails");

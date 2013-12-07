@@ -27,6 +27,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -34,12 +35,18 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 /**
  * @author duzhen
  */
-@View(name = "TBuyTradingPage", withToolbar = true, description="模拟盘/实盘", provideSelection=true)
+@View(name = "TBuyTradingPage", withToolbar = true, description="参赛交易盘", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_trading_account_info_page_layout")
 public abstract class TBuyTradingPage extends PageBase implements IModelUpdater {
 
 	private static final Trace log = Trace.register(TBuyTradingPage.class);
-
+	
+	@Bean
+	boolean isSelf = true; //true自己，false别人
+	
+	@Bean
+	boolean isVirtual = true; //true模拟盘，false实盘
+	
 	@Bean
 	String acctId;
 	
@@ -146,7 +153,6 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 
 	@OnShow
 	void initTitleBar() {
-		registerBean("acctId", acctId);
 //		getPageToolbar().setTitle("模拟盘", null);
 		// ((IStockAppToolbar)getAppToolbar()).setTitle("模拟盘", null);
 	}
@@ -157,13 +163,23 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 			Map temp = (Map) value;
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
-				if (tempt != null && "result".equals(key)) {
+				if (tempt != null && Constants.KEY_ACCOUNT_ID_FLAG.equals(key)) {
 					if(tempt instanceof Long) {
 						acctId = (Long)tempt + "";
 					} else if(tempt instanceof String) {
 						acctId = (String)tempt;
 					}
 					registerBean("acctId", acctId);
+				} else if (tempt != null && Constants.KEY_VIRTUAL_FLAG.equals(key)) {
+					if(tempt instanceof Boolean) {
+						isVirtual = (Boolean)tempt;
+					}
+					registerBean("isVirtual", isVirtual);
+				} else if (tempt != null && Constants.KEY_SELF_FLAG.equals(key)) {
+					if(tempt instanceof Boolean) {
+						isSelf = (Boolean)tempt;
+					}
+					registerBean("isSelf", isSelf);
 				}
 			}
 		}
@@ -176,6 +192,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 			log.debug("TBuyTradingPage : handleTopRefresh");
 		}
 		tradingService.getTradingAccountInfo(acctId);
+		registerBean("tradingBean", tradingBean);
 		return null;
 	}
 
@@ -185,14 +202,19 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage") })
+	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
+			@Navigation(on = "ShiPanBuyStockInfoPage", showPage = "ShiPanBuyStockInfoPage") })
 	CommandResult handleStockClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
 			if (tradingBean != null) {
 				resutl.setPayload(tradingBean.getId());
 			}
-			resutl.setResult("TBuyStockInfoPage");
+			if(isVirtual){
+				resutl.setResult("TBuyStockInfoPage");
+			}else{
+				resutl.setResult("ShiPanBuyStockInfoPage");
+			}
 			return resutl;
 		}
 
@@ -205,7 +227,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "BuyStockDetailPage", showPage = "BuyStockDetailPage") })
+	@Command(navigations = { @Navigation(on = "BuyStockDetailPage", showPage = "BuyStockDetailPage"),
+			@Navigation(on = "GeGuStockPage", showPage = "GeGuStockPage")})
 	CommandResult handleItemClick(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
 			CommandResult result = new CommandResult();
@@ -215,24 +238,30 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 				int position = (Integer) event.getProperty("position");
 				List<StockTradingOrderBean> orders = (tradingBean != null ? tradingBean
 						.getTradingOrders() : null);
+				String code = "";
+				String name = "";
+				String market = "";
+				String avalible = "";
 				if (orders != null && orders.size() > 0) {
 					StockTradingOrderBean bean = orders.get(position);
-					String code = bean.getStockCode();
-					String name = bean.getStockName();
-					String market = bean.getMarketCode();
-					String avalible = tradingBean.getAvalibleFee() + "";
-//					map.put("code", code);
-//					map.put("name", name);
-//					map.put("market", market);
-//					map.put("acctId", this.acctId);
-//					map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
-					
-					Object val = new String[] { code, name, market, acctId, avalible };
-					updateSelection(val);
+					code = bean.getStockCode();
+					name = bean.getStockName();
+					market = bean.getMarketCode();
+					avalible = tradingBean.getAvalibleFee() + "";
+					map.put(Constants.KEY_CODE_FLAG, code);
+					map.put(Constants.KEY_NAME_FLAG, name);
+					map.put(Constants.KEY_MARKET_FLAG, market);
+					map.put("acctId", acctId);
+					map.put("avalible", avalible);
 				}
+				if(isSelf) {
+					result.setResult("BuyStockDetailPage");
+				} else {
+					result.setResult("GeGuStockPage");
+					result.setPayload(map);
+				}
+				updateSelection(map);
 			}
-			result.setResult("BuyStockDetailPage");
-//			result.setPayload(map);
 			return result;
 		}
 		return null;
@@ -248,15 +277,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	CommandResult handleBuyBtnClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("code", "");
-//		map.put("name", "");
-//		map.put("market", "");
-//		map.put("acctId", this.acctId);
-//		map.put("avalibleFee", tradingBean.getAvalibleFee() + "");
-		String avalible = tradingBean.getAvalibleFee() + "";
+		map.put(Constants.KEY_CODE_FLAG, "");
+		map.put(Constants.KEY_NAME_FLAG, "");
+		map.put(Constants.KEY_MARKET_FLAG, "");
+		map.put("acctId", this.acctId);
+		if (tradingBean != null)
+			map.put("avalible", tradingBean.getAvalibleFee() + "");
 		
-		Object val = new String[] { "", "", "", acctId, avalible };
-		updateSelection(val);
+		updateSelection(map);
 		
 		result.setResult("BuyStockDetailPage");
 //		result.setPayload(map);

@@ -25,7 +25,7 @@ public class Constants {
 	/**
 	 * 交易盘ID
 	 */
-	public static final String KEY_ACCOUNT_ID_FLAG = "accId";
+	public static final String KEY_ACCOUNT_ID_FLAG = "accid";
 	
 	/**
 	 * 用户是否为自己

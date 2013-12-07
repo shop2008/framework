@@ -49,7 +49,7 @@ public abstract class TradingRecordItemView extends ViewBase implements
 	String time;
 
 	@Field(valueKey = "text", binding = "${stockInfoBean!=null?stockInfoBean.name:'--'}")
-	String market;
+	String name;
 	
 	@Field(valueKey = "text", binding = "${recordBean!=null?recordBean.code:'--'}")
 	String code;

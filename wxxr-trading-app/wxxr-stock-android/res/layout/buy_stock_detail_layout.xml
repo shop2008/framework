@@ -26,7 +26,7 @@
                 <ViewPager
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="220dp"
                     android:background="@color/black"
                     bind:field="contents" >
                 </ViewPager>
@@ -63,7 +63,7 @@
 
                         <EditText
                             android:id="@+id/price"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/inpunt_2"

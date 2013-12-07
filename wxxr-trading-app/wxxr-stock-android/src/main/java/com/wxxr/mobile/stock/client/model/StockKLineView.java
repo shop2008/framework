@@ -20,13 +20,15 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
-import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
+import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -60,6 +62,12 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
 	})
 	LongTime2StringConvertor longTime2StringConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="--")
+	})
+	BTTime2StringConvertor btTime2StringConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%+.2f"),
@@ -134,15 +142,6 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	String secuamount;
 	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.capital:'0'}", converter = "stockLong2StringAutoUnitConvertor")
 	String capital;
-//	@Override
-//	public void updateModel(Object data) {
-//		if (data instanceof ArticleBean) {
-//			registerBean("nameBean", "鸿达兴业");
-//			registerBean("codeBean", "100100");
-//			registerBean("marketBean", "SH");
-//			registerBean("timeBean", new Date().getTime());
-//		}
-//	}
 	
 	@OnCreate
 	void registerSelectionListener() {
@@ -152,61 +151,23 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 			selectionChanged("TBuyTradingPage", selection);
 		service.addSelectionListener("TBuyTradingPage", this);
 		
-		service.addSelectionListener("stockSearchPage", this);
-		service.addSelectionListener("BuyStockDetailPage", this);
-		
 		ISelection selectionInfoCenter = service.getSelection("infoCenter");
 		if(selectionInfoCenter!=null){
 			selectionChanged("infoCenter", selectionInfoCenter);
 		}
 		service.addSelectionListener("infoCenter",this);
-	}
-	
-	@Override
-	public void selectionChanged(String providerId, ISelection selection) {
-		if(selection == null)
-			return;
-		SimpleSelectionImpl impl = (SimpleSelectionImpl)selection;
-		if(providerId.equals("infoCenter") && impl!=null){
-			if(impl.getSelected() instanceof Map){
-				Map temp = (Map) impl.getSelected();
-				for (Object key : temp.keySet()) {
-					if(key.equals("code")){
-						String code = (String) temp.get(key);
-						this.codeBean = code;
-						registerBean("codeBean", this.codeBean);
-					}
-					if(key.equals("name")){
-						String name = (String) temp.get(key);
-						this.nameBean = name;
-						registerBean("nameBean", this.nameBean);
-					}
-					if(key.equals("market")){
-						String market = (String) temp.get(key);
-						this.marketBean = market;
-						registerBean("marketBean", this.marketBean);
-					}
-				}
-			}
-		}else{
-			String[] stockInfos = (String[])impl.getSelected();
-			this.codeBean = stockInfos[0];
-			this.nameBean = stockInfos[1];
-			this.marketBean = stockInfos[2];
-			registerBean("codeBean", this.codeBean);
-			registerBean("nameBean", this.nameBean);
-			registerBean("marketBean", this.marketBean);
+		
+		ISelection selectionSellTrading = service.getSelection("sellTradingAccount");
+		if(selectionSellTrading!=null){
+			selectionChanged("sellTradingAccount", selectionSellTrading);
 		}
+		service.addSelectionListener("sellTradingAccount",this);
+		
+		service.addSelectionListener("stockSearchPage", this);
+		service.addSelectionListener("BuyStockDetailPage", this);
 	}
 	
-	@OnShow
-	void initStockData() {
-//		registerBean("nameBean", "鸿达兴业");
-		registerBean("type", 1);
-//		registerBean("marketBean", "SH");
-		registerBean("timeBean", new Date().getTime());
-	}
-	
+
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
@@ -215,6 +176,39 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		service.removeSelectionListener("TBuyTradingPage", this);
 		service.removeSelectionListener("BuyStockDetailPage", this);
 		service.removeSelectionListener("infoCenter", this);
+		service.removeSelectionListener("sellTradingAccount", this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		if (selection == null)
+			return;
+		ISimpleSelection impl = (ISimpleSelection) selection;
+		Object value = impl.getSelected();
+		if (value instanceof Map) {
+			Map temp = (Map) value;
+			for (Object key : temp.keySet()) {
+				if (key.equals(Constants.KEY_CODE_FLAG)) {
+					String code = (String) temp.get(key);
+					this.codeBean = code;
+					registerBean("codeBean", this.codeBean);
+				} else if (key.equals(Constants.KEY_NAME_FLAG)) {
+					String name = (String) temp.get(key);
+					this.nameBean = name;
+					registerBean("nameBean", this.nameBean);
+				} else if (key.equals(Constants.KEY_MARKET_FLAG)) {
+					String market = (String) temp.get(key);
+					this.marketBean = market;
+					registerBean("marketBean", this.marketBean);
+				}
+			}
+		}
+	}
+	
+	@OnShow
+	void initStockData() {
+		registerBean("type", 1);
+		registerBean("timeBean", new Date().getTime());
 	}
 	
 //	@Override

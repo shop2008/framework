@@ -67,11 +67,6 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SearchStockDetailPage"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.BuyStockDetailPage"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"

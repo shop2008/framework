@@ -4,9 +4,13 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 
@@ -44,7 +48,23 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof MegagameRankBean) {
+			msgRank = (MegagameRankBean)value;
 			registerBean("msgRank",value);
 		}
+	}
+	
+	/**
+	 * 用户点击
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	CommandResult handlerUserClicked(InputEvent event) {
+		CommandResult result = new CommandResult();
+
+		result.setPayload(msgRank.getUserId());
+		result.setResult("");
+		return result;
 	}
 }
