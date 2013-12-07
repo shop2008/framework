@@ -27,7 +27,6 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
-import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -55,6 +54,8 @@ import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
+import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
+import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
@@ -172,6 +173,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(RefresUserInfoHandler.COMMAND_NAME, new RefresUserInfoHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RestPasswordHandler.COMMAND_NAME, new RestPasswordHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateTokenHandler.COMMAND_NAME, new UpdateTokenHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(RegisterHandher.COMMAND_NAME, new RegisterHandher());
 		
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
@@ -253,37 +255,21 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public void register(final String phoneNumber) throws StockAppBizException {
-		Future<StockAppBizException> future = context.getExecutor().submit(
-				new Callable<StockAppBizException>() {
-					@Override
-					public StockAppBizException call() throws Exception {
-						try {
-							SimpleResultVo vo = context
-									.getService(IRestProxyService.class)
-									.getRestService(StockUserResource.class)
-									.register(phoneNumber);
-							if (vo != null && vo.getResult() == 0) {
-								return null;
-							}
-							return new StockAppBizException("注册失败");
-						} catch (RestBizException e) {
-							return new StockAppBizException("用户已存在");
-						}
+		UserRegisterCommand cmd=new UserRegisterCommand();
+		try{
+			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+				try {
+					SimpleResultVo vo=future.get(30,TimeUnit.SECONDS);
+					if(vo.getResult()!=0){
+						throw new StockAppBizException(vo.getMessage());
 					}
-				});
-		if (future != null) {
-			try {
-				StockAppBizException e = future.get(1, TimeUnit.SECONDS);
-				if (e != null) {
-					if (log.isDebugEnabled()) {
-						log.debug("Register error", e);
-					}
-					throw e;
+				} catch (Exception e) {
+					throw new StockAppBizException("系统错误");
 				}
-			} catch (Exception e) {
-				throw new StockAppBizException("网络连接超时，请稍后再试");
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
 			}
-		}
+
 	}
 
 	@Override
