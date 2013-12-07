@@ -32,7 +32,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	String stockName;
 	
 	/**股票代码*/
-	@Field(valueKey="text",binding="${accountBean!=null?accountBean.maxStockCode:'--'}",attributes={
+	@Field(valueKey="text",binding="${(accountBean!=null&&accountBean.maxStockCode!=null)?accountBean.maxStockCode:'---'}",attributes={
 			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}"
 					)
 			})

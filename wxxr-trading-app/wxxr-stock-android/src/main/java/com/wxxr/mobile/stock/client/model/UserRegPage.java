@@ -10,6 +10,8 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -65,12 +67,13 @@ public abstract class UserRegPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "sendMsg")
+	@Command(commandName = "sendMsg",navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
+			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+			@Parameter(name = "title", value = "提示") }) })
 	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 1)
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
 			//将密码发送到手机
 			if (log.isDebugEnabled()) {
 				log.debug("register:Send Message To Mobile");
@@ -79,6 +82,7 @@ public abstract class UserRegPage extends PageBase {
 			if (usrService != null) {
 				usrService.register(this.callback.getUserName());
 			}
+			hide();
 		}
 		return null;
 	}
