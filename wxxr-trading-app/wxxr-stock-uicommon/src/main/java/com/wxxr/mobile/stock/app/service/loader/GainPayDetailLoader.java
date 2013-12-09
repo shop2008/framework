@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.app.service.loader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +10,7 @@ import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
+import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 
 public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDetailBean, GainPayDetailsVO> {
     private static final String COMMAND_NAME = "GetGainPayDetailCommand";
@@ -82,7 +82,10 @@ public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDe
     protected List<GainPayDetailsVO> executeCommand(
             ICommand<List<GainPayDetailsVO>> command) throws Exception {
         GetGainPayDetailCommand cmd = (GetGainPayDetailCommand) command;
-        List<GainPayDetailsVO> result= RestUtils.getRestService(ITradingProtectedResource.class).getGPDetails(cmd.getStart(), cmd.getLimit());
+        
+        		
+        	GainPayDetailsVOs gvos=	RestUtils.getRestService(ITradingProtectedResource.class).getGPDetails(cmd.getStart(), cmd.getLimit());
+        	List<GainPayDetailsVO> result=  gvos==null?null:gvos.getGainPayDetailss();
         return result;
     }
 

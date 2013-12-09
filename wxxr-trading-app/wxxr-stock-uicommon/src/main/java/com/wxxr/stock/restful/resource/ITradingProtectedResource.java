@@ -1,19 +1,17 @@
 package com.wxxr.stock.restful.resource;
 
-import java.util.List;
-
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
-import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
-import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.HomePageVO;
+import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
-import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
@@ -38,12 +36,12 @@ public interface ITradingProtectedResource{
 	@Path("/getGain")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public GainVOs getGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
 	@Path("/getList")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<TradingAccInfoVO> getTradingAccountList() throws Exception;
+	public TradingAccInfoVOs getTradingAccountList() throws Exception;
 	@GET
 	@Path("/getInfo")
 	@Produces({ "application/json;charset=utf-8" })
@@ -78,18 +76,18 @@ public interface ITradingProtectedResource{
 	@Path("/totalGain")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getTotalGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public GainVOs getTotalGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	
 	@GET
 	@Path("/homeImage")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<HomePageVO> getHomeImage() throws Exception;
+	public HomePageVOs getHomeImage() throws Exception;
 	@GET
 	@Path("/homeList")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<HomePageVO> getHomeList(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public HomePageVOs getHomeList(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
 	@Path("/applyDrawMoney")
 	@Produces({ "application/json;charset=utf-8" })
@@ -104,7 +102,7 @@ public interface ITradingProtectedResource{
 	@Path("/getGPDetails")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainPayDetailsVO> getGPDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Exception;
+	public GainPayDetailsVOs getGPDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Exception;
 	@GET
 	@Path("/getSelfHomePage")
 	@Produces({ "application/json;charset=utf-8" })
@@ -114,7 +112,7 @@ public interface ITradingProtectedResource{
 	@Path("/getMoreHomePage")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getMorePersonalRecords(@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual) throws Exception ;
+	public GainVOs getMorePersonalRecords(@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual) throws Exception ;
 	
 	@GET
 	@Path("/getVouDetails")

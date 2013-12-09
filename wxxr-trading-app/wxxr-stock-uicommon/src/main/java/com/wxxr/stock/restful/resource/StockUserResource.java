@@ -1,7 +1,5 @@
 package com.wxxr.stock.restful.resource;
 
-import java.util.List;
-
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
@@ -11,20 +9,16 @@ import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.BindMobileVO;
-import com.wxxr.security.vo.ChangeBindMobileVO;
-import com.wxxr.security.vo.RegistVO;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.security.vo.UserAuthenticaVO;
 import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.security.vo.UserParamVO;
-import com.wxxr.security.vo.UserPermisVO;
-import com.wxxr.security.vo.VerifyVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
-import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
+import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 
 @Path("/secure/user")
 public interface StockUserResource {
@@ -152,5 +146,5 @@ public interface StockUserResource {
 	@Path("/getUserAttributes")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
-	public List<UserAttributeVO> getUserAttributes() throws Exception;
+	public UserAttributeVOs getUserAttributes() throws Exception;
 }

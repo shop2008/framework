@@ -12,6 +12,7 @@ import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
 
 public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, GainVO> {
 
@@ -133,7 +134,10 @@ public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, Gain
              vos = RestUtils.getRestService(ITradingResource.class).getMoreOtherPersonal(cmd.getUserId(), cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
         }else if (command instanceof GetGainBeanCommand){
             GetGainBeanCommand cmd =(GetGainBeanCommand) command;
-            vos = RestUtils.getRestService(ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
+          
+            		GainVOs gvos=RestUtils.getRestService(ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
+            		
+            		vos = gvos==null?null:gvos.getGains();
         }
         return vos;
     }

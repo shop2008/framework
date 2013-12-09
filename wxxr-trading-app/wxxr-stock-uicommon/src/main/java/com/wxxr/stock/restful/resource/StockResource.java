@@ -18,7 +18,7 @@ import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.MediaType;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
-import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
+import com.wxxr.stock.hq.ejb.api.StockMinuteKVOs;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.BaseInfoListVO;
 import com.wxxr.stock.restful.json.ComponentstocksListVO;
@@ -26,7 +26,9 @@ import com.wxxr.stock.restful.json.LineListVO;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.json.PlateTaxisListVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
+import com.wxxr.stock.restful.json.StockParamsVo;
 import com.wxxr.stock.restful.json.StockTaxisListVO;
+import com.wxxr.stock.trading.ejb.api.StockQuotationVOs;
 
 /**
  * 分享：短信分享
@@ -58,7 +60,7 @@ public interface StockResource {
     @Produces({ "application/json;charset=utf-8" })
     @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
-    public QuotationListVO getQuotation(List<ParamVO> list) throws Exception;
+    public QuotationListVO getQuotation(StockParamsVo stockParamsVos) throws Exception;
     @GET
     @Path("/quo")
     @Produces({ "application/json;charset=utf-8" })
@@ -101,7 +103,7 @@ public interface StockResource {
     @Produces( { "application/json;charset=utf-8" })
     @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
-    public List<StockMinuteKVO> getFiveDayMinuteline(ParamVO paramVO) throws Exception;
+    public StockMinuteKVOs getFiveDayMinuteline(ParamVO paramVO) throws Exception;
    
     /**
      * @GZIP
@@ -113,7 +115,7 @@ public interface StockResource {
     @Path("/blocStockkHQ")
     @Produces( { "application/json;charset=utf-8" })
     @Consumes({ "application/json;charset=utf-8" })
-    public List<StockQuotationVO> getStockHQListByBlockId(TaxisVO taxisvo) throws Exception;
+    public StockQuotationVOs getStockHQListByBlockId(TaxisVO taxisvo) throws Exception;
     /**
      * 周K线数据接口
      * @param paramVO

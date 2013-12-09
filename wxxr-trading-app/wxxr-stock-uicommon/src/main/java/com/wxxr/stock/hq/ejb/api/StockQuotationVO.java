@@ -10,7 +10,7 @@ import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
  * 
  * @author juyao
  */
-@XmlRootElement(name = "StockCondition")
+@XmlRootElement(name = "")
 public class StockQuotationVO implements Serializable {
 	// datetime 2011-12-27/13:26:56"
 	@XmlElement(name = "code")

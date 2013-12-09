@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.UserAttributeBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
+import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 import com.wxxr.stock.restful.resource.StockUserResource;
 
 /**
@@ -94,7 +95,8 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, UserAttrib
 	@Override
 	protected List<UserAttributeVO> executeCommand(
 			ICommand<List<UserAttributeVO>> command) throws Exception {
-		return getRestService(StockUserResource.class).getUserAttributes();
+		UserAttributeVOs vos=getRestService(StockUserResource.class).getUserAttributes();
+		return vos==null?null:vos.getUserAttributes();
 	}
 
 }

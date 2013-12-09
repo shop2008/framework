@@ -12,6 +12,7 @@ import com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 
 public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAccInfoBean,TradingAccInfoVO>{
     
@@ -63,7 +64,8 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
 
     @Override
     protected List<TradingAccInfoVO> executeCommand(ICommand<List<TradingAccInfoVO>> command) throws Exception {
-        return getRestService(ITradingProtectedResource.class).getTradingAccountList();
+    		TradingAccInfoVOs vos=getRestService(ITradingProtectedResource.class).getTradingAccountList();
+        return vos==null?null:vos.getTradingAccInfos();
     }
    
 

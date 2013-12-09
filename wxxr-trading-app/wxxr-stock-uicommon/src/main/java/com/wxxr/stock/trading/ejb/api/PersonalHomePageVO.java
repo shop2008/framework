@@ -12,7 +12,7 @@ public class PersonalHomePageVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@XmlElement(name="userID")
-	private String userId; //id
+	private String userID; //id
 	@XmlElement(name = "voucherVol")
 	private Long voucherVol;
 	@XmlElement(name = "totalProfit")
@@ -113,12 +113,19 @@ public class PersonalHomePageVO implements Serializable {
 		return "PersonalHomePageVO [voucherVol=" + voucherVol + ", totalProfit=" + totalProfit + ", actualCount=" + actualCount + ", virtualCount="
 				+ virtualCount + ", actualList=" + actualList + ", virtualList=" + virtualList + "]";
 	}
-	public String getUserId() {
-		return userId;
+	/**
+	 * @return the userID
+	 */
+	public String getUserID() {
+		return userID;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	/**
+	 * @param userID the userID to set
+	 */
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
+	
 	
 	
 	

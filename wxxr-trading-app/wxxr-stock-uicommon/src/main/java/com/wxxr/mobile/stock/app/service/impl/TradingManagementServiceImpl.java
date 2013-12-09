@@ -71,6 +71,7 @@ import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.GainVO;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
@@ -391,8 +392,9 @@ public class TradingManagementServiceImpl extends
 						if (log.isDebugEnabled()) {
 							log.debug("fetch all trading account info...");
 						}
-						List<GainVO> list = getRestService(ITradingProtectedResource.class)
+						GainVOs vos=getRestService(ITradingProtectedResource.class)
 								.getTotalGain(start, limit);
+						List<GainVO> list =vos==null?null:vos.getGains() ;
 						return list;
 					} catch (Throwable e) {
 						log.warn("Failed to fetch all trading account", e);
@@ -429,8 +431,9 @@ public class TradingManagementServiceImpl extends
 						if (log.isDebugEnabled()) {
 							log.debug("fetch all trading account info...");
 						}
-						List<GainVO> list = getRestService(ITradingProtectedResource.class)
-								.getGain(start, limit);
+						GainVOs vos=getRestService(ITradingProtectedResource.class)
+								.getTotalGain(start, limit);
+						List<GainVO> list =vos==null?null:vos.getGains() ;
 						return list;
 					} catch (Throwable e) {
 						log.warn("Failed to fetch success trading account", e);

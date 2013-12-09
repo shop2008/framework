@@ -10,6 +10,7 @@ import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
+import com.wxxr.stock.hq.ejb.api.StockMinuteKVOs;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.resource.StockResource;
 
@@ -89,10 +90,10 @@ public class FiveDayStockMinuteKLoader extends AbstractEntityLoader<String, Stoc
         ParamVO p=new ParamVO();
         p.setMarket(cmd.getMarket());
         p.setCode(cmd.getCode());
-        List<StockMinuteKVO> vos= getRestService(StockResource.class).getFiveDayMinuteline(p);
-        if (vos!=null && !vos.isEmpty() ){
+        StockMinuteKVOs vos= getRestService(StockResource.class).getFiveDayMinuteline(p);
+        if (vos!=null &&vos.getStockMinuteKVOs()!=null ){
             List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
-            for (StockMinuteKVO vo:vos){
+            for (StockMinuteKVO vo:vos.getStockMinuteKVOs()){
             StockMinuteKBean bean =ConverterUtils.fromVO(vo);
             bean.setMarket(cmd.getMarket());
             bean.setCode(cmd.getCode());
