@@ -117,7 +117,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 					viewPagerProvider);
 			setupAdapter(viewPagerAdapter);
 		} else {
-//			viewPagerAdapter.active();
+			viewPagerAdapter.active();
 		}
 	}
 

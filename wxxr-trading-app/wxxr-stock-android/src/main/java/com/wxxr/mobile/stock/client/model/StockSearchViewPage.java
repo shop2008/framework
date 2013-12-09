@@ -27,38 +27,35 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * 股票搜索页面
+ * 
  * @author duzhen
- *
+ * 
  */
-@View(name="stockSearchPage", withToolbar=true, description="搜索股票", provideSelection=true)
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.stock_search_layout")
+@View(name = "stockSearchPage", withToolbar = true, description = "搜索股票", provideSelection = true)
+@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_search_layout")
 public abstract class StockSearchViewPage extends PageBase {
 
 	private static Trace log = Trace.getLogger(StockSearchViewPage.class);
 
 	@Bean
 	String key;
-	
-	@Menu(items={"left"})
+
+	@Menu(items = { "left" })
 	private IMenu toolbar;
-	
-	@Field(valueKey="text", binding="${key}")
+
+	@Field(valueKey = "text", binding = "${key}")
 	String searchEdit;
-		
-	@Bean(type=BindingType.Service)
+
+	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
-	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.searchStock(key)}")
+
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.searchStock(key)}")
 	SearchStockListBean searchListBean;
-	
-	@Field(valueKey="options", binding="${searchListBean != null ? searchListBean.searchResult : null}")
+
+	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
 	List<StockBaseInfo> searchList;
-	
-	@Command(description="Invoke when a toolbar item was clicked",
-			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
-			}
-	)
+
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
@@ -66,18 +63,18 @@ public abstract class StockSearchViewPage extends PageBase {
 		hide();
 		return null;
 	}
-	
+
 	@OnShow
 	void initStockView() {
 		registerBean("key", "");
 	}
-	
+
 	@OnUIDestroy
 	void DestroyData() {
 		registerBean("key", "");
 		infoCenterService.searchStock(null);
 	}
-	
+
 	@Command
 	String searchTextChanged(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
@@ -88,7 +85,7 @@ public abstract class StockSearchViewPage extends PageBase {
 		}
 		return null;
 	}
-	
+
 	@Command
 	String handleItemClick(InputEvent event) {
 		if (event.getProperty("position") instanceof Integer) {
@@ -100,8 +97,7 @@ public abstract class StockSearchViewPage extends PageBase {
 				String code = bean.getCode();
 				String name = bean.getName();
 				String market = bean.getMc();
-				Object val = new String[] { code, name, market };
-				updateSelection(val);
+				updateSelection(new StockSelection(market, code, name));
 				hide();
 			}
 		}

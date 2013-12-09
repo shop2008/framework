@@ -253,11 +253,13 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					map.put(Constants.KEY_CODE_FLAG, code);
 					map.put(Constants.KEY_NAME_FLAG, name);
 					map.put(Constants.KEY_MARKET_FLAG, market);
+					map.put("acctId", acctId);
+					map.put("avalible", avalible);
 				}
 				if(isSelf) {
-					Object val = new String[] { code, name, market, acctId, avalible };
-					updateSelection(val); //买入page使用
 					result.setResult("BuyStockDetailPage");
+					result.setPayload(map);
+					updateSelection(new StockSelection(market,code,name));
 				} else {
 					result.setResult("GeGuStockPage");
 					result.setPayload(map);
