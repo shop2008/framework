@@ -39,31 +39,93 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:layout_marginLeft="5dp"
             android:text="@string/select_from_system_back_text"
             android:textColor="@color/black" />
 
-        <include layout="@layout/lines"/>
-        <GridView
+        <include layout="@layout/lines" />
+
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:stretchMode="columnWidth"
-            android:numColumns="2"
-            bind:field="systemImages"
-            android:scrollbars="none"
-            android:horizontalSpacing="5dp"
-            android:verticalSpacing="2dp"
-            android:listSelector="@drawable/bg_grid"
-            android:cacheColorHint="#00000000"
-            bind:itemViewId="imageItemForHomeBack"
-            bind:on_ItemClick="imageSelected" >
-        </GridView>
+            android:layout_height="240dp"
+            android:layout_margin="10dp"
+            android:orientation="vertical" >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back1Click"
+                    android:background="@drawable/back1" />
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back2Click"
+                    android:background="@drawable/back2" />
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back3Click"
+                    android:background="@drawable/back3" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back4Click"
+                    android:background="@drawable/back4" />
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back5Click"
+                    android:background="@drawable/back5" />
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    bind:field="*"
+                    bind:on_Click="back6Click"
+                    android:background="@drawable/back6" />
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
 
 </LinearLayout>

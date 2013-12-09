@@ -63,7 +63,7 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 	@Override
 	public void init(IWorkbenchRTContext ctx, Map<String, Object> params) {
 	
-		if (params.containsKey("format")) {
+		if (params != null&&params.containsKey("format")) {
 			this.format = (String) params.get("format");
 		}
 	}

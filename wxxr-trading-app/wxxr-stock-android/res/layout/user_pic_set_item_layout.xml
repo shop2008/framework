@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://wxxr.com.cn/binding"
-    android:layout_width="60dp"
-    android:layout_height="60dp"
-    bind:field="userIcon"
-    />

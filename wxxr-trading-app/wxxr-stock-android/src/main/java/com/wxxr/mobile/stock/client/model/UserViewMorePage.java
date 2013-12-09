@@ -26,7 +26,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作")
+@View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作", singleton=false)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_view_more_layout")
 public abstract class UserViewMorePage extends PageBase implements
 		IModelUpdater {
@@ -102,7 +102,7 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 
@@ -324,6 +324,9 @@ public abstract class UserViewMorePage extends PageBase implements
 	@OnUIDestroy
 	protected void clearData() {
 		this.userId = null;
-		
+		this.myChallengeListBean = null;
+		this.myJoinListBean = null;
+		this.otherChallengeListBean = null;
+		this.otherJoinListBean = null;
 	}
 }
