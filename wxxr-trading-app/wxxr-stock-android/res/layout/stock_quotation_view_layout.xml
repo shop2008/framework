@@ -16,37 +16,45 @@
         android:paddingBottom="5dip"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
-        android:paddingTop="5dip" >
+        android:paddingTop="2dip" >
 
-        <TextView
-            android:id="@+id/stock_name"
+        <LinearLayout
+            android:id="@+id/stock_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="----"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            bind:field="name" />
+            android:gravity="center"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/stock_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/stock_name"
-            android:text="(--.--)"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            bind:field="code" />
+            <TextView
+                android:id="@+id/stock_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="----"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                bind:field="name" />
+
+            <TextView
+                android:id="@+id/stock_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="(--.--)"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                bind:field="code" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/stock_code"
+            android:layout_alignBottom="@id/stock_layout"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp"
+            android:includeFontPadding="false"
             android:text="--"
             android:textColor="@color/white"
             android:textSize="10sp"
@@ -56,8 +64,9 @@
             android:id="@+id/up_rates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/time"
+            android:layout_above="@id/time"
             android:layout_alignParentRight="true"
+            android:includeFontPadding="false"
             android:text="(--)"
             android:textColor="@color/white"
             android:textSize="10sp"
@@ -67,9 +76,10 @@
             android:id="@+id/up_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/time"
+            android:layout_above="@id/time"
             android:layout_marginRight="4dip"
             android:layout_toLeftOf="@id/up_rates"
+            android:includeFontPadding="false"
             android:text="--"
             android:textColor="@color/white"
             android:textSize="10sp"
