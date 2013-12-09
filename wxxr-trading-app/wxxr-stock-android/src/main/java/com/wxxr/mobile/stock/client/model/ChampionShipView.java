@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -24,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * @author neillin
@@ -160,7 +162,7 @@ public abstract class ChampionShipView extends ViewBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	@Command(navigations = { @Navigation(on = "*", showPage = "TBuyTradingPage") })
 	CommandResult handleChampionShipItemClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 
@@ -170,9 +172,12 @@ public abstract class ChampionShipView extends ViewBase {
 					.getData() : null);
 			if (championShip != null && championShip.size() > 0
 					&& position < championShip.size()) {
-				String userId = championShip.get(position).getUserId();
-//				updateSelection(userId);
-				result.setPayload(userId);
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				String acctId = championShip.get(position).getAcctID() + "";
+				map.put(Constants.KEY_ACCOUNT_ID_FLAG, acctId);
+				map.put(Constants.KEY_VIRTUAL_FLAG, true);
+				map.put(Constants.KEY_SELF_FLAG, false);
+				result.setPayload(map);
 			}
 		}
 		result.setResult("");
@@ -185,7 +190,7 @@ public abstract class ChampionShipView extends ViewBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	@Command(navigations = { @Navigation(on = "*", showPage = "TBuyTradingPage") })
 	CommandResult handleChampionShipT1ItemClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 
@@ -195,9 +200,12 @@ public abstract class ChampionShipView extends ViewBase {
 					.getData() : null);
 			if (championShip != null && championShip.size() > 0
 					&& position < championShip.size()) {
-				String userId = championShip.get(position).getUserId();
-//				updateSelection(userId);
-				result.setPayload(userId);
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				String acctId = championShip.get(position).getAcctID() + "";
+				map.put(Constants.KEY_ACCOUNT_ID_FLAG, acctId);
+				map.put(Constants.KEY_VIRTUAL_FLAG, true);
+				map.put(Constants.KEY_SELF_FLAG, false);
+				result.setPayload(map);
 			}
 		}
 		result.setResult("");

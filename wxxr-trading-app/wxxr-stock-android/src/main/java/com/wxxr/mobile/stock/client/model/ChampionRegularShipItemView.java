@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -13,6 +14,7 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 public abstract class ChampionRegularShipItemView extends ViewBase implements
 		IModelUpdater {
 
+	@Bean
 	RegularTicketBean regularTicket;
 	
 	@Field(valueKey = "text", binding="${regularTicket!=null?regularTicket.rankSeq:'--'}")
