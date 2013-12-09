@@ -41,7 +41,9 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
     /**
      * 股票代码
      */
-	@Field(valueKey="text", binding="${(accountBean!=null&&accountBean.maxStockCode!=null)?accountBean.maxStockCode:'---'}")
+	@Field(valueKey="text", binding="${(accountBean!=null&&accountBean.maxStockCode!=null)?accountBean.maxStockCode:'---'}", attributes={
+			@Attribute(name="textColor",value="${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
+			})
 	String stock_code;
 	
 	/**
@@ -65,14 +67,16 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	/**
 	 * 交易时间
 	 */
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}", attributes={
+			@Attribute(name="textColor",value="${(accountBean.over!=null&&accountBean.over=='CLOSED')?'resourceId:color/gray':'resourceId:color/white'}")
+			})
 	String trade_date;
 	
 	@Convertor(
 			params={@Parameter(name="format", value="%.2f"),
 					@Parameter(name="formatUnit",value="元"),
 					@Parameter(name="multiple",value="100.0f"),
-					@Parameter(name="nullString", value="0.00元")
+					@Parameter(name="nullString", value="--")
 			}
 			)
 	StockLong2StringConvertor lossConvertor;
@@ -82,7 +86,7 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 					@Parameter(name="format", value="%.0f"),
 					@Parameter(name="multiple", value="1000000"),
 					@Parameter(name="formatUnit",value="万"),
-					@Parameter(name="nullString",value="0万")
+					@Parameter(name="nullString",value="--")
 			
 			}
 			)

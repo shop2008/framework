@@ -35,17 +35,17 @@ public abstract class UserViewMorePage extends PageBase implements
 	IUserManagementService usrService;
 
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,15,false)}")
+	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,myHomeALimit,false)}")
 	BindableListWrapper<GainBean> myChallengeListBean;
 
-	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,15,true)}")
+	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,myHomeVLimit,true)}")
 	BindableListWrapper<GainBean> myJoinListBean;
 	
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,15,false)}")
+	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,otherHomeALimit,false)}")
 	BindableListWrapper<GainBean> otherChallengeListBean;
 
-	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,15,true)}")
+	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,otherHomeVLimit,true)}")
 	BindableListWrapper<GainBean> otherJoinListBean;
 	
 
@@ -140,11 +140,13 @@ public abstract class UserViewMorePage extends PageBase implements
 		if (StringUtils.isBlank(userId)) {
 			//用户自己的参赛交易记录
 			if (usrService != null) {
-				usrService.getMorePersonalRecords(0, 15, true);
+				
+				usrService.getMorePersonalRecords(0, myHomeVLimit, true);
 			}
 		} else {
 			if (usrService != null) {
-				usrService.getMoreOtherPersonal(userId, 0, 15, true);
+				
+				usrService.getMoreOtherPersonal(userId, 0, otherHomeVLimit, true);
 			}
 		}
 		return null;
@@ -272,13 +274,39 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handleActualTopRefresh(InputEvent event) {
-		showActualRecords(null);
+		if (StringUtils.isBlank(userId)) {
+			// 用户自己的挑战交易记录
+			if (usrService != null) {
+				
+				this.myHomeALimit += 10;
+				usrService.getMorePersonalRecords(0, this.myHomeALimit, true);
+			}
+		} else {
+			if (usrService != null) {
+				
+				this.myHomeALimit += 10;
+				usrService.getMoreOtherPersonal(userId, 0, this.myHomeALimit, true);
+			}
+		}
 		return null;
 	}
 
 	@Command
 	String handleActualBottomRefresh(InputEvent event) {
-		showActualRecords(null);
+		if (StringUtils.isBlank(userId)) {
+			// 用户自己的挑战交易记录
+			if (usrService != null) {
+				
+				this.myHomeALimit += 10;
+				usrService.getMorePersonalRecords(0, this.myHomeALimit, true);
+			}
+		} else {
+			if (usrService != null) {
+				
+				this.myHomeALimit += 10;
+				usrService.getMoreOtherPersonal(userId, 0, this.myHomeALimit, true);
+			}
+		}
 		return null;
 	}
 	
@@ -286,13 +314,40 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handleVirtualBottomRefresh(InputEvent event) {
-		showVirtualRecords(null);
+		if (StringUtils.isBlank(userId)) {
+			// 用户自己的挑战交易记录
+			if (usrService != null) {
+				
+				this.myHomeVLimit += 10;
+				usrService.getMorePersonalRecords(0, this.myHomeVLimit, true);
+			}
+		} else {
+			if (usrService != null) {
+				
+				this.otherHomeVLimit += 10;
+				usrService.getMoreOtherPersonal(userId, 0, this.otherHomeVLimit, true);
+			}
+		}
 		return null;
 	}
 
 	@Command
 	String handleVirtualTopRefresh(InputEvent event) {
-		showVirtualRecords(null);
+		if (StringUtils.isBlank(userId)) {
+			// 用户自己的挑战交易记录
+			if (usrService != null) {
+				
+				this.myHomeVLimit += 10;
+				usrService.getMorePersonalRecords(0, this.myHomeVLimit, true);
+			}
+		} else {
+			if (usrService != null) {
+				
+				this.otherHomeVLimit += 10;
+				usrService.getMoreOtherPersonal(userId, 0, this.otherHomeVLimit, true);
+			}
+		}
+		
 		return null;
 	}
 	

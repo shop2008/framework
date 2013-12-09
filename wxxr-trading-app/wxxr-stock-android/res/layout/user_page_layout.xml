@@ -231,6 +231,7 @@
                             android:text="@string/view_more_text"
                             android:background="@drawable/bg_view_more"
                             bind:field="*"
+                            android:textColor="@color/white"
                             bind:on_Click="challengeViewMore" />
                     </LinearLayout>
 
@@ -356,6 +357,7 @@
                             android:text="@string/view_more_text"
                             bind:field="*"
                             bind:on_Click="joinViewMore" 
+                            android:textColor="@color/white"
                             android:background="@drawable/bg_view_more"
                             />
                     </LinearLayout>

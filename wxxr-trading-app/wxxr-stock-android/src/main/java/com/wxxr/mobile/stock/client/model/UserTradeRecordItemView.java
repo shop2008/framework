@@ -46,11 +46,12 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	
 	/**总收益*/
 	@Field(valueKey="text",binding="${accountBean!=null?accountBean.totalGain:null}",attributes={
-			@Attribute(name = "textColor", value = "${accountBean.status == 1 ? 'resourceId:color/gray': (accountBean.totalGain > 0 ? 'resourceId:color/red' : (accountBean.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
+			@Attribute(name = "textColor", value = "${accountBean.status==1?'resourceId:color/gray':(accountBean.totalGain > 0 ? 'resourceId:color/red' : (accountBean.totalGain < 0 ? 'resourceId:color/green':'resourceId:color/white'))}")
 			},converter="profitConvertor")	
 	String income;
 	
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",converter="stringT2StrConvertor")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",converter="stringT2StrConvertor",attributes={
+			@Attribute(name="textColor", value="${accountBean.status==1?'resourceId:color/gray':'resourceId:color/white'}")})
 	String date;
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
@@ -66,7 +67,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 					@Parameter(name="format", value="%.0f"),
 					@Parameter(name="multiple", value="1000000"),
 					@Parameter(name="formatUnit",value="万"),
-					@Parameter(name="nullString",value="0万")
+					@Parameter(name="nullString",value="--")
 			
 				}
 			)

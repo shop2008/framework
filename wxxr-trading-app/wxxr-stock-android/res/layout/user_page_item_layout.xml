@@ -3,16 +3,17 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/listview_selected_item1"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
@@ -22,34 +23,41 @@
                 android:id="@+id/imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="2dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/trading_stype"
                 bind:field="type" />
 
-            <TextView
-                android:id="@+id/textview"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_toRightOf="@id/imageview"
-                android:text="赤峰黄金"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                bind:field="stock_name" />
+                android:orientation="vertical" 
+                android:gravity="center"
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/textview"
-                android:layout_below="@id/textview"
-                android:layout_marginTop="2dp"
-                android:text="600988"
-                android:textSize="10sp"
-                bind:field="stock_code" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="2dp"
+                    android:text="赤峰黄金"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    bind:field="stock_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/textview"
+                    android:layout_below="@id/textview"
+                    android:layout_marginTop="2dp"
+                    android:text="600988"
+                    android:textSize="10sp"
+                    bind:field="stock_code" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -75,8 +83,8 @@
             android:gravity="center"
             bind:field="trade_date" />
     </LinearLayout>
-	
-   	<include
-   	    layout="@layout/hlines"
-   	    />"
+
+    <include layout="@layout/hlines" />
+"
+
 </LinearLayout>
