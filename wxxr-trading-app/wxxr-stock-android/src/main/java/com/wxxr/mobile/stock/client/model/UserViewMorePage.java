@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
@@ -99,6 +100,9 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean
 	int otherHomeVLimit = 15;
 
+	@Bean(type=BindingType.Pojo, express="${userId!=null?usrService.getUserInfoById(userId):usrService.myUserInfo}")
+	UserBean user;
+	
 	@SuppressWarnings("unused")
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
