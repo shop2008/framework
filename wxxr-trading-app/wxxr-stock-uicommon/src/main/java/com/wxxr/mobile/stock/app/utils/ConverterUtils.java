@@ -476,6 +476,7 @@ public class ConverterUtils {
         b.setFund(vo.getFund());
         b.setPlRisk(vo.getPlRisk());
         b.setUserGain(Float.valueOf(vo.getUserGain()));
+        b.setTotalGain(Float.valueOf(vo.getTotalGain()));
         b.setImgUrl(vo.getImgUrl());
         List<TradeRecordVO> volist = vo.getTradingRecords();
         if (volist != null && volist.size() > 0) {
