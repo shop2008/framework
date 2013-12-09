@@ -28,6 +28,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
@@ -55,14 +56,10 @@ public abstract class TradingMainView extends ViewBase{
 	/**获取T日数据*/
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
-//	
-//	@Bean(type=BindingType.Pojo,express="${tradingService.getHomePageTradingAccountList()}")
-//	TradingAccountListBean tradingAccount;
 
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}")
 	BindableListWrapper<TradingAccInfoBean> t0TradingAccountList;
 	
-//	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t0TradingAccounts:null}")
 	@Field(valueKey="options",binding="${t0TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT;
 	
@@ -71,11 +68,9 @@ public abstract class TradingMainView extends ViewBase{
 	/**获取T+1日数据*/
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT1TradingAccountList()}")
     BindableListWrapper<TradingAccInfoBean> t1TradingAccountList;
-//	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.t1TradingAccounts:null}")
 	   @Field(valueKey="options",binding="${t1TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT1;
 	   
-//	@Field(valueKey="visible",visibleWhen="${tradingAccount.t1TradingAccounts!=null?true:false}")
 	@Field(valueKey="visible",visibleWhen="${t1TradingAccountList.getData()!=null&&t1TradingAccountList.getData().size()>0?true:false}")
 	boolean isVisibleT1;
 	
@@ -177,7 +172,7 @@ public abstract class TradingMainView extends ViewBase{
 					if("CLOSED".equals(over)){
 						resutl.setPayload(map);
 						resutl.setResult("operationDetails");
-						updateSelection(map);
+						updateSelection(new StockSelection(acctId, isVirtual));
 					}
 					if("UNCLOSE".equals(over)){
 						resutl.setResult("sellTradingAccount");

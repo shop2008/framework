@@ -25,6 +25,7 @@ public abstract class MinuteLineViewKeys {
 	
 	public static final AttributeKey<Integer> count = new AttributeKey<Integer>(Integer.class, "count");
 	public static final AttributeKey<Integer> position = new AttributeKey<Integer>(Integer.class, "position");
+	public static final AttributeKey<Long> buyPrice = new AttributeKey<Long>(Long.class, "buyPrice");
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){
 		attrMgr.registerAttribute(stockBorderColor);
@@ -39,5 +40,6 @@ public abstract class MinuteLineViewKeys {
 		attrMgr.registerAttribute(background);
 		attrMgr.registerAttribute(count);
 		attrMgr.registerAttribute(position);
+		attrMgr.registerAttribute(buyPrice);
 	}
 }

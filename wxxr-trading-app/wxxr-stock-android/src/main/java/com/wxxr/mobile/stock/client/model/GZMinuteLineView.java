@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="GZMinuteLineView",description="个股界面")
@@ -74,7 +75,21 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			@Parameter(name="multiple", value="1000f"),
 			@Parameter(name="nullString",value="--")
 	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial1;	
+	StockLong2StringConvertor stockLong2StringConvertorSpecial1;
+	
+	@Convertor(params={
+			@Parameter(name="multiple",value="1000"),
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor2;
+	
+	@Convertor(params={
+			@Parameter(name="multiple",value="1000"),
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor3;
 	
 	@Bean
 	Map<String, Object> map;
@@ -134,6 +149,23 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	/**时间*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:null}",converter="btTime2StringConvertor")
 	String datetime;
+	
+	/**换手率*/
+	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.handrate:null}", converter = "stockLong2StringConvertorSpecial")
+	String handrate;
+	
+	/**量比*/
+	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.lb:null}", converter = "stockLong2StringAutoUnitConvertor")
+	String lb;
+	
+	/**成交额*/
+	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.secuamount:null}", converter = "stockLong2StringAutoUnitConvertor3")
+	String secuamount;
+	
+	/**流通盘*/
+	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.capital:null}", converter = "stockLong2StringAutoUnitConvertor2")
+	String capital;
+	
 	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
@@ -168,6 +200,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 				this.codeBean = stockSelection.getCode();
 				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
+				this.minuteHeaderType = stockSelection.getType();
 			}
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);

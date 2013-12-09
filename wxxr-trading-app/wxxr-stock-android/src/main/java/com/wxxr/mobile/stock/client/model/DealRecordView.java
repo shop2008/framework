@@ -22,13 +22,14 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
-import com.wxxr.mobile.core.ui.api.ISimpleSelection;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -56,13 +57,6 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;
-	
-	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
 			@Parameter(name="multiple", value="100.00")
 	})
@@ -83,8 +77,8 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	String fund;
 	
 	/**总盈亏率*/
-	@Field(valueKey="text",binding="${dealDetail!=null?dealDetail.plRisk:null}",converter="stockLong2StringConvertorSpecial",attributes={
-			@Attribute(name = "textColor", value = "${(dealDetail!=null && dealDetail.plRisk>0)?'resourceId:color/red':((dealDetail!=null && dealDetail.plRisk<0)?'resourceId:color/green':'resourceId:color/white')}")
+	@Field(valueKey="text",binding="${dealDetail!=null?dealDetail.plRisk:null}",attributes={
+			@Attribute(name = "textColor", value = "${(dealDetail!=null && dealDetail.totalGain>0)?'resourceId:color/red':((dealDetail!=null && dealDetail.totalGain<0)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String plRisk;
 	
@@ -96,7 +90,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	
 	
 	/**交易图片*/
-	@Field(valueKey="imageURI",binding="${dealDetail!=null?dealDetail.imgUrl[0]:'--'}")
+	@Field(valueKey="imageURI",binding="${dealDetail!=null?dealDetail.imgUrl[0]:'--'}",visibleWhen="${dealDetail!=null&&dealDetail.imgUrl!=null}")
 	String imgUrl;
 	
 	/**
@@ -112,36 +106,27 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	
 	@OnCreate
 	void registerSelectionListener() {
-		ISelection selection = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection("tradingMain");
-		if(selection!=null){
-			selectionChanged("tradingMain",selection);
-		}
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("tradingMain", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		selectionChanged("",service.getSelection(StockSelection.class));
+		service.addSelectionListener(this);
 	}
+	
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("tradingMain", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener(this);
 	}
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		ISimpleSelection impl = (ISimpleSelection)selection;
-		if(impl!=null){
-			if(impl.getSelected() instanceof Map){
-				Map temp = (Map) impl.getSelected();
-				for (Object key : temp.keySet()) {
-					if(key.equals("accid")){
-						String accid = temp.get(key).toString();
-						this.accId = accid;
-						registerBean("accId", this.accId);
-					}
-					if(key.equals("isVirtual")){
-						boolean virtual = (Boolean) temp.get(key);
-						this.isVirtual = virtual;
-						registerBean("isVirtual", this.isVirtual);
-					}
-				}
+		if(selection instanceof StockSelection){
+			StockSelection stockSelection = (StockSelection) selection;
+			if(stockSelection!=null){
+				this.accId = stockSelection.getAccid();
+				this.isVirtual = stockSelection.getVirtual();
 			}
+			registerBean("accId", this.accId);
+			registerBean("isVirtual", this.isVirtual);
 		}
 	}
 	
@@ -176,7 +161,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 				map.put("code", code);
 				map.put("market", market);
 				result.setPayload(map);
-				updateSelection(map);
+				updateSelection(new StockSelection(market, code, name));
 				result.setResult("hangqing");
 			}
 		}

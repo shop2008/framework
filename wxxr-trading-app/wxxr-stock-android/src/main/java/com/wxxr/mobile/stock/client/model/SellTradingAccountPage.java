@@ -27,6 +27,8 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -283,11 +285,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	//卖出
 	@Command(navigations={@Navigation(on="SellStockPage",showPage="SellStockPage")})
 	CommandResult sellStockItemClick(InputEvent event){
-		String stockCode = null; //订单id
-		Long id = null; //股票代码
+		String stockCode = null; //股票代码
 		String stockName = null; //股票名称
 		String stockMarketCode = null; //市场代码
-		Long amount = 0L;
+		Long buyPrice = 0l; //委托价格
+		Long amount = 0L; //委托数量
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if (event.getProperty("position") instanceof Integer) {
@@ -296,15 +298,12 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 					List<StockTradingOrderBean> stockOrder = tradingAccount.getTradingOrders();
 					if(stockOrder!=null && stockOrder.size()>0){
 						StockTradingOrderBean stockTrading = stockOrder.get(position);
-						id= stockTrading.getId(); 
 						stockCode = stockTrading.getStockCode(); 
 						stockName = stockTrading.getStockName(); 
 						stockMarketCode = stockTrading.getMarketCode(); 
 						amount = stockTrading.getAmount();
+						buyPrice = stockTrading.getBuy();
 						//交易盘id
-						if(id!=null){
-							map.put("orderId", id);
-						}
 						if(accid!=null){
 							map.put("accid", accid);
 						}
@@ -322,11 +321,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						}
 						map.put("position", position);
 					}
+					updateSelection(new StockSelection(stockMarketCode, stockCode, stockName, buyPrice));
 				}
 				CommandResult result = new CommandResult();
 				if(map!=null && map.size()>0){
 					result.setPayload(map);
-					updateSelection(map);
 				}
 				result.setResult("SellStockPage");
 				return result;
@@ -346,17 +345,22 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 				if(stockOrder!=null && stockOrder.size()>0){
 					StockTradingOrderBean order = stockOrder.get(0);
 					if(order!=null){
+						Long buyPrice = order.getBuy();
 						String code = order.getStockCode();
 						String name = order.getStockName();
+						String market = order.getMarketCode();
 						Long amount = order.getAmount();
-						map.put("stockName", name);
-						map.put("stockCode", code);
+						map.put(Constants.KEY_NAME_FLAG, name);
+						map.put(Constants.KEY_CODE_FLAG, code);
+						map.put(Constants.KEY_MARKET_FLAG, market);
 						map.put("amount", amount);
+						updateSelection(new StockSelection(market, code, name, buyPrice));
 					}
 				}
 			}
-			if(accid!=null)
+			if(accid!=null){
 				map.put("accid", accid);
+			}
 			map.put("position", 0);
 			result.setPayload(map);
 			result.setResult("SellStockPage");

@@ -13,15 +13,25 @@ public class StockSelection implements ISelection {
 
 	private String market,code,name;
 	private int type;
+	private long buyPrice;
+	
+	private String accid;
+	private boolean virtual;
 	
 	public StockSelection(){
 		
 	}
-	
 	public StockSelection(String market, String code, String name){
 		this.market = market;
 		this.code = code;
 		this.name = name;
+	}
+	
+	public StockSelection(String market, String code, String name,long buy){
+		this.market = market;
+		this.code = code;
+		this.name = name;
+		this.buyPrice = buy;
 	}
 	
 	public StockSelection(String market, String code, String name, int type){
@@ -29,6 +39,11 @@ public class StockSelection implements ISelection {
 		this.code = code;
 		this.name = name;
 		this.type = type;
+	}
+	
+	public StockSelection(String accid, boolean virtual){
+		this.accid = accid;
+		this.virtual = virtual;
 	}
 	
 	/* (non-Javadoc)
@@ -39,6 +54,14 @@ public class StockSelection implements ISelection {
 		return false;
 	}
 
+	
+	
+	public boolean getVirtual() {
+		return virtual;
+	}
+	public void setVirtual(boolean virtual) {
+		this.virtual = virtual;
+	}
 	public String getMarket() {
 		return market;
 	}
@@ -70,7 +93,20 @@ public class StockSelection implements ISelection {
 	public void setType(int type) {
 		this.type = type;
 	}
-	
-	
 
+	public long getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(long buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+	public String getAccid() {
+		return accid;
+	}
+	public void setAccid(String accid) {
+		this.accid = accid;
+	}
+	
+	
 }

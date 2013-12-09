@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +88,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;	
 	
-	@ViewGroup(viewIds={"StockQuotationView","GZMinuteLineView", "StockKLineView"})
+	@ViewGroup(viewIds={"SellFiveDayMinuteLineView"})
 	private IViewGroup contents;	
 	
 	@Bean
@@ -234,32 +233,30 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 			}
 		}
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 	
 	@OnShow
 	protected void initData(){
 		registerBean("isChecked", isSelected);
-		ArrayList<String> StockName = new ArrayList<String>();
-		if(tradingAccount!=null){
-			List<StockTradingOrderBean> stockTradingOrder = tradingAccount.getTradingOrders();
-			if(stockTradingOrder!=null && stockTradingOrder.size()>0){
-				for(int i=0; i<stockTradingOrder.size();i++){
-					StockTradingOrderBean tempStock = stockTradingOrder.get(i);
-					if(tempStock!=null){
-						String code = tempStock.getStockCode();
-						String name = tempStock.getStockName();
-						if(name==null){
-							name = "--";
-						}
-						StockName.add(name+" "+code);
-					}
-				}
-			}
-		}
-		if(StockName!=null && StockName.size()>0){
-			registerBean("sellStockData", StockName);
-		}
+//		ArrayList<String> StockName = new ArrayList<String>();
+//		if(tradingAccount!=null){
+//			List<StockTradingOrderBean> stockTradingOrder = tradingAccount.getTradingOrders();
+//			if(stockTradingOrder!=null && stockTradingOrder.size()>0){
+//				for(int i=0; i<stockTradingOrder.size();i++){
+//					StockTradingOrderBean tempStock = stockTradingOrder.get(i);
+//					if(tempStock!=null){
+//						String code = tempStock.getStockCode();
+//						String name = tempStock.getStockName();
+//						if(name==null){
+//							name = "--";
+//						}
+//						StockName.add(name+" "+code);
+//					}
+//				}
+//			}
+//		}
 	}
 	
 	//挂单

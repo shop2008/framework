@@ -28,10 +28,11 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name="GeGuStockPage",withToolbar=true,description="个股界面")
+@View(name="GeGuStockPage",withToolbar=true,description="个股界面",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.gegu_page_layout")
 public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	
@@ -204,6 +205,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 			temp.put("tiaozhan", "tiaozhan");
 			result.setPayload(temp);
 			result.setResult("tiaozhan");
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			return result;
 		}
 		return null;
@@ -219,6 +221,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 			temp.put("cansai", "cansai");
 			result.setPayload(temp);
 			result.setResult("cansai");
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			return result;
 		}
 		return null;
@@ -230,6 +233,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 			tempMap.put("code", quotationBean.getCode());
 			tempMap.put("market", quotationBean.getMarket());
 			tempMap.put("name", this.stockName);
+			updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), this.stockName, 1));
 		}
 		return tempMap;
 	}

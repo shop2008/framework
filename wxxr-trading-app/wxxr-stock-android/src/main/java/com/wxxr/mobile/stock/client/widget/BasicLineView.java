@@ -242,9 +242,10 @@ public class BasicLineView extends View {
 		mPaint.setColor(stockBorderColor);
 		mPaint.setStyle(Paint.Style.STROKE);
 		//分时上下两条横线
-		mStartY = mStopY = (marginTop + minuteTopPadding);
+		mStartY = mStopY = marginTop;
 		canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
 		mStartY = mStopY = (marginTop + minuteTopPadding) + 4* lineHeight;
+		canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
 		//量分时图间距
 		
 		//分时纵线
@@ -252,7 +253,7 @@ public class BasicLineView extends View {
 		//左边分时竖线
 		for(int i = 0; i<3; i++){
 			mStartX = mStopX = marginLeft + sellWidthScale * i;
-			mStartY= marginTop + minuteTopPadding;
+			mStartY= marginTop;
 			mStopY = (marginTop + minuteTopPadding) + 4* lineHeight;
 			canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
 		}
@@ -266,7 +267,7 @@ public class BasicLineView extends View {
 		//成交量
 		//上边线
 		float tempH = (marginTop + minuteTopPadding)+lineHeight*4+minuteBottomPadding;
-		mStartY= tempH+textLineHeight;
+		mStartY = mStopY = tempH+textLineHeight;
 		mStartX = marginLeft;
 		mStopX = cWidth - marginRight;
 		canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
