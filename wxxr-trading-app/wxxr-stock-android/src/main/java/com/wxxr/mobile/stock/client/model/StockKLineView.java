@@ -55,12 +55,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	Long timeBean;
 	//0:个股 or 1:买入
 	@Bean
-	int type;
-	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
-	})
-	LongTime2StringConvertor longTime2StringConvertor;
-	
+	int type = 1;
 	@Convertor(params={
 			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
 			@Parameter(name="nullString",value="--")
@@ -129,18 +124,19 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Field(valueKey = "imageURI", visibleWhen = "${stockQuotationBean!=null&&type == 0}", attributes = { @Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows':'resourceId:drawable/down_arrows'}") })
 	String newpriceIcon;
 
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${timeBean}", converter = "longTime2StringConvertor")
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.datetime:null}", converter = "btTime2StringConvertor")
 	String time;
 	//买入界面
-	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.handrate:'0'}", converter = "stockLong2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${stockQuotationBean!=null?stockQuotationBean.handrate:'0'}", converter = "stockLong2StringConvertorBuy")
 	String handrate;
-	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.lb:'0'}", converter = "stockLong2StringConvertorNoSign")
+	@Field(valueKey = "text", binding = "${stockQuotationBean!=null?stockQuotationBean.lb:'0'}", converter = "stockLong2StringConvertorNoSign")
 	String lb;
-	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.secuamount:'0'}", converter = "stockLong2StringAutoUnitConvertor")
+	@Field(valueKey = "text", binding = "${stockQuotationBean!=null?stockQuotationBean.secuamount:'0'}", converter = "stockLong2StringAutoUnitConvertor")
 	String secuamount;
-	@Field(valueKey = "text", visibleWhen = "${type == 1}", binding = "${stockQuotationBean!=null?stockQuotationBean.capital:'0'}", converter = "stockLong2StringAutoUnitConvertor")
+	@Field(valueKey = "text", binding = "${stockQuotationBean!=null?stockQuotationBean.capital:'0'}", converter = "stockLong2StringAutoUnitConvertor")
 	String capital;
-	
+	@Field(valueKey = "text", visibleWhen = "${type == 1}")
+	String buyRateLayout;
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
@@ -163,16 +159,17 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 				this.codeBean = stockSelection.getCode();
 				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
+				this.type = stockSelection.getType();
 			}
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
+			registerBean("type", this.type);
 		}
 	}
 	
 	@OnShow
 	void initStockData() {
-		registerBean("type", 1);
 		registerBean("timeBean", new Date().getTime());
 	}
 	

@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 public class StockSelection implements ISelection {
 
 	private String market,code,name;
+	private int type;
 	
 	public StockSelection(){
 		
@@ -21,6 +22,13 @@ public class StockSelection implements ISelection {
 		this.market = market;
 		this.code = code;
 		this.name = name;
+	}
+	
+	public StockSelection(String market, String code, String name, int type){
+		this.market = market;
+		this.code = code;
+		this.name = name;
+		this.type = type;
 	}
 	
 	/* (non-Javadoc)
@@ -53,6 +61,14 @@ public class StockSelection implements ISelection {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 	
 	

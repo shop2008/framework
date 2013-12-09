@@ -79,7 +79,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 			return nullString;
 		}
 		if (val < 0)
-			return null;
+			return nullString;
 		SimpleDateFormat sdf;
 		try {
 			sdf = new SimpleDateFormat(format);

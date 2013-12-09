@@ -221,9 +221,9 @@ public class KLineView extends View implements IDataChangedListener {
 		if (dataProvider != null && dataProvider.getItemCounts() > 0) {
 			size = dataProvider.getItemCounts();
 			count = size <= 50 ? size : 50;// 缺省最多取50个蜡烛图
-			maxPrice = 0;
-			minPrice = 20000;
-			maxSecuvolume = 0;
+			maxPrice = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getHigh()));
+			minPrice = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getLow()));
+			maxSecuvolume = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getSecuvolume()));
 			float temp;
 			for (int i = 0; i < count; i++) {
 				temp = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));

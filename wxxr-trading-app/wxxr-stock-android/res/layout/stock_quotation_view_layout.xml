@@ -26,11 +26,11 @@
             android:layout_alignParentTop="true"
             android:text="----"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="15sp"
             bind:field="name" />
 
         <TextView
+            android:id="@+id/stock_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -41,37 +41,39 @@
             bind:field="code" />
 
         <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/stock_code"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="6dp"
+            android:text="--"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            bind:field="time" />
+
+        <TextView
             android:id="@+id/up_rates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/time"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:text="(--)"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="10sp"
             bind:field="risefallRate" />
 
         <TextView
             android:id="@+id/up_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_above="@+id/time"
             android:layout_marginRight="4dip"
             android:layout_toLeftOf="@id/up_rates"
             android:text="--"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="10sp"
             bind:field="change" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/stock_name"
-            android:text="--"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            bind:field="time" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -84,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 bind:field="newprice" />
 

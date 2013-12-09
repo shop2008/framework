@@ -20,11 +20,11 @@
             android:layout_alignParentTop="true"
             android:text="----"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="15sp"
             bind:field="name" />
 
         <TextView
+            android:id="@+id/stock_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -36,37 +36,39 @@
         <!-- 个股界面显示 -->
 
         <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/stock_code"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="6dp"
+            android:text="--"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            bind:field="time" />
+
+        <TextView
             android:id="@+id/up_rates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/time"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:text="(--)"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="10sp"
             bind:field="risefallRate" />
 
         <TextView
             android:id="@+id/up_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_above="@+id/time"
             android:layout_marginRight="4dip"
             android:layout_toLeftOf="@id/up_rates"
             android:text="--"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="10sp"
             bind:field="change" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/stock_name"
-            android:text="--"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            bind:field="time" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -79,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 bind:field="newprice" />
 
@@ -97,7 +99,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dip"
-            android:gravity="right|center_vertical" >
+            android:gravity="right|center_vertical"
+            bind:field="buyRateLayout" >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -112,7 +115,7 @@
                     android:layout_alignParentTop="true"
                     android:text="换手:"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/lb"
@@ -122,15 +125,15 @@
                     android:layout_below="@id/handrate"
                     android:text="量比:"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/handrate"
-                    android:text="0.08%"
+                    android:text="--"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     bind:field="handrate" />
 
                 <TextView
@@ -138,17 +141,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/handrate"
                     android:layout_toRightOf="@id/lb"
-                    android:text="1.65"
+                    android:text="--"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     bind:field="lb" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dip" >
+                android:layout_marginLeft="20dip"
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/secuamount"
@@ -158,7 +161,7 @@
                     android:layout_alignParentTop="true"
                     android:text="成交额:"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/capital"
@@ -168,15 +171,15 @@
                     android:layout_below="@id/secuamount"
                     android:text="流通盘:"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/secuamount"
-                    android:text="445.02万"
+                    android:text="--"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     bind:field="secuamount" />
 
                 <TextView
@@ -184,9 +187,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/secuamount"
                     android:layout_toRightOf="@id/capital"
-                    android:text="55.61亿"
+                    android:text="--"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     bind:field="capital" />
             </RelativeLayout>
         </LinearLayout>

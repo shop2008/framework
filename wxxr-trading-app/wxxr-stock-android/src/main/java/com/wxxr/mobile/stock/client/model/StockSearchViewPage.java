@@ -97,7 +97,7 @@ public abstract class StockSearchViewPage extends PageBase {
 				String code = bean.getCode();
 				String name = bean.getName();
 				String market = bean.getMc();
-				updateSelection(new StockSelection(market, code, name));
+				updateSelection(new StockSelection(market, code, name, 1));
 				hide();
 			}
 		}

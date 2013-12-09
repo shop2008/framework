@@ -52,12 +52,14 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	String acctId;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="M月d日买入")
+			@Parameter(name="format",value="M月d日买入"),
+			@Parameter(name="nullString",value="-月-日买入")
 	})
 	LongTime2StringConvertor longTime2StringConvertorBuy;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="M月d日卖出")
+			@Parameter(name="format",value="M月d日卖出"),
+			@Parameter(name="nullString",value="-月-日卖出")
 	})
 	LongTime2StringConvertor longTime2StringConvertorSell;
 	
@@ -91,10 +93,10 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
 	TradingAccountBean tradingBean;
 	// 字段
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'-1'}", converter = "longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.buyDay==0?'-1':tradingBean.buyDay):'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'-1'}", converter = "longTime2StringConvertorSell")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.sellDay==0?'-1':tradingBean.sellDay):'-1'}", converter = "longTime2StringConvertorSell")
 	String sellDay;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
@@ -266,7 +268,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 				if(isSelf) {
 					result.setResult("BuyStockDetailPage");
 					result.setPayload(map);
-					updateSelection(new StockSelection(market,code,name));
+					updateSelection(new StockSelection(market,code,name,1));
 				} else {
 					result.setResult("GeGuStockPage");
 					result.setPayload(map);

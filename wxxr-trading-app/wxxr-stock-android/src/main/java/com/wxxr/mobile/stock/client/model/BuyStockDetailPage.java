@@ -173,7 +173,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 //		map.put(Constants.KEY_NAME_FLAG, nameBean);
 //		map.put(Constants.KEY_MARKET_FLAG, marketBean);
 //		updateSelection(map);
-		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean));
+		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean, 1));
 		return null;
 	}
 	/**
