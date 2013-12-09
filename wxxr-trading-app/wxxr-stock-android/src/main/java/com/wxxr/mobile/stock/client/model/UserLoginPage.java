@@ -45,7 +45,7 @@ public abstract class UserLoginPage extends PageBase {
 	 * @return null
 	 */
 	@Command(navigations = { @Navigation(on = "loginfailedexception", message = "resourceId:message/login_failed_message", params = {
-			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+			@Parameter(name = "autoclosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "resourceId:message/login_failed_title") }) }
 
 	)

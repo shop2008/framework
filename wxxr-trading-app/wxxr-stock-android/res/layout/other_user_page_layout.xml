@@ -131,6 +131,130 @@
                 </LinearLayout>
             </LinearLayout>
 
+            
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:background="@drawable/share"
+                    android:gravity="center_vertical"
+                    android:padding="8dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="@string/label_join_trade_panel" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/shared_text" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_default_text"
+                            android:textColor="@color/red"
+                            bind:field="joinSharedNum" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/shared_unit" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp" 
+                    android:background="#252324"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:gravity="center"
+                        android:text="@string/label_stock" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/label_amount" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/label_profit_loss" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/label_date" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" 
+                        android:visibility="gone"
+                       	bind:field="jSharedVisiable"
+                        >
+
+                        <com.wxxr.mobile.stock.client.widget.NoScrollListView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            bind:field="joinTradeInfos"
+                            bind:itemViewId="uPageItemView"
+                            bind:on_ItemClick="joinItemClick" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:gravity="center"
+                            android:text="@string/view_more_text"
+                            bind:field="*"
+                            bind:on_Click="joinViewMore" 
+                            android:background="@drawable/bg_view_more"
+                            />
+                    </LinearLayout>
+                    
+                    
+                    <TextView 
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:text="@string/user_no_shared_text"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        bind:field="jNoSharedVisiable"
+                        android:textSize="18sp"
+                        />
+                </FrameLayout>
+            </LinearLayout>
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -253,128 +377,6 @@
                         android:visibility="visible"
                         android:text="@string/user_no_shared_text"
                         bind:field="cNoSharedVisiable" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:background="@drawable/share"
-                    android:gravity="center_vertical"
-                    android:padding="8dp" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="@string/label_join_trade_panel" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:orientation="horizontal" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/shared_text" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_default_text"
-                            android:textColor="@color/red"
-                            bind:field="joinSharedNum" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/shared_unit" />
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="30dp" 
-                    android:background="#252324"
-                    >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.8"
-                        android:gravity="center"
-                        android:text="@string/label_stock" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_amount" />
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_profit_loss" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/label_date" />
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" 
-                        android:visibility="gone"
-                       	bind:field="jSharedVisiable"
-                        >
-
-                        <com.wxxr.mobile.stock.client.widget.NoScrollListView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            bind:field="joinTradeInfos"
-                            bind:itemViewId="uPageItemView"
-                            bind:on_ItemClick="joinItemClick" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:gravity="center"
-                            android:text="@string/view_more_text"
-                            bind:field="*"
-                            bind:on_Click="joinViewMore" 
-                            android:background="@drawable/bg_view_more"
-                            />
-                    </LinearLayout>
-                    
-                    
-                    <TextView 
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:text="@string/user_no_shared_text"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        bind:field="jNoSharedVisiable"
-                        android:textSize="18sp"
-                        />
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>

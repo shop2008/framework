@@ -27,20 +27,20 @@
                 android:background="@drawable/tab_left_btn_background"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/label_challenge_trade_panel"
-                bind:field="actualRecordBtn"
-                bind:on_Click="showActualRecords" />
-
+                android:text="@string/label_join_trade_panel"
+                bind:field="virtualRecordBtn"
+                bind:on_Click="showVirtualRecords" />
+            
             <RadioButton
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/tab_right_btn_background"
+               	android:background="@drawable/tab_right_btn_background"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/label_join_trade_panel"
-                bind:field="virtualRecordBtn"
-                bind:on_Click="showVirtualRecords" />
+                android:text="@string/label_challenge_trade_panel"
+                bind:field="actualRecordBtn"
+                bind:on_Click="showActualRecords" />
         </RadioGroup>
 
         <LinearLayout
@@ -108,24 +108,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                bind:field="actualRecordList"
-                bind:itemViewId="tradeRecordMoreItemView"
-                android:scrollbars="none"
-                bind:on_BottomRefresh="handleActualBottomRefresh"
-                bind:on_ItemClick="actualRecordItemClicked"
-                bind:on_TopRefresh="handleActualTopRefresh" >
-            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
-
-            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible"
                 bind:field="virtualRecordsList"
                 bind:itemViewId="tradeRecordMoreItemView"
                 android:scrollbars="none"
                 bind:on_BottomRefresh="handleVirtualBottomRefresh"
                 bind:on_ItemClick="virtualRecordItemClicked"
                 bind:on_TopRefresh="handleVirtualTopRefresh" >
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+            
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                bind:field="actualRecordList"
+                bind:itemViewId="tradeRecordMoreItemView"
+                android:scrollbars="none"
+                bind:on_BottomRefresh="handleActualBottomRefresh"
+                bind:on_ItemClick="actualRecordItemClicked"
+                bind:on_TopRefresh="handleActualTopRefresh" >
             </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
             
             <TextView 

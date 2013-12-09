@@ -26,7 +26,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作", singleton=false)
+@View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_view_more_layout")
 public abstract class UserViewMorePage extends PageBase implements
 		IModelUpdater {
@@ -35,17 +35,17 @@ public abstract class UserViewMorePage extends PageBase implements
 	IUserManagementService usrService;
 
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,myHomeALimit,false)}")
+	@Bean(type=BindingType.Pojo,express="${userId==null?(usrService.getMorePersonalRecords(0,myHomeALimit,false)):null}")
 	BindableListWrapper<GainBean> myChallengeListBean;
 
-	@Bean(type=BindingType.Pojo,express="${usrService.getMorePersonalRecords(0,myHomeVLimit,true)}")
+	@Bean(type=BindingType.Pojo,express="${userId==null?(usrService.getMorePersonalRecords(0,myHomeVLimit,true)):null}")
 	BindableListWrapper<GainBean> myJoinListBean;
 	
 	
-	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,otherHomeALimit,false)}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,0,otherHomeALimit,false)):null}")
 	BindableListWrapper<GainBean> otherChallengeListBean;
 
-	@Bean(type=BindingType.Pojo,express="${usrService.getMoreOtherPersonal(userId,0,otherHomeVLimit,true)}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,0,otherHomeVLimit,true)):null}")
 	BindableListWrapper<GainBean> otherJoinListBean;
 	
 
@@ -79,6 +79,9 @@ public abstract class UserViewMorePage extends PageBase implements
 	/** 其它用户ID */
 	@Bean
 	String userId = null;
+	
+	@Bean
+	boolean isVirtual;
 
 	/** 用户--参赛交易盘每页初始条目 */
 	@Bean
@@ -140,7 +143,6 @@ public abstract class UserViewMorePage extends PageBase implements
 		if (StringUtils.isBlank(userId)) {
 			//用户自己的参赛交易记录
 			if (usrService != null) {
-				
 				usrService.getMorePersonalRecords(0, myHomeVLimit, true);
 			}
 		} else {
@@ -361,6 +363,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				if (tempt != null && "isVirtual".equals(key)) {
 					if (tempt instanceof Boolean) {
 						Boolean isVirtual = (Boolean) tempt;
+						this.isVirtual = isVirtual;
 						registerBean("curItemId", isVirtual?1:0);
 					}
 				}
@@ -371,17 +374,15 @@ public abstract class UserViewMorePage extends PageBase implements
 						this.userId = userId;
 						registerBean("userId", userId);
 					}
-				}	
+				}
 			}
 		}
 	}
-
+	
 	@OnUIDestroy
 	protected void clearData() {
-		this.userId = null;
-		this.myChallengeListBean = null;
-		this.myJoinListBean = null;
-		this.otherChallengeListBean = null;
-		this.otherJoinListBean = null;
+		registerBean("userId", null);
+		usrService.getMorePersonalRecords(0, 0, this.isVirtual);
+		usrService.getMoreOtherPersonal(this.userId, 0, 0, this.isVirtual);
 	}
 }
