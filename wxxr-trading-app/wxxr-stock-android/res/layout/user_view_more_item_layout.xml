@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     bind:field="stockName" />
 
                 <TextView
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     bind:field="stockCode" />
             </LinearLayout>
         </LinearLayout>

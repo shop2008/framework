@@ -49,7 +49,7 @@ public abstract class UserViewMoreItemView extends ViewBase implements IModelUpd
 			)	
 	String income;
 	
-	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}")
+	@Field(valueKey="text", binding="${accountBean!=null?accountBean.closeTime:'--'}",attributes={@Attribute(name = "textColor", value = "${accountBean.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")})
 	String date;
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
