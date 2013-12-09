@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@drawable/date_bj"
-        android:gravity="center" >
+        android:gravity="center"
+        bind:field="titleBg" >
 
         <TextView
             android:layout_width="fill_parent"

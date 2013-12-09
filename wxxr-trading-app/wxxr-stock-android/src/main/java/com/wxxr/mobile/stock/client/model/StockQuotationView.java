@@ -78,7 +78,8 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple", value="100")
+			@Parameter(name="multiple", value="100"),
+			@Parameter(name="formatUnit", value=" ")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	

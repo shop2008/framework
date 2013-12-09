@@ -68,6 +68,7 @@ public abstract class TradingRecordItemView extends ViewBase implements
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof TradingRecordBean) {
+			recordBean = (TradingRecordBean)value;
 			registerBean("recordBean",value);
 		}
 	}

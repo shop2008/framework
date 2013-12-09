@@ -119,12 +119,19 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	@Field(valueKey = "visible", visibleWhen = "${tradingBean != null ? (tradingBean.tradingOrders != null?(tradingBean.tradingOrders.size() > 0 ? false : true):false) : false}")
 	boolean noOrders;
 
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", visibleWhen="${isSelf}", attributes={
+			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}")
+			})
 	String buyBtn;
 
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 						@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
+	
+	@Field(valueKey = "text", attributes={
+			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/date_bj':'resourceId:drawable/red_data_bj'}")
+			})
+	String titleBg;
 	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
@@ -283,12 +290,11 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String avalible = tradingBean.getAvalibleFee() + "";
-		
-		Object val = new String[] { "", "", "", acctId, avalible };
-		updateSelection(val);
-		
+		map.put("acctId", acctId);
+		map.put("avalible", avalible);
 		result.setResult("BuyStockDetailPage");
-//		result.setPayload(map);
+		result.setPayload(map);
+		updateSelection(new StockSelection());
 		return result;
 	}
 
