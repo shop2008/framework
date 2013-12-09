@@ -33,6 +33,17 @@ public abstract class UserManagePage extends PageBase {
 		return "OK";
 	}
 	
+	
+	/**
+	 * 跳转到我的认证界面
+	 * @param event
+	 * @return
+	 */
+	@Command(navigations={@Navigation(on="*", showPage="userAuthPage")})
+	String toMyAuthInfo(InputEvent event) {
+		return "*";
+	}
+	
 	/**
 	 * 标题栏-"返回"按钮事件处理
 	 * 

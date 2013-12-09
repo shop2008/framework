@@ -76,7 +76,7 @@
             android:background="@drawable/bg_bottom"
             android:clickable="true"
             bind:field="*"
-            bind:on_Click="loginOut" >
+            bind:on_Click="toMyAuthInfo" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="10dip"
-                android:text="@string/label_login_out"
+                android:text="@string/t_myrz"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -96,6 +96,31 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/arrow" />
         </RelativeLayout>
+    </LinearLayout>
+    
+    
+    <LinearLayout 
+        android:layout_marginTop="10dip"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:background="@drawable/text_back"
+        android:gravity="center"
+        android:orientation="vertical" 
+        android:layout_marginLeft="8dip"
+        android:layout_marginRight="8dip"
+        >
+        
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:background="@drawable/bg_red_btn"
+            android:text="@string/label_login_out"
+            android:textColor="@color/white"
+            android:textSize="15sp" 
+            bind:field="*"
+            bind:on_Click="loginOut"
+            />
     </LinearLayout>
 
 </LinearLayout>

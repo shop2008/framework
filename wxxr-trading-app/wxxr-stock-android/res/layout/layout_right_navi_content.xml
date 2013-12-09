@@ -43,6 +43,7 @@
             android:layout_toRightOf="@id/iv_personal_pic"
             android:gravity="bottom"
             android:text="10000000000"
+            android:textColor="#262628"
             android:textSize="10sp"
             bind:field="userNum" />
     </RelativeLayout>
@@ -127,11 +128,13 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/jf" />
 
-                <TextView
+                <com.wxxr.mobile.stock.client.widget.MarqueeText
                     android:id="@+id/tv_integral_balance"
                     style="@style/userMsgStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
                     bind:field="integralBalance" />
             </LinearLayout>
 
@@ -157,11 +160,13 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/tz" />
 
-                <TextView
+                <com.wxxr.mobile.stock.client.widget.MarqueeText
                     android:id="@+id/tv_user_account_balance"
                     style="@style/userMsgStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
                     bind:field="accountBalance" />
             </LinearLayout>
 

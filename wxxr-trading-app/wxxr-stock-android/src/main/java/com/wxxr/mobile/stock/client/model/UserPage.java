@@ -39,8 +39,6 @@ public abstract class UserPage extends PageBase  {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
-
-	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
@@ -58,7 +56,7 @@ public abstract class UserPage extends PageBase  {
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'---'}")
+	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
 	String userNickName;
 
 	/**
@@ -121,7 +119,7 @@ public abstract class UserPage extends PageBase  {
 			uiItems={
 				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
 			},
-			navigations={@Navigation(on="OK", showPage="userManagePage")}
+			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
 	)
 	String toolbarClickedRight(InputEvent event){
 		return "OK";
@@ -291,29 +289,9 @@ public abstract class UserPage extends PageBase  {
 		}
 		return null;
 	}
-
-	
-/*	protected void registerSelectionListener(){
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("userSelfDefine",new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(String providerId, ISelection selection) {
-				
-			}
-		});
-	}*/
-	
-	@Command(
-			commandName="personalSet",
-			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
-			)
-	String personalSet(InputEvent event) {
-		return "OK";
-	}
 	
 	/**
 	 * 设置昵称
-	 * 
 	 * @param event
 	 * @return
 	 */

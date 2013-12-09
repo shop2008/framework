@@ -138,18 +138,16 @@ public abstract class HomePage extends PageBase {
 	 
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
-				@UIItem(id="rhome",label="我的认证",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),
-				@UIItem(id="rpage1",label="我的账户",icon="resourceId:drawable/myzh",visibleWhen="${userInfo != null}"),
-				@UIItem(id="rpage2",label="交易记录",icon="resourceId:drawable/jyjl",visibleWhen="${userInfo != null}"),
-				@UIItem(id="rpage3",label="设置",icon="resourceId:drawable/seting"),
-				@UIItem(id="rpage4",label="版本:1.4.0",icon="resourceId:drawable/v_default")
+				@UIItem(id="rhome",label="我的主页",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),
+				@UIItem(id="rpage1",label="交易记录",icon="resourceId:drawable/jyjl",visibleWhen="${userInfo != null}"),
+				@UIItem(id="rpage2",label="设置",icon="resourceId:drawable/seting"),
+				@UIItem(id="rpage3",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="rhome",showPage="userAuthPage"),
-				@Navigation(on="rpage1",showPage="userAccountPage"),
-				@Navigation(on="rpage2",showPage="userTradeRecordPage"),
-				@Navigation(on="rpage3",showPage="appSetPage"),
-				@Navigation(on="rpage4",showDialog="curVertionDialog")
+				@Navigation(on="rhome",showPage="userPage"),
+				@Navigation(on="rpage1",showPage="userTradeRecordPage"),
+				@Navigation(on="rpage2",showPage="appSetPage"),
+				@Navigation(on="rpage3",showDialog="curVertionDialog")
 			}
 	)
 	String menuRightClicked(InputEvent event){

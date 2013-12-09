@@ -45,7 +45,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
 	boolean userRegistered;
 	
-	@Field(valueKey="imageURI", binding="${userInfo != null ? userInfo.userPic : 'resourceId:drawable/default_user_icons'}")
+	@Field(valueKey="imageURI", binding="${(userInfo!=null&&userInfo.userPic!=null)?userInfo.userPic:'resourceId:drawable/default_user_icons'}")
 	String headIcon;
 	
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.nickName : '登录账号'}")
@@ -54,34 +54,33 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.phoneNumber : '赶快登录赚实盘积分吧'}")
 	String userNum;
 	
-	@Field(valueKey="text", binding="${userInfo != null ? userInfo.unReadMsg : '0'}")
+	@Field(valueKey="text", binding="${(userInfo!=null&&userInfo.unReadMsg!=null)?userInfo.unReadMsg:'0'}")
 	String unreadNews;
 	
-	@Field(valueKey="text", binding="${voucherBean != null ? voucherBean.balance : '0'}")
+	@Field(valueKey="text", binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="stockL2StrConvertor")
 	String integralBalance;
 	
-	@Field(valueKey="text", binding="${assetBean != null ? assetBean.balance : '0'}", converter="stockL2StrConvertor")
+	@Field(valueKey="text", binding="${(assetBean!=null&&assetBean.balance>0)?assetBean.balance:null}", converter="stockL2StrConvertor")
 	String accountBalance;
 	
 	@Convertor(
 			params={
 					@Parameter(name="format", value="%10.2f"),
 					@Parameter(name="formatUnit", value="元"),
-					@Parameter(name="multiple", value="100.0f")
+					@Parameter(name="multiple", value="100.0f"),
+					@Parameter(name="nullString", value="0")
 			})
 	StockLong2StringConvertor stockL2StrConvertor;
 	
 	@Command(commandName="handleClickImage",
 		navigations={
 			@Navigation(on="userLoginPage",showPage="userLoginPage"),
-			@Navigation(on="userPage",showPage="userPage", params={
-					@Parameter(name="phone",value="${userInfo.phoneNumber}")
-		})
+			@Navigation(on="userManagePage",showPage="userManagePage")
 	})
 	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");
 		if(this.userInfo != null){
-			return "userPage";
+			return "userManagePage";
 		} else {
 			return "userLoginPage";
 		}
@@ -92,15 +91,15 @@ public abstract class HeaderMenuItemView extends ViewBase {
 		})
 	String handleClickUnread(InputEvent event){
 		log.info("User click on Unread acticles !");
-		return "";
+		return "*";
 	}
 	
 	@Command(navigations={
-			@Navigation(on="*",showPage="userAccountPage")
+			@Navigation(on="*",showPage="uRealPanelScorePage")
 		})
 	String handleClickBalance(InputEvent event){
 		log.info("User click on Account balance !");
-		return "";
+		return "*";
 	}
 	
 	@Command(navigations={
@@ -108,6 +107,6 @@ public abstract class HeaderMenuItemView extends ViewBase {
 		})
 	String handleClickCash(InputEvent event){
 		log.info("User click on cash icon !");
-		return "";
+		return "*";
 	}
 }

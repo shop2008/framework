@@ -77,7 +77,8 @@ public abstract class UserAlterPswPage extends PageBase {
 			if (usrService != null) {
 				usrService.updatePassword(this.callback.getOldPassword(), this.callback.getNewPassword(), this.callback.getNewPasswordAgain());
 			}
-			hide();
+			
+			//hide();
 		}
 		return null;
 	}
