@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Properties;
 
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+
 import android.app.Application;
 import android.os.Environment;
 import android.webkit.WebView;
@@ -100,8 +102,9 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		m.setConnectionPoolSize(30);
 		registerKernelModule(m);
 		RestEasyClientModule<IStockAppContext> rest = new RestEasyClientModule<IStockAppContext>();
-		rest.getClient().register(XStreamProvider.class);
-		rest.getClient().register(GSONProvider.class);
+//		rest.getClient().register(GSONProvider.class);
+		rest.getClient().register(JacksonJsonProvider.class);
+//		rest.getClient().register(XStreamProvider.class);
 		registerKernelModule(rest);
 		CommandExecutorModule<IStockAppContext> cmdExecutor = new CommandExecutorModule<IStockAppContext>();
 		CommandIntializer.initBizCommand(cmdExecutor);
