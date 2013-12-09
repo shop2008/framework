@@ -133,7 +133,7 @@ public class GSONProvider implements MessageBodyReader<Object>, MessageBodyWrite
 								if (fileds!=null&&fileds.length>0) {
 									for (Field field : fileds) {
 										Class<?> clazz = field.getType();
-										if (Map.class.isAssignableFrom(clazz)) {
+										if (Map.class.isAssignableFrom(clazz)) {//处理map不能解析的问题
 											Map<?,?> l2 = (Map<?, ?>) l1.remove(field.getName());
 											if (l2!=null) {
 												List l3 = (List)l2.get("entry");
