@@ -98,7 +98,6 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			if(log.isDebugEnabled()){
 				log.debug("Command :"+cmdName+" will be executed asynchronously with monitor guard :"+guard);
 			}
-			checkCommandConstraint(cmdHandler);
 			InvocationMonitor monitor = new InvocationMonitor(context) {
 				
 				@Override
@@ -131,6 +130,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				@Override
 				public Object call() throws Exception {
 					try {
+						checkCommandConstraint(cmdHandler);
 						return cmdHandler.execute(event);
 					}catch(ExecAsyncException e){
 						return e.getTaskControl().getFuture().get();
@@ -138,12 +138,12 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				}
 			});
 		}else if(callback != null){
-			checkCommandConstraint(cmdHandler);
 			KUtils.executeTask(new Runnable() {
 				
 				@Override
 				public void run() {
 					try {
+						checkCommandConstraint(cmdHandler);
 						Object val = cmdHandler.execute(event);
 						callback.success(val);
 					}catch(ExecAsyncException e){
