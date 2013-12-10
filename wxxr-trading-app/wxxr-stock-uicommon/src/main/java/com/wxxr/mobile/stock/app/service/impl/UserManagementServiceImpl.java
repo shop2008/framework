@@ -154,10 +154,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 		addRequiredService(ICommandExecutor.class);
+	    addRequiredService(IPreferenceManager.class);
+
 	}
 
 	@Override
 	protected void startService() {
+	    
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
@@ -188,6 +191,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.registerService(IUserAuthManager.class, this);
 		context.registerService(IUserIdentityManager.class, this);
 		updateToken();
+		restoreUserBean();
 	}
 
 	@Override
@@ -290,6 +294,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     					myUserInfo.setUsername(vo.getUserName());
     					myUserInfo.setPhoneNumber(vo.getMoblie());
     					myUserInfo.setUserPic(vo.getIcon());
+    					saveUserBean(myUserInfo);
     					 //根据用户密码登录成功
     	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
     	                if(pref == null){
@@ -301,6 +306,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     	                pref.put(KEY_USERNAME, userId);
     	                pref.put(KEY_PASSWORD, pwd);
     	                pref.put(KEY_UPDATE_DATE, String.valueOf(System.currentTimeMillis()));
+    	                getPrefManager().putPreference(getModuleName(), pref);
 					}
 					
 				} catch (NotAuthorizedException e) {
@@ -509,6 +515,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+			    myUserInfo=null;
+	            getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
 				HttpRpcService httpService = context.getService(HttpRpcService.class);
 				if (httpService != null) {
 					httpService.resetHttpClientContext();
@@ -756,6 +764,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					myUserInfo.setUsername(vo.getUserName());
 					myUserInfo.setPhoneNumber(vo.getMoblie());
 					myUserInfo.setUserPic(vo.getIcon());
+					saveUserBean(myUserInfo);
 				} catch (Exception e) {
 					throw new StockAppBizException("系统错误");
 				}
@@ -790,5 +799,49 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}
 	}
 	
+
+    private static final String KEY_NICKNAME = "NickName";
+    private static final String KEY_PHONENUMBER = "PhoneNumber";
+    private static final String KEY_USERPIC = "UserPic";
+	private void saveUserBean(UserBean b){
+	    Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+        if(pref == null){
+            pref= new Hashtable<String, String>();
+            getPrefManager().newPreference(getModuleName(), pref);
+        }else{
+            pref = DictionaryUtils.clone(pref);
+        }
+        if (b.getNickName()!=null){
+            pref.put(KEY_NICKNAME, b.getNickName());
+        }
+        if (b.getUsername()!=null){
+            pref.put(KEY_USERNAME, b.getUsername());
+        }
+        if (b.getPhoneNumber()!=null){
+            pref.put(KEY_PHONENUMBER,b.getPhoneNumber());
+        }
+        if (b.getUserPic()!=null){
+            pref.put(KEY_USERPIC, b.getUserPic());
+        }
+        getPrefManager().putPreference(getModuleName(), pref);
+
+	}
+	private void restoreUserBean(){
+	    IPreferenceManager mgr = getPrefManager();
+        Dictionary<String, String> d = mgr.getPreference(getModuleName());
+        String nickName = d != null ? d.get(KEY_NICKNAME) : null;
+        String user_name = d != null ? d.get(KEY_USERNAME) : null;
+        String pn = d != null ? d.get(KEY_PHONENUMBER) : null;
+        String icon = d != null ? d.get(KEY_USERPIC) : null;
+
+        if(user_name != null && this.myUserInfo==null){
+            myUserInfo=new UserBean();
+            myUserInfo.setNickName(nickName);
+            myUserInfo.setUsername(user_name);
+            myUserInfo.setPhoneNumber(pn);
+            myUserInfo.setUserPic(icon);
+        }
+          
+	}
 	
 }
