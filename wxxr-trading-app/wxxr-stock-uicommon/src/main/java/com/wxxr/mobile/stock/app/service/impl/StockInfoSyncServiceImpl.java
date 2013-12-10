@@ -103,7 +103,6 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			} catch (Exception e) {
 				log.warn("Failed to deserilize the data", e);
 			}
-
 		}
 		public void dateReceiving(Object key) {
 			if (log.isDebugEnabled()) {
@@ -123,7 +122,6 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 				log.debug("All data Received.");
 			}
 			processAllDataReceived();
-
 		}
 		public byte[] removeReceivedData(Object key) {
 			List<String> ids = datas.remove(key);
@@ -341,7 +339,6 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		datas.clear();
 		receiving.clear();
 		receiveFailed.clear();
-
 	}
 
 	private void restartSync() {
