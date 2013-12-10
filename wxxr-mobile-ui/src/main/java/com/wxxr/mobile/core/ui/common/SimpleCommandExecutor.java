@@ -208,9 +208,9 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 	 */
 	protected void doExecute(final String cmdName, final IView view,
 			final IUICommandHandler cmdHandler, final InputEvent event) {
-		checkCommandConstraint(cmdHandler);
 		Object cmdResult = null;
 		try {
+			checkCommandConstraint(cmdHandler);
 			cmdResult = cmdHandler.execute(event);
 		}catch(ExecAsyncException e){
 			final IAsyncTaskControl taskControl = e.getTaskControl();
