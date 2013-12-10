@@ -9,6 +9,7 @@ import java.util.Map;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.stock.restful.json.PullMessageVOs;
 import com.wxxr.stock.restful.resource.ArticleResource;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 
@@ -133,7 +134,8 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 	@Override
 	protected List<PullMessageVO> executeCommand(
 			ICommand<List<PullMessageVO>> command) throws Exception {
-		return getRestService(ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit());
+		PullMessageVOs vos= getRestService(ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit());
+		return vos==null ?null:vos.getPullMessages();
 	}
 
 }

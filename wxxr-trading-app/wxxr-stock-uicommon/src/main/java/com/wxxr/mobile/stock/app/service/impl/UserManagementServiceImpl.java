@@ -256,6 +256,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public void register(final String phoneNumber) throws StockAppBizException {
 		UserRegisterCommand cmd=new UserRegisterCommand();
+		cmd.setUserName(phoneNumber);
 		try{
 			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
 				try {
