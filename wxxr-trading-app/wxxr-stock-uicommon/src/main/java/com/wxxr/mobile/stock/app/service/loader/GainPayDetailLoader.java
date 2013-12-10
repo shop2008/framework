@@ -3,6 +3,8 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
+import android.R.integer;
+
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
@@ -47,7 +49,7 @@ public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDe
     public ICommand<List<GainPayDetailsVO>> createCommand(Map<String, Object> params) {
         GetGainPayDetailCommand cmd = new GetGainPayDetailCommand();
         cmd.setLimit((Integer) params.get("limit"));
-        cmd.setLimit((Integer) params.get("start"));
+        cmd.setStart((Integer) params.get("start"));
         return cmd;
     }
 
@@ -58,8 +60,9 @@ public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDe
         boolean updated = false;
 
         if(result != null){
+        		int i=((GetGainPayDetailCommand)cmd).getStart();
             for (GainPayDetailsVO vo : result) {
-                String key=vo.getId();
+                String key=i+"";
                 GainPayDetailBean bean=cache.getEntity(key);
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
@@ -68,6 +71,7 @@ public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDe
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
                 updated = true;
+                i++;
             }
         }
         return updated;
