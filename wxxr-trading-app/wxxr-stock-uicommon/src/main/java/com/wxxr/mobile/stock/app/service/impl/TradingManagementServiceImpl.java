@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.IAsyncCallback;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
@@ -795,9 +796,13 @@ public class TradingManagementServiceImpl extends
   //未结算
     @Override
     public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
-        if (tradingAccountBean_cache.getEntity(acctID)==null){
+    	if (!StringUtils.isNumeric(acctID)) {
+			throw new IllegalArgumentException("Invalid Argument:accId===>"+acctID);
+		}
+    	Long accId =  Long.valueOf(acctID);
+        if (tradingAccountBean_cache.getEntity(accId)==null){
             TradingAccountBean b=new TradingAccountBean();
-            b.setId(Long.valueOf(acctID));
+            b.setId(accId);
             tradingAccountBean_cache.putEntity(b.getId(),b);
         }
         Map<String, Object> params=new HashMap<String, Object>(); 
