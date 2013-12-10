@@ -154,7 +154,7 @@ public class WebGrabberServiceImplTest {
 		WebGrabberServiceImplTest tester = new WebGrabberServiceImplTest();
 		tester.setUp();
 		tester.doGrabPage();
-		tester.doGrabSite();
+//		tester.doGrabSite();
 		tester.tearDown();
 	}
 

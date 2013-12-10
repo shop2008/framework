@@ -113,14 +113,15 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 	public void saveContent(IWebPageGrabbingTask task, IWebContent content,WebURL url) throws IOException {
 		File resFile = getResourceFile(task,url);
 		String path = resFile.getCanonicalPath();
-		File tmpFile = new File(path+".tmp");
+//		File tmpFile = new File(path+".tmp");
+		File origFile = new File(path+".orig");
 		File propFile = new File(path+".x");
-		if(!tmpFile.getParentFile().exists()){
-			tmpFile.getParentFile().mkdirs();
+		if(!resFile.getParentFile().exists()){
+			resFile.getParentFile().mkdirs();
 		}
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream(tmpFile);
+			fos = new FileOutputStream(resFile);
 			InputStream is = content.getContentData();
             byte[] tmp = new byte[4096];
             int l;
@@ -139,14 +140,28 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 				fos.close();
 				fos = null;
 			}
-			if(resFile.exists()){
-				if(!resFile.delete()){
-					log.warn("Failed to delete existing content file :"+resFile.getAbsolutePath());
-				}
-			}
-			if(!tmpFile.renameTo(resFile)){
-				log.warn("Failed to rename downloaded content file :"+tmpFile.getAbsolutePath()+" to regular file :"+resFile.getAbsolutePath());
-			}
+//			if(resFile.exists()){
+//				if(!resFile.delete()){
+//					log.warn("Failed to delete existing content file :"+resFile.getAbsolutePath());
+//					throw new IOException("Failed to delete existing content file :"+resFile.getAbsolutePath());
+//				}
+//			}
+//			int cnt = 0;
+//			while(true){
+//				if(tmpFile.renameTo(resFile)){
+//					break;
+//				}
+//				cnt++;
+//				if(cnt >= 3){
+//					log.warn("Failed to rename downloaded content file :"+tmpFile.getAbsolutePath()+" to regular file :"+resFile.getAbsolutePath());
+//					throw new IOException("Failed to rename downloaded content file :"+tmpFile.getAbsolutePath()+" to regular file :"+resFile.getAbsolutePath());
+//				}
+//				try {
+//					Thread.sleep(1000L);
+//				} catch (InterruptedException e) {
+//					throw new IOException("Failed to rename downloaded content file :"+tmpFile.getAbsolutePath()+" to regular file :"+resFile.getAbsolutePath());
+//				}
+//			}
 			String lastModified = content.getLastModifiedDate();
 			Date d = null;
 			if(lastModified != null){
@@ -158,6 +173,9 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			}
 			if(d != null){
 				resFile.setLastModified(d.getTime());
+			}
+			if(origFile.exists()){
+				origFile.delete();
 			}
 		}finally{
 			if(fos != null){
@@ -220,10 +238,9 @@ public abstract class AbstractContentStorage implements IWebContentStorage {
 			File resFile = getResourceFile(task,webUrl);
 			String path = resFile.getCanonicalPath();
 			File origFile = new File(path+".orig");
-			if(origFile.exists()) {
-				origFile.delete();
+			if(!origFile.exists()) {
+				resFile.renameTo(origFile);
 			}
-			resFile.renameTo(origFile);
 			FileOutputStream fos = null;
 			OutputStreamWriter sw = null;
 			try {

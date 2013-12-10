@@ -2,38 +2,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.wxxr.mobile</groupId>
+    <parent>
+        <artifactId>wxxr-mobile-parent</artifactId>
+        <groupId>com.wxxr.mobile.core</groupId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 	<artifactId>wxxr-mobile-xstream</artifactId>
-	<version>1.0.0</version>
+	<version>${framework.version}</version>
 	<packaging>jar</packaging>
-	<name>wxxr-mobile-xstream</name>
-	
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1</platform.version>
-    </properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
-            <groupId>com.wxxr.mobile</groupId>
+            <groupId>com.wxxr.mobile.core</groupId>
             <artifactId>wxxr-mobile-core</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.wxxr.mobile</groupId>
+            <groupId>com.wxxr.mobile.core</groupId>
             <artifactId>wxxr-mobile-xml</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>
