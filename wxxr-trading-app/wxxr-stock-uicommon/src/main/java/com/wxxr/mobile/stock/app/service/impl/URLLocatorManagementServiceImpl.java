@@ -78,7 +78,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 					lastCheckTime = System.currentTimeMillis();
 				}
 			}
-		}, 10000,10000);
+		}, 60000,60000);
 		context.registerService(IURLLocatorManagementService.class, this);
 	}
 
@@ -149,7 +149,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 				mUrl = remoteConfig.get("product.maganoliaURL");
 			}
 		} catch (Exception e) {
-			log.warn("Error when open file:server.properties", e);
+			log.warn("Error when loading properties from server", e);
 		}
 	}
 	private <T> T fromBytes(byte[] data) throws Exception {
