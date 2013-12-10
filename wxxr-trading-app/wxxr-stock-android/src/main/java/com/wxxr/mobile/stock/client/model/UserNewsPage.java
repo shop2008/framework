@@ -36,7 +36,7 @@ public abstract class UserNewsPage extends PageBase {
 	BindableListWrapper<PullMessageBean> infoNoticeListBean;
 	
 	/**账户&交易-数据*/
-	@Field(valueKey="options", binding="${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen="${((accountTradeListBean!=null?(accountTradeListBean.data!=null?(accountTradeListBean.data>0?true:false):false):false))&&(curItemId==0)}")
+	@Field(valueKey="options", binding="${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen="${curItemId==0}")
 	List<RemindMessageBean> accountTradeInfos;
 	
 	/**当账户&交易数据为空时显示*/
@@ -58,7 +58,7 @@ public abstract class UserNewsPage extends PageBase {
 	
 
 	/**资讯&公告-数据*/
-	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${((infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data>0?true:false):false):false))&&(curItemId==0)}")
+	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${curItemId==1}")
 	List<PullMessageBean> noticeInfos;
 	
 	@Field(valueKey="visible", binding="${infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data>0?false:true):true):true}")

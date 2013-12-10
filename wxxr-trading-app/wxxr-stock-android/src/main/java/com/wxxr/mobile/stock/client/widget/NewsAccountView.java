@@ -68,11 +68,11 @@ public class NewsAccountView extends PinnedHeaderListView {
 						RemindMessageBean messageInfoBean = (RemindMessageBean) object;
 						if (i==0) {
 							curMessage = messageInfoBean;
-							labels.add(long2StrYMD(curMessage.getCreatedDate()));
+							labels.add(curMessage.getCreatedDate());
 							labelPositions.add(index);
 						} else {
-							if (!long2StrYMD(messageInfoBean.getCreatedDate()).equals(long2StrYMD(curMessage.getCreatedDate()))) {
-								labels.add(long2StrYMD(messageInfoBean.getCreatedDate()));
+							if (!messageInfoBean.getCreatedDate().equals(curMessage.getCreatedDate())) {
+								labels.add(messageInfoBean.getCreatedDate());
 								index = i;
 								isChange = true;
 								labelPositions.add(index);
@@ -89,12 +89,12 @@ public class NewsAccountView extends PinnedHeaderListView {
 			}
 		}
 		
-		private String long2StrYMD(String time) {
+		/*private String long2StrYMD(String time) {
 			long longTime = Long.parseLong(time);
 			Date date = new Date(longTime);
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			return format.format(date);
-		}
+		}*/
 		
 		private String long2StrHM(String time) {
 			long longTime = Long.parseLong(time);
