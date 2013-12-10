@@ -171,7 +171,7 @@ public interface StockResource {
     @Produces( { "application/json;charset=utf-8" })
     @Consumes({ "application/json;charset=utf-8" })
     //@GZIP
-    public PlateTaxisListVO getRefenceBlockHQ(List<ParamVO> list) throws Exception;
+    public PlateTaxisListVO getRefenceBlockHQ(StockParamsVo vos) throws Exception;
     
     /**
      * 成份股接口

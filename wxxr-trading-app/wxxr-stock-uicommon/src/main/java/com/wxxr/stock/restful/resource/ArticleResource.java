@@ -8,8 +8,7 @@ import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
-import com.wxxr.stock.article.ejb.api.ArticleVO;
-import com.wxxr.stock.restful.json.NewsQueryBO;
+import com.wxxr.stock.article.ejb.api.ArticleVOs;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 @Path("/rest/article")
 public interface ArticleResource  {
@@ -18,7 +17,7 @@ public interface ArticleResource  {
     @Path("/getnewarticle")
 	@Produces({"application/json;charset=utf-8"})
 	@Consumes({ "application/json"})
-    public List<ArticleVO> getNewArticle(NewsQueryBO query) throws Exception ;
+    public ArticleVOs getNewArticle(@QueryParam("type") String type,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception ;
 	@GET
     @Path("/getPullMessage")
     @Produces({ "application/json;charset=utf-8"})

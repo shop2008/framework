@@ -15,6 +15,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.service.IURLLocatorManagementService;
 import com.wxxr.stock.article.ejb.api.ArticleVO;
+import com.wxxr.stock.article.ejb.api.ArticleVOs;
 import com.wxxr.stock.restful.json.NewsQueryBO;
 import com.wxxr.stock.restful.resource.ArticleResource;
 
@@ -169,11 +170,10 @@ public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, A
 	protected List<ArticleVO> executeCommand(ICommand<List<ArticleVO>> command)
 			throws Exception {
     	GetMyArticlesCommand g=(GetMyArticlesCommand) command;
-        NewsQueryBO bo=new NewsQueryBO();
-        bo.setLimit(g.getLimit());
-        bo.setStart(g.getStart());
-        bo.setType(String.valueOf(g.getType()));
-        return RestUtils.getRestService(ArticleResource.class).getNewArticle(bo);
+
+        ArticleVOs vos=RestUtils.getRestService(ArticleResource.class).getNewArticle(String.valueOf(g.getType()),g.getStart(),g.getLimit());
+
+        return vos==null?null:vos.getArticles();
 	}
 
 	/**
