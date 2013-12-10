@@ -21,7 +21,7 @@ public abstract class AbstractMTreeDataSyncClient implements IMTreeDataSyncClien
 	private Map<String,MTreeRoot> trees =new ConcurrentHashMap<String,MTreeRoot>();
 	protected Trace log=Trace.register(AbstractMTreeDataSyncClient.class);
 	private long lastSuccessTime, lastFailedTime;
-	
+	protected long cycleInterval = 60;//seconds
 	private Checker checker=new Checker();
 	class Checker implements Runnable{
 
@@ -48,7 +48,7 @@ public abstract class AbstractMTreeDataSyncClient implements IMTreeDataSyncClien
 					}
 				}
 				try {
-					Thread.sleep(1000L);
+					Thread.sleep(cycleInterval*1000L);
 				} catch (InterruptedException e) {
 				}
 			}
@@ -71,6 +71,22 @@ public abstract class AbstractMTreeDataSyncClient implements IMTreeDataSyncClien
 		}
 	}
 	
+	protected long getCycleInterval() {
+		return cycleInterval;
+	}
+
+	protected void setCycleInterval(long cycleInterval) {
+		this.cycleInterval = cycleInterval;
+	}
+
+	protected void setLastSuccessTime(long lastSuccessTime) {
+		this.lastSuccessTime = lastSuccessTime;
+	}
+
+	protected void setLastFailedTime(long lastFailedTime) {
+		this.lastFailedTime = lastFailedTime;
+	}
+
 	protected abstract boolean isOK2CheckerMTreeServer();
 	
 	public void walk(String key,IDataConsumer consumer) throws IOException {
@@ -114,7 +130,6 @@ public abstract class AbstractMTreeDataSyncClient implements IMTreeDataSyncClien
 			if(log.isDebugEnabled()){
 				log.debug("Going to receiving data of node :"+node.getPath()+" ,group id :"+grpId);
 			}
-
 			consumer.dateReceiving(grpId);
 			try{
 				byte[] bytes=getConnector().getNodeData(key, nodePath);

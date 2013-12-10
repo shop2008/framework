@@ -36,7 +36,6 @@ public class MTreeNode {
 		List<MTreeNode> children = node.getChildren();
 		if((children != null)&&(children.size() > 0)){
 			Collections.sort(children, new Comparator<MTreeNode>() {			
-				@Override
 				public int compare(MTreeNode o1, MTreeNode o2) {
 					return o1.getNodeName().compareTo(o2.getNodeName());
 				}

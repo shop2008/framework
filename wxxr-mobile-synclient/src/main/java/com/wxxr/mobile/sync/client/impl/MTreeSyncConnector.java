@@ -152,7 +152,7 @@ public abstract class MTreeSyncConnector<T extends IKernelContext> extends Abstr
 	public <S> S getRestService(Class<S> clazz) {
 		String url = getServerUrl();
 		if (url == null) {
-			throw new IllegalArgumentException("There is not sshx sync server url setup, you should specified server target url[SSHX_SYNC_SERVER_URI] !!!");
+			throw new IllegalArgumentException("There is not  sync server url setup, you should specified server target url[SSHX_SYNC_SERVER_URI] !!!");
 		}
 		return context.getService(IRestProxyService.class).getRestService(clazz, url);
 	}
