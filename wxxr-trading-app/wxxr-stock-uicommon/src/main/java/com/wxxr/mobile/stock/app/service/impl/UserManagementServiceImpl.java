@@ -4,7 +4,9 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -13,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
+import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
@@ -99,10 +102,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		implements IUserManagementService, IUserAuthManager,IUserIdentityManager {
 	private static final Trace log = Trace
 			.register(UserManagementServiceImpl.class);
-
-//	private static final String KEY_USERNAME = "U";
-//	private static final String KEY_PASSWORD = "P";
-//	private static final String KEY_UPDATE_DATE = "UD";
+	private static final String KEY_USERNAME = "U";
+	private static final String KEY_PASSWORD = "P";
+	private static final String KEY_UPDATE_DATE = "UD";
 	private IPreferenceManager prefManager;
 	private UsernamePasswordCredential usernamePasswordCredential4Login;
 	// ==================beans =============================
@@ -204,22 +206,22 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public IUserAuthCredential getAuthCredential(String host, String realm) {
-//		IPreferenceManager mgr = getPrefManager();
-//		if (!mgr.hasPreference(getModuleName())
-//				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
-//			if (UsernamePasswordCredential4Login != null) {
+		IPreferenceManager mgr = getPrefManager();
+		if (!mgr.hasPreference(getModuleName())
+				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
+			if (usernamePasswordCredential4Login != null) {
 				return usernamePasswordCredential4Login;
-//			}
+			}
 //			
 //			
 //			IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
 //			dialog.show();
 //			
-//		}
-//		Dictionary<String, String> d = mgr.getPreference(getModuleName());
-//		String userName = d.get(KEY_USERNAME);
-//		String passwd = d.get(KEY_PASSWORD);
-//		return new UsernamePasswordCredential(userName, passwd);
+		}
+		Dictionary<String, String> d = mgr.getPreference(getModuleName());
+		String userName = d.get(KEY_USERNAME);
+		String passwd = d.get(KEY_PASSWORD);
+		return new UsernamePasswordCredential(userName, passwd);
 	}
 
 	@Override
@@ -282,11 +284,25 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
                         userId, pwd);
 				try {
 					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
-					myUserInfo = new UserBean();
-					myUserInfo.setNickName(vo.getNickName());
-					myUserInfo.setUsername(vo.getUserName());
-					myUserInfo.setPhoneNumber(vo.getMoblie());
-					myUserInfo.setUserPic(vo.getIcon());
+					if (vo!=null){
+    					myUserInfo = new UserBean();
+    					myUserInfo.setNickName(vo.getNickName());
+    					myUserInfo.setUsername(vo.getUserName());
+    					myUserInfo.setPhoneNumber(vo.getMoblie());
+    					myUserInfo.setUserPic(vo.getIcon());
+    					 //根据用户密码登录成功
+    	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+    	                if(pref == null){
+    	                    pref= new Hashtable<String, String>();
+    	                    getPrefManager().newPreference(getModuleName(), pref);
+    	                }else{
+    	                    pref = DictionaryUtils.clone(pref);
+    	                }
+    	                pref.put(KEY_USERNAME, userId);
+    	                pref.put(KEY_PASSWORD, pwd);
+    	                pref.put(KEY_UPDATE_DATE, String.valueOf(System.currentTimeMillis()));
+					}
+					
 				} catch (NotAuthorizedException e) {
 					log.warn("Failed to login user due to invalid user name and/or password",e);
 					usernamePasswordCredential4Login = null;
@@ -296,6 +312,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					usernamePasswordCredential4Login = null;
 					throw new LoginFailedException("登录失败，请稍后再试...");
 				}
+				
 			}
 		});
 		if (future != null) {
@@ -769,4 +786,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			log.warn("updatToken error",e);
 		}
 	}
+	
+	
 }
