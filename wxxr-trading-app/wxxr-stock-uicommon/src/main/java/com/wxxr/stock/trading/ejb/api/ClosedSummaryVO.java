@@ -30,4 +30,52 @@ public class ClosedSummaryVO{
 		return builder.toString();
 	}
 
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
+	/**
+	 * @return the auditDetailVO
+	 */
+	public AuditInfoVO getAuditDetailVO() {
+		return auditDetailVO;
+	}
+
+
+	/**
+	 * @param auditDetailVO the auditDetailVO to set
+	 */
+	public void setAuditDetailVO(AuditInfoVO auditDetailVO) {
+		this.auditDetailVO = auditDetailVO;
+	}
+
+
+	/**
+	 * @return the dealDetailVO
+	 */
+	public DealDetailInfoVO getDealDetailVO() {
+		return dealDetailVO;
+	}
+
+
+	/**
+	 * @param dealDetailVO the dealDetailVO to set
+	 */
+	public void setDealDetailVO(DealDetailInfoVO dealDetailVO) {
+		this.dealDetailVO = dealDetailVO;
+	}
+
 }

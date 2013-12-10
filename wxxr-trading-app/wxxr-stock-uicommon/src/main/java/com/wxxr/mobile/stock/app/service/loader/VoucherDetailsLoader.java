@@ -13,7 +13,7 @@ import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 
 public class VoucherDetailsLoader  extends AbstractEntityLoader<String, VoucherDetailsBean, VoucherDetailsVO> {
-    private static final String COMMAND_NAME = "GetGainPayDetailCommand";
+    private static final String COMMAND_NAME = "GetVoucherDetailsCommand";
     private static class GetVoucherDetailsCommand implements ICommand<List<VoucherDetailsVO>> {
         private int start, limit;
         public int getStart() {
