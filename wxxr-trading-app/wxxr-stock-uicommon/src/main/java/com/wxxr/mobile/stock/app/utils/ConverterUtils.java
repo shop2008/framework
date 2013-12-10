@@ -560,7 +560,7 @@ public class ConverterUtils {
         }
         GainPayDetailBean b=new GainPayDetailBean();
         updatefromVOtoBean(b,vo);
-        return null;
+        return b;
     }
     public static void updatefromVOtoBean(GainPayDetailBean bean, GainPayDetailsVO vo) {
         bean.setAmount(vo.getAmount());
