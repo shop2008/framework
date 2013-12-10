@@ -84,6 +84,11 @@
               <artifactId>wxxr-mobile-gson</artifactId>
                 <version>${framework.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile</groupId>
+                <artifactId>wxxr-mobile-jackson</artifactId>
+                <version>${framework.version}</version>
+            </dependency>   
             <!-- 后端服务 -->
              <dependency>
               <groupId>com.wxxr.mobile</groupId>
