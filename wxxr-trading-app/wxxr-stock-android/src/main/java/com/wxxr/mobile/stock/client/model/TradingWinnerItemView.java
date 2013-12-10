@@ -27,7 +27,7 @@ import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
  * @author wangxuyang
  *
  */
-@View(name="earnRankListItemView")
+@View(name="earnRankListItemView",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.earn_money_rank_layout_item")
 public abstract class TradingWinnerItemView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
 	

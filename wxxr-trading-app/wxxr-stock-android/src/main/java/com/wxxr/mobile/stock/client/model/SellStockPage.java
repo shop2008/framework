@@ -32,6 +32,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
@@ -169,11 +170,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		registerBean("closePriceBean", closePriceBean);
 		registerBean("sellPrice", sellPrice);
 		//刷新viewpager
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put(Constants.KEY_CODE_FLAG, stockCode);
-		map.put(Constants.KEY_NAME_FLAG, stockName);
-		map.put(Constants.KEY_MARKET_FLAG, stockMarket);
-		updateSelection(map);
+		updateSelection(new StockSelection(stockMarket, stockCode, stockName));
 		return null;
 	}
 	
@@ -184,10 +181,12 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
 				StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
+				long buyPrice = 0;
 				if(stockTrading!=null){
 					maxAmountBean = stockTrading.getAmount() + "";
 					this.stockMarket = stockTrading.getMarketCode();
 					this.stockCode = stockTrading.getStockCode();
+					buyPrice = stockTrading.getBuy();
 				}
 				if(stockInfoSyncService!=null){
 					StockBaseInfo stockInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.stockCode, this.stockMarket);
@@ -200,11 +199,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
 				this.infoCenterService.getStockQuotation(stockCode, stockMarket);
 				//刷新viewpager
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put(Constants.KEY_CODE_FLAG, stockCode);
-				map.put(Constants.KEY_NAME_FLAG, stockName);
-				map.put(Constants.KEY_MARKET_FLAG, stockMarket);
-				updateSelection(map);
+				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice));
 			}
 		}
 		return null;

@@ -169,7 +169,6 @@ public abstract class TradingMainView extends ViewBase{
 					boolean isVirtual = tempTradingA.getVirtual();
 					Long accid = tempTradingA.getAcctID();
 					String over = tempTradingA.getOver();
-					resutl.setPayload(isVirtual);
 					HashMap<String, Object> map = new HashMap<String, Object>();
 					map.put(Constants.KEY_ACCOUNT_ID_FLAG, accid);
 					map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);

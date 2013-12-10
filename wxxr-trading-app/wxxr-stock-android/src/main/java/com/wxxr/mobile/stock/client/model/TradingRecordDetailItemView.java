@@ -33,7 +33,7 @@ public abstract class TradingRecordDetailItemView extends ViewBase implements IM
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple", value="1000f"),
+			@Parameter(name="multiple", value="100f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertor;

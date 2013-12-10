@@ -185,15 +185,15 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	Utils utils = Utils.getInstance();
 	@OnShow
 	void initData(){
-		registerBean("virtual", true);
-		registerBean("accid", accid);
-		if(getAppToolbar()!=null){
-			if(this.virtual){
-				getAppToolbar().setTitle("模拟盘", null);
-			}else{
-				getAppToolbar().setTitle("实盘", null);
-			}
-		}
+//		registerBean("virtual", true);
+//		registerBean("accid", accid);
+//		if(getAppToolbar()!=null){
+//			if(this.virtual){
+//				getAppToolbar().setTitle("模拟盘", null);
+//			}else{
+//				getAppToolbar().setTitle("实盘", null);
+//			}
+//		}
 	}
 	
 	/**

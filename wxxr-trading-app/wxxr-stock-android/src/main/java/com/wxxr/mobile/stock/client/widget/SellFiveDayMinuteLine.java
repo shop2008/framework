@@ -38,6 +38,7 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 	private boolean flag = true;
 	private float left;
 	private float top;
+	private boolean drawArrows = false;
 	
 	public SellFiveDayMinuteLine(Context context) {
 		super(context);
@@ -373,6 +374,7 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 //						canvas.saveLayer(left, top, right, bottom, paint, saveFlags)
 						if(buyPrice == tempNewPrice && flag){
 							this.flag = false;
+							this.drawArrows = true;
 							this.left = startX;
 							this.top = startY;
 						}
@@ -383,11 +385,13 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 	}
 	
 	private void drawArrows(Canvas canvas,float left, float top, Paint mPaint){
-		canvas.save();
-		Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.min_arrows).copy(Bitmap.Config.ARGB_8888, true);
-		Bitmap newBitmap = Bitmap.createBitmap(photo);
-		canvas.drawBitmap(newBitmap, left, top, mPaint);
-		canvas.restore();
+		if(drawArrows){
+			canvas.save();
+			Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.min_arrows).copy(Bitmap.Config.ARGB_8888, true);
+			Bitmap newBitmap = Bitmap.createBitmap(photo);
+			canvas.drawBitmap(newBitmap, left, top, mPaint);
+			canvas.restore();
+		}
 	}
 	
 	/**画今天分时线*/

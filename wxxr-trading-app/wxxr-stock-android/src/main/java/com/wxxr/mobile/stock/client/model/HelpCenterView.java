@@ -8,9 +8,9 @@ import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -20,7 +20,6 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
-import com.wxxr.mobile.stock.app.bean.MyArticlesBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 
@@ -36,7 +35,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
-	@Bean(type=BindingType.Pojo,express="${articleService.getMyArticles(0,10)}")
+	@Bean(type=BindingType.Pojo,express="${articleService.getHelpArticles(0,10)}")
 	BindableListWrapper<ArticleBean> articlesBean;
 	
 	@Field(valueKey="options",binding="${articlesBean.data}")

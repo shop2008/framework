@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -198,6 +200,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	@Command(navigations={
 			@Navigation(on = "tiaozhan",showPage="QuickBuyStockPage")
 	})
+	@SecurityConstraint(allowRoles={})
+	@NetworkConstraint
 	CommandResult tiaoZhanTradingBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			CommandResult result = new CommandResult();
@@ -214,6 +218,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 	@Command(navigations={
 			@Navigation(on = "cansai",showPage="QuickBuyStockPage")
 	})
+	@SecurityConstraint(allowRoles={})
+	@NetworkConstraint
 	CommandResult canSaiTradingBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			CommandResult result = new CommandResult();
