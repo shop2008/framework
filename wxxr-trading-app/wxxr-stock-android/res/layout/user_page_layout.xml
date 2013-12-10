@@ -84,7 +84,7 @@
                     <View
                         android:layout_width="2dp"
                         android:layout_height="fill_parent"
-                        android:background="@android:color/transparent" />
+                        android:background="@color/gray" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
