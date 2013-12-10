@@ -1,6 +1,6 @@
 package com.wxxr.mobile.stock.app.service.handler;
 
-import org.apache.commons.lang.StringUtils;
+
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.CommandException;
@@ -8,7 +8,8 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.stock.restful.resource.UserResource;
 
 public class RestPasswordHandler implements ICommandHandler {
 
@@ -61,7 +62,7 @@ public class RestPasswordHandler implements ICommandHandler {
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		context.getKernelContext().getService(IRestProxyService.class).
-		getRestService(StockUserResource.class).resetPassword(((RestPasswordCommand)command).getUserName());
+		getRestService(UserResource.class).resetPassword(((RestPasswordCommand)command).getUserName());
 		return null;
 	}
 

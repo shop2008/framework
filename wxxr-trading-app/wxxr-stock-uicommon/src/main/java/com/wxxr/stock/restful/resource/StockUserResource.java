@@ -23,35 +23,9 @@ import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 @Path("/secure/user")
 public interface StockUserResource {
 
-	/**
-	 * 用户使用手机号注册，如果没有注册过，则直接使用短信把密码发给他 如果已经注册过，就告诉客户端已经注册
-	 * 
-	 * @param phoneNum
-	 *            用户手机号
-	 * @return 所创建用户的缺省信息--UserBaseInfoVO--->String
-	 * @throws Exception
-	 */
-	@GET
-	@Path("/regUser")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public SimpleResultVo register(@QueryParam("phone") String phoneNum)
-			throws RestBizException;
 
-	/**
-	 * 用户首次使用时缺省注册流程，系统首先验证SHA1值是否正确，然后注册缺省用户，并将信息返回给手机客户端
-	 * 
-	 * @param phoneNum
-	 *            用户手机号
-	 * @return 所创建用户的缺省信息--UserBaseInfoVO--->String
-	 * @throws Exception
-	 */
-	@GET
-	@Path("/resetPass")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public Response resetPassword(@QueryParam("phone") String phoneNum)
-			throws RestBizException;
+
+
 
 	/**
 	 * 用户登陆后绑定客户端app 所有的信息在ejb那里取得

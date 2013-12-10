@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.security.vo.SimpleResultVo;
-import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.restful.resource.UserResource;
 
 public class RegisterHandher implements ICommandHandler {
 
@@ -60,7 +60,7 @@ public class RegisterHandher implements ICommandHandler {
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		
-		SimpleResultVo result=context.getKernelContext().getService(IRestProxyService.class).getRestService(StockUserResource.class).register(((UserRegisterCommand)command).getUserName());
+		SimpleResultVo result=context.getKernelContext().getService(IRestProxyService.class).getRestService(UserResource.class).register(((UserRegisterCommand)command).getUserName());
 		return (T) result;
 	}
 
