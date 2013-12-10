@@ -319,4 +319,9 @@
     <string name="all">全 部</string>
     <string name="scale">比 例</string>
     <string name="txt_buy">买入</string>
+    <!-- 我的积分 -->
+    <string name="label_today_increase">当日增加</string>
+    <string name="label_today_decrease">当日减少</string>
+    <string name="label_score_balance">余额</string>
+    <string name="label_score_details">积分明细</string>
 </resources>

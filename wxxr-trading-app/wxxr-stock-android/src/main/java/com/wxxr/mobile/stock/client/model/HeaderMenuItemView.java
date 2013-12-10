@@ -95,7 +95,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	}
 	
 	@Command(navigations={
-			@Navigation(on="*",showPage="uRealPanelScorePage")
+			@Navigation(on="*",showPage="userScorePage")
 		})
 	String handleClickBalance(InputEvent event){
 		log.info("User click on Account balance !");

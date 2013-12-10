@@ -11,22 +11,22 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "incomeDetailsItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.income_details_item_layout")
 public abstract class UserIncomeDetailItemView extends ViewBase implements
 		IModelUpdater {
 
-	@Field(valueKey = "text", binding = "${detailBean!=null?detailBean.comment:'--'}")
+	@Field(valueKey = "text", binding = "${(detailBean!=null&&detailBean.comment!=null)?detailBean.comment:'--'}")
 	String incomeCatagory;
 
 	@Field(valueKey = "text", binding = "${detailBean!=null?detailBean.time:null}", converter = "timeConvertor")
 	String incomeDate;
 
-	@Field(valueKey = "text", binding = "${detailBean!=null?(detailBean.amount>0?'+'+detailBean.amount:detailBean.amount):'--'}", attributes={
+	@Field(valueKey = "text", binding = "${detailBean!=null?(detailBean.amount>0?'+'+detailBean.amount:detailBean.amount):null}", attributes={
 			@Attribute(name="textColor", value="${detailBean!=null?(detailBean.amount>0?'resourceId:color/red':'resourceId:color/green'):'resourceId:color/white'}")
 	})
-	
 	String incomeAmount;
 
 	GainPayDetailBean detailBean;
@@ -35,6 +35,11 @@ public abstract class UserIncomeDetailItemView extends ViewBase implements
 			@Parameter(name = "nullString", value = "--") })
 	LongTime2StringConvertor timeConvertor;
 
+	
+	@Convertor(params={@Parameter(name="nullString",value="0"),
+			@Parameter(name="format", value="%.0f")
+	})
+	StockLong2StringConvertor stockL2StrConvertor;
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof GainPayDetailBean) {

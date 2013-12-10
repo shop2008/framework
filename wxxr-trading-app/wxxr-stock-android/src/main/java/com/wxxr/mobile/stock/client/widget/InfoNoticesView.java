@@ -73,11 +73,11 @@ public class InfoNoticesView extends PinnedHeaderListView {
 						PullMessageBean messageInfoBean = (PullMessageBean) object;
 						if (i==0) {
 							curMessage = messageInfoBean;
-							labels.add(long2StrYMD(curMessage.getCreateDate()));
+							labels.add(curMessage.getCreateDate());
 							labelPositions.add(index);
 						} else {
-							if (!long2StrYMD(messageInfoBean.getCreateDate()).equals(long2StrYMD(curMessage.getCreateDate()))) {
-								labels.add(long2StrYMD(messageInfoBean.getCreateDate()));
+							if (messageInfoBean.getCreateDate().equals(curMessage.getCreateDate())){
+								labels.add(messageInfoBean.getCreateDate());
 								index = i;
 								isChange = true;
 								labelPositions.add(index);
@@ -145,6 +145,7 @@ public class InfoNoticesView extends PinnedHeaderListView {
 			if (getPositionForSection(section) == position) {
 				mHeaderParent.setVisibility(View.VISIBLE);
 				mHeaderText.setText(labels.get(section));
+				mHeaderParent.setEnabled(false);
 			} else {
 				mHeaderParent.setVisibility(View.GONE);
 			}

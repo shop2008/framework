@@ -136,9 +136,11 @@ public class NewsAccountView extends PinnedHeaderListView {
 					.findViewById(R.id.header_container);
 			TextView mHeaderText = (TextView) convertView
 					.findViewById(R.id.date_label);
+			
 			if (getPositionForSection(section) == position) {
 				mHeaderParent.setVisibility(View.VISIBLE);
 				mHeaderText.setText(labels.get(section));
+				mHeaderParent.setEnabled(false);
 			} else {
 				mHeaderParent.setVisibility(View.GONE);
 			}

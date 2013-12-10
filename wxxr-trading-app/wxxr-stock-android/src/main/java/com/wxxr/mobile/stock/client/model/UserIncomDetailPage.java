@@ -25,7 +25,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
  * @author renwenjie
  *
  */
-@View(name="userIncomDetailPage", withToolbar=true, description="余额明细")
+@View(name="userIncomDetailPage", withToolbar=true, description="收支明细")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.income_detail_layout")
 public abstract class UserIncomDetailPage extends PageBase {
 

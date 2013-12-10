@@ -3,32 +3,37 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.ScoreBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 
 @View(name="actualScoreItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.actual_panel_integral_detail_item_layout")
 public abstract class URealPanelScoreItemView extends ViewBase implements IModelUpdater {
 
-	@Field(valueKey="text", binding="${scoreBean!=null?scoreBean.catagory:'--'}")
+	@Field(valueKey="text", binding="${(scoreBean!=null&&scoreBean.comment!=null)?scoreBean.comment:'--'}")
 	String scoreCatagory;
 	
-	@Field(valueKey="text",binding="${scoreBean!=null?scoreBean.date:'--'}")
+	@Field(valueKey="text",binding="${scoreBean!=null?scoreBean.time:null}", converter="timeConvertor")
 	String gainDate;
 	
-	@Field(valueKey="text", binding="${scoreBean!=null?scoreBean.amount:'--'}",attributes={
+	@Field(valueKey="text", binding="${scoreBean!=null?(scoreBean.amount>0?'+'+scoreBean.amount:scoreBean.amount):null}",attributes={
 			@Attribute(name = "textColor", value = "${scoreBean.amount>0?'resourceId:color/red':'resourceId:color/green'}")
 			})
 	String gainNum;
 	
-	ScoreBean scoreBean;
+	@Convertor(params = { @Parameter(name = "format", value = "yyyy-MM-dd"),
+			@Parameter(name = "nullString", value = "--") })
+	LongTime2StringConvertor timeConvertor;
 	
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof ScoreBean) {
+		if (value instanceof GainPayDetailBean) {
 			registerBean("scoreBean", value);
 		}
 	}
