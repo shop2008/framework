@@ -11,6 +11,7 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -45,6 +46,9 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
+	@Bean(type=BindingType.Service)
+	IUserIdentityManager idManager;
+	
 	@Bean(express="${articleService.getHomeArticles(0, 4)}")
 	BindableListWrapper<ArticleBean> myArticles;
 	
@@ -57,7 +61,7 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
 	BindableListWrapper<TradingAccInfoBean> t0TradingAccountList;
 	
 	@Field(valueKey="options",binding="${t0TradingAccountList.getData()}")
@@ -66,7 +70,7 @@ public abstract class TradingMainView extends ViewBase{
 	@Field(valueKey="visible",visibleWhen="${t0TradingAccountList.getData()!=null&&t0TradingAccountList.getData().size()>0?true:false}")
 	boolean isVisibleT;
 	/**获取T+1日数据*/
-	@Bean(type=BindingType.Pojo,express="${tradingService.getT1TradingAccountList()}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getT1TradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
     BindableListWrapper<TradingAccInfoBean> t1TradingAccountList;
 	   @Field(valueKey="options",binding="${t1TradingAccountList.getData()}")
 	List<TradingAccInfoBean> tradingT1;
