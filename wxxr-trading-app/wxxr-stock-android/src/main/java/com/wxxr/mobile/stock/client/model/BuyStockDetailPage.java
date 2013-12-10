@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -371,7 +372,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 				
 				@Override
 				public void run() {
-					getUIContext().getWorkbenchManager().getWorkbench().showPage("stockSearchPage", null, null);
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("result", 1);
+					getUIContext().getWorkbenchManager().getWorkbench().showPage("stockSearchPage", map, null);
 					hasShow = true;
 				}
 			}, 100, TimeUnit.MILLISECONDS);

@@ -21,11 +21,12 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 /**
  * @author neillin
  */
-@View(name="home",withToolbar=true, description="短线放大镜")
+@View(name="home",withToolbar=true, description="短线放大镜",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;
@@ -87,12 +88,13 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="search",label="搜索",icon="resourceId:drawable/finds")
 			}, 
 	navigations={
-			@Navigation(on="*",showPage="stockSearchPage")}
+			@Navigation(on="*",showPage="GeGuStockPage")}
 	)
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
+		updateSelection(new StockSelection());
 		return "";
 	}
 	

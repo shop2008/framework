@@ -3,7 +3,9 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -17,7 +19,10 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -25,9 +30,13 @@ import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
@@ -36,12 +45,14 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="GeGuStockPage",withToolbar=true,description="个股界面",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.gegu_page_layout")
-public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
+public abstract class GeGuStockPage extends PageBase implements IModelUpdater, ISelectionChangedListener {
 	
 	static Trace log = Trace.getLogger(GeGuStockPage.class);
 	@Menu(items = { "left" }) 
 	private IMenu toolbar;
 
+	private boolean hasShow = false;
+	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
@@ -267,5 +278,65 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater {
 				}
 	        }
 		}
+	}
+	
+	@OnCreate
+	void registerSelectionListener() {
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		selectionChanged("",service.getSelection(StockSelection.class));
+		service.addSelectionListener(this);
+	}
+	
+	@OnDestroy
+	void removeSelectionListener() {
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener(this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		if(selection instanceof StockSelection){
+			StockSelection stockSelection = (StockSelection) selection;
+			if(stockSelection!=null){
+				this.codeValue = stockSelection.getCode();
+				this.stockName = stockSelection.getName();
+				this.marketCode = stockSelection.getMarket();
+			}
+			registerBean("codeValue", this.codeValue);
+			registerBean("stockName", this.stockName);
+			registerBean("marketCode", this.marketCode);
+		}
+	}
+	
+	@OnShow
+	void startStockSearch() {
+		if(hasShow) {
+			if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
+				hide();
+			} else {
+				
+			}
+			return;
+		} else {
+		}
+		if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
+			AppUtils.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("result", 0);
+					getUIContext().getWorkbenchManager().getWorkbench().showPage("stockSearchPage", map, null);
+					hasShow = true;
+				}
+			}, 100, TimeUnit.MILLISECONDS);
+		}
+	}
+	
+	@OnUIDestroy
+	void destroyData() {
+		hasShow = false;
+		marketCode = null;
+		codeValue = null;
 	}
 }

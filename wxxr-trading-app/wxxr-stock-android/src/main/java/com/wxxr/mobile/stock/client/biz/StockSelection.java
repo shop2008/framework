@@ -15,11 +15,13 @@ public class StockSelection implements ISelection {
 	private int type;
 	private long buyPrice;
 	
-	private String accid;
+	private String accid = "";
 	private boolean virtual;
 	
 	public StockSelection(){
-		
+		market = "";
+		code = "";
+		name = "";
 	}
 	public StockSelection(String market, String code, String name){
 		this.market = market;

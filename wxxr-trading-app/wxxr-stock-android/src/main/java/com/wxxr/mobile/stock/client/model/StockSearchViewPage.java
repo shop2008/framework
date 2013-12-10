@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -18,6 +19,7 @@ import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
@@ -33,13 +35,15 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
  */
 @View(name = "stockSearchPage", withToolbar = true, description = "搜索股票", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_search_layout")
-public abstract class StockSearchViewPage extends PageBase {
+public abstract class StockSearchViewPage extends PageBase implements IModelUpdater {
 
 	private static Trace log = Trace.getLogger(StockSearchViewPage.class);
 
 	@Bean
 	String key;
 
+	int type = 0;
+	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
@@ -97,10 +101,22 @@ public abstract class StockSearchViewPage extends PageBase {
 				String code = bean.getCode();
 				String name = bean.getName();
 				String market = bean.getMc();
-				updateSelection(new StockSelection(market, code, name, 1));
+				updateSelection(new StockSelection(market, code, name, type));
 				hide();
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public void updateModel(Object data) {
+		if (data instanceof Map) {
+			Map result = (Map) data;
+			for (Object key : result.keySet()) {
+				if ("result".equals(key) && result.get(key) instanceof Integer) {
+					type = (Integer) result.get(key);
+				}
+			}
+		}
 	}
 }
