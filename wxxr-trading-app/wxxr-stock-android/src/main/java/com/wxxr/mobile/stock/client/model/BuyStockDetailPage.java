@@ -36,7 +36,6 @@ import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
@@ -140,6 +139,16 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text")
 	String buyBtn;
 	
+	@Bean
+	int size;
+	@Bean
+	int position;
+	
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "size", value = "${size}"),
+			@Attribute(name = "position", value = "${position}") })
+	String indexGroup;
+	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
@@ -176,6 +185,21 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean, 1));
 		return null;
 	}
+	
+	@Command
+	String handlerPageChanged(InputEvent event) {
+		Object p = event.getProperty("position");
+		Object s = event.getProperty("size");
+		if(p  instanceof Integer) {
+			this.position = (Integer)p;
+			this.size = (Integer)s;
+		}
+		registerBean("size", size);
+		registerBean("position", position);
+		log.debug("BuyStockDetailPage handlerPageChanged position: " + position + "size: "+size);
+		return null;
+	}
+	
 	/**
 	 * 市价点中，作收价*1.1传进去计算最大可买股数
 	 * @param envent
@@ -300,6 +324,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 				log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
 			}
 		}
+		registerBean("size", 3);
+		registerBean("position", 0);
 	}
 	
 	/**

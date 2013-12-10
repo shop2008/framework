@@ -16,6 +16,8 @@ public abstract class BuyStockViewKeys {
 	public static final AttributeKey<String> fund = new AttributeKey<String>(String.class, "fund");
 	public static final AttributeKey<String> sellCount = new AttributeKey<String>(String.class, "sellCount");
 	public static final AttributeKey<String> type = new AttributeKey<String>(String.class, "type");
+	public static final AttributeKey<Integer> size = new AttributeKey<Integer>(Integer.class, "size");
+	public static final AttributeKey<Integer> position = new AttributeKey<Integer>(Integer.class, "position");
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){
 		attrMgr.registerAttribute(marketPrice);
@@ -23,5 +25,8 @@ public abstract class BuyStockViewKeys {
 		attrMgr.registerAttribute(fund);
 		attrMgr.registerAttribute(sellCount);
 		attrMgr.registerAttribute(type);
+		
+		attrMgr.registerAttribute(size);
+		attrMgr.registerAttribute(position);
 	}
 }

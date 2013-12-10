@@ -179,8 +179,17 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 			try {
 				Method setShowSoftInputOnFocus = cls.getMethod(
 						"setShowSoftInputOnFocus", boolean.class);
-				setShowSoftInputOnFocus.setAccessible(false);
+				setShowSoftInputOnFocus.setAccessible(true);
 				setShowSoftInputOnFocus.invoke(et, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				Method setSoftInputShownOnFocus;
+				setSoftInputShownOnFocus = cls.getMethod(
+						"setSoftInputShownOnFocus", boolean.class);
+				setSoftInputShownOnFocus.setAccessible(true);
+				setSoftInputShownOnFocus.invoke(et, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -202,12 +211,12 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				isPrice = true;
 				showInitPriceKeyboard();
 				setKeyboardShow(true);
-				return true;
+				break;
 			case R.id.count:
 				isPrice = false;
 				showInitCountKeyboard();
 				setKeyboardShow(true);
-				return true;
+				break;
 			default:
 				break;
 			}

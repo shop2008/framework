@@ -265,9 +265,14 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/** 设置分时线表格底边时间文字 */
 	private void setOnDrawBottomTextFont(Canvas canvas){
-		if (cWidth >= 570)
+		
+		if (cWidth >= 700)
 		{
-			mPaint.setTextSize(10);
+			mPaint.setTextSize(16);
+		}
+		else if (cWidth >= 570)
+		{
+			mPaint.setTextSize(14);
 		}
 		else if (cWidth >= 450)
 		{
@@ -283,13 +288,15 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		}
 		mPaint.setAntiAlias(true);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(getStockCloseColor());
 		float tempY = zStartY - (textLineHeight/3);
+		mPaint.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText("09:30", fStartX, tempY, mPaint);
+		mPaint.setTextAlign(Paint.Align.CENTER);
 		canvas.drawText("10:30", fStartX + tableW *1, tempY, mPaint);
 		canvas.drawText("11:30/13:00",fStartX + tableW *2, tempY, mPaint);
 		canvas.drawText("14:00", fStartX + tableW *3, tempY, mPaint);
+		mPaint.setTextAlign(Paint.Align.RIGHT);
 		canvas.drawText("15:00", fStopX, tempY, mPaint);	
 	}
 	

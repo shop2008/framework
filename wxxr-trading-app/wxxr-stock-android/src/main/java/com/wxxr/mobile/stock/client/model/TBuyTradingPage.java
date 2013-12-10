@@ -106,12 +106,12 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	String avalibleFee;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:''}", converter = "stockLong2StringConvertorSpecial", attributes={
-			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.gainRate>0?'resourceId:color/red':(tradingBean.gainRate<0?'resourceId:color/green':'resourceId:color/gray')}")
+			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.gainRate>0?'resourceId:color/stock_text_up':(tradingBean.gainRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 			})
 	String gainRate;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:''}", converter = "stockLong2StringConvertorYuan", attributes={
-			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.totalGain>0?'resourceId:color/red':(tradingBean.totalGain<0?'resourceId:color/green':'resourceId:color/gray')}")
+			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.totalGain>0?'resourceId:color/stock_text_up':(tradingBean.totalGain<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 			})
 	String totalGain;
 

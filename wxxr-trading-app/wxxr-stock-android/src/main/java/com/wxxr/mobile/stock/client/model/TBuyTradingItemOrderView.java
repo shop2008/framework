@@ -37,7 +37,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	StockTradingOrderBean orderBean;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="format",value="%.2f元"),
 			@Parameter(name="multiple", value="100.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorNoSign;
@@ -68,6 +68,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	
 	@Command
 	String handlerCancelClick(InputEvent event) {
+		//未实现撤单前确认
 		if("100".equals(orderBean.getStatus()))
 			return null;
 		manageService.cancelOrder(orderBean.getId()+"");

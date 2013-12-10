@@ -36,7 +36,7 @@ public class BasicLineView extends View {
 	private float mStopY;
 	
 	public float lineHeight; //每条线直接的距离
-	private float marginTop = 8f;
+	private float marginTop = 10f;
 	private float marginBottom = 8f;
 	public float minuteTopPadding = 8f;
 	public float minuteBottomPadding = 8f;

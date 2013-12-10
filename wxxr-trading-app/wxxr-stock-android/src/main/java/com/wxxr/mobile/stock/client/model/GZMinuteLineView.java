@@ -64,7 +64,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	BTTime2StringConvertor btTime2StringConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="(%.2f%%)"),
+			@Parameter(name="format",value="%.2f%%"),
 			@Parameter(name="multiple", value="1000f"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -86,7 +86,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
-			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor3;
@@ -130,19 +130,19 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	/**涨跌幅*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial1",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
 	})
 	String risefallrate;
 	
 	/**涨跌额*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:null}",converter="stockLong2StringAutoUnitConvertor1",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
 	})
 	String change;
 	
 	/**最新价*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
 	})
 	String newprice;
 	

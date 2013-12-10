@@ -181,4 +181,44 @@ public class Utils {
 		}
 		return data;
 	}	
+	
+	/**
+	 * FIXME “#”是可以为空，“0”是不够添0占位，“，”是分隔符;例如“#，##0.0#”
+	 * 
+	 * @param v
+	 *            需要格式化的数字
+	 * @param scale
+	 *            小数点后“至少”保留几位
+	 * @return
+	 */
+	public String formatDouble(float v, int scale) {
+		String temp = "0.";
+		for (int i = 0; i < scale; i++) {
+			temp += "0";
+		}
+		return new java.text.DecimalFormat(temp).format(v);
+	}
+
+	/**
+	 * FIXME 小数转化为百分数,保留2位小数(有四舍五入)
+	 * 
+	 * @param -0.12345
+	 * @return -12.35%
+	 */
+	public String formatToPercent(float value) {
+		Float ret = null;
+		value = value * 100;
+		int precision = 2;
+		try {
+			double factor = Math.pow(10, precision);
+			ret = new Float(Math.floor(value * factor + 0.5) / factor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String tmp = String.valueOf(ret);
+		if (tmp.substring(tmp.indexOf('.') + 1).length() < 2) {
+			tmp = tmp + "0";
+		}
+		return tmp + "%";
+	}
 }

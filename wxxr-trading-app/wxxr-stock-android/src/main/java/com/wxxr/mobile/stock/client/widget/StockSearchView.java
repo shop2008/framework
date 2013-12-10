@@ -95,6 +95,15 @@ public class StockSearchView extends RelativeLayout implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			try {
+				Method setSoftInputShownOnFocus;
+				setSoftInputShownOnFocus = cls.getMethod(
+						"setSoftInputShownOnFocus", boolean.class);
+				setSoftInputShownOnFocus.setAccessible(true);
+				setSoftInputShownOnFocus.invoke(et, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else {
 			et.setInputType(InputType.TYPE_NULL);
 		}

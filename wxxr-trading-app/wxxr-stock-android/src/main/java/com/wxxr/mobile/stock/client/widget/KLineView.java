@@ -1,46 +1,40 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.PathEffect;
+import android.graphics.PaintFlagsDrawFilter;
 import android.util.AttributeSet;
-import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.wxxr.mobile.core.ui.api.IDataChangedListener;
 import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.client.biz.Kline;
-
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * K线自定义控件
+ * 
  * @author renwenjie
- *
+ * 
  */
 public class KLineView extends View implements IDataChangedListener {
-
-	private SurfaceHolder holder;
-
 
 	/**
 	 * 手指触摸点横坐标
 	 */
-	private float touchX ;
-	
+	private float touchX;
+
 	/**
 	 * 白线起始点坐标
 	 */
 	private float whiteStartX;
-	
-	
+
 	/**
 	 * 用于格式化数据
 	 */
@@ -62,7 +56,7 @@ public class KLineView extends View implements IDataChangedListener {
 	/**
 	 * K线右上角纵度比(自定义的)（点坐标/画板高）
 	 */
-	private final float tBi = (float) 20 / 220;
+	private final float tBi = (float) 12 / 220;
 
 	/**
 	 * 柱状图上边缘纵度比(自定义的)（点坐标/画板高）
@@ -125,12 +119,9 @@ public class KLineView extends View implements IDataChangedListener {
 	 * 成交量最大值
 	 */
 	private float maxSecuvolume = 0;
-	
+
 	private IObservableListDataProvider dataProvider;
 
-	private SurfaceHolder mHolder;
-
-//	private List<Kline> dataProvider;
 	public float w;
 
 	public KLineView(Context context, AttributeSet attrs) {
@@ -149,45 +140,14 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	private void init(Context context) {
-//		holder = getHolder();
-//		holder.addCallback(this);
 		mPaint = new Paint();
 		df = new DecimalFormat("0.00");
 		isRender = true;
 	}
 
-	
-	
-	
-//
-//	@Override
-//	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-//			int height) {
-//
-//	}
-//
-//	@Override
-//	public void surfaceCreated(SurfaceHolder holder) {
-//		this.mHolder = holder;
-//	}
-//
-//	@Override
-//	public void surfaceDestroyed(SurfaceHolder holder) {
-//		this.mHolder = null;
-//	}
-//	
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//		touchX = event.getX();
-//		return true;
-//	}
-	
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		/**
-		 * 画图
-		 */
 		doDraw(canvas, klineType);
 	}
 
@@ -196,18 +156,17 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	private void doDraw(Canvas c, int klineType) {
-		setData(c);
+		setBgData(c);
 		drawBgProgram(c);
-		if (dataProvider != null) {
-			drawKline(c);
-		}
+		setKlineData();
+		drawKline(c);
 	}
 
-	public void setData(Canvas c) {
-		cWidth = c.getWidth(); //画布宽
-		cHeight = c.getHeight(); //画布高
-		wBi = (float) 65 / cWidth; //从逻辑的65开始
-		mStartX = cWidth * wBi; //算实际画布开始位置
+	public void setBgData(Canvas c) {
+		cWidth = c.getWidth(); // 画布宽
+		cHeight = c.getHeight(); // 画布高
+		wBi = (float) 65 / cWidth; // 从逻辑的65开始
+		mStartX = cWidth * wBi; // 算实际画布开始位置
 		mStartY = cHeight * hBi;
 		mEndX = cWidth - 1;
 		mEndY = cHeight * tBi;
@@ -217,42 +176,55 @@ public class KLineView extends View implements IDataChangedListener {
 		fenshiHeight = mStartY - mEndY;
 	}
 
-	private void setData2() {
+	private void setKlineData() {
 		if (dataProvider != null && dataProvider.getItemCounts() > 0) {
 			size = dataProvider.getItemCounts();
 			count = size <= 50 ? size : 50;// 缺省最多取50个蜡烛图
-			maxPrice = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getHigh()));
-			minPrice = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getLow()));
-			maxSecuvolume = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(0)).getSecuvolume()));
+			maxPrice = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(0))
+							.getHigh()));
+			minPrice = Float
+					.parseFloat(String.valueOf(((StockLineBean) dataProvider
+							.getItem(0)).getLow()));
+			maxSecuvolume = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(0))
+							.getSecuvolume()));
 			float temp;
 			for (int i = 0; i < count; i++) {
-				temp = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));
+				temp = Float.parseFloat(String
+						.valueOf(((StockLineBean) dataProvider.getItem(i))
+								.getHigh()));
 				if (maxPrice < temp)
 					maxPrice = temp;
-				temp = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getLow()));
+				temp = Float.parseFloat(String
+						.valueOf(((StockLineBean) dataProvider.getItem(i))
+								.getLow()));
 				if (minPrice > temp)
 					minPrice = temp;
-				temp = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getSecuvolume()));
+				temp = Float.parseFloat(String
+						.valueOf(((StockLineBean) dataProvider.getItem(i))
+								.getSecuvolume()));
 				if (maxSecuvolume < temp)
 					maxSecuvolume = temp;
 			}
 		}
 	}
-	
-	/**
-	 * 刷新界面
-	 */
-	public void notifyDataSetChanged() {
-			updateCanvas();
-	}
+
+	//
+	// /**
+	// * 刷新界面
+	// */
+	// public void notifyDataSetChanged() {
+	// updateCanvas();
+	// }
 
 	void setPaintTextSize(Paint p) {
 		if (cWidth >= 1000) {
-			mPaint.setTextSize(20);
-		}else if (cWidth >= 700) {
 			mPaint.setTextSize(18);
-		} else if (cWidth >= 570) {
+		} else if (cWidth >= 700) {
 			mPaint.setTextSize(16);
+		} else if (cWidth >= 570) {
+			mPaint.setTextSize(14);
 		} else if (cWidth >= 450) {
 			mPaint.setTextSize(10);
 		} else if (cWidth >= 330) {
@@ -261,136 +233,157 @@ public class KLineView extends View implements IDataChangedListener {
 			mPaint.setTextSize(10);
 		}
 	}
+
 	public void drawKline(Canvas canvas) {
 		// 在背景表格上画数据
-		
-		
 		if (dataProvider == null) {
 			return;
 		}
 		if (dataProvider.getItemCounts() == 0) {
 			return;
 		}
-
-		setData2();
-		/** 画各项指标从这里开始************************************************ */
-
-		/** 清空画笔样式 */
-		mPaint.setPathEffect(null);
-		canvas.save();
-
+		mPaint.setStyle(Paint.Style.FILL);
+		mPaint.setAntiAlias(true);
 		/** 设置表格左边的股票价格文字 */
 		setPaintTextSize(mPaint);
 		mPaint.setTextAlign(Paint.Align.RIGHT);
-		mPaint.setColor(Color.RED);
-		
+		mPaint.setColor(Color.parseColor("#C43F32"));
+
 		/** 计算左边7个值 */
 		float price1 = maxPrice;
-		float price2 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM-1) / K_LINE_LABEL_Y_NUM + minPrice;
-		float price3 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM-2) / K_LINE_LABEL_Y_NUM + minPrice;
-		float price4 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM-3) / K_LINE_LABEL_Y_NUM + minPrice;
-//		double price5 = (maxPrice - minPrice) / 3 + minPrice;
-//		double price6 = (maxPrice - minPrice) / 6 + minPrice;
+		float price2 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM - 1)
+				/ K_LINE_LABEL_Y_NUM + minPrice;
+		float price3 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM - 2)
+				/ K_LINE_LABEL_Y_NUM + minPrice;
+		float price4 = (maxPrice - minPrice) * (K_LINE_LABEL_Y_NUM - 3)
+				/ K_LINE_LABEL_Y_NUM + minPrice;
 		float price5 = minPrice;
-		
-		canvas.drawText(formatDouble(price1/1000), mStartX - 3, mEndY + 3, mPaint);
-		canvas.drawText(formatDouble(price2/1000), mStartX - 3, mEndY + 3
+
+		canvas.drawText(formatDouble(price1 / 1000), mStartX - 6, mEndY + 10,
+				mPaint);
+		canvas.drawText(formatDouble(price2 / 1000), mStartX - 6, mEndY + 10
 				+ (fenshiHeight / K_LINE_LABEL_Y_NUM), mPaint);
 		mPaint.setColor(Color.WHITE);
-		canvas.drawText(formatDouble(price3/1000), mStartX - 3, mEndY + 3
-				+ fenshiHeight / (K_LINE_LABEL_Y_NUM-2), mPaint);
-		mPaint.setColor(Color.GREEN);
-		canvas.drawText(formatDouble(price4/1000), mStartX - 3, mEndY + 3
-				+ fenshiHeight * (K_LINE_LABEL_Y_NUM - 1) / (K_LINE_LABEL_Y_NUM), mPaint);
-		canvas.drawText(formatDouble(price5/1000), mStartX - 3, mStartY - 1, mPaint);
-//		canvas.drawText(formatDouble(price6), mStartX - 3, mEndY + 3
-//				+ (fenshiHeight / 6) * 5, mPaint);
-//		canvas.drawText(formatDouble(price7), mStartX - 3, mStartY - 1, mPaint);
+		canvas.drawText(formatDouble(price3 / 1000), mStartX - 6, mEndY + 6
+				+ fenshiHeight / (K_LINE_LABEL_Y_NUM - 2), mPaint);
+		mPaint.setColor(Color.parseColor("#4A9143"));
+		canvas.drawText(formatDouble(price4 / 1000), mStartX - 6, mEndY
+				+ fenshiHeight * (K_LINE_LABEL_Y_NUM - 1)
+				/ (K_LINE_LABEL_Y_NUM), mPaint);
+		canvas.drawText(formatDouble(price5 / 1000), mStartX - 6, mStartY,
+				mPaint);
 
 		/** 设置表格底边时间文字 */
 		setPaintTextSize(mPaint);
 		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(Color.WHITE);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*4/5)).getDate(), mStartX + (fenshiWidth/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*3/5)).getDate(), mStartX + (fenshiWidth*2/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT +(zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count*2/5)).getDate(), mStartX + (fenshiWidth*3/5),
-				 mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2, mPaint);
-		canvas.drawText(((StockLineBean)dataProvider.getItem(count/5)).getDate(), mStartX + (fenshiWidth*4/5),  mStartY + TOP_BOTTOM_SPACE_HEIGHT + (zzTopY-mStartY)/2,
+		canvas.drawText(
+				((StockLineBean) dataProvider.getItem(count * 4 / 5)).getDate(),
+				mStartX + (fenshiWidth / 5), mStartY + TOP_BOTTOM_SPACE_HEIGHT
+						+ (zzTopY - mStartY) / 2, mPaint);
+		canvas.drawText(
+				((StockLineBean) dataProvider.getItem(count * 3 / 5)).getDate(),
+				mStartX + (fenshiWidth * 2 / 5), mStartY
+						+ TOP_BOTTOM_SPACE_HEIGHT + (zzTopY - mStartY) / 2,
+				mPaint);
+		canvas.drawText(
+				((StockLineBean) dataProvider.getItem(count * 2 / 5)).getDate(),
+				mStartX + (fenshiWidth * 3 / 5), mStartY
+						+ TOP_BOTTOM_SPACE_HEIGHT + (zzTopY - mStartY) / 2,
+				mPaint);
+		canvas.drawText(
+				((StockLineBean) dataProvider.getItem(count / 5)).getDate(),
+				mStartX + (fenshiWidth * 4 / 5), mStartY
+						+ TOP_BOTTOM_SPACE_HEIGHT + (zzTopY - mStartY) / 2,
 				mPaint);
 
 		/** 画成交量柱状图的值 */
 		setPaintTextSize(mPaint);
 		/** 成交量（万） */
 		mPaint.setTextAlign(Paint.Align.RIGHT);
-		canvas.drawText(formatNum(maxSecuvolume / 100), mStartX - 3,
+		canvas.drawText(formatNum(maxSecuvolume / 100), mStartX - 6,
 				zzTopY + 10, mPaint);
-		canvas.drawText(formatNum(maxSecuvolume / 200), mStartX - 3, zzTopY
+		canvas.drawText(formatNum(maxSecuvolume / 200), mStartX - 6, zzTopY
 				+ (zzBottomY - zzTopY) / 2 + 8, mPaint);
 		mPaint.setTextSize(16);
 		/** 单位（手） */
-		canvas.drawText("单位:手", mStartX - 3, zzBottomY + 4, mPaint);
+		canvas.drawText("单位:手", mStartX - 6, zzBottomY + 4, mPaint);
 
 		/** 蜡烛图画法 */
-		/** 清空画笔样式 */
-		mPaint.setPathEffect(null);// 轨道效果
 		canvas.save();
 		float left = mStartX, top, right, bottom;
 		float startX, startY, stopY;
-		mPaint.setStyle(Paint.Style.FILL);
 
-		w = 1;//fenshiWidth / (count * K_LINE_SPACE);
+		w = 1f;// fenshiWidth / (count * K_LINE_SPACE);
 
-		
 		/**
 		 * 画每个柱状图的白线
 		 */
 		drawWhiteLine(canvas, mStartX, mEndX, mEndY, zzBottomY, count, w);
-	
-		for (int i = count-1, j = 0; i >= 0; i--, j++) {
-//			Log.d("", ((StockLineBean)dataProvider.getItem(i)).getDate());
-			float open = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getOpen()));
-			float high = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getHigh()));
-			float low = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getLow()));
-			float newprice = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getPrice()));
-			float secuvolume = Float.parseFloat(String.valueOf(((StockLineBean)dataProvider.getItem(i)).getSecuvolume()));
-//			Log.d("", "open:"+high+" low:"+low+" newprice:"+newprice+" secuvolume:"+secuvolume);
+
+		for (int i = count - 1, j = 0; i >= 0; i--, j++) {
+			float open = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(i))
+							.getOpen()));
+			float high = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(i))
+							.getHigh()));
+			float low = Float
+					.parseFloat(String.valueOf(((StockLineBean) dataProvider
+							.getItem(i)).getLow()));
+			float newprice = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(i))
+							.getPrice()));
+			float secuvolume = Float.parseFloat(String
+					.valueOf(((StockLineBean) dataProvider.getItem(i))
+							.getSecuvolume()));
+			// Log.d("",
+			// "open:"+high+" low:"+low+" newprice:"+newprice+" secuvolume:"+secuvolume);
 			if (open >= newprice) {
-				mPaint.setColor(Color.parseColor("#3C7F00"));
+				mPaint.setColor(Color.parseColor("#329900"));
 				top = (float) (mStartY - (open - minPrice) * fenshiHeight
 						/ (maxPrice - minPrice));
-				right = left + fenshiWidth/count - 1;
+				right = left + fenshiWidth / count - w;
 				bottom = (float) (mStartY - (newprice - minPrice)
 						* fenshiHeight / (maxPrice - minPrice));
 			} else {
-				mPaint.setColor(Color.parseColor("#BA2514"));
+				mPaint.setColor(Color.parseColor("#E92C0C"));
 				top = (float) (mStartY - (newprice - minPrice) * fenshiHeight
 						/ (maxPrice - minPrice));
-				right = left + fenshiWidth/count - 1;
+				right = left + fenshiWidth / count - w;
 				bottom = (float) (mStartY - (open - minPrice) * fenshiHeight
 						/ (maxPrice - minPrice));
 			}
 
 			int a = (int) top;
 			int b = (int) bottom;
-			
+
 			// 画蜡烛
-			if (open == newprice || a == b) {
+			if (open == newprice && high == low) {
+				mPaint.setColor(Color.WHITE);
+				mPaint.setStrokeWidth(2);
+				canvas.drawLine(left, top, right, bottom, mPaint);
+			} else if (open == newprice || a == b) {
+				mPaint.setStrokeWidth(2);
 				canvas.drawLine(left, top, right, bottom, mPaint);
 			} else {
 				canvas.drawRect(left, top, right, bottom, mPaint);
 			}
-
+			mPaint.setStrokeWidth(1);
+			if (open >= newprice) {
+				mPaint.setColor(Color.parseColor("#329900"));
+			} else {
+				mPaint.setColor(Color.parseColor("#E92C0C"));
+			}
 			// 画柱状图
 			if (secuvolume != 0) {
-				
 				top = (float) (zzBottomY - secuvolume * (zzBottomY - zzTopY)
 						/ maxSecuvolume + 1);
 				float deltaY = 0;
 				if (top > zzBottomY) {
 					deltaY = top - zzBottomY;
-					top = top - 2* deltaY;
+					top = top - 2 * deltaY;
 				}
-				
 				/**
 				 * 柱状图高度
 				 */
@@ -399,10 +392,9 @@ public class KLineView extends View implements IDataChangedListener {
 				 * 底部边框高度
 				 */
 				float absDisF = zzBottomY - zzTopY;
-				
 
 				if (absDisY > absDisF) {
-					top = top + (absDisY - absDisF)+2;
+					top = top + (absDisY - absDisF) + 2;
 				}
 				canvas.drawRect(left, top, right, zzBottomY, mPaint);
 			}
@@ -412,19 +404,19 @@ public class KLineView extends View implements IDataChangedListener {
 			stopY = (float) (mStartY - (low - minPrice) * fenshiHeight
 					/ (maxPrice - minPrice));
 			// 画中线
+			mPaint.setStrokeWidth(2);
 			canvas.drawLine(startX, startY, startX, stopY, mPaint);
 
-			left += fenshiWidth/count;
+			left += fenshiWidth / count;
 
 		}
 		canvas.restore();
 	}
 
-
 	private void drawWhiteLine(Canvas canvas, float left, float right,
 			float top, float bottom, int size, float w) {
 		mPaint.setColor(Color.WHITE);
-		int whiteLineCount = (int) ((touchX - left) / w /3);
+		int whiteLineCount = (int) ((touchX - left) / w / 3);
 		if (touchX >= left && touchX <= right && whiteLineCount < size) {
 			whiteStartX = left + w + whiteLineCount * 3 * w;
 			canvas.drawLine(whiteStartX, top - 6, whiteStartX, bottom, mPaint);
@@ -434,56 +426,48 @@ public class KLineView extends View implements IDataChangedListener {
 	public void setKlineData(ArrayList<Kline> data) {
 
 	}
+
 	private final static int K_LINE_LABEL_X_NUM = 5;
 	private final static int K_LINE_LABEL_Y_NUM = 4;
 	private final static int TOP_BOTTOM_SPACE_HEIGHT = 8;
+
 	public void drawBgProgram(Canvas canvas) {
 		/** 设置虚线样式 */
-		mPaint.setAntiAlias(true);
-		mPaint.setColor(Color.parseColor("#5b5b5b"));
-		mPaint.setStyle(Paint.Style.FILL);
-		mPaint.setStrokeWidth(1);
-		// mPaint.setColor(Color.DKGRAY);
-		// Path path = new Path();
-		// path.moveTo(0, 10);
-		// path.lineTo(480, 10);
-		PathEffect effects = new DashPathEffect(new float[] { 2, 2, 2, 2 }, 1);
-//		mPaint.setPathEffect(effects);
-		// canvas.drawPath(path, mPaint);
+		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
+				| Paint.FILTER_BITMAP_FLAG));
+		mPaint.setColor(Color.parseColor("#535353"));
+		mPaint.setStyle(Paint.Style.STROKE);
 
 		/** 横虚线 */
-
-		// if (!Tools.isPortrait(context))
-		// {
 		// K线的
-		for (int i = 0; i < K_LINE_LABEL_X_NUM +1; i++) {
-			canvas.drawLine(mStartX, mStartY - i * (fenshiHeight / K_LINE_LABEL_Y_NUM), mEndX,
-					mStartY - i * (fenshiHeight / K_LINE_LABEL_Y_NUM), mPaint);
+		for (int i = 0; i < K_LINE_LABEL_X_NUM + 1; i++) {
+			canvas.drawLine(mStartX, mStartY - i
+					* (fenshiHeight / K_LINE_LABEL_Y_NUM), mEndX, mStartY - i
+					* (fenshiHeight / K_LINE_LABEL_Y_NUM), mPaint);
 		}
 		// 柱状图的一条横虚线
 		canvas.drawLine(mStartX, zzTopY + (zzBottomY - zzTopY) / 2, mEndX,
 				zzTopY + (zzBottomY - zzTopY) / 2, mPaint);
 
 		/** 纵虚线 */
-		for (int j = 1; j < K_LINE_LABEL_Y_NUM+1; j++) {
+		for (int j = 1; j < K_LINE_LABEL_Y_NUM + 1; j++) {
 			float x = mStartX + j * (fenshiWidth / K_LINE_LABEL_X_NUM);
 			// K线的
-			canvas.drawLine(x, mStartY + TOP_BOTTOM_SPACE_HEIGHT, x, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mPaint);
+			canvas.drawLine(x, mStartY + TOP_BOTTOM_SPACE_HEIGHT, x, mEndY
+					- TOP_BOTTOM_SPACE_HEIGHT, mPaint);
 			// 柱状图的
 			canvas.drawLine(x, zzTopY, x, zzBottomY, mPaint);
 		}
-		// }
-
-		/** 清空画笔样式 */
-		mPaint.setPathEffect(null);
 
 		/** 外围边框 */
-		// mPaint.setColor(Color.DKGRAY);
-		mPaint.setColor(Color.parseColor("#5b5b5b"));
-		canvas.drawLine(mStartX, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mEndX, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时上方横线
-		canvas.drawLine(mStartX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mEndX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时下方横线
-		canvas.drawLine(mStartX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mStartX, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时左纵线
-		canvas.drawLine(mEndX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mEndX, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时右纵线
+		canvas.drawLine(mStartX, mEndY - TOP_BOTTOM_SPACE_HEIGHT, mEndX, mEndY
+				- TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时上方横线
+		canvas.drawLine(mStartX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mEndX,
+				mStartY + TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时下方横线
+		canvas.drawLine(mStartX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mStartX,
+				mEndY - TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时左纵线
+		canvas.drawLine(mEndX, mStartY + TOP_BOTTOM_SPACE_HEIGHT, mEndX, mEndY
+				- TOP_BOTTOM_SPACE_HEIGHT, mPaint);// 分时右纵线
 		canvas.drawLine(mStartX, zzTopY, mEndX, zzTopY, mPaint);// 柱状图上方横线
 		canvas.drawLine(mStartX, zzBottomY, mEndX, zzBottomY, mPaint);// 柱状图底边横线
 		canvas.drawLine(mStartX, zzBottomY, mStartX, zzTopY, mPaint);// 柱状图左纵线
@@ -492,13 +476,7 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	private String formatDouble(float value) {
-
-//		if (stock.code.substring(0, 1).equals("9")) {
-//			return formatDouble(round(value, 3), 3);
-//		} else {
-//			
-//		}
-		return df.format(round(value, 2));
+		return df.format(Utils.roundHalfUp(value, 2));
 	}
 
 	private String formatNum(float value) {
@@ -506,76 +484,16 @@ public class KLineView extends View implements IDataChangedListener {
 		// 大于1万，加万，保留1位小数，如1140.5万；
 		// 大于1亿，加亿，保留1位小数，如1.5亿。
 		if (value >= 100000000000d) {// 大于等于1千亿
-			return round(value / 100000000, 1) + "亿";// 6,666亿
+			return Utils.roundHalfUp(value / 100000000, 1) + "亿";// 6,666亿
 		} else if (value >= 100000000) {// 大于等于1亿
-			return round((value / 100000000), 1) + "亿";// 666.6亿
+			return Utils.roundHalfUp((value / 100000000), 1) + "亿";// 666.6亿
 		} else if (value > 10000000 && value < 100000000) {// 大于1千万小于1亿
-			return round(value / 10000, 1) + "万";// 6666万
+			return Utils.roundHalfUp(value / 10000, 1) + "万";// 6666万
 		} else if (value >= 10000) {// 大于等于一万
-			return round((value / 10000), 1) + "万";// 666.6万
+			return Utils.roundHalfUp((value / 10000), 1) + "万";// 666.6万
 		} else {// 小于一万
-			return String.valueOf(round(value, 1));// 6,666
+			return String.valueOf(Utils.roundHalfUp(value, 1));// 6,666
 		}
-	}
-	
-	
-	/**
-	 * FIXME 提供小数位四舍五入处理。如果不是科学计算，任何商业计算都应该使用BigDecimal而不是double，因为double类型不精确。
-	 * 
-	 * @param v
-	 *            需要四舍五入的数字
-	 * @param scale
-	 *            小数点后“最多”保留几位
-	 * @return 四舍五入后的结果
-	 */
-	private float round(float v, int scale) {
-		if (scale < 0) {
-			throw new IllegalArgumentException(
-					"The scale must be a positive integer or zero");
-		}
-		BigDecimal b = new BigDecimal(Float.toString(v));
-		BigDecimal one = new BigDecimal("1");
-		return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).floatValue();
-	}
-
-	/**
-	 * FIXME “#”是可以为空，“0”是不够添0占位，“，”是分隔符;例如“#，##0.0#”
-	 * 
-	 * @param v
-	 *            需要格式化的数字
-	 * @param scale
-	 *            小数点后“至少”保留几位
-	 * @return
-	 */
-	public String formatDouble(float v, int scale) {
-		String temp = "0.";
-		for (int i = 0; i < scale; i++) {
-			temp += "0";
-		}
-		return new java.text.DecimalFormat(temp).format(v);
-	}
-
-	/**
-	 * FIXME 小数转化为百分数,保留2位小数(有四舍五入)
-	 * 
-	 * @param -0.12345
-	 * @return -12.35%
-	 */
-	public String formatToPercent(float value) {
-		Float ret = null;
-		value = value * 100;
-		int precision = 2;
-		try {
-			double factor = Math.pow(10, precision);
-			ret = new Float(Math.floor(value * factor + 0.5) / factor);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String tmp = String.valueOf(ret);
-		if (tmp.substring(tmp.indexOf('.') + 1).length() < 2) {
-			tmp = tmp + "0";
-		}
-		return tmp + "%";
 	}
 
 	/**
@@ -586,14 +504,15 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	/**
-	 * @param dataProvider the dataProvider to set
+	 * @param dataProvider
+	 *            the dataProvider to set
 	 */
 	public void setDataProvider(IObservableListDataProvider dataProvider) {
 		IObservableListDataProvider oldProv = this.dataProvider;
 		this.dataProvider = dataProvider;
-		if(this.dataProvider != null){
+		if (this.dataProvider != null) {
 			this.dataProvider.registerDataChangedListener(this);
-		}else if(oldProv != null){
+		} else if (oldProv != null) {
 			oldProv.unregisterDataChangedListener(this);
 		}
 	}

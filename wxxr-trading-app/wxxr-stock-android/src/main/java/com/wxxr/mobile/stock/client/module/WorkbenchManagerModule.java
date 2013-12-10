@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.client.binding.InfoNoticesViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.NewsAccountViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PinHeaderListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
@@ -39,6 +40,7 @@ import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.ViewPagerIndexGroupFieldBinder;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyView;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
@@ -54,8 +56,8 @@ import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
 import com.wxxr.mobile.stock.client.widget.SellFiveDayMinuteLine;
-import com.wxxr.mobile.stock.client.widget.StockInfoViewKeys;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
+import com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup;
 import com.wxxr.mobile.stock.client.widget.wheel.PinnedHeaderListView;
 
 /**
@@ -81,6 +83,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, Spinner.class, new SpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PinnedHeaderListView.class, new PinHeaderListViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
 	}
 
 	@Override
@@ -92,6 +95,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("PinItemClick", new IPinHeadItemClickBinder());
 		mgr.registerFieldBinder("SelCallBack", new IViewPagerSelEventBinder());
 		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());
+		mgr.registerFieldBinder("PageChange", new PageChangeEventBinder());
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		MinuteLineViewKeys.registerKeys(mgr);
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
-		StockInfoViewKeys.registerKeys(mgr);
+//		StockInfoViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());

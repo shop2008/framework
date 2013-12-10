@@ -23,13 +23,27 @@
                 android:focusableInTouchMode="true"
                 android:orientation="vertical" >
 
-                <ViewPager
-                    android:id="@+id/content_frame"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:background="@color/black"
-                    bind:field="contents" >
-                </ViewPager>
+                    android:background="@drawable/bj_stock_chart" >
+
+                    <ViewPager
+                        android:id="@+id/content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:overScrollMode="never"
+                        bind:field="contents"
+                        bind:on_PageChange="handlerPageChanged" >
+                    </ViewPager>
+
+                    <com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        bind:field="indexGroup" >
+                    </com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup>
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tv_stock_name"
@@ -41,6 +55,7 @@
                     android:layout_marginTop="10dip"
                     android:background="@drawable/inpunt_2"
                     android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="18sp"

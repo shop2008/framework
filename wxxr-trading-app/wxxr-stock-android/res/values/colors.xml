@@ -4,9 +4,9 @@
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FFE400</color>
     <color name="black">#000000</color>
-    <color name="red">#cd0000</color>
+    <color name="red">#C43F32</color>
     <color name="blue">#0966be</color>
-    <color name="green">#3C7F00</color>
+    <color name="green">#4A9143</color>
     <color name="qsxq">#404040</color>
     <color name="page_background_color">#181818</color>
     <color name="slideMenu_l_r_background">#E5E5E5</color>
@@ -16,6 +16,11 @@
     <color name="selectedColor">#212121</color>
     <color name="input_txt_content">#cccccc</color>
     <color name="mid_gray">#2c2c2c</color>
+    <color name="stock_line_gray">#10DCDCDC</color>
+    <color name="stock_up">#E92C0C</color>
+    <color name="stock_down">#4A9143</color>
+    <color name="stock_text_up">#C43F32</color>
+    <color name="stock_text_down">#4A9143</color>
      <!-- 软键盘 -->
     <color name="numkey_bg_color">#606060</color>
     <color name="numkey_btn_text_color_white">#feffff</color>

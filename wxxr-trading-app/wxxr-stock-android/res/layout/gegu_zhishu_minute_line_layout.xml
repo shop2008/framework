@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    xmlns:bind="http://wxxr.com.cn/binding">
-    
-    <LinearLayout 
+    android:orientation="vertical" >
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        bind:field="minuteHeaderOne">
-		<include layout="@layout/common_stock_header_layout1"/>
+        bind:field="minuteHeaderOne" >
+        <include layout="@layout/common_stock_header_layout1" />
     </LinearLayout>
-    <LinearLayout 
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        bind:field="minuteHeaderTwo"
-        android:visibility="gone">
-		<include layout="@layout/common_stock_header_layout"/>
+        android:visibility="gone"
+        bind:field="minuteHeaderTwo" >
+        <include layout="@layout/common_stock_header_layout" />
     </LinearLayout>
-	<com.wxxr.mobile.stock.client.widget.MinuteLineView 
-		 android:layout_width="match_parent"
-		 android:layout_height="160dp"
-		 bind:field="stockMinuteData" />
+
+    <com.wxxr.mobile.stock.client.widget.MinuteLineView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        bind:field="stockMinuteData" />
 </LinearLayout>

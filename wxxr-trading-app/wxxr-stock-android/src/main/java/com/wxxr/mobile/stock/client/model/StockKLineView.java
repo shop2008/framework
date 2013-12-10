@@ -51,8 +51,6 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	String codeBean;
 	@Bean
 	String marketBean;
-	@Bean
-	Long timeBean;
 	//0:个股 or 1:买入
 	@Bean
 	int type = 1;
@@ -112,13 +110,13 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Field(valueKey = "text", binding = "${'('}${stockQuotationBean!=null?stockQuotationBean.code:'--'}${'.'}${stockQuotationBean!=null?stockQuotationBean.market:'--'}${')'}")
 	String code;
 	//个股界面
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.newprice:'0'}", converter = "stockLong2StringConvertorNoSign", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.newprice:'0'}", converter = "stockLong2StringConvertorNoSign", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
 	String newprice;
 
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.change:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.change:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
 	String change;
 
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.risefallrate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/red':'resourceId:color/green'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.risefallrate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
 	String risefallRate;
 
 	@Field(valueKey = "imageURI", visibleWhen = "${stockQuotationBean!=null&&type == 0}", attributes = { @Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows':'resourceId:drawable/down_arrows'}") })
@@ -170,7 +168,6 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	
 	@OnShow
 	void initStockData() {
-		registerBean("timeBean", new Date().getTime());
 	}
 	
 //	@Override
