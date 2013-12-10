@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
+import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
 /**
  * @author neillin
@@ -71,7 +72,8 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 	@Override
 	protected List<WeekRankVO> executeCommand(ICommand<List<WeekRankVO>> command)
 			throws Exception {
-		return getRestService(ITradingResource.class).getWeekRank();
+		WeekRankVOs vos=getRestService(ITradingResource.class).getWeekRank();
+		return vos==null?null:vos.getWeekRanks();
 	}
 
 	@Override

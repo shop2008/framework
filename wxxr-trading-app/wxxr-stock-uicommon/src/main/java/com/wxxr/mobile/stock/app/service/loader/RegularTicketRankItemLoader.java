@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 
 /**
  * @author neillin
@@ -70,7 +71,9 @@ public class RegularTicketRankItemLoader extends AbstractEntityLoader<String, Re
 	@Override
 	protected List<RegularTicketVO> executeCommand(ICommand<List<RegularTicketVO>> command)
 			throws Exception {
-		return getRestService(ITradingResource.class).getRegularTicketRank();
+		RegularTicketVOs vos=getRestService(ITradingResource.class).getRegularTicketRank();
+		
+		return vos==null?null:vos.getRegularTickets();
 	}
 
 	@Override

@@ -8,9 +8,9 @@ import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.stock.restful.json.StockTaxisListVO;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
+import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
 
 public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRecordBean, TradingRecordVO> {
 
@@ -107,8 +107,8 @@ public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRec
     protected List<TradingRecordVO> executeCommand(
             ICommand<List<TradingRecordVO>> command) throws Exception {
         GetTradingRecordVOsCommand cmd = (GetTradingRecordVOsCommand)command;
-        List<TradingRecordVO> result = RestUtils.getRestService(ITradingResource.class).getTradingAccountRecord(cmd.getAcctID(), cmd.getStart(), cmd.getLimit());
-        return result;
+        TradingRecordVOs vos=RestUtils.getRestService(ITradingResource.class).getTradingAccountRecord(cmd.getAcctID(), cmd.getStart(), cmd.getLimit());
+        return vos==null?null:vos.getTradingRecords();
     }
 
 }

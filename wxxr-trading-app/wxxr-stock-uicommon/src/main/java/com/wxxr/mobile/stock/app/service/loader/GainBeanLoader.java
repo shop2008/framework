@@ -128,18 +128,18 @@ public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, Gain
     @Override
     protected List<GainVO> executeCommand(
             ICommand<List<GainVO>> command) throws Exception {
-        List<GainVO> vos=null;
+    		GainVOs vos=null;
         if ( command instanceof GetOtherUserGainBeanCommand){
             GetOtherUserGainBeanCommand cmd =(GetOtherUserGainBeanCommand) command;
              vos = RestUtils.getRestService(ITradingResource.class).getMoreOtherPersonal(cmd.getUserId(), cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
         }else if (command instanceof GetGainBeanCommand){
             GetGainBeanCommand cmd =(GetGainBeanCommand) command;
           
-            		GainVOs gvos=RestUtils.getRestService(ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
+            	vos=RestUtils.getRestService(ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
             		
-            		vos = gvos==null?null:gvos.getGains();
+            		
         }
-        return vos;
+        return vos==null?null:vos.getGains();
     }
 
 }

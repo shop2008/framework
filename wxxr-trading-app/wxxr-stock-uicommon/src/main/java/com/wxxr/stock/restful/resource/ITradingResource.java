@@ -1,7 +1,5 @@
 package com.wxxr.stock.restful.resource;
 
-import java.util.List;
-
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
@@ -10,15 +8,14 @@ import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
-import com.wxxr.stock.trading.ejb.api.DealDetailVO;
-import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.HomePageVO;
-import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.HomePageVOs;
+import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
-import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
-import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
-import com.wxxr.stock.trading.ejb.api.WeekRankVO;
+import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
+import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
 @Path("/rest/trading")
 public interface ITradingResource{
@@ -32,13 +29,13 @@ public interface ITradingResource{
     @Path("/getAcctRecord")
     @Produces({ "application/json;charset=utf-8" })
 	@Consumes
-    public List<TradingRecordVO> getTradingAccountRecord(@QueryParam("acctID") String acctID,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception ;
+    public TradingRecordVOs getTradingAccountRecord(@QueryParam("acctID") String acctID,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception ;
 	
 	@GET
 	@Path("/getGain")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public GainVOs getGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
 	@Path("/getClosedSum")
 	@Produces({ "application/json;charset=utf-8" })
@@ -59,18 +56,18 @@ public interface ITradingResource{
 	@Path("/totalGain")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getTotalGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public GainVOs getTotalGain(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	
 	@GET
 	@Path("/homeImage")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<HomePageVO> getHomeImage() throws Exception;
+	public HomePageVOs getHomeImage() throws Exception;
 	@GET
 	@Path("/homeList")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<HomePageVO> getHomeList(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public HomePageVOs getHomeList(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	
 	@GET
 	@Path("/filterStocks")
@@ -81,25 +78,25 @@ public interface ITradingResource{
 	@Path("/getTRank")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<MegagameRankVO> getTMegagameRank()throws Exception;
+	public MegagameRankVOs getTMegagameRank()throws Exception;
 	
 	@GET
 	@Path("/getTPlusRank")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<MegagameRankVO> getTPlusMegagameRank() throws Exception;
+	public MegagameRankVOs getTPlusMegagameRank() throws Exception;
 	
 	@GET
 	@Path("/getRegTic")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<RegularTicketVO> getRegularTicketRank()throws Exception;
+	public RegularTicketVOs getRegularTicketRank()throws Exception;
 	
 	@GET
 	@Path("/getWeekRank")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<WeekRankVO> getWeekRank()throws Exception;
+	public WeekRankVOs getWeekRank()throws Exception;
 	@GET
 	@Path("/getOtherHomeFromWeek")
 	@Produces({ "application/json;charset=utf-8" })
@@ -119,5 +116,5 @@ public interface ITradingResource{
 	@Path("/getMoreOtherHomePage")
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
-	public List<GainVO> getMoreOtherPersonal(@QueryParam("userId") String userId,@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual)throws Exception;
+	public GainVOs getMoreOtherPersonal(@QueryParam("userId") String userId,@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual)throws Exception;
 }

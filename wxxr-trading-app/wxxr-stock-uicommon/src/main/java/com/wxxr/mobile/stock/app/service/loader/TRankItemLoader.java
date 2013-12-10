@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 
 /**
  * @author neillin
@@ -71,7 +72,9 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	@Override
 	protected List<MegagameRankVO> executeCommand(ICommand<List<MegagameRankVO>> command)
 			throws Exception {
-		return getRestService(ITradingResource.class).getTMegagameRank();
+		
+		MegagameRankVOs vos=getRestService(ITradingResource.class).getTMegagameRank();
+		return vos==null?null:vos.getMegagameRanks();
 	}
 
 	@Override

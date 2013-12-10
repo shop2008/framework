@@ -13,6 +13,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.Utils;
 import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
+import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 
 /**
  * @author neillin
@@ -83,7 +84,8 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 	@Override
 	protected List<HomePageVO> executeCommand(ICommand<List<HomePageVO>> command) throws Exception {
 		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
-		return getRestService(ITradingResource.class).getHomeList(cmd.getStart(), cmd.getLimit());
+		HomePageVOs vos=getRestService(ITradingResource.class).getHomeList(cmd.getStart(), cmd.getLimit());
+		return vos==null?null:vos.getHomePages();
 	}
 
 	/* (non-Javadoc)
