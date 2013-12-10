@@ -83,13 +83,13 @@
               <groupId>com.wxxr.mobile</groupId>
               <artifactId>wxxr-mobile-gson</artifactId>
                 <version>${framework.version}</version>
-            </dependency>
+            </dependency>  
+            <!-- 后端服务 -->
             <dependency>
                 <groupId>com.wxxr.mobile</groupId>
                 <artifactId>wxxr-mobile-jackson</artifactId>
                 <version>${framework.version}</version>
-            </dependency>   
-            <!-- 后端服务 -->
+            </dependency>             
              <dependency>
               <groupId>com.wxxr.mobile</groupId>
               <artifactId>wxxr-stock-uicommon</artifactId>
@@ -98,11 +98,6 @@
              <dependency>
               <groupId>com.wxxr.mobile</groupId>
               <artifactId>wxxr-mobile-synclient</artifactId>
-                <version>${framework.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>com.wxxr.mobile</groupId>
-              <artifactId>wxxr-mobile-jackson</artifactId>
                 <version>${framework.version}</version>
             </dependency>
             <dependency>
