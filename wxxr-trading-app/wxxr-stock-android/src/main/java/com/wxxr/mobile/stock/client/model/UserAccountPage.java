@@ -119,22 +119,4 @@ public abstract class UserAccountPage extends PageBase {
 	String incomeDetail(InputEvent event) {
 		return "OK";
 	}
-	
-	/**
-	 * 进入实盘积分明细
-	 * @param event
-	 * @return
-	 */
-	@Command(
-			commandName="actualIntegralDetail",
-			navigations={
-					@Navigation(on="OK", 
-					showPage="uRealPanelScorePage"
-					)
-			}
-	)
-	String actualIntegralDetail(InputEvent event) {
-		return "OK";
-	}
-
 }
