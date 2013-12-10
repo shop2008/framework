@@ -96,6 +96,8 @@ public abstract class UserNewsPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (usrService != null) {
 				//usrService.getMyMessageInfos();
+				usrService.getPullMessageBean(0, 10);
+				
 			}
 		}
 		return null;
@@ -108,6 +110,7 @@ public abstract class UserNewsPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (usrService != null) {
 				//usrService.getMyMessageInfos();
+				usrService.getRemindMessageBean();
 			}
 		}
 		return null;
