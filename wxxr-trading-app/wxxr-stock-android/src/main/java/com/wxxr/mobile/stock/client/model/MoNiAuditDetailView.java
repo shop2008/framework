@@ -1,7 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Map;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -16,10 +14,11 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
-import com.wxxr.mobile.core.ui.api.ISimpleSelection;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 
@@ -92,36 +91,28 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	}
 	@OnCreate
 	void registerSelectionListener() {
-		ISelection selection = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().getSelection("tradingMain");
-		if(selection!=null){
-			selectionChanged("tradingMain",selection);
-		}
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("tradingMain", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		selectionChanged("",service.getSelection(StockSelection.class));
+		service.addSelectionListener(this);
 	}
+	
 	@OnDestroy
 	void removeSelectionListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("tradingMain", this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener(this);
 	}
+	
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		ISimpleSelection impl = (ISimpleSelection)selection;
-		if(impl!=null){
-			if(impl.getSelected() instanceof Map){
-				Map temp = (Map) impl.getSelected();
-				for (Object key : temp.keySet()) {
-					if(key.equals("accid")){
-						String accid = temp.get(key).toString();
-						this.accId = accid;
-						registerBean("accId", this.accId);
-					}
-					if(key.equals("isVirtual")){
-						boolean virtual = (Boolean) temp.get(key);
-						this.isVirtual = virtual;
-						registerBean("isVirtual", this.isVirtual);
-					}
-				}
+		if(selection instanceof StockSelection){
+			StockSelection stockSelection = (StockSelection) selection;
+			if(stockSelection!=null){
+				this.accId = stockSelection.getAccid();
+				this.isVirtual = stockSelection.getVirtual();
 			}
+			registerBean("accId", this.accId);
+			registerBean("isVirtual", this.isVirtual);
 		}
 	}	
 	@Override
