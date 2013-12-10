@@ -9,14 +9,12 @@
 
 package com.wxxr.stock.restful.resource;
 
-import java.util.List;
-
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
-import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
+import com.wxxr.stock.restful.json.MessageVOs;
 
 @Path("/secure/remind")
 public interface IMessageRemindResource {
@@ -24,5 +22,5 @@ public interface IMessageRemindResource {
 	@Path("/findById")
 	@Produces( {"application/json;charset=utf-8"})
 	@Consumes({"application/json"})
-	public List<MessageVO> findById(MsgQuery vo) throws Exception ;
+	public MessageVOs findById(MsgQuery vo) throws Exception ;
 }

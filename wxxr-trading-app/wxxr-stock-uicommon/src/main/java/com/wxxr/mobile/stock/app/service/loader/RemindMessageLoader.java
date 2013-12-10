@@ -11,6 +11,7 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
+import com.wxxr.stock.restful.json.MessageVOs;
 import com.wxxr.stock.restful.resource.IMessageRemindResource;
 
 /**
@@ -77,7 +78,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 					bean.setAttrs(vo.getAttributes());
 					bean.setContent(vo.getContent());
 					bean.setCreatedDate(vo.getCreatedDate());
-					bean.setTitle(vo.getAttributes().get(""));
+					bean.setTitle(vo.getAttributes().get("title"));
 					bean.setType(bean.getType());
 					updated = true;
 				
@@ -101,7 +102,8 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	@Override
 	protected List<MessageVO> executeCommand(ICommand<List<MessageVO>> command)
 			throws Exception {
-		return getRestService(IMessageRemindResource.class).findById(new MsgQuery());
+		MessageVOs vos=getRestService(IMessageRemindResource.class).findById(new MsgQuery());
+		return vos==null ?null: vos.getMessages();
 	}
 
 }
