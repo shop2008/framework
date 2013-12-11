@@ -44,34 +44,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <!-- <com.wxxr.mobile.stock.client.widget.NewsAccountView
+            <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                bind:field="accountTradeInfos" 
-                bind:on_PinItemClick="newsItemClick"
-                /> -->
-                
-                <com.wxxr.mobile.stock.client.widget.wheel.PinnedHeaderListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible"
-                    bind:field="accountTradeInfos"
-                    bind:itemViewId="NewsContentItem"
-                    bind:on_ItemClick="handleItemClick"
-                    />
+                bind:field="accountTradeInfos"
+                bind:itemViewId="NewsContentItem"
+                bind:on_ItemClick="handleNewsItemClick" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:background="@color/black"
+                android:gravity="center"
                 android:text="@string/news_account_is_null_text"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:visibility="gone"
-                bind:field="newsAccountNullVisible" 
-                />
+                bind:field="newsAccountNullVisible" />
         </FrameLayout>
 
         <FrameLayout
@@ -85,20 +75,21 @@
                 bind:field="noticeRefreshView"
                 bind:on_TopRefresh="handleNoticeTopRefresh" >
 
-                <com.wxxr.mobile.stock.client.widget.InfoNoticesView
+                <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible"
-                    bind:field="noticeInfos" 
-                    bind:on_PinItemClick="noticeItemClick"
+                    bind:itemViewId="InfoNoticesItemView"
+                    bind:field="noticeInfos"
+                    bind:on_ItemClick="handleNoticesItemClick" 
                     />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:background="@color/black"
+                android:gravity="center"
                 android:text="@string/notice_infos_is_null_text"
                 android:textColor="@color/white"
                 android:textStyle="bold"

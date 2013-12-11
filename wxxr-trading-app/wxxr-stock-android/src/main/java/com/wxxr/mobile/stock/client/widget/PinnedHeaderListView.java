@@ -1,9 +1,5 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import com.wxxr.mobile.core.ui.api.IDataChangedListener;
-import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
-import com.wxxr.mobile.stock.client.binding.IPinHeadViewItemClick;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -11,10 +7,7 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public abstract class PinnedHeaderListView extends ListView implements
-		IDataChangedListener {
-
-	public static int FLAG = 0;
+public class PinnedHeaderListView extends ListView {
 
 	public interface PinnedHeaderAdapter {
 		public static final int PINNED_HEADER_GONE = 0;
@@ -24,11 +17,12 @@ public abstract class PinnedHeaderListView extends ListView implements
 		int getPinnedHeaderState(int position);
 
 		void configurePinnedHeader(View header, int position, int alpha);
+		
+		View getPinnedHeaderView();
 	}
 
-	private IPinHeadViewItemClick iPinHeadItemClick;
 	private static final int MAX_ALPHA = 255;
-	protected IObservableListDataProvider dataProvider;
+
 	protected PinnedHeaderAdapter mAdapter;
 	protected View mHeaderView;
 	protected boolean mHeaderViewVisible;
@@ -47,34 +41,30 @@ public abstract class PinnedHeaderListView extends ListView implements
 			int defStyle) {
 		super(context, attrs, defStyle);
 	}
-
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
-		if (mHeaderView != null) {
-			mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
-			configureHeaderView(getFirstVisiblePosition());
-		}
-	}
-
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if (mHeaderView != null) {
-			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
-			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
-			mHeaderViewHeight = mHeaderView.getMeasuredHeight();
-		}
-	}
-
-	/**
-	 * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
-	 * 
-	 * @param view
-	 *            标题头部的View
-	 */
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (mHeaderView != null) {
+            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+            configureHeaderView(getFirstVisiblePosition());
+        }
+    }
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mHeaderView != null) {
+            measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
+            mHeaderViewWidth = mHeaderView.getMeasuredWidth();
+            mHeaderViewHeight = mHeaderView.getMeasuredHeight();
+        }
+    }
+    
+    /**
+     * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
+     * @param view 标题头部的View
+     */
 	public void setPinnedHeaderView(View view) {
-
 		mHeaderView = view;
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);//.generateLayoutParams(mHeaderView.);
+		mHeaderView.setLayoutParams(params);
 		if (mHeaderView != null) {
 			setFadingEdgeLength(0);
 		}
@@ -83,23 +73,28 @@ public abstract class PinnedHeaderListView extends ListView implements
 		 */
 		requestLayout();
 	}
+	
+	
+    public void setAdapter(ListAdapter adapter) {
+        super.setAdapter(adapter);
+        mAdapter = (PinnedHeaderAdapter)adapter;
+        if(mAdapter instanceof OnScrollListener){
+        	setOnScrollListener((OnScrollListener)mAdapter);
+        }
+        if(mAdapter != null)
+        	setPinnedHeaderView(mAdapter.getPinnedHeaderView());
+    }
 
-	public void setAdapter(ListAdapter adapter) {
-		super.setAdapter(adapter);
-		mAdapter = (PinnedHeaderAdapter) adapter;
-	}
-
-	/**
-	 * 根据不同位置返回的不同状态，来控制ListView指定条目(position)标题的显示，隐藏和上推下拉效果
-	 * 
-	 * @param position
-	 */
-	public void configureHeaderView(int position) {
+    /**
+     * 根据不同位置返回的不同状态，来控制ListView指定条目(position)标题的显示，隐藏和上推下拉效果
+     * @param position
+     */
+    synchronized public void configureHeaderView(int position) {
 		if (mHeaderView == null) {
 			return;
 		}
 		int state = mAdapter.getPinnedHeaderState(position);
-
+		
 		switch (state) {
 		case PinnedHeaderAdapter.PINNED_HEADER_GONE: {
 			mHeaderViewVisible = false;
@@ -117,9 +112,6 @@ public abstract class PinnedHeaderListView extends ListView implements
 
 		case PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP: {
 			View firstView = getChildAt(0);
-			if(firstView == null)
-				return;
-			
 			int bottom = firstView.getBottom();
 			int headerHeight = mHeaderView.getHeight();
 			int y;
@@ -135,54 +127,20 @@ public abstract class PinnedHeaderListView extends ListView implements
 			if (mHeaderView.getTop() != y) {
 				mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight
 						+ y);
-			} else {
-				mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight);
 			}
 			mHeaderViewVisible = true;
 			break;
 		}
 		}
 	}
-
+    
 	/**
 	 * 绘制每个条目的标题
 	 */
 	protected void dispatchDraw(Canvas canvas) {
-		super.dispatchDraw(canvas);
-		if (mHeaderViewVisible) {
-			drawChild(canvas, mHeaderView, getDrawingTime());
-		}
-	}
-
-	public void setDataProvider(IObservableListDataProvider dataProvider) {
-		IObservableListDataProvider oldProv = this.dataProvider;
-		this.dataProvider = dataProvider;
-		if (this.dataProvider != null) {
-			this.dataProvider.registerDataChangedListener(this);
-		} else if (oldProv != null) {
-			oldProv.unregisterDataChangedListener(this);
-		}
-	}
-
-	protected void itemClicked(int position) {
-		if (iPinHeadItemClick != null) {
-			iPinHeadItemClick.onItemClick(position);
-		}
-	}
-	
-	public void setIPinHeaderItemClick(IPinHeadViewItemClick iPinHeadViewItemClick) {
-		this.iPinHeadItemClick = iPinHeadViewItemClick;
-	}
-	
-	@Override
-	public void dataSetChanged() {
-		updateUI();
-	}
-
-	@Override
-	public void dataItemChanged() {
-		updateUI();
-	}
-
-	protected abstract void updateUI();
+        super.dispatchDraw(canvas);
+        if (mHeaderViewVisible) {
+            drawChild(canvas, mHeaderView, getDrawingTime());
+        }
+    }
 }

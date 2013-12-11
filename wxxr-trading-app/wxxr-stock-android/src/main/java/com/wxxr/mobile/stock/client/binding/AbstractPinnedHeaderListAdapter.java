@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.stock.client.widget.wheel;
+package com.wxxr.mobile.stock.client.binding;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,8 @@ import com.wxxr.mobile.android.ui.IRefreshableListAdapter;
 import com.wxxr.mobile.android.ui.ItemViewSelector;
 import com.wxxr.mobile.android.ui.binding.ListViewPool;
 import com.wxxr.mobile.core.ui.api.IListDataProvider;
-import com.wxxr.mobile.stock.client.widget.wheel.PinnedHeaderListView.PinnedHeaderAdapter;
+import com.wxxr.mobile.stock.client.widget.PinnedHeaderListView;
+import com.wxxr.mobile.stock.client.widget.PinnedHeaderListView.PinnedHeaderAdapter;
 
 /**
  * @author neillin
@@ -125,7 +126,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 			((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
 	}
 	
-	public View getHeaderView() {
+	public View getPinnedHeaderView() {
 		return getViewPool().createUI(getHeaderViewId());
 	}
 	

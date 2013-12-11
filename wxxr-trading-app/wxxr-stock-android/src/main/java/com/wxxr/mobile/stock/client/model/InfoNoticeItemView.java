@@ -7,14 +7,17 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 
-@View(name="NewsSelecterItemView")
-@AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.news_item_layout")
-public abstract class NewsSelecterItemView extends ViewBase implements IModelUpdater{
+@View(name="InfoNoticeItemView")
+@AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.notice_info_item_layout")
+public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdater {
 
 	@Bean
-	RemindMessageBean message;
+	PullMessageBean message;
+	
+	@Field(valueKey="enabled")
+	boolean remindReaded;
 	
 	@Field(valueKey="text", binding="${message.createdDate}")
 	String date;
@@ -27,7 +30,7 @@ public abstract class NewsSelecterItemView extends ViewBase implements IModelUpd
 	
 	@Override
 	public void updateModel(Object value) {
-		if (value instanceof RemindMessageBean) {
+		if (value instanceof PullMessageBean) {
 			registerBean("message", value);
 		}
 	}

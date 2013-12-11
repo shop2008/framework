@@ -13,27 +13,31 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 
-@View(name="NewsContentItem")
-public abstract class NewsItemView extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
+@View(name="InfoNoticesItemView")
+public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
+
 	
 	@Override
 	public String getItemViewId(Object itemData) {
+		// TODO Auto-generated method stub
+		
 		if (itemData instanceof String) {
-			return "NewsTitleItemView";
-		} else if (itemData instanceof RemindMessageBean) {
-			return "NewsSelecterItemView";
+			return "InfoNoticeTitleView";
+		} else if (itemData instanceof PullMessageBean) {
+			return "InfoNoticeItemView";
 		}
 		return null;
 	}
-	
+
 	@Override
-	public IRefreshableListAdapter buildListAdapter(final IUIComponent field,
+	public IRefreshableListAdapter buildListAdapter(IUIComponent field,
 			IAndroidBindingContext bContext, String itemViewId) {
 		
-		AbstractPinnedHeaderListAdapter adapter = new AbstractPinnedHeaderListAdapter(bContext,createAdaptorFromValue(field), this) {
+		return new AbstractPinnedHeaderListAdapter(bContext, createAdaptorFromValue(field),this) {
 			
 			@Override
 			protected String getHeaderViewId() {
@@ -44,16 +48,14 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 			protected boolean isHeaderData(Object data) {
 				if (data instanceof String) {
 					return true;
-				} else if (data instanceof RemindMessageBean) {
+				} else if (data instanceof PullMessageBean) {
 					return false;
 				} 
-				
 				return false;
 			}
 		};
-		return adapter;
 	}
-	
+
 	public static IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
 		return new IListDataProvider() {
 			Object[] data = null;
@@ -91,20 +93,20 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 			
 			List<Object> labels = new ArrayList<Object>();
 			labels.add("2013-11-20");
-			List<RemindMessageBean> data = new ArrayList<RemindMessageBean>();
-			RemindMessageBean bean = new RemindMessageBean();
-			bean.setContent("11111");
+			List<PullMessageBean> data = new ArrayList<PullMessageBean>();
+			PullMessageBean bean = new PullMessageBean();
+			bean.setMessage("111111");
 			bean.setTitle("2222");
 			data.add(bean);
 			
-			bean = new RemindMessageBean();
-			bean.setContent("11122");
+			bean = new PullMessageBean();
+			bean.setMessage("11122");
 			bean.setTitle("33333");
 			data.add(bean);
 			
 
-			bean = new RemindMessageBean();
-			bean.setContent("3332");
+			bean = new PullMessageBean();
+			bean.setMessage("3332");
 			bean.setTitle("44444");
 			data.add(bean);
 			
@@ -183,5 +185,4 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 		}
 		return null;
 	}
-
 }
