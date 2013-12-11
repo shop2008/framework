@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -44,15 +43,17 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		private final View view;
 		private final String fieldName;
 		private final Map<String, String> params;
+		private final String decoratorName;
 		private IFieldBinding binding;
 		
-		FieldBindingCreator(View v, String name, Map<String, String> map){
+		FieldBindingCreator(View v, String name, Map<String, String> map,String decorName){
 			if((v == null)||(name == null)){
 				throw new IllegalArgumentException("Neither view nor field name could be NULL, view :"+v+", name :"+name);
 			}
 			this.view = v;
 			this.fieldName = name;
 			this.params = map;
+			this.decoratorName = decorName;
 		}
 		
 		public void createNActivateBinding(IView vmodel){
@@ -90,6 +91,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						bindingContext.hideView();
 					}
 				}, fieldName, params);
+				if(decoratorName != null){
+					binding = (IFieldBinding)doDecorate(decoratorName, binding);
+				}
 				binding.init(runtimeContext);
 			}
 			binding.activate(vmodel);
@@ -158,6 +162,10 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 //		}
 	}
 	
+	protected <T extends IUIComponent> IBinding<T> doDecorate(String decoratorName, IBinding<T> binding) {
+		return this.bindingContext.getWorkbenchManager().getBindingDecoratorRegistry().createDecorator(decoratorName, binding);
+	}
+	
 	private final int layoutResourceId;
 	private final IAndroidBindingContext bindingContext;
 	private final String viewId;
@@ -186,6 +194,12 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 				if(log.isTraceEnabled()){
 					log.trace("Found field binding :"+val+" of view :"+view);
 				}
+				int idx = val.indexOf('@');
+				String fieldDecor = null;
+				if(idx > 0){
+					fieldDecor = val.substring(idx+1);
+					val = val.substring(0,idx);
+				}
 				HashMap<String, String> params = new HashMap<String, String>();
 				HashMap<String, String> events = new HashMap<String, String>();
 				int cnt = attrSet.getAttributeCount();
@@ -206,13 +220,19 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					}
 				}
 				if(!"*".equals(val)){
-					FieldBindingCreator binding = new FieldBindingCreator(view, val, params);
+					FieldBindingCreator binding = new FieldBindingCreator(view, val, params,fieldDecor);
 					bindings.add(binding);
 					fieldBindings.put(val, binding);
 				}
 				if(events.size() > 0){
 					for (String evtType : events.keySet()) {
 						String cmdName = events.get(evtType);
+						idx = cmdName.indexOf('@');
+						String eventDecor = null;
+						if(idx > 0){
+							eventDecor = cmdName.substring(idx+1);
+							cmdName = cmdName.substring(0,idx);
+						}
 						IEventBinder eBinder = eventBinderMgr.getFieldBinder(evtType);
 						if(eBinder != null){
 							IBinding<IView> eBinding = eBinder.createBinding(new IAndroidBindingContext() {
@@ -242,6 +262,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 									bindingContext.hideView();
 								}
 							}, val, cmdName, params);
+							if(eventDecor != null){
+								eBinding = doDecorate(eventDecor, eBinding);
+							}
 							bindings.add(eBinding);
 						}
 					}

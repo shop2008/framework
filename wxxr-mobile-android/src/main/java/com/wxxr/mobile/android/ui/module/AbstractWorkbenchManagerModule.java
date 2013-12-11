@@ -98,6 +98,7 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		initEventBinders(this.manager.getEventBinderManager());
 		initDefaultAttributeUpdaters(this.manager.getFieldAttributeManager());
 		initAttributeUpdaters(this.manager.getFieldAttributeManager());
+		initBindingDecorators(this.manager.getBindingDecoratorRegistry());
 		initPresentationModels(uiContext);
 		context.registerService(IAndroidWorkbenchManager.class, manager);
 	}
@@ -111,6 +112,8 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 	protected abstract void initFieldBinders(IFieldBinderManager mgr);
 
 	protected abstract void initEventBinders(IEventBinderManager mgr);
+	
+	protected abstract void initBindingDecorators(IBindingDecoratorRegistry registry);
 
 	protected abstract void initAttributeUpdaters(IFieldAttributeManager mgr);
 	
