@@ -69,7 +69,7 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	String stockName;
 	
 	/**当前价*/
-	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.currentPirce:'--'}",converter = "stockLong2StringConvertorNoSign",attributes={
+	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.currentPirce:null}",converter = "stockLong2StringConvertorNoSign",attributes={
 			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.currentPirce>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.currentPirce<0)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String currentPirce;

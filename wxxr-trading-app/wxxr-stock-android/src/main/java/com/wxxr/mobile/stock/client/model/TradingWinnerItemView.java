@@ -19,15 +19,15 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.SimpleSelectionImpl;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 /**
  * @author wangxuyang
  *
  */
-@View(name="earnRankListItemView",provideSelection=true)
+@View(name="earnRankListItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.earn_money_rank_layout_item")
 public abstract class TradingWinnerItemView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
 	
@@ -37,8 +37,14 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	@Field(valueKey="text",binding="${earnRank!=null?earnRank.title:'--'}")
 	String text;
 	
-	@Field(valueKey="imageURI",binding="${earnRank!=null?earnRank.imgUrl:null}",visibleWhen="${isOpen}")
+	@Field(valueKey="imageURI",binding="${imgUrl!=null?imgUrl:null}",visibleWhen="${isOpen}")
 	String imageUrl;
+	
+	@Bean
+	String imgUrl;
+	
+	@Field(valueKey="visible",visibleWhen="${isOpen}")
+	boolean isLoading = false;
 	
 	@Bean
 	boolean isOpen = false;
@@ -73,7 +79,6 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("isVirtual", true);
 				map.put("accid", accid);
-//				updateSelection(accid);
 				result.setPayload(map);
 				result.setResult("operationDetails");
 				return result;
@@ -87,16 +92,25 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	 */
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		Integer selectedPosition = (Integer)((SimpleSelectionImpl)selection).getSelected();
-		Integer myPosition = (Integer)getProperty("_item_position");
-		boolean oldVal = this.isOpen;
-		if(selectedPosition.equals(myPosition)){
-			this.isOpen = true;
-		}else{
-			this.isOpen = false;
-		}
-		if(oldVal != this.isOpen){
-			registerBean("isOpen", this.isOpen);
+		if(selection instanceof StockSelection){
+			StockSelection selectionTemp = (StockSelection) selection;
+			if(selectionTemp!=null){
+				Integer selectedPosition = selectionTemp.getPosition();
+				Integer myPosition = (Integer)getProperty("_item_position");
+				boolean oldVal = this.isOpen;
+				if(selectedPosition.equals(myPosition)){
+					this.isOpen = true;
+					if(earnRank!=null){
+						this.imgUrl = earnRank.getImgUrl();
+						registerBean("imgUrl", this.imgUrl);
+					}
+				}else{
+					this.isOpen = false;
+				}
+				if(oldVal != this.isOpen){
+					registerBean("isOpen", this.isOpen);
+				}
+			}
 		}
 	}
 	

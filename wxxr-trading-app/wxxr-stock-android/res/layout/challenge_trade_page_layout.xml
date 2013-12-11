@@ -168,7 +168,7 @@
             android:textSize="14sp"
             bind:field="submitBtnStatus"
             bind:on_Click="submitDataClick"
-            android:background="@drawable/button_up"
+            android:background="@drawable/red_button_style"
             />
     </LinearLayout>
 

@@ -248,19 +248,33 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setTextAlign(Paint.Align.LEFT);
 		mPaint.setColor(getStockUpColor());
-		String highPicePercentage = String.format("%.2f%%", (highPrice - yesterdayClose)/yesterdayClose*100.00);
-		canvas.drawText(highPicePercentage, textMarginRight, fStartY + padding, mPaint);
-		String secondPricePercentage = String.format("%.2f%%", (secondPrice - yesterdayClose)/yesterdayClose*100.00);
-		canvas.drawText(secondPricePercentage, textMarginRight, fStartY + padding + lineHeight*1, mPaint);
-
+		if(highPrice>0 && yesterdayClose>0){
+			String highPicePercentage = String.format("%.2f%%", (highPrice - yesterdayClose)/yesterdayClose*100.00);
+			canvas.drawText(highPicePercentage, textMarginRight, fStartY + padding, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding, mPaint);
+		}
+		if(secondPrice>0 && yesterdayClose>0){
+			String secondPricePercentage = String.format("%.2f%%", (secondPrice - yesterdayClose)/yesterdayClose*100.00);
+			canvas.drawText(secondPricePercentage, textMarginRight, fStartY + padding + lineHeight*1, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*1, mPaint);
+		}
 		mPaint.setColor(getStockCloseColor());
 		canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*2, mPaint);
 		mPaint.setColor(getStockDownColor());
-		
-		String fourthPercentage = String.format("%.2f%%", (yesterdayClose - fourthPrice)/yesterdayClose*100.00);
-		canvas.drawText(fourthPercentage, textMarginRight, fStartY + padding + lineHeight*3, mPaint);
-		String lowPicePercentage = String.format("%.2f%%", (yesterdayClose - lowPrice)/yesterdayClose*100.00);
-		canvas.drawText(lowPicePercentage, textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		if(fourthPrice>0 && yesterdayClose>0){
+			String fourthPercentage = String.format("%.2f%%", (yesterdayClose - fourthPrice)/yesterdayClose*100.00);
+			canvas.drawText(fourthPercentage, textMarginRight, fStartY + padding + lineHeight*3, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*3, mPaint);
+		}
+		if(lowPrice>0 && yesterdayClose>0){
+			String lowPicePercentage = String.format("%.2f%%", (yesterdayClose - lowPrice)/yesterdayClose*100.00);
+			canvas.drawText(lowPicePercentage, textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		}
 	}
 	
 	/** 设置分时线表格底边时间文字 */
@@ -309,7 +323,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		}else{
 			scale = (lowPrice - highPrice) / fHeight;
 		}
-		float width = (float) (zWidth / 241.0);
+		float width = (float) (zWidth / 240.0);
 		for (int i = 0; i < size - 1; i++)
 		{
 			if (i <= 239)
@@ -342,7 +356,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	 * @param canvas
 	 */
 	private void setOnDrawAverageLine(Canvas canvas){
-		float width = (float) (zWidth / 241.0);
+		float width = (float) (zWidth / 240.0);
 		float scale = 0.0f;
 		if(highPrice - lowPrice>0){
 			scale = (highPrice - lowPrice) / fHeight;
@@ -431,15 +445,15 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	private void setOnDrawSecuVolume(Canvas canvas){
 		mPaint.setColor(getStockAverageLineColor());
 		float scale = maxSecuvolume/zHeight;
-		float width = (float) (zWidth / 241.0);
-		for (int i = 0; i < size-1; i++)
+		float width = (float) (zWidth / 240.0);
+		for (int i = 0; i < size; i++)
 		{
 			mPaint.setAntiAlias(true);
 			canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG)); 
 			mPaint.setStrokeWidth(2);
 			StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
 			// 成交量
-			if (i <= 239 && stockMinute!=null)
+			if (stockMinute!=null)
 			{
 				mPaint.setAntiAlias(true);
 				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  

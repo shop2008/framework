@@ -82,7 +82,7 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	
 	private void showPopUpWindowsList(){
 		createPopUpWindows();
-		if(adapter!=null && popupWindow!=null && !popupWindow.isShowing()){
+		if(adapter!=null && adapter.getCount()>0 && popupWindow!=null && !popupWindow.isShowing()){
 			popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_activity_top_title));
 			popupWindow.showAsDropDown(this, 0, 0);
 			

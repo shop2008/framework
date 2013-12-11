@@ -65,13 +65,15 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple",value="100")
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="100")
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor1;
 	
@@ -89,13 +91,15 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorYuan;	
 
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
 	/** 交易盘编号*/
@@ -110,21 +114,21 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	String sellDay;  
 	
 	/**申购金额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.applyFee:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.applyFee:null}",converter="stockLong2StringAutoUnitConvertor")
 	String applyFee;
 	
 	/**可用资金*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:'--'}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:null}",converter="stockLong2StringAutoUnitConvertor1")
 	String avalibleFee;
 	
 	/**总盈亏率*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.gainRate:'--'}",converter="stockLong2StringConvertorSpecial",attributes={
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.gainRate:null}",converter="stockLong2StringConvertorSpecial",attributes={
 			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.gainRate>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.gainRate<0)?'resourceId:color/green':'resourceId:color/white')}")
 			})
 	String gainRate;  
 	
 	/**总盈亏额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.totalGain:'--'}", converter = "stockLong2StringConvertorYuan" ,attributes={
+	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.totalGain:null}", converter = "stockLong2StringConvertorYuan" ,attributes={
 			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.totalGain>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.totalGain<0)?'resourceId:color/green':'resourceId:color/white')}")
 			})
 	String totalGain;
@@ -321,7 +325,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						}
 						map.put("position", position);
 					}
-					updateSelection(new StockSelection(stockMarketCode, stockCode, stockName, buyPrice));
+					StockSelection selection = new StockSelection(stockMarketCode, stockCode, stockName, buyPrice);
+					selection.setType(1);
+					updateSelection(selection);
 				}
 				CommandResult result = new CommandResult();
 				if(map!=null && map.size()>0){

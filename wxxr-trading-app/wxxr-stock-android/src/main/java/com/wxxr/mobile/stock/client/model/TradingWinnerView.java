@@ -13,13 +13,12 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
-import com.wxxr.mobile.stock.app.bean.RankListBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 /**
  * 赚钱榜逻辑视图
@@ -47,8 +46,15 @@ public abstract class TradingWinnerView extends ViewBase {
 	@Command
 	String handleItemClick(InputEvent event){
 		Integer position = (Integer)event.getProperty("position");
-		if(position != null){
-			updateSelection(position);
+		if(rankBean!=null){
+			EarnRankItemBean earn = rankBean.getData().get(position);
+			if(earn!=null && position!=null){
+				String accid = earn.getAcctId();
+				StockSelection selection = new StockSelection();
+				selection.setAccid(accid);
+				selection.setPosition(position);
+				updateSelection(selection);
+			}
 		}
 		return null;
 	}

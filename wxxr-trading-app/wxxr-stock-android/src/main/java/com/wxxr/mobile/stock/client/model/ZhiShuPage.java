@@ -86,6 +86,15 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	
 	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;
+	@Bean
+	int size;
+	@Bean
+	int position;
+	
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "size", value = "${size}"),
+			@Attribute(name = "position", value = "${position}") })
+	String indexGroup;
 	
 	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='000001'&&stockMarket=='SH')}")
 	boolean showSHLayout = true;
@@ -168,7 +177,19 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 		infoCenterService.getQuotations();
 		return null;
 	}	
-	
+	@Command
+	String handlerPageChanged(InputEvent event) {
+		Object p = event.getProperty("position");
+		Object s = event.getProperty("size");
+		if(p  instanceof Integer) {
+			this.position = (Integer)p;
+			this.size = (Integer)s;
+		}
+		registerBean("size", size);
+		registerBean("position", position);
+		log.debug("ZhiShuPage handlerPageChanged position: " + position + "size: "+size);
+		return null;
+	}	
 	@OnShow
 	protected void initData(){
 		
@@ -202,5 +223,7 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 				registerBean("map", temp);
 			}
 		}
+		registerBean("size", 2);
+		registerBean("position", 0);
 	}
 }

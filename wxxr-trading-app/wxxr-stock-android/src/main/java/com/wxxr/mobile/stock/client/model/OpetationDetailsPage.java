@@ -6,12 +6,11 @@ import java.util.Map;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -22,6 +21,8 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
+import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 @View(name="OperationDetails", withToolbar=true, description="模拟盘")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.operation_details_page_layout")
@@ -30,6 +31,12 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
+	
+	@Bean(type=BindingType.Service)
+	ITradingManagementService tradingService;
+	
+	@Bean(type=BindingType.Pojo,express="${tradingService.getAuditDetail(accid)}")
+	AuditDetailBean auditData;
 	
 	@ViewGroup(viewIds={"DealRecordView","auditDetail","mnAuditDetail"})
 	private IViewGroup contents;
@@ -52,15 +59,20 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	boolean isVirtual = false;
 	
 	@Bean
-	String accid;
+	String accid = "";
 	@Bean
-	Object stockId;
+	Object stockId = "";
 	
 	
-	@OnShow
-	void showView(){
-		contents.resetViewStack();
-	}
+//	@OnShow
+//	void showView(){
+//		contents.resetViewStack();
+//		if(auditData!=null){
+//			this.isVirtual = auditData.getVirtual();
+//			registerBean("isVirtual", this.isVirtual);
+//			updateSelection(new StockSelection(accid, isVirtual));
+//		}
+//	}
 	
 	@Command(navigations={
 			@Navigation(on="readRecord",showView="DealRecordView",params={@Parameter(name = "add2BackStack", value = "false")})
@@ -81,6 +93,9 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			HashMap<String, Object> temp = new HashMap<String, Object>();
 			CommandResult result = new CommandResult();
+			if(auditData!=null){
+				this.isVirtual = auditData.getVirtual();
+			}
 			if(isVirtual){
 				result.setResult("mnAudit");
 				

@@ -124,9 +124,17 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Field(valueKey="text",binding="${nameBean!=null?nameBean:'--'}")
 	String name;
 	
+	/**股票名称*/
+	@Field(valueKey="text",binding="${nameBean!=null?nameBean:'--'}")
+	String name1;
+	
 	/**股票代码+市场代码*/
 	@Field(valueKey="text",binding="${'('}${(quotationBean!=null && quotationBean.code!=null)?quotationBean.code:'--'}${'.'}${(quotationBean!=null && quotationBean.market!=null)?quotationBean.market:'--'}${')'}")
 	String codeAndmarket;
+	
+	/**股票代码+市场代码*/
+	@Field(valueKey="text",binding="${'('}${(quotationBean!=null && quotationBean.code!=null)?quotationBean.code:'--'}${'.'}${(quotationBean!=null && quotationBean.market!=null)?quotationBean.market:'--'}${')'}")
+	String codeAndmarket1;
 	
 	/**涨跌幅*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial1",attributes={

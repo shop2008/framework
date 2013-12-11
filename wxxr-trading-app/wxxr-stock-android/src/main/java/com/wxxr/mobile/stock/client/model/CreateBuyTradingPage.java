@@ -18,7 +18,6 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
-import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
@@ -104,8 +103,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	/**实盘券综合费用比例,手续费*/
 	float voucherCostRate;	
 	
-	
-	
 	@Field(valueKey="visible",visibleWhen="${currentViewId==0}")
 	boolean showChallengeTrading;
 	
@@ -139,6 +136,14 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	@Field(valueKey="checked",binding="${checkedbox1==0?true:false}")
 	boolean isChecked1;
+	@Field(valueKey="checked",binding="${radioBtn==0?true:false}")
+	boolean cansaiRadio;
+	
+	@Field(valueKey="checked",binding="${radioBtn==1?true:false}")
+	boolean tiaozhanRadio;
+	
+	@Bean
+	int radioBtn = 0;
 	
 	int checkedbox1 = 0;
 	
@@ -161,10 +166,6 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	//冻结余额
 	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
 	String frozen_money;
-	
-//	//冻结余额
-//	@Field(valueKey="text",binding="${djDeposit!=null?djDeposit:'0.00元'}")
-//	String jifen_money;
 	
 	@Field(valueKey="visible",visibleWhen="${currentRadioBtnId != 3}")
 	boolean frozen_visibility;
@@ -260,6 +261,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Command
 	String showChallengeTradingClick(InputEvent event){
 		this.currentViewId = 0;
+		this.radioBtn = 1;
+		registerBean("radioBtn", this.radioBtn);
 		registerBean("currentViewId", currentViewId);
 		this.checkedbox = 0;
 		registerBean("checkedbox", checkedbox);
@@ -273,17 +276,17 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		registerBean("currentViewId", currentViewId);
 		this.checkedbox1 = 0;
 		registerBean("checkedbox1", checkedbox1);
+		this.radioBtn = 0;
+		registerBean("radioBtn", this.radioBtn);
 		return null;
 	}
 	//交易规则
 	@Command(navigations={
-			@Navigation(on = "webPage",showPage="webPage")
+			@Navigation(on = "TradingRuleWebPage",showPage="TradingRuleWebPage")
 	})
-	CommandResult showTradingRulePage(InputEvent event){
+	String showTradingRulePage(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			CommandResult result = new CommandResult();
-			result.setResult("webPage");
-			return result;
+			return "TradingRuleWebPage";
 		}
 		return null;
 		
@@ -374,21 +377,25 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 				assetType= "VOUCHER"; //积分
 				break;
 			}
-			userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			if(money>0 && _rate>0 && _depositRate>0 && assetType!=null){
+				userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
+				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			}
 		}
 		return "home";
 	}
 	
 	
 	//参赛交易-提交
-		@Command(navigations={@Navigation(on="home",showPage="home")})
+		@Command
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
+				if(getRate3()>0 && getDeposit3()>0){
+					userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
+					getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+				}
 			}
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-			return "home";
+			return null;
 		}
 	
 	
@@ -396,7 +403,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@OnShow
 	protected void initData(){
 
-		
+		this.radioBtn = 0;
+		registerBean("radioBtn", this.radioBtn);
 		this.checkedbox = 0;
 		this.checkedbox1 = 0;
 		registerBean("checkedbox", checkedbox);

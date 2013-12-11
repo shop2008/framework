@@ -63,7 +63,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	
 	@Bean
-	String accId;
+	String accId = "";
 	
 	@Bean
 	boolean isVirtual = true;

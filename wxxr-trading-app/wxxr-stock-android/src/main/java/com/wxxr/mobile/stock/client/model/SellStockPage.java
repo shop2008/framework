@@ -89,7 +89,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;	
 	
-	@ViewGroup(viewIds={"SellFiveDayMinuteLineView"})
+	@ViewGroup(viewIds={"StockQuotationView","SellFiveDayMinuteLineView","StockKLineView"})
 	private IViewGroup contents;	
 	
 	@Bean
@@ -131,7 +131,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean
 	List<String> sellStockData;
 	
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:0}",converter="stockLong2StringAutoUnitConvertor")
 	String newprice;
 	
 	@Bean
@@ -226,9 +226,9 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		if(tradingService!=null){
 			if(accid!=null && stockMarket!=null && stockCode!=null && price!=null && amount!=null){
 				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
+				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			}
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 	

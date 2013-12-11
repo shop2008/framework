@@ -49,6 +49,13 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor1;
 	
 	@Convertor(params={
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="multiple",value="1000"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor2;
+	
+	@Convertor(params={
 			@Parameter(name="format",value="-%.0f")
 	})
 	Float2PercentStringConvertor float2PercentStringConvertor;
@@ -70,11 +77,11 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	String tradingCost;
 	
 	/**账户管理费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringAutoUnitConvertor")
 	String accountPay;
 	
 	/**玩家实得收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringAutoUnitConvertor")
 	String userGain;
 	
 	/**终止止损*/

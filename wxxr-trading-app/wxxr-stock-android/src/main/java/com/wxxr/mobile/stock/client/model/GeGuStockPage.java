@@ -122,6 +122,16 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	
 	@Bean
 	List<String> counts;
+	
+	@Bean
+	int size;
+	@Bean
+	int position;
+	
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "size", value = "${size}"),
+			@Attribute(name = "position", value = "${position}") })
+	String indexGroup;
 
 	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;	
@@ -207,6 +217,20 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	protected void initData(){
 	}
 	
+	@Command
+	String handlerPageChanged(InputEvent event) {
+		Object p = event.getProperty("position");
+		Object s = event.getProperty("size");
+		if(p  instanceof Integer) {
+			this.position = (Integer)p;
+			this.size = (Integer)s;
+		}
+		registerBean("size", size);
+		registerBean("position", position);
+		log.debug("GeGuStockPage handlerPageChanged position: " + position + "size: "+size);
+		return null;
+	}
+	
 	//挑战交易盘买入
 	@Command(navigations={
 			@Navigation(on = "tiaozhan",showPage="QuickBuyStockPage")
@@ -278,6 +302,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 				}
 	        }
 		}
+		registerBean("size", 2);
+		registerBean("position", 0);
 	}
 	
 	@OnCreate

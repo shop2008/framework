@@ -7,14 +7,13 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp" >
 
-    <ImageButton
+    <Button
         android:id="@id/ib_toggle_left_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@null"
-        android:src="@drawable/list_button"
+        android:background="@drawable/list_button_style"
         android:visibility="invisible"
         bind:field="leftIcon"
         bind:on_Click="handleClick" />
@@ -34,27 +33,25 @@
         android:textStyle="bold"
         bind:field="title" />
 
-    <ImageButton
+    <Button
         android:id="@id/ib_toggle_right_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@null"
-        android:src="@drawable/message_button"
+        android:background="@drawable/user_button_style"
         android:visibility="invisible"
         bind:field="rightIcon"
         bind:on_Click="handleClick" />
 
-    <ImageButton
+    <Button
         android:id="@id/ib_toggle_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/ib_toggle_right_menu"
-        android:background="@null"
-        android:src="@drawable/finds"
+        android:background="@drawable/find_button_style"
         android:visibility="invisible"
         bind:field="searchIcon"
         bind:on_Click="handleClick" />

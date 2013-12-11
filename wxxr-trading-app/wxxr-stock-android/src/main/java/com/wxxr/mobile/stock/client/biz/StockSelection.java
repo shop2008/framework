@@ -17,6 +17,7 @@ public class StockSelection implements ISelection {
 	
 	private String accid = "";
 	private boolean virtual;
+	private int position = -1;
 	
 	public StockSelection(){
 		market = "";
@@ -58,6 +59,12 @@ public class StockSelection implements ISelection {
 
 	
 	
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int position) {
+		this.position = position;
+	}
 	public boolean getVirtual() {
 		return virtual;
 	}

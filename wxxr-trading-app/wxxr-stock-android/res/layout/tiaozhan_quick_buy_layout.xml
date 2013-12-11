@@ -95,7 +95,7 @@
         android:text="买入下单" 
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:background="@drawable/button_up"
+        android:background="@drawable/red_button_style"
         bind:field="tiaozhanButton"
         bind:on_Click="TiaoZhanBuyStockClick"
         />

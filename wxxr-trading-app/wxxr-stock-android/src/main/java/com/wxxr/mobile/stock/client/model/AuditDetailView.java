@@ -55,6 +55,12 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	})
 	Float2PercentStringConvertor float2PercentStringConvertor;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString",value="--")
+	})
+	
 	@Bean
 	Object accId;
 	@Bean
@@ -69,7 +75,7 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	String plRisk;
 	
 	/**实盘收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="stockLong2StringAutoUnitConvertor1")
 	String totalGain;
 	
 	/**补偿交易综合费*/
@@ -77,11 +83,11 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	String tradingCost;
 	
 	/**账户管理费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringAutoUnitConvertor")
 	String accountPay;
 	
 	/**玩家实得收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringAutoUnitConvertor1")
 	String userGain;
 	
 	/**终止止损*/

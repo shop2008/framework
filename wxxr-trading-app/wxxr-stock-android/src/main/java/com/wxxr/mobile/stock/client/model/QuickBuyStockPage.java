@@ -14,19 +14,19 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
@@ -99,6 +99,16 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	
 	@ViewGroup(viewIds={"StockQuotationView","GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;
+	
+	@Bean
+	int size;
+	@Bean
+	int position;
+	
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "size", value = "${size}"),
+			@Attribute(name = "position", value = "${position}") })
+	String indexGroup;
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
@@ -193,6 +203,20 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			this.C_buyNum = String.valueOf(mBuyNum);
 			registerBean("C_buyNum", this.C_buyNum);
 		}
+	}
+	
+	@Command
+	String handlerPageChanged(InputEvent event) {
+		Object p = event.getProperty("position");
+		Object s = event.getProperty("size");
+		if(p  instanceof Integer) {
+			this.position = (Integer)p;
+			this.size = (Integer)s;
+		}
+		registerBean("size", size);
+		registerBean("position", position);
+		log.debug("QuickBuyStockPage handlerPageChanged position: " + position + "size: "+size);
+		return null;
 	}
 	
 	//切换RadioButtn事件
@@ -329,7 +353,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	}
 	
 	/**参赛交易盘买人--模拟盘*/
-	@Command
+	@Command(navigations={@Navigation(on="home",showPage="home")})
 	String CanSaiBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String market = null;
@@ -344,14 +368,20 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			}
 			if(getRate3()>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && getDeposit3()>0){
 				userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
+				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+				return "home";	
 			}
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		return "home";	}
+		return null;
+	}
 	
-	@Command
-	String TiaoZhanBuyStockClick(InputEvent event){
+	@Command(navigations={
+			@Navigation(on = "WarnAlertDailog",showDialog="WarnAlertDailog"),
+			@Navigation(on="home",showPage="home")
+	})
+	CommandResult TiaoZhanBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			CommandResult result = new CommandResult();
 			long captitalAmount = changeMoney * 10000 * 100; //-申请额度
 			float _rate = 0.0f; //-中止止损
 			float _depositRate = 0.0f; //保证金
@@ -361,7 +391,6 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			long maxBuyNum = 0; //委托数量
 			String assetType = "VOUCHER";
 			if(stockQuotation!=null){
-//				stockBuyAmount = String.valueOf(stockQuotation.getNewprice());
 				close = stockQuotation.getClose();
 				maxBuyNum = buyNumber(changeMoney * 10000, close);
 				code = stockQuotation.getCode();
@@ -390,12 +419,19 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				assetType= "VOUCHER"; //积分
 				break;
 			}
-			if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
-				userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
+			if(captitalAmount<=0){
+				result.setPayload("请输入申购金额");
+				result.setResult("WarnAlertDailog");
+				return result;
 			}
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			else if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
+				userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
+				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+				result.setResult("home");
+				return result;
+			}
 		}
-		return "home";		
+		return null;
 	}
 	
 	
@@ -447,5 +483,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				registerBean("minuteMap", this.minuteMap);
 			}
 		}
+		registerBean("size", 3);
+		registerBean("position", 0);
 	}
 }

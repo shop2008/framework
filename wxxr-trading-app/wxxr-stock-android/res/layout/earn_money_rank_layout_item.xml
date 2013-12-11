@@ -32,12 +32,35 @@
             android:enabled="false"
             android:background="@drawable/attrows_style" />
     </LinearLayout>
-    <ImageView
-      android:id="@+id/imageView2"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      bind:field="imageUrl"
-      bind:on_Click="earnRankItemClick"
-      android:visibility="gone"/> 
+    <RelativeLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            bind:field="isLoading"
+            android:padding="10dp"
+            android:gravity="center">
+
+           <ProgressBar
+	            android:id="@+id/progressBar1"
+	            android:layout_width="30dp"
+	            android:layout_height="30dp" />
+            
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="数据加载中..."
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+	    <ImageView
+	      android:id="@+id/imageView2"
+	      android:layout_width="fill_parent"
+	      android:layout_height="wrap_content"
+	      bind:field="imageUrl"
+	      bind:on_Click="earnRankItemClick"
+	      android:visibility="gone"/> 
+    </RelativeLayout>
 	<include layout="@layout/hlines"/>
 </LinearLayout>
