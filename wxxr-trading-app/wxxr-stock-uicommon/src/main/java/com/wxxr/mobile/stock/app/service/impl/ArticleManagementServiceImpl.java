@@ -33,8 +33,9 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private IReloadableEntityCache<String, ArticleBean> homeArticlesCache;
 	private IReloadableEntityCache<String, ArticleBean> helpArticlesCache;
-	
-	private BindableListWrapper<ArticleBean> homeArticles,helpArticles;
+	private IReloadableEntityCache<String, ArticleBean> tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> withdrawlNoticeCache;
+	private BindableListWrapper<ArticleBean> homeArticles,helpArticles,tradingRuleArticles,withdrawlNoticeArticles;
 
 	//=================module life cycle methods=============================
 	@Override
@@ -53,6 +54,12 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		loader = new MyArticleLoader();
 		loader.setArticleType(19);
 		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("helpArticles", loader);
+		loader = new MyArticleLoader();
+		loader.setArticleType(16);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingRuleArticles", loader);
+		loader = new MyArticleLoader();
+		loader.setArticleType(17);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("withdrawlNoticeArticles", loader);
 		context.registerService(IArticleManagementService.class, this);
 	}
 
@@ -111,6 +118,38 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		map.put("limit", limit);
 		this.helpArticlesCache.doReloadIfNeccessay(map);
 		return this.helpArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getTradingRuleArticle() {
+		if(this.tradingRuleCache == null){
+			this.tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("homeArticles");
+		}
+		if(this.tradingRuleArticles == null){
+			this.tradingRuleArticles = this.tradingRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.tradingRuleCache.doReloadIfNeccessay(map);
+		return this.tradingRuleArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle() {
+		if(this.withdrawlNoticeCache == null){
+			this.withdrawlNoticeCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("homeArticles");
+		}
+		if(this.withdrawlNoticeArticles == null){
+			this.withdrawlNoticeArticles = this.withdrawlNoticeCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.withdrawlNoticeCache.doReloadIfNeccessay(map);
+		return this.withdrawlNoticeArticles;
 	}
 
 
