@@ -2,18 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.wxxr.mobile.stock</groupId>
+    <parent>
+        <artifactId>wxxr-stock-app</artifactId>
+        <groupId>com.wxxr.mobile.stock</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 	<artifactId>wxxr-stock-android</artifactId>
-	<version>1.0.0</version>
+	<version>${application.version}</version>
 	<packaging>jar</packaging>
 	<name>wxxr-stock-android - Application</name>
-	
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform.version>2.2.1</platform.version>
-        <wxxr.tools.version>1.0.0</wxxr.tools.version>
-        <framework.version>1.0.0</framework.version>
         <android.sdk.path>D:/tool</android.sdk.path>
     </properties>
 
@@ -21,89 +20,73 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r8</version>
         </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-core</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-net</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-xml</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-db</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-ui</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-android</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-tools</artifactId>
-                <version>${wxxr.tools.version}</version>
             </dependency>
             <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.core</groupId>
               <artifactId>wxxr-mobile-web</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.core</groupId>
               <artifactId>wxxr-mobile-command</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.core</groupId>
               <artifactId>wxxr-mobile-xstream</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.core</groupId>
               <artifactId>wxxr-mobile-gson</artifactId>
-                <version>${framework.version}</version>
             </dependency>  
             <!-- 后端服务 -->
             <dependency>
-                <groupId>com.wxxr.mobile</groupId>
+                <groupId>com.wxxr.mobile.core</groupId>
                 <artifactId>wxxr-mobile-jackson</artifactId>
-                <version>${framework.version}</version>
             </dependency>             
              <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.stock</groupId>
               <artifactId>wxxr-stock-uicommon</artifactId>
-                <version>${framework.version}</version>
+                <version>${application.version}</version>
             </dependency>
              <dependency>
-              <groupId>com.wxxr.mobile</groupId>
+              <groupId>com.wxxr.mobile.core</groupId>
               <artifactId>wxxr-mobile-synclient</artifactId>
-                <version>${framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>3.8.2</version>
                 <scope>test</scope>
             </dependency>
 	</dependencies>
