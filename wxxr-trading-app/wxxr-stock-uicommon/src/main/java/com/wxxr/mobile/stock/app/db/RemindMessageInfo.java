@@ -22,7 +22,7 @@ public class RemindMessageInfo {
 	private String acctId;
 	@Column
 	private String attrs;
-	@Column(nullable=false)
+	@Column
 	private boolean read;
 	
 	public Long getId() {
