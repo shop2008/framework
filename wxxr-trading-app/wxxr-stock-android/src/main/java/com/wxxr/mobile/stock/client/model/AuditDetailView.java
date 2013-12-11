@@ -55,12 +55,6 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	})
 	Float2PercentStringConvertor float2PercentStringConvertor;
 	
-	@Convertor(params={
-			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple",value="100"),
-			@Parameter(name="nullString",value="--")
-	})
-	
 	@Bean
 	Object accId;
 	@Bean
