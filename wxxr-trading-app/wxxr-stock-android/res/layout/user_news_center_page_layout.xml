@@ -44,13 +44,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <com.wxxr.mobile.stock.client.widget.NewsAccountView
+            <!-- <com.wxxr.mobile.stock.client.widget.NewsAccountView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 bind:field="accountTradeInfos" 
                 bind:on_PinItemClick="newsItemClick"
-                />
+                /> -->
+                
+                <com.wxxr.mobile.stock.client.widget.wheel.PinnedHeaderListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    bind:field="accountTradeInfos"
+                    bind:itemViewId="NewsContentItem"
+                    bind:on_ItemClick="handleItemClick"
+                    />
 
             <TextView
                 android:layout_width="match_parent"

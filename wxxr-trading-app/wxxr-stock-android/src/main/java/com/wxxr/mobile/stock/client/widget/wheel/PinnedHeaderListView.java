@@ -21,11 +21,11 @@ public class PinnedHeaderListView extends ListView {
 
 	private static final int MAX_ALPHA = 255;
 
-	protected PinnedHeaderAdapter mAdapter;
-	protected View mHeaderView;
+	protected AbstractPinnedHeaderListAdapter mAdapter;
+	// protected View mAdapter.getHeaderView();
 	protected boolean mHeaderViewVisible;
-	protected int mHeaderViewWidth;
-	protected int mHeaderViewHeight;
+	protected int mHeaderViewWidth = 480;
+	protected int mHeaderViewHeight = 80;
 
 	public PinnedHeaderListView(Context context) {
 		super(context);
@@ -39,49 +39,56 @@ public class PinnedHeaderListView extends ListView {
 			int defStyle) {
 		super(context, attrs, defStyle);
 	}
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (mHeaderView != null) {
-            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
-            configureHeaderView(getFirstVisiblePosition());
-        }
-    }
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mHeaderView != null) {
-            measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
-            mHeaderViewWidth = mHeaderView.getMeasuredWidth();
-            mHeaderViewHeight = mHeaderView.getMeasuredHeight();
-        }
-    }
-    
-    /**
-     * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
-     * @param view 标题头部的View
-     */
-	public void setPinnedHeaderView(View view) {
-		mHeaderView = view;
-		if (mHeaderView != null) {
-			setFadingEdgeLength(0);
-		}
-		/**
-		 * 重新执行onLayout方法，将列表的第一个标题显示出来
-		 */
-		requestLayout();
-	}
-	
-	
-    public void setAdapter(ListAdapter adapter) {
-        super.setAdapter(adapter);
-        mAdapter = (PinnedHeaderAdapter)adapter;
-    }
 
-    /**
-     * 根据不同位置返回的不同状态，来控制ListView指定条目(position)标题的显示，隐藏和上推下拉效果
-     * @param position
-     */
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		if (mAdapter.getHeaderView() != null) {
+			mAdapter.getHeaderView().layout(0, 0, mHeaderViewWidth,
+					mHeaderViewHeight);
+			configureHeaderView(getFirstVisiblePosition());
+		}
+	}
+
+	/*
+	 * protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	 * super.onMeasure(widthMeasureSpec, heightMeasureSpec); if
+	 * (mAdapter.getHeaderView() != null) {
+	 * measureChild(mAdapter.getHeaderView(), widthMeasureSpec,
+	 * heightMeasureSpec); mHeaderViewWidth =
+	 * mAdapter.getHeaderView().getMeasuredWidth(); mHeaderViewHeight =
+	 * mAdapter.getHeaderView().getMeasuredHeight(); } }
+	 */
+
+	/**
+	 * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
+	 * 
+	 * @param view
+	 *            标题头部的View
+	 */
+	// public void setPinnedHeaderView(View view) {
+	// mAdapter.getHeaderView() = view;
+	// if (mAdapter.getHeaderView() != null) {
+	// setFadingEdgeLength(0);
+	// }
+	// /**
+	// * 重新执行onLayout方法，将列表的第一个标题显示出来
+	// */
+	// requestLayout();
+	// }
+
+	public void setAdapter(ListAdapter adapter) {
+		super.setAdapter(adapter);
+		mAdapter = (AbstractPinnedHeaderListAdapter) adapter;
+	}
+
+	/**
+	 * 根据不同位置返回的不同状态，来控制ListView指定条目(position)标题的显示，隐藏和上推下拉效果
+	 * 
+	 * @param position
+	 */
 	public void configureHeaderView(int position) {
-		if (mHeaderView == null) {
+		if (mAdapter == null || mAdapter.getHeaderView() == null) {
 			return;
 		}
 		int state = mAdapter.getPinnedHeaderState(position);
@@ -92,9 +99,11 @@ public class PinnedHeaderListView extends ListView {
 		}
 
 		case PinnedHeaderAdapter.PINNED_HEADER_VISIBLE: {
-			mAdapter.configurePinnedHeader(mHeaderView, position, MAX_ALPHA);
-			if (mHeaderView.getTop() != 0) {
-				mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+			mAdapter.configurePinnedHeader(mAdapter.getHeaderView(), position,
+					MAX_ALPHA);
+			if (mAdapter.getHeaderView().getTop() != 0) {
+				mAdapter.getHeaderView().layout(0, 0, mHeaderViewWidth,
+						mHeaderViewHeight);
 			}
 			mHeaderViewVisible = true;
 			break;
@@ -103,7 +112,7 @@ public class PinnedHeaderListView extends ListView {
 		case PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP: {
 			View firstView = getChildAt(0);
 			int bottom = firstView.getBottom();
-			int headerHeight = mHeaderView.getHeight();
+			int headerHeight = 80;// mAdapter.getHeaderView().getHeight();
 			int y;
 			int alpha;
 			if (bottom < headerHeight) {
@@ -113,10 +122,11 @@ public class PinnedHeaderListView extends ListView {
 				y = 0;
 				alpha = MAX_ALPHA;
 			}
-			mAdapter.configurePinnedHeader(mHeaderView, position, alpha);
-			if (mHeaderView.getTop() != y) {
-				mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight
-						+ y);
+			mAdapter.configurePinnedHeader(mAdapter.getHeaderView(), position,
+					alpha);
+			if (mAdapter.getHeaderView().getTop() != y) {
+				mAdapter.getHeaderView().layout(0, y, mHeaderViewWidth,
+						mHeaderViewHeight + y);
 			}
 			mHeaderViewVisible = true;
 			break;
@@ -124,14 +134,13 @@ public class PinnedHeaderListView extends ListView {
 		}
 	}
 
-    
 	/**
 	 * 绘制每个条目的标题
 	 */
 	protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        if (mHeaderViewVisible) {
-            drawChild(canvas, mHeaderView, getDrawingTime());
-        }
-    }
+		super.dispatchDraw(canvas);
+		if (mHeaderViewVisible) {
+			drawChild(canvas, mAdapter.getHeaderView(), getDrawingTime());
+		}
+	}
 }
