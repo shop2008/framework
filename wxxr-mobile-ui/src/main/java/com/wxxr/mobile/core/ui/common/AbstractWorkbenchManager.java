@@ -19,6 +19,7 @@ import com.wxxr.javax.validation.TraversableResolver;
 import com.wxxr.javax.validation.Validator;
 import com.wxxr.javax.validation.spi.ConfigurationState;
 import com.wxxr.mobile.core.event.api.IEventRouter;
+import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
@@ -64,7 +65,8 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 	private IFieldBinderManager fieldBinderManager; // = new SimpleFieldBinderManager<Context>(uiContext);
 
 	private IEventBinderManager eventBinderManager; // = new SimpleEventBinderManager<Context, View>(uiContext);
-
+	
+	private IBindingDecoratorRegistry bindingDecotatorRegistry;
 	
 	public AbstractWorkbenchManager registerView(IViewDescriptor descriptor){
 		this.viewContainer.add(descriptor);
@@ -375,5 +377,17 @@ public abstract class AbstractWorkbenchManager implements IWorkbenchManager {
 			throw new IllegalStateException("Workbench was created, it's not right time to set workbench description at this time !");
 		}
 		this.workbenchDescriptor = workbenchDescriptor;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IWorkbenchManager#getBindingDecoratorRegistry()
+	 */
+	@Override
+	public  synchronized IBindingDecoratorRegistry getBindingDecoratorRegistry() {
+		if(this.bindingDecotatorRegistry == null){
+			this.bindingDecotatorRegistry = new SimpleBindingDecoratorRegistry(context);
+		}
+		return this.bindingDecotatorRegistry;
 	}
 }

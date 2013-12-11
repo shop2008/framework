@@ -27,6 +27,8 @@ public interface IWorkbenchManager {
 	 */
 	IFieldBinderManager getFieldBinderManager();
 	
+	IBindingDecoratorRegistry getBindingDecoratorRegistry();
+	
 	/**
 	 * return event binder manager which is suitable for specific target UI context
 	 * @param contextType
