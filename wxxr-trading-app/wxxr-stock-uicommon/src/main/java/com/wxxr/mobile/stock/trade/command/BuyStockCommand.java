@@ -2,9 +2,11 @@ package com.wxxr.mobile.stock.trade.command;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.stock.app.annotation.TadingTimeConstraint;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 @NetworkConstraint(allowConnectionTypes={})
+@TadingTimeConstraint
 public class BuyStockCommand implements ICommand<StockResultVO>{
     public final static String Name="BuyStockCommand";
     private String acctID; 

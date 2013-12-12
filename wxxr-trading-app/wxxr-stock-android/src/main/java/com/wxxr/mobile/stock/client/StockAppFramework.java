@@ -28,8 +28,6 @@ import com.wxxr.mobile.core.event.api.EventRouterImpl;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
-import com.wxxr.mobile.core.rest.provider.GSONProvider;
-import com.wxxr.mobile.core.rest.provider.XStreamProvider;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
@@ -42,6 +40,7 @@ import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.SyncConnector;
+import com.wxxr.mobile.stock.app.service.impl.TadingCalendarServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
@@ -125,6 +124,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new InfoCenterManagementServiceImpl());	
 		registerKernelModule(new AndroidI10NServiceModule<IStockAppContext>());
 		registerKernelModule(new ValidationMessageInterpolator<IStockAppContext>());
+	    registerKernelModule(new TadingCalendarServiceImpl());
+
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
