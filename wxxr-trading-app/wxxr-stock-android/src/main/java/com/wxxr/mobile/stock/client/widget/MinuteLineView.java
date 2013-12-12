@@ -162,8 +162,8 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	}
 	
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
+	public void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		canvas.save();
 		/** 画布和画笔的抗锯齿处理*** */
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));		

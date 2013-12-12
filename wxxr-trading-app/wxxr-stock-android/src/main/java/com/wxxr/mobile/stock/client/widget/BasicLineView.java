@@ -149,8 +149,8 @@ public class BasicLineView extends View {
 	
 	/**计算 画布大小、X、Y坐标*/
 	private void countData(Canvas canvas){
-		this.cWidth = canvas.getWidth();
-		this.cHeight = canvas.getHeight();
+		this.cWidth = this.getWidth();
+		this.cHeight = this.getHeight();
 		this.fWidth = cWidth - (marginLeft + marginRight);
 		this.zWidth = this.fWidth;
 		this.lineHeight  = (cHeight - (marginTop + marginBottom + minuteTopPadding + minuteBottomPadding + textLineHeight)) / 6;
@@ -182,8 +182,8 @@ public class BasicLineView extends View {
 	}
 	
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
+	public void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		countData(canvas);
 		if(stockState!=null && BUY_STATE.equals(stockState)){
 			onBuyMinuteDraw(canvas);
