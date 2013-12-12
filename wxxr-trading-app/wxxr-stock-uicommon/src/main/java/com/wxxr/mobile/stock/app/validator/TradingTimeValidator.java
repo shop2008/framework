@@ -28,7 +28,7 @@ public class TradingTimeValidator implements ICommandValidator {
             return;
         }
         if(!mgr.isTradingTime(m)){
-            throw new TradingTimeInvalidateException(constraint);
+//            throw new TradingTimeInvalidateException(constraint);
         }    
         
     }

@@ -99,7 +99,7 @@ public class TadingCalendarServiceImpl extends AbstractModule<IStockAppContext> 
     protected void startService() {
         context.registerService(ITadingCalendarService.class, this);
         
-        TadingtimeStrategy t=new TadingtimeStrategy("SH");
+        t=new TadingtimeStrategy("SH");
         t.add(new TimePair("9:30","11:30"));
         t.add(new TimePair("13:00","14:55"));
     }
