@@ -16,16 +16,16 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 	@Bean
 	PullMessageBean message;
 	
-	@Field(valueKey="enabled")
+	@Field(valueKey="visible")
 	boolean remindReaded;
 	
-	@Field(valueKey="text", binding="${message.createdDate}")
+	@Field(valueKey="text", binding="${message.createDate}")
 	String date;
 	
 	@Field(valueKey="text", binding="${message.title}")
 	String title;
 	
-	@Field(valueKey="text", binding="${message.content}")
+	@Field(valueKey="text", binding="${message.message}")
 	String content;
 	
 	@Override

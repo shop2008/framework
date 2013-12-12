@@ -1,6 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
@@ -15,9 +16,11 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 @View(name="NewsContentItem")
 public abstract class NewsItemView extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
+	
 	
 	@Override
 	public String getItemViewId(Object itemData) {
@@ -89,97 +92,16 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			
-			List<Object> labels = new ArrayList<Object>();
-			labels.add("2013-11-20");
-			List<RemindMessageBean> data = new ArrayList<RemindMessageBean>();
-			RemindMessageBean bean = new RemindMessageBean();
-			bean.setContent("11111");
-			bean.setTitle("2222");
-			data.add(bean);
-			
-			bean = new RemindMessageBean();
-			bean.setContent("11122");
-			bean.setTitle("33333");
-			data.add(bean);
-			
-
-			bean = new RemindMessageBean();
-			bean.setContent("3332");
-			bean.setTitle("44444");
-			data.add(bean);
-			
-			labels.addAll(data);
-			
-			labels.add("2013-11-21");
-			labels.addAll(data);
-			
-			labels.add("2013-11-22");
-			labels.addAll(data);
-			labels.add("2013-11-23");
-			labels.addAll(data);
-			labels.add("2013-11-24");
-	        labels.addAll(data);
-	        labels.add("2013-11-25");
-	        labels.addAll(data);
-	        labels.add("2013-11-26");
-	        labels.addAll(data);
-	        labels.add("2013-11-27");
-	        labels.addAll(data);
-	        labels.add("2013-11-28");
-	        labels.addAll(data);
-	        labels.add("2013-11-29");
-	        labels.addAll(data);
-	        labels.add("2013-12-1");
-	        labels.addAll(data);
-	        labels.add("2013-12-2");
-	        labels.addAll(data);
-	        labels.add("2013-12-3");
-	        labels.addAll(data);
-	        
-	        labels.add("2013-12-4");
-	        labels.addAll(data);
-	        labels.add("2013-12-5");
-	        labels.addAll(data);
-	        labels.add("2013-12-6");
-	        labels.addAll(data);
-			return labels.toArray();
-			//return result != null ? result.toArray() : null;
+			return result != null ? Utils.getGroupData(result, "getCreatedDate"): null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
-				List<Object> labels = new ArrayList<Object>();
-				labels.add("2013-11-20");
-				List<RemindMessageBean> data = new ArrayList<RemindMessageBean>();
-				RemindMessageBean bean = new RemindMessageBean();
-				bean.setContent("11111");
-				bean.setTitle("2222");
-				data.add(bean);
-				
-				bean = new RemindMessageBean();
-				bean.setContent("11122");
-				bean.setTitle("33333");
-				data.add(bean);
-				
-
-				bean = new RemindMessageBean();
-				bean.setContent("3332");
-				bean.setTitle("44444");
-				data.add(bean);
-				
-				labels.addAll(data);
-				
-				labels.add("2013-11-21");
-				labels.addAll(data);
-				
-				labels.add("2013-11-23");
-				labels.addAll(data);
-				labels.add("2013-11-24");
-				labels.addAll(data);
-				return labels.toArray();
+				List<Object> result = (List<Object>) val;
+				return Utils.getGroupData(result, "getCreatedDate");
 			}else if((val != null)&&val.getClass().isArray()){
-				return (Object[])val;
+				List<Object>  result = Arrays.asList(val);
+				return Utils.getGroupData(result, "getCreatedDate");
 			}
 		}
 		return null;

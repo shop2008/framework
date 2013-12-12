@@ -1,7 +1,11 @@
 package com.wxxr.mobile.stock.client.utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.View;
@@ -220,5 +224,47 @@ public class Utils {
 			tmp = tmp + "0";
 		}
 		return tmp + "%";
+	}
+
+	public static Object[] getGroupData(List<Object> data, String method) {
+		
+		if (data == null || data.size() <=0) {
+			return null;
+		}
+		List<Object> retList = new ArrayList<Object>();
+		Object curLabelObj = null;
+		for(int i=0;i<data.size();i++) {
+			Object obj = data.get(i);
+			try {
+				Method m = obj.getClass().getMethod(method, null);
+				m.setAccessible(true);
+				Object labelObj = m.invoke(obj, null);
+				
+				if (i==0) {
+					curLabelObj = labelObj;
+					retList.add(curLabelObj);
+					retList.add(obj);
+				} else {
+					if (labelObj.equals(curLabelObj)) {
+						retList.add(obj);
+					} else {
+						curLabelObj = labelObj;
+						retList.add(curLabelObj);
+						retList.add(obj);
+					}
+				}
+				return retList.toArray();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
 	}
 }
