@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import com.wxxr.mobile.stock.client.utils.Utils;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -63,7 +65,7 @@ public class PinnedHeaderListView extends ListView {
      */
 	public void setPinnedHeaderView(View view) {
 		mHeaderView = view;
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);//.generateLayoutParams(mHeaderView.);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, Utils.dip2px(getContext(), 40));//.generateLayoutParams(mHeaderView.);
 		mHeaderView.setLayoutParams(params);
 		if (mHeaderView != null) {
 			setFadingEdgeLength(0);

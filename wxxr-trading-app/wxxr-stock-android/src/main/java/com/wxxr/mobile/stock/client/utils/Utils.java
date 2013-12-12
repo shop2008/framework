@@ -237,8 +237,12 @@ public class Utils {
 	 */
 	public static Object[] getSortedGroupData(List<Object> data, String method) {
 
-		if (data == null || data.size() <= 0) {
+		if (data == null) {
 			return null;
+		}
+		
+		if (data.size() <= 0) {
+			return data.toArray();
 		}
 		List<Object> retList = new ArrayList<Object>();
 		Object curLabelObj = null;
