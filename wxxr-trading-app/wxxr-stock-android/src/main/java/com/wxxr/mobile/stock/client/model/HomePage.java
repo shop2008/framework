@@ -125,12 +125,12 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
 			}
-			if("page6".equals(name)){
-				try {
-					Thread.sleep(5000L);
-				} catch (InterruptedException e) {
-				}
-			}
+//			if("page6".equals(name)){
+//				try {
+//					Thread.sleep(5000L);
+//				} catch (InterruptedException e) {
+//				}
+//			}
 			return name;
 		}
 		return null;
