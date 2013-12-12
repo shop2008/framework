@@ -3,8 +3,9 @@
  */
 package com.wxxr.mobile.android.ui;
 
-import static com.wxxr.mobile.android.ui.BindingUtils.*;
-
+import static com.wxxr.mobile.android.ui.BindingUtils.getBindingDescriptor;
+import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
+import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;

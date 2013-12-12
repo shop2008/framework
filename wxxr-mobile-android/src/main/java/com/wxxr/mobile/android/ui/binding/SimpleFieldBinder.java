@@ -5,15 +5,10 @@ package com.wxxr.mobile.android.ui.binding;
 
 import java.util.Map;
 
-import android.content.Context;
-import android.view.View;
-
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
 /**

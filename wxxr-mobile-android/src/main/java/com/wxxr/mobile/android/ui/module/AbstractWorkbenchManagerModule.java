@@ -31,19 +31,18 @@ import com.wxxr.mobile.android.ui.updater.WebUrlAttributeUpdater;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
-import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.ViewGroupBase;
-import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 
 /**
  * @author neillin

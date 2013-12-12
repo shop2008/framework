@@ -8,5 +8,5 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IBindingDecoratorFactory {
-	<T extends IUIComponent> IBinding<T> createDecorator(IBinding<T> binding);
+	<T> T createDecorator(T binding);
 }

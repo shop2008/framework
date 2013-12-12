@@ -5,7 +5,6 @@ package com.wxxr.mobile.android.ui.updater;
 
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;

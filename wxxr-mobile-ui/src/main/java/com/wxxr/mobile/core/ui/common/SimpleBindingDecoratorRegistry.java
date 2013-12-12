@@ -3,13 +3,12 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorFactory;
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
-import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -20,7 +19,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 public class SimpleBindingDecoratorRegistry implements
 		IBindingDecoratorRegistry {
 	private final IWorkbenchRTContext context;
-	private Map<String, Class<? extends IBinding<?>>> classes = new HashMap<String, Class<? extends IBinding<?>>>();
+	private Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 	private Map<String,IBindingDecoratorFactory> factories = new HashMap<String, IBindingDecoratorFactory>();
 	
 	public SimpleBindingDecoratorRegistry(IWorkbenchRTContext ctx){
@@ -31,7 +30,7 @@ public class SimpleBindingDecoratorRegistry implements
 	 */
 	@Override
 	public void registerDecorator(String name,
-			Class<? extends IBinding<?>> clazz) {
+			Class<?> clazz) {
 		if(StringUtils.isBlank(name)||(clazz == null)){
 			throw new IllegalArgumentException("decorator name and class cannot be NULL");
 		}
@@ -46,9 +45,9 @@ public class SimpleBindingDecoratorRegistry implements
 	 */
 	@Override
 	public boolean unregisterDecorator(String name,
-			Class<? extends IBinding<?>> clazz) {
+			Class<?> clazz) {
 		synchronized(this.classes) {
-			Class<? extends IBinding<?>> klass = this.classes.get(name);
+			Class<?> klass = this.classes.get(name);
 			if(klass == clazz){
 				this.classes.remove(name);
 				return true;
@@ -114,8 +113,8 @@ public class SimpleBindingDecoratorRegistry implements
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IUIComponent> IBinding<T> createDecorator(String name,
-			IBinding<T> binding) {
+	public <T> T createDecorator(String name,
+			T binding) {
 		IBindingDecoratorFactory factory = null;
 		synchronized(this.factories){
 			factory = this.factories.get(name);
@@ -123,15 +122,26 @@ public class SimpleBindingDecoratorRegistry implements
 		if(factory != null){
 			return factory.createDecorator(binding);
 		}
-		Class<? extends IBinding<?>> clazz = null;
+		Class<?> clazz = null;
 		synchronized(this.classes){
 			clazz = this.classes.get(name);
 		}
 		if(clazz != null){
 			try {
-				@SuppressWarnings("rawtypes")
-				IBinding b = clazz.getConstructor(IBinding.class).newInstance(binding);
-				return (IBinding<T>)b;
+				Constructor<?> constructor = null;
+				Constructor<?>[] cons = clazz.getConstructors();
+				for (Constructor<?> con : cons) {
+					Class<?>[] pTypes = con.getParameterTypes();
+					if((pTypes.length == 1)&&pTypes[0].isAssignableFrom(binding.getClass())){
+						constructor = con;
+						break;
+					}
+				}
+				if(constructor == null){
+					throw new NoSuchMethodException("Cannot find appropriate constructor for decorator :"+name);
+				}
+				Object b =constructor.newInstance(binding);
+				return (T)b;
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to create binding decorator from class :"+clazz.getCanonicalName(),e);
 			}	

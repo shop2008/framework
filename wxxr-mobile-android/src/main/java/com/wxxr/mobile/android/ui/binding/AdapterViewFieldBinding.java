@@ -83,7 +83,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
 		
-		this.listAdapter = this.adapterBuilder != null ? this.adapterBuilder.buildListAdapter(comp, getAndroidBindingContext(),itemViewId) : GenericListAdapter.createAdapter(comp, context, itemViewId);
+		this.listAdapter = this.adapterBuilder != null ? this.adapterBuilder.buildListAdapter(comp, ((IAndroidBindingContext)getBindingContext()),itemViewId) : GenericListAdapter.createAdapter(comp, ((IAndroidBindingContext)getBindingContext()), itemViewId);
 		if((headerBinding != null)&&(headerView != null)){
 			model.addChild(headerView);
 			headerBinding.activate(headerView);
@@ -105,7 +105,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 
 			@Override
 			public Context getUIContext() {
-				return getAndroidBindingContext().getUIContext();
+				return ((IAndroidBindingContext)getBindingContext()).getUIContext();
 			}
 
 			@Override
@@ -120,12 +120,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 
 			@Override
 			public boolean isOnShow() {
-				return getAndroidBindingContext().isOnShow();
+				return ((IAndroidBindingContext)getBindingContext()).isOnShow();
 			}
 
 			@Override
 			public void hideView() {
-				getAndroidBindingContext().hideView();
+				((IAndroidBindingContext)getBindingContext()).hideView();
 				
 			}
 		}, bDesc);
@@ -226,7 +226,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			headerBinding = null;
 		}
 		if(headerView != null){
-			bContext.getWorkbenchManager().getWorkbench().destroyComponent(headerView);
+			getWorkbenchContext().getWorkbenchManager().getWorkbench().destroyComponent(headerView);
 			headerView = null;
 		}
 		if((list != null)&&(footerItemView != null)){
@@ -238,7 +238,7 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			footerBinding = null;
 		}
 		if(footerView != null){
-			bContext.getWorkbenchManager().getWorkbench().destroyComponent(footerView);
+			getWorkbenchContext().getWorkbenchManager().getWorkbench().destroyComponent(footerView);
 			footerView = null;
 		}
 		super.destroy();

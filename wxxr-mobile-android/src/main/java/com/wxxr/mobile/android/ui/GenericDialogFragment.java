@@ -4,7 +4,6 @@
 package com.wxxr.mobile.android.ui;
 
 import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;

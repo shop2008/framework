@@ -41,7 +41,7 @@ public class UICommandButtonBinding extends BasicFieldBinding implements OnClick
 		super.updateUI(recursive);
 		String val = command.getAttribute(AttributeKeys.label);
 		if(val != null){
-			Button button = (Button)this.pComponent;
+			Button button = (Button)getUIControl();
 			try {
 				if(RUtils.isResourceIdURI(val)){
 					button.setText(RUtils.getInstance().getResourceIdByURI(val));
@@ -49,7 +49,7 @@ public class UICommandButtonBinding extends BasicFieldBinding implements OnClick
 					button.setText(val);
 				}
 			} catch (Exception e) {
-				log.error("Failed to set image for field :"+field.getName(), e);
+				log.error("Failed to set image for field :"+getFieldName(), e);
 			}
 		}
 		
@@ -60,14 +60,14 @@ public class UICommandButtonBinding extends BasicFieldBinding implements OnClick
 	 */
 	@Override
 	public void activate(IView model) {
-		this.pComponent.setOnClickListener(this);
-		IUIComponent comp = model.getChild(getFieldName());
+		super.activate(model);
+		((Button)getUIControl()).setOnClickListener(this);
+		IUIComponent comp = getField();
 		if(comp instanceof UICommand){
 			this.command = (UICommand)comp;
 		}else{
 			throw new IllegalStateException("UICommandButtonBinding must bind to a UICommand field, current field :"+getField());
 		}
-		super.activate(model);
 	}
 
 	/* (non-Javadoc)
@@ -75,7 +75,7 @@ public class UICommandButtonBinding extends BasicFieldBinding implements OnClick
 	 */
 	@Override
 	public void deactivate() {
-		this.pComponent.setOnClickListener(null);
+		((Button)getUIControl()).setOnClickListener(null);
 		super.deactivate();
 	}
 

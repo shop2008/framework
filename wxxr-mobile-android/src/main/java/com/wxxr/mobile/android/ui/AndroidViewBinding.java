@@ -20,11 +20,13 @@ import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IEventBinder;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
+import com.wxxr.mobile.core.ui.api.IEventBinding;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
 import com.wxxr.mobile.core.ui.api.IMenuHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IUIDecorator;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -92,7 +94,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					}
 				}, fieldName, params);
 				if(decoratorName != null){
-					binding = (IFieldBinding)doDecorate(decoratorName, binding);
+					binding.doDecorate(StringUtils.split(decoratorName,','));
 				}
 				binding.init(runtimeContext);
 			}
@@ -151,15 +153,19 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			}
 		}
 
-//		@Override
-//		public IUIComponent getValueModel() {
-//			return this.binding != null ? this.binding.getValueModel() : null;
-//		}
-//
-//		@Override
-//		public View getViewModel() {
-//			return this.view;
-//		}
+		@Override
+		public IUIDecorator doDecorate(String... decoratorNames) {
+			if(this.binding != null){
+				return this.binding.doDecorate(decoratorNames);
+			}
+			return null;
+		}
+
+		@Override
+		public Class<IUIDecorator> getDecoratorClass() {
+			return IUIDecorator.class;
+		}
+
 	}
 	
 	protected <T extends IUIComponent> IBinding<T> doDecorate(String decoratorName, IBinding<T> binding) {
@@ -235,7 +241,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						}
 						IEventBinder eBinder = eventBinderMgr.getFieldBinder(evtType);
 						if(eBinder != null){
-							IBinding<IView> eBinding = eBinder.createBinding(new IAndroidBindingContext() {
+							IEventBinding eBinding = eBinder.createBinding(new IAndroidBindingContext() {
 								
 								@Override
 								public Context getUIContext() {
@@ -263,7 +269,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 								}
 							}, val, cmdName, params);
 							if(eventDecor != null){
-								eBinding = doDecorate(eventDecor, eBinding);
+								eBinding.doDecorate(StringUtils.split(eventDecor,','));
 							}
 							bindings.add(eBinding);
 						}
