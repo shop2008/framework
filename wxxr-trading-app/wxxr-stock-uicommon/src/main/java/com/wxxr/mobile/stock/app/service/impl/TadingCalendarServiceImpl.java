@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.TradingTimeInvalidateException;
 import com.wxxr.mobile.stock.app.service.ITadingCalendarService;
 
 
@@ -66,7 +67,8 @@ public class TadingCalendarServiceImpl extends AbstractModule<IStockAppContext> 
                     Date startDate = sdf.parse(t.getStartDate());
                     Date endDate = sdf.parse(t.getEndDate());
                     if (currDate.before(startDate) || currDate.after(endDate)){
-                        return false;
+                        throw new TradingTimeInvalidateException("不在时间"+startDate+"-"+endDate+"范围内");
+//                        return false;
                     }
                 }
             } catch (ParseException e) {

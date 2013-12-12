@@ -9,4 +9,8 @@ public class TradingTimeInvalidateException extends CommandConstraintViolatedExc
         super(ann);
     }
 
+    public TradingTimeInvalidateException(String message) {
+        super(message,null);
+    }
+
 }
