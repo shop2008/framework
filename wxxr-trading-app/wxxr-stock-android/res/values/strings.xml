@@ -30,6 +30,8 @@
     <string name="network_not_available">你要展示的页面需要从网络下载数据，你需要打开网络连接...</string>
     <string name="login_required">您要求的数据、指令要在您登录才能执行，请登录...</string>
     
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
     <!-- left slidingMenu title -->
     <string name="t_home">首页</string>
     <string name="t_dsphb">大赛排行榜</string>
@@ -98,6 +100,7 @@
     <string name="search_hint">代码/拼音/首字母</string>
 	<!-- 买入股票 -->
 	<string name="buy_stock_count_hint">输入最大可买股数</string>
+	<string name="confirm_cancel_order">是否要撤单</string>
     <!-- 快速买入 -->
     <string name="bt_hang_order_text">挂单</string>
     <string name="bt_market_price_text">市价</string>
