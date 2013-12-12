@@ -10,30 +10,24 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 
-public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelectedListener{
+public class SpinnerItemClickEventBinding extends AbstractEventBinding implements OnItemSelectedListener{
 
 	private Spinner control;
-	private String fieldName;
-	private String commandName;
-	private IView pModel;
 	
 	public SpinnerItemClickEventBinding(View view,String cmdName,String field){
 		this.control = (Spinner)view;
-		this.commandName = cmdName;
-		this.fieldName = field;
+		setUIControl(this.control);
+		setCommandName(cmdName);
+		setFieldName(field);
 	}
 	
-	
-	@Override
-	public void notifyDataChanged(ValueChangedEvent... events) {
-		
-	}
 
 	@Override
 	public void activate(IView model) {
-		this.pModel = model;
+		super.activate(model);
 		if(control instanceof Spinner) {
 			((Spinner)control).setOnItemSelectedListener(this);
 		} 	
@@ -45,7 +39,7 @@ public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelec
 		if(control instanceof Spinner) {
 			((Spinner)control).setOnItemSelectedListener(null);
 		} 
-		this.pModel = null;
+		super.deactivate();
 	}
 
 
@@ -55,28 +49,18 @@ public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelec
 		this.control = null;
 	}
 
-	@Override
-	public void init(IWorkbenchRTContext ctx) {
-		
-	}
-
-	@Override
-	public Object getUIControl() {
-		return this.control;
-	}
-
 
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		IUIComponent field = pModel.getChild(fieldName);
+		IUIComponent field = getField();
 		if (field != null) {
 			SimpleInputEvent event = new SimpleInputEvent("SpinnerItemSelected",field);
 			event.addProperty("position", position);
-			field.invokeCommand(commandName, event);
+			handleInputEvent(event);
 		} else {
-			SimpleInputEvent event = new SimpleInputEvent("SpinnerItemSelected",pModel);
-			pModel.invokeCommand(commandName, event);
+			SimpleInputEvent event = new SimpleInputEvent("SpinnerItemSelected",getModel());
+			handleInputEvent(event);
 		}		
 	}
 
@@ -86,10 +70,4 @@ public class SpinnerItemClickEventBinding implements IBinding<IView>,OnItemSelec
 		
 	}
 
-
-	@Override
-	public void doUpdate() {
-		// TODO Auto-generated method stub
-		
-	}
 }

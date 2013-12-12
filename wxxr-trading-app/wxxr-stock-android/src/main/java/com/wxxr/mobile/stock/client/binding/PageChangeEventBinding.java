@@ -8,27 +8,26 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 
 /**
  * @author dz
  *
  */
-public class PageChangeEventBinding implements IBinding<IView>, OnPageChangeListener {
+public class PageChangeEventBinding extends AbstractEventBinding implements  OnPageChangeListener {
 
 	private ViewPager control;
-	private String fieldName,commandName;
-	private IView pModel;
 	
 	public PageChangeEventBinding(View view,String cmdName,String field){
 		this.control = (ViewPager)view;
-		this.commandName = cmdName;
-		this.fieldName = field;
+		setUIControl(control);
+		setCommandName(cmdName);
+		setFieldName(field);
 	}
 	
 	@Override
@@ -37,14 +36,14 @@ public class PageChangeEventBinding implements IBinding<IView>, OnPageChangeList
 
 	@Override
 	public void activate(IView model) {
-		this.pModel = model;
+		super.activate(model);
 		control.setOnPageChangeListener(this);	
 	}
 
 	@Override
 	public void deactivate() {
 		control.setOnPageChangeListener(null);
-		this.pModel = null;
+		super.deactivate();
 		
 	}
 
@@ -72,32 +71,28 @@ public class PageChangeEventBinding implements IBinding<IView>, OnPageChangeList
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		// TODO Auto-generated method stub
 
-		IUIComponent field = pModel.getChild(fieldName);
+		IUIComponent field = getField();
 		if(field != null){
 			SimpleInputEvent event = new SimpleInputEvent("PageChange",field);
 			event.addProperty("position", position);
 			event.addProperty("size", control.getAdapter().getCount());
-			field.invokeCommand(commandName, event);
+			handleInputEvent(event);
 		}else{
-			SimpleInputEvent event = new SimpleInputEvent("PageChange",pModel);
+			SimpleInputEvent event = new SimpleInputEvent("PageChange",getModel());
 			event.addProperty("position", position);
 			event.addProperty("size", control.getAdapter().getCount());
-			pModel.invokeCommand(commandName, event);
+			handleInputEvent(event);
 		}	
 	
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		// TODO Auto-generated method stub
 		
 	}
 

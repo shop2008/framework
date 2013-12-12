@@ -7,12 +7,12 @@ package com.wxxr.mobile.stock.client.binding;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
+import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
@@ -25,17 +25,15 @@ import com.wxxr.mobile.stock.client.widget.PullToRefreshView.OnHeaderRefreshList
  * @author neillin
  *
  */
-public class RefreshEventBinding implements IBinding<IView> {
+public class RefreshEventBinding extends AbstractEventBinding {
 
 	private ViewGroup control;
-	private String fieldName,commandName;
-	private IView pModel;
 	private OnHeaderRefreshListener headerListener = new OnHeaderRefreshListener() {
 		
 		@Override
 		public void onHeaderRefresh(PullToRefreshView view) {
 			
-			IUIComponent field = pModel.getChild(fieldName);
+			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
 				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
@@ -54,10 +52,10 @@ public class RefreshEventBinding implements IBinding<IView> {
 						}
 					}
 				});
-				field.invokeCommand(commandName, event);
+				handleInputEvent(event);
 			}else{
-				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",pModel);
-				pModel.invokeCommand(commandName, event);
+				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",getModel());
+				handleInputEvent(event);
 			}			
 		}
 	};
@@ -67,7 +65,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 		@Override
 		public void onFooterRefresh(PullToRefreshView view) {
 			
-			IUIComponent field = pModel.getChild(fieldName);
+			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
 				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
@@ -86,10 +84,10 @@ public class RefreshEventBinding implements IBinding<IView> {
 						}
 					}
 				});
-				field.invokeCommand(commandName, event);
+				handleInputEvent(event);
 			}else{
-				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",pModel);
-				pModel.invokeCommand(commandName, event);
+				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",getModel());
+				handleInputEvent(event);
 			}			
 		}
 	};
@@ -98,7 +96,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 
 		@Override
 		public void onRefresh() {
-			IUIComponent field = pModel.getChild(fieldName);
+			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
 				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
@@ -117,15 +115,15 @@ public class RefreshEventBinding implements IBinding<IView> {
 						}
 					}
 				});
-				field.invokeCommand(commandName, event);
+				handleInputEvent(event);
 			}else{
-				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",pModel);
-				pModel.invokeCommand(commandName, event);
+				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",getModel());
+				handleInputEvent(event);
 			}
 		}
 		@Override
 		public void onLoadMore() {
-			IUIComponent field = pModel.getChild(fieldName);
+			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
 				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
@@ -144,17 +142,17 @@ public class RefreshEventBinding implements IBinding<IView> {
 						}
 					}
 				});
-				field.invokeCommand(commandName, event);
+				handleInputEvent(event);
 			}else{
-				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",pModel);
-				pModel.invokeCommand(commandName, event);
+				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",getModel());
+				handleInputEvent(event);
 			}	
 		}
 	};
 	public RefreshEventBinding(View view,String cmdName,String field){
 		this.control = (ViewGroup)view;
-		this.commandName = cmdName;
-		this.fieldName = field;
+		super.setCommandName(cmdName);
+		super.setFieldName(field);
 	}
 	
 	@Override
@@ -163,7 +161,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 
 	@Override
 	public void activate(IView model) {
-		this.pModel = model;
+		super.activate(model);
 		if(control instanceof PullToRefreshListView) {
 			((PullToRefreshListView)control).setRefreshViewListener(refreshListener);
 		} else if(control instanceof PullToRefreshView) {
@@ -180,7 +178,7 @@ public class RefreshEventBinding implements IBinding<IView> {
 			((PullToRefreshView)control).setOnHeaderRefreshListener(null);
 			((PullToRefreshView)control).setOnFooterRefreshListener(null);
 		}
-		this.pModel = null;
+		super.deactivate();
 		
 	}
 
@@ -188,21 +186,6 @@ public class RefreshEventBinding implements IBinding<IView> {
 	public void destroy() {
 		deactivate();
 		this.control = null;
-	}
-
-	@Override
-	public void init(IWorkbenchRTContext ctx) {
-		
-	}
-
-	@Override
-	public Object getUIControl() {
-		return this.control;
-	}
-
-	@Override
-	public void doUpdate() {
-		
 	}
 
 }

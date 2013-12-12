@@ -29,7 +29,7 @@ public class SpinnerViewFieldBinding extends BasicFieldBinding {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(SPINNER_ITEM_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
-		this.listAdapter = GenericListAdapter.createAdapter(comp, getAndroidBindingContext(), itemViewId);
+		this.listAdapter = GenericListAdapter.createAdapter(comp, (IAndroidBindingContext)getBindingContext(), itemViewId);
 		setupAdapter(listAdapter);
 	}
 	

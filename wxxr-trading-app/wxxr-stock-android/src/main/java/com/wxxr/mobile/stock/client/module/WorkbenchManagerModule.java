@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.log.api.Trace;
 //import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
+import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
@@ -104,9 +105,9 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		}
 	}
 
-	/*@Override
+	@Override
 	protected void initBindingDecorators(IBindingDecoratorRegistry arg0) {
 		
-	}*/
+	}
 
 }

@@ -7,6 +7,7 @@ import com.wxxr.mobile.android.ui.binding.ClickEventBinding;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IEventBinder;
+import com.wxxr.mobile.core.ui.api.IEventBinding;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -16,7 +17,7 @@ public class TextChangedEventBinder implements IEventBinder {
 	private IWorkbenchRTContext context;
 	
 	@Override
-	public IBinding<IView> createBinding(IBindingContext context,
+	public IEventBinding createBinding(IBindingContext context,
 			String fieldName, String cmdName, Map<String, String> attrs) {
 		IAndroidBindingContext ctx = (IAndroidBindingContext)context;
 		return new TextChangedEventBinding(ctx.getBindingControl(), cmdName, fieldName);

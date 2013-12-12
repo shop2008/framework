@@ -113,7 +113,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 		if (viewPagerAdapter == null) {
 			viewPagerProvider.updateDataIfNeccessary();
 			viewPagerAdapter = new GenericViewPagerAdapter(
-					getWorkbenchContext(), getAndroidBindingContext(),
+					getWorkbenchContext(), (IAndroidBindingContext)getBindingContext(),
 					viewPagerProvider);
 			setupAdapter(viewPagerAdapter);
 		} else {

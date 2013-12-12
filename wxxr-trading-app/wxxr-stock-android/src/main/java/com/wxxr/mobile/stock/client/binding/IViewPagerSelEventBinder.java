@@ -9,6 +9,7 @@ import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IEventBinder;
+import com.wxxr.mobile.core.ui.api.IEventBinding;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 
@@ -21,7 +22,7 @@ public class IViewPagerSelEventBinder implements IEventBinder {
 	
 	
 	@Override
-	public IBinding<IView> createBinding(IBindingContext context,
+	public IEventBinding createBinding(IBindingContext context,
 			String fieldName, String cmdName, Map<String, String> attrs) {
 		IAndroidBindingContext ctx = (IAndroidBindingContext)context;
 		return new IViewPagerSelEventBinding(ctx.getBindingControl(), cmdName, fieldName);
