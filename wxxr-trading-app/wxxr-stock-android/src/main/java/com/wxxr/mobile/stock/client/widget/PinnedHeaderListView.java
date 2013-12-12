@@ -65,7 +65,7 @@ public class PinnedHeaderListView extends ListView {
      */
 	public void setPinnedHeaderView(View view) {
 		mHeaderView = view;
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, Utils.dip2px(getContext(), 40));//.generateLayoutParams(mHeaderView.);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);//.generateLayoutParams(mHeaderView.);
 		mHeaderView.setLayoutParams(params);
 		if (mHeaderView != null) {
 			setFadingEdgeLength(0);

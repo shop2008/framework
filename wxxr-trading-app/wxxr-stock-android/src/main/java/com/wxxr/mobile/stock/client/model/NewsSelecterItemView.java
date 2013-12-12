@@ -16,7 +16,7 @@ public abstract class NewsSelecterItemView extends ViewBase implements IModelUpd
 	@Bean
 	RemindMessageBean message;
 	
-	@Field(valueKey="text", binding="${message.createdDate}")
+	@Field(valueKey="text", binding="${message.attrs.get('time')}")
 	String date;
 	
 	@Field(valueKey="text", binding="${message.title}")
