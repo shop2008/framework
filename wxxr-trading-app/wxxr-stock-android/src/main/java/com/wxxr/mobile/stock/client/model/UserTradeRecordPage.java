@@ -174,6 +174,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 					map.put("isVirtual", isVirtual);
 				result.setPayload(map);
 				result.setResult("operationDetails");
+				updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}

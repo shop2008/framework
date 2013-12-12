@@ -22,9 +22,10 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "otherUserPage")
+@View(name = "otherUserPage", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.other_user_page_layout")
 public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
@@ -222,6 +223,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
+					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
@@ -271,6 +273,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
+					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = actualBean.getStatus();

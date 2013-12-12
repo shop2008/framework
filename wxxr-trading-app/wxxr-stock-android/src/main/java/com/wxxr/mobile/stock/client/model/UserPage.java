@@ -25,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
@@ -32,7 +33,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  * 
  * @author renwenjie
  */
-@View(name = "userPage", withToolbar=true, description="我的主页")
+@View(name = "userPage", withToolbar=true, description="我的主页", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
 public abstract class UserPage extends PageBase  {
 
@@ -224,6 +225,7 @@ public abstract class UserPage extends PageBase  {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
+					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
@@ -273,6 +275,7 @@ public abstract class UserPage extends PageBase  {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
+					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = actualBean.getStatus();
