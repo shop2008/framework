@@ -60,7 +60,9 @@ public class SpinnerViewFieldBinding extends BasicFieldBinding {
 	
 	@Override
 	protected void updateUI(boolean recursive) {
-		this.listAdapter.refresh();
+		if(this.listAdapter!=null){
+			this.listAdapter.refresh();
+		}
 		IUIComponent comp = getField();
 		Spinner view = (Spinner)getUIControl();
 		Integer position = comp.getAttribute(MinuteLineViewKeys.position);

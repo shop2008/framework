@@ -53,7 +53,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 
 	private boolean hasShow = false;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
@@ -103,8 +103,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		if (log.isDebugEnabled()) {
 			log.debug("GeGuStockPage : handleTMegaTopRefresh");
 		}
-		infoCenterService.getStockQuotation(codeValue,marketCode);
-		infoCenterService.getMinuteline(map);
+		this.infoCenterService.getStockQuotation(codeValue,marketCode);
+		updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), stockName));
 		return null;
 	}	
 	

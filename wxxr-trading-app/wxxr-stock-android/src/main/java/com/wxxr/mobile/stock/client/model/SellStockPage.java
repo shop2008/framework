@@ -14,9 +14,11 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -57,7 +59,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
@@ -213,7 +215,21 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	 * @param amount -委托数量
 	 * @throws StockAppBizException
 	 */
-	@Command
+	@Command(
+			navigations={
+					@Navigation(on = "price", showDialog="messageBox",params={
+							@Parameter(name = "message", value = "卖出价格不能为0"),
+							@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "icon",value = ""),
+							@Parameter(name = "title",value="")
+						}),
+					@Navigation(on = "amount", showDialog="messageBox",params={
+							@Parameter(name = "message", value = "卖出股数不能为空"),
+							@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "icon",value = ""),
+							@Parameter(name = "title",value="")
+						})					
+			})
 	String sellStock(InputEvent event){
 		String price = "0";
 		if(isSelected == 0) {
@@ -222,6 +238,11 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
+		}
+		if(price==null){
+			return "price";
+		}else if(amount==null){
+			return "amount";
 		}
 		if(tradingService!=null){
 			if(accid!=null && stockMarket!=null && stockCode!=null && price!=null && amount!=null){

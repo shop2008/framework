@@ -4,18 +4,21 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -41,7 +44,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
@@ -116,8 +119,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	//同意守则-挑战交易盘
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${checkedbox==0?'resourceId:color/white':'resourceId:color/gray'}"),
-			@Attribute(name = "enabled", value = "${checkedbox==0?true:false}")
+			@Attribute(name = "textColor", value = "${(checkedbox==0 && userCreateTradAccInfo.requestamount!=null)?'resourceId:color/white':'resourceId:color/gray'}"),
+			@Attribute(name = "enabled", value = "${checkedbox==0 && userCreateTradAccInfo.requestamount!=null}")
 			}
 	)
 	String submitBtnStatus;
@@ -129,8 +132,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	//同意守则-挑战交易盘
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${checkedbox1==0?'resourceId:color/white':'resourceId:color/gray'}"),
-			@Attribute(name = "enabled", value = "${checkedbox1==0?true:false}")
+			@Attribute(name = "textColor", value = "${(checkedbox1==0 && userCreateTradAccInfo.getRateData3()>0 && userCreateTradAccInfo.getDeposit3()>0)?'resourceId:color/white':'resourceId:color/gray'}"),
+			@Attribute(name = "enabled", value = "${checkedbox1==0 && userCreateTradAccInfo.getRateData3()>0 && userCreateTradAccInfo.getDeposit3()>0}")
 			})
 	String submitBtnStatus1;
 	
@@ -347,7 +350,16 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	}
 	
 	//挑战交易-提交
-	@Command
+	@Command(navigations={
+			@Navigation(on = "*", showDialog="messageBox",params={
+					@Parameter(name = "message", value = "请输入申购金额"),
+					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "icon",value = ""),
+					@Parameter(name = "title",value="")
+			})
+	})
+	@NetworkConstraint
+	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
 	String submitDataClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			long money = changeMoney * 10000 * 100;
@@ -380,19 +392,35 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 			if(money>0 && _rate>0 && _depositRate>0 && assetType!=null){
 				userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
 				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			}else{
+				log.info("creataBuyTradePage Tiao Zhan submitDataClick: money= " +money+ " _rate= " +_rate + "_depositRate = " +_depositRate);
+				return "";
 			}
 		}
-		return "home";
+		return null;
 	}
 	
 	
 	//参赛交易-提交
-		@Command
+		@Command(navigations={
+				@Navigation(on = "*", showDialog="messageBox",params={
+						@Parameter(name = "message", value = "创建失败"),
+						@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+						@Parameter(name = "icon",value = ""),
+						@Parameter(name = "title",value="")
+				})
+		})
+		
+		@NetworkConstraint
+		@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
 		String submitDataClick1(InputEvent event){
 			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 				if(getRate3()>0 && getDeposit3()>0){
 					userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
 					getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+				}else{
+					log.info("creataBuyTradePage  Can Sai submitDataClick1: getRate3= " +getRate3()+ " getDeposit3= " + getDeposit3());
+					return "";
 				}
 			}
 			return null;

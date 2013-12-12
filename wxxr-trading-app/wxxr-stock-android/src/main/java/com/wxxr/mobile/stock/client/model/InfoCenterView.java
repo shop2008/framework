@@ -3,8 +3,10 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -223,8 +225,14 @@ public abstract class InfoCenterView extends ViewBase {
 		return null;
 	}
 	
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "false")})
+	String acctRefreshView;
+	
 	@Command
 	String handleTopRefresh(InputEvent event){
+		this.infoCenterService.getStockQuotation("000001","SH");
+		this.infoCenterService.getStockQuotation("399001","SZ");
 		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
 		return null;
 	}

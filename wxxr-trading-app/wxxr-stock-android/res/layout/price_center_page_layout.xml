@@ -233,17 +233,30 @@
 		</LinearLayout>
 
     </LinearLayout>
-
-    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        bind:itemViewId="infoCenterItemView"
-	    bind:field="stockInfos"
-	    style="@style/mListView"
-	    bind:on_TopRefresh="handleTopRefresh"
-		bind:on_BottomRefresh="handleBottomRefresh"
-	    bind:on_ItemClick="gotoPageItemClick">
-    </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+	<com.wxxr.mobile.stock.client.widget.PullToRefreshView
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    bind:field="acctRefreshView"
+	    android:layout_weight="1"
+	    bind:on_TopRefresh="handleTopRefresh" >
+		<ScrollView android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:scrollbars="none"
+		    android:fadingEdge="none">
+		    <LinearLayout android:layout_width="fill_parent"
+		        android:layout_height="fill_parent">
+			    <com.wxxr.mobile.stock.client.widget.AutoHeightListView
+			        android:id="@+id/listView1"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" 
+			        bind:itemViewId="infoCenterItemView"
+				    bind:field="stockInfos"
+				    style="@style/mListView"
+				    bind:on_ItemClick="gotoPageItemClick">
+			    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
+		    </LinearLayout>
+		</ScrollView>
+	</com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
 </LinearLayout>

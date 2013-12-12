@@ -97,6 +97,8 @@ public abstract class TradingMainView extends ViewBase{
 		}
 		articleService.getHomeArticles(0, 4);
 		tradingService.getHomePageTradingAccountList();
+		tradingService.getT0TradingAccountList();
+		tradingService.getT1TradingAccountList();
 		return null;
 	}	
 	

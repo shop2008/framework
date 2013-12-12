@@ -25,17 +25,18 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name="ZhiShuPage",withToolbar=true,description="指数界面")
+@View(name="ZhiShuPage",withToolbar=true,description="指数界面",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.zhishu_page_layout")
 public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	static Trace log = Trace.getLogger(ZhiShuPage.class);
 	@Menu(items = { "left" })
 	private IMenu toolbar; 
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
@@ -174,7 +175,8 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 		if (log.isDebugEnabled()) {
 			log.debug("SZzhiShuPage : handleTMegaTopRefresh");
 		}
-		infoCenterService.getQuotations();
+		this.infoCenterService.getStockQuotation(this.stockCode, this.stockMarket);
+		updateSelection(new StockSelection(stockBean.getMarket(),stockBean.getCode(),this.stockName));
 		return null;
 	}	
 	@Command

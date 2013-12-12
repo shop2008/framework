@@ -59,7 +59,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
 	List<StockBaseInfo> searchList;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");

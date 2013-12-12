@@ -78,7 +78,7 @@ public abstract class UserNewsPage extends PageBase {
 	String noticeRefreshView;
 	@Command(
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){

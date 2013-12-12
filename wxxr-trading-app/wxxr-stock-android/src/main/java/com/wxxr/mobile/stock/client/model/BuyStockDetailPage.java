@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -153,7 +154,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -335,7 +336,17 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "page", showView = "StockKLineView") })
+	@Command(commandName="handleBuyBtnClick",navigations = { 
+			@Navigation(
+					on = "TradingTimeInvalidateException", 
+					message = "%m%n", 
+					params = {
+							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "title", value = "错误")
+							}
+					) 
+			}
+	)
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String handleBuyBtnClick(InputEvent event) {
 		String price = "0";

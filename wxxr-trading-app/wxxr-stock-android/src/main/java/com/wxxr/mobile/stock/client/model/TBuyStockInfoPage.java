@@ -81,7 +81,7 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;

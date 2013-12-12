@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor3;
 	
 	@Bean
-	Map<String, Object> map;
+	Map<String, String> map;
 	@Bean
 	String nameBean;
 	@Bean
@@ -202,7 +203,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
 		if(selection instanceof StockSelection){
-			HashMap<String, Object> minuteMap = new HashMap<String, Object>();
+			HashMap<String, String> minuteMap = new HashMap<String, String>();
 			StockSelection stockSelection = (StockSelection) selection;
 			if(stockSelection!=null){
 				this.codeBean = stockSelection.getCode();
@@ -218,10 +219,13 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 				minuteMap.put("market", this.marketBean);
 				this.map = minuteMap;
 				registerBean("map", this.map);
+				if(infoCenterService!=null){
+					infoCenterService.getMinuteline(this.map);
+				}
 			}
 			if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
 				this.stockType = "0";
-			}			
+			}	
 		}
 	}
 	

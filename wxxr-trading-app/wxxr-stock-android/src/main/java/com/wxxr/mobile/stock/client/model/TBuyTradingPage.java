@@ -139,7 +139,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	private IMenu toolbar;
 
 	@Command(description = "Invoke when a toolbar item was clicked", 
-			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -152,7 +152,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @return
 	 */
 	@Command(description = "Invoke when a toolbar item was clicked", 
-			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();

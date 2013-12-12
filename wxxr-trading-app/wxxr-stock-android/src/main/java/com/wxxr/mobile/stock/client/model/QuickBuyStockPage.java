@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -42,7 +43,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
@@ -188,10 +189,10 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Field(valueKey="text",binding="${C_buyNum!=null?C_buyNum:'***'}${'股'}")
 	String CbuyNum;
 	
-	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null)}")
+	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && userCreateTradAccInfo.requestamount!=null && stockQuotation.close!=null)}")
 	boolean tiaozhanButton = true;
 	
-	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null)}")
+	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && stockQuotation.close!=null)}")
 	boolean cansaiButton = true;
 	
 	@OnShow
@@ -353,7 +354,21 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	}
 	
 	/**参赛交易盘买人--模拟盘*/
-	@Command(navigations={@Navigation(on="home",showPage="home")})
+	@Command(navigations={
+			@Navigation(on="home",showPage="home"),
+			@Navigation(on = "buyNum", showDialog="messageBox",params={
+					@Parameter(name = "message", value = "买入数量不能为空"),
+					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "icon",value = ""),
+					@Parameter(name = "title",value="")
+				}),
+			@Navigation(on = "*", showDialog="messageBox",params={
+					@Parameter(name = "message", value = "买入失败"),
+					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "icon",value = ""),
+					@Parameter(name = "title",value="")
+				})
+			})
 	String CanSaiBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String market = null;
@@ -364,24 +379,36 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				market = stockQuotation.getMarket();
 				code = stockQuotation.getCode();
 				close = stockQuotation.getClose();
-				maxBuyNum = buyNumber(100000l, close);
+				if(close>0){
+					maxBuyNum = buyNumber(100000l, close);
+				}
+			}
+			if(maxBuyNum == 0 && String.valueOf(maxBuyNum)==null){
+				return "buyNum";
 			}
 			if(getRate3()>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && getDeposit3()>0){
 				userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
 				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 				return "home";	
+			}else{
+				log.info("QuickBuyStockPage CanSaiBuyStockClick :: rate3 = " +getRate3()+ "market= "+market+ "code= "+code+ "MaxBuyNum ="+maxBuyNum+ "Deposit= "+getDeposit3());
+				return "";
 			}
 		}
 		return null;
 	}
 	
 	@Command(navigations={
-			@Navigation(on = "WarnAlertDailog",showDialog="WarnAlertDailog"),
-			@Navigation(on="home",showPage="home")
+			@Navigation(on="home",showPage="home"),
+			@Navigation(on = "captitalAmount", showDialog="messageBox",params={
+					@Parameter(name = "message", value = "请输入申购金额"),
+					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "icon",value = ""),
+					@Parameter(name = "title",value="")
+				})
 	})
-	CommandResult TiaoZhanBuyStockClick(InputEvent event){
+	String TiaoZhanBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			CommandResult result = new CommandResult();
 			long captitalAmount = changeMoney * 10000 * 100; //-申请额度
 			float _rate = 0.0f; //-中止止损
 			float _depositRate = 0.0f; //保证金
@@ -420,15 +447,11 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				break;
 			}
 			if(captitalAmount<=0){
-				result.setPayload("请输入申购金额");
-				result.setResult("WarnAlertDailog");
-				return result;
-			}
-			else if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
+				return "captitalAmount";
+			}else if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
 				userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
 				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-				result.setResult("home");
-				return result;
+				return "home";
 			}
 		}
 		return null;

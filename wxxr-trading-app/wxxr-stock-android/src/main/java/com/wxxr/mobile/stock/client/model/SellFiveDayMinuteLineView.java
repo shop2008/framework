@@ -106,11 +106,11 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 	
 	/**股票名称*/
 	@Field(valueKey="text",binding="${stockInfoBean!=null?stockInfoBean.name:'--'}")
-	String name;
+	String name1;
 	
 	/**股票代码+市场代码*/
 	@Field(valueKey="text",binding="${'('}${(quotationBean!=null && quotationBean.code!=null)?quotationBean.code:'--'}${'.'}${(quotationBean!=null && quotationBean.market!=null)?quotationBean.market:'--'}${')'}")
-	String codeAndmarket;
+	String codeAndmarket1;
 	
 	/**换手率*/
 	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.handrate:null}", converter = "stockLong2StringConvertorSpecial")

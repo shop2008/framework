@@ -108,7 +108,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;

@@ -72,7 +72,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean
 	int curItemId = 1;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;

@@ -45,7 +45,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
  
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
@@ -207,22 +207,17 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * @return
 	 */
 	@Command(description = "Invoke when a toolbar item was clicked", 
-			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage")
 			})
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
-		Long stockId = 0L;
-		if (event.getProperty("position") instanceof Integer) {
-			int position = (Integer) event.getProperty("position");
-			if (stockTradingOrder != null && stockTradingOrder.size() > 0) {
-				StockTradingOrderBean tempTradingA = stockTradingOrder.get(position);
-				stockId = tempTradingA.getId();
-			}
+		if(this.accid!=null){
+			resutl.setResult("TradingRecordsPage");
+			resutl.setPayload(this.accid);
+			return resutl;
 		}
-		resutl.setResult("TradingRecordsPage");
-		resutl.setPayload(stockId);
-		return resutl;
+		return null;
 	}
 	
 	

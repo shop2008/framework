@@ -49,7 +49,7 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="左菜单",icon="resourceId:drawable/list_button")
+				@UIItem(id="left",label="左菜单",icon="resourceId:drawable/list_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
@@ -67,7 +67,7 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="right",label="右菜单",icon="resourceId:drawable/message_button")
+				@UIItem(id="right",label="右菜单",icon="resourceId:drawable/user_button_style")
 			}
 	)
 	String toolbarClickedRight(InputEvent event){
@@ -85,7 +85,7 @@ public abstract class HomePage extends PageBase {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="search",label="搜索",icon="resourceId:drawable/finds")
+				@UIItem(id="search",label="搜索",icon="resourceId:drawable/find_button_style")
 			}, 
 	navigations={
 			@Navigation(on="*",showPage="GeGuStockPage")}

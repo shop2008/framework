@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -43,7 +44,7 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
@@ -59,20 +60,15 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	boolean isVirtual = false;
 	
 	@Bean
-	String accid = "";
+	String accid;
 	@Bean
-	Object stockId = "";
+	Object stockId;
 	
 	
-//	@OnShow
-//	void showView(){
-//		contents.resetViewStack();
-//		if(auditData!=null){
-//			this.isVirtual = auditData.getVirtual();
-//			registerBean("isVirtual", this.isVirtual);
-//			updateSelection(new StockSelection(accid, isVirtual));
-//		}
-//	}
+	@OnShow
+	void showView(){
+		contents.resetViewStack();
+	}
 	
 	@Command(navigations={
 			@Navigation(on="readRecord",showView="DealRecordView",params={@Parameter(name = "add2BackStack", value = "false")})
@@ -137,7 +133,7 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/jyjl") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		resutl.setResult("TradingRecordsPage");
