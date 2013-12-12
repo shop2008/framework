@@ -135,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
                     bind:field="integralBalance" />
             </LinearLayout>
 
@@ -167,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
                     bind:field="accountBalance" />
             </LinearLayout>
 
