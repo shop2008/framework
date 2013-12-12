@@ -3,8 +3,12 @@ package com.wxxr.mobile.stock.client.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -13,45 +17,45 @@ import android.view.View;
 public class Utils {
 
 	private static Utils instance;
-	
-	private Utils(){
-		
+
+	private Utils() {
+
 	}
-	
+
 	public static Utils getInstance() {
-		if(instance==null){
+		if (instance == null) {
 			instance = new Utils();
 		}
 		return instance;
 	}
-	
-	public static String getDate(long data){
+
+	public static String getDate(long data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
-		if(data>0){
+		if (data > 0) {
 			String date = sdf.format(data);
 			return date;
 		}
 		return null;
 	}
-	
-	public static String getTime(long data){
+
+	public static String getTime(long data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		if(data>0){
+		if (data > 0) {
 			String teim = sdf.format(data);
 			return teim;
 		}
 		return null;
 	}
-	
-	public static String parseFloat(Float f) { 
-		
+
+	public static String parseFloat(Float f) {
+
 		if (f > 0) {
-			return "+"+String.valueOf(f);
+			return "+" + String.valueOf(f);
 		} else {
-			return "-"+String.valueOf(f);
+			return "-" + String.valueOf(f);
 		}
 	}
-	
+
 	public static int dip2px(Context context, float dipValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (dipValue * scale + 0.5f);
@@ -61,9 +65,9 @@ public class Utils {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (pxValue / scale + 0.5f);
 	}
-	
+
 	public static int[] getViewLTPoint(View view) {
-		if(view == null)
+		if (view == null)
 			return null;
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
@@ -72,7 +76,7 @@ public class Utils {
 	}
 
 	public static int[] getViewRBPoint(View view) {
-		if(view == null)
+		if (view == null)
 			return null;
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
@@ -83,7 +87,7 @@ public class Utils {
 	}
 
 	public static int[] getViewCentrePoint(View view) {
-		if(view == null)
+		if (view == null)
 			return null;
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
@@ -92,36 +96,32 @@ public class Utils {
 
 		return location;
 	}
-	
-	/** 
-     * 获取状态栏高度 
-     *  
-     * @return 
-     */  
-    public static int getStatusBarHeight(Context context)  
-    {  
-        Class<?> c = null;  
-        Object obj = null;  
-        java.lang.reflect.Field field = null;  
-        int x = 0;  
-        int statusBarHeight = 0;  
-        try  
-        {  
-            c = Class.forName("com.android.internal.R$dimen");  
-            obj = c.newInstance();  
-            field = c.getField("status_bar_height");  
-            x = Integer.parseInt(field.get(obj).toString());  
-            statusBarHeight = context.getResources().getDimensionPixelSize(x);  
-            return statusBarHeight;  
-        }  
-        catch (Exception e)  
-        {  
-            e.printStackTrace();  
-        }  
-        return statusBarHeight;  
-    }  
-    
-    /**
+
+	/**
+	 * 获取状态栏高度
+	 * 
+	 * @return
+	 */
+	public static int getStatusBarHeight(Context context) {
+		Class<?> c = null;
+		Object obj = null;
+		java.lang.reflect.Field field = null;
+		int x = 0;
+		int statusBarHeight = 0;
+		try {
+			c = Class.forName("com.android.internal.R$dimen");
+			obj = c.newInstance();
+			field = c.getField("status_bar_height");
+			x = Integer.parseInt(field.get(obj).toString());
+			statusBarHeight = context.getResources().getDimensionPixelSize(x);
+			return statusBarHeight;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return statusBarHeight;
+	}
+
+	/**
 	 * FIXME 提供小数位四舍五入处理。如果不是科学计算，任何商业计算都应该使用BigDecimal而不是double，因为double类型不精确。
 	 * 
 	 * @param v
@@ -139,53 +139,53 @@ public class Utils {
 		BigDecimal one = new BigDecimal("1");
 		return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).floatValue();
 	}
-	
-	  /**
-		 * FIXME 提供小数位四舍五入处理。如果不是科学计算，任何商业计算都应该使用BigDecimal而不是double，因为double类型不精确。
-		 * 
-		 * @param v
-		 *            需要四舍五入的数字
-		 * @param scale
-		 *            小数点后“最多”保留几位
-		 * @return 四舍五入后的结果
-		 */
+
+	/**
+	 * FIXME 提供小数位四舍五入处理。如果不是科学计算，任何商业计算都应该使用BigDecimal而不是double，因为double类型不精确。
+	 * 
+	 * @param v
+	 *            需要四舍五入的数字
+	 * @param scale
+	 *            小数点后“最多”保留几位
+	 * @return 四舍五入后的结果
+	 */
 	public static float roundUp(float v, int scale) {
-			if (scale < 0) {
-				throw new IllegalArgumentException(
-						"The scale must be a positive integer or zero");
-			}
-			BigDecimal b = new BigDecimal(Float.toString(v));
-			BigDecimal one = new BigDecimal("1");
-			return b.divide(one, scale, BigDecimal.ROUND_UP).floatValue();
+		if (scale < 0) {
+			throw new IllegalArgumentException(
+					"The scale must be a positive integer or zero");
 		}
-	
-	public static String formatNumber(Float val,int n){
+		BigDecimal b = new BigDecimal(Float.toString(v));
+		BigDecimal one = new BigDecimal("1");
+		return b.divide(one, scale, BigDecimal.ROUND_UP).floatValue();
+	}
+
+	public static String formatNumber(Float val, int n) {
 		String data = null;
-		if(val > 10000000000.0){
-			if(n==1){
-				data = String.format("%.1f亿", val/10000000000.0);
+		if (val > 10000000000.0) {
+			if (n == 1) {
+				data = String.format("%.1f亿", val / 10000000000.0);
 			}
-			if(n==2){
-				data = String.format("%.1f亿", val/10000000000.0/2);
+			if (n == 2) {
+				data = String.format("%.1f亿", val / 10000000000.0 / 2);
 			}
-		}else if(val > 1000000.0){
-			if(n==1){
-				data = String.format("%.1f万", val/1000000.0);
+		} else if (val > 1000000.0) {
+			if (n == 1) {
+				data = String.format("%.1f万", val / 1000000.0);
 			}
-			if(n==2){
-				data = String.format("%.1f万", val/1000000.0/2);
+			if (n == 2) {
+				data = String.format("%.1f万", val / 1000000.0 / 2);
 			}
-		}else{
-			if(n==1){
-				data = String.format("%.0f", val/100);
+		} else {
+			if (n == 1) {
+				data = String.format("%.0f", val / 100);
 			}
-			if(n==2){
-				data = String.format("%.0f", val/200);
+			if (n == 2) {
+				data = String.format("%.0f", val / 200);
 			}
 		}
 		return data;
-	}	
-	
+	}
+
 	/**
 	 * FIXME “#”是可以为空，“0”是不够添0占位，“，”是分隔符;例如“#，##0.0#”
 	 * 
@@ -226,21 +226,30 @@ public class Utils {
 		return tmp + "%";
 	}
 
-	public static Object[] getGroupData(List<Object> data, String method) {
-		
-		if (data == null || data.size() <=0) {
+	/**
+	 * 处理已排序的数据
+	 * 
+	 * @param data
+	 *            要处理的数据
+	 * @param method
+	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
+	 * @return 分组后的数据
+	 */
+	public static Object[] getSortedGroupData(List<Object> data, String method) {
+
+		if (data == null || data.size() <= 0) {
 			return null;
 		}
 		List<Object> retList = new ArrayList<Object>();
 		Object curLabelObj = null;
-		for(int i=0;i<data.size();i++) {
+		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
 				Method m = obj.getClass().getMethod(method, null);
 				m.setAccessible(true);
 				Object labelObj = m.invoke(obj, null);
-				
-				if (i==0) {
+
+				if (i == 0) {
 					curLabelObj = labelObj;
 					retList.add(curLabelObj);
 					retList.add(obj);
@@ -264,7 +273,127 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-		
 		return null;
+	}
+
+	/**
+	 * 处理未排序的数据--按时间排序
+	 * 
+	 * @param data
+	 *            要处理的数据
+	 * @param method
+	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
+	 * @return 分组后的数据
+	 */
+	public static Object[] getUnSortedGroupData(List<Object> data,
+			final String method) {
+
+		if (data == null || data.size() <= 0) {
+			return null;
+		}
+
+		Collections.sort(data, new Comparator<Object>() {
+
+			@Override
+			public int compare(Object lhs, Object rhs) {
+				try {
+					Method lMethod = lhs.getClass().getMethod(method, null);
+					Method rMethod = rhs.getClass().getMethod(method, null);
+					Object lValue = lMethod.invoke(lhs, null);
+					Object rValue = rMethod.invoke(rhs, null);
+					
+					if (lValue instanceof String || rValue instanceof String) {
+						long lTime = stringTime2Long((String) lValue);
+						long rTime = stringTime2Long((String) rValue);
+						if (lTime > rTime) {
+							return -1;
+						} else if (lTime == rTime) {
+							return 0;
+						} else {
+							return 1;
+						}
+					}
+					
+					if (lValue instanceof Long || rValue instanceof Long) {
+						long ltime = (Long) lValue;
+						long rtime = (Long) rValue;
+						if (ltime >rtime) {
+							return -1;
+						} else if (ltime == rtime) {
+							return 0;
+						} else {
+							return 1;
+						}
+					}
+					
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				return 0;
+			}
+		});
+		List<Object> retList = new ArrayList<Object>();
+		Object curLabelObj = null;
+		for (int i = 0; i < data.size(); i++) {
+			Object obj = data.get(i);
+			try {
+				Method m = obj.getClass().getMethod(method, null);
+				m.setAccessible(true);
+				Object labelObj = m.invoke(obj, null);
+
+				if (i == 0) {
+					curLabelObj = labelObj;
+					retList.add(stringTimeFormat(curLabelObj.toString()));
+					retList.add(obj);
+				} else {
+					if (labelObj.equals(curLabelObj)) {
+						retList.add(obj);
+					} else {
+						curLabelObj = labelObj;
+						retList.add(stringTimeFormat(curLabelObj.toString()));
+						retList.add(obj);
+					}
+				}
+				return retList.toArray();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	private static Long stringTime2Long(String time) throws ParseException {
+		SimpleDateFormat formatter = null;
+		if (time.length()==8) {
+			
+			formatter = new SimpleDateFormat("yyyyMMdd");
+		} else if (time.length() == 10) {
+			formatter = new SimpleDateFormat("yyyy-MM-dd");
+		}
+		Date date = formatter.parse(time);
+		return date.getTime();
+	}
+	
+	private static String stringTimeFormat(String time) throws ParseException {
+		long lTime = stringTime2Long(time);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date(lTime);
+		return formatter.format(date);
 	}
 }

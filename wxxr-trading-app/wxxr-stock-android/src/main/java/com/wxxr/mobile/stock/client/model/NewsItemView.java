@@ -92,16 +92,16 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			return result != null ? Utils.getGroupData(result, "getCreatedDate"): null;
+			return result != null ? Utils.getSortedGroupData(result, "getCreatedDate"): null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
 				List<Object> result = (List<Object>) val;
-				return Utils.getGroupData(result, "getCreatedDate");
+				return Utils.getSortedGroupData(result, "getCreatedDate");
 			}else if((val != null)&&val.getClass().isArray()){
 				List<Object>  result = Arrays.asList(val);
-				return Utils.getGroupData(result, "getCreatedDate");
+				return Utils.getSortedGroupData(result, "getCreatedDate");
 			}
 		}
 		return null;
