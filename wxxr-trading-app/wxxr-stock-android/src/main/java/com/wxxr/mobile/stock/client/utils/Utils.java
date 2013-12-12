@@ -99,7 +99,6 @@ public class Utils {
 
 	/**
 	 * 获取状态栏高度
-	 * 
 	 * @return
 	 */
 	public static int getStatusBarHeight(Context context) {
@@ -266,7 +265,7 @@ public class Utils {
 						retList.add(obj);
 					}
 				}
-				return retList.toArray();
+				
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -277,7 +276,7 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		return retList.toArray();
 	}
 
 	/**
@@ -366,7 +365,7 @@ public class Utils {
 						retList.add(obj);
 					}
 				}
-				return retList.toArray();
+				
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -379,7 +378,7 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		return retList.toArray();
 	}
 
 	private static Long stringTime2Long(String time) throws ParseException {
