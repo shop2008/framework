@@ -30,7 +30,7 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 	}
 	
 	@Override
-	public IRefreshableListAdapter buildListAdapter(final IUIComponent field,
+	public IRefreshableListAdapter buildListAdapter(IUIComponent field,
 			IAndroidBindingContext bContext, String itemViewId) {
 		
 		AbstractPinnedHeaderListAdapter adapter = new AbstractPinnedHeaderListAdapter(bContext,createAdaptorFromValue(field), this) {
@@ -54,7 +54,8 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 		return adapter;
 	}
 	
-	public static IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
+	public static IListDataProvider createAdaptorFromValue(IUIComponent comp) {
+		final IUIComponent c = comp;
 		return new IListDataProvider() {
 			Object[] data = null;
 			@Override
@@ -79,13 +80,13 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 
 			@Override
 			public boolean updateDataIfNeccessary() {
-				data = getListData(comp);
+				data = getListData(c);
 				return true;
 			}
 		};
 	}
 
-	public static Object[] getListData(final IUIComponent comp){
+	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
 			

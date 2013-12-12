@@ -56,7 +56,8 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 		};
 	}
 
-	public static IListDataProvider createAdaptorFromValue(final IUIComponent comp) {
+	public static IListDataProvider createAdaptorFromValue(IUIComponent comp) {
+		final IUIComponent c = comp;
 		return new IListDataProvider() {
 			Object[] data = null;
 			@Override
@@ -81,7 +82,7 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 
 			@Override
 			public boolean updateDataIfNeccessary() {
-				data = getListData(comp);
+				data = getListData(c);
 				return true;
 			}
 		};
