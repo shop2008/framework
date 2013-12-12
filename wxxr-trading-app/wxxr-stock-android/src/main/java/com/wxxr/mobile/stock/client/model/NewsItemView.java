@@ -73,7 +73,7 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 
 			@Override
 			public Object getItem(int i) {
-				return data[i];
+				return data.length>0?data[i]:null;
 			}
 
 			@Override

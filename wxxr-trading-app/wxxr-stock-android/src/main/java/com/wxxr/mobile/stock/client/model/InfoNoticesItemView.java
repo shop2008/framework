@@ -76,7 +76,7 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 
 			@Override
 			public Object getItem(int i) {
-				return data[i];
+				return data.length>0?data[i]:null;
 			}
 
 			@Override
