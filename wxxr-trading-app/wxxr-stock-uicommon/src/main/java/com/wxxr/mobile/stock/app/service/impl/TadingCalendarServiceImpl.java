@@ -67,7 +67,7 @@ public class TadingCalendarServiceImpl extends AbstractModule<IStockAppContext> 
                     Date startDate = sdf.parse(t.getStartDate());
                     Date endDate = sdf.parse(t.getEndDate());
                     if (currDate.before(startDate) || currDate.after(endDate)){
-                        throw new TradingTimeInvalidateException("不在时间"+startDate+"-"+endDate+"范围内");
+                        throw new TradingTimeInvalidateException("不在时间"+t.getStartDate()+"-"+t.getEndDate()+"范围内");
 //                        return false;
                     }
                 }
