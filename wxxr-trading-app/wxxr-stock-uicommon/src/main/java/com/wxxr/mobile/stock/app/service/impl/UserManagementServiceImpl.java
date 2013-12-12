@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -679,7 +680,21 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			if(remindMessagesCache==null){
 				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
 			}
-			remindMessages=remindMessagesCache.getEntities(null, null);
+			remindMessages=remindMessagesCache.getEntities(null, new Comparator<RemindMessageBean>() {
+				
+				@Override
+				public int compare(RemindMessageBean lhs, RemindMessageBean rhs) {
+					long c=Long.parseLong(rhs.getCreatedDate())-Long.parseLong(lhs.getCreatedDate());
+					if(c==0){
+						try {
+							c=Long.parseLong(((String)rhs.getAttrs().get("time")))-Long.parseLong(((String)lhs.getAttrs().get("time")));
+						} catch (NumberFormatException e) {
+							
+						}
+					}
+					return c>=0?1:-1;
+				}
+			});
 		}
 		remindMessagesCache.doReloadIfNeccessay();
 		return remindMessages;
@@ -695,7 +710,15 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			if(pullMessagesCache==null){
 				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean");
 			}
-			pullMessages=pullMessagesCache.getEntities(null, null);
+			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {
+
+				@Override
+				public int compare(PullMessageBean lhs, PullMessageBean rhs) {
+					long c=Long.parseLong(lhs.getCreateDate())-Long.parseLong(lhs.getCreateDate());
+					return c>=0?1:-1;
+				}
+				
+			});
 		}
 		Map<String, Object> params=new HashMap<String, Object>();
 		params.put("start", start);
