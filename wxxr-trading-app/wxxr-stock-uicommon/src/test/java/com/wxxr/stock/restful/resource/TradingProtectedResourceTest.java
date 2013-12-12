@@ -1,7 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,12 +15,12 @@ import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
-import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
-import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.HomePageVO;
+import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
-import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 
@@ -128,13 +127,13 @@ public class TradingProtectedResourceTest extends TestCase {
 
 	// public List<GainVO> getGain( int start, int limit) throws Exception;
 	public void testGetGain() throws Exception {
-		List<GainVO> a = tradingProtectedResource.getGain(0, 10);
+		GainVOs a = tradingProtectedResource.getGain(0, 10);
 		System.out.println(a);
 	}
 
 	// public List<TradingAccInfoVO> getTradingAccountList() throws Exception;
 	public void testGetTradingAccountList() throws Exception {
-		List<TradingAccInfoVO> a = tradingProtectedResource
+		TradingAccInfoVOs a = tradingProtectedResource
 				.getTradingAccountList();
 		System.out.println(a);
 	}
@@ -190,20 +189,20 @@ public class TradingProtectedResourceTest extends TestCase {
 
 	// public List<GainVO> getTotalGain( int start, int limit) throws Exception;
 	public void testGetTotalGain() throws Exception {
-		List<GainVO> a = tradingProtectedResource.getTotalGain(0, 10);
+		GainVOs a = tradingProtectedResource.getTotalGain(0, 10);
 		System.out.println(a);
 	}
 
 	// public List<HomePageVO> getHomeImage() throws Exception;
 	public void testGetHomeImage() throws Exception {
-		List<HomePageVO> a = tradingProtectedResource.getHomeImage();
+		HomePageVOs a = tradingProtectedResource.getHomeImage();
 		System.out.println(a);
 	}
 
 	// public List<HomePageVO> getHomeList( int start, int limit) throws
 	// Exception;
 	public void testGetHomeList() throws Exception {
-		List<HomePageVO> a = tradingProtectedResource.getHomeList(0, 10);
+		HomePageVOs a = tradingProtectedResource.getHomeList(0, 10);
 		System.out.println(a);
 	}
 
@@ -222,7 +221,7 @@ public class TradingProtectedResourceTest extends TestCase {
 	// public List<GainPayDetailsVO> getGPDetails( int start, int limit)throws
 	// Exception;
 	public void testGetGPDetails() throws Exception {
-		List<GainPayDetailsVO> a = tradingProtectedResource.getGPDetails(0, 10);
+		GainPayDetailsVOs a = tradingProtectedResource.getGPDetails(0, 10);
 		System.out.println(a);
 	}
 
@@ -235,7 +234,7 @@ public class TradingProtectedResourceTest extends TestCase {
 	// public List<GainVO> getMorePersonalRecords( int start, int limit, boolean
 	// virtual) throws Exception ;
 	public void testGetMorePersonalRecords() throws Exception {
-		List<GainVO> a = tradingProtectedResource.getMorePersonalRecords(0, 10,
+		GainVOs a = tradingProtectedResource.getMorePersonalRecords(0, 10,
 				true);
 		System.out.println(a);
 	}

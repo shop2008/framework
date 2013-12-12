@@ -10,6 +10,8 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -23,15 +25,12 @@ import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
-import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.rpc.rest.ResteasyRestClientService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
-import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
+import com.wxxr.stock.restful.json.MessageVOs;
 
 
 public class MessageRemindResourceTest extends TestCase{
@@ -123,7 +122,8 @@ public class MessageRemindResourceTest extends TestCase{
 	public void testFindById()throws Exception{
 		MsgQuery vo = new MsgQuery();
 //		vo.setId("whatever");
-		List<MessageVO> a =messageRemindResource.findById(vo);
+		List<String> list = Collections.synchronizedList(new ArrayList<String>());
+		MessageVOs a =messageRemindResource.findById(vo);
 		System.out.println(a);
 	}
 }

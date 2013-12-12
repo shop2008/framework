@@ -45,6 +45,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-jackson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
 			<artifactId>wxxr-mobile-xml</artifactId>
 		</dependency>
 		<dependency>

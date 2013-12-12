@@ -17,15 +17,17 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
-import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
+import com.wxxr.stock.hq.ejb.api.StockMinuteKVOs;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.BaseInfoListVO;
-import com.wxxr.stock.restful.json.ComponentstocksListVO;
 import com.wxxr.stock.restful.json.LineListVO;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.json.PlateTaxisListVO;
 import com.wxxr.stock.restful.json.QuotationListVO;
+import com.wxxr.stock.restful.json.StockParamVo;
+import com.wxxr.stock.restful.json.StockParamsVo;
 import com.wxxr.stock.restful.json.StockTaxisListVO;
+import com.wxxr.stock.trading.ejb.api.StockQuotationVOs;
 
 
 public class StockResourceTest  extends TestCase{
@@ -106,12 +108,14 @@ public class StockResourceTest  extends TestCase{
 	}
 	
 	public void testGetQuotation()throws Exception{
-		List<ParamVO> list = new ArrayList<ParamVO>();
-		ParamVO p = new ParamVO();
+		List<StockParamVo> list = new ArrayList<StockParamVo>();
+		StockParamVo p = new StockParamVo();
 		p.setMarket("SH");
 		p.setCode("600000");
 		list.add(p);
-		QuotationListVO a = tradingResource.getQuotation(list);
+		StockParamsVo ps = new StockParamsVo();
+		ps.setStocks(list);
+		QuotationListVO a = tradingResource.getQuotation(ps);
 	}
 	
 	public void testGetQuotation1()throws Exception{
@@ -147,7 +151,7 @@ public class StockResourceTest  extends TestCase{
 		p.setCode("600000");
 		p.setStart(0L);
 		p.setLimit(10L);
-		List<StockMinuteKVO> a = tradingResource.getFiveDayMinuteline(p);
+		StockMinuteKVOs a = tradingResource.getFiveDayMinuteline(p);
 	}
 	
 	public void testGetStockHQListByBlockId()throws Exception{
@@ -157,7 +161,7 @@ public class StockResourceTest  extends TestCase{
 		p.setLimit(10L);
 		p.setBlockId(47513L);
 		p.setTaxis("risefallrate");
-		List<StockQuotationVO> a = tradingResource.getStockHQListByBlockId(p);
+		StockQuotationVOs a = tradingResource.getStockHQListByBlockId(p);
 	}
 	
 	public void testGetWeekline()throws Exception{
@@ -196,12 +200,14 @@ public class StockResourceTest  extends TestCase{
 	}
 	public void testGetRefenceBlockHQ()throws Exception{
 		//列表参数。。。。。。。
-		List<ParamVO> list = new ArrayList<ParamVO>();
-		ParamVO p = new ParamVO();
+		List<StockParamVo> list = new ArrayList<StockParamVo>();
+		StockParamVo p = new StockParamVo();
 		p.setMarket("SH");
 		p.setCode("600000");
 		list.add(p);
-		PlateTaxisListVO a = tradingResource.getRefenceBlockHQ(list);
+		StockParamsVo ps = new StockParamsVo();
+		ps.setStocks(list);
+		PlateTaxisListVO a = tradingResource.getRefenceBlockHQ(ps);
 	}
 
 

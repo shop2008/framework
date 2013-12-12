@@ -1,7 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,14 +18,14 @@ import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
-import com.wxxr.stock.trading.ejb.api.GainVO;
-import com.wxxr.stock.trading.ejb.api.HomePageVO;
-import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.HomePageVOs;
+import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
-import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
-import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
-import com.wxxr.stock.trading.ejb.api.WeekRankVO;
+import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
+import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
 public class TradingResourceTest extends TestCase {
 
@@ -111,14 +110,14 @@ public class TradingResourceTest extends TestCase {
 	// public List<TradingRecordVO> getTradingAccountRecord( String acctID, int
 	// start, int limit) throws Exception ;
 	public void testGetTradingAccountRecord() throws Exception {
-		List<TradingRecordVO> a = tradingResource.getTradingAccountRecord(
+		TradingRecordVOs a = tradingResource.getTradingAccountRecord(
 				"2661", 0, 10);
 		System.out.println(a);
 	}
 
 	// public List<GainVO> getGain( int start, int limit) throws Exception;
 	public void testGetGain() throws Exception {
-		List<GainVO> a = tradingResource.getGain(0, 10);
+		GainVOs a = tradingResource.getGain(0, 10);
 		System.out.println(a);
 	}
 
@@ -143,20 +142,20 @@ public class TradingResourceTest extends TestCase {
 
 	// public List<GainVO> getTotalGain( int start, int limit) throws Exception;
 	public void testGetTotalGain() throws Exception {
-		List<GainVO> a = tradingResource.getTotalGain(0, 10);
+		GainVOs a = tradingResource.getTotalGain(0, 10);
 		System.out.println(a);
 	}
 
 	// public List<HomePageVO> getHomeImage() throws Exception;
 	public void testGetHomeImage() throws Exception {
-		List<HomePageVO> a = tradingResource.getHomeImage();
+		HomePageVOs a = tradingResource.getHomeImage();
 		System.out.println(a);
 	}
 
 	// public List<HomePageVO> getHomeList( int start, int limit) throws
 	// Exception;
 	public void testGetHomeList() throws Exception {
-		List<HomePageVO> a = tradingResource.getHomeList(1, 10);
+		HomePageVOs a = tradingResource.getHomeList(1, 10);
 		System.out.println(a);
 	}
 
@@ -168,25 +167,25 @@ public class TradingResourceTest extends TestCase {
 
 	// public List<MegagameRankVO> getTMegagameRank()throws Exception;
 	public void testGetTMegagameRank() throws Exception {
-		List<MegagameRankVO> a = tradingResource.getTMegagameRank();
+		MegagameRankVOs a = tradingResource.getTMegagameRank();
 		System.out.println(a);
 	}
 
 	// public List<MegagameRankVO> getTPlusMegagameRank() throws Exception;
 	public void testGetTPlusMegagameRank() throws Exception {
-		List<MegagameRankVO> a = tradingResource.getTPlusMegagameRank();
+		MegagameRankVOs a = tradingResource.getTPlusMegagameRank();
 		System.out.println(a);
 	}
 
 	// public List<RegularTicketVO> getRegularTicketRank()throws Exception;
 	public void testGetRegularTicketRank() throws Exception {
-		List<RegularTicketVO> a = tradingResource.getRegularTicketRank();
+		RegularTicketVOs a = tradingResource.getRegularTicketRank();
 		System.out.println(a);
 	}
 
 	// public List<WeekRankVO> getWeekRank()throws Exception;
 	public void testGetWeekRank() throws Exception {
-		List<WeekRankVO> a = tradingResource.getWeekRank();
+		WeekRankVOs a = tradingResource.getWeekRank();
 		System.out.println(a);
 	}
 
@@ -217,7 +216,7 @@ public class TradingResourceTest extends TestCase {
 	// public List<GainVO> getMoreOtherPersonal( String userId, int start, int
 	// limit, boolean virtual)throws Exception;
 	public void testGetMoreOtherPersonal() throws Exception {
-		List<GainVO> a = tradingResource.getMoreOtherPersonal("13500001009", 0,
+		GainVOs a = tradingResource.getMoreOtherPersonal("13500001009", 0,
 				10, true);
 		System.out.println(a);
 	}

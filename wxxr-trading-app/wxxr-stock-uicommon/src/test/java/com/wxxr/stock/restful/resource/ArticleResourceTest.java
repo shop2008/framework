@@ -1,7 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,9 +15,9 @@ import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
-import com.wxxr.stock.article.ejb.api.ArticleVO;
+import com.wxxr.stock.article.ejb.api.ArticleVOs;
 import com.wxxr.stock.restful.json.NewsQueryBO;
-import com.wxxr.stock.trading.ejb.api.PullMessageVO;
+import com.wxxr.stock.restful.json.PullMessageVOs;
 
 public class ArticleResourceTest extends TestCase{
 
@@ -102,11 +101,10 @@ public class ArticleResourceTest extends TestCase{
 		query.setLimit(3);
 		query.setType("18");
 		query.setUid(0);
-		List<ArticleVO> a = articleResource.getNewArticle(query);
+		ArticleVOs a = articleResource.getNewArticle("16", 0, 3);
 		assertNotNull(a);
 	}
-	//public List<PullMessageVO> getPullMessage(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	public void testGetPullMessage()throws Exception{
-		List<PullMessageVO> a = articleResource.getPullMessage(0,4);
+		PullMessageVOs a = articleResource.getPullMessage(0,4);
 	}
 }

@@ -1,7 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,18 +17,15 @@ import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.BindMobileVO;
-import com.wxxr.security.vo.ChangeBindMobileVO;
 import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.security.vo.UserAuthenticaVO;
 import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.security.vo.UserParamVO;
-import com.wxxr.security.vo.UserPermisVO;
-import com.wxxr.security.vo.VerifyVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
-import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
+import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 
 
 public class StockUserResourceTest extends TestCase{
@@ -205,7 +201,7 @@ public class StockUserResourceTest extends TestCase{
 
 //	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException;
 	//FIXME: the device id and the device type is null, so can not be succeed!
-	public void testUpdateToken(){
+	/*public void testUpdateToken(){
 		try {
 			TokenVO vo = new TokenVO();
 			vo.setPollToken("");
@@ -215,7 +211,7 @@ public class StockUserResourceTest extends TestCase{
 		} catch (RestBizException e) {
 			System.out.println(e.getMessage());
 		}
-	}
+	}*/
 
 //	public UserBaseInfoVO getMobile() throws RestBizException;
 	public void testGetMobile(){
@@ -265,6 +261,6 @@ public class StockUserResourceTest extends TestCase{
 
 //	public List<UserAttributeVO> getUserAttributes() throws Exception;
 	public void testGetUserAttributes()throws Exception{
-		List<UserAttributeVO> info = stockUserResource.getUserAttributes();
+		UserAttributeVOs info = stockUserResource.getUserAttributes();
 	}
 }
