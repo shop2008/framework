@@ -25,7 +25,6 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 	
 	@Override
 	public String getItemViewId(Object itemData) {
-		// TODO Auto-generated method stub
 		
 		if (itemData instanceof String) {
 			return "InfoNoticeTitleView";
@@ -48,7 +47,7 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 			
 			@Override
 			protected String getHeaderViewId() {
-				return "PinHeadItemView";
+				return "InfoNoticeTitleView";
 			}
 			
 			@Override

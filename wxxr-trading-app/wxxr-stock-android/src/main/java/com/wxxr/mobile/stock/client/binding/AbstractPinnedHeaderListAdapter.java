@@ -29,6 +29,8 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	private final IAndroidBindingContext context;
 	private ListViewPool viewPool;
 	
+	private int titlePos = 0;
+	
 	public AbstractPinnedHeaderListAdapter(IAndroidBindingContext ctx,IListDataProvider provider, ItemViewSelector selector){
 		if((ctx == null)||(provider == null)||(selector == null)){
 			throw new IllegalArgumentException("Binding context, provider, selector cannot be NULL !");
@@ -117,7 +119,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+		
 	}
 
 	@Override
@@ -143,6 +145,15 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 		return -1;
 	}
 
+	protected int getPosition4PreviousSection(int position){
+		for(int i=position-1;i>=0; i--){
+			Object data = this.dataProvider.getItem(i);
+			if(isHeaderData(data)){
+				return i;
+			}
+		}
+		return 0;
+	}
 	@Override
 	public int getPinnedHeaderState(int position) {
 		int realPosition = position;
@@ -162,8 +173,42 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	@Override
 	public void configurePinnedHeader(View header, int position, int alpha) {
 		getViewPool();
-		this.viewPool.updateView(header,getItem(position),position);
+		if (position >= titlePos) {
+			this.viewPool.updateView(header,getItem(position),position);
+		} else {
+			this.viewPool.updateView(header,getItem(getPosition4PreviousSection(position)),position);
+		}
+		titlePos = position;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#getItemViewType(int)
+	 */
+	@Override
+	public int getItemViewType(int position) {
+		if(this.viewSelector != null){
+			Object val = getItem(position);
+			String vid = this.viewSelector.getItemViewId(val);
+			String[] ids = this.viewSelector.getAllViewIds();
+			for (int i = 0; i < ids.length; i++) {
+				if(ids[i].equals(vid)){
+					return i;
+				}			
+			}
+		}
+		return super.getItemViewType(position);
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#getViewTypeCount()
+	 */
+	@Override
+	public int getViewTypeCount() {
+		if(this.viewSelector != null){
+			return this.viewSelector.getAllViewIds().length;
+		}
+		return super.getViewTypeCount();
+	}	
 
 }
