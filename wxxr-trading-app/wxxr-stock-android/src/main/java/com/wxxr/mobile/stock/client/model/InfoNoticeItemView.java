@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 
 @View(name="InfoNoticeItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.notice_info_item_layout")
@@ -22,7 +23,7 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 	@Field(valueKey="visible", binding="${read==false}")
 	boolean remindReaded;
 	
-	@Field(valueKey="text", binding="${message.createDate}", converter="ltime2StrConvertor")
+	@Field(valueKey="text", binding="${message.createDate}", converter="stime2StrConvertor")
 	String date;
 	
 	@Field(valueKey="text", binding="${message.title}")
@@ -37,7 +38,7 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 			}
 			)
 	
-	LongTime2StringConvertor ltime2StrConvertor;
+	StringTime2StringConvertor stime2StrConvertor;
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof PullMessageBean) {

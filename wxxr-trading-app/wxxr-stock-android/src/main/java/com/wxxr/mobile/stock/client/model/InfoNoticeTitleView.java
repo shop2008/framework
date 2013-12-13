@@ -18,8 +18,8 @@ public abstract class InfoNoticeTitleView extends ViewBase implements IModelUpda
 	String title;
 
 	@Convertor(
-			params={@Parameter(name="format", value="yyyy-MM-dd"),
-					@Parameter(name="nullString", value="--:--")
+			params={@Parameter(name="format", value="yyyy年MM月dd日"),
+					@Parameter(name="nullString", value="-年-月-日")
 			}
 			)
 	
