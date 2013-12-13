@@ -27,10 +27,11 @@ public abstract class HelpCenterItemView extends ViewBase implements ItemViewSel
 		}
 		return null;
 	}
-	
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.ItemViewSelector#getAllViewIds()
+	 */
 	@Override
 	public String[] getAllViewIds() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[] {"helpCenterItemImageView","helpCenterItemTextView"};
 	}
 }

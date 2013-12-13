@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +31,11 @@ public abstract class NewsItemView extends ViewBase implements ItemViewSelector,
 		return null;
 	}
 	
+	@Override
+	public String[] getAllViewIds() {
+		return new String[] {"NewsTitleItemView","NewsSelecterItemView"};
+	}
+
 	@Override
 	public IRefreshableListAdapter buildListAdapter(IUIComponent field,
 			IAndroidBindingContext bContext, String itemViewId) {

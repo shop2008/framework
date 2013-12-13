@@ -21,4 +21,10 @@ public abstract class TBuyTradingItemView extends ViewBase implements ItemViewSe
 		}
 		return null;
 	}
+	
+	@Override
+	public String[] getAllViewIds() {
+		return new String[] {"TBuyTradingItemOrderView","TBuyTradingItemDealView"};
+	}
+
 }

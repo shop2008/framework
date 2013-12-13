@@ -36,6 +36,11 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 	}
 
 	@Override
+	public String[] getAllViewIds() {
+		return new String[] {"InfoNoticeTitleView","InfoNoticeItemView"};
+	}
+
+	@Override
 	public IRefreshableListAdapter buildListAdapter(final IUIComponent field,
 			IAndroidBindingContext bContext, String itemViewId) {
 		

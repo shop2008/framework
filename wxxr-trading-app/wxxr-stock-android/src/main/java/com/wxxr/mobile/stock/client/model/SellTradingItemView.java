@@ -24,7 +24,7 @@ public abstract class SellTradingItemView extends ViewBase implements ItemViewSe
 	
 	@Override
 	public String[] getAllViewIds() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[] {"TBuyTradingItemOrderView","sellTradingStockOrder"};
 	}
+
 }
