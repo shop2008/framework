@@ -27,4 +27,10 @@ public abstract class HelpCenterItemView extends ViewBase implements ItemViewSel
 		}
 		return null;
 	}
+	
+	@Override
+	public String[] getAllViewIds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

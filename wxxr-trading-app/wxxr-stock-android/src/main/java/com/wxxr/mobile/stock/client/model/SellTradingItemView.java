@@ -21,4 +21,10 @@ public abstract class SellTradingItemView extends ViewBase implements ItemViewSe
 		}
 		return null;
 	}
+	
+	@Override
+	public String[] getAllViewIds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
