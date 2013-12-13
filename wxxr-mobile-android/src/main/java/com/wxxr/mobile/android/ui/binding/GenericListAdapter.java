@@ -37,6 +37,7 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 	private List<ObserverDataChangedListerWrapper> listeners;
 	private ListViewPool viewPool;
 	
+	
 	public GenericListAdapter(IAndroidBindingContext bCtx, IListDataProvider prov, String viewId){
 		if((bCtx == null)||(prov == null)||(viewId == null)){
 			throw new IllegalArgumentException("All arguments cannot be NULL");
@@ -222,8 +223,31 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 		}
 		return null;
 	}
-
-
-
-	
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#getItemViewType(int)
+	 */
+	@Override
+	public int getItemViewType(int position) {
+		if(this.viewSelector != null){
+			Object val = getItem(position);
+			String vid = this.viewSelector.getItemViewId(val);
+			String[] ids = this.viewSelector.getAllViewIds();
+			for (int i = 0; i < ids.length; i++) {
+				if(ids[i].equals(vid)){
+					return i;
+				}			
+			}
+		}
+		return super.getItemViewType(position);
+	}
+	/* (non-Javadoc)
+	 * @see android.widget.BaseAdapter#getViewTypeCount()
+	 */
+	@Override
+	public int getViewTypeCount() {
+		if(this.viewSelector != null){
+			return this.viewSelector.getAllViewIds().length;
+		}
+		return super.getViewTypeCount();
+	}	
 }

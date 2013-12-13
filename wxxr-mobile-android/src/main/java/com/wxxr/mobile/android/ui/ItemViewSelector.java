@@ -9,4 +9,5 @@ package com.wxxr.mobile.android.ui;
  */
 public interface ItemViewSelector {
 	String getItemViewId(Object itemData);
+	String[] getAllViewIds();
 }
