@@ -93,10 +93,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						bindingContext.hideView();
 					}
 				}, fieldName, params);
+				binding.init(runtimeContext);
+				
 				if(decoratorName != null){
 					binding.doDecorate(StringUtils.split(decoratorName,','));
 				}
-				binding.init(runtimeContext);
 			}
 			binding.activate(vmodel);
 			
@@ -132,6 +133,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 
 		@Override
 		public void init(IWorkbenchRTContext ctx) {
+			if(this.binding != null){
+				this.binding.init(ctx);
+			}
 		}
 
 		@Override
@@ -164,6 +168,11 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		@Override
 		public Class<IUIDecorator> getDecoratorClass() {
 			return IUIDecorator.class;
+		}
+
+		@Override
+		public boolean isInitialized() {
+			return runtimeContext != null;
 		}
 
 	}
@@ -268,6 +277,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 									bindingContext.hideView();
 								}
 							}, val, cmdName, params);
+							eBinding.init(runtimeContext);
 							if(eventDecor != null){
 								eBinding.doDecorate(StringUtils.split(eventDecor,','));
 							}
@@ -471,6 +481,12 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 		if(isOnShow()){
 			this.bindingContext.hideView();
 		}
+	}
+
+
+	@Override
+	public boolean isInitialized() {
+		return this.runtimeContext != null;
 	}
 
 }

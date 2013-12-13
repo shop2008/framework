@@ -182,6 +182,14 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 		this.bindingAttrs = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IBinding#isInitialized()
+	 */
+	@Override
+	public boolean isInitialized() {
+		return this.workbenchContext != null;
+	}
+
 
 	/**
 	 * @return the field

@@ -201,4 +201,12 @@ public abstract class AbstractEventBinding implements IEventBinding {
 	protected void setUIControl(Object uiControl) {
 		this.uiControl = uiControl;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IBinding#isInitialized()
+	 */
+	@Override
+	public boolean isInitialized() {
+		return this.context != null;
+	}
 }

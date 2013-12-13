@@ -18,4 +18,5 @@ public interface IBinding<M extends IUIComponent>
 	void init(IWorkbenchRTContext ctx);
 //	IUIComponent getValueModel();
 	Object getUIControl();
+	boolean isInitialized();
 }
