@@ -43,9 +43,6 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Pojo, express="${usrMgr.voucherBean}")
 	VoucherBean voucherBean;
 	
-	
-	@Bean(type=BindingType.Pojo, express="${usrMgr.unreadRemindMessages}")
-	List<RemindMessageBean> remindMessageList;
 	@Bean(type=BindingType.Pojo, express="${usrMgr.userAssetBean}")
 	UserAssetBean assetBean;
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
@@ -60,7 +57,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.phoneNumber : '赶快登录赚实盘积分吧'}")
 	String userNum;
 	
-	@Field(valueKey="text", binding="${(userInfo!=null&&userInfo.unReadMsg!=null)?userInfo.unReadMsg:'0'}")
+	@Field(valueKey="text", binding="${(usrMgr.unreadRemindMessages!=null)?usrMgr.unreadRemindMessages.size():'0'}")
 	String unreadNews;
 	
 	@Field(valueKey="text", binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="stockL2StrScoreConvertor")

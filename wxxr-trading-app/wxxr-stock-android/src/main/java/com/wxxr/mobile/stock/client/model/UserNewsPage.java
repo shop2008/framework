@@ -92,7 +92,7 @@ public abstract class UserNewsPage extends PageBase {
 	
 	@OnShow
 	protected void initData() {
-		//usrService.readAllUnremindMessage();
+		usrService.readAllUnremindMessage();
 	}
 	
 	@Command
@@ -127,9 +127,7 @@ public abstract class UserNewsPage extends PageBase {
 	String newsItemClick(InputEvent event) {
 		int position = (Integer) event.getProperty("position");
 		RemindMessageBean messageBean = accountTradeListBean.getData().get(position);
-		if (usrService != null) {
-			usrService.readRemindMessage(messageBean.getId());
-		}
+		
 		return null;
 	}
 	
