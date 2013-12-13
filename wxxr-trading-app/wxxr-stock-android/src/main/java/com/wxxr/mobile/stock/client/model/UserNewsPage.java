@@ -75,7 +75,6 @@ public abstract class UserNewsPage extends PageBase {
 	
 	
 	
-	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String noticeRefreshView;
