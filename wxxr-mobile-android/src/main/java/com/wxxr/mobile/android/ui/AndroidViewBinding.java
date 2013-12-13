@@ -367,7 +367,9 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	public void init(IWorkbenchRTContext ctx) {
 		this.runtimeContext = ctx;
 		for (IBinding<IView> b : bindings) {
-			b.init(ctx);
+			if(!b.isInitialized()){
+				b.init(ctx);
+			}
 		}
 	}
 	
