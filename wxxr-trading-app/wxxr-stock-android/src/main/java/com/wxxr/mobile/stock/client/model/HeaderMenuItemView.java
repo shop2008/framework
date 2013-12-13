@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.List;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -16,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
@@ -40,6 +43,9 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Pojo, express="${usrMgr.voucherBean}")
 	VoucherBean voucherBean;
 	
+	
+	@Bean(type=BindingType.Pojo, express="${usrMgr.unreadRemindMessages}")
+	List<RemindMessageBean> remindMessageList;
 	@Bean(type=BindingType.Pojo, express="${usrMgr.userAssetBean}")
 	UserAssetBean assetBean;
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")

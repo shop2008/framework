@@ -12,9 +12,11 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
@@ -86,7 +88,10 @@ public abstract class UserNewsPage extends PageBase {
 		return null;
 	}
 	
-	
+	@OnShow
+	protected void initData() {
+		usrService.readAllUnremindMessage();
+	}
 	
 	@Command
 	String showInfoNotices(InputEvent event) {
