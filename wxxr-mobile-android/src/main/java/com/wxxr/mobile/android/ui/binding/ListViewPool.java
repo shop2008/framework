@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.IReusableUIModel;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewBinder;
 import com.wxxr.mobile.core.ui.api.IViewDescriptor;
+import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.TargetUISystem;
 import com.wxxr.mobile.core.util.LRUList;
 
@@ -53,9 +54,6 @@ public class ListViewPool {
 	public View createUI(String viewId){
 		LRUList<View> pool = getViewPool(viewId, false);
 		View view = pool != null ? pool.get() : null;
-		if(view != null){
-			return view;
-		}
 		IViewDescriptor v = this.bindingCtx.getWorkbenchManager().getViewDescriptor(viewId);
 		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
@@ -86,6 +84,8 @@ public class ListViewPool {
 		}
 		if(vModel instanceof IReusableUIModel){
 			((IReusableUIModel)vModel).reset();
+		}else{
+			bag.view = recycleViewModel(vModel);
 		}
 		localCtx.setReady(false);
 		LRUList<View> pool = getViewPool(vModel.getName(), true);
@@ -121,9 +121,8 @@ public class ListViewPool {
 		IView vModel = bag.view;
 		if(existing){
 			binding.deactivate();
-			if(vModel instanceof IReusableUIModel){
-				((IReusableUIModel)vModel).reset();
-			}
+			vModel = recycleViewModel(vModel);
+			bag.view = vModel;
 			localCtx.setReady(false);
 		}
 		vModel.getAdaptor(IModelUpdater.class).updateModel(data);
@@ -132,6 +131,17 @@ public class ListViewPool {
 		binding.doUpdate();
 		localCtx.setReady(true);
 		return view;
+	}
+	
+	protected IView recycleViewModel(IView vModel) {
+		if(vModel instanceof IReusableUIModel){
+			((IReusableUIModel)vModel).reset();
+		}else{
+			IWorkbench workbench = bindingCtx.getWorkbenchManager().getWorkbench();
+			workbench.destroyComponent(vModel);
+			vModel = workbench.createNInitializedView(vModel.getName());
+		}
+		return vModel;
 	}
 	
 	public void updateView(View view, Object data, int position){
