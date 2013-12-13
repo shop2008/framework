@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
@@ -54,18 +53,8 @@ public class PageChangeEventBinding extends AbstractEventBinding implements  OnP
 	}
 
 	@Override
-	public void init(IWorkbenchRTContext ctx) {
-		
-	}
-
-	@Override
 	public Object getUIControl() {
 		return this.control;
-	}
-
-	@Override
-	public void doUpdate() {
-		
 	}
 
 	@Override

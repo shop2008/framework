@@ -3,109 +3,102 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/listview_selected_item1">
+    android:background="@drawable/listview_selected_item1"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginTop="4dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp" >
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/white"
             android:textSize="16sp"
-            bind:field="stockName"
-			/>
+            bind:field="stockName" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/gray"
             android:textSize="16sp"
-            bind:field="currentPirce"           
-            />
+            bind:field="currentPirce" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/white"
             android:textSize="16sp"
-            bind:field="buy"
-            />
+            bind:field="buy" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="--"
             android:textColor="@color/gray"
-            android:textSize="16sp"
-            bind:field="gain"
-            />
-
+            android:textSize="14sp"
+            bind:field="gain" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginBottom="4dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp" >
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/gray"
             android:textSize="14sp"
-            bind:field="stockCode"           
-			/>
+            bind:field="stockCode" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/gray"
             android:textSize="14sp"
-            bind:field="changeRate"           
-			/>
+            bind:field="changeRate" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/gray"
             android:textSize="14sp"
-            bind:field="amount"
-            />
+            bind:field="amount" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="--" 
             android:layout_weight="1"
             android:gravity="center"
+            android:text="--"
             android:textColor="@color/gray"
             android:textSize="14sp"
-            bind:field="gainRate"
-            />
-
+            bind:field="gainRate" />
     </LinearLayout>
-	<include layout="@layout/hlines"/>
+
+    <include layout="@layout/hlines" />
+
 </LinearLayout>

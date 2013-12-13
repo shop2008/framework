@@ -38,6 +38,12 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
 	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="1000.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecialT;
+	
+	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
 			@Parameter(name="multiple", value="100.00")
 	})
@@ -73,7 +79,7 @@ public abstract class TBuyTradingItemDealView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.stockCode:'--'}")
 	String stockCode;
 
-	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.changeRate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes={
+	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.changeRate:'0'}", converter = "stockLong2StringConvertorSpecialT", attributes={
 			@Attribute(name = "textColor", value = "${orderBean==null?'resourceId:color/gray':orderBean.changeRate>0?'resourceId:color/stock_text_up':(orderBean.changeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 			})
 	String changeRate;

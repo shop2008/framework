@@ -16,8 +16,10 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IReusableUIModel;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
@@ -29,8 +31,7 @@ import com.wxxr.mobile.stock.client.biz.StockSelection;
  */
 @View(name="earnRankListItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.earn_money_rank_layout_item")
-public abstract class TradingWinnerItemView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
-	
+public abstract class TradingWinnerItemView extends ViewBase implements IModelUpdater,ISelectionChangedListener,IReusableUIModel {
 	@Bean
 	EarnRankItemBean earnRank;
 	
@@ -63,13 +64,6 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 		}
 	}
 	
-	@Command(description="点击文本事件")
-	String showItemView(InputEvent event){
-		this.isOpen = !this.isOpen;
-		registerBean("isOpen", this.isOpen);
-		return null;
-	}
-	
 	@Command(navigations={@Navigation(on="operationDetails",showPage="OperationDetails")})
 	CommandResult earnRankItemClick(InputEvent event){
 		CommandResult result = new CommandResult();
@@ -97,7 +91,6 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 			if(selectionTemp!=null){
 				Integer selectedPosition = selectionTemp.getPosition();
 				Integer myPosition = (Integer)getProperty("_item_position");
-				boolean oldVal = this.isOpen;
 				if(selectedPosition.equals(myPosition)){
 					this.isOpen = true;
 					if(earnRank!=null){
@@ -107,21 +100,27 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 				}else{
 					this.isOpen = false;
 				}
-				if(oldVal != this.isOpen){
-					registerBean("isOpen", this.isOpen);
-				}
+				registerBean("isOpen", this.isOpen);
 			}
 		}
 	}
 	
 	@OnShow
 	void registerListener(){
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().addSelectionListener("tradingWinner",this);
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		ISelection selection = service.getSelection("tradingWinner");
+		selectionChanged("tradingWinner", selection);
+		service.addSelectionListener("tradingWinner",this);
 	}
 	
 	@OnHide
 	void unregisterListener() {
 		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("tradingWinner",this);
 	}
-	
+
+	@Override
+	public void reset() {
+		isOpen = false;
+		registerBean("isOpen", this.isOpen);
+	}
 }

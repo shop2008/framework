@@ -202,7 +202,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 			log.debug("TBuyTradingPage : handleTopRefresh");
 		}
 		tradingService.getTradingAccountInfo(acctId);
-		registerBean("tradingBean", tradingBean);
+//		registerBean("tradingBean", tradingBean);
 		return null;
 	}
 

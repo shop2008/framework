@@ -180,11 +180,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="--"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold"
                         bind:field="applyFee" />
 
                     <TextView
@@ -192,11 +192,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="--"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold"
                         bind:field="avalibleFee" />
 
                     <TextView
@@ -204,11 +204,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="--"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold"
                         bind:field="gainRate" />
 
                     <TextView
@@ -216,11 +216,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="8dp"
+                        android:includeFontPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="--"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold"
                         bind:field="totalGain" />
                 </LinearLayout>
 

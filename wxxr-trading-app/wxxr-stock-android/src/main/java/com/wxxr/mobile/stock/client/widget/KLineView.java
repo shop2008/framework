@@ -146,8 +146,8 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
+	public void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		doDraw(canvas, klineType);
 	}
 
@@ -163,8 +163,8 @@ public class KLineView extends View implements IDataChangedListener {
 	}
 
 	public void setBgData(Canvas c) {
-		cWidth = c.getWidth(); // 画布宽
-		cHeight = c.getHeight(); // 画布高
+		cWidth = this.getWidth(); // 画布宽
+		cHeight = this.getHeight(); // 画布高
 		wBi = (float) 65 / cWidth; // 从逻辑的65开始
 		mStartX = cWidth * wBi; // 算实际画布开始位置
 		mStartY = cHeight * hBi;

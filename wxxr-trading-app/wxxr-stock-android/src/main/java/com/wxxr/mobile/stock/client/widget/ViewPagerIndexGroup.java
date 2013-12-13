@@ -35,9 +35,16 @@ public class ViewPagerIndexGroup extends RadioGroup {
 	public void setPosition(int position) {
 		this.position = position;
 		if (getChildCount() > 0 && position < getChildCount()) {
-			RadioButton bt = (RadioButton) getChildAt(position);
-			if(bt != null)
-			bt.setChecked(true);
+			for (int i = 0; i < getChildCount(); i++) {
+				RadioButton bt = (RadioButton) getChildAt(i);
+				if (bt != null) {
+					if (i == position) {
+						bt.setChecked(true);
+					} else {
+						bt.setChecked(false);
+					}
+				}
+			}
 		}
 	}
 

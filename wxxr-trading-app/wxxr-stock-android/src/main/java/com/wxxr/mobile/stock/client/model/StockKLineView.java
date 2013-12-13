@@ -163,6 +163,8 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
 			registerBean("type", this.type);
+			if(infoCenterService != null)
+				infoCenterService.getDayStockline(codeBean, marketBean);
 		}
 	}
 	
