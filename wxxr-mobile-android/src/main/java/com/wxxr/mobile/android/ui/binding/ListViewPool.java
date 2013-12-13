@@ -54,6 +54,9 @@ public class ListViewPool {
 	public View createUI(String viewId){
 		LRUList<View> pool = getViewPool(viewId, false);
 		View view = pool != null ? pool.get() : null;
+		if(view != null){
+			return view;
+		}
 		IViewDescriptor v = this.bindingCtx.getWorkbenchManager().getViewDescriptor(viewId);
 		IBindingDescriptor bDesc = v.getBindingDescriptor(TargetUISystem.ANDROID);
 		IBinding<IView> binding = null;
