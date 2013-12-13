@@ -23,7 +23,7 @@ import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 
 /**
  * @author wangxuyang
@@ -86,8 +86,8 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	 */
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		if(selection instanceof StockSelection){
-			StockSelection selectionTemp = (StockSelection) selection;
+		if(selection instanceof AccidSelection){
+			AccidSelection selectionTemp = (AccidSelection) selection;
 			if(selectionTemp!=null){
 				Integer selectedPosition = selectionTemp.getPosition();
 				Integer myPosition = (Integer)getProperty("_item_position");

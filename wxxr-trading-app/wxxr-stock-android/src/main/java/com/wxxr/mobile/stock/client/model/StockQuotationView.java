@@ -222,6 +222,10 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 				this.codeBean = stockSelection.getCode();
 				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
+				this.stockInfoBean = this.stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+				this.stockQuotationBean = this.infoCenterService.getStockQuotation(codeBean, marketBean);
+				registerBean("stockQuotationBean", this.stockQuotationBean);
+				registerBean("stockInfoBean", this.stockInfoBean);
 			}
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);

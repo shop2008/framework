@@ -199,7 +199,8 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				registerBean("stockMarket", this.stockMarket);
 				registerBean("maxAmountBean", this.maxAmountBean);
 				log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
-				this.infoCenterService.getStockQuotation(stockCode, stockMarket);
+				this.stockQuotation = this.infoCenterService.getStockQuotation(stockCode, stockMarket);
+				registerBean("stockQuotation", this.stockQuotation);
 				//刷新viewpager
 				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice));
 			}
@@ -234,6 +235,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		String price = "0";
 		if(isSelected == 0) {
 			try {
+				if(sellPrice!=null)
 				price = Long.parseLong(sellPrice)/10 + "";
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
@@ -245,7 +247,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			return "amount";
 		}
 		if(tradingService!=null){
-			if(accid!=null && stockMarket!=null && stockCode!=null && price!=null && amount!=null){
+			if(!StringUtils.isEmpty(accid) && !StringUtils.isEmpty(stockMarket) && !StringUtils.isEmpty(stockCode) && !StringUtils.isEmpty(price) && !StringUtils.isEmpty(amount)){
 				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 			}

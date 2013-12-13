@@ -200,9 +200,11 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 		this.currentRadioBtnId = 1;
 		registerBean("currentRadioBtnId", this.currentRadioBtnId);
 		if(stockQuotation!=null){
-			long mBuyNum = buyNumber(100000l, stockQuotation.getClose());
-			this.C_buyNum = String.valueOf(mBuyNum);
-			registerBean("C_buyNum", this.C_buyNum);
+			if(stockQuotation.getClose()!=null){
+				long mBuyNum = buyNumber(100000l, stockQuotation.getClose());
+				this.C_buyNum = String.valueOf(mBuyNum);
+				registerBean("C_buyNum", this.C_buyNum);
+			}
 		}
 	}
 	

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -18,7 +19,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 
 /**
  * 赚钱榜逻辑视图
@@ -39,6 +40,16 @@ public abstract class TradingWinnerView extends ViewBase {
 	@Field(valueKey="options",binding="${rankBean.data}")
 	List<EarnRankItemBean> earnRankList;
 	
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "true")})
+	String acctRefreshView;
+	
+	@Command
+	String handleTopRefresh(InputEvent event) {
+		this.service.getEarnRank(0,20);
+		return null;
+	}
+	
 	@OnShow	
 	protected void updateEarnRankList() {
 	}
@@ -50,9 +61,7 @@ public abstract class TradingWinnerView extends ViewBase {
 			EarnRankItemBean earn = rankBean.getData().get(position);
 			if(earn!=null && position!=null){
 				String accid = earn.getAcctId();
-				StockSelection selection = new StockSelection();
-				selection.setAccid(accid);
-				selection.setPosition(position);
+				AccidSelection selection = new AccidSelection(accid,position);
 				updateSelection(selection);
 			}
 		}

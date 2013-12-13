@@ -29,7 +29,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
@@ -177,7 +177,7 @@ public abstract class TradingMainView extends ViewBase{
 					if("CLOSED".equals(over)){
 						resutl.setPayload(map);
 						resutl.setResult("operationDetails");
-						updateSelection(new StockSelection(acctId, isVirtual));
+						updateSelection(new AccidSelection(acctId, isVirtual));
 					}
 					if("UNCLOSE".equals(over)){
 						resutl.setResult("sellTradingAccount");

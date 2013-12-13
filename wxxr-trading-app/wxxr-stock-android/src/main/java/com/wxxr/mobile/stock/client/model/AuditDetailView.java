@@ -19,7 +19,7 @@ import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 
@@ -107,7 +107,7 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		selectionChanged("",service.getSelection(StockSelection.class));
+		selectionChanged("",service.getSelection(AccidSelection.class));
 		service.addSelectionListener(this);
 	}
 	
@@ -119,11 +119,11 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	
 	@Override
 	public void selectionChanged(String providerId, ISelection selection) {
-		if(selection instanceof StockSelection){
-			StockSelection stockSelection = (StockSelection) selection;
-			if(stockSelection!=null){
-				this.accId = stockSelection.getAccid();
-				this.isVirtual = stockSelection.getVirtual();
+		if(selection instanceof AccidSelection){
+			AccidSelection accidSelection = (AccidSelection) selection;
+			if(accidSelection!=null){
+				this.accId = accidSelection.getAccid();
+				this.isVirtual = accidSelection.isVirtual();
 			}
 			registerBean("accId", this.accId);
 			registerBean("isVirtual", this.isVirtual);

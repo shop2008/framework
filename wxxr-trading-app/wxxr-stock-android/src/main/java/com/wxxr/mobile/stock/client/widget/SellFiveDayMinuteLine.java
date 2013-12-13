@@ -199,8 +199,8 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 	}
 	
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
+	public void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		canvas.save();
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		mPaint.setAntiAlias(true);
@@ -273,19 +273,33 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setTextAlign(Paint.Align.LEFT);
 		mPaint.setColor(getStockUpColor());
-		String highPicePercentage = String.format("%.2f%%", (highPrice - yesterdayClose)/yesterdayClose*100.00);
-		canvas.drawText(highPicePercentage, textMarginRight, fStartY + padding, mPaint);
-		String secondPricePercentage = String.format("%.2f%%", (secondPrice - yesterdayClose)/yesterdayClose*100.00);
-		canvas.drawText(secondPricePercentage, textMarginRight, fStartY + padding + lineHeight*1, mPaint);
-
+		if(highPrice>0 && yesterdayClose>0){
+			String highPicePercentage = String.format("%.2f%%", (highPrice - yesterdayClose)/yesterdayClose*100.00);
+			canvas.drawText(highPicePercentage, textMarginRight, fStartY + padding, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding, mPaint);
+		}
+		if(secondPrice>0 && yesterdayClose>0){
+			String secondPricePercentage = String.format("%.2f%%", (secondPrice - yesterdayClose)/yesterdayClose*100.00);
+			canvas.drawText(secondPricePercentage, textMarginRight, fStartY + padding + lineHeight*1, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*1, mPaint);
+		}
 		mPaint.setColor(getStockCloseColor());
 		canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*2, mPaint);
 		mPaint.setColor(getStockDownColor());
-		
-		String fourthPercentage = String.format("%.2f%%", (yesterdayClose - fourthPrice)/yesterdayClose*100.00);
-		canvas.drawText(fourthPercentage, textMarginRight, fStartY + padding + lineHeight*3, mPaint);
-		String lowPicePercentage = String.format("%.2f%%", (yesterdayClose - lowPrice)/yesterdayClose*100.00);
-		canvas.drawText(lowPicePercentage, textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		if(fourthPrice>0 && yesterdayClose>0){
+			String fourthPercentage = String.format("%.2f%%", (yesterdayClose - fourthPrice)/yesterdayClose*100.00);
+			canvas.drawText(fourthPercentage, textMarginRight, fStartY + padding + lineHeight*3, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*3, mPaint);
+		}
+		if(lowPrice>0 && yesterdayClose>0){
+			String lowPicePercentage = String.format("%.2f%%", (yesterdayClose - lowPrice)/yesterdayClose*100.00);
+			canvas.drawText(lowPicePercentage, textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		}else{
+			canvas.drawText("0.00%", textMarginRight, fStartY + padding + lineHeight*4, mPaint);
+		}
 		
 	}
 	/**画成交量文字*/
