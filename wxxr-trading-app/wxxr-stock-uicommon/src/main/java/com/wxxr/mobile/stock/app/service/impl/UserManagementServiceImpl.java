@@ -918,7 +918,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		ReadPullMessageCommand command=new ReadPullMessageCommand();
 		command.setId(id);
 		try{
-			context.getService(ICommandExecutor.class).submitCommand(command);
+			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			future.get(30,TimeUnit.SECONDS);
 		}catch(Throwable e){
 			log.warn("updatToken error",e);
 		}
