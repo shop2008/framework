@@ -413,12 +413,12 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 	protected Map<String, Object> getNavigationParameters(Object payload,
 			INavigationDescriptor nextNavigation) {
 		Map<String, Object> params = nextNavigation.getParameters();
+		if((params != null)&&(params.size() > 0)){
+			params = new HashMap<String, Object>(params);
+		}else{
+			params = new HashMap<String, Object>();
+		}
 		if(payload != null){
-			if((params != null)&&(params.size() > 0)){
-				params = new HashMap<String, Object>(params);
-			}else{
-				params = new HashMap<String, Object>();
-			}
 			if((payload instanceof Map)&&(((Map)payload).size() > 0)&&(((Map)payload).keySet().iterator().next() instanceof String)){
 				params.putAll((Map<String,Object>)payload);
 			}else{
