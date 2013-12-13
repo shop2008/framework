@@ -57,7 +57,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="text", binding="${(userInfo!=null&&userInfo.unReadMsg!=null)?userInfo.unReadMsg:'0'}")
 	String unreadNews;
 	
-	@Field(valueKey="text", binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="stockL2StrConvertor")
+	@Field(valueKey="text", binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="stockL2StrScoreConvertor")
 	String integralBalance;
 	
 	@Field(valueKey="text", binding="${(assetBean!=null&&assetBean.balance>0)?assetBean.balance:null}", converter="stockL2StrConvertor")
@@ -71,6 +71,13 @@ public abstract class HeaderMenuItemView extends ViewBase {
 					@Parameter(name="nullString", value="0")
 			})
 	StockLong2StringConvertor stockL2StrConvertor;
+	
+	@Convertor(
+			params={
+					@Parameter(name="format", value="%.0f"),
+					@Parameter(name="nullString", value="0")
+			})
+	StockLong2StringConvertor stockL2StrScoreConvertor;
 	
 	@Command(commandName="handleClickImage",
 		navigations={

@@ -1,7 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -21,10 +19,13 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.model.UserApplyCashCallBack;
+import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -33,7 +34,6 @@ import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 /**
  * 提现金界面
  * @author renwenjie
- *
  */
 @View(name="userWithDrawCashPage")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.withdraw_cath_page_layout")
@@ -43,6 +43,13 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
+	
+	@Bean(type = BindingType.Service)
+	IArticleManagementService articleService;
+	
+	@Bean(type = BindingType.Pojo, express = "${articleService.withdrawalNoticeArticle}")
+	BindableListWrapper<ArticleBean> articleBean;
+	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
 	
@@ -172,15 +179,15 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	
 	@Command(
 			commandName="withDrawCashRules",
-			navigations={@Navigation(on="OK", showPage="articleBodyPage")}
+			navigations={@Navigation(on="OK", showPage="webPage")}
 			)
 	
 	CommandResult withDrawCashRules(InputEvent event) { 
 		CommandResult result = new CommandResult();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("loadUrl", "http://m.hao123.com");
-		result.setPayload(map);
+		if(articleBean != null)
+			result.setPayload((articleBean.getData()!=null)&&(articleBean.getData().size()>0)?articleBean.getData().get(0).getArticleUrl():null);
 		result.setResult("OK");
+		
 		return result;
 	}
 	

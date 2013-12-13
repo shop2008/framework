@@ -40,7 +40,7 @@ public abstract class UserNewsPage extends PageBase {
 	List<RemindMessageBean> accountTradeInfos;
 	
 	/**当账户&交易数据为空时显示*/
-	@Field(valueKey="visible", binding="${accountTradeListBean!=null?(accountTradeListBean.data!=null?(accountTradeListBean.data.size()>0?false:true):true):true}")
+	@Field(valueKey="visible", binding="${(curItemId == 0)&&(accountTradeListBean!=null?(accountTradeListBean.data!=null?(accountTradeListBean.data.size()>0?false:true):true):true)}")
 	boolean newsAccountNullVisible;
 
 	/**更新RadioButton的选中状态*/
@@ -61,7 +61,7 @@ public abstract class UserNewsPage extends PageBase {
 	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${curItemId==1}")
 	List<PullMessageBean> noticeInfos;
 	
-	@Field(valueKey="visible", binding="${infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data.size()>0?false:true):true):true}")
+	@Field(valueKey="visible", binding="${(curItemId==1)&&(infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data.size()>0?false:true):true):true)}")
 	boolean noticeInfosNullVisible;
 	
 	@Bean
