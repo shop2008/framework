@@ -10,8 +10,8 @@ import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
+import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler.ReadRemindMessageCommand;
-import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
 
 /**
  * @author wangyan
@@ -54,8 +54,8 @@ public class ReadAllUnreadMessageHandler implements ICommandHandler {
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		String id=((ReadRemindMessageCommand)command).getId();
-		RemindMessageInfoDao dao=context.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getRemindMessageInfoDao();
-		List<RemindMessageInfo> list=dao.queryRaw(" read =false",null);
+		RemindMessageInfoDao dao=context.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
+		List<RemindMessageInfo> list=dao.queryRaw(" READ ='false'",null);
 		if(list==null || list.size()<1){
 			return null;
 		}

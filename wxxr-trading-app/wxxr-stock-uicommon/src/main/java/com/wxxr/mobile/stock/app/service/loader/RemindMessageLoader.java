@@ -4,15 +4,17 @@
 package com.wxxr.mobile.stock.app.service.loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
-import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
+import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
 import com.wxxr.stock.restful.json.MessageVOs;
@@ -99,23 +101,30 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	}
 	
 	protected void insertOrUpdateDB(RemindMessageBean bean) {
-		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getRemindMessageInfoDao();
-		List<RemindMessageInfo> list=dao.queryRaw("where id =?", bean.getId());
+		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
+		List<RemindMessageInfo> list=dao.queryRaw("where _id =?", bean.getId());
 		RemindMessageInfo entity;
 		boolean insert=false;
 		if(list==null || list.size()>0){
-			entity=new RemindMessageInfo();
-			
-		}else{
 			entity=list.get(0);
-			
+		}else{
+			entity=new RemindMessageInfo();
+			insert=true;
 		}
 		entity.setAcctId(bean.getAcctId());
 		entity.setId(Long.valueOf(bean.getId()));
-		entity.setAttrs(bean.getAttrs().toString());
+		StringBuilder attrs=new StringBuilder();
+		if(bean.getAttrs()!=null){
+			for(Entry<String, String> entry:bean.getAttrs().entrySet()){
+				attrs.append(entry.getKey()).append(":::").append(entry.getValue()).append(",");
+			}
+		}
+
+		entity.setAttrs(attrs.toString());
 		entity.setContent(bean.getContent());
 		entity.setCreatedDate(bean.getCreatedDate());
 		entity.setTitle(bean.getAttrs().get("title"));
+		entity.setType(bean.getType());
 		entity.setType(bean.getType());
 		if(insert)
 			dao.insert(entity);
@@ -124,15 +133,26 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	}
 
 	protected List<RemindMessageBean> queryRemindMessages() {
-		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getRemindMessageInfoDao();
+		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
 		List<RemindMessageInfo> list=dao.loadAll();
 		if(list!=null ){
 			for(RemindMessageInfo entity:list){
 				RemindMessageBean bean=new RemindMessageBean();
 				bean.setAcctId(entity.getAcctId());
-				bean.setId(entity.getId()+"");
-//				entity.setAttrs(entity.getAttrs().toString());
+				bean.setId(String.valueOf(entity.getId()));
+				Map<String,String> attr=new HashMap<String, String>();
+				String[] atts=entity.getAttrs().split(",");
+				if(atts!=null){
+					for(String att:atts){
+						String[] ats=att.split(":::");
+						if(ats!=null && ats.length==2){
+							attr.put(ats[0], ats[1]);
+						}
+					}
+				}
+
+				bean.setAttrs(attr);
 				bean.setContent(entity.getContent());
 				bean.setCreatedDate(entity.getCreatedDate());
 				bean.setTitle(entity.getTitle());

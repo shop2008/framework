@@ -10,7 +10,7 @@ import com.wxxr.mobile.dao.annotation.Table;
 public class RemindMessageInfo {
 	@Id
 	private Long id;// 提醒ID
-	@Column(nullable=false)
+	@Column
 	private String type;// 提醒类型
 	@Column(nullable=false)
 	private String title;//标题

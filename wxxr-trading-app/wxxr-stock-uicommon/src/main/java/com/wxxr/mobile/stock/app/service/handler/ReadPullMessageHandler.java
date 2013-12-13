@@ -7,7 +7,7 @@ import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.stock.app.db.PullMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
-import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
+import com.wxxr.mobile.stock.app.service.IDBService;
 
 public class ReadPullMessageHandler implements ICommandHandler {
 
@@ -57,8 +57,8 @@ public class ReadPullMessageHandler implements ICommandHandler {
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		long id=((ReadPullMessageCommand)command).getId();
-		PullMessageInfoDao dao=context.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getPullMessageInfoDao();
-		List<PullMessageInfo> list=dao.queryRaw(" id =?", id+"");
+		PullMessageInfoDao dao=context.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
+		List<PullMessageInfo> list=dao.queryRaw("_id =?", id+"");
 		if(list==null || list.size()<1){
 			return null;
 		}

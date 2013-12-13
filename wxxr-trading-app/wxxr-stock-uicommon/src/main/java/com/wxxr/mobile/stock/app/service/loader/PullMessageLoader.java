@@ -15,7 +15,7 @@ import com.wxxr.mobile.stock.app.db.PullMessageInfo;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
-import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
+import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.restful.json.PullMessageVOs;
 import com.wxxr.stock.restful.resource.ArticleResource;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
@@ -131,14 +131,39 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 					bean.setMessage(vo.getMessage());
 					bean.setPhone(vo.getPhone());
 					bean.setTitle(vo.getTitle());
+					insertOrUpdateDB(bean);
 					updated = true;
 			}
-		}		return false;
+		}		
+		return updated;
 	}
 
+	protected void insertOrUpdateDB(PullMessageBean bean) {
+		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
+		List<PullMessageInfo> list=dao.queryRaw("where _id =?", String.valueOf(bean.getId()));
+		PullMessageInfo entity;
+		boolean insert=false;
+		if(list==null || list.size()>0){
+			entity=list.get(0);
+		}else{
+			entity=new PullMessageInfo();
+			insert=true;
+		}
+		entity.setId(Long.valueOf(bean.getId()));
+		entity.setArticleUrl(bean.getArticleUrl());
+		entity.setMessage(bean.getMessage());
+		entity.setPhone(bean.getPhone());
+		entity.setCreateDate(bean.getCreateDate());
+		entity.setTitle(bean.getTitle());
+		entity.setRead(false);
+		if(insert)
+			dao.insert(entity);
+		else
+			dao.update(entity);
+	}
 	
 	protected List<PullMessageBean> queryRemindMessages() {
-		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getPullMessageInfoDao();
+		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
 		List<PullMessageBean> pullMessageBeans=new ArrayList<PullMessageBean>();
 		List<PullMessageInfo> list=dao.loadAll();
 		if(list!=null ){
