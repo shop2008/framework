@@ -88,6 +88,14 @@ public interface IInfoCenterManagementService {
 	public StockQuotationBean getStockQuotation(String code,String market);
 	/**
 	 * 
+	 * 获取个股行情数据-同步调用
+	 * @param code
+	 * @param market
+	 * @return
+	 */
+	public StockQuotationBean getSyncStockQuotation(String code, String market);
+	/**
+	 * 
 	 * 获取五日分时数据
 	 * @param code
 	 * @param market

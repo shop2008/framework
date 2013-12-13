@@ -253,7 +253,20 @@ public class InfoCenterManagementServiceImpl extends
         this.stockQuotationBean_cache.forceReload(params,false);
         return stockQuotationBean_cache.getEntity(mc);
     }
-	
+	@Override
+    public StockQuotationBean getSyncStockQuotation(String code, String market) {
+	    String mc=market+code;
+	    if (stockQuotationBean_cache.getEntity(market+code)==null){
+	        StockQuotationBean b=new StockQuotationBean();
+            stockQuotationBean_cache.putEntity(mc,b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("code", code);
+        params.put("market", market);
+
+        this.stockQuotationBean_cache.forceReload(params,true);
+        return stockQuotationBean_cache.getEntity(mc);
+    }
 //=====================beans =====================
 	private QuotationListBean quotationListBean = new QuotationListBean();
 	
