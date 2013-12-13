@@ -153,7 +153,7 @@ public class InfoCenterManagementServiceImpl extends
 				if (StringUtils.isBlank(keyword)) {
 					return false;
 				}
-				return entity.getAbbr().startsWith(keyword)||entity.getCode().startsWith(keyword);
+				return (entity.getType()==1||entity.getType()==2)&&(entity.getAbbr().startsWith(keyword)||entity.getCode().startsWith(keyword));
 			}
 		});
 		
