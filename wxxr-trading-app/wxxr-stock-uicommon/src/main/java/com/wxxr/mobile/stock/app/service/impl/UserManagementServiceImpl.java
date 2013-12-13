@@ -922,6 +922,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}catch(Throwable e){
 			log.warn("updatToken error",e);
 		}
+		pullMessagesCache.doReloadIfNeccessay();
 	}
 	
 }
