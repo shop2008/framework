@@ -477,7 +477,7 @@ public class ConverterUtils {
         b.setPlRisk(vo.getPlRisk());
         b.setUserGain(Float.valueOf(vo.getUserGain()));
         b.setTotalGain(Float.valueOf(vo.getTotalGain()));
-        b.setImgUrl(Utils.getAbsoluteURL());
+        b.setImgUrl(Utils.getAbsoluteURL(vo.getImgUrl()));
         List<TradeRecordVO> volist = vo.getTradingRecords();
         if (volist != null && volist.size() > 0) {
             List<TradingRecordBean> beans = new ArrayList<TradingRecordBean>();

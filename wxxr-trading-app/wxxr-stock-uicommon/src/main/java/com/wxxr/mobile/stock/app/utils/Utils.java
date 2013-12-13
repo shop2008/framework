@@ -17,4 +17,12 @@ public class Utils {
 	public static String getAbsoluteURL(String relativeUrl){
 		return getHostURL()+relativeUrl;
 	}
+	public static String[] getAbsoluteURL(String... relativeUrls){
+		if (relativeUrls!=null) {
+			for (int i = 0; i < relativeUrls.length; i++) {
+				relativeUrls[i]=getHostURL()+relativeUrls[i];
+			}
+		}
+		return relativeUrls;
+	}
 }
