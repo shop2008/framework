@@ -12,7 +12,7 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 
 	
 	private String format = "M月d日";
-	
+	private String nullString = null;
 	@Override
 	public Class<String> getSourceType() {
 		return String.class;
@@ -31,7 +31,7 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 	@Override
 	public String toTargetTypeValue(String value) {
 		if (value == null) {
-			return null;
+			return this.nullString;
 		}
 		
 		SimpleDateFormat sdf;
@@ -65,6 +65,10 @@ public class StringTime2StringConvertor implements IValueConvertor<String, Strin
 	
 		if (params != null&&params.containsKey("format")) {
 			this.format = (String) params.get("format");
+		}
+		
+		if(params != null&&params.containsKey("nullString")) {
+			this.nullString = (String) params.get("nullString");
 		}
 	}
 
