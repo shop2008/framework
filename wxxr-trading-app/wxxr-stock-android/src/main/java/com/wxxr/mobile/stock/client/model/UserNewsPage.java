@@ -4,7 +4,6 @@ import java.util.List;
 
 
 
-import com.wxxr.javax.ws.rs.NameBinding;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -65,7 +64,7 @@ public abstract class UserNewsPage extends PageBase {
 	@Field(valueKey="options", binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen="${curItemId==1}")
 	List<PullMessageBean> noticeInfos;
 	
-	@Field(valueKey="visible", binding="${(curItemId==1)&&(infoNoticeListBean!=null?(infoNoticeListBean.data!=null?(infoNoticeListBean.data.size()>0?false:true):true):true)}")
+	@Field(valueKey="visible", binding="${false}")
 	boolean noticeInfosNullVisible;
 	
 	@Bean
@@ -124,15 +123,15 @@ public abstract class UserNewsPage extends PageBase {
 	}
 	
 	@Command
-	String newsItemClick(InputEvent event) {
+	String handleNewsItemClick(InputEvent event) {
 		int position = (Integer) event.getProperty("position");
 		RemindMessageBean messageBean = accountTradeListBean.getData().get(position);
-		
+		String accId = messageBean.getAcctId();
 		return null;
 	}
 	
 	@Command(navigations={@Navigation(on="*", showPage="webPage")})
-	CommandResult noticeItemClick(InputEvent event) {
+	CommandResult handleNoticesItemClick(InputEvent event) {
 		int position = (Integer) event.getProperty("position");
 		PullMessageBean messageBean = infoNoticeListBean.getData().get(position);
 		if (usrService != null) {
@@ -140,7 +139,6 @@ public abstract class UserNewsPage extends PageBase {
 		}
 		
 		CommandResult result = new CommandResult();
-		
 		result.setPayload(messageBean.getArticleUrl());
 		result.setResult("*");
 		return result;
