@@ -58,7 +58,7 @@ public class ReadPullMessageHandler implements ICommandHandler {
 	public <T> T execute(ICommand<T> command) throws Exception {
 		long id=((ReadPullMessageCommand)command).getId();
 		PullMessageInfoDao dao=context.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
-		List<PullMessageInfo> list=dao.queryRaw("_id =?", id+"");
+		List<PullMessageInfo> list=dao.queryRaw("where _id =?", id+"");
 		if(list==null || list.size()<1){
 			return null;
 		}
