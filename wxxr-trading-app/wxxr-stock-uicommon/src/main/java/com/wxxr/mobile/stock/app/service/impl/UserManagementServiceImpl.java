@@ -56,6 +56,8 @@ import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
+import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler;
+import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler.ReadRemindMessageCommand;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
@@ -66,7 +68,9 @@ import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
+import com.wxxr.mobile.stock.app.service.handler.UnReadRemindingMessagesHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
+import com.wxxr.mobile.stock.app.service.handler.UnReadRemindingMessagesHandler.UnReadRemindingMessagesCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler.UpdateAuthCommand;
@@ -180,6 +184,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(RestPasswordHandler.COMMAND_NAME, new RestPasswordHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateTokenHandler.COMMAND_NAME, new UpdateTokenHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RegisterHandher.COMMAND_NAME, new RegisterHandher());
+		context.getService(ICommandExecutor.class).registerCommandHandler(ReadRemindMessageHandler.COMMAND_NAME, new ReadRemindMessageHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(UnReadRemindingMessagesHandler.COMMAND_NAME, new UnReadRemindingMessagesHandler());
 		
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
@@ -865,6 +871,30 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
             myUserInfo.setUserPic(icon);
         }
           
+	}
+
+	@Override
+	public void readRemindMessage(String read) {
+		ReadRemindMessageCommand command=new ReadRemindMessageCommand();
+		command.setId(read);
+		try{
+			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
+		}catch(Throwable e){
+			log.warn("updatToken error",e);
+		}
+	}
+
+	@Override
+	public List<RemindMessageBean> getUnreadRemindMessages() {
+		UnReadRemindingMessagesCommand command=new UnReadRemindingMessagesCommand();
+		try{
+			Future<List<RemindMessageBean>> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			List<RemindMessageBean> list=future.get(30,TimeUnit.SECONDS);
+			return list;
+		}catch(Throwable e){
+			log.warn("updatToken error",e);
+		}
+		return null;
 	}
 	
 }

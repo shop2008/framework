@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import java.util.List;
+
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -189,4 +191,7 @@ public interface IUserManagementService {
 	UserBean refreshUserInfo();
 	
 	void resetPassword(String userName);
+	
+	void readRemindMessage(String read);
+	List<RemindMessageBean> getUnreadRemindMessages();
 }
