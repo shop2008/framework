@@ -192,6 +192,8 @@ public interface IUserManagementService {
 	
 	void resetPassword(String userName);
 	
-	void readRemindMessage(String read);
+	void readRemindMessage(String id);
 	List<RemindMessageBean> getUnreadRemindMessages();
+	void readAllUnremindMessage();
+	void readPullMesage(long id);
 }

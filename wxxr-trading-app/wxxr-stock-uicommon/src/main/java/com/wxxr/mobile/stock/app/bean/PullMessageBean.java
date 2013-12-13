@@ -20,7 +20,7 @@ public class PullMessageBean implements IBindableBean {
 	private String title;
 	private String createDate;
 	private String articleUrl;
-
+	private boolean read;
 	/**
 	 * @param listener
 	 */
@@ -133,19 +133,34 @@ public class PullMessageBean implements IBindableBean {
 		this.emitter.firePropertyChange("articleUrl", old, this.articleUrl);
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override   
-    public String toString() {
-        return "PullMessageBean ["+
-                "message=" + this.message +
-                " , id=" + this.id +
-                " , phone=" + this.phone +
-                " , title=" + this.title +
-                " , createDate=" + this.createDate +
-                " , articleUrl=" + this.articleUrl +
-        "]";
-    }	
+	
+    /**
+	 * @return the read
+	 */
+	public boolean isRead() {
+		return read;
+	}
+
+	/**
+	 * @param read the read to set
+	 */
+	public void setRead(boolean read) {
+		boolean old=this.read;
+		this.read = read;
+		emitter.firePropertyChange("read", old, read);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PullMessageBean [emitter=" + emitter + ", message=" + message
+				+ ", id=" + id + ", phone=" + phone + ", title=" + title
+				+ ", createDate=" + createDate + ", articleUrl=" + articleUrl
+				+ ", read=" + read + "]";
+	}
+
+	
 
 }

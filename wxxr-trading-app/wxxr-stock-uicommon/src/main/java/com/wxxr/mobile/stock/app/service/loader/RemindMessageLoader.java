@@ -111,7 +111,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 			
 		}
 		entity.setAcctId(bean.getAcctId());
-		entity.setAcctId(bean.getId());
+		entity.setId(Long.valueOf(bean.getId()));
 		entity.setAttrs(bean.getAttrs().toString());
 		entity.setContent(bean.getContent());
 		entity.setCreatedDate(bean.getCreatedDate());
@@ -128,14 +128,14 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
 		List<RemindMessageInfo> list=dao.loadAll();
 		if(list!=null ){
-			for(RemindMessageBean entity:remindMessages){
+			for(RemindMessageInfo entity:list){
 				RemindMessageBean bean=new RemindMessageBean();
 				bean.setAcctId(entity.getAcctId());
-				bean.setAcctId(entity.getId());
+				bean.setId(entity.getId()+"");
 //				entity.setAttrs(entity.getAttrs().toString());
 				bean.setContent(entity.getContent());
 				bean.setCreatedDate(entity.getCreatedDate());
-				bean.setTitle(entity.getAttrs().get("title"));
+				bean.setTitle(entity.getTitle());
 				bean.setType(entity.getType());
 				remindMessages.add(bean);
 			}

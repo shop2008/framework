@@ -3,12 +3,19 @@
  */
 package com.wxxr.mobile.stock.app.service.loader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.db.PullMessageInfo;
+import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
+import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
+import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
+import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
 import com.wxxr.stock.restful.json.PullMessageVOs;
 import com.wxxr.stock.restful.resource.ArticleResource;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
@@ -100,7 +107,17 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 	@Override
 	public boolean handleCommandResult(ICommand<?> cmd,List<PullMessageVO> result,
 			IReloadableEntityCache<Long, PullMessageBean> cache) {
+		
+		
 		boolean updated = false;
+		if(cache.getAllKeys()==null ||cache.getAllKeys().length==0){
+			List<PullMessageBean> pullMessageBeans=queryRemindMessages();
+			for(PullMessageBean bean:pullMessageBeans){
+				cache.putEntity(bean.getId(), bean);
+				updated=true;
+			}
+		}
+		
 		if(result!=null && !result.isEmpty()){
 			for (PullMessageVO vo : result) {
 					PullMessageBean bean=cache.getEntity(vo.getId());
@@ -115,11 +132,30 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 					bean.setPhone(vo.getPhone());
 					bean.setTitle(vo.getTitle());
 					updated = true;
-				
 			}
 		}		return false;
 	}
 
+	
+	protected List<PullMessageBean> queryRemindMessages() {
+		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(DBServiceImpl.class).getDaoSession().getPullMessageInfoDao();
+		List<PullMessageBean> pullMessageBeans=new ArrayList<PullMessageBean>();
+		List<PullMessageInfo> list=dao.loadAll();
+		if(list!=null ){
+			for(PullMessageInfo entity:list){
+				PullMessageBean bean=new PullMessageBean();
+				bean.setArticleUrl(entity.getArticleUrl());
+				bean.setCreateDate(entity.getCreateDate());
+				bean.setId(entity.getId());
+				bean.setMessage(entity.getMessage());
+				bean.setPhone(entity.getPhone());
+				bean.setRead(entity.getRead());
+				bean.setTitle(entity.getTitle());
+				pullMessageBeans.add(bean);
+			}
+		}
+		return pullMessageBeans;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader#getCommandName()
 	 */
