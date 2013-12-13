@@ -44,7 +44,7 @@ public class SimpleFieldBinderManager implements
 	protected <T> ControlFieldBinders getFieldBinders(Class<T> clazz, boolean createIfNotexisting) {
 		ControlFieldBinders binders = (ControlFieldBinders)this.factories.get(clazz);
 		if((binders == null)&&createIfNotexisting){
-			binders = new ControlFieldBinders();
+			binders = new ControlFieldBinders(this.context);
 			this.factories.put(clazz, binders);
 		}
 		return binders;

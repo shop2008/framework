@@ -33,7 +33,11 @@ public class SimpleEventBinderManager implements IEventBinderManager {
 
 	@Override
 	public void registerFieldBinder(String eventType, IEventBinder binder) {
-		this.binders.put(eventType, binder);
+		IEventBinder old = this.binders.put(eventType, binder);
+		binder.init(context);
+		if(old != null){
+			old.destory();
+		}
 	}
 
 	@Override
@@ -41,6 +45,7 @@ public class SimpleEventBinderManager implements IEventBinderManager {
 		IEventBinder b = this.binders.get(eventType);
 		if(b == binder){
 			this.binders.remove(eventType);
+			b.destory();
 			return true;
 		}
 		return false;

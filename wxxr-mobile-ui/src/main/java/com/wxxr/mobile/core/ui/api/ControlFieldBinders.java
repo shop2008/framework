@@ -13,6 +13,11 @@ import java.util.Map;
 public class ControlFieldBinders implements IControlFieldBinders {
 	
 	private Map<Class<?>, IFieldBinder> binders;
+	private final IWorkbenchRTContext context;
+	
+	public ControlFieldBinders(IWorkbenchRTContext ctx){
+		this.context = ctx;
+	}
 
 	@Override
 	public <M extends IUIComponent> IFieldBinder getFieldBinder(
@@ -38,7 +43,11 @@ public class ControlFieldBinders implements IControlFieldBinders {
 		if(binders == null){
 			binders = new HashMap<Class<?>, IFieldBinder>();
 		}
-		binders.put(pmodelClass, binder);
+		IFieldBinder old = binders.put(pmodelClass, binder);
+		binder.init(this.context);
+		if(old != null){
+			old.destory();
+		}
 	}
 
 	@Override
@@ -48,6 +57,7 @@ public class ControlFieldBinders implements IControlFieldBinders {
 			IFieldBinder b = binders.get(pmodelClass);
 			if(b == binder){
 				binders.remove(pmodelClass);
+				b.destory();
 				return true;
 			}
 		}
