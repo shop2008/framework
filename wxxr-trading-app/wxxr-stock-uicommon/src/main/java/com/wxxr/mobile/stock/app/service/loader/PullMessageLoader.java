@@ -119,19 +119,22 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 
 		
 		if(result!=null && !result.isEmpty()){
+			boolean insert=false;
 			for (PullMessageVO vo : result) {
 					PullMessageBean bean=cache.getEntity(vo.getId());
 					if(bean==null){
 						bean=new PullMessageBean();
 						bean.setId(vo.getId());
 						cache.putEntity(bean.getId(), bean);
+						insert=true;
 					}
 					bean.setArticleUrl(vo.getArticleUrl());
 					bean.setCreateDate(vo.getCreateDate());
 					bean.setMessage(vo.getMessage());
 					bean.setPhone(vo.getPhone());
 					bean.setTitle(vo.getTitle());
-					insertOrUpdateDB(bean);
+					if(insert)
+						insertOrUpdateDB(bean);
 					updated = true;
 			}
 		}		
