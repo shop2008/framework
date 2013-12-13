@@ -124,7 +124,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	public BindableListWrapper<ArticleBean> getTradingRuleArticle() {
 		if(this.tradingRuleCache == null){
-			this.tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("homeArticles");
+			this.tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("tradingRuleArticles");
 		}
 		if(this.tradingRuleArticles == null){
 			this.tradingRuleArticles = this.tradingRuleCache.getEntities(null,null);
@@ -140,7 +140,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle() {
 		if(this.withdrawlNoticeCache == null){
-			this.withdrawlNoticeCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("homeArticles");
+			this.withdrawlNoticeCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("withdrawlNoticeArticles");
 		}
 		if(this.withdrawlNoticeArticles == null){
 			this.withdrawlNoticeArticles = this.withdrawlNoticeCache.getEntities(null,null);
