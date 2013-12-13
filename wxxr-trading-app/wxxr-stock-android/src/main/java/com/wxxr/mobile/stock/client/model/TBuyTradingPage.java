@@ -262,6 +262,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 					map.put(Constants.KEY_CODE_FLAG, code);
 					map.put(Constants.KEY_NAME_FLAG, name);
 					map.put(Constants.KEY_MARKET_FLAG, market);
+					map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 					map.put("acctId", acctId);
 					map.put("avalible", avalible);
 				}
@@ -294,6 +295,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		String avalible = tradingBean.getAvalibleFee() + "";
 		map.put("acctId", acctId);
 		map.put("avalible", avalible);
+		map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 		result.setResult("BuyStockDetailPage");
 		result.setPayload(map);
 		updateSelection(new StockSelection());

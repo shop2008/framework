@@ -11,33 +11,42 @@ import com.wxxr.mobile.core.util.IAsyncCallback;
 public class StockRefreshClickedDecorator implements InputEventDecorator {
 
 	private final InputEventDecorator next;
-	
-	public StockRefreshClickedDecorator(InputEventDecorator decor){
+
+	public StockRefreshClickedDecorator(InputEventDecorator decor) {
 		this.next = decor;
 	}
-	
+
 	@Override
 	public void handleEvent(InputEventHandlingContext context, InputEvent event) {
 		IView v = context.getViewModel();
-		final IDataField<Boolean> fieldProgress = v.getChild("progress",IDataField.class);
-		final IDataField<Boolean> fieldRefresh = v.getChild("refresh",IDataField.class);
-		fieldProgress.setValue(true);
-		fieldRefresh.setValue(false);
+		final IDataField<Boolean> fieldProgress = v.getChild("progress",
+				IDataField.class);
+		final IDataField<Boolean> fieldRefresh = v.getChild("refresh",
+				IDataField.class);
+		if (fieldProgress != null)
+			fieldProgress.setValue(true);
+		if (fieldRefresh != null)
+			fieldRefresh.setValue(false);
 		IAsyncCallback cb = new IAsyncCallback() {
-			
+
 			@Override
 			public void success(Object result) {
-				fieldProgress.setValue(false);
-				fieldRefresh.setValue(true);
+				if (fieldProgress != null)
+					fieldProgress.setValue(false);
+				if (fieldRefresh != null)
+					fieldRefresh.setValue(true);
 			}
-			
+
 			@Override
 			public void failed(Object cause) {
-				fieldProgress.setValue(false);
-				fieldRefresh.setValue(true);
+				if (fieldProgress != null)
+					fieldProgress.setValue(false);
+				if (fieldRefresh != null)
+					fieldRefresh.setValue(true);
 			}
 		};
-		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_CALLBACK, cb);
+		((SimpleInputEvent) event)
+				.addProperty(InputEvent.PROPERTY_CALLBACK, cb);
 		this.next.handleEvent(context, event);
 	}
 

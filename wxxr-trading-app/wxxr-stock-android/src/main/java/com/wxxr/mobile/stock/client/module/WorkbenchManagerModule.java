@@ -8,7 +8,6 @@ import android.widget.Spinner;
 
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
 import com.wxxr.mobile.core.log.api.Trace;
-//import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
 import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
@@ -19,6 +18,7 @@ import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.core.ui.common.ViewGroupBase;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
+import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
@@ -32,6 +32,7 @@ import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.SellFiveDayMinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.SpinnerItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.SpinnerViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.StockRefreshClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
@@ -90,7 +91,6 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		MinuteLineViewKeys.registerKeys(mgr);
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
-//		StockInfoViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());
@@ -106,8 +106,9 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	}
 
 	@Override
-	protected void initBindingDecorators(IBindingDecoratorRegistry arg0) {
-		
+	protected void initBindingDecorators(IBindingDecoratorRegistry registry) {
+		registry.registerDecorator("StockRefreshClickedDecorator", StockRefreshClickedDecorator.class);
+		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
 	}
 
 }

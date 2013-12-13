@@ -103,14 +103,15 @@
                                 android:layout_gravity="center"
                                 android:src="@drawable/refresh"
                                 bind:field="refresh"
-                                bind:on_Click="handlerRefreshClicked" />
+                                bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" />
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleSmall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                bind:field="progress" />
                         </FrameLayout>
                     </LinearLayout>
 
@@ -183,7 +184,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     bind:field="buyBtn"
-                    bind:on_Click="handleBuyBtnClick" />
+                    bind:on_Click="handleBuyBtnClick@BuyStockClickedDecorator" />
 
                 <com.wxxr.mobile.stock.client.widget.StockInputKeyboard
                     android:id="@+id/keyboard_view"

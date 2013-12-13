@@ -22,7 +22,8 @@ public class BuyStockClickedDecorator implements InputEventDecorator {
 			
 			@Override
 			public void success(Object result) {
-				v.hide();
+				if(v != null)
+					v.hide();
 			}
 			
 			@Override

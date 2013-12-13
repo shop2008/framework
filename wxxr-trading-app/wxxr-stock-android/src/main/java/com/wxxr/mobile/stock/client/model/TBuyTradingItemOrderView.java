@@ -71,19 +71,13 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	}
 
 	@Command(uiItems=
-			@UIItem(id="right",label="取消",icon="resourceId:drawable/zpb")
-		,navigations = { @Navigation(on = "*", showDialog = "messageBox", params = {
+			@UIItem(id="right",label="取消",icon="resourceId:drawable/zpb"),
+			navigations = { @Navigation(on = "*", message = "resourceId:message/confirm_cancel_order", params = {
 			@Parameter(name = "title", value = ""),
 			@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
-			@Parameter(name = "message", value = "resourceId:message/confirm_cancel_order"),
 			@Parameter(name = "onOK", value = "leftok"),
 			@Parameter(name = "onCanceled", value = "right") }) })
 	String handlerCancelClick(InputEvent event) {
-		// 未实现撤单前确认
-		// if("100".equals(orderBean.getStatus()))
-		// return null;
-		// manageService.cancelOrder(orderBean.getId()+"");
-		// orderBean.setStatus("100");
 		return "";
 	}
 

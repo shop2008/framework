@@ -37,6 +37,7 @@ import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -44,6 +45,7 @@ import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -94,8 +96,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Bean
 	String orderPriceBean;
 	
-//	@Bean
-//	String orderCountBean;
+	@Bean
+	boolean isVirtual = true; //true模拟盘，false实盘
 	
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
@@ -135,11 +137,18 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding="${amountBean}")
 	String count;
 	
-	@Field(valueKey = "text")
-	String refresh;
-	
-	@Field(valueKey = "text")
+	@Field(valueKey = "text", attributes={
+			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}")
+			})
 	String buyBtn;
+	
+	@Field(valueKey = "visible")
+	boolean progress;
+	DataField<Boolean> progressField;
+
+	@Field(valueKey = "visible")
+	boolean refresh = true;
+	DataField<Boolean> refreshField;
 	
 	@Bean
 	int size;
@@ -173,17 +182,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handlerRefreshClicked(InputEvent event) {
-		//需要回调
 		infoCenterService.getStockQuotation(codeBean, marketBean);
-		orderPriceBean = stockQuotationBean.getNewprice() + "";
-		marketPriceBean = stockQuotationBean.getClose() + "";
+		//同步
+		StockQuotationBean bean = infoCenterService.getSyncStockQuotation(codeBean, marketBean);
+		
+		orderPriceBean = bean.getNewprice() + "";
+		marketPriceBean = bean.getClose() + "";
 		registerBean("orderPriceBean", orderPriceBean);
 		registerBean("marketPriceBean", marketPriceBean);
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put(Constants.KEY_CODE_FLAG, codeBean);
-//		map.put(Constants.KEY_NAME_FLAG, nameBean);
-//		map.put(Constants.KEY_MARKET_FLAG, marketBean);
-//		updateSelection(map);
 		updateSelection(new StockSelection(this.marketBean,this.codeBean,this.nameBean, 1));
 		return null;
 	}
@@ -322,6 +328,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					}
 					avalibleFeeBean = avalibleFee;
 					registerBean("avalibleFeeBean", avalibleFee);
+				} else if (tempt != null && Constants.KEY_VIRTUAL_FLAG.equals(key)) {
+					if(tempt instanceof Boolean) {
+						isVirtual = (Boolean)tempt;
+					}
+					registerBean("isVirtual", isVirtual);
 				}
 				log.debug("BuyStockDetailPage updateModel: avalibleFeeBean : "+avalibleFeeBean);
 			}
@@ -358,8 +369,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			}
 		}
 		tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
-		hide();
-		return null;
+		return "";
 	}
 	
 	@OnCreate
@@ -397,5 +407,17 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		hasShow = false;
 		marketBean = null;
 		codeBean = null;
+		amountBean = null;
+		acctIdBean = null;
+		marketPriceBean = null;
+		avalibleFeeBean = null;
+		orderPriceBean = null;
+		registerBean("marketBean", "");
+		registerBean("codeBean", "");
+		registerBean("amountBean", "");
+		registerBean("acctIdBean", "");
+		registerBean("marketPriceBean", "");
+		registerBean("avalibleFeeBean", "");
+		registerBean("orderPriceBean", "");
 	}
 }
