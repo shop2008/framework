@@ -93,8 +93,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						bindingContext.hideView();
 					}
 				}, fieldName, params);
-				binding.init(runtimeContext);
-				
+				binding.init(runtimeContext);				
 				if(decoratorName != null){
 					binding.doDecorate(StringUtils.split(decoratorName,','));
 				}
@@ -277,7 +276,6 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 									bindingContext.hideView();
 								}
 							}, val, cmdName, params);
-							eBinding.init(runtimeContext);
 							if(eventDecor != null){
 								eBinding.doDecorate(StringUtils.split(eventDecor,','));
 							}

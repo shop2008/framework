@@ -32,7 +32,9 @@ public class ViewGroupFieldBinder implements IFieldBinder {
 	@Override
 	public IFieldBinding createBinding(IBindingContext context,String fieldName,
 			Map<String, String> attrs) {
-		return new ViewGroupFieldBinding((IAndroidBindingContext)context, fieldName, attrs);
+		ViewGroupFieldBinding binding = new ViewGroupFieldBinding((IAndroidBindingContext)context, fieldName, attrs);
+		binding.init(this.mngContext);
+		return binding;
 	}
 
 }
