@@ -110,13 +110,13 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 		
 		
 		boolean updated = false;
-		if(cache.getAllKeys()==null ||cache.getAllKeys().length==0){
+
 			List<PullMessageBean> pullMessageBeans=queryRemindMessages();
 			for(PullMessageBean bean:pullMessageBeans){
 				cache.putEntity(bean.getId(), bean);
 				updated=true;
 			}
-		}
+
 		
 		if(result!=null && !result.isEmpty()){
 			for (PullMessageVO vo : result) {

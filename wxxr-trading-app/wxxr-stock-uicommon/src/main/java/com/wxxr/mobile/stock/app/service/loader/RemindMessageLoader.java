@@ -72,13 +72,13 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	public boolean handleCommandResult(ICommand<?> cmd,List<MessageVO> result,
 			IReloadableEntityCache<String, RemindMessageBean> cache) {
 		boolean updated = false;
-		if(cache.getAllKeys()==null ||cache.getAllKeys().length==0){
-			List<RemindMessageBean> remindMessageBeans=queryRemindMessages();
-			for(RemindMessageBean bean:remindMessageBeans){
-				cache.putEntity(bean.getId(), bean);
-				updated=true;
-			}
+
+		List<RemindMessageBean> remindMessageBeans=queryRemindMessages();
+		for(RemindMessageBean bean:remindMessageBeans){
+			cache.putEntity(bean.getId(), bean);
+			updated=true;
 		}
+
 		if(result!=null && !result.isEmpty()){
 			for (MessageVO vo : result) {
 					RemindMessageBean bean=cache.getEntity(vo.getId());
@@ -151,7 +151,6 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 						}
 					}
 				}
-
 				bean.setAttrs(attr);
 				bean.setContent(entity.getContent());
 				bean.setCreatedDate(entity.getCreatedDate());
