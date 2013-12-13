@@ -35,6 +35,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.IStockAppFramework;
 import com.wxxr.mobile.stock.app.service.impl.ArticleManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.ContentManager;
+import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.EntityLoaderRegistryImpl;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
@@ -125,6 +126,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new AndroidI10NServiceModule<IStockAppContext>());
 		registerKernelModule(new ValidationMessageInterpolator<IStockAppContext>());
 	    registerKernelModule(new TadingCalendarServiceImpl());
+	    registerKernelModule(new DBServiceImpl());
 
 	}
 	/* (non-Javadoc)
