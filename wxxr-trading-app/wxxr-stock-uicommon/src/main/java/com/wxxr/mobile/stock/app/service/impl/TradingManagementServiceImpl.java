@@ -728,6 +728,8 @@ public class TradingManagementServiceImpl extends
                             if (log.isDebugEnabled()) {
                                 log.debug("buyStock successfully.");
                             }
+                            tradingAccInfo_cache.forceReload(false);
+                            tradingAccountBean_cache.forceReload(true);
                         }
                     }
                
@@ -758,6 +760,7 @@ public class TradingManagementServiceImpl extends
                             if (log.isDebugEnabled()) {
                                 log.debug("Create sellStock successfully.");
                             }
+                            tradingAccountBean_cache.forceReload(true);
                         }
                     }
                
@@ -787,6 +790,7 @@ public class TradingManagementServiceImpl extends
                             if (log.isDebugEnabled()) {
                                 log.debug("quickBuy successfully.");
                             }
+                            tradingAccountBean_cache.forceReload(true);
                         }
                     }
                
@@ -834,6 +838,7 @@ public class TradingManagementServiceImpl extends
                             if (log.isDebugEnabled()) {
                                 log.debug("cancelOrder successfully.");
                             }
+                            tradingAccountBean_cache.forceReload(true);
                         }
                     }
                
@@ -875,6 +880,15 @@ public class TradingManagementServiceImpl extends
         return voucherDetailsBean_cache.getEntity(key);
 	}
 	
+	
+	void clearCache(){
+		tradingAccInfo_cache.clear();
+        tradingAccountBean_cache.clear();
+        tradingRecordBean_cache.clear();
+        dealDetailBean_cache.clear();
+        auditDetailBean_cache.clear();
+        voucherDetailsBean_cache.clear();
+	}
 
 }
 
