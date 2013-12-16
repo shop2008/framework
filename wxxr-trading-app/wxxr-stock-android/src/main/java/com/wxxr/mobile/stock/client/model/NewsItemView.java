@@ -1,10 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.IListAdapterBuilder;
