@@ -182,6 +182,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		
 		return null;
 	}
+	
 	@Override
 	public String getApplicationId() {
 		return getAndroidApplication().getPackageName();
@@ -192,7 +193,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	}
 	@Override
 	public String getApplicationBuildNnumber() {
-		return null;
+		return this.info.get("versionCode");
 	}
 
 	@Override
