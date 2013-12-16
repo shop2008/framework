@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 @View(name = "userTradeRecordPage", withToolbar = true, description = "我的交易记录", provideSelection=true)
@@ -137,7 +138,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 					map.put("isVirtual", isVirtual);
 				result.setPayload(map);
 				result.setResult("operationDetails");
-				updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}
@@ -145,9 +146,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	@Command(commandName = "sucRecordItemClicked", navigations = {
-			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
-			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "operationDetails", showPage = "OperationDetails")
+			})
 	CommandResult sucRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -174,7 +174,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 					map.put("isVirtual", isVirtual);
 				result.setPayload(map);
 				result.setResult("operationDetails");
-				updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
+				//updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}

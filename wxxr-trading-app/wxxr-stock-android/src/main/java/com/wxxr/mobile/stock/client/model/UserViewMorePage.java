@@ -26,6 +26,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 @View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作", provideSelection=true)
@@ -201,7 +202,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
@@ -263,7 +264,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = actualBean.getStatus();
