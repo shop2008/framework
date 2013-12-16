@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
 @View(name="mnAuditDetail",description="模拟盘")
@@ -42,23 +43,15 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="100"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor1;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="1000"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor2;
-	
-	@Convertor(params={
 			@Parameter(name="format",value="-%.0f")
 	})
 	Float2PercentStringConvertor float2PercentStringConvertor;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f元"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	
 	/**模拟盘额度*/
 	@Field(valueKey="text",binding="${auditData!=null ? auditData.fund:null}",converter="stockLong2StringAutoUnitConvertor")
@@ -69,19 +62,19 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	String plRisk;
 	
 	/**模拟盘收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="stockLong2StringConvertorYuan")
 	String totalGain;
 	
 	/**补偿交易综合费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.tradingCost:null}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.tradingCost:null}",converter="stockLong2StringConvertorYuan")
 	String tradingCost;
 	
 	/**账户管理费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringConvertorYuan")
 	String accountPay;
 	
 	/**玩家实得收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringConvertorYuan")
 	String userGain;
 	
 	/**终止止损*/
@@ -124,15 +117,5 @@ public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpda
 	
 	@Override
 	public void updateModel(Object value) {
-//		if(value instanceof Map){
-//			Map temp = (Map)value;
-//	        for (Object key : temp.keySet()) {
-//	            Object tempt = temp.get(key);
-//	            if("accId".equals(key)){
-//	            	this.accId = tempt;
-//	            }
-//	        }
-//	        registerBean("accId", this.accId);
-//		}
 	}
 }

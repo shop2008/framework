@@ -21,22 +21,21 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
-import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
 
-@View(name="QuickBuyStockPage", description="快速买入",withToolbar=true)
+@View(name="QuickBuyStockPage", description="快速买入",withToolbar=true,provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.quick_buy_page")
 public abstract class QuickBuyStockPage extends PageBase implements IModelUpdater {
 	static Trace log = Trace.getLogger(QuickBuyStockPage.class);
@@ -56,9 +55,6 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	
 	@Bean(type=BindingType.Pojo,express="${userCreateService.getUserCreateTradAccInfo()}")
 	UserCreateTradAccInfoBean userCreateTradAccInfo;	
-	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(minuteMap)}")
-	StockMinuteKBean minute;
 	
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeValue,marketValue)}")
 	StockQuotationBean stockQuotation;
@@ -195,6 +191,12 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && stockQuotation.close!=null)}")
 	boolean cansaiButton = true;
 	
+	@Field(valueKey = "visible")
+	boolean progress;
+
+	@Field(valueKey = "visible")
+	boolean refresh = true;
+	
 	@OnShow
 	protected void initData(){
 		this.currentRadioBtnId = 1;
@@ -206,6 +208,14 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				registerBean("C_buyNum", this.C_buyNum);
 			}
 		}
+	}
+	
+	@Command
+	String handlerRefreshClicked(InputEvent event) {
+		this.userCreateService.getUserCreateTradAccInfo();
+		this.infoCenterService.getSyncStockQuotation(this.codeValue,this.marketValue);
+		updateSelection(new StockSelection(this.marketValue, this.codeValue, this.stockName, 1));
+		return null;
 	}
 	
 	@Command
@@ -500,12 +510,6 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 					this.stockName = name;
 					registerBean("stockName", this.stockName);
 				}
-			}
-			if(this.codeValue!=null && this.marketValue!=null){
-				HashMap<String, String> temp = new HashMap<String, String>();
-				temp.put(codeValue, marketValue);
-				this.minuteMap = temp;
-				registerBean("minuteMap", this.minuteMap);
 			}
 		}
 		registerBean("size", 3);

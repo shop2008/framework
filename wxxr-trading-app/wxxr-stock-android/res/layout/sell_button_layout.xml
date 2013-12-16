@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:gravity="center"
             bind:field="isBlueCleanBtn"
-            bind:on_Click="clearTradingAccount"
+            bind:on_Click="handlerClearClick"
             android:layout_marginLeft="4dp"
             >
             <ImageView android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
             android:layout_weight="1"
             android:gravity="center"
             bind:field="isRedCleanBtn"
-            bind:on_Click="clearTradingAccount"
+            bind:on_Click="handlerClearClick"
             android:layout_marginLeft="4dp"
             >
             <ImageView android:layout_width="wrap_content"

@@ -98,25 +98,28 @@
                             </EditText>
 
                             <FrameLayout
-                                android:id="@+id/refresh_layout"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/inpunt_right_btn" >
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/refresh"
-                                    bind:on_Click="retryLoadingClick" />
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleSmall"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:visibility="gone" />
-                            </FrameLayout>
+		                        android:id="@+id/refresh_layout"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:clickable="true"
+		                        android:background="@drawable/refresh_button_style" >
+		
+		                    <ImageView
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:src="@drawable/refresh" 
+		                        bind:field="refresh"
+                                bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator"/>
+		
+		                    <ProgressBar
+		                        style="?android:attr/progressBarStyleSmall"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:visibility="gone"
+		                        bind:field="progress" />
+		                </FrameLayout>
                         </LinearLayout>
 
                         <RadioGroup

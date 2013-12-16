@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +21,17 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name="GZMinuteLineView",description="个股界面")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.gegu_zhishu_minute_line_layout")
@@ -44,6 +46,10 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
 	StockMinuteKBean minute;
+	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+		
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000f"),
 			@Parameter(name="format",value="%.2f"),
@@ -207,9 +213,16 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			StockSelection stockSelection = (StockSelection) selection;
 			if(stockSelection!=null){
 				this.codeBean = stockSelection.getCode();
-				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
 				this.minuteHeaderType = stockSelection.getType();
+				if(this.nameBean!=null && !StringUtils.isEmpty(this.nameBean)){
+					this.nameBean = stockSelection.getName();
+				}else{
+					StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
+					if(baseInfo!=null && baseInfo.getName()!=null){
+						this.nameBean = baseInfo.getName();
+					}
+				}
 			}
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);

@@ -163,19 +163,24 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean
 	String closePriceBean; //作收价格，传入keyboard计算%
 	
+	@Field(valueKey = "visible")
+	boolean progress;
+
+	@Field(valueKey = "visible")
+	boolean refresh = true;
+	
 	@Command()
-	String retryLoadingClick(InputEvent event) {
+	String handlerRefreshClicked(InputEvent event) {
 		// 需要回调
-		infoCenterService.getStockQuotation(stockCode, stockMarket);
+		infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
 		sellPrice = stockQuotation.getNewprice() + "";
 		closePriceBean = stockQuotation.getClose() + "";
 		registerBean("closePriceBean", closePriceBean);
 		registerBean("sellPrice", sellPrice);
 		//刷新viewpager
-		updateSelection(new StockSelection(stockMarket, stockCode, stockName));
+		updateSelection(new StockSelection(stockMarket, stockCode, stockName,1));
 		return null;
 	}
-	
 	
 	@Command
 	String dropDownMenuListItemClick(InputEvent event){

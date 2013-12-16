@@ -22,6 +22,7 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
 @View(name="auditDetail",description="实盘")
@@ -55,6 +56,13 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	})
 	Float2PercentStringConvertor float2PercentStringConvertor;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.2f元"),
+			@Parameter(name="multiple", value="100.00")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorYuan;
+	
+	
 	@Bean
 	Object accId;
 	@Bean
@@ -69,19 +77,19 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	String plRisk;
 	
 	/**实盘收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.totalGain:null}",converter="stockLong2StringConvertorYuan")
 	String totalGain;
 	
 	/**补偿交易综合费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.tradingCost:null}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.tradingCost:null}",converter="stockLong2StringConvertorYuan")
 	String tradingCost;
 	
 	/**账户管理费*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.accountPay:null}",converter="stockLong2StringConvertorYuan")
 	String accountPay;
 	
 	/**玩家实得收益*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringAutoUnitConvertor1")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.userGain:null}",converter="stockLong2StringConvertorYuan")
 	String userGain;
 	
 	/**终止止损*/
@@ -89,15 +97,15 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	String capitalRate;
 	
 	/**冻结资金*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.frozenAmount:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.frozenAmount:null}",converter="stockLong2StringConvertorYuan")
 	String frozenAmount;
 	
 	/**扣减数量*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.payOut:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.payOut:null}",converter="stockLong2StringConvertorYuan")
 	String payOut;
 	
 	/**解冻数量*/
-	@Field(valueKey="text",binding="${auditData!=null ? auditData.plRisk:'--'}")
+	@Field(valueKey="text",binding="${auditData!=null ? (auditData.frozenAmount - auditData.payOut):null}",converter="stockLong2StringConvertorYuan")
 	String unfreezeAmount;
 	
 	@OnShow
@@ -132,15 +140,5 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	
 	@Override
 	public void updateModel(Object value) {
-//		if(value instanceof Map){
-//			Map temp = (Map)value;
-//	        for (Object key : temp.keySet()) {
-//	            Object tempt = temp.get(key);
-//	            if("accId".equals(key)){
-//	            	this.accId = tempt;
-//	            }
-//	        }
-//	        registerBean("accId", this.accId);
-//		}
 	}
 }
