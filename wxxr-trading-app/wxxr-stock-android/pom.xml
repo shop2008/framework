@@ -13,8 +13,9 @@
 	<packaging>apk</packaging>
 	<name>wxxr-stock-android - Application</name>
     <properties>
-        <android.version>4.2.2</android.version>
-        <platform.version>17</platform.version>
+        <android.version>4.3</android.version>
+        <platform.version>18</platform.version>
+        <application.buildnumber>1</application.buildnumber>
     </properties>
 
 	<dependencies>
@@ -141,7 +142,6 @@
 		          </execution>
 		        </executions>
 		      </plugin>
-             -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -155,20 +155,34 @@
 					</execution>
 				</executions>
 			</plugin>
+             -->
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
 				<configuration>
-				  <undeployBeforeDeploy>true</undeployBeforeDeploy>
-				  <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml</androidManifestFile>
-				</configuration>
+					<sign>
+					    <debug>true</debug>
+					</sign>
+					<manifest>
+					    <versionCode>${application.buildnumber}</versionCode>
+					    <debuggable>true</debuggable>
+					</manifest>
+   				</configuration>
+				<executions>
+					<execution>
+					   <id>update-manifest</id>
+					   <goals>
+					     <goal>manifest-update</goal>
+					   </goals>
+					</execution>
+				</executions>
             </plugin>
 		</plugins>
 	</build>
 
     <profiles>
         <profile>
-            <id>sign</id>
+            <id>android-release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -188,10 +202,13 @@
                                     <includes>
                                         <include>target/*.apk</include>
                                     </includes>
-                                    <keystore>path/to/keystore</keystore>
-                                    <storepass>storepasword</storepass>
-                                    <keypass>keypassword</keypass>
-                                    <alias>key-alias</alias>
+                                    <keystore>${sign.keystore.path}</keystore>
+                                    <storepass>${sign.keystore.password}</storepass>
+                                    <keypass>${sign.key.password}</keypass>
+                                    <storetype>${sign.keystore.type}</storetype>
+                                    <alias>${sign.key.alias}</alias>
+                                    <verbose>true</verbose>
+                                    <certs>true</certs>
                                     <arguments>
                                       <argument>-sigalg</argument><argument>MD5withRSA</argument>
                                       <argument>-digestalg</argument><argument>SHA1</argument>
@@ -200,16 +217,36 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                        <artifactId>android-maven-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <sign>
-                                <debug>false</debug>
-                            </sign>
-                        </configuration>
-                    </plugin>
+		             <plugin>
+		                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+		                <artifactId>android-maven-plugin</artifactId>
+		                <configuration>
+                            <apkDebug>false</apkDebug>
+		                    <sign>
+		                        <debug>false</debug>
+		                    </sign>
+		                    <manifest>
+		                        <versionCode>${application.buildnumber}</versionCode>
+		                        <debuggable>false</debuggable>
+		                    </manifest>
+		                    <zipalign>
+		                        <skip>false</skip>
+		                        <verbose>true</verbose>
+		                    </zipalign>
+		                    <proguard>
+		                        <skip>false</skip>
+		                        <config>proguard.conf</config>
+		                    </proguard>
+		                </configuration>
+		                <executions>
+		                    <execution>
+		                       <id>update-manifest</id>
+		                       <goals>
+		                         <goal>manifest-update</goal>
+		                       </goals>
+		                    </execution>
+		                </executions>
+		            </plugin>
                 </plugins>
             </build>
         </profile>
