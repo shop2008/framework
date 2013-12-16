@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.IRefreshableListAdapter;
@@ -114,7 +115,9 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	 */
 	@Override
 	public boolean refresh() {
-		return this.dataProvider.updateDataIfNeccessary();
+		boolean result =  this.dataProvider.updateDataIfNeccessary();
+		notifyDataSetChanged();
+		return result;
 	}
 
 	@Override
