@@ -690,7 +690,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	public BindableListWrapper<RemindMessageBean> getRemindMessageBean() {
 		if(remindMessages==null){
 			if(remindMessagesCache==null){
-				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean");
+				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean",60);
 			}
 			remindMessages=remindMessagesCache.getEntities(null, new Comparator<RemindMessageBean>() {
 				
@@ -720,7 +720,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		
 		if(pullMessages==null){
 			if(pullMessagesCache==null){
-				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean");
+				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean",60);
 			}
 			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {
 
