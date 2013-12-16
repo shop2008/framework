@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -22,6 +21,7 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -47,6 +47,10 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	UserAssetBean assetBean;
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
 	boolean userRegistered;
+	
+	@Bean(type=BindingType.Pojo, express="${usrMgr.remindMessageBean}")
+	BindableListWrapper<RemindMessageBean> messageBeans;
+	
 	
 	@Field(valueKey="imageURI", binding="${(userInfo!=null&&userInfo.userPic!=null)?userInfo.userPic:'resourceId:drawable/default_user_icons'}")
 	String headIcon;
