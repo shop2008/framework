@@ -19,4 +19,14 @@
        <module>wxxr-stock-android</module>
        <module>wxxr-stock-uicommon</module>
    </modules>
+   <profiles>
+        <profile>
+            <id>android-release</id>
+            <properties>
+                <application.buildnumber>${env.buildNumber}</application.buildnumber>
+                <application.version>${env.versionNumber}</application.version>
+            </properties>
+        </profile>
+   </profiles>
+   
 </project>

@@ -183,6 +183,11 @@
     <profiles>
         <profile>
             <id>android-release</id>
+			<properties>
+			    <application.buildnumber>${env.buildNumber}</application.buildnumber>
+			    <application.version>${env.versionNumber}</application.version>
+			</properties>
+            
             <build>
                 <plugins>
                     <plugin>
