@@ -18,9 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:clickable="true" 
-            bind:field="*"
-            bind:on_Click="setPushMsgEnabled"
-            android:background="@drawable/bg_up"
+            
             >
 
             <TextView
@@ -50,6 +48,7 @@
 	                android:clickable="false"
 	                android:focusable="false" 
 	                bind:field="pushEnabled"
+           			bind:on_Click="setPushMsgEnabled"
 	                />
 	            
 	            <TextView 

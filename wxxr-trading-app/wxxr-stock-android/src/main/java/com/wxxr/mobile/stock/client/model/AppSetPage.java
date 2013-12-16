@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
@@ -23,17 +24,28 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked", binding="${usrService.pushMessageSetting}", visibleWhen="${user!=null?true:false}")
+	@Field(valueKey="checked", binding="${pushEnabledFlag}", visibleWhen="${user!=null?true:false}")
 	boolean pushEnabled;
 	
 	@Field(valueKey="visible", binding="${user!=null?false:true}")
 	boolean notLoginText;
+	
+	@Bean
+	boolean pushEnabledFlag;
+	
 	
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrService;
 	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
+	
+	
+	@OnShow
+	void initData() {
+		pushEnabledFlag = usrService.getPushMessageSetting();
+		registerBean("pushEnabledFlag", pushEnabledFlag);
+	}
 	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
@@ -43,6 +55,7 @@ public abstract class AppSetPage extends PageBase {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
+	
 	
 	/**
 	 * 联系我们
@@ -103,8 +116,13 @@ public abstract class AppSetPage extends PageBase {
 			if (user == null) {
 				return "*";
 			}
-			boolean pushEnabled = usrService.getPushMessageSetting();
-			usrService.pushMessageSetting(!pushEnabled);
+			pushEnabledFlag = usrService.getPushMessageSetting();
+			usrService.pushMessageSetting(!pushEnabledFlag);
+			
+			
+			pushEnabledFlag = !pushEnabledFlag;
+			
+			registerBean("pushEnabledFlag", pushEnabledFlag);
 		}
 		return null;
 	}
