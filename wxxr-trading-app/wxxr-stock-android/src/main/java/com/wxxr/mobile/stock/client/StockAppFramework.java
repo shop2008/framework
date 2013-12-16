@@ -177,21 +177,6 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			dataDir= getAndroidApplication().getDir(name, mode);
 		}
 		return dataDir;
-	}
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.app.AndroidFramework#getApplicationBuildNnumber()
-	 */
-	@Override
-	public String getApplicationBuildNnumber() {
-		return Version.getBuildNumber();
-	}
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.app.AndroidFramework#getApplicationVersion()
-	 */
-	@Override
-	public String getApplicationVersion() {
-		return Version.getVersionNumber();
 	}	
-	
 
 }
