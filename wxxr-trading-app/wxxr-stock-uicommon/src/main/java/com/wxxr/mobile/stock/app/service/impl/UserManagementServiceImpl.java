@@ -72,8 +72,6 @@ import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
-import com.wxxr.mobile.stock.app.service.handler.UnReadRemindingMessagesHandler;
-import com.wxxr.mobile.stock.app.service.handler.UnReadRemindingMessagesHandler.UnReadRemindingMessagesCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpPwdHandler.UpPwdCommand;
 import com.wxxr.mobile.stock.app.service.handler.UpdateAuthHandler;
@@ -88,6 +86,7 @@ import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PullMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
+import com.wxxr.mobile.stock.app.service.loader.UNReadRemindingMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
@@ -157,6 +156,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     private GenericReloadableEntityCache<String,GainBean,List> gainBean_cache;
 
     
+	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
+	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
+    
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -177,6 +179,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
 		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
         registry.registerEntityLoader("gainPayDetailBean", new GainPayDetailLoader());
+        registry.registerEntityLoader("unreadRemindingMsg", new UNReadRemindingMessageLoader());
         
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
@@ -189,7 +192,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateTokenHandler.COMMAND_NAME, new UpdateTokenHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(RegisterHandher.COMMAND_NAME, new RegisterHandher());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadRemindMessageHandler.COMMAND_NAME, new ReadRemindMessageHandler());
-		context.getService(ICommandExecutor.class).registerCommandHandler(UnReadRemindingMessagesHandler.COMMAND_NAME, new UnReadRemindingMessagesHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadAllUnreadMessageHandler.COMMAND_NAME, new ReadAllUnreadMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
 		
@@ -892,16 +894,29 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
 	@Override
-	public List<RemindMessageBean> getUnreadRemindMessages() {
-		UnReadRemindingMessagesCommand command=new UnReadRemindingMessagesCommand();
-		try{
-			Future<List<RemindMessageBean>> future=context.getService(ICommandExecutor.class).submitCommand(command);
-			List<RemindMessageBean> list=future.get(30,TimeUnit.SECONDS);
-			return list;
-		}catch(Throwable e){
-			log.warn("updatToken error",e);
+	public  BindableListWrapper<RemindMessageBean> getUnreadRemindMessages() {
+		if(unreadRemindMessages==null){
+			if(unreadRemindMessagesCache==null){
+				unreadRemindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, RemindMessageBean>("unreadRemindingMsg",60);
+			}
+			unreadRemindMessages=unreadRemindMessagesCache.getEntities(null, new Comparator<RemindMessageBean>() {
+				
+				@Override
+				public int compare(RemindMessageBean lhs, RemindMessageBean rhs) {
+					long c=Long.parseLong(rhs.getCreatedDate())-Long.parseLong(lhs.getCreatedDate());
+					if(c==0){
+						try {
+							c=Long.parseLong(((String)rhs.getAttrs().get("time")))-Long.parseLong(((String)lhs.getAttrs().get("time")));
+						} catch (NumberFormatException e) {
+							
+						}
+					}
+					return c>=0?1:-1;
+				}
+			});
 		}
-		return null;
+		unreadRemindMessagesCache.doReloadIfNeccessay();
+		return unreadRemindMessages;
 	}
 
 	@Override
