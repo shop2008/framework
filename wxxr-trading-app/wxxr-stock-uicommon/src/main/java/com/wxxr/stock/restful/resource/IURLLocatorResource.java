@@ -10,8 +10,8 @@ import com.wxxr.javax.ws.rs.core.MediaType;
 @Path("/rest/url")
 public interface IURLLocatorResource {	
 	@GET
-    @Path("/loadRemoteConfig")
+    @Path("/urlSettings")
 	@Produces({MediaType.WILDCARD})
 	@Consumes
-	byte[] isServerConfigChanged(@QueryParam("digest") String digest);
+	byte[] getURLSettings(@QueryParam("digest") String digest);
 }
