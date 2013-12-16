@@ -371,6 +371,7 @@ public class TradingManagementServiceImpl extends
                             if (log.isDebugEnabled()) {
                                 log.debug("clearTradingAccount successfully.");
                             }
+                            tradingAccountBean_cache.forceReload(true);
                         }
                     }
                
