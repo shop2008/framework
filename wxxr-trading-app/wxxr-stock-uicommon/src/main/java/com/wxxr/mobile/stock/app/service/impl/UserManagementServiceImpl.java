@@ -140,10 +140,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 
 	private BindableListWrapper<RemindMessageBean> remindMessages;
-	private IReloadableEntityCache<String, RemindMessageBean> remindMessagesCache;
+	private GenericReloadableEntityCache<String, RemindMessageBean,MessageVO> remindMessagesCache;
 	
 	private BindableListWrapper<PullMessageBean> pullMessages;
-	private IReloadableEntityCache<Long, PullMessageBean> pullMessagesCache;
+	private GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO> pullMessagesCache;
 
 	
 	private BindableListWrapper<UserAttributeBean> userAttrbutes;
@@ -717,10 +717,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	 */
 	@Override
 	public BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit) {
-		
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put("start", start);
+		params.put("limit", limit);
 		if(pullMessages==null){
 			if(pullMessagesCache==null){
 				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean",60);
+				pullMessagesCache.setCommandParameters(params);
 			}
 			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {
 
@@ -732,9 +735,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				
 			});
 		}
-		Map<String, Object> params=new HashMap<String, Object>();
-		params.put("start", start);
-		params.put("limit", limit);
+
 		pullMessagesCache.doReloadIfNeccessay(params);
 		return pullMessages;
 	}
