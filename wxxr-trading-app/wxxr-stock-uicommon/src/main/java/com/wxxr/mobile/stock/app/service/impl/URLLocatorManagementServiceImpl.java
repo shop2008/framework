@@ -36,6 +36,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	private int checkIntervalInSeconds = 30*60;		// 30 minutes
 	private String serverUrl;
 	private String magnoliaUrl;
+	private String urlCheckServerURL;
 	private Dictionary<String, String> defaultSettings = new Hashtable<String, String>();
 	private Timer timer;
 	Map<String,String> remoteConfig;
@@ -60,6 +61,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			log.debug("Loading local settings...");
 		}
 		loadLocalSettings();
+		this.urlCheckServerURL = getURL("url_checker_server");
 		this.serverUrl = getURL("server");
 		this.magnoliaUrl = getURL("magnolia");
 		if (log.isDebugEnabled()) {
@@ -113,22 +115,24 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			}
 		}
 	}
+	public String getUrlCheckServerURL() {
+		return urlCheckServerURL;
+	}
 	private void loadRemoteSettings() {
 		try {
 			String digest = null;
-			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class).isServerConfigChanged(digest);
-			if (data==null) {
+			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class,getUrlCheckServerURL()).getURLSettings(digest);
+			if (data==null||(remoteConfig = fromBytes(data))==null) {
 				return;
 			}
-			remoteConfig = fromBytes(data);
 			IPreferenceManager prefManager = context.getService(IPreferenceManager.class);	
 			String prefName = getModuleName();
 			if (!prefManager.hasPreference(prefName)) {
 				Dictionary<String, String> d = new Hashtable<String, String>();
 				prefManager.newPreference(prefName, d);
 			}
-			String sUrl =  null;
-			String mUrl =  null;
+			String sUrl =  remoteConfig.get("server");
+			String mUrl =  remoteConfig.get("magnolia");
 			if (StringUtils.isNotBlank(sUrl)) {
 				this.serverUrl = sUrl;
 				if (isChanged(getModuleName(), "server", sUrl)) {
@@ -140,13 +144,6 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 				if (isChanged(getModuleName(), "magnolia", mUrl)) {
 					prefManager.updatePreference(prefName, "magnolia", mUrl);
 				}
-			}
-			if (context.getApplication().isInDebugMode()) {
-				sUrl = remoteConfig.get("test.server");
-				mUrl = remoteConfig.get("test.maganoliaURL");
-			}else{
-				sUrl = remoteConfig.get("product.server");
-				mUrl = remoteConfig.get("product.maganoliaURL");
 			}
 		} catch (Exception e) {
 			log.warn("Error when loading properties from server", e);
