@@ -9,6 +9,7 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface InputEvent {
 	String PROPERTY_CALLBACK = "_Callback";	// value of this property must be type of IAsyncCallback
+	String PROPERTY_SOURCE_VIEW = "_SrcView";	// IView model that trigger this event
 	
 	String EVENT_TYPE_CLICK = "Click";
 	String EVENT_TYPE_ITEM_CLICK = "ItemClick";

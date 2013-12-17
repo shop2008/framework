@@ -82,6 +82,7 @@ public class UICommandButtonBinding extends BasicFieldBinding implements OnClick
 	@Override
 	public void onClick(View v) {
 		SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_CLICK, this.command);
+		event.addProperty(InputEvent.PROPERTY_SOURCE_VIEW, getViewModel());
 		command.invokeCommand(null, event);
 	}
 
