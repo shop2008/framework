@@ -58,9 +58,10 @@ public class ReadAllUnreadMessageHandler implements ICommandHandler {
 		if(list==null || list.size()<1){
 			return null;
 		}
-		RemindMessageInfo entity=list.get(0);
-		entity.setRead(true);
-		dao.update(entity);
+		for(RemindMessageInfo entity:list){
+			entity.setRead(true);
+			dao.update(entity);
+		}
 		return null;
 	}
 
