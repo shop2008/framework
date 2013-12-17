@@ -55,7 +55,7 @@ public class ReadAllUnreadMessageHandler implements ICommandHandler {
 	public <T> T execute(ICommand<T> command) throws Exception {
 		String id=((ReadRemindMessageCommand)command).getId();
 		RemindMessageInfoDao dao=context.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
-		List<RemindMessageInfo> list=dao.queryRaw(" READ ='false'",null);
+		List<RemindMessageInfo> list=dao.queryRaw(" read =1",null);
 		if(list==null || list.size()<1){
 			return null;
 		}
