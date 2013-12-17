@@ -45,6 +45,8 @@ public class TradingAccountInfoLoader extends AbstractEntityLoader<String, Tradi
     }
     @Override
     public ICommand<List<TradingAccountVO>> createCommand(Map<String, Object> params) {
+    	if(params == null || params.get("acctID") == null)
+    		return null;
         GetTradingAccountInfoCommand cmd = new GetTradingAccountInfoCommand();
         cmd.setAcctID((String)params.get("acctID"));
         return cmd;
