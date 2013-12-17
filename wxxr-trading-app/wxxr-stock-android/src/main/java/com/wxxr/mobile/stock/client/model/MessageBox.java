@@ -13,13 +13,13 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.R;
 
 /**
  * @author neillin
@@ -48,7 +48,7 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 	
 	DataField<String> iconField;
 	
-	IUICommand left,right,middle;
+	UICommand left,right,middle;
 	
 	@Command(uiItems={
 			@UIItem(label="resourceId:message/dummy_ok_label",id="left_button",icon="",visibleWhen="false"),
@@ -80,24 +80,36 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 				this.iconField.setValue((String)val);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
-			if(val instanceof IUICommand){
-				this.left = (IUICommand)val;
+			if(val instanceof UICommand){
+				this.left = (UICommand)val;
+				IUICommandHandler handler = this.left.getHandler();
+				if((handler instanceof MessageBoxCommandHandler)==false){
+					this.left.setHandler(new MessageBoxCommandHandler(handler, this));
+				}
 			}else if(val instanceof String){
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
-			if(val instanceof IUICommand){
-				this.middle = (IUICommand)val;
+			if(val instanceof UICommand){
+				this.middle = (UICommand)val;
+				IUICommandHandler handler = this.middle.getHandler();
+				if((handler instanceof MessageBoxCommandHandler)==false){
+					this.middle.setHandler(new MessageBoxCommandHandler(handler, this));
+				}
 			}else if(val instanceof String){
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, false);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
-			if(val instanceof IUICommand){
-				this.right = (IUICommand)val;
+			if(val instanceof UICommand){
+				this.right = (UICommand)val;
+				IUICommandHandler handler = this.right.getHandler();
+				if((handler instanceof MessageBoxCommandHandler)==false){
+					this.right.setHandler(new MessageBoxCommandHandler(handler, this));
+				}
 			}else if(val instanceof String){
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
