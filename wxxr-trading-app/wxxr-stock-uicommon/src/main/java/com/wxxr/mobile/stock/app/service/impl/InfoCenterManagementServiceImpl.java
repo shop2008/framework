@@ -47,7 +47,7 @@ public class InfoCenterManagementServiceImpl extends
 		IInfoCenterManagementService {
 
 	private static final Trace log = Trace
-			.register(InfoCenterManagementServiceImpl.class);
+			.register("com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl");
 	private static class StockTaxisComparator implements Comparator<StockTaxisBean> {
 
 		private String fieldName,order;

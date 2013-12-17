@@ -40,7 +40,7 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
  */
 public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 		implements IStockInfoSyncService {
-	private static final Trace log = Trace.register(StockInfoSyncServiceImpl.class);
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl");
 	private static final String TYPE_STOCK_DATA_BLOCK = "stock_block";
 	@Override
 	protected void initServiceDependency() {

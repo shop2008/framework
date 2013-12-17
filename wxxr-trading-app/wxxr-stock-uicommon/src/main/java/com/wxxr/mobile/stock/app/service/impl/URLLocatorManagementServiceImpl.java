@@ -31,7 +31,7 @@ import com.wxxr.stock.restful.resource.IURLLocatorResource;
  */
 public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppContext> implements
 		IURLLocatorManagementService {
-	private static final Trace log = Trace.register(URLLocatorManagementServiceImpl.class);
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl");
 	private long lastCheckTime;
 	private int checkIntervalInSeconds = 30*60;		// 30 minutes
 	private String serverUrl;

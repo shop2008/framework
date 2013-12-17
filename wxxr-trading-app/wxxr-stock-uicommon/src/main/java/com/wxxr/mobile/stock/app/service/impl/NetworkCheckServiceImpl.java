@@ -15,7 +15,7 @@ import com.wxxr.mobile.stock.app.service.INetworkCheckService;
  */
 public class NetworkCheckServiceImpl extends AbstractModule<IStockAppContext>
 		implements INetworkCheckService {
-	private static final Trace log = Trace.register(NetworkCheckServiceImpl.class);
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl");
 	@Override
 	public boolean isNetworkConnected() {
 		return getService(IDataExchangeCoordinator.class)

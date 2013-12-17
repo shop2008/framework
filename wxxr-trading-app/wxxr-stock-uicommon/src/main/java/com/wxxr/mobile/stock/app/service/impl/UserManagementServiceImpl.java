@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +31,6 @@ import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
-import com.wxxr.mobile.stock.app.bean.BindMobileBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -41,7 +39,6 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.ScoreBean;
 import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
-import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserAttributeBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -108,8 +105,7 @@ import com.wxxr.stock.trading.ejb.api.UserAssetVO;
  */
 public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		implements IUserManagementService, IUserAuthManager,IUserIdentityManager {
-	private static final Trace log = Trace
-			.register(UserManagementServiceImpl.class);
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl");
 	private static final String KEY_USERNAME = "U";
 	private static final String KEY_PASSWORD = "P";
 	private static final String KEY_UPDATE_DATE = "UD";
@@ -117,9 +113,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private UsernamePasswordCredential usernamePasswordCredential4Login;
 	// ==================beans =============================
 	private UserBean myUserInfo ;
-	private TradingAccountListBean myTradingAccountListBean = new TradingAccountListBean();
 	private UserBean otherUserInfo = new UserBean();
-	private BindMobileBean bindMobile = new BindMobileBean();
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
 	
@@ -127,7 +121,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	/**
 	 * 个人主页
 	 */
-	private PersonalHomePageBean myPBean = new PersonalHomePageBean();
 	
 	private UserAssetBean userAssetBean;
 	
@@ -629,27 +622,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       gainBean_cache.setCommandParameters(p);
      return gainBeans;
     }
-	
-	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
-		Future<T> future = context.getExecutor().submit(task);
-		T result = null;
-		try {
-			result = future.get();
-			return result;
-		} catch (Exception e) {
-			log.warn("Error when fetching data from server", e);
-			throw e;
-		}
-	}
-
-	private <T> T getRestService(Class<T> restResouce) {
-		return context.getService(IRestProxyService.class).getRestService(
-				restResouce);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserAssetBean()
-	 */
 	@Override
 	public UserAssetBean getUserAssetBean() {
 		if(userAssetBean==null){

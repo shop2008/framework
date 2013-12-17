@@ -24,7 +24,7 @@ public class ContentManager extends AbstractModule<IStockAppContext> implements
 
 	private static final String CONTENT_FILE = "content.bin";
 
-	private static Trace log = Trace.register(ContentManager.class);
+	private static Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.ContentManager");
 
 	private File storeDir;
 

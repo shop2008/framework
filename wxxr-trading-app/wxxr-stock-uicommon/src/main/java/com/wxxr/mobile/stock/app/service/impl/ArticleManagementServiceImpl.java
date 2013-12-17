@@ -28,9 +28,7 @@ import com.wxxr.stock.article.ejb.api.ArticleVO;
  */
 public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContext>
 		implements IArticleManagementService {
-	private static final Trace log = Trace.register(ArticleManagementServiceImpl.class);
-	
-
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.ArticleManagementServiceImpl");
 	private IReloadableEntityCache<String, ArticleBean> homeArticlesCache;
 	private IReloadableEntityCache<String, ArticleBean> helpArticlesCache;
 	private IReloadableEntityCache<String, ArticleBean> tradingRuleCache;
