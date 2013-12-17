@@ -39,7 +39,7 @@ public class UnReadRemindingMessagesHandler implements ICommandHandler {
 
 		RemindMessageInfoDao dao=this.context.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
-		List<RemindMessageInfo> list=dao.queryRaw(" where READ='false' ");
+		List<RemindMessageInfo> list=dao.queryRaw(" where READ=0 ");
 		if(list!=null ){
 			for(RemindMessageBean entity:remindMessages){
 				RemindMessageBean bean=new RemindMessageBean();

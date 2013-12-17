@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.service.loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,14 +53,24 @@ public class UNReadRemindingMessageLoader extends AbstractEntityLoader<String, R
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
 		List<RemindMessageInfo> list=dao.queryRaw(" where read=0 ");
 		if(list!=null ){
-			for(RemindMessageBean entity:remindMessages){
+			for(RemindMessageInfo entity:list){
 				RemindMessageBean bean=new RemindMessageBean();
 				bean.setAcctId(entity.getAcctId());
-				bean.setAcctId(entity.getId());
-//					entity.setAttrs(entity.getAttrs().toString());
+				bean.setId(entity.getId()+"");
+				Map<String,String> attr=new HashMap<String, String>();
+				String[] atts=entity.getAttrs().split(",");
+				if(atts!=null){
+					for(String att:atts){
+						String[] ats=att.split(":::");
+						if(ats!=null && ats.length==2){
+							attr.put(ats[0], ats[1]);
+						}
+					}
+				}
+				bean.setAttrs(attr);
 				bean.setContent(entity.getContent());
 				bean.setCreatedDate(entity.getCreatedDate());
-				bean.setTitle(entity.getAttrs().get("title"));
+				bean.setTitle(entity.getTitle());
 				bean.setType(entity.getType());
 				remindMessages.add(bean);
 			}
