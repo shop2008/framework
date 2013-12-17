@@ -8,6 +8,7 @@ import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.stock.app.db.PullMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 public class ReadPullMessageHandler implements ICommandHandler {
 

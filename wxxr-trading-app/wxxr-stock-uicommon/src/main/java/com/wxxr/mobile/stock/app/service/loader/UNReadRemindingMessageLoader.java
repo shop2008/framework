@@ -50,7 +50,7 @@ public class UNReadRemindingMessageLoader extends AbstractEntityLoader<String, R
 			throws Exception {
 		RemindMessageInfoDao dao=cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
-		List<RemindMessageInfo> list=dao.queryRaw(" where READ='false' ");
+		List<RemindMessageInfo> list=dao.queryRaw(" where read=0 ");
 		if(list!=null ){
 			for(RemindMessageBean entity:remindMessages){
 				RemindMessageBean bean=new RemindMessageBean();
