@@ -152,6 +152,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
 	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
     
+	/*private IEventListener listener = new IEventListener() {
+      @Override
+      public void onEvent(IBroadcastEvent event) {
+        if (event instanceof LogoutEvent) {
+           clearCache();
+        }
+      }
+   };
+   protected void clearCache(){
+      
+   }*/
 	//==============  module life cycle =================
 	@Override
 	protected void initServiceDependency() {
@@ -194,7 +205,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
-
+       // context.getService(IEventRouter.class).registerEventListener(LogoutEvent.class, listener);
 		context.registerService(IUserManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		context.registerService(IUserIdentityManager.class, this);
@@ -204,6 +215,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	protected void stopService() {
+	   // context.getService(IEventRouter.class).unregisterEventListener(LogoutEvent.class, listener);
 		context.unregisterService(IUserIdentityManager.class, this);
 		context.unregisterService(IUserManagementService.class, this);
 		context.unregisterService(IUserAuthManager.class, this);
@@ -520,17 +532,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public void logout(){
-		context.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-			    myUserInfo=null;
-	            getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
-				HttpRpcService httpService = context.getService(HttpRpcService.class);
-				if (httpService != null) {
-					httpService.resetHttpClientContext();
-				}
-			}
-		}, 1, TimeUnit.SECONDS);
+	   myUserInfo=null;
+       getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
+       HttpRpcService httpService = context.getService(HttpRpcService.class);
+       if (httpService != null) {
+           httpService.resetHttpClientContext();
+       }
+      // getService(IEventRouter.class).routeEvent(new LogoutEvent());
 	}
 
 	@Override
