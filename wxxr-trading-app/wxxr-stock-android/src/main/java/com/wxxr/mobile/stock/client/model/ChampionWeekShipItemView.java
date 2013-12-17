@@ -31,14 +31,15 @@ public abstract class ChampionWeekShipItemView extends ViewBase implements
 	@Field(valueKey = "text", binding="${weekRank!=null?weekRank.gainCount:'--'}${'个正收益'}")
 	String gainCount;
 
-	@Field(valueKey = "text", binding = "${msgRank!=null?msgRank.gainRate:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${msgRank.totalGain>0?'resourceId:color/red':(msgRank.gainRates=0?'resourceId:color/gray':'resourceId:color/green')}")
+	@Field(valueKey = "text", binding = "${weekRank!=null?weekRank.gainRate:'--'}", attributes={
+			@Attribute(name = "textColor", value = "${weekRank.totalGain>0?'resourceId:color/red':(weekRank.gainRates==0?'resourceId:color/gray':'resourceId:color/green')}")
 			})
 	String gainRate;
 
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof WeekRankBean) {
+			weekRank = (WeekRankBean)value;
 			registerBean("weekRank",value);
 		}
 	}

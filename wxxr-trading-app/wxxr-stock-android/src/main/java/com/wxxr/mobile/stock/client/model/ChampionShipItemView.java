@@ -45,7 +45,7 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	String nickName;
 
 	@Field(valueKey = "text", binding = "${msgRank!=null?msgRank.gainRate:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${msgRank.over=='CLOSED'?'resourceId:color/gray':(msgRank.totalGain>0?'resourceId:color/red':(msgRank.gainRates=0?'resourceId:color/gray':'resourceId:color/green'))}")
+			@Attribute(name = "textColor", value = "${msgRank.over=='CLOSED'?'resourceId:color/gray':(msgRank.totalGain>0?'resourceId:color/red':(msgRank.gainRates==0?'resourceId:color/gray':'resourceId:color/green'))}")
 			})
 	String gainRate;
 

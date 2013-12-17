@@ -78,6 +78,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:visibility="gone"
             bind:field="regularTicketBtn"
             bind:on_Click="reloadRegularTicketRank" />
     </RadioGroup>
