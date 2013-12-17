@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
@@ -83,6 +84,9 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 
 	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"))
 	String confirmCancelClick(InputEvent event) {
+		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if(v != null)
+			v.hide();
 		manageService.cancelOrder(orderBean.getId() + "");
 		orderBean.setStatus("100");
 		return null;
