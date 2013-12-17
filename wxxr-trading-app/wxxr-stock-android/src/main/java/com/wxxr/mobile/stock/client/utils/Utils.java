@@ -13,6 +13,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class Utils {
 
@@ -399,4 +402,92 @@ public class Utils {
 		Date date = new Date(lTime);
 		return formatter.format(date);
 	}
+	
+	/**
+	 * 处理已排序的数据
+	 * 
+	 * @param data
+	 *            要处理的数据
+	 * @param method
+	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
+	 * @return 分组后的数据
+	 */
+	public static Object[] getSortedGroupDataLongTime(List<Object> data, String method) {
+
+		if (data == null) {
+			return null;
+		}
+		
+		if (data.size() <= 0) {
+			return data.toArray();
+		}
+		List<Object> retList = new ArrayList<Object>();
+		Object curLabelObj = null;
+		for (int i = 0; i < data.size(); i++) {
+			Object obj = data.get(i);
+			try {
+				Method m = obj.getClass().getMethod(method, null);
+				m.setAccessible(true);
+				Object labelObj = m.invoke(obj, null);
+				if(labelObj instanceof Long) {
+					labelObj = longTimeFormat((Long)labelObj);
+				}
+				if (i == 0) {
+					curLabelObj = labelObj;
+					retList.add(curLabelObj);
+					retList.add(obj);
+				} else {
+					if (labelObj.equals(curLabelObj)) {
+						retList.add(obj);
+					} else {
+						curLabelObj = labelObj;
+						retList.add(curLabelObj);
+						retList.add(obj);
+					}
+				}
+				
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		return retList.toArray();
+	}
+
+	private static String longTimeFormat(long time) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+			Date date = new Date(time);
+			return formatter.format(date);
+		} catch (NullPointerException e) {
+
+		} catch (IllegalArgumentException e) {
+
+		}
+		return "";
+	}
+	
+	public static void setListViewHeightBasedOnChildren(ListView listView) {  
+        ListAdapter listAdapter = listView.getAdapter();   
+        if (listAdapter == null) {  
+            // pre-condition  
+            return;  
+        }  
+  
+        int totalHeight = 0;  
+        for (int i = 0; i < listAdapter.getCount(); i++) {  
+            View listItem = listAdapter.getView(i, null, listView);  
+            listItem.measure(0, 0);  
+            totalHeight += listItem.getMeasuredHeight();  
+        }  
+  
+        ViewGroup.LayoutParams params = listView.getLayoutParams();  
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));  
+        listView.setLayoutParams(params);  
+    }  
 }

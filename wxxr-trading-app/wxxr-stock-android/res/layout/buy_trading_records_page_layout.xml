@@ -93,31 +93,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
+    <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
+        style="@style/mListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-2dp"
-            android:background="@color/light_black"
-            android:gravity="center_vertical|left"
-            android:paddingBottom="2dip"
-            android:paddingTop="2dip"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            bind:field="weekDate" />
-
-        <ListView
-            style="@style/mListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            bind:field="tradingRecordBean"
-            bind:itemViewId="TradingRecordItemView"
-            bind:on_ItemClick="handleItemClick" >
-        </ListView>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        bind:field="tradingRecordBean"
+        bind:itemViewId="TradingRecordsSelectorItemView" >
+    </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
 
 </LinearLayout>

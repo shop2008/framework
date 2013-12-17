@@ -451,7 +451,7 @@ public class PullToRefreshView extends LinearLayout {
 		int newTopMargin = changingHeaderViewTopMargin(deltaY);
 		// 当header view的topMargin>=0时，说明已经完全显示出来了,修改header view 的提示状态
 		if (newTopMargin >= 0 && mHeaderState != RELEASE_TO_REFRESH) {
-			mHeaderTextView.setText("松开后刷新");
+			mHeaderTextView.setText("松开即可更新…");
 			mHeaderUpdateTextView.setVisibility(View.VISIBLE);
 			mHeaderImageView.clearAnimation();
 			mHeaderImageView.startAnimation(mFlipAnimationForHeader);
@@ -463,13 +463,13 @@ public class PullToRefreshView extends LinearLayout {
 				mHeaderImageView.startAnimation(mReverseFlipAnimationForHeader);
 				isback = false;
 			}
-			mHeaderTextView.setText("下拉刷新");
+			mHeaderTextView.setText("下拉即可更新…");
 			mHeaderState = PULL_TO_REFRESH;
 			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_DOWN_REFRESH_DATE);
 			if (TextUtils.isEmpty(date)) {
-				mHeaderUpdateTextView.setText("没有更新记录");
+				mHeaderUpdateTextView.setText("最后更新:无更新记录");
 			} else {
-				mHeaderUpdateTextView.setText("上次更新:"+date);
+				mHeaderUpdateTextView.setText("最后更新:"+date);
 			}
 		}
 	}
@@ -487,7 +487,7 @@ public class PullToRefreshView extends LinearLayout {
 		if (Math.abs(newTopMargin) >= (mHeaderViewHeight + mFooterViewHeight)
 				&& mFooterState != RELEASE_TO_REFRESH) {
 			mFooterTextView
-					.setText("松开后加载");
+					.setText("松开即可加载…");
 			mFooterImageView.clearAnimation();
 			mFooterImageView.startAnimation(mFlipAnimationForFooter);
 			mFooterState = RELEASE_TO_REFRESH;
@@ -497,13 +497,13 @@ public class PullToRefreshView extends LinearLayout {
 				mFooterImageView.startAnimation(mReverseFlipAnimationForFooter);
 				isfootBack = false;
 			}
-			mFooterTextView.setText("上拉刷新");
+			mFooterTextView.setText("上拉即可加载…");
 			mFooterState = PULL_TO_REFRESH;
 			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_UP_REFRESH_DATE);
 			if (TextUtils.isEmpty(date)) {
-				mFooterUpdateTextView.setText("上次更新:无更新记录");
+				mFooterUpdateTextView.setText("最后加载:无更新记录");
 			} else {
-				mFooterUpdateTextView.setText("上次更新:"+date);
+				mFooterUpdateTextView.setText("最后加载:"+date);
 			}
 		}
 	}
@@ -541,7 +541,7 @@ public class PullToRefreshView extends LinearLayout {
 		mHeaderImageView.clearAnimation();
 		mHeaderImageView.setImageDrawable(null);
 		mHeaderProgressBar.setVisibility(View.VISIBLE);
-		mHeaderTextView.setText("正在刷新中...");
+		mHeaderTextView.setText("加载中...");
 		if (mOnHeaderRefreshListener != null) {
 			mOnHeaderRefreshListener.onHeaderRefresh(this);
 		}
@@ -559,7 +559,7 @@ public class PullToRefreshView extends LinearLayout {
 		mFooterImageView.setImageDrawable(null);
 		mFooterProgressBar.setVisibility(View.VISIBLE);
 		mFooterTextView
-				.setText("正在刷新中...");
+				.setText("加载中...");
 		if (mOnFooterRefreshListener != null) {
 			mOnFooterRefreshListener.onFooterRefresh(this);
 		}
@@ -596,10 +596,10 @@ public class PullToRefreshView extends LinearLayout {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mHeaderImageView.setVisibility(View.VISIBLE);
 		mHeaderImageView.setImageResource(R.drawable.arrow_down);
-		mHeaderTextView.setText("下拉刷新");
+		mHeaderTextView.setText("下拉即可更新…");
 		mHeaderProgressBar.setVisibility(View.GONE);
 		String date = new Date().toLocaleString();
-		mHeaderUpdateTextView.setText("上次更新：" + date);
+		mHeaderUpdateTextView.setText("最后更新：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
 		mHeaderState = PULL_TO_REFRESH;
 		
@@ -614,10 +614,10 @@ public class PullToRefreshView extends LinearLayout {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mFooterImageView.setVisibility(View.VISIBLE);
 		mFooterImageView.setImageResource(R.drawable.arrow_up);
-		mFooterTextView.setText("pull_to_refresh_footer_pull_label");
+		mFooterTextView.setText("上拉即可加载…");
 		mFooterProgressBar.setVisibility(View.GONE);
 		String date = new Date().toLocaleString();
-		mFooterUpdateTextView.setText("上次更新：" + date);
+		mFooterUpdateTextView.setText("最后加载：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_UP_REFRESH_DATE, date);
 		mFooterState = PULL_TO_REFRESH;
 	}

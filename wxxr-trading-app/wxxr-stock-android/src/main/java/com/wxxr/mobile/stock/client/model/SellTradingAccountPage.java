@@ -373,13 +373,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 清算交易盘
 	 * @param acctID - 交易盘Id
 	 */	
-	@Command(uiItems=
-			@UIItem(id="rightCancel",label="取消",icon="resourceId:drawable/zpb"),
-			navigations = { @Navigation(on = "*", message = "是否确定撤单？", params = {
+	@Command(navigations = { @Navigation(on = "*", message = "是否确定撤单？", params = {
 			@Parameter(name = "title", value = ""),
 			@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
 			@Parameter(name = "onOK", value = "leftok"),
-			@Parameter(name = "onCanceled", value = "rightCancel") }) })
+			@Parameter(name = "onCanceled", value = "取消") }) })
 	String handlerClearClick(InputEvent event) {
 		return "";
 	}

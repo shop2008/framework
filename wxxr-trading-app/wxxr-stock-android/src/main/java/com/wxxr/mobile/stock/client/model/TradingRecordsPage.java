@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +14,8 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
-import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -51,12 +48,6 @@ public abstract class TradingRecordsPage extends PageBase implements
 	List<TradingRecordBean> tradingRecordBean;
 	// RadioButton
 
-	// week Title
-	@Field(valueKey = "text")
-	// , binding =
-	// "${tradingRecordBean!=null?(tradingRecordBean.size()>0?(tradingRecordBean.get(1).date):'--'):'--'}")
-	String weekDate;
-
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
@@ -82,47 +73,5 @@ public abstract class TradingRecordsPage extends PageBase implements
 				}
 			}
 		}
-	}
-
-	/**
-	 * 订单列表点击
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(navigations = { @Navigation(on = "TradingRecordOrderDetailPage", showPage = "TradingRecordOrderDetailPage"),
-							 @Navigation(on = "TradingRecordDoneDetailPage", showPage = "TradingRecordDoneDetailPage")})
-	CommandResult handleItemClick(InputEvent event) {
-		if (InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())) {
-			CommandResult resutl = new CommandResult();
-			Map map = new HashMap();
-			if (event.getProperty("position") instanceof Integer) {
-				int position = (Integer) event.getProperty("position");
-				List<TradingRecordBean> record = (recordListBean != null?recordListBean.getData():null);
-				if (record != null && record.size() > 0) {
-					TradingRecordBean recordBean = record.get(position);
-					if (recordBean != null) {
-						map.put("market", recordBean.getMarket());
-						map.put("code", recordBean.getCode());
-						map.put("describe", recordBean.getDescribe());
-						map.put("date", recordBean.getDate());
-						map.put("price", recordBean.getPrice());
-						map.put("vol", recordBean.getVol());
-						if(recordBean.getBeDone()) {
-							map.put("amount", recordBean.getAmount());
-							map.put("brokerage", recordBean.getBrokerage());
-							map.put("tax", recordBean.getTax());
-							map.put("fee", recordBean.getFee());
-							resutl.setResult("TradingRecordDoneDetailPage");
-						} else {
-							resutl.setResult("TradingRecordOrderDetailPage");
-						}
-					}
-				}
-			}
-			resutl.setPayload(map);
-			return resutl;
-		}
-		return null;
 	}
 }

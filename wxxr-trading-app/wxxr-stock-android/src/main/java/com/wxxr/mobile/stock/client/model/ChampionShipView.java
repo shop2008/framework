@@ -31,85 +31,92 @@ import com.wxxr.mobile.stock.client.utils.Constants;
  * @author neillin
  * 
  */
-@View(name="championShip", description="大赛排行榜")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.champion_ship_page_layout")
+@View(name = "championShip", description = "大赛排行榜")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.champion_ship_page_layout")
 public abstract class ChampionShipView extends ViewBase {
 	private static final Trace log = Trace.register(ChampionShipView.class);
 
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingMgr;
-	
-	@Bean(type=BindingType.Pojo,express="${tradingMgr.getTMegagameRank()}")
+
+	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getTMegagameRank()}")
 	BindableListWrapper<MegagameRankBean> tRankListBean;
-	
-	@Bean(type=BindingType.Pojo,express="${tradingMgr.getT1MegagameRank()}")
+
+	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getT1MegagameRank()}")
 	BindableListWrapper<MegagameRankBean> t1RankListBean;
 
-	@Bean(type=BindingType.Pojo,express="${tradingMgr.getWeekRank()}")
+	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getWeekRank()}")
 	BindableListWrapper<WeekRankBean> weekRankListBean;
 
-	@Bean(type=BindingType.Pojo,express="${tradingMgr.getRegularTicketRank()}")
+	@Bean(type = BindingType.Pojo, express = "${tradingMgr.getRegularTicketRank()}")
 	BindableListWrapper<RegularTicketBean> rtRankListBean;
 
-	//List
-	@Field(valueKey = "options", binding="${tRankListBean.data}", visibleWhen="${currentViewId == 1}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-						  @Attribute(name = "enablePullUpRefresh", value="true")})
+	// List
+	@Field(valueKey = "options", binding = "${tRankListBean.data}")
 	List<MegagameRankBean> ChampionShip;
-	
-	@Field(valueKey = "options", binding="${t1RankListBean.data}", visibleWhen="${currentViewId == 2}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-				  @Attribute(name = "enablePullUpRefresh", value="true")})
+
+	@Field(valueKey = "options", binding = "${t1RankListBean.data}")
 	List<MegagameRankBean> ChampionT1Ship;
 
-	@Field(valueKey = "options", binding="${weekRankListBean.data}", visibleWhen="${currentViewId == 3}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
-			  @Attribute(name = "enablePullUpRefresh", value="false")})
+	@Field(valueKey = "options", binding = "${weekRankListBean.data}")
 	List<WeekRankBean> ChampionWeekShip;
 
-	@Field(valueKey = "options", binding="${rtRankListBean.data}", visibleWhen="${currentViewId == 4}",
-			attributes = {@Attribute(name = "enablePullDownRefresh", value="false"),
-			  @Attribute(name = "enablePullUpRefresh", value="true")})
+	@Field(valueKey = "options", binding = "${rtRankListBean.data}")
 	List<RegularTicketBean> ChampionRegularShip;
-	//RadioButton
-	@Field(valueKey = "checked", attributes={
+
+	@Field(valueKey = "text", visibleWhen = "${currentViewId == 1}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "${tRankListBean!=null&&tRankListBean.data!=null&&tRankListBean.data.size()>0?true:false}") })
+	String TRefreshView;
+	@Field(valueKey = "text", visibleWhen = "${currentViewId == 2}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "${t1RankListBean!=null&&t1RankListBean.data!=null&&t1RankListBean.data.size()>0?true:false}") })
+	String T1RefreshView;
+	@Field(valueKey = "text", visibleWhen = "${currentViewId == 3}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "${weekRankListBean!=null&&weekRankListBean.data!=null&&weekRankListBean.data.size()>0?true:false}") })
+	String WeekRefreshView;
+	@Field(valueKey = "text", visibleWhen = "${currentViewId == 4}", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "${rtRankListBean!=null&&rtRankListBean.data!=null&&rtRankListBean.data.size()>0?true:false}") })
+	String RegularRefreshView;
+
+	// RadioButton
+	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${currentViewId == 1}"),
-			@Attribute(name = "textColor", value = "${currentViewId == 1?'resourceId:color/white':'resourceId:color/gray'}")
-			})
+			@Attribute(name = "textColor", value = "${currentViewId == 1?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean tMegaBtn;
-	
-	@Field(valueKey = "checked", attributes={
+
+	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${currentViewId == 2}"),
-			@Attribute(name = "textColor", value = "${currentViewId == 2?'resourceId:color/white':'resourceId:color/gray'}")
-			})
+			@Attribute(name = "textColor", value = "${currentViewId == 2?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean t1MegaBtn;
-	
-	@Field(valueKey = "checked", attributes={
+
+	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${currentViewId == 3}"),
-			@Attribute(name = "textColor", value = "${currentViewId == 3?'resourceId:color/white':'resourceId:color/gray'}")
-			})
+			@Attribute(name = "textColor", value = "${currentViewId == 3?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean weekBtn;
-	
-	@Field(valueKey = "checked", attributes={
+
+	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${currentViewId == 4}"),
-			@Attribute(name = "textColor", value = "${currentViewId == 4?'resourceId:color/white':'resourceId:color/gray'}")
-			})
+			@Attribute(name = "textColor", value = "${currentViewId == 4?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean regularTicketBtn;
-	//week Title
-	@Field(valueKey = "text", binding="${weekRankListBean.data.size() > 0 ? weekRankListBean.data.get(0).dates : ''}"
-			,visibleWhen="${(currentViewId == 3)&&(weekRankListBean.data.size() > 0)}")
-	String weekDate;
-	
+	// week Title
+	// @Field(valueKey = "text",
+	// binding="${weekRankListBean.data.size() > 0 ? weekRankListBean.data.get(0).dates : ''}"
+	// ,visibleWhen="${(currentViewId == 3)&&(weekRankListBean.data.size() > 0)}")
+	// String weekDate;
+
 	@Bean
 	int currentViewId = 1;
-//	@OnShow
-//	protected void updataMegagameRank() {
-//		registerBean("currentViewId", currentViewId);
-//	}
 
-	
+	// @OnShow
+	// protected void updataMegagameRank() {
+	// registerBean("currentViewId", currentViewId);
+	// }
+
 	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadTRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMegaTopRefresh");
@@ -121,7 +128,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadT1Rank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMega1TopRefresh");
@@ -133,7 +140,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadWeekRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleWeekTopRefresh");
@@ -145,7 +152,7 @@ public abstract class ChampionShipView extends ViewBase {
 	}
 
 	@Command
-	@ExeGuard(title="提示",message="正在获取数据，请稍后...",silentPeriod=1,cancellable=true)
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadRegularTicketRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleRegularTicketTopRefresh");
@@ -155,7 +162,7 @@ public abstract class ChampionShipView extends ViewBase {
 		tradingMgr.reloadRegularTicketRank(true);
 		return null;
 	}
-	
+
 	/**
 	 * T日列表点击
 	 * 
@@ -183,7 +190,7 @@ public abstract class ChampionShipView extends ViewBase {
 		result.setResult("");
 		return result;
 	}
-	
+
 	/**
 	 * T+1日列表点击
 	 * 
@@ -211,32 +218,34 @@ public abstract class ChampionShipView extends ViewBase {
 		result.setResult("");
 		return result;
 	}
-	
-	/**
-	 * Week列表点击
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
-	CommandResult handleChampionWeekShipItemClick(InputEvent event) {
-		CommandResult result = new CommandResult();
 
-		if (event.getProperty("position") instanceof Integer) {
-			int position = (Integer) event.getProperty("position");
-			List<WeekRankBean> weekShip = (weekRankListBean != null ? weekRankListBean
-					.getData() : null);
-			if (weekShip != null && weekShip.size() > 0
-					&& position < weekShip.size()) {
-				String userId = weekShip.get(position).getUserId();
-//				updateSelection(userId);
-				result.setPayload(userId);
-			}
-		}
-		result.setResult("");
-		return result;
-	}
-	
+	// /**
+	// * Week列表点击
+	// *
+	// * @param event
+	// * @return
+	// */
+	// @Command(navigations = { @Navigation(on = "*", showPage =
+	// "otherUserPage") })
+	// CommandResult handleChampionWeekShipItemClick(InputEvent event) {
+	// CommandResult result = new CommandResult();
+	//
+	// if (event.getProperty("position") instanceof Integer) {
+	// int position = (Integer) event.getProperty("position");
+	// List<WeekRankBean> weekShip = (weekRankListBean != null ?
+	// weekRankListBean
+	// .getData() : null);
+	// if (weekShip != null && weekShip.size() > 0
+	// && position < weekShip.size()) {
+	// String userId = weekShip.get(position).getUserId();
+	// // updateSelection(userId);
+	// result.setPayload(userId);
+	// }
+	// }
+	// result.setResult("");
+	// return result;
+	// }
+
 	/**
 	 * Regular列表点击
 	 * 
@@ -251,11 +260,10 @@ public abstract class ChampionShipView extends ViewBase {
 			int position = (Integer) event.getProperty("position");
 			List<RegularTicketBean> rtShip = (rtRankListBean != null ? rtRankListBean
 					.getData() : null);
-			if (rtShip != null && rtShip.size() > 0
-					&& position < rtShip.size()) {
-//				String userId = rtShip.get(position).getUserId();
-//				updateSelection(userId);
-//				result.setPayload(userId);
+			if (rtShip != null && rtShip.size() > 0 && position < rtShip.size()) {
+				// String userId = rtShip.get(position).getUserId();
+				// updateSelection(userId);
+				// result.setPayload(userId);
 			}
 		}
 		result.setResult("");

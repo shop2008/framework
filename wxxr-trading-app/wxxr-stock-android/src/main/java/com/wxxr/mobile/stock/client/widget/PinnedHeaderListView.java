@@ -43,6 +43,8 @@ public class PinnedHeaderListView extends ListView {
 			int defStyle) {
 		super(context, attrs, defStyle);
 	}
+	
+	@Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (mHeaderView != null) {
@@ -50,14 +52,16 @@ public class PinnedHeaderListView extends ListView {
             configureHeaderView(getFirstVisiblePosition());
         }
     }
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mHeaderView != null) {
-            measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
-            mHeaderViewWidth = mHeaderView.getMeasuredWidth();
-            mHeaderViewHeight = mHeaderView.getMeasuredHeight();
-        }
-    }
+	
+    @Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		if (mHeaderView != null) {
+			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
+			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
+			mHeaderViewHeight = mHeaderView.getMeasuredHeight();
+		}
+	}
     
     /**
      * 此方法供外部使用，用于HeaderView的配置，并且重新ListView的onLayout方法
@@ -80,11 +84,11 @@ public class PinnedHeaderListView extends ListView {
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
         mAdapter = (PinnedHeaderAdapter)adapter;
+        if(mAdapter != null)
+        	setPinnedHeaderView(mAdapter.getPinnedHeaderView());
         if(mAdapter instanceof OnScrollListener){
         	setOnScrollListener((OnScrollListener)mAdapter);
         }
-        if(mAdapter != null)
-        	setPinnedHeaderView(mAdapter.getPinnedHeaderView());
     }
 
     /**
