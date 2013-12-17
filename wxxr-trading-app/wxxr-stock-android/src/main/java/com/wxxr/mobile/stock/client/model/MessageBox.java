@@ -41,6 +41,11 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 	@Field
 	int progress;
 	
+	@Field(valueKey="visible")
+	boolean progressBarVisible;
+	
+	DataField<Boolean> progressBarVisibleField;
+	
 	DataField<Integer> progressField;
 	
 	@Field
@@ -67,6 +72,7 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 	public void updateModel(Object data) {
 		if(data instanceof Map){
 			Map<String, Object> map = (Map<String, Object>)data;
+			
 			Object val = map.get(IDialog.DIALOG_ATTRIBUTE_TITLE);
 			if(val instanceof String){
 				this.titleField.setValue((String)val);
@@ -78,6 +84,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_ICON);
 			if(val instanceof String){
 				this.iconField.setValue((String)val);
+			}
+			
+			val = map.get("progressDialogVisible");
+			if(val instanceof String) {
+				Boolean pdVisible = Boolean.parseBoolean((String)val);
+				this.progressBarVisibleField.setValue(pdVisible);
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof UICommand){
