@@ -94,10 +94,6 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof UICommand){
 				this.left = (UICommand)val;
-				IUICommandHandler handler = this.left.getHandler();
-				if((handler instanceof MessageBoxCommandHandler)==false){
-					this.left.setHandler(new MessageBoxCommandHandler(handler, this));
-				}
 			}else if(val instanceof String){
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
@@ -106,10 +102,6 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof UICommand){
 				this.middle = (UICommand)val;
-				IUICommandHandler handler = this.middle.getHandler();
-				if((handler instanceof MessageBoxCommandHandler)==false){
-					this.middle.setHandler(new MessageBoxCommandHandler(handler, this));
-				}
 			}else if(val instanceof String){
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
@@ -118,10 +110,6 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
 			if(val instanceof UICommand){
 				this.right = (UICommand)val;
-				IUICommandHandler handler = this.right.getHandler();
-				if((handler instanceof MessageBoxCommandHandler)==false){
-					this.right.setHandler(new MessageBoxCommandHandler(handler, this));
-				}
 			}else if(val instanceof String){
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 			}else{
