@@ -86,19 +86,19 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	String capitalRate;
 	
 	/**止损*/
-	@Field(valueKey="text",binding="${'余额创建'}${userCreateTradAccInfo.rateString1!=null?userCreateTradAccInfo.rateString1:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'余额创建\\n'}${userCreateTradAccInfo.rateString1!=null?userCreateTradAccInfo.rateString1:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==1?true:false}")
 	})
 	String rate1;
 	
 	/**止损*/
-	@Field(valueKey="text",binding="${'余额创建'}${userCreateTradAccInfo.rateString2!=null?userCreateTradAccInfo.rateString2:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'余额创建\\n'}${userCreateTradAccInfo.rateString2!=null?userCreateTradAccInfo.rateString2:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==2?true:false}")
 	})
 	String rate2;
 	
 	/**止损*/
-	@Field(valueKey="text",binding="${'积分创建'}${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}${'止损'}",attributes={
+	@Field(valueKey="text",binding="${'积分创建\\n'}${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}${'止损'}",attributes={
 			@Attribute(name = "checked", value = "${currentRadioBtnId==3?true:false}")
 	})
 	String rate3;
