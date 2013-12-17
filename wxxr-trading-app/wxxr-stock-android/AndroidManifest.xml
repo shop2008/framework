@@ -54,8 +54,8 @@
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.GeGuStockPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.QuickBuyStockPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.GuidePage" android:screenOrientation="portrait"/>
-        
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserScorePage" android:screenOrientation="portrait"/>
+        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TradingRuleWebPage" android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
