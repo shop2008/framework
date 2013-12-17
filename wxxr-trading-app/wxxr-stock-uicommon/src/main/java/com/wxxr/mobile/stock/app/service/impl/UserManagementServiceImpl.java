@@ -670,13 +670,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				
 				@Override
 				public int compare(RemindMessageBean lhs, RemindMessageBean rhs) {
-					long c=Long.parseLong(rhs.getCreatedDate())-Long.parseLong(lhs.getCreatedDate());
+					long c=rhs.getCreatedDate().compareTo(lhs.getCreatedDate());
 					if(c==0){
-						try {
-							c=Long.parseLong(((String)rhs.getAttrs().get("time")))-Long.parseLong(((String)lhs.getAttrs().get("time")));
-						} catch (NumberFormatException e) {
-							
-						}
+						c=((String)rhs.getAttrs().get("time")).compareTo((String)lhs.getAttrs().get("time"));
 					}
 					return c>=0?1:-1;
 				}
@@ -703,7 +699,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 				@Override
 				public int compare(PullMessageBean lhs, PullMessageBean rhs) {
-					long c=Long.parseLong(lhs.getCreateDate())-Long.parseLong(lhs.getCreateDate());
+					long c=lhs.getCreateDate().compareTo(lhs.getCreateDate());
 					return c>=0?1:-1;
 				}
 				
@@ -875,13 +871,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				
 				@Override
 				public int compare(RemindMessageBean lhs, RemindMessageBean rhs) {
-					long c=Long.parseLong(rhs.getCreatedDate())-Long.parseLong(lhs.getCreatedDate());
+					long c=rhs.getCreatedDate().compareTo(lhs.getCreatedDate());
 					if(c==0){
-						try {
-							c=Long.parseLong(((String)rhs.getAttrs().get("time")))-Long.parseLong(((String)lhs.getAttrs().get("time")));
-						} catch (NumberFormatException e) {
-							
-						}
+						c=((String)rhs.getAttrs().get("time")).compareTo((String)lhs.getAttrs().get("time"));
 					}
 					return c>=0?1:-1;
 				}
