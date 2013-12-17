@@ -81,6 +81,13 @@ public abstract class AppSetPage extends PageBase {
 		return "OK";
 	}
 	
+	
+	@Command(navigations={@Navigation(on="*", showPage="userLoginPage")})
+	String unLogin(InputEvent event) {
+		return "*";
+	}
+	
+	
 	/**
 	 * 给软件打分
 	 * 
@@ -91,6 +98,7 @@ public abstract class AppSetPage extends PageBase {
 	String playScore(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			//TODO 新手指引
+			
 		}
 		return null;
 	}

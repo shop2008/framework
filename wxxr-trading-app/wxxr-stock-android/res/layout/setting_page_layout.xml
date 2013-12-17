@@ -58,6 +58,7 @@
 	                android:textColor="@color/black"
 	                android:text="@string/not_login_text"
 	                bind:field="notLoginText"
+	                bind:on_Click="unLogin"
 	                android:visibility="gone"
 	                />
             </FrameLayout>
