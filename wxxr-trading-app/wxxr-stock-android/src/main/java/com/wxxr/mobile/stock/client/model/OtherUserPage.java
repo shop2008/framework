@@ -10,11 +10,14 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -25,7 +28,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "otherUserPage", provideSelection=true)
+@View(name = "otherUserPage", withToolbar=true, description="---的个人主页",provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.other_user_page_layout")
 public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
@@ -96,6 +99,19 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?false:true):true):true}")
 	boolean jNoSharedVisiable;
 
+	@Menu(items={"left"})
+	private IMenu toolbar;
+	
+	@Command(
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		hide();
+		return null;
+	}
+	
 	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
 			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor scoreConvertor;
@@ -116,20 +132,6 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Bean
 	String userId;
 
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
-		return null;
-	}
 
 	@Override
 	public void updateModel(Object value) {
