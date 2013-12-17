@@ -366,21 +366,18 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	}
 	
 	/**参赛交易盘买人--模拟盘*/
-	@Command(navigations={
+	@Command(commandName="CanSaiBuyStockClick",navigations = { 
 			@Navigation(on="home",showPage="home"),
-			@Navigation(on = "buyNum", showDialog="messageBox",params={
-					@Parameter(name = "message", value = "买入数量不能为空"),
-					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "icon",value = ""),
-					@Parameter(name = "title",value="")
-				}),
-			@Navigation(on = "*", showDialog="messageBox",params={
-					@Parameter(name = "message", value = "买入失败"),
-					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "icon",value = ""),
-					@Parameter(name = "title",value="")
-				})
-			})
+			@Navigation(
+					on = "StockAppBizException", 
+					message = "%m%n", 
+					params = {
+							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "title", value = "错误")
+							}
+					) 
+			}
+	)
 	String CanSaiBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String market = null;
@@ -410,15 +407,18 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 		return null;
 	}
 	
-	@Command(navigations={
+	@Command(commandName="TiaoZhanBuyStockClick",navigations = { 
 			@Navigation(on="home",showPage="home"),
-			@Navigation(on = "captitalAmount", showDialog="messageBox",params={
-					@Parameter(name = "message", value = "请输入申购金额"),
-					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "icon",value = ""),
-					@Parameter(name = "title",value="")
-				})
-	})
+			@Navigation(
+					on = "StockAppBizException", 
+					message = "%m%n", 
+					params = {
+							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+							@Parameter(name = "title", value = "错误")
+							}
+					) 
+			}
+	)
 	String TiaoZhanBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			long captitalAmount = changeMoney * 10000 * 100; //-申请额度

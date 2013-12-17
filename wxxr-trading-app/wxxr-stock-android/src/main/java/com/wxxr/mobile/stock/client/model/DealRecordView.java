@@ -157,7 +157,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 					}
 				}
 			}
-			if(name!=null && code!=null && market!=null){
+			if(code!=null && market!=null){
 				map.put("name", name);
 				map.put("code", code);
 				map.put("market", market);
