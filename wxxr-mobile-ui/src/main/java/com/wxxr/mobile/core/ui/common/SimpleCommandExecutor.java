@@ -323,7 +323,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				if(command != null){
 					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, command);
 				}else{
-					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_RIGHT_BUTTON, cmdId);
+					params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON, cmdId);
 				}
 			}
 			if(payload instanceof Throwable){

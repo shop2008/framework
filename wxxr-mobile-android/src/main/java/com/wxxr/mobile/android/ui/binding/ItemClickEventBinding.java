@@ -51,7 +51,7 @@ public class ItemClickEventBinding extends AbstractEventBinding implements OnIte
 			ListView l = ((ListView) list);
 			if(position < l.getHeaderViewsCount()) {
 				return;
-			} else if(position >= l.getCount() - l.getHeaderViewsCount()) {
+			} else if(position >= l.getCount() + l.getHeaderViewsCount()) {
 				return;
 			} else {
 				position -= l.getHeaderViewsCount();
