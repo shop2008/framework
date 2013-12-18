@@ -27,7 +27,7 @@ public abstract class URealPanelScoreItemView extends ViewBase implements IModel
 			})
 	String gainNum;
 	
-	@Convertor(params = { @Parameter(name = "format", value = "yyyy-MM-dd"),
+	@Convertor(params = { @Parameter(name = "format", value = "yyyy年MM月dd日"),
 			@Parameter(name = "nullString", value = "--") })
 	LongTime2StringConvertor timeConvertor;
 	

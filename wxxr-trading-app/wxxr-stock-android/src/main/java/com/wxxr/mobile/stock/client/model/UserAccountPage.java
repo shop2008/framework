@@ -86,8 +86,12 @@ public abstract class UserAccountPage extends PageBase {
 					@Navigation(on="WITHDRAW", showPage="userWithDrawCashPage"),
 					@Navigation(
 							on="ALERTBIND", 
-							showDialog="unBindCardDialog", params={
-						    @Parameter(name="1", value="1")
+							showDialog="messageBox", params={
+						    @Parameter(name="left_button", value="是"),
+						    @Parameter(name="right_button", value="否"),
+						    @Parameter(name="message", value="尚未绑定银行卡，是否现在绑定?"),
+						    @Parameter(name="onOK", value="toWithDrawCashPage"),
+						    @Parameter(name="progressDialogVisible", value="false")
 						    })
 					}
 			)
@@ -103,6 +107,12 @@ public abstract class UserAccountPage extends PageBase {
 		return null;
 	}
 	
+	@Command(
+			commandName="toWithDrawCashPage",
+			navigations={@Navigation(on="*",showPage="withDrawCashAuthPage")})
+	String toWithDrawCashPage(InputEvent event) {
+		return "*";
+	}
 	/**
 	 * 进入收支明细业务界面
 	 * @param event

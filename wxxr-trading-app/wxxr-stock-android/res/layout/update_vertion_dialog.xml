@@ -10,12 +10,11 @@
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="系统提示框" 
+        android:text="提示" 
         android:gravity="center"
         android:padding="8dp"
         android:textColor="#e1e1e1"
         android:textSize="16sp"
-        bind:field="title"
         android:layout_margin="12dp"/>
 
     <View android:layout_width="fill_parent"
@@ -29,21 +28,12 @@
         android:layout_margin="12dp"
         android:gravity="center">
 
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            android:layout_width="30dp"
-            android:layout_height="30dp" 
-            android:visibility="gone"
-            bind:field="progressBarVisible"
-            />
-
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确认删除数据？" 
+            android:text="版本有更新，是否更新到最新版本？" 
             android:textColor="#e1e1e1"
-            bind:field="message"
         	android:textSize="14sp"
         	android:layout_marginLeft="8dp"/>
         
@@ -61,39 +51,29 @@
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="确定" 
+            android:text="是" 
             android:padding="15dp"
             android:layout_weight="1"
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
             android:background="@drawable/message_box_btn"
-            bind:field="left_button"
+            bind:field="*"
+            bind:on_Click="downloadApk"
             android:layout_marginRight="4dp"/>
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="取消" 
-            android:textColor="#e1e1e1"
-            android:textSize="14sp"
-            android:padding="15dp"
-            android:layout_marginLeft="4dp"
-            android:layout_weight="1"
-            bind:field="mid_button"
-            android:background="@drawable/message_box_btn"/>
         
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="取消" 
+            android:text="下次再说" 
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
         	android:padding="15dp"
         	android:layout_marginLeft="4dp"
             android:layout_weight="1"
-            bind:field="right_button"
+            bind:field="*"
+            bind:on_Click="cancel"
             android:background="@drawable/message_box_btn"/>
         
    </LinearLayout>     

@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -51,6 +52,7 @@ public abstract class UserLoginPage extends PageBase {
 	}) }
 
 	)
+	@NetworkConstraint
 	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 1)
 	String login(InputEvent event) {
 

@@ -26,9 +26,11 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
@@ -49,6 +51,8 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
 	
+	
+	
 	@Bean(express="${articleService.getHomeArticles(0, 4)}")
 	BindableListWrapper<ArticleBean> myArticles;
 	
@@ -61,6 +65,12 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 
+	@Bean(type=BindingType.Service)
+	IUserManagementService usrMgr;
+	
+	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
+	UserBean userInfo;
+	
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
 	BindableListWrapper<TradingAccInfoBean> t0TradingAccountList;
 	
@@ -111,13 +121,18 @@ public abstract class TradingMainView extends ViewBase{
 	 * 
 	 * */
 	@Command(navigations={
-		@Navigation(on="createBuy",showPage="creataBuyTradePage")
+		@Navigation(on="createBuy",showPage="creataBuyTradePage"),
+		@Navigation(on="UNLOGINALERT", showDialog="unLoginDialog")
 		})
-	@SecurityConstraint(allowRoles={})
+	//@SecurityConstraint(allowRoles={})
 	@NetworkConstraint
 	String createBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			return "createBuy";
+			
+			if(userInfo != null)
+				return "createBuy";
+			else 
+				return "UNLOGINALERT";
 		}
 		return null;
 	} 

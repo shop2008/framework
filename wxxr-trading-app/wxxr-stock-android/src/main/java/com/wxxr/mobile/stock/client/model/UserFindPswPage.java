@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -50,6 +51,7 @@ public abstract class UserFindPswPage extends PageBase {
 	@Command(commandName = "sendMsg", navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") }) })
+	@NetworkConstraint
 	@ExeGuard(title = "重置密码", message = "正在处理，请稍候...", silentPeriod = 1)
 	String sendMsg(InputEvent event) {
 

@@ -64,7 +64,8 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	
 	@Bean(type=BindingType.Pojo,express="${usrMgr.unreadRemindMessages}")
 	BindableListWrapper<RemindMessageBean> messageListBean;
-	@Field(valueKey="text", binding="${(messageListBean.data!=null)?messageListBean.data.size():'0'}")
+	
+	@Field(valueKey="text", binding="${messageListBean.data!=null?(messageListBean.data.size()>0?messageListBean.data.size():'0'):'0'}")
 	String unreadNews;
 	
 	@Field(valueKey="text", binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="stockL2StrScoreConvertor")

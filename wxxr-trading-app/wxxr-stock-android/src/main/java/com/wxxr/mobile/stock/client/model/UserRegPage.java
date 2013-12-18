@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -70,6 +71,7 @@ public abstract class UserRegPage extends PageBase {
 	@Command(commandName = "sendMsg",navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "提示") }) })
+	@NetworkConstraint
 	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 1)
 	String sendMsg(InputEvent event) {
 

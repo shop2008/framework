@@ -34,7 +34,7 @@ public abstract class UserIncomDetailPage extends PageBase {
 	@Field(valueKey = "options", binding="${gainPayDetailListBean!=null?gainPayDetailListBean.data:null}",
 			visibleWhen="${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?true:false):false):false}",
 				attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="false")})
+			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<GainPayDetailBean> incomeDetails;
 	
 	@Bean(type=BindingType.Service)
@@ -44,25 +44,52 @@ public abstract class UserIncomDetailPage extends PageBase {
 	boolean noDataVisible;
 	
 	
-	@Bean(type=BindingType.Pojo, express="${usrService.getGPDetails(0,15)}")
+	@Bean(type=BindingType.Pojo, express="${usrService.getGPDetails(start,limit)}")
 	BindableListWrapper<GainPayDetailBean> gainPayDetailListBean;
 	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
+	@Bean
+	int start = 0;
+	
+	@Bean
+	int limit = 10;
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
 	
+	/**处理下拉刷新*/
 	@Command
 	String handleTopRefresh(InputEvent event) {
 		if(log.isDebugEnabled()) {
 			log.debug("UserIncomDetailPage : handleTopRefresh");
 		}
+		
+		if(usrService != null) {
+			/*start += limit;
+			limit += limit;
+			
+			registerBean("start", start);
+			registerBean("limit", limit);
+			gainPayDetailListBean = usrService.getGPDetails(start, limit);*/
+		}
+		
 		return null;
 		
 	}
+	
+	/**处理上拉刷新*/
+	@Command
+	String handleBottomRefresh(InputEvent event) {
+		if(log.isDebugEnabled()) {
+			log.debug("UserIncomDetailPage : handleBottomRefresh");
+		}
+		return null;
+		
+	}
+	
 	
 }

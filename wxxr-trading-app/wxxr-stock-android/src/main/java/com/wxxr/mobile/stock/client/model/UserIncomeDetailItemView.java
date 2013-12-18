@@ -24,20 +24,22 @@ public abstract class UserIncomeDetailItemView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${detailBean!=null?detailBean.time:null}", converter = "timeConvertor")
 	String incomeDate;
 
-	@Field(valueKey = "text", binding = "${detailBean!=null?(detailBean.amount>0?'+'+detailBean.amount:detailBean.amount):null}", attributes={
+	@Field(valueKey = "text", binding = "${detailBean!=null?detailBean.amount:null}", 
+			attributes={
 			@Attribute(name="textColor", value="${detailBean!=null?(detailBean.amount>0?'resourceId:color/red':'resourceId:color/green'):'resourceId:color/white'}")
-	})
+	}, converter="stockL2StrConvertor")
 	String incomeAmount;
 
 	GainPayDetailBean detailBean;
 
-	@Convertor(params = { @Parameter(name = "format", value = "yyyy-MM-dd"),
+	@Convertor(params = { @Parameter(name = "format", value = "yyyy年MM月d日"),
 			@Parameter(name = "nullString", value = "--") })
 	LongTime2StringConvertor timeConvertor;
 
 	
 	@Convertor(params={@Parameter(name="nullString",value="0"),
-			@Parameter(name="format", value="%.0f")
+			@Parameter(name="format", value="%.2f"),
+			@Parameter(name="multiple", value="100.0f")
 	})
 	StockLong2StringConvertor stockL2StrConvertor;
 	@Override

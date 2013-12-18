@@ -3,6 +3,9 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import android.app.AlertDialog;
+import android.util.Log;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -11,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -135,9 +139,12 @@ public abstract class HomePage extends PageBase {
 		}
 		return null;
 	}
-	@Menu(items={"rhome","rpage1","rpage2","rpage3","rpage4"})
+	@Menu(items={"rhome","rpage1","rpage2","rpage3"})
 	private IMenu rightMenu;
 	 
+	@Menu(items={"leftOK"})
+	private IMenu vertionMenu;
+	
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
 				@UIItem(id="rhome",label="我的主页",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),
@@ -149,7 +156,8 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="rhome",showPage="userPage"),
 				@Navigation(on="rpage1",showPage="userTradeRecordPage"),
 				@Navigation(on="rpage2",showPage="appSetPage"),
-				@Navigation(on="rpage3",showDialog="curVertionDialog")
+				@Navigation(on="NO_UPDATE", showDialog="noVerUpdateDialog"),
+				@Navigation(on="ALERT_UPDATE",showDialog="updateVertionDialog")
 			}
 	)
 	String menuRightClicked(InputEvent event){
@@ -158,8 +166,26 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
 			}
+			
+			if(name!=null&& name.equals("rpage3")) {
+				//调用服务里面检查版本接口
+				boolean isLastest = false;
+				if(isLastest) {
+					return "NO_UPDATE";
+				} else {
+					return "ALERT_UPDATE";
+				}
+			}
+			
 			return name;
 		}
+		return null;
+	}
+	
+	@Command(uiItems=@UIItem(id="leftOK",label="是",icon="resourceId:drawable/home"))
+	String confirmDownloadClick(InputEvent event) {
+		Log.e("wwwww", "-----start download apk-----");
+		
 		return null;
 	}
 		

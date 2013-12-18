@@ -31,7 +31,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	VoucherDetailsBean voucherDetailsBean;
 	
 	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.list:null}",attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="false")})
+			  @Attribute(name = "enablePullUpRefresh", value="true")})
 	List<GainPayDetailBean> actualScores;
 	
 	@Menu(items = { "left" })
@@ -47,4 +47,10 @@ public abstract class URealPanelScorePage extends PageBase{
 	String refreshTopData(InputEvent event) {
 		return null;
 	}
+	
+	@Command
+	String refreshBottomData(InputEvent event) {
+		return null;
+	}
+	
 }
