@@ -4,10 +4,13 @@
 package com.wxxr.mobile.stock.client.ui;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.common.AbstractToolbarView;
+import com.wxxr.mobile.core.ui.common.UIComponent;
 import com.wxxr.mobile.stock.app.IStockAppToolbar;
 
 /**
@@ -33,6 +36,23 @@ public abstract class StockAppToolbar extends AbstractToolbarView implements ISt
 						attrKey.updateAttributeWithString(field, parameters.get(key));
 					}
 				}
+			}
+			if(message != null){
+				KUtils.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						UIComponent.disableEvents();
+						try {
+							IDataField<String> field = getField(MESSAGE_FIELD_NAME);
+							if(field != null){
+								field.setValue(null);
+							}
+						}finally{
+							UIComponent.enableEvents();
+						}
+					}
+				}, 1, TimeUnit.SECONDS);
 			}
 		}
 	}
