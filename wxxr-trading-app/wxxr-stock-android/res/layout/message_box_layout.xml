@@ -62,11 +62,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="确定" 
-            android:padding="15dp"
             android:layout_weight="1"
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
-            android:background="@drawable/message_box_btn"
+            android:background="@drawable/red_button_style"
             bind:field="left_button"
             android:layout_marginRight="4dp"/>
 
@@ -77,11 +76,10 @@
             android:text="取消" 
             android:textColor="#e1e1e1"
             android:textSize="14sp"
-            android:padding="15dp"
             android:layout_marginLeft="4dp"
             android:layout_weight="1"
             bind:field="mid_button"
-            android:background="@drawable/message_box_btn"/>
+            android:background="@drawable/red_button_style"/>
         
         <Button
             android:id="@+id/button2"
@@ -90,11 +88,10 @@
             android:text="取消" 
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
-        	android:padding="15dp"
         	android:layout_marginLeft="4dp"
             android:layout_weight="1"
             bind:field="right_button"
-            android:background="@drawable/message_box_btn"/>
+            android:background="@drawable/red_button_style"/>
         
    </LinearLayout>     
 </LinearLayout>

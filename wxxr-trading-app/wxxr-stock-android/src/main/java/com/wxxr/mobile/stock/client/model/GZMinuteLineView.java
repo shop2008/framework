@@ -215,9 +215,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 				this.codeBean = stockSelection.getCode();
 				this.marketBean = stockSelection.getMarket();
 				this.minuteHeaderType = stockSelection.getType();
-				if(this.nameBean!=null && !StringUtils.isEmpty(this.nameBean)){
-					this.nameBean = stockSelection.getName();
-				}else{
+				if(this.marketBean!=null && this.codeBean!=null){
 					StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
 					if(baseInfo!=null && baseInfo.getName()!=null){
 						this.nameBean = baseInfo.getName();

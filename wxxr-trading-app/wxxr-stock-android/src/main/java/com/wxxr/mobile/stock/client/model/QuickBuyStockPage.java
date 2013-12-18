@@ -188,7 +188,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && userCreateTradAccInfo.requestamount!=null && stockQuotation.close!=null)}")
 	boolean tiaozhanButton = true;
 	
-	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && stockQuotation.close!=null)}")
+	@Field(valueKey="enabled",enableWhen="${(stockQuotation!=null && stockQuotation.newprice!=null && stockQuotation.close!=null && userCreateTradAccInfo.getDeposit3()>0 && userCreateTradAccInfo.getRateData3()>0)}")
 	boolean cansaiButton = true;
 	
 	@Field(valueKey = "visible")
@@ -200,7 +200,14 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@OnShow
 	protected void initData(){
 		this.currentRadioBtnId = 1;
+		this.changeMoney = 0;
 		registerBean("currentRadioBtnId", this.currentRadioBtnId);
+		this.T_buyNum = null;
+		registerBean("T_buyNum", this.T_buyNum);
+		this.zhfzf = null;
+		registerBean("zhfzf", this.zhfzf);
+		this.djDeposit = null;
+		registerBean("djDeposit", this.djDeposit);
 		if(stockQuotation!=null){
 			if(stockQuotation.getClose()!=null){
 				long mBuyNum = buyNumber(100000l, stockQuotation.getClose());
@@ -367,15 +374,10 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	
 	/**参赛交易盘买人--模拟盘*/
 	@Command(commandName="CanSaiBuyStockClick",navigations = { 
-			@Navigation(on="home",showPage="home"),
-			@Navigation(
-					on = "StockAppBizException", 
-					message = "%m%n", 
-					params = {
-							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-							@Parameter(name = "title", value = "错误")
-							}
-					) 
+			@Navigation(on="home",showView="tradingMain"),
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误")})				
 			}
 	)
 	String CanSaiBuyStockClick(InputEvent event){
@@ -395,28 +397,18 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			if(maxBuyNum == 0 && String.valueOf(maxBuyNum)==null){
 				return "buyNum";
 			}
-			if(getRate3()>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && getDeposit3()>0){
-				userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
-				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-				return "home";	
-			}else{
-				log.info("QuickBuyStockPage CanSaiBuyStockClick :: rate3 = " +getRate3()+ "market= "+market+ "code= "+code+ "MaxBuyNum ="+maxBuyNum+ "Deposit= "+getDeposit3());
-				return "";
-			}
+			userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			return "home";	
 		}
 		return null;
 	}
 	
 	@Command(commandName="TiaoZhanBuyStockClick",navigations = { 
-			@Navigation(on="home",showPage="home"),
-			@Navigation(
-					on = "StockAppBizException", 
-					message = "%m%n", 
-					params = {
-							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-							@Parameter(name = "title", value = "错误")
-							}
-					) 
+			@Navigation(on="home",showView="tradingMain"),
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误")})				
 			}
 	)
 	String TiaoZhanBuyStockClick(InputEvent event){
@@ -458,13 +450,9 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				assetType= "VOUCHER"; //积分
 				break;
 			}
-			if(captitalAmount<=0){
-				return "captitalAmount";
-			}else if(captitalAmount>0 && _rate>0 && market!=null && code!=null && String.valueOf(maxBuyNum)!=null && _depositRate>0){
-				userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
-				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-				return "home";
-			}
+			userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			return "home";
 		}
 		return null;
 	}

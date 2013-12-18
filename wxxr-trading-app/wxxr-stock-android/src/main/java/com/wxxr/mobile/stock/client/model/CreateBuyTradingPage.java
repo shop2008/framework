@@ -350,14 +350,12 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	}
 	
 	//挑战交易-提交
-	@Command(navigations={
-			@Navigation(on = "*", showDialog="messageBox",params={
-					@Parameter(name = "message", value = "请输入申购金额"),
-					@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "icon",value = ""),
-					@Parameter(name = "title",value="")
-			})
-	})
+	@Command(commandName="submitDataClick",navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误")})				
+			}
+	)
 	@NetworkConstraint
 	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
 	String submitDataClick(InputEvent event){
@@ -402,15 +400,12 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	
 	//参赛交易-提交
-		@Command(navigations={
-				@Navigation(on = "*", showDialog="messageBox",params={
-						@Parameter(name = "message", value = "创建失败"),
-						@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-						@Parameter(name = "icon",value = ""),
-						@Parameter(name = "title",value="")
-				})
-		})
-		
+		@Command(commandName="submitDataClick1",navigations = { 
+				@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+						@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+						@Parameter(name = "title", value = "错误")})				
+				}
+		)
 		@NetworkConstraint
 		@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
 		String submitDataClick1(InputEvent event){

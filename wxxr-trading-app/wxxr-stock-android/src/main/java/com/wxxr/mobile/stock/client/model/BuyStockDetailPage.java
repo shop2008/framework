@@ -348,14 +348,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	 * @return
 	 */
 	@Command(commandName="handleBuyBtnClick",navigations = { 
-			@Navigation(
-					on = "TradingTimeInvalidateException", 
-					message = "%m%n", 
-					params = {
-							@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-							@Parameter(name = "title", value = "错误")
-							}
-					) 
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误")})				
 			}
 	)
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)

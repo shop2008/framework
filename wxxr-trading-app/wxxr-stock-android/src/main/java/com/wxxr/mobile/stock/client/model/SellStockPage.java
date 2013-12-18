@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
-import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -125,10 +125,13 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	String isChecked1;
 	
 	/**交易订单列表*/
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}",attributes={
+	@Field(valueKey="options",binding="${TradingOrder!=null?TradingOrder:null}",attributes={
 			@Attribute(name = "position", value = "${position}")
 	})
 	List<StockTradingOrderBean> stockTradingOrder;
+	
+	@Bean
+	List<StockTradingOrderBean> TradingOrder;
 	
 	@Bean
 	List<String> sellStockData;
@@ -173,7 +176,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	String handlerRefreshClicked(InputEvent event) {
 		// 需要回调
 		infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
-		sellPrice = stockQuotation.getNewprice() + "";
+		String sellPrice = stockQuotation.getNewprice() + "";
 		closePriceBean = stockQuotation.getClose() + "";
 		registerBean("closePriceBean", closePriceBean);
 		registerBean("sellPrice", sellPrice);
@@ -221,41 +224,25 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	 * @param amount -委托数量
 	 * @throws StockAppBizException
 	 */
-	@Command(
-			navigations={
-					@Navigation(on = "price", showDialog="messageBox",params={
-							@Parameter(name = "message", value = "卖出价格不能为0"),
-							@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-							@Parameter(name = "icon",value = ""),
-							@Parameter(name = "title",value="")
-						}),
-					@Navigation(on = "amount", showDialog="messageBox",params={
-							@Parameter(name = "message", value = "卖出股数不能为空"),
-							@Parameter(name = "autoClosed",type = ValueType.INETGER, value = "2"),
-							@Parameter(name = "icon",value = ""),
-							@Parameter(name = "title",value="")
-						})					
-			})
+	@Command(commandName="sellStock",navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误")})				
+			}
+	)
 	String sellStock(InputEvent event){
-		String price = "0";
+		String price = null;
 		if(isSelected == 0) {
 			try {
-				if(sellPrice!=null)
+				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice))
 				price = Long.parseLong(sellPrice)/10 + "";
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
 		}
-		if(price==null){
-			return "price";
-		}else if(amount==null){
-			return "amount";
-		}
 		if(tradingService!=null){
-			if(!StringUtils.isEmpty(accid) && !StringUtils.isEmpty(stockMarket) && !StringUtils.isEmpty(stockCode) && !StringUtils.isEmpty(price) && !StringUtils.isEmpty(amount)){
-				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
-				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-			}
+			tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -263,23 +250,26 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@OnShow
 	protected void initData(){
 		registerBean("isChecked", isSelected);
-//		ArrayList<String> StockName = new ArrayList<String>();
-//		if(tradingAccount!=null){
-//			List<StockTradingOrderBean> stockTradingOrder = tradingAccount.getTradingOrders();
-//			if(stockTradingOrder!=null && stockTradingOrder.size()>0){
-//				for(int i=0; i<stockTradingOrder.size();i++){
-//					StockTradingOrderBean tempStock = stockTradingOrder.get(i);
-//					if(tempStock!=null){
-//						String code = tempStock.getStockCode();
-//						String name = tempStock.getStockName();
-//						if(name==null){
-//							name = "--";
-//						}
-//						StockName.add(name+" "+code);
-//					}
-//				}
-//			}
-//		}
+		if(tradingAccount!=null){
+			List<StockTradingOrderBean> stockTradingOrder = tradingAccount.getTradingOrders();
+			if(stockTradingOrder!=null && stockTradingOrder.size()>0){
+				List<StockTradingOrderBean> tempOrder = new ArrayList<StockTradingOrderBean>();
+				for(int i=0; i<stockTradingOrder.size();i++){
+					StockTradingOrderBean tempStock = stockTradingOrder.get(i);
+					if(tempStock!=null){
+						String status = tempStock.getStatus();
+						if(status==null){
+							StockTradingOrderBean temp = tempStock;
+							tempOrder.add(temp);
+						}
+					}
+				}
+				if(tempOrder!=null && tempOrder.size()>0){
+					this.TradingOrder = tempOrder;
+					registerBean("TradingOrder", this.TradingOrder);
+				}
+			}
+		}
 	}
 	
 	//挂单
@@ -305,9 +295,12 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		String key = (String) event.getProperty("changedText");
 		String value = "0";
 		try {
-			if(!StringUtils.isEmpty(key))
+			if(!StringUtils.isEmpty(key)){
 				value = (long) Utils.roundUp(Float.parseFloat(key) * 1000, 0) + "";
-			sellPrice = value;
+				sellPrice = value;
+			}else{
+				sellPrice = key;
+			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}

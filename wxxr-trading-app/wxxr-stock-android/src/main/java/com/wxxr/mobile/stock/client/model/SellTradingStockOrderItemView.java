@@ -38,6 +38,13 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
 	@Convertor(params={
+			@Parameter(name="format",value="%.2f%%"),
+			@Parameter(name="multiple", value="1000.00"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial1;
+	
+	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
 			@Parameter(name="multiple", value="100.00"),
 			@Parameter(name="nullString",value="--")
@@ -75,7 +82,7 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	String currentPirce;
 	
 	/** 当前涨幅*/
-	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.changeRate:null}",converter = "stockLong2StringConvertorSpecial",attributes={
+	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.changeRate:null}",converter = "stockLong2StringConvertorSpecial1",attributes={
 			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.changeRate>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.changeRate<0)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String changeRate;

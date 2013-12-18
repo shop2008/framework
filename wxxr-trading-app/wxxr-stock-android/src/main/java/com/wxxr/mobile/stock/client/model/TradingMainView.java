@@ -20,17 +20,17 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
-import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
@@ -51,8 +51,6 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
 	
-	
-	
 	@Bean(express="${articleService.getHomeArticles(0, 4)}")
 	BindableListWrapper<ArticleBean> myArticles;
 	
@@ -65,12 +63,6 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type=BindingType.Service)
-	IUserManagementService usrMgr;
-	
-	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
-	UserBean userInfo;
-	
 	@Bean(type=BindingType.Pojo,express="${tradingService.getT0TradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
 	BindableListWrapper<TradingAccInfoBean> t0TradingAccountList;
 	
@@ -106,9 +98,12 @@ public abstract class TradingMainView extends ViewBase{
 			log.debug("TradingMainView : handleTMegaTopRefresh");
 		}
 		articleService.getHomeArticles(0, 4);
-		tradingService.getHomePageTradingAccountList();
-		tradingService.getT0TradingAccountList();
-		tradingService.getT1TradingAccountList();
+		BindableListWrapper<TradingAccInfoBean> t0 = tradingService.getT0TradingAccountList();
+		this.t0TradingAccountList = t0;
+		BindableListWrapper<TradingAccInfoBean> t1 = tradingService.getT1TradingAccountList();
+		this.t1TradingAccountList = t1;
+		registerBean("t0TradingAccountList", this.t0TradingAccountList);
+		registerBean("t1TradingAccountList", this.t1TradingAccountList);
 		return null;
 	}	
 	
@@ -122,20 +117,28 @@ public abstract class TradingMainView extends ViewBase{
 	 * */
 	@Command(navigations={
 		@Navigation(on="createBuy",showPage="creataBuyTradePage"),
-		@Navigation(on="UNLOGINALERT", showDialog="unLoginDialog")
+		@Navigation(on = "*", message = "请先登录", params = {
+					@Parameter(name = "title", value = "提示"),
+					@Parameter(name = "onOK", value = "leftok"),
+					@Parameter(name = "onCanceled", value = "取消")})				
 		})
-	//@SecurityConstraint(allowRoles={})
+	@SecurityConstraint(allowRoles={})
 	@NetworkConstraint
 	String createBuyClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			
-			if(userInfo != null)
-				return "createBuy";
-			else 
-				return "UNLOGINALERT";
+			return "createBuy";
 		}
-		return null;
-	} 
+		return "";
+	}
+	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"),navigations={
+		@Navigation(on="*",showPage="userLoginPage")
+	})
+	String clearTradingAccount(InputEvent event){
+		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if(v != null)
+			v.hide();
+		return "";
+	}	
 	
 	//点击T日列表跳转
 	@Command(navigations={@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")})

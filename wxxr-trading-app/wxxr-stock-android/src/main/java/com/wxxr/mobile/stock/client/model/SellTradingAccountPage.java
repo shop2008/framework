@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
@@ -189,15 +190,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	Utils utils = Utils.getInstance();
 	@OnShow
 	void initData(){
-//		registerBean("virtual", true);
-//		registerBean("accid", accid);
-//		if(getAppToolbar()!=null){
-//			if(this.virtual){
-//				getAppToolbar().setTitle("模拟盘", null);
-//			}else{
-//				getAppToolbar().setTitle("实盘", null);
-//			}
-//		}
+		if(this.virtual){
+			getAppToolbar().setTitle("模拟盘", null);
+		}else{
+			getAppToolbar().setTitle("实盘", null);
+		}
 	}
 	
 	/**
@@ -289,6 +286,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		String stockMarketCode = null; //市场代码
 		Long buyPrice = 0l; //委托价格
 		Long amount = 0L; //委托数量
+		String status = null;
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if (event.getProperty("position") instanceof Integer) {
@@ -297,6 +295,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 					List<StockTradingOrderBean> stockOrder = tradingAccount.getTradingOrders();
 					if(stockOrder!=null && stockOrder.size()>0){
 						StockTradingOrderBean stockTrading = stockOrder.get(position);
+						status = stockTrading.getStatus();
 						stockCode = stockTrading.getStockCode(); 
 						stockName = stockTrading.getStockName(); 
 						stockMarketCode = stockTrading.getMarketCode(); 
@@ -318,7 +317,12 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						if(amount!=null){
 							map.put("amount", amount);
 						}
-						map.put("position", position);
+						for(int i=0; i<stockOrder.size();i++){
+							StockTradingOrderBean temp = stockOrder.get(i);
+							if(stockCode!=null && stockCode.equals(temp.getStockCode()) && temp.getStatus()==null){
+								map.put("position", i);
+							}
+						}
 					}
 					StockSelection selection = new StockSelection(stockMarketCode, stockCode, stockName, buyPrice);
 					selection.setType(1);
@@ -373,7 +377,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 清算交易盘
 	 * @param acctID - 交易盘Id
 	 */	
-	@Command(navigations = { @Navigation(on = "*", message = "是否确定撤单？", params = {
+	@Command(navigations = { @Navigation(on = "*", message = "是否确定清仓？", params = {
 			@Parameter(name = "title", value = ""),
 			@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
 			@Parameter(name = "onOK", value = "leftok"),
@@ -384,6 +388,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 
 	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"))
 	String clearTradingAccount(InputEvent event){
+		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if(v != null)
+			v.hide();
 		if(tradingService!=null && accid!=null){
 			tradingService.clearTradingAccount(accid);
 		}
