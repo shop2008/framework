@@ -47,7 +47,7 @@ public class VoucherDetailsLoader  extends AbstractEntityLoader<String, VoucherD
     public ICommand<List<VoucherDetailsVO>> createCommand(Map<String, Object> params) {
         GetVoucherDetailsCommand cmd = new GetVoucherDetailsCommand();
         cmd.setLimit((Integer) params.get("limit"));
-        cmd.setLimit((Integer) params.get("start"));
+        cmd.setStart((Integer) params.get("start"));
         return cmd;
     }
 
