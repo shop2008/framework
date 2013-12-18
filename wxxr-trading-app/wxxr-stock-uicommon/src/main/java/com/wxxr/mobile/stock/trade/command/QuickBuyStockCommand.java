@@ -2,6 +2,8 @@ package com.wxxr.mobile.stock.trade.command;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 @NetworkConstraint(allowConnectionTypes={})
 public class QuickBuyStockCommand implements ICommand<StockResultVO>{
@@ -105,10 +107,12 @@ public class QuickBuyStockCommand implements ICommand<StockResultVO>{
 
     @Override
     public void validate() {
-        
+    	if(getCaptitalAmount()==null){
+        	throw new StockAppBizException("申请额度不能为空！");
+        }else if(getCaptitalAmount()<=0){
+        	throw new StockAppBizException("申请额度不能为0！");
+        }else if(getStockBuyAmount()==null || StringUtils.isEmpty(getStockBuyAmount())){
+        	throw new StockAppBizException("买入股票数量不能为空");
+        }
     }
-
-   
-   
-    
 }

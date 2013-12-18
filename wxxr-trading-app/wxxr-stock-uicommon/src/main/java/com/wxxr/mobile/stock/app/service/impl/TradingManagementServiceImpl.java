@@ -352,34 +352,38 @@ public class TradingManagementServiceImpl extends
 
 	@Override
 	public void clearTradingAccount(final String acctID) {
-	    context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID), new IAsyncCallback() {
-            @Override
-            public void failed(Object cause) {
-                log.error("clearTradingAccount fail" + cause.toString());
+		try {
+			Future f = context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID));
+			Object result = f.get();
+			if (result != null && result instanceof StockResultVO) {
+	            StockResultVO vo=(StockResultVO) result;
+	                if (vo.getSuccOrNot() == 0) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Failed to clearTradingAccount, caused by "
+	                                + vo.getCause());
+	                    }
+	                    throw new StockAppBizException(vo.getCause());
+	                }
+	                if (vo.getSuccOrNot() == 1) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("clearTradingAccount successfully.");
+	                    }
+	                    tradingAccountBean_cache.forceReload(true);
+	                }
+	            }
+			
+		} catch (InterruptedException e) {
+			throw new StockAppBizException("系统清仓失败");
+		} catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+            	throw new StockAppBizException("系统清仓失败");
             }
-            @Override
-            public void success(Object result) {
-                if (result != null && result instanceof StockResultVO) {
-                    StockResultVO vo=(StockResultVO) result;
-                   
-                        if (vo.getSuccOrNot() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Failed to clearTradingAccount, caused by "
-                                        + vo.getCause());
-                            }
-                            throw new StockAppBizException(vo.getCause());
-                        }
-                        if (vo.getSuccOrNot() == 1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("clearTradingAccount successfully.");
-                            }
-                            tradingAccountBean_cache.forceReload(true);
-                        }
-                    }
-               
-            }
-        });
-
+		}
 	}
 	@Override
 	public TradingAccountListBean getMyAllTradingAccountList(final int start,
@@ -680,38 +684,43 @@ public class TradingManagementServiceImpl extends
 
     @Override
     public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate,String assetType) throws StockAppBizException {
-        context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType), new IAsyncCallback() {
-            @Override
-            public void failed(Object cause) {
-                log.error("createTradingAccount fail" + cause.toString());
+		try {
+			Future f = context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
+			Object result = f.get();
+			if (result != null && result instanceof StockResultVO) {
+	            StockResultVO vo=(StockResultVO) result;
+	           
+	                if (vo.getSuccOrNot() == 0) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Failed to create trading account, caused by "
+	                                + vo.getCause());
+	                    }
+	                    throw new StockAppBizException(vo.getCause());
+	                }
+	                if (vo.getSuccOrNot() == 1) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Create trading account successfully.");
+	                    }
+	                }
+	           }			
+		}catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+                throw new StockAppBizException("创建交易盘失败");
             }
-            @Override
-            public void success(Object result) {
-                if (result != null && result instanceof StockResultVO) {
-                    StockResultVO vo=(StockResultVO) result;
-                   
-                        if (vo.getSuccOrNot() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Failed to create trading account, caused by "
-                                        + vo.getCause());
-                            }
-                            throw new StockAppBizException(vo.getCause());
-                        }
-                        if (vo.getSuccOrNot() == 1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Create trading account successfully.");
-                            }
-                        }
-                    }
-               
-            }
-        });
+		} catch (InterruptedException e){
+			throw new StockAppBizException("创建交易盘失败");
+		}
     }
     
     @Override
     public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        Future f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
         try {
+        	Future f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
            Object result= f.get();
            if (result != null && result instanceof StockResultVO) {
                StockResultVO vo=(StockResultVO) result;
@@ -730,105 +739,87 @@ public class TradingManagementServiceImpl extends
                        tradingAccountBean_cache.forceReload(true);
                    }
                }
-        }catch (Exception e) {
-            Throwable t = e.getCause();
-            if(t instanceof StockAppBizException){
-                throw (StockAppBizException)t;
-            }else if( t instanceof CommandConstraintViolatedException){
+        }catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
                 throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
             }else{
-                throw new StockAppBizException("提交订单失败");
+                throw new StockAppBizException("买人股票失败");
             }
-        }      
-//        context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
-//            @Override
-//            public void failed(Object cause) {
-//                log.error("createTradingAccount fail" + cause.toString());
-//            }
-//            @Override
-//            public void success(Object result) {
-//                if (result != null && result instanceof StockResultVO) {
-//                    StockResultVO vo=(StockResultVO) result;
-//                   
-//                        if (vo.getSuccOrNot() == 0) {
-//                            if (log.isDebugEnabled()) {
-//                                log.debug("Failed to buyStock, caused by "
-//                                        + vo.getCause());
-//                            }
-//                            throw new StockAppBizException(vo.getCause());
-//                        }
-//                        if (vo.getSuccOrNot() == 1) {
-//                            if (log.isDebugEnabled()) {
-//                                log.debug("buyStock successfully.");
-//                            }
-//                            tradingAccInfo_cache.forceReload(false);
-//                            tradingAccountBean_cache.forceReload(true);
-//                        }
-//                    }
-//               
-//            }
-//        });
+		} catch (InterruptedException e){
+			throw new StockAppBizException("买人股票失败");
+		}      
     }
 
     @Override
     public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount), new IAsyncCallback() {
-            @Override
-            public void failed(Object cause) {
-                log.error("sellStock fail" + cause.toString());
+		try {
+			Future f = context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount));
+			Object result = f.get();
+	    	if (result != null && result instanceof StockResultVO) {
+	            StockResultVO vo=(StockResultVO) result;
+	                if (vo.getSuccOrNot() == 0) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Failed sellStock, caused by "
+	                                + vo.getCause());
+	                    }
+	                    throw new StockAppBizException(vo.getCause());
+	                }
+	                if (vo.getSuccOrNot() == 1) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Create sellStock successfully.");
+	                    }
+	                    tradingAccountBean_cache.forceReload(true);
+	                }
+	            }			
+		}catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+                throw new StockAppBizException("卖出股票失败");
             }
-            @Override
-            public void success(Object result) {
-                if (result != null && result instanceof StockResultVO) {
-                    StockResultVO vo=(StockResultVO) result;
-                   
-                        if (vo.getSuccOrNot() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Failed sellStock, caused by "
-                                        + vo.getCause());
-                            }
-                            throw new StockAppBizException(vo.getCause());
-                        }
-                        if (vo.getSuccOrNot() == 1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Create sellStock successfully.");
-                            }
-                            tradingAccountBean_cache.forceReload(true);
-                        }
-                    }
-               
-            }
-        });
+		} catch (InterruptedException e){
+			throw new StockAppBizException("卖出股票失败");
+		}      
     }
     @Override
     public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate,String assetType ) throws StockAppBizException {
-        context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType), new IAsyncCallback() {
-            @Override
-            public void failed(Object cause) {
-                log.error("quickBuy fail" + cause.toString());
+    	try {
+    		Future f = context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType));
+			Object result = f.get();
+			if (result != null && result instanceof StockResultVO) {
+              StockResultVO vo=(StockResultVO) result;
+                  if (vo.getSuccOrNot() == 0) {
+                      if (log.isDebugEnabled()) {
+                          log.debug("Failed quickBuy, caused by "
+                                  + vo.getCause());
+                      }
+                      throw new StockAppBizException(vo.getCause());
+                  }
+                  if (vo.getSuccOrNot() == 1) {
+                      if (log.isDebugEnabled()) {
+                          log.debug("quickBuy successfully.");
+                      }
+                      tradingAccountBean_cache.forceReload(true);
+                  }
+              }
+		} catch (InterruptedException e) {
+			 throw new StockAppBizException("买入股票失败");
+		} catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+                throw new StockAppBizException("买入股票失败");
             }
-            @Override
-            public void success(Object result) {
-                if (result != null && result instanceof StockResultVO) {
-                    StockResultVO vo=(StockResultVO) result;
-                   
-                        if (vo.getSuccOrNot() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Failed quickBuy, caused by "
-                                        + vo.getCause());
-                            }
-                            throw new StockAppBizException(vo.getCause());
-                        }
-                        if (vo.getSuccOrNot() == 1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("quickBuy successfully.");
-                            }
-                            tradingAccountBean_cache.forceReload(true);
-                        }
-                    }
-               
-            }
-        });
+		}
     }
   //未结算
     @Override
@@ -850,33 +841,38 @@ public class TradingManagementServiceImpl extends
 
     @Override
     public void cancelOrder(String orderID) {
-        context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID), new IAsyncCallback() {
-            @Override
-            public void failed(Object cause) {
-                log.error("cancelOrder fail" + cause.toString());
+		try {
+			Future f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
+			Object result = f.get();
+	    	if (result != null && result instanceof StockResultVO) {
+	            StockResultVO vo=(StockResultVO) result;
+	           
+	                if (vo.getSuccOrNot() == 0) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Failed to cancelOrder, caused by "
+	                                + vo.getCause());
+	                    }
+	                    throw new StockAppBizException(vo.getCause());
+	                }
+	                if (vo.getSuccOrNot() == 1) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("cancelOrder successfully.");
+	                    }
+	                    tradingAccountBean_cache.forceReload(true);
+	                }
+	            }			
+		} catch (InterruptedException e) {
+			throw new StockAppBizException("系统执行撤单失败");
+		} catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+            	throw new StockAppBizException("系统执行撤单失败");
             }
-            @Override
-            public void success(Object result) {
-                if (result != null && result instanceof StockResultVO) {
-                    StockResultVO vo=(StockResultVO) result;
-                   
-                        if (vo.getSuccOrNot() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Failed to cancelOrder, caused by "
-                                        + vo.getCause());
-                            }
-                            throw new StockAppBizException(vo.getCause());
-                        }
-                        if (vo.getSuccOrNot() == 1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("cancelOrder successfully.");
-                            }
-                            tradingAccountBean_cache.forceReload(true);
-                        }
-                    }
-               
-            }
-        });
+		}
     }
 
 	@Override

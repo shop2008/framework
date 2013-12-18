@@ -2,6 +2,8 @@ package com.wxxr.mobile.stock.trade.command;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 @NetworkConstraint(allowConnectionTypes={})
@@ -34,7 +36,13 @@ public class SellStockCommand implements ICommand<StockResultVO>{
 
     @Override
     public void validate() {
-        
+        if(getPrice()==null || StringUtils.isEmpty(getPrice())){
+        	throw new StockAppBizException("卖出股票价格不能为0！");
+        }else if(getAmount()==null || StringUtils.isEmpty(getAmount())){
+        	throw new StockAppBizException("卖出的股票数量不能为空");
+        }else if(Long.valueOf(getAmount()) % 100!=0){
+        	throw new StockAppBizException("卖出的股票数量应为100的整数倍！");
+        }
     }
 
     public String getAcctID() {
