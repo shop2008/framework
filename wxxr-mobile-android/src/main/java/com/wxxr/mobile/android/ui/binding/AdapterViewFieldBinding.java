@@ -82,8 +82,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		super.activate(model);
 		String itemViewId = getBindingAttrs().get(LIST_ITEM_VIEW_ID);
 		IUIComponent comp = model.getChild(getFieldName());
-		
-		this.listAdapter = this.adapterBuilder != null ? this.adapterBuilder.buildListAdapter(comp, ((IAndroidBindingContext)getBindingContext()),itemViewId) : GenericListAdapter.createAdapter(comp, ((IAndroidBindingContext)getBindingContext()), itemViewId);
 		if((headerBinding != null)&&(headerView != null)){
 			model.addChild(headerView);
 			headerBinding.activate(headerView);
@@ -92,6 +90,9 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			model.addChild(footerView);
 			footerBinding.activate(footerView);
 		}
+		if(listAdapter != null)
+			return;
+		this.listAdapter = this.adapterBuilder != null ? this.adapterBuilder.buildListAdapter(comp, ((IAndroidBindingContext)getBindingContext()),itemViewId) : GenericListAdapter.createAdapter(comp, ((IAndroidBindingContext)getBindingContext()), itemViewId);
 		this.listAdapter.refresh();
 		setupAdapter(listAdapter);
 	}
@@ -146,11 +147,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 */
 	@Override
 	public void deactivate() {
-		if (this.listAdapter != null) {
-			setupAdapter(null);
-			this.listAdapter.destroy();
-			this.listAdapter = null;
-		}
+//		if (this.listAdapter != null) {
+//			setupAdapter(null);
+//			this.listAdapter.destroy();
+//			this.listAdapter = null;
+//		}
 		super.deactivate();
 		if(headerBinding != null) {
 			headerBinding.deactivate();
@@ -216,6 +217,11 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 	 */
 	@Override
 	public void destroy() {
+		if (this.listAdapter != null) {
+			setupAdapter(null);
+			this.listAdapter.destroy();
+			this.listAdapter = null;
+		}
 		ListView list = getUIControl() instanceof ListView ? (ListView)getUIControl() : null;
 		if((list != null)&&(headItemView != null)){
 			list.removeHeaderView(headItemView);

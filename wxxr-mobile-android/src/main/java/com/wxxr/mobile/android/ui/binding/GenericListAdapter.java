@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui.binding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -202,8 +203,13 @@ public class GenericListAdapter extends BaseAdapter implements IRefreshableListA
 
 			@Override
 			public boolean updateDataIfNeccessary() {
-				data = getListData(comp);
-				return true;
+				Object[] val = getListData(comp);
+				if(Arrays.equals(data, val)) {
+					return false;
+				} else {
+					data = val;
+					return true;
+				}
 			}
 		};
 	}
