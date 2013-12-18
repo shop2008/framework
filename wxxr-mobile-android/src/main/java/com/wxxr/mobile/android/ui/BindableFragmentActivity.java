@@ -162,20 +162,18 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		this.androidViewBinding.activate(page);
 		if(this.toolbar != null){
 			this.toolbar.attach(page);
-		}
-		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
-			this.toolbarViewBingding.activate(this.rootView);
-			if(this.toolbar != null){
-				page.onToolbarShow();
-			}
-		}
-		if(this.toolbar != null){
 			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingPage().getName());
 			String desc = descriptor.getViewDescription();
 			if(StringUtils.isNotBlank(desc)){
 				toolbar.setTitle(BindingUtils.getMessage(descriptor.getViewDescription()), null);
 			}else{
 				toolbar.setTitle("", null);
+			}
+		}
+		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
+			this.toolbarViewBingding.activate(this.rootView);
+			if(this.toolbar != null){
+				page.onToolbarShow();
 			}
 		}
 		super.onStart();
