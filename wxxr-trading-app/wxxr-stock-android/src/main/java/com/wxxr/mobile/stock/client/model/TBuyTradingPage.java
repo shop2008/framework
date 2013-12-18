@@ -36,7 +36,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 /**
  * @author duzhen
  */
-@View(name = "TBuyTradingPage", withToolbar = true, description="参赛交易盘", provideSelection=true)
+@View(name = "TBuyTradingPage", withToolbar = true, description="交易盘", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.buy_trading_account_info_page_layout")
 public abstract class TBuyTradingPage extends PageBase implements IModelUpdater {
 
@@ -163,8 +163,11 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 
 	@OnShow
 	void initTitleBar() {
-//		getPageToolbar().setTitle("模拟盘", null);
-		// ((IStockAppToolbar)getAppToolbar()).setTitle("模拟盘", null);
+		if(isVirtual) {
+			getPageToolbar().setTitle("参赛交易盘", null);
+		} else {
+			getPageToolbar().setTitle("挑战交易盘", null);
+		}
 	}
 
 	@Override
@@ -301,11 +304,4 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		updateSelection(new StockSelection());
 		return result;
 	}
-
-//	@Override
-//	public void onToolbarCreated(IAppToolbar toolbar) {
-//		// TODO Auto-generated method stub
-//		super.onToolbarCreated(toolbar);
-////		toolbar.setTitle("模拟盘", null);
-//	}
 }

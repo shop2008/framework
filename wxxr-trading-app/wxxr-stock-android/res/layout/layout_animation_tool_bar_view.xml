@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wxxr.mobile.stock.client.widget.ToolBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:id="@+id/title_bar_layout"
     android:layout_width="fill_parent"
@@ -24,4 +24,4 @@
         android:layout_below="@id/view_switch" >
     </FrameLayout>
 
-</com.wxxr.mobile.stock.client.widget.ToolBarLayout>
+</RelativeLayout>

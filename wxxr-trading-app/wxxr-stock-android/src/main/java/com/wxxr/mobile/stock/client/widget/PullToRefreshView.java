@@ -592,7 +592,7 @@ public class PullToRefreshView extends LinearLayout {
 	 * header view 完成更新后恢复初始状态
 	 */
 	@SuppressWarnings("deprecation")
-	public void onHeaderRefreshComplete() {
+	public void onHeaderRefreshComplete(boolean success) {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mHeaderImageView.setVisibility(View.VISIBLE);
 		mHeaderImageView.setImageResource(R.drawable.arrow_down);
@@ -602,8 +602,8 @@ public class PullToRefreshView extends LinearLayout {
 		mHeaderUpdateTextView.setText("最后更新：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
 		mHeaderState = PULL_TO_REFRESH;
-		
-		notifyToolBar();
+		if(success)
+			notifyToolBar();
 	}
 
 	/**

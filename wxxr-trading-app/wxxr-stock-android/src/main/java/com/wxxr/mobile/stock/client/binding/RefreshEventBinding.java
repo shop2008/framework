@@ -40,14 +40,14 @@ public class RefreshEventBinding extends AbstractEventBinding {
 					@Override
 					public void success(Object arg0) {
 						if(control instanceof PullToRefreshView) {
-							((PullToRefreshView)control).onHeaderRefreshComplete();
+							((PullToRefreshView)control).onHeaderRefreshComplete(true);
 						}
 					}
 					
 					@Override
 					public void failed(Object arg0) {
 						if(control instanceof PullToRefreshView) {
-							((PullToRefreshView)control).onHeaderRefreshComplete();
+							((PullToRefreshView)control).onHeaderRefreshComplete(false);
 						}
 					}
 				});

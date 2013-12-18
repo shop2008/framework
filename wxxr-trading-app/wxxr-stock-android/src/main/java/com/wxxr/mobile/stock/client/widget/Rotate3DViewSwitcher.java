@@ -17,6 +17,7 @@ import android.widget.ViewSwitcher;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.util.DateUtil;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.client.R;
 
 public class Rotate3DViewSwitcher extends ViewSwitcher {
@@ -79,10 +80,14 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 		if(log.isDebugEnabled()) {
 			log.debug("show notification :["+message+"]");
 		}
+		TextView msgTv = (TextView) findViewById(R.id.time);
+		if(StringUtils.isBlank(message)) {
+			msgTv.setText("");
+			return;
+		}
 		if(mShowing)
 			return;
 		mShowing = true;
-		TextView msgTv = (TextView) findViewById(R.id.time);
 		msgTv.setText(message);
 		setRorateUp();
 		showNext();
