@@ -70,6 +70,8 @@
                         android:text="@string/tv_default_text"
                         android:textColor="@color/black"
                         android:textSize="10sp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         bind:field="userBalance" />
 
                     <TextView
@@ -81,6 +83,8 @@
                         android:text="@string/tv_default_text"
                         android:textColor="@color/black"
                         android:textSize="10sp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         bind:field="userFreeze" />
 
                     <TextView
@@ -92,6 +96,8 @@
                         android:text="@string/tv_default_text"
                         android:textColor="@color/black"
                         android:textSize="10sp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         bind:field="userAvalible" />
                 </TableRow>
             </TableLayout>
