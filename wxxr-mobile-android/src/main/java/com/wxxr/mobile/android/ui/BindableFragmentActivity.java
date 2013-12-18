@@ -159,7 +159,6 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Starting activity ...");
 		}
 		IPage page = getBindingPage();
-		this.androidViewBinding.activate(page);
 		if(this.toolbar != null){
 			this.toolbar.attach(page);
 			IViewDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getViewDescriptor(getBindingPage().getName());
@@ -170,6 +169,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				toolbar.setTitle("", null);
 			}
 		}
+		this.androidViewBinding.activate(page);
 		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
 			this.toolbarViewBingding.activate(this.rootView);
 			if(this.toolbar != null){
