@@ -42,8 +42,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dip" 
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             >
             <ImageView
                 android:id="@+id/iv_phone"
@@ -67,7 +65,7 @@
                 android:layout_toRightOf="@id/iv_phone"
                 android:background="@null"
                 bind:field="mobileNum"
-                bind:on_FocusLost="_updateValue"
+                bind:on_FocusChanged="_updateValue"
                 />
 
             <TextView
@@ -91,8 +89,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dip" 
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             >
 
             <ImageView
@@ -116,8 +112,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/hint_psw"
                 android:background="@null"
-                bind:field="password"
-                bind:on_FocusLost="_updateValue"
+                bind:on_FocusChanged="_updateValue"
                 />
 
             <TextView

@@ -4,6 +4,8 @@
 package com.wxxr.mobile.stock.client.module;
 
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -21,7 +23,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
-import com.wxxr.mobile.stock.client.binding.EditTextFieldBinder;
+import com.wxxr.mobile.stock.client.binding.FocusViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
@@ -77,7 +79,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, Spinner.class, new SpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
-		mgr.registerFieldBinder(UIComponent.class, EditText.class, new EditTextFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, View.class, new FocusViewFieldBinder());
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("SelCallBack", new IViewPagerSelEventBinder());
 		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());
 		mgr.registerFieldBinder("PageChange", new PageChangeEventBinder());
-		mgr.registerFieldBinder("FocusLost", new EditTextFocusChangedEventBinder());
+		mgr.registerFieldBinder("FocusChanged", new EditTextFocusChangedEventBinder());
 	}
 
 	@Override

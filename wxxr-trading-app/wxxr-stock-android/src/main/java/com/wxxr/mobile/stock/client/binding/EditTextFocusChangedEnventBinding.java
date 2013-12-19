@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.binding;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
@@ -25,9 +26,9 @@ public class EditTextFocusChangedEnventBinding extends AbstractEventBinding {
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
 			
-			System.out.println("--hasFocus---"+hasFocus);
+			
 			if(hasFocus == false) {
-				SimpleInputEvent event = new SimpleInputEvent("FocusLost",
+				SimpleInputEvent event = new SimpleInputEvent("FocusChanged",
 						getField());
 				handleInputEvent(event);
 			}
