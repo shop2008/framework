@@ -112,6 +112,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/hint_psw"
                 android:background="@null"
+                bind:field="password"
                 bind:on_TextChanged="_updateValue"
                 />
 
