@@ -52,13 +52,15 @@ public class GenericDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	    AlertDialog dialog = null;
 	    IBindableActivity bActivity = (getActivity() instanceof IBindableActivity) ? (IBindableActivity)getActivity() : null;
 	    getNavigator().onViewCreate(view, bActivity);
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
 	    View v = createUI();
 	    if(v != null){
-	    	builder.setView(v);
+	    	dialog = builder.create();
+	    	dialog.setView(v, 0, 0, 0, 0);
 	    	if(this.handback != null){
 		    	IUICommand cmd = (IUICommand)this.view.getChild(UIConstants.MESSAGEBOX_ATTRIBUTE_LEFT_BUTTON);
 			    if(cmd instanceof UICommand){
@@ -122,11 +124,12 @@ public class GenericDialogFragment extends DialogFragment {
 		               }
 		         });
 		    }
+		    dialog = builder.create();
 	    }
 		if(view instanceof ViewBase){
 			((ViewBase)view).onUICreate();
 		}
-	    return builder.create();
+	    return dialog;
 	}
 	
 	
