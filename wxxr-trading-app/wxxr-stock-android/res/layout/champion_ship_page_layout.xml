@@ -96,23 +96,15 @@
             bind:on_BottomRefresh="reloadTRank"
             bind:on_TopRefresh="reloadTRank" >
 
-            <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fadingEdge="none"
-                android:scrollbars="none" >
-
-                <com.wxxr.mobile.stock.client.widget.AutoHeightListView
-                    android:id="@+id/listView1"
-                    style="@style/mListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never"
-                    bind:field="ChampionShip"
-                    bind:itemViewId="ChampionShipItemView"
-                    bind:on_ItemClick="handleChampionShipItemClick" >
-                </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
-            </ScrollView>
+            <ListView
+                android:id="@+id/listView1"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                bind:field="ChampionShip"
+                bind:itemViewId="ChampionShipItemView"
+                bind:on_ItemClick="handleChampionShipItemClick" />
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshView
@@ -124,22 +116,14 @@
             bind:on_BottomRefresh="reloadT1Rank"
             bind:on_TopRefresh="reloadT1Rank" >
 
-            <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fadingEdge="none"
-                android:scrollbars="none" >
-
-                <com.wxxr.mobile.stock.client.widget.AutoHeightListView
-                    android:id="@+id/listView2"
-                    style="@style/mListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    bind:field="ChampionT1Ship"
-                    bind:itemViewId="ChampionShipItemView"
-                    bind:on_ItemClick="handleChampionShipT1ItemClick" >
-                </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
-            </ScrollView>
+            <ListView
+                android:id="@+id/listView2"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:field="ChampionT1Ship"
+                bind:itemViewId="ChampionShipItemView"
+                bind:on_ItemClick="handleChampionShipT1ItemClick" />
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshView
@@ -151,22 +135,14 @@
             bind:on_BottomRefresh="reloadWeekRank"
             bind:on_TopRefresh="reloadWeekRank" >
 
-            <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fadingEdge="none"
-                android:fillViewport="true"
-                android:scrollbars="none" >
-
-                <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
-                    android:id="@+id/listView3"
-                    style="@style/mListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    bind:field="ChampionWeekShip"
-                    bind:itemViewId="ChampionWeekShipSelectorItemView" >
-                </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
-            </ScrollView>
+            <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
+                android:id="@+id/listView3"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:field="ChampionWeekShip"
+                bind:itemViewId="ChampionWeekShipSelectorItemView" >
+            </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
         <com.wxxr.mobile.stock.client.widget.PullToRefreshView
@@ -178,22 +154,14 @@
             bind:on_BottomRefresh="reloadRegularTicketRank"
             bind:on_TopRefresh="reloadRegularTicketRank" >
 
-            <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fadingEdge="none"
-                android:scrollbars="none" >
-
-                <com.wxxr.mobile.stock.client.widget.AutoHeightListView
-                    android:id="@+id/listView4"
-                    style="@style/mListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    bind:field="ChampionRegularShip"
-                    bind:itemViewId="ChampionRegularShipItemView"
-                    bind:on_ItemClick="handleChampionRegularShipItemClick" >
-                </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
-            </ScrollView>
+            <ListView
+                android:id="@+id/listView4"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:field="ChampionRegularShip"
+                bind:itemViewId="ChampionRegularShipItemView"
+                bind:on_ItemClick="handleChampionRegularShipItemClick" />
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
     </FrameLayout>
 
