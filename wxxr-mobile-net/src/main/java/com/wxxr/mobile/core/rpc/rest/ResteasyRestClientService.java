@@ -21,6 +21,7 @@ import com.wxxr.mobile.core.rpc.rest.provider.InputStreamProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.JaxrsFormProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.SerializableProvider;
 import com.wxxr.mobile.core.rpc.rest.provider.StreamingOutputProvider;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 
 /**
@@ -38,7 +39,7 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
    protected Map<String, Object> properties = new HashMap<String, Object>();
    protected ClientHttpEngine httpEngine;
    protected IKernelContext application;
-
+   protected String defautTarget;
    /**
     * Changing the providerFactory will wipe clean any registered components or properties.
     *
@@ -238,12 +239,15 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 
 
 	protected String getDefaultServerUrl(){
-		IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
-		if(prefManager == null){
-			return null;
-		}
-		Dictionary<String, String> d = prefManager.getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME);
-		return d != null ? d.get(IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL) : null;
+	   if (StringUtils.isBlank(this.defautTarget)) {
+	      IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
+	        if(prefManager == null){
+	            return null;
+	        }
+	        Dictionary<String, String> d = prefManager.getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME);
+	        this.defautTarget = d != null ? d.get(IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL) : null;
+	   }
+	   return this.defautTarget;
 	}
 
 	@Override
@@ -254,5 +258,13 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 		}
 		return getRestService(clazz, url);
 	}
+
+
+   @Override
+   public void setDefautTarget(String target) {   
+      if (StringUtils.isNotBlank(target)) {
+         this.defautTarget = target;
+      }
+   }
 
 }
