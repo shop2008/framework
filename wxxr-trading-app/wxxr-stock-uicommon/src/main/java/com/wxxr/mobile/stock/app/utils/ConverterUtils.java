@@ -609,6 +609,27 @@ public class ConverterUtils {
             bean.setList(bs);
         }
     }
-    
+    public static void updatefromVO(TradingAccInfoVO vo,TradingAccInfoBean bean) {
+       if (vo == null) {
+           return;
+       }
+       bean.setAcctID(vo.getAcctID());
+       bean.setCreateDate(vo.getCreateDate());
+       bean.setMaxStockCode(vo.getMaxStockCode());
+       bean.setMaxStockMarket(vo.getMaxStockMarket());
+       String stockName = vo.getMaxStockName();
+       if (StringUtils.isBlank(stockName)) {
+           StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
+           if (stock!=null) {
+               stockName = stock.getName();
+           }
+       }
+       bean.setMaxStockName(stockName);
+       bean.setOver(vo.getOver());
+       bean.setStatus(vo.getStatus());
+       bean.setSum(vo.getSum());
+       bean.setTotalGain(vo.getTotalGain());
+       bean.setVirtual(vo.isVirtual());
+   }
 
 }

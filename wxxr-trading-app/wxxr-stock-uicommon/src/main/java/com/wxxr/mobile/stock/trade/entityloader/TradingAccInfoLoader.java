@@ -52,6 +52,9 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
                 bean =  ConverterUtils.fromVO(vo);
                 cache.putEntity(accId, bean);
                 updated = true;
+            }else{
+               ConverterUtils.updatefromVO(vo,bean);
+               updated = true;
             }
         }
         return updated;

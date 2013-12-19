@@ -19,7 +19,6 @@ import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
@@ -212,8 +211,8 @@ public class TradingManagementServiceImpl extends
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
 		
-        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo");
-        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo");
+        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo",30);
         tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
         auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
@@ -735,7 +734,6 @@ public class TradingManagementServiceImpl extends
                        if (log.isDebugEnabled()) {
                            log.debug("buyStock successfully.");
                        }
-                       tradingAccInfo_cache.forceReload(false);
                        tradingAccountBean_cache.forceReload(true);
                    }
                }
