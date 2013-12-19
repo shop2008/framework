@@ -58,9 +58,9 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	@Override
 	protected void startService() {
 		if (log.isDebugEnabled()) {
-			log.debug("Loading local settings...");
+			log.debug("Loading default settings...");
 		}
-		loadLocalSettings();
+		loadDefaultSettings();//加载出厂设置
 		this.urlCheckServerURL = getURL("url_checker_server");
 		this.serverUrl = getURL("server");
 		this.magnoliaUrl = getURL("magnolia");
@@ -89,7 +89,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		context.unregisterService(IURLLocatorManagementService.class,this);
 	}
 
-	private void loadLocalSettings() {
+	private void loadDefaultSettings() {
 		InputStream in = null;
 		try {
 			in = context.getApplication().getAndroidApplication().getAssets()
@@ -115,7 +115,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			}
 		}
 	}
-	public String getUrlCheckServerURL() {
+	private String getUrlCheckServerURL() {
 		return urlCheckServerURL;
 	}
 	private void loadRemoteSettings() {
@@ -136,6 +136,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			if (StringUtils.isNotBlank(sUrl)) {
 				this.serverUrl = sUrl;
 				if (isChanged(getModuleName(), "server", sUrl)) {
+				    getService(IRestProxyService.class).setDefautTarget(sUrl);
 					prefManager.updatePreference(prefName, "server", sUrl);
 				}
 			}
