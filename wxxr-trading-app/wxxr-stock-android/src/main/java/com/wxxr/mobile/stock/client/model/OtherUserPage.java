@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -101,6 +102,15 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Menu(items={"left"})
 	private IMenu toolbar;
+	
+	
+	@OnShow
+	void initData(){
+		if(user != null){
+			getAppToolbar().setTitle(user.getNickName()+"的主页", null);
+		}
+	}
+	
 	
 	@Command(
 			uiItems={
@@ -254,7 +264,6 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 			int position = (Integer) event.getProperty("position");
 			GainBean actualBean = null;
 
-			// 本人
 			if (personalBean != null) {
 				List<GainBean> actualList = personalBean.getActualList();
 				if (actualList != null && actualList.size() > 0) {

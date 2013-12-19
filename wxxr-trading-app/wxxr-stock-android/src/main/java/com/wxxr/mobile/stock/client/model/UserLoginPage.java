@@ -1,9 +1,11 @@
 package com.wxxr.mobile.stock.client.model;
 
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -24,21 +26,23 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
 	static Trace log = Trace.register(UserLoginPage.class);
-	@Field(valueKey = "text", binding = "${callback.userName}")
+	@Field(valueKey = "text", binding = "${callback.userName}",attributes={@Attribute(name="focusable", value="${focusLost == false}")})
 	String mobileNum;
 
-	@Field(valueKey = "text", binding = "${callback.password}")
+	@Field(valueKey = "text", binding = "${callback.password}", attributes={@Attribute(name="focusable", value="${focusLost == false}")})
 	String password;
 
 	@Field(valueKey = "text")
 	String loginBtn;
-
+	
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
 
+	@Bean
+	boolean focusLost = false;
 	/**
 	 * 处理登录
 	 * 
@@ -53,27 +57,37 @@ public abstract class UserLoginPage extends PageBase {
 
 	)
 	@NetworkConstraint
-	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 200)
 	String login(InputEvent event) {
-
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			/** 手机号码 */
-			// String mobileNum = mobileNumField.getValue();
-			/** 密 码 */
-			// String password = passwordField.getValue();
-
+			focusLost = !focusLost;
+			registerBean("focusLost", focusLost);
 			if (log.isDebugEnabled()) {
 				log.debug("login:mobileNum" + this.callback.getUserName());
 				log.debug("login:password" + this.callback.getPassword());
 			}
-			usrService.login(this.callback.getUserName(),
-					this.callback.getPassword());
+			
+			//String mobileNum = this.callback.getUserName();
+			//String password = this.callback.getPassword();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			usrService.login(this.callback.getUserName(),this.callback.getPassword());
 			hide();
 		}
 		return null;
 
 	}
-
+	
+	@OnShow
+	void initData() {
+		focusLost = false;
+		registerBean("focusLost", focusLost);
+	}
+	
 	/**
 	 * 处理后退
 	 * 

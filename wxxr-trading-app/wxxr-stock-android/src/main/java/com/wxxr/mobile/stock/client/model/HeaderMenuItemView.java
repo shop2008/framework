@@ -92,7 +92,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Command(commandName="handleClickImage",
 		navigations={
 			@Navigation(on="userLoginPage",showPage="userLoginPage"),
-			@Navigation(on="userManagePage",showPage="userManagePage")
+			@Navigation(on="userManagePage",showPage="userManagePage", keepMenuOpen=true)
 	})
 	String handleClickImage(InputEvent event) {
 		log.info("User click on user image !");

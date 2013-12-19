@@ -142,8 +142,6 @@ public abstract class HomePage extends PageBase {
 	@Menu(items={"rhome","rpage1","rpage2","rpage3"})
 	private IMenu rightMenu;
 	 
-	@Menu(items={"leftOK"})
-	private IMenu vertionMenu;
 	
 	@Command(description="Invoke when a menu item was clicked",commandName="doNavigationRight",
 			uiItems={
@@ -156,8 +154,8 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="rhome",showPage="userPage"),
 				@Navigation(on="rpage1",showPage="userTradeRecordPage"),
 				@Navigation(on="rpage2",showPage="appSetPage"),
-				@Navigation(on="NO_UPDATE", showDialog="noVerUpdateDialog"),
-				@Navigation(on="ALERT_UPDATE",showDialog="updateVertionDialog")
+				@Navigation(on="NO_UPDATE", showDialog="noVerUpdateDialog", keepMenuOpen=true),
+				@Navigation(on="ALERT_UPDATE",showDialog="updateVertionDialog",keepMenuOpen=true)
 			}
 	)
 	String menuRightClicked(InputEvent event){
@@ -169,7 +167,7 @@ public abstract class HomePage extends PageBase {
 			
 			if(name!=null&& name.equals("rpage3")) {
 				//调用服务里面检查版本接口
-				boolean isLastest = false;
+				boolean isLastest = true;
 				if(isLastest) {
 					return "NO_UPDATE";
 				} else {
@@ -181,12 +179,4 @@ public abstract class HomePage extends PageBase {
 		}
 		return null;
 	}
-	
-	@Command(uiItems=@UIItem(id="leftOK",label="是",icon="resourceId:drawable/home"))
-	String confirmDownloadClick(InputEvent event) {
-		Log.e("wwwww", "-----start download apk-----");
-		
-		return null;
-	}
-		
 }
