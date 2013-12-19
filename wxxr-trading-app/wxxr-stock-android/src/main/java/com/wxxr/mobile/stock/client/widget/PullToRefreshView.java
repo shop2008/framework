@@ -29,6 +29,7 @@ import com.wxxr.mobile.stock.app.IStockAppToolbar;
 import com.wxxr.mobile.stock.client.R;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.SpUtil;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * 自定义下拉刷新控件
@@ -172,13 +173,16 @@ public class PullToRefreshView extends LinearLayout {
 
 	private boolean isback = false;
 	boolean isfootBack= false;
+	private Context mContext;
 	public PullToRefreshView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mContext = context;
 		init();
 	}
 
 	public PullToRefreshView(Context context) {
 		super(context);
+		mContext = context;
 		init();
 	}
 
@@ -467,9 +471,9 @@ public class PullToRefreshView extends LinearLayout {
 			mHeaderState = PULL_TO_REFRESH;
 			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_DOWN_REFRESH_DATE);
 			if (TextUtils.isEmpty(date)) {
-				mHeaderUpdateTextView.setText("最后更新:无更新记录");
+				mHeaderUpdateTextView.setText("最后更新：无更新记录");
 			} else {
-				mHeaderUpdateTextView.setText("最后更新:"+date);
+				mHeaderUpdateTextView.setText("最后更新："+date);
 			}
 		}
 	}
@@ -501,9 +505,9 @@ public class PullToRefreshView extends LinearLayout {
 			mFooterState = PULL_TO_REFRESH;
 			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_UP_REFRESH_DATE);
 			if (TextUtils.isEmpty(date)) {
-				mFooterUpdateTextView.setText("最后加载:无更新记录");
+				mFooterUpdateTextView.setText("最后加载：无更新记录");
 			} else {
-				mFooterUpdateTextView.setText("最后加载:"+date);
+				mFooterUpdateTextView.setText("最后加载："+date);
 			}
 		}
 	}
@@ -584,21 +588,20 @@ public class PullToRefreshView extends LinearLayout {
 		IPage page = bench.getPage(id);
 		IStockAppToolbar tool = ((IStockAppToolbar) page.getPageToolbar());
 		if (tool != null) {
-			tool.showNotification("最后更新:" + fmt.format(new Date()), null);
+			tool.showNotification("最后更新：" + fmt.format(new Date()), null);
 		}
 	}
 	
 	/**
 	 * header view 完成更新后恢复初始状态
 	 */
-	@SuppressWarnings("deprecation")
 	public void onHeaderRefreshComplete(boolean success) {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mHeaderImageView.setVisibility(View.VISIBLE);
 		mHeaderImageView.setImageResource(R.drawable.arrow_down);
 		mHeaderTextView.setText("下拉即可更新…");
 		mHeaderProgressBar.setVisibility(View.GONE);
-		String date = new Date().toLocaleString();
+		String date = Utils.getCurrentTime();
 		mHeaderUpdateTextView.setText("最后更新：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
 		mHeaderState = PULL_TO_REFRESH;
@@ -609,14 +612,13 @@ public class PullToRefreshView extends LinearLayout {
 	/**
 	 * footer view 完成更新后恢复初始状态
 	 */
-	@SuppressWarnings("deprecation")
 	public void onFooterRefreshComplete() {
 		setHeaderTopMargin(-mHeaderViewHeight);
 		mFooterImageView.setVisibility(View.VISIBLE);
 		mFooterImageView.setImageResource(R.drawable.arrow_up);
 		mFooterTextView.setText("上拉即可加载…");
 		mFooterProgressBar.setVisibility(View.GONE);
-		String date = new Date().toLocaleString();
+		String date = Utils.getCurrentTime();
 		mFooterUpdateTextView.setText("最后加载：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_UP_REFRESH_DATE, date);
 		mFooterState = PULL_TO_REFRESH;
