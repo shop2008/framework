@@ -170,12 +170,12 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			}
 		}
 		this.androidViewBinding.activate(page);
-		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
-			this.toolbarViewBingding.activate(this.rootView);
-			if(this.toolbar != null){
-				page.onToolbarShow();
-			}
-		}
+//		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
+//			this.toolbarViewBingding.activate(this.rootView);
+//			if(this.toolbar != null){
+//				page.onToolbarShow();
+//			}
+//		}
 		super.onStart();
 		onActivityStarted();
 		this.onShow = true;
@@ -225,9 +225,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		this.onShow = false;
 		super.onStop();
-		if(this.toolbarViewBingding != null){
-			this.toolbarViewBingding.deactivate();
-		}
+//		if(this.toolbarViewBingding != null){
+//			this.toolbarViewBingding.deactivate();
+//		}
 		if(this.toolbar != null){
 			this.toolbar.dettach(page);
 			this.page.onToolbarHide();
@@ -344,6 +344,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			log.debug("Pausing activity ...");
 		}
 		super.onPause();
+		if(this.toolbarViewBingding != null){
+			this.toolbarViewBingding.deactivate();
+		}
 	}
 
 
@@ -354,6 +357,12 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	protected void onResume() {
 		if(log.isDebugEnabled()){
 			log.debug("Resuming activity ...");
+		}
+		if((this.toolbarViewBingding != null)&&(this.rootView != null)){
+			this.toolbarViewBingding.activate(this.rootView);
+			if(this.toolbar != null){
+				page.onToolbarShow();
+			}
 		}
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.doUpdate();
