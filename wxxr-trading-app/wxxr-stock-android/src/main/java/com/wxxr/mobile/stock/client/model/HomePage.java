@@ -151,9 +151,9 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="rpage3",label="版本:1.4.0",icon="resourceId:drawable/v_default")
 			},
 			navigations={
-				@Navigation(on="rhome",showPage="userPage"),
-				@Navigation(on="rpage1",showPage="userTradeRecordPage"),
-				@Navigation(on="rpage2",showPage="appSetPage"),
+				@Navigation(on="rhome",showPage="userPage",keepMenuOpen=true),
+				@Navigation(on="rpage1",showPage="userTradeRecordPage", keepMenuOpen=true),
+				@Navigation(on="rpage2",showPage="appSetPage", keepMenuOpen=true),
 				@Navigation(on="NO_UPDATE", showDialog="noVerUpdateDialog", keepMenuOpen=true),
 				@Navigation(on="ALERT_UPDATE",showDialog="updateVertionDialog",keepMenuOpen=true)
 			}

@@ -41,8 +41,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
-
+            android:layout_height="60dip" 
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
             <ImageView
                 android:id="@+id/iv_phone"
                 android:layout_width="40dip"
@@ -65,8 +67,7 @@
                 android:layout_toRightOf="@id/iv_phone"
                 android:background="@null"
                 bind:field="mobileNum"
-                bind:on_TextChanged="_updateValue"
-                android:text="13987654321"
+                bind:on_FocusLost="_updateValue"
                 />
 
             <TextView
@@ -89,7 +90,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip" 
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
 
             <ImageView
                 android:id="@+id/iv_phone"
@@ -113,8 +117,7 @@
                 android:hint="@string/hint_psw"
                 android:background="@null"
                 bind:field="password"
-                bind:on_TextChanged="_updateValue"
-                android:text="1111111"
+                bind:on_FocusLost="_updateValue"
                 />
 
             <TextView

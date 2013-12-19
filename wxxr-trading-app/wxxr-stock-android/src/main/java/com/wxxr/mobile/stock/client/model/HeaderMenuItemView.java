@@ -104,7 +104,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	}
 	
 	@Command(navigations={
-			@Navigation(on="*",showPage="userNewsPage")
+			@Navigation(on="*",showPage="userNewsPage", keepMenuOpen=true)
 		})
 	String handleClickUnread(InputEvent event){
 		log.info("User click on Unread acticles !");
@@ -112,7 +112,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	}
 	
 	@Command(navigations={
-			@Navigation(on="*",showPage="userScorePage")
+			@Navigation(on="*",showPage="userScorePage", keepMenuOpen=true)
 		})
 	String handleClickBalance(InputEvent event){
 		log.info("User click on Account balance !");
@@ -120,7 +120,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	}
 	
 	@Command(navigations={
-			@Navigation(on="*",showPage="userAccountPage")
+			@Navigation(on="*",showPage="userAccountPage",keepMenuOpen=true)
 		})
 	String handleClickCash(InputEvent event){
 		log.info("User click on cash icon !");
