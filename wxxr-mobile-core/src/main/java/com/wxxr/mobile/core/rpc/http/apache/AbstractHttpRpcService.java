@@ -208,17 +208,16 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			        
 			    });
 				ThreadSafeClientConnManager tcm = new ThreadSafeClientConnManager(params,registry){
-					private AtomicInteger connInUsing = new AtomicInteger(0);
 					@Override
 					public void releaseConnection(ManagedClientConnection conn,
 							long validDuration, TimeUnit timeUnit) {
 						try {
 							super.releaseConnection(conn, validDuration, timeUnit);
 							if(log.isDebugEnabled()){
-								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.connInUsing.decrementAndGet());
+								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.getConnectionsInPool());
 							}
 						}catch(RuntimeException e){
-							log.debug("caught runtime exception when release connection, message :"+e.getMessage());
+							log.error("caught runtime exception when release connection, connection in using :"+this.getConnectionsInPool()+", error message :"+e.getMessage());
 						}
 					}
 
@@ -236,7 +235,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 									throws InterruptedException, ConnectionPoolTimeoutException {
 								ManagedClientConnection conn = req.getConnection(timeout, tunit);
 								if(log.isDebugEnabled()){
-									log.debug("Acquired connection :"+conn+" , connection in using :"+connInUsing.incrementAndGet());
+									log.debug("Acquired connection :"+conn+" , connection in using :"+getConnectionsInPool());
 								}
 								return conn;
 							}
