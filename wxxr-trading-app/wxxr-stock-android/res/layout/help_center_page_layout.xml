@@ -11,30 +11,15 @@
 	    android:orientation="vertical"
 	    bind:field="acctRefreshView"
 	    bind:on_TopRefresh="handleTopRefresh" >
-	    <ScrollView
-	        android:id="@+id/scrollView1"
+		<ListView
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" 
-	        android:scrollbars="none"
-	        android:fadingEdge="none"
+	        android:layout_height="wrap_content"
+	        android:id="@id/lv_help_center_detail"
+	        bind:itemViewId="helpCenterItemView"
+		    bind:field="helpArticles"
+	        bind:on_ItemClick="goWebPageOnItemClick"
+	        style="@style/mListView"
 	        >
-	        <LinearLayout
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:orientation="vertical"
-	            android:scrollbars="none"
-	            android:fadingEdge="none" >
-				<com.wxxr.mobile.stock.client.widget.AutoHeightListView
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:id="@id/lv_help_center_detail"
-			        bind:itemViewId="helpCenterItemView"
-				    bind:field="helpArticles"
-			        bind:on_ItemClick="goWebPageOnItemClick"
-			        style="@style/mListView"
-			        >
-			    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>	            
-	        </LinearLayout>
-	    </ScrollView>
+	    </ListView>	            
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 </LinearLayout> 
