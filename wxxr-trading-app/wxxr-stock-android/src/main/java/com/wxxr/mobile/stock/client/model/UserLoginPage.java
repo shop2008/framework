@@ -26,10 +26,10 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
 	static Trace log = Trace.register(UserLoginPage.class);
-	@Field(valueKey = "text", binding = "${callback.userName}",attributes={@Attribute(name="focusable", value="${focusLost == false}")})
+	@Field(valueKey = "text", binding = "${callback.userName}")
 	String mobileNum;
 
-	@Field(valueKey = "text", binding = "${callback.password}", attributes={@Attribute(name="focusable", value="${focusLost == false}")})
+	@Field(valueKey = "text", binding = "${callback.password}")
 	String password;
 
 	@Field(valueKey = "text")
@@ -41,8 +41,7 @@ public abstract class UserLoginPage extends PageBase {
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
 
-	@Bean
-	boolean focusLost = false;
+	
 	/**
 	 * 处理登录
 	 * 
@@ -60,8 +59,8 @@ public abstract class UserLoginPage extends PageBase {
 	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 200)
 	String login(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			focusLost = !focusLost;
-			registerBean("focusLost", focusLost);
+			//focusLost = !focusLost;
+			//registerBean("focusLost", focusLost);
 			if (log.isDebugEnabled()) {
 				log.debug("login:mobileNum" + this.callback.getUserName());
 				log.debug("login:password" + this.callback.getPassword());
@@ -69,11 +68,6 @@ public abstract class UserLoginPage extends PageBase {
 			
 			//String mobileNum = this.callback.getUserName();
 			//String password = this.callback.getPassword();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			
 			usrService.login(this.callback.getUserName(),this.callback.getPassword());
 			hide();
@@ -82,11 +76,11 @@ public abstract class UserLoginPage extends PageBase {
 
 	}
 	
-	@OnShow
+	/*@OnShow
 	void initData() {
 		focusLost = false;
 		registerBean("focusLost", focusLost);
-	}
+	}*/
 	
 	/**
 	 * 处理后退

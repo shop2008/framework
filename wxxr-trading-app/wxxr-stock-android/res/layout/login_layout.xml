@@ -65,7 +65,7 @@
                 android:layout_toRightOf="@id/iv_phone"
                 android:background="@null"
                 bind:field="mobileNum"
-                bind:on_FocusChanged="_updateValue"
+                bind:on_TextChanged="_updateValue"
                 />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/hint_psw"
                 android:background="@null"
-                bind:on_FocusChanged="_updateValue"
+                bind:on_TextChanged="_updateValue"
                 />
 
             <TextView
