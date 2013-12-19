@@ -103,8 +103,10 @@ public class ArticleResourceTest extends TestCase{
 		query.setUid(0);
 		ArticleVOs a = articleResource.getNewArticle("16", 0, 3);
 		assertNotNull(a);
+		System.out.println(a);
 	}
 	public void testGetPullMessage()throws Exception{
 		PullMessageVOs a = articleResource.getPullMessage(0,4);
+		System.out.println(a);
 	}
 }

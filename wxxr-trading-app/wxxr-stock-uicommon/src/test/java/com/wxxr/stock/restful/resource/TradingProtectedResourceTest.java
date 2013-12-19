@@ -8,6 +8,11 @@ import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
+import com.wxxr.javax.ws.rs.Consumes;
+import com.wxxr.javax.ws.rs.GET;
+import com.wxxr.javax.ws.rs.Path;
+import com.wxxr.javax.ws.rs.Produces;
+import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -15,6 +20,7 @@ import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
+import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
@@ -236,6 +242,12 @@ public class TradingProtectedResourceTest extends TestCase {
 	public void testGetMorePersonalRecords() throws Exception {
 		GainVOs a = tradingProtectedResource.getMorePersonalRecords(0, 10,
 				true);
+		System.out.println(a);
+	}
+
+//	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Throwable;
+	public void testGetVoucherDetails() throws Throwable {
+		VoucherDetailsVO a = tradingProtectedResource.getVoucherDetails(1, 10);
 		System.out.println(a);
 	}
 }
