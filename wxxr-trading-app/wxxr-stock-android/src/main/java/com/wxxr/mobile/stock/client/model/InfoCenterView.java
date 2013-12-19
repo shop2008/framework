@@ -3,10 +3,8 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -42,7 +40,7 @@ public abstract class InfoCenterView extends ViewBase {
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis('risefallrate','desc',0,20)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis(orderBy,direction,0,20)}")
 	BindableListWrapper<StockTaxisBean> stockTaxis;
 	
 	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('000001','SH')}")
