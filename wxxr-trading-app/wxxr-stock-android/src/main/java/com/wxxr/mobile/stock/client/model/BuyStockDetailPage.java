@@ -137,10 +137,10 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding="${amountBean}")
 	String count;
 	
-	@Field(valueKey = "text", attributes={
+	@Field(valueKey = "enabled", attributes={
 			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}")
 			})
-	String buyBtn;
+	boolean buyBtn = true;
 	
 	@Field(valueKey = "visible")
 	boolean progress;

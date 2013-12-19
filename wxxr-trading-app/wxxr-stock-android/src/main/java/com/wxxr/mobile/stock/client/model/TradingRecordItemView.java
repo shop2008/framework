@@ -25,7 +25,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name = "TradingRecordItemView")
-@AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.deal_record_layout_item")
+@AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.trading_record_layout_item")
 public abstract class TradingRecordItemView extends ViewBase implements
 		IModelUpdater {
 	// 查股票名称
