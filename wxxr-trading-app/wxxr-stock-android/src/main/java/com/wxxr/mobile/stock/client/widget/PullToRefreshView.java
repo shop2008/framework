@@ -173,16 +173,13 @@ public class PullToRefreshView extends LinearLayout {
 
 	private boolean isback = false;
 	boolean isfootBack= false;
-	private Context mContext;
 	public PullToRefreshView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mContext = context;
 		init();
 	}
 
 	public PullToRefreshView(Context context) {
 		super(context);
-		mContext = context;
 		init();
 	}
 
@@ -469,7 +466,8 @@ public class PullToRefreshView extends LinearLayout {
 			}
 			mHeaderTextView.setText("下拉即可更新…");
 			mHeaderState = PULL_TO_REFRESH;
-			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_DOWN_REFRESH_DATE);
+			String name = getActiveViewName();
+			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_DOWN_REFRESH_DATE+"_"+name);
 			if (TextUtils.isEmpty(date)) {
 				mHeaderUpdateTextView.setText("最后更新：无更新记录");
 			} else {
@@ -503,7 +501,8 @@ public class PullToRefreshView extends LinearLayout {
 			}
 			mFooterTextView.setText("上拉即可加载…");
 			mFooterState = PULL_TO_REFRESH;
-			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_UP_REFRESH_DATE);
+			String name = getActiveViewName();
+			String date = SpUtil.getInstance(getContext()).find(Constants.KEY_UP_REFRESH_DATE+"_"+name);
 			if (TextUtils.isEmpty(date)) {
 				mFooterUpdateTextView.setText("最后加载：无更新记录");
 			} else {
@@ -591,6 +590,12 @@ public class PullToRefreshView extends LinearLayout {
 			tool.showNotification("最后更新：" + fmt.format(new Date()), null);
 		}
 	}
+
+	private String getActiveViewName() {
+		IWorkbench bench = AppUtils.getService(IWorkbenchManager.class).getWorkbench();
+		String name = bench.getActiveView().getName();
+		return name;
+	}
 	
 	/**
 	 * header view 完成更新后恢复初始状态
@@ -603,7 +608,8 @@ public class PullToRefreshView extends LinearLayout {
 		mHeaderProgressBar.setVisibility(View.GONE);
 		String date = Utils.getCurrentTime();
 		mHeaderUpdateTextView.setText("最后更新：" + date);
-		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
+		String name = getActiveViewName();
+		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE+"_"+name, date);
 		mHeaderState = PULL_TO_REFRESH;
 		if(success)
 			notifyToolBar();
@@ -620,7 +626,8 @@ public class PullToRefreshView extends LinearLayout {
 		mFooterProgressBar.setVisibility(View.GONE);
 		String date = Utils.getCurrentTime();
 		mFooterUpdateTextView.setText("最后加载：" + date);
-		SpUtil.getInstance(getContext()).save(Constants.KEY_UP_REFRESH_DATE, date);
+		String name = getActiveViewName();
+		SpUtil.getInstance(getContext()).save(Constants.KEY_UP_REFRESH_DATE+"_"+name, date);
 		mFooterState = PULL_TO_REFRESH;
 	}
 
