@@ -35,6 +35,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
@@ -364,6 +365,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			}
 		}
 		tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
+		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		v.hide();
 		return "";
 	}
 	
