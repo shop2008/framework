@@ -70,7 +70,6 @@
                         bind:field="stockTradingOrder"
                         bind:itemViewId="dropDownMenuItem"
                         bind:on_SpinnerItemSelected="dropDownMenuListItemClick" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -187,7 +186,7 @@
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         bind:field="isSellBuyBtn"
-                        bind:on_Click="sellStock" />
+                        bind:on_Click="sellStock@BuyStockClickedDecorator" />
                 </LinearLayout>
 
                 <com.wxxr.mobile.stock.client.widget.StockInputKeyboard

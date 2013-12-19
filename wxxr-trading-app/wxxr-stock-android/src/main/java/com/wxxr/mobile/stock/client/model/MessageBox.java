@@ -7,13 +7,13 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
@@ -28,8 +28,18 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @View(name="progressMonitor",alias="messageBox")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.message_box_layout")
 public abstract class MessageBox extends ViewBase implements IModelUpdater{
-	@Field(valueKey="text")
+	@Field(valueKey="text",visibleWhen="${isTitle}")
 	String title;
+	@Bean
+	boolean isTitle = true;
+	@Bean
+	boolean isController = false;
+	
+	@Field(valueKey="visible",visibleWhen="${isTitle}")
+	boolean hlines;
+	
+	@Field(valueKey="visible",visibleWhen="${isController}")
+	boolean controller;
 	
 	DataField<String> titleField;
 	
@@ -72,11 +82,14 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 	public void updateModel(Object data) {
 		if(data instanceof Map){
 			Map<String, Object> map = (Map<String, Object>)data;
-			
 			Object val = map.get(IDialog.DIALOG_ATTRIBUTE_TITLE);
 			if(val instanceof String){
 				this.titleField.setValue((String)val);
+				this.isTitle = true;
+			}else{
+				this.isTitle = false;
 			}
+			registerBean("isTitle", this.isTitle);
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MESSAGE);
 			if(val instanceof String){
 				this.messageField.setValue((String)val);
@@ -96,8 +109,10 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 				this.left = (UICommand)val;
 			}else if(val instanceof String){
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
+				this.isController = true;
 			}else{
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, false);
+				this.isController = false;
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof UICommand){
@@ -112,9 +127,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 				this.right = (UICommand)val;
 			}else if(val instanceof String){
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
+				this.isController = true;
 			}else{
+				this.isController = false;
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, false);
 			}
+			registerBean("isController", this.isController);
 		}
 		
 	}

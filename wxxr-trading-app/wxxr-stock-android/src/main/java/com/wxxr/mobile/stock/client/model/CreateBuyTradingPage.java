@@ -351,9 +351,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	//挑战交易-提交
 	@Command(commandName="submitDataClick",navigations = { 
-			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误")})				
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
 	@NetworkConstraint
@@ -387,13 +386,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 				assetType= "VOUCHER"; //积分
 				break;
 			}
-			if(money>0 && _rate>0 && _depositRate>0 && assetType!=null){
-				userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
-				getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-			}else{
-				log.info("creataBuyTradePage Tiao Zhan submitDataClick: money= " +money+ " _rate= " +_rate + "_depositRate = " +_depositRate);
-				return "";
-			}
+			userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
+			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -401,9 +395,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	//参赛交易-提交
 		@Command(commandName="submitDataClick1",navigations = { 
-				@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-						@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-						@Parameter(name = "title", value = "错误")})				
+				@Navigation(on = "StockAppBizException", message = "%m", params = {
+						@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 				}
 		)
 		@NetworkConstraint

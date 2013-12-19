@@ -167,7 +167,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             bind:field="submitBtnStatus"
-            bind:on_Click="submitDataClick"
+            bind:on_Click="submitDataClick@BuyStockClickedDecorator"
             android:background="@drawable/red_button_style"
             />
     </LinearLayout>

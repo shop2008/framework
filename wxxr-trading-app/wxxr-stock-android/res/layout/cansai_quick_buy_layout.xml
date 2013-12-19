@@ -55,7 +55,7 @@
         android:background="@drawable/blue_button_style"
         android:layout_marginTop="8dp"
         bind:field="cansaiButton"
-        bind:on_Click="CanSaiBuyStockClick"
+        bind:on_Click="CanSaiBuyStockClick@BuyStockClickedDecorator"
         />
 	<LinearLayout
         android:layout_width="match_parent"

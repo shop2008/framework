@@ -225,9 +225,8 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	 * @throws StockAppBizException
 	 */
 	@Command(commandName="sellStock",navigations = { 
-			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误")})				
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
 	String sellStock(InputEvent event){

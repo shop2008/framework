@@ -97,7 +97,7 @@
         android:textSize="15sp"
         android:background="@drawable/red_button_style"
         bind:field="tiaozhanButton"
-        bind:on_Click="TiaoZhanBuyStockClick"
+        bind:on_Click="TiaoZhanBuyStockClick@BuyStockClickedDecorator"
         />
  	<TextView
         android:id="@+id/textView3"

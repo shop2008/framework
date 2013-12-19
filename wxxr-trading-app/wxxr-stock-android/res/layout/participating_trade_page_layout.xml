@@ -57,7 +57,7 @@
         android:background="@drawable/blue_button_style"
         android:layout_marginTop="8dp"
         bind:field="submitBtnStatus1"
-        bind:on_Click="submitDataClick1" />
+        bind:on_Click="submitDataClick1@BuyStockClickedDecorator" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

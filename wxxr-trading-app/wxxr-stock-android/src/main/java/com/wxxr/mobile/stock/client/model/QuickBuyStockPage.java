@@ -375,9 +375,8 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	/**参赛交易盘买人--模拟盘*/
 	@Command(commandName="CanSaiBuyStockClick",navigations = { 
 			@Navigation(on="home",showView="tradingMain"),
-			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误")})				
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
 	String CanSaiBuyStockClick(InputEvent event){
@@ -406,9 +405,8 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	
 	@Command(commandName="TiaoZhanBuyStockClick",navigations = { 
 			@Navigation(on="home",showView="tradingMain"),
-			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误")})				
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
 	String TiaoZhanBuyStockClick(InputEvent event){
