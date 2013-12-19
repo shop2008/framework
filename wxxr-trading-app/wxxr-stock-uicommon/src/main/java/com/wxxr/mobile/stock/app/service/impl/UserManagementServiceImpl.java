@@ -243,8 +243,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 //			
 		}
 		Dictionary<String, String> d = mgr.getPreference(getModuleName());
-		String userName = d.get(KEY_USERNAME);
-		String passwd = d.get(KEY_PASSWORD);
+		String userName = null;
+        String passwd = null;
+		if (d!=null) {
+		   userName = d.get(KEY_USERNAME);
+		   passwd = d.get(KEY_PASSWORD);
+        }
 		return new UsernamePasswordCredential(userName, passwd);
 	}
 
