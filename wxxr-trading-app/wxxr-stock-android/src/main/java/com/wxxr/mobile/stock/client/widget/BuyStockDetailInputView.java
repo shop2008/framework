@@ -128,7 +128,6 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 				maxCountStock = ((int) (fund / (price * 100)) * 100);
 				countEditText.setHint("输入最大可买股数: " + maxCountStock + "股");
 			}
-			countEditText.setText("");
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
