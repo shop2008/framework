@@ -25,7 +25,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
-@View(name="OperationDetails", withToolbar=true, description="模拟盘")
+@View(name="OperationDetails", withToolbar=true, description="操作详情")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.operation_details_page_layout")
 public abstract class OpetationDetailsPage extends PageBase implements IModelUpdater{
 	static Trace log = Trace.getLogger(OpetationDetailsPage.class);

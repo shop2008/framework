@@ -36,7 +36,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 
-@View(name="DealRecordView", description="模拟盘",provideSelection=true)
+@View(name="DealRecordView", description="操作详情",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.deal_record_layout")
 public abstract class DealRecordView extends ViewBase implements IModelUpdater,ISelectionChangedListener{
 

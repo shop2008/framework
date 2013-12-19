@@ -191,9 +191,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@OnShow
 	void initData(){
 		if(this.virtual){
-			getAppToolbar().setTitle("模拟盘", null);
+			getAppToolbar().setTitle("参赛交易盘", null);
 		}else{
-			getAppToolbar().setTitle("实盘", null);
+			getAppToolbar().setTitle("挑战交易盘", null);
 		}
 	}
 	
