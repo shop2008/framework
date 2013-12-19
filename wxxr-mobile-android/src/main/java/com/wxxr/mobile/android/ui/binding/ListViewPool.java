@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.ItemViewSelector;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IBindingDescriptor;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -26,6 +27,8 @@ import com.wxxr.mobile.core.util.LRUList;
  *
  */
 public class ListViewPool {
+	private static final Trace log = Trace.getLogger(ListViewPool.class);
+	
 	private Map<String, LRUList<View>> viewPool = new HashMap<String, LRUList<View>>();
 	private final IAndroidBindingContext bindingCtx;
 	private final ItemViewSelector viewSelector;
@@ -107,9 +110,15 @@ public class ListViewPool {
 		BindingBag bag = null;
 		if(convertView == null){
 			view = createUI(viewId);
+			if(log.isDebugEnabled()){
+				log.debug("Created list item view :"+viewId+", position :"+position+", view hash :"+System.identityHashCode(view));
+			}
 			bag = (BindingBag)view.getTag();
 		}else{
 			view = convertView;
+			if(log.isDebugEnabled()){
+				log.debug("Reuse scraped list item view :"+viewId+", position :"+position+", view hash :"+System.identityHashCode(view));
+			}
 			bag = (BindingBag)view.getTag();
 			if((bag.view == null)||(! bag.view.getName().equals(viewId))){
 				poolView(view);
