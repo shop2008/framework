@@ -54,7 +54,7 @@ import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
-import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
+import com.wxxr.mobile.stock.client.widget.RefreshableLayout;
 import com.wxxr.mobile.stock.client.widget.SellFiveDayMinuteLine;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 import com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup;
@@ -70,7 +70,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class,PageSwiperView.class, new PageSwiperViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, KLineView.class, new KlineFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, TextSpinnerView.class, new TextSpinnerViewFieldBinder());
-		mgr.registerFieldBinder(UIComponent.class, PullToRefreshView.class, new RefreshViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, RefreshableLayout.class, new RefreshViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, PullToRefreshListView.class, new RefreshListViewAdapterBinder());
 		mgr.registerFieldBinder(UIComponent.class, MinuteLineView.class, new MinuteLineViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, SellFiveDayMinuteLine.class, new SellFiveDayMinuteLineViewFieldBinder());

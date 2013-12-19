@@ -17,8 +17,9 @@ import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshViewListener;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
-import com.wxxr.mobile.stock.client.widget.PullToRefreshView.OnFooterRefreshListener;
-import com.wxxr.mobile.stock.client.widget.PullToRefreshView.OnHeaderRefreshListener;
+import com.wxxr.mobile.stock.client.widget.RefreshableLayout;
+import com.wxxr.mobile.stock.client.widget.RefreshableLayout.OnFooterRefreshListener;
+import com.wxxr.mobile.stock.client.widget.RefreshableLayout.OnHeaderRefreshListener;
 
 /**
  * @author neillin
@@ -30,7 +31,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 	private OnHeaderRefreshListener headerListener = new OnHeaderRefreshListener() {
 		
 		@Override
-		public void onHeaderRefresh(PullToRefreshView view) {
+		public void onHeaderRefresh(RefreshableLayout view) {
 			
 			IUIComponent field = getField();
 			if(field != null){
@@ -62,7 +63,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 	private OnFooterRefreshListener footerListener = new OnFooterRefreshListener() {
 		
 		@Override
-		public void onFooterRefresh(PullToRefreshView view) {
+		public void onFooterRefresh(RefreshableLayout view) {
 			
 			IUIComponent field = getField();
 			if(field != null){
