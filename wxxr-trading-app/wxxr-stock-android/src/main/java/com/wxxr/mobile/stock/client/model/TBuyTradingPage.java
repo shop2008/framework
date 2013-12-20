@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -24,9 +25,12 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -47,6 +51,25 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	
 	@Bean
 	boolean isVirtual = true; //true模拟盘，false实盘
+	//消息推送
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+	
+	@Bean(type = BindingType.Pojo, express = "${usrService.getUnreadRemindMessages()}")
+	BindableListWrapper<RemindMessageBean> unReadMessages;
+	
+	@Field(valueKey = "text", visibleWhen="${isShow&&unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0}", 
+			binding = "${unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0?unReadMessages.data.get(0).createdDate:''}${unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0&&unReadMessages.data.get(0).createdDate != null?',':''}${unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0?unReadMessages.data.get(0).title:''}${unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0&&unReadMessages.data.get(0).title != null?',':''}${unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0?unReadMessages.data.get(0).content:''}")
+	String message;
+	
+	@Field(valueKey = "text", visibleWhen="${isShow&&unReadMessages!=null&&unReadMessages.data!=null&&unReadMessages.data.size()>0}")
+	String messageLayout;
+	
+	@Field(valueKey = "text")
+	String closeBtn;
+	
+	@Bean
+	boolean isShow = false;
 	
 	@Bean
 	String acctId;
@@ -151,6 +174,19 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 	 * @param event
 	 * @return
 	 */
+	@Command
+	String handleCloseBtnClick(InputEvent event) {
+		isShow = false;
+		registerBean("isShow", isShow);
+		return "";
+	}
+	
+	/**
+	 * 交易详情点击
+	 * 
+	 * @param event
+	 * @return
+	 */
 	@Command(description = "Invoke when a toolbar item was clicked", 
 			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
@@ -168,8 +204,15 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater 
 		} else {
 			getPageToolbar().setTitle("挑战交易盘", null);
 		}
+		isShow = false;
+		registerBean("isShow", isShow);
 	}
 
+	@OnHide
+	void hideView() {
+		isShow = false;
+		registerBean("isShow", isShow);
+	}
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
