@@ -12,5 +12,5 @@ import com.wxxr.mobile.core.ui.api.IAppToolbar;
  *
  */
 public interface IStockAppToolbar extends IAppToolbar {
-	void showNotification(String message,Map<String, String> parameters);
+	void showNotification(String message, String status, Map<String, String> parameters);
 }
