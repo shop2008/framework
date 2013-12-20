@@ -4,9 +4,6 @@
 package com.wxxr.mobile.stock.client.module;
 
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
@@ -23,11 +20,11 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
-import com.wxxr.mobile.stock.client.binding.FocusViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
@@ -46,7 +43,6 @@ import com.wxxr.mobile.stock.client.binding.ViewPagerIndexGroupFieldBinder;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
-import com.wxxr.mobile.stock.client.widget.FocusAttributeKeys;
 import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineView;
@@ -79,7 +75,6 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, Spinner.class, new SpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
-		mgr.registerFieldBinder(UIComponent.class, View.class, new FocusViewFieldBinder());
 	}
 
 	@Override
@@ -102,7 +97,6 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());
-		FocusAttributeKeys.registerKeys(mgr);
 	}
 
 	@Override
@@ -118,6 +112,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	protected void initBindingDecorators(IBindingDecoratorRegistry registry) {
 		registry.registerDecorator("StockRefreshClickedDecorator", StockRefreshClickedDecorator.class);
 		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
+		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
 	}
 
 }

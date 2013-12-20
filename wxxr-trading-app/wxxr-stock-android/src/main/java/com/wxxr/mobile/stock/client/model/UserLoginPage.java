@@ -13,18 +13,20 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name = "userLoginPage")
+@View(name = "userLoginPage" ,withToolbar=true, description="登录")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
 public abstract class UserLoginPage extends PageBase {
 	static Trace log = Trace.register(UserLoginPage.class);
@@ -43,6 +45,20 @@ public abstract class UserLoginPage extends PageBase {
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
 
+	
+	@Menu(items={"left"})
+	private IMenu toolbar;
+	
+	@Command(
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		hide();
+		return null;
+	}
+	
 	/**
 	 * 处理登录
 	 * 
