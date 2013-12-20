@@ -172,6 +172,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 	
 	@Override
 	public void onEvent(IBroadcastEvent event) {
+		if(tradingService != null)
+			tradingService.getTradingAccountInfo(acctId);
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 
