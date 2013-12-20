@@ -15,6 +15,7 @@
         bind:itemViewId="actualScoreItemView"
         bind:on_ItemClick="itemClicked"
         bind:field="actualScores"
+        android:scrollbars="none"
         bind:on_BottomRefresh="refreshBottomData"
         bind:on_TopRefresh="refreshTopData"
         />

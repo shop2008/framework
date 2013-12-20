@@ -14,6 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:gravity="center"
+        android:layout_marginLeft="5dp"
         >
         <TextView 
             android:id="@+id/tv_integral_category"
@@ -39,8 +40,8 @@
         android:id="@+id/tv_integral_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+260"
         android:textSize="18sp"
+        android:layout_marginRight="5dp"
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
