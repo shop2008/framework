@@ -542,15 +542,19 @@ public abstract class RefreshableLayout extends LinearLayout {
 		invalidate();
 	}
 
-	void notifyToolBar() {
+	void notifyToolBar(boolean success) {
 		final SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 		IWorkbench bench = AppUtils.getService(IWorkbenchManager.class).getWorkbench();
 		String id = bench.getActivePageId();
 		IPage page = bench.getPage(id);
 		IStockAppToolbar tool = ((IStockAppToolbar) page.getPageToolbar());
+		String status = "交易数据更新成功";
+		if(!success) {
+			status = "交易数据更新失败";
+		}
 		if (tool != null) {
-			tool.showNotification("最后更新：" + fmt.format(new Date()), null);
+			tool.showNotification("最后更新：" + fmt.format(new Date()), status, null);
 		}
 	}
 	
@@ -567,8 +571,7 @@ public abstract class RefreshableLayout extends LinearLayout {
 		mHeaderUpdateTextView.setText("最后更新：" + date);
 		SpUtil.getInstance(getContext()).save(Constants.KEY_DOWN_REFRESH_DATE, date);
 		mHeaderState = PULL_TO_REFRESH;
-		if(success)
-			notifyToolBar();
+		notifyToolBar(success);
 	}
 
 	/**

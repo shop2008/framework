@@ -191,7 +191,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 		IPage page = bench.getPage(id);
 		IStockAppToolbar tool = ((IStockAppToolbar) page.getPageToolbar());
 		if (tool != null) {
-			tool.showNotification("最后更新:" + fmt.format(new Date()), null);
+			tool.showNotification("最后更新:" + fmt.format(new Date()), "交易数据更新成功", null);
 		}
 	}
 

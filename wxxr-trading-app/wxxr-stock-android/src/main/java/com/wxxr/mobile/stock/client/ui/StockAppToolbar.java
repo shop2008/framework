@@ -20,12 +20,16 @@ import com.wxxr.mobile.stock.app.IStockAppToolbar;
 public abstract class StockAppToolbar extends AbstractToolbarView implements IStockAppToolbar {
 	public static final String MESSAGE_FIELD_NAME = "message";
 	public static final String TITLE_FIELD_NAME = "title";
+	public static final String STATUS_FIELD_NAME = "status";
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.client.IStockAppToolbar#showNotification(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public void showNotification(String message, Map<String, String> parameters) {
+	public void showNotification(String message, String status, Map<String, String> parameters) {
+		IDataField<String> statusfield = getField(STATUS_FIELD_NAME);
+		if(statusfield != null)
+			statusfield.setValue(status);
 		IDataField<String> field = getField(MESSAGE_FIELD_NAME);
 		if(field != null){
 			field.setValue(message);

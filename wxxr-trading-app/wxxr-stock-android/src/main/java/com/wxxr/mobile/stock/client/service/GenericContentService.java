@@ -3,11 +3,11 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 
 import com.wxxr.mobile.android.app.AppUtils;
-import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
@@ -66,4 +66,28 @@ public class GenericContentService extends AbstractModule<IStockAppContext> impl
 		navigator.startActivity(intent);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.client.service.IGenericContentService#showEmailUI(java.lang.String)
+	 */
+	@Override
+	public void showEmailUI(String email) {
+		Uri uri = Uri.parse("mailto:"+email); 
+		Intent intent = new Intent(Intent.ACTION_SENDTO, uri); 
+		IAndroidPageNavigator navigator = (IAndroidPageNavigator)AppUtils.getService(IWorkbenchManager.class).getPageNavigator();
+		navigator.startActivity(intent);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.client.service.IGenericContentService#showMarket(java.lang.String)
+	 */
+	@Override
+	public void showMarket(String packageName) {
+		Uri uri = Uri.parse("market://search?q=pname:"+packageName);          
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);          
+		IAndroidPageNavigator navigator = (IAndroidPageNavigator)AppUtils.getService(IWorkbenchManager.class).getPageNavigator();
+		try {
+			navigator.startActivity(intent);
+		} catch(ActivityNotFoundException e) {
+		}
+	}
 }

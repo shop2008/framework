@@ -1,6 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -19,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
 @View(name="appSetPage", withToolbar=true, description="设置")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
@@ -97,8 +99,7 @@ public abstract class AppSetPage extends PageBase {
 	@Command(commandName = "playScore", description = "Back To Last UI")
 	String playScore(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//TODO 新手指引
-			
+			AppUtils.getService(IGenericContentService.class).showMarket(AppUtils.getFramework().getAndroidApplication().getPackageName());			
 		}
 		return null;
 	}
