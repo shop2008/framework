@@ -46,6 +46,7 @@ import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
+import com.wxxr.mobile.stock.client.service.GenericContentService;
 
 /**
  * @author neillin
@@ -127,6 +128,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new ValidationMessageInterpolator<IStockAppContext>());
 	    registerKernelModule(new TadingCalendarServiceImpl());
 	    registerKernelModule(new DBServiceImpl());
+	    registerKernelModule(new GenericContentService());
 
 	}
 	/* (non-Javadoc)
