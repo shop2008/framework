@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -12,12 +14,12 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserLoginCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -41,7 +43,6 @@ public abstract class UserLoginPage extends PageBase {
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
 
-	
 	/**
 	 * 处理登录
 	 * 
@@ -53,34 +54,18 @@ public abstract class UserLoginPage extends PageBase {
 			@Parameter(name = "title", value = "resourceId:message/login_failed_title")
 			
 	}) }
-
 	)
 	@NetworkConstraint
 	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 200)
 	String login(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//focusLost = !focusLost;
-			//registerBean("focusLost", focusLost);
-			if (log.isDebugEnabled()) {
-				log.debug("login:mobileNum" + this.callback.getUserName());
-				log.debug("login:password" + this.callback.getPassword());
-			}
-			
-			//String mobileNum = this.callback.getUserName();
-			//String password = this.callback.getPassword();
-			
+			SystemClock.sleep(500);
 			usrService.login(this.callback.getUserName(),this.callback.getPassword());
 			hide();
 		}
 		return null;
 
 	}
-	
-	/*@OnShow
-	void initData() {
-		focusLost = false;
-		registerBean("focusLost", focusLost);
-	}*/
 	
 	/**
 	 * 处理后退
