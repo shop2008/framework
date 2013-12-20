@@ -11,13 +11,16 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -37,7 +40,7 @@ import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
  * 提现金界面
  * @author renwenjie
  */
-@View(name="userWithDrawCashPage")
+@View(name="userWithDrawCashPage", withToolbar=true, description="提现金")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.withdraw_cath_page_layout")
 public abstract class UserWithDrawCashPage extends PageBase{
 
@@ -117,17 +120,13 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	
 	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:''}", converter="s2sConvertor")
 	String accountName;
-	/**
-	 * 返回到上一个界面
-	 * @param event
-	 * @return
-	 */
-	@Command
-	String back(InputEvent event) {
-		
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
+	
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
 		return null;
 	}
 

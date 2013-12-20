@@ -11,19 +11,22 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UseSwitchCardCallBack;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name = "userSwitchCardPage")
+@View(name = "userSwitchCardPage",withToolbar=true, description="更换银行卡")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.switch_bank_card_layout")
 public abstract class UserSwitchCardPage extends PageBase implements
 		IModelUpdater {
@@ -46,6 +49,15 @@ public abstract class UserSwitchCardPage extends PageBase implements
 	@Bean
 	UseSwitchCardCallBack callBack = new UseSwitchCardCallBack();
 
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
+		return null;
+	}
+	
 	/**
 	 * 标题栏-"返回"按钮事件处理
 	 * 
