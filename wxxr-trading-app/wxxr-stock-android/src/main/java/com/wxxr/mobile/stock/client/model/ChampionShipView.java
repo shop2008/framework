@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -25,13 +26,14 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * @author neillin
  * 
  */
-@View(name = "championShip", description = "大赛排行榜")
+@View(name = "championShip", description = "大赛排行榜", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.champion_ship_page_layout")
 public abstract class ChampionShipView extends ViewBase {
 	private static final Trace log = Trace.register(ChampionShipView.class);
@@ -197,7 +199,10 @@ public abstract class ChampionShipView extends ViewBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "TBuyTradingPage") })
+	@Command(navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails", 
+					params = { @Parameter(name = "add2BackStack", value = "false") }),
+			@Navigation(on = "sellTradingAccount", showPage = "sellTradingAccount") })
 	CommandResult handleChampionShipT1ItemClick(InputEvent event) {
 		CommandResult result = new CommandResult();
 
@@ -212,10 +217,17 @@ public abstract class ChampionShipView extends ViewBase {
 				map.put(Constants.KEY_ACCOUNT_ID_FLAG, acctId);
 				map.put(Constants.KEY_VIRTUAL_FLAG, true);
 				map.put(Constants.KEY_SELF_FLAG, false);
-				result.setPayload(map);
+				String over = championShip.get(position).getOver();
+				if("CLOSED".equals(over)){
+					result.setPayload(map);
+					result.setResult("operationDetails");
+					updateSelection(new AccidSelection(acctId, true));
+				} else if("UNCLOSE".equals(over)){
+					result.setResult("sellTradingAccount");
+					result.setPayload(map);
+				}
 			}
 		}
-		result.setResult("");
 		return result;
 	}
 
