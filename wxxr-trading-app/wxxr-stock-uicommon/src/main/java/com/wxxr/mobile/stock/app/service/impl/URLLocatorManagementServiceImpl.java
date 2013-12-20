@@ -126,7 +126,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		try {
 		    byte[] localData = toBytes(remoteConfig);
 		    String digest =  null;
-		    if (localData==null) {
+		    if (localData!=null) {
 		       digest = Base64.encodeToString(localData, Base64.NO_WRAP);
             }
 			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class,getUrlCheckServerURL()).getURLSettings(digest);
