@@ -5,9 +5,11 @@ package com.wxxr.mobile.stock.app.service.impl;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
@@ -15,6 +17,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import android.util.Base64;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
@@ -120,7 +124,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	}
 	private void loadRemoteSettings() {
 		try {
-			String digest = null;
+			String digest = Base64.encodeToString(toBytes(remoteConfig), Base64.NO_WRAP);
 			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class,getUrlCheckServerURL()).getURLSettings(digest);
 			if (data==null||(remoteConfig = fromBytes(data))==null) {
 				return;
@@ -173,6 +177,30 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		}
 
 	}
+	private byte[] toBytes(Map<String,String> data) throws Exception {
+       if (data == null) {
+           return null;
+       }
+       ByteArrayOutputStream bos = new ByteArrayOutputStream();
+       ObjectOutputStream oos = null;
+       try {
+           oos = new ObjectOutputStream(bos);
+           oos.writeObject(data);
+           return bos.toByteArray();
+       } catch (Exception e) {
+           log.warn("Error when data info from bytes", e);
+           throw e;
+       } finally {
+           try {
+               if (oos != null) {
+                   oos.close();
+               }
+               bos.close();
+           } catch (IOException e) {
+           }
+       }
+
+   }
 	public String getURL(String name) {
 		if (StringUtils.isBlank(name)) {
 			throw new IllegalArgumentException("The attribute name is null!!!");
