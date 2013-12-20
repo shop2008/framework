@@ -188,6 +188,9 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 	@Override
 	public <T extends ISelection> List<T> getSelections(Class<T> clazz) {
 		ArrayList<T> result = new ArrayList<T>();
+		if(this.map.size() == 0){
+			return null;
+		}
 		for (String key : this.map.getMRUKeys(this.maxSize)) {
 			Object val = this.map.peek(key);
 			if(clazz.isAssignableFrom(val.getClass())){
