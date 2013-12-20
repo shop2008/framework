@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -52,10 +54,11 @@ public abstract class UserFindPswPage extends PageBase {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") }) })
 	@NetworkConstraint
-	@ExeGuard(title = "重置密码", message = "正在处理，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "重置密码", message = "正在处理，请稍候...", silentPeriod = 200)
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			SystemClock.sleep(500);
 			if (userService != null) {
 				userService.resetPassword(callBack.getPhoneNum());
 			}

@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.Map;
 
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -70,8 +71,9 @@ public abstract class UserSwitchCardPage extends PageBase implements
 	@Command(commandName = "commit", navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误")}) })
-	@ExeGuard(title = "更换银行卡", message = "正在处理，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "更换银行卡", message = "正在处理，请稍候...", silentPeriod = 200)
 	String commit(InputEvent event) {
+		SystemClock.sleep(500);
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (usrService != null)
 				usrService.switchBankCard(callBack.getBankName(),

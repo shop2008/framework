@@ -7,7 +7,6 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -82,54 +81,6 @@ public abstract class UserLoginPage extends PageBase {
 		return null;
 
 	}
-	
-	/**
-	 * 处理后退
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back")
-	String back(InputEvent event) {
-
-		// if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-		// //处理后退事件
-		// getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		// }
-		// this.callback.done(true);
-		hide();
-		return null;
-	}
-
-	// /**
-	// * 手机号码编辑框
-	// *
-	// * @param event
-	// * @return
-	// */
-	// @Command(commandName="mnTextChanged")
-	// String mnTextChanged(InputEvent event) {
-	// if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-	// String mobileNum = (String) event.getProperty("changedText");
-	// mobileNumField.setValue(mobileNum);
-	// }
-	// return null;
-	// }
-	//
-	//
-	// /**
-	// * 密码编辑框
-	// * @param event
-	// * @return
-	// */
-	// @Command(commandName="pswTextChanged")
-	// String pswTextChanged(InputEvent event) {
-	// if (event.getEventType().equals(InputEvent.EVENT_TYPE_TEXT_CHANGED)) {
-	// String password = (String) event.getProperty("changedText");
-	// passwordField.setValue(password);
-	// }
-	// return null;
-	// }
 
 	/**
 	 * 找回密码
@@ -139,7 +90,6 @@ public abstract class UserLoginPage extends PageBase {
 	 */
 	@Command(commandName = "findPasswordBack", navigations = { @Navigation(on = "OK", showPage = "userFindPswPage", closeCurrentView = true) })
 	String findPasswordBack(InputEvent event) {
-		// this.callback.done(true);
 		return "OK";
 	}
 
@@ -152,7 +102,6 @@ public abstract class UserLoginPage extends PageBase {
 
 	@Command(commandName = "quickRegister", navigations = { @Navigation(on = "OK", showPage = "userRegPage", closeCurrentView = true) })
 	String quickRegister(InputEvent event) {
-		// this.callback.done(true);
 		return "OK";
 	}
 

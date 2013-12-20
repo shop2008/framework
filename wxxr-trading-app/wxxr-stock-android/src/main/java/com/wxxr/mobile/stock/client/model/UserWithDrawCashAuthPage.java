@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -72,9 +74,10 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	@Command(commandName = "cashAuth", description = "Back To Last UI", navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") }) })
-	@ExeGuard(title = "提现认证", message = "正在处理，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "提现认证", message = "正在处理，请稍候...", silentPeriod = 200)
 	String cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			SystemClock.sleep(500);
 			if (userService != null) {
 				userService.withDrawCashAuth(
 						callBack.getAccountName(),

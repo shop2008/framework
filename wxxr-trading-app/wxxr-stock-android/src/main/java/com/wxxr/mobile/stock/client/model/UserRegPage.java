@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -72,15 +74,12 @@ public abstract class UserRegPage extends PageBase {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "提示") }) })
 	@NetworkConstraint
-	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 200)
 	String sendMsg(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			//将密码发送到手机
-			if (log.isDebugEnabled()) {
-				log.debug("register:Send Message To Mobile");
-			}
-			
+			SystemClock.sleep(500);
 			if (usrService != null) {
 				usrService.register(this.callback.getUserName());
 			}

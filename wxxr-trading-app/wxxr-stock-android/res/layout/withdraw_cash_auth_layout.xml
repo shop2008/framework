@@ -50,7 +50,7 @@
             android:singleLine="true"
             android:textSize="15sp" 
             bind:field="accountName"
-            bind:on_TextChanged="_updateValue"
+            bind:on_FocusChanged="_updateValue"
             />
 
         <include 
@@ -67,7 +67,7 @@
             android:singleLine="true"
             android:textSize="15sp" 
             bind:field="bankName"
-            bind:on_TextChanged="_updateValue"
+            bind:on_FocusChanged="_updateValue"
             />
 
         <include 
@@ -84,7 +84,7 @@
             android:textSize="15sp" 
             android:singleLine="true"
             bind:field="bankAddr"
-            bind:on_TextChanged="_updateValue"
+            bind:on_FocusChanged="_updateValue"
             />
 
         <include 
@@ -101,7 +101,7 @@
             android:inputType="number"
             android:textSize="15sp" 
             bind:field="bankNum"
-            bind:on_TextChanged="_updateValue"
+            bind:on_FocusChanged="_updateValue"
             />
     </LinearLayout>
 
@@ -124,7 +124,7 @@
             android:textColor="@color/white"
             android:textSize="15sp" 
             bind:field="*"
-            bind:on_Click="cashAuth"
+            bind:on_Click="cashAuth@EditablePageBtnClickedDecorator"
             />
     </LinearLayout>
 

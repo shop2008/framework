@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
 
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
@@ -141,11 +143,12 @@ public abstract class UserWithDrawCashPage extends PageBase{
 							) 
 					}
 			)
-	@ExeGuard(title = "提取现金", message = "正在处理，请稍候...", silentPeriod = 1)
+	@ExeGuard(title = "提取现金", message = "正在处理，请稍候...", silentPeriod = 200)
 	String commit(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 		
+			SystemClock.sleep(500);
 			if (tradingService != null) {
 				
 				if (!StringUtils.isBlank(callBack.getApplyAmount())) {

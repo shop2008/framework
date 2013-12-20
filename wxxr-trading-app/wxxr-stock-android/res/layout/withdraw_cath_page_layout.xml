@@ -72,7 +72,7 @@
             android:textSize="15sp"
             android:inputType="number"
             bind:field="availCashAmountET"
-            bind:on_TextChanged="_updateValue" />
+            bind:on_FocusChanged="_updateValue" />
     </LinearLayout>
 
     <LinearLayout
@@ -243,7 +243,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             bind:field="commitBtn"
-            bind:on_Click="commit" />
+            bind:on_Click="commit@EditablePageBtnClickedDecorator" />
     </LinearLayout>
 
     <LinearLayout
