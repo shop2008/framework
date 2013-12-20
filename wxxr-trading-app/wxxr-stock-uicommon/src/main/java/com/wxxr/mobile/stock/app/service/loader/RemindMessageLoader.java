@@ -10,10 +10,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.event.api.IEventRouter;
+import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
+import com.wxxr.mobile.stock.app.event.MessageReceivedEvent;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
@@ -25,7 +29,7 @@ import com.wxxr.stock.restful.resource.IMessageRemindResource;
  *
  */
 public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMessageBean, MessageVO> {
-
+    private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader");
 	private static String COMMAND_NAME="GetRemindMessageCommand";
 
 	private static class GetRemindMessageCommand implements ICommand<List<MessageVO>>{
@@ -79,7 +83,9 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 				updated=true;
 			}
 		}
+		
 		if(result!=null && !result.isEmpty()){
+		   List<RemindMessageBean> list  = new ArrayList<RemindMessageBean>();
 			for (MessageVO vo : result) {
 					RemindMessageBean bean=cache.getEntity(vo.getId());
 					if(bean==null){
@@ -95,7 +101,15 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 					bean.setType(bean.getType());
 					insertOrUpdateDB(bean);
 					updated = true;
+					list.add(bean);
 			}
+			if (list.size()>0) {
+			   if (log.isDebugEnabled()) {
+                  log.debug(String.format("%d messages received.", list.size()));
+               }
+               MessageReceivedEvent event = new MessageReceivedEvent(list.toArray(new RemindMessageBean[list.size()]));
+               KUtils.getService(IEventRouter.class).routeEvent(event);
+            }
 		}
 		return updated;
 	}
