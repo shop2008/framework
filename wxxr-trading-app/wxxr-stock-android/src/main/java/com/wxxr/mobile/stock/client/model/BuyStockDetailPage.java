@@ -402,6 +402,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@OnUIDestroy
 	void destroyData() {
+		isMarket = false;
 		hasShow = false;
 		marketBean = null;
 		codeBean = null;
