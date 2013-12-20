@@ -26,10 +26,8 @@ public class FocusViewFieldBinding extends BasicFieldBinding {
 			if (val == true) {
 				view.setFocusable(true);
 				view.setFocusableInTouchMode(true);
-			} else {
-				view.clearFocus();
-				view.setFocusableInTouchMode(true);
-			}
+				view.requestFocus();
+			} 
 		}
 		super.updateUI(recursive);
 	}
