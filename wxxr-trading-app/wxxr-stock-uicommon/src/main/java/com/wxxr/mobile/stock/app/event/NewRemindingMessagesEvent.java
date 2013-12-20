@@ -19,9 +19,9 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
  * @version $Revision$
  * @created time 2013-12-20  下午3:01:30
  */
-public class MessageReceivedEvent extends GenericEventObject {
+public class NewRemindingMessagesEvent extends GenericEventObject {
    
-   public MessageReceivedEvent(RemindMessageBean[] messages) {     
+   public NewRemindingMessagesEvent(RemindMessageBean[] messages) {     
       super();
       setSource(messages);
    }

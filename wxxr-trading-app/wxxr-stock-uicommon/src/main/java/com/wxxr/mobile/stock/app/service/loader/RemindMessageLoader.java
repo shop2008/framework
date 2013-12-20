@@ -17,7 +17,7 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
-import com.wxxr.mobile.stock.app.event.MessageReceivedEvent;
+import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.notification.ejb.api.MsgQuery;
@@ -107,7 +107,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 			   if (log.isDebugEnabled()) {
                   log.debug(String.format("%d messages received.", list.size()));
                }
-               MessageReceivedEvent event = new MessageReceivedEvent(list.toArray(new RemindMessageBean[list.size()]));
+               NewRemindingMessagesEvent event = new NewRemindingMessagesEvent(list.toArray(new RemindMessageBean[list.size()]));
                KUtils.getService(IEventRouter.class).routeEvent(event);
             }
 		}
