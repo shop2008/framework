@@ -19,18 +19,21 @@ public class BuyStockClickedDecorator implements InputEventDecorator {
 	@Override
 	public void handleEvent(InputEventHandlingContext context, InputEvent event) {
 		final View v = (View)context.getUIControl();
-		v.setEnabled(false);
-		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_SOURCE_VIEW,v);
+		if(v != null)
+			v.setEnabled(false);
+		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_SOURCE_VIEW, context.getViewModel());
 		IAsyncCallback cb = new IAsyncCallback() {
 			
 			@Override
 			public void success(Object result) {
-				v.setEnabled(true);
+				if(v != null)
+					v.setEnabled(true);
 			}
 			
 			@Override
 			public void failed(Object cause) {
-				v.setEnabled(true);
+				if(v != null)
+					v.setEnabled(true);
 			}
 		};
 		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_CALLBACK, cb);

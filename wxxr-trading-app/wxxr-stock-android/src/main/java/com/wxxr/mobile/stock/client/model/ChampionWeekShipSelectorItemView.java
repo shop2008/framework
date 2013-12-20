@@ -13,7 +13,6 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 import com.wxxr.mobile.stock.client.utils.Utils;
