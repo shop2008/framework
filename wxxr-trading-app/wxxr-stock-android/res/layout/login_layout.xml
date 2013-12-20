@@ -125,7 +125,7 @@
             android:textColor="@color/white"
             android:textSize="15sp" 
             bind:field="loginBtn"
-            bind:on_Click="login"
+            bind:on_Click="login@EditablePageBtnClickedDecorator"
             />
     </LinearLayout>
 
