@@ -427,4 +427,19 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.android.ui.IAndroidPageNavigator#startActivity(android.content.Intent)
+	 */
+	@Override
+	public void startActivity(Intent intent) {
+		Application app = AppUtils.getFramework().getAndroidApplication();
+		Activity activity = getCurrentActivity();
+		if(activity != null) {
+			activity.startActivity(intent);
+		} else {
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			app.startActivity(intent);
+		}
+	}
+
 }

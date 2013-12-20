@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.android.ui;
 
+import android.content.Intent;
+
 import com.wxxr.mobile.core.ui.api.IPage;
 import com.wxxr.mobile.core.ui.api.IPageNavigator;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -24,5 +26,7 @@ public interface IAndroidPageNavigator extends IPageNavigator {
 	IBindableActivity getOnShowActivity();
 	
 	IBindableActivity getPageActivity(IPage page);
+	
+	void startActivity(Intent intent);
 	
 }
