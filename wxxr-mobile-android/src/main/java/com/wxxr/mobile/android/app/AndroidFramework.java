@@ -82,7 +82,12 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	 */
 	@Override
 	public void start() {
-//		collectDeviceInfo();
+	  try {
+         collectDeviceInfo();
+      }
+      catch (Exception e1) {
+         log.warn("Error when collect Device Info ", e1);
+      }
 		if(log.isInfoEnabled()){
 			log.info("UnexpectingExceptionHandler installed, ui thread :"+handler.getUiThread());
 		}
@@ -134,10 +139,9 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	}
 	
 	
-	protected void collectDeviceInfo()
+	protected void collectDeviceInfo() throws Exception
 	{
-		try
-		{
+		
 			Context context = getAndroidApplication();
 			PackageManager pm = context.getPackageManager();
 			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
@@ -152,28 +156,9 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 					log.info("versionCode -> ", versionCode);
 				}
 			}
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-		}
+		
 
-		Field[] fields = Build.class.getDeclaredFields();
-		for (Field field : fields)
-		{
-			try
-			{
-				field.setAccessible(true);
-				info.put(field.getName(), field.get("").toString());
-				if(log.isDebugEnabled()){
-					log.info( field.getName()+" -> "+ field.get(""));
-				}
-			}
-			catch (Throwable e)
-			{
-				e.printStackTrace();
-			}
-		}
+		
 	}
 
 	
