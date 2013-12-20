@@ -8,10 +8,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Level;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.wxxr.mobile.android.log.Log4jConfigurator;
 import com.wxxr.mobile.core.log.spi.ILoggerFactory;
 import com.wxxr.mobile.core.log.spi.Log4jLoggerFactory;
+import com.wxxr.mobile.stock.client.service.StockAppService;
 
 /**
  * @author neillin
@@ -35,7 +37,8 @@ public class StockApplication extends Application
 			logConfig.configureFileAppender("/",Level.WARN);
 			logConfig.configureLogCatAppender("/", Level.WARN);
 		}
-		this.framework.startLater(1,TimeUnit.SECONDS);	
+		this.framework.startLater(1,TimeUnit.SECONDS);
+		startService(new Intent(this, StockAppService.class));
 	}
 
 
@@ -48,6 +51,7 @@ public class StockApplication extends Application
 			this.framework.stop();
 			this.framework = null;
 		}
+		stopService(new Intent(this, StockAppService.class));
 		super.onTerminate();
 	}
 	
