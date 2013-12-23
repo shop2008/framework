@@ -419,7 +419,7 @@ public class Utils {
 	}
 	
 	/**
-	 * 处理已排序的数据
+	 * 处理已排序的数据-交易记录使用
 	 * 
 	 * @param data
 	 *            要处理的数据
@@ -474,6 +474,60 @@ public class Utils {
 		return retList.toArray();
 	}
 
+	/**
+	 * 处理已排序的数据-周赛排名使用
+	 * 
+	 * @param data
+	 *            要处理的数据
+	 * @param method
+	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
+	 * @return 分组后的数据
+	 */
+	public static Object[] getSortedGroupTimeData(List<Object> data, String method) {
+
+		if (data == null) {
+			return null;
+		}
+		
+		if (data.size() <= 0) {
+			return data.toArray();
+		}
+		List<Object> retList = new ArrayList<Object>();
+		Object curLabelObj = null;
+		for (int i = 0; i < data.size(); i++) {
+			Object obj = data.get(i);
+			try {
+				Method m = obj.getClass().getMethod(method, null);
+				m.setAccessible(true);
+				Object labelObj = m.invoke(obj, null);
+
+				if (i == 0) {
+					curLabelObj = labelObj;
+					retList.add(curLabelObj.toString());
+					retList.add(obj);
+				} else {
+					if (labelObj.equals(curLabelObj)) {
+						retList.add(obj);
+					} else {
+						curLabelObj = labelObj;
+						retList.add(curLabelObj.toString());
+						retList.add(obj);
+					}
+				}
+				
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		return retList.toArray();
+	}
+	
 	private static String longTimeFormat(long time) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");

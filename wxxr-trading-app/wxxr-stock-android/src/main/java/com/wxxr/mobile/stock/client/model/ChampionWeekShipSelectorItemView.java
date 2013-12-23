@@ -95,16 +95,16 @@ public abstract class ChampionWeekShipSelectorItemView extends ViewBase implemen
 	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			return result != null ? Utils.getSortedGroupData(result, "getDates"): null;
+			return result != null ? Utils.getSortedGroupTimeData(result, "getDates"): null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
 				List<Object> result = (List<Object>) val;
-				return Utils.getSortedGroupData(result, "getDates");
+				return Utils.getSortedGroupTimeData(result, "getDates");
 			}else if((val != null)&&val.getClass().isArray()){
 				List<Object>  result = Arrays.asList(val);
-				return Utils.getSortedGroupData(result, "getDates");
+				return Utils.getSortedGroupTimeData(result, "getDates");
 			}
 		}
 		return null;
