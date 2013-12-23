@@ -31,6 +31,7 @@ import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -51,6 +52,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler.ReadClientInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.ReadAllUnreadMessageHandler;
@@ -94,6 +96,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
+import com.wxxr.stock.restful.json.ClientInfoVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
@@ -126,7 +129,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	private IReloadableEntityCache<String,UserAssetBean> userAssetBeanCache;
 	
-	
+	private ClientInfoBean clientInfoBean;
 	private VoucherBean voucherBean;
 	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
 	
@@ -588,12 +591,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
         this.personalHomePageBean_cache.forceReload(null,false);
         return personalHomePageBean_cache.getEntity(key);
 	}
-//	@Override
-//	public PersonalHomePageBean getMorePersonalRecords(int start, int limit,
-//			boolean virtual) {
-//		return null;
-//	}
-	
+
     public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
@@ -916,5 +914,30 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			log.warn("updatToken error",e);
 		}
 	}
+
+   @Override
+   public ClientInfoBean getClientInfo() {
+      if (clientInfoBean==null) {
+         clientInfoBean = new ClientInfoBean();
+      }
+      ReadClientInfoCommand cmd=new ReadClientInfoCommand();
+      try{
+          Future<ClientInfoVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+              try {
+                  ClientInfoVO vo=future.get(30,TimeUnit.SECONDS);
+                  if (vo!=null) {
+                     clientInfoBean.setStatus(vo.getStatus());
+                     clientInfoBean.setDescription(vo.getDescription());
+                     clientInfoBean.setUrl(vo.getUrl());
+                     clientInfoBean.setVersion(vo.getVersion());
+                  }
+              } catch (Exception e) {
+                  throw new StockAppBizException("系统错误");
+              }
+          }catch(CommandException e){
+              throw new StockAppBizException(e.getMessage());
+          }
+      return clientInfoBean;
+   }
 	
 }

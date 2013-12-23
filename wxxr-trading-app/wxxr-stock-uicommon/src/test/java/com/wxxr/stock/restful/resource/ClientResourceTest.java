@@ -1,8 +1,5 @@
 package com.wxxr.stock.restful.resource;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.security.KeyStore;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -20,10 +17,11 @@ import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
+import com.wxxr.stock.restful.json.ClientInfoVO;
 
-public class URLLocatorResourceTest extends TestCase {
+public class ClientResourceTest extends TestCase {
 
-   private IURLLocatorResource resource;
+   private ClientResource resource;
 
    private String appName;
 
@@ -43,11 +41,11 @@ public class URLLocatorResourceTest extends TestCase {
    }
 
    protected String getAppName() {
-      return URLLocatorResourceTest.this.appName;
+      return ClientResourceTest.this.appName;
    }
 
    protected String getAppVersion() {
-      return URLLocatorResourceTest.this.appVer;
+      return ClientResourceTest.this.appVer;
    }
 
    protected void init() {
@@ -92,6 +90,8 @@ public class URLLocatorResourceTest extends TestCase {
             HttpRequest request = super.createRequest(endpointUrl, params);
             request.setHeader("appName", getAppName());
             request.setHeader("appVer", getAppVersion());
+            request.setHeader("deviceid", "00-1E-90-B1-C3-57");
+            request.setHeader("deviceType", "2");
             return request;
          }
       };
@@ -118,66 +118,17 @@ public class URLLocatorResourceTest extends TestCase {
 
       MockRestClient builder = new MockRestClient();
       builder.init(context);
-      resource = builder.getRestService(IURLLocatorResource.class,
+      resource = builder.getRestService(ClientResource.class,
             "http://192.168.123.44:8480/mobilestock2");
    }
 
-   public void testGetURLSettings() throws Exception {
-      //test snapshot
-      System.out.println("===========test snapshot ============");
+   public void testGetClientInfo() throws Exception {
       this.appName = "trading";
-      this.appVer = "1.0.0.SNAPSHOT";
-      byte[] a = resource.getURLSettings("");
-      assertNotNull(a);
-      Map<String, String> urls = fromBytes(a);
-      System.out.println(urls);
-      // test M
-      System.out.println("===========test Milestone ============");
-      this.appName = "trading";
-      this.appVer = "1.0.0.M1";
-      a = resource.getURLSettings("");
-      assertNotNull(a);
-      urls = fromBytes(a);
-      System.out.println(urls);
-      
-      //test rc
-      System.out.println("===========test Release credit ============");
-      this.appName = "trading";
-      this.appVer = "1.0.0.RC1";
-      a = resource.getURLSettings("");
-      assertNotNull(a);
-      urls = fromBytes(a);
-      System.out.println(urls);
-      //test error format
-      this.appName = "trading";
-      this.appVer = "1.0.0.GA";
-      a = resource.getURLSettings("");
-      assertNull(a);
+      this.appVer = "1.0.0-SNAPSHOT";
+      ClientInfoVO vo = resource.getClientInfo();
+      System.out.println(vo);
+     
    }
 
-   private <T> T fromBytes(byte[] data) throws Exception {
-      if (data == null) {
-         return null;
-      }
-      ByteArrayInputStream bis = new ByteArrayInputStream(data);
-      ObjectInputStream ois = null;
-      try {
-         ois = new ObjectInputStream(bis);
-         return (T) ois.readObject();
-      }
-      catch (Exception e) {
-         throw e;
-      }
-      finally {
-         try {
-            if (ois != null) {
-               ois.close();
-            }
-            bis.close();
-         }
-         catch (IOException e) {
-         }
-      }
-
-   }
+ 
 }

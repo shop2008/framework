@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -196,4 +197,6 @@ public interface IUserManagementService {
 	BindableListWrapper<RemindMessageBean> getUnreadRemindMessages();
 	void readAllUnremindMessage();
 	void readPullMesage(long id);
+	
+	ClientInfoBean getClientInfo();
 }
