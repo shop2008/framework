@@ -27,7 +27,6 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 @View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_view_more_layout")

@@ -69,12 +69,7 @@ public abstract class UserIncomDetailPage extends PageBase {
 		}
 		
 		if(usrService != null) {
-			/*start += limit;
-			limit += limit;
-			
-			registerBean("start", start);
-			registerBean("limit", limit);
-			gainPayDetailListBean = usrService.getGPDetails(start, limit);*/
+			usrService.getGPDetails(start, limit).getData();
 		}
 		
 		return null;

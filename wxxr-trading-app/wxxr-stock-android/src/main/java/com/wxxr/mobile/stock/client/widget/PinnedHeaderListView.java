@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import com.wxxr.mobile.stock.client.utils.Utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -84,11 +83,12 @@ public class PinnedHeaderListView extends ListView {
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
         mAdapter = (PinnedHeaderAdapter)adapter;
-        if(mAdapter != null)
-        	setPinnedHeaderView(mAdapter.getPinnedHeaderView());
         if(mAdapter instanceof OnScrollListener){
         	setOnScrollListener((OnScrollListener)mAdapter);
         }
+        
+        if(mAdapter != null)
+        	setPinnedHeaderView(mAdapter.getPinnedHeaderView());
     }
 
     /**
