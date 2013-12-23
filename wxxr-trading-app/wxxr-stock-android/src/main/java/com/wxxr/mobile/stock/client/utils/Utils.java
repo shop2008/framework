@@ -269,14 +269,14 @@ public class Utils {
 
 				if (i == 0) {
 					curLabelObj = labelObj;
-					retList.add(curLabelObj);
+					retList.add(stringTimeFormat(curLabelObj.toString()));
 					retList.add(obj);
 				} else {
 					if (labelObj.equals(curLabelObj)) {
 						retList.add(obj);
 					} else {
 						curLabelObj = labelObj;
-						retList.add(curLabelObj);
+						retList.add(stringTimeFormat(curLabelObj.toString()));
 						retList.add(obj);
 					}
 				}
@@ -288,6 +288,9 @@ public class Utils {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
