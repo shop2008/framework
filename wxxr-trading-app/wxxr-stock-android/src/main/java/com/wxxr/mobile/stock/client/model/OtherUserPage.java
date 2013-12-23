@@ -28,6 +28,7 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "otherUserPage", withToolbar=true, description="---的个人主页",provideSelection=true)
@@ -108,7 +109,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@OnShow
 	void initData(){
 		if(user != null){
-			getAppToolbar().setTitle(user.getNickName()+"的主页", null);
+			getAppToolbar().setTitle(userName+"的主页", null);
 		}
 	}
 	
@@ -144,26 +145,28 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	String userId;
 
 
+	String userName;
+	
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
 			Map temp = (Map) value;
 			for (Object key : temp.keySet()) {
 				Object tempt = temp.get(key);
-				if (tempt != null && "result".equals(key)) {
+				if (tempt != null && Constants.KEY_USER_ID_FLAG.equals(key)) {
 					if (tempt instanceof String) {
 						userId = (String) tempt;
 					}
 					registerBean("userId", userId);
 				}
+				
+				if (tempt != null && Constants.KEY_USER_NAME_FLAG.equals(key)) {
+					if (tempt instanceof String) {
+						userName = (String) tempt;
+					}
+				}
 			}
 		}
-		
-//		Map<String, String> map = (Map<String, String>) value;
-//		userId = map.get("userId");
-//
-//		//模拟数据，正式环境需改成userId
-//		registerBean("userId", "2");
 	}
 
 	/**
@@ -180,6 +183,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("isVirtual", false);
+		map.put(Constants.KEY_USER_NAME_FLAG, userName);
 		result.setPayload(map);
 		result.setResult("OK");
 		return result;
@@ -199,6 +203,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", this.userId);
 		map.put("isVirtual", true);
+		map.put(Constants.KEY_USER_NAME_FLAG, userName);
 		result.setPayload(map);
 		result.setResult("OK");
 

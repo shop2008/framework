@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -27,8 +28,9 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
-@View(name = "userViewMorePage", withToolbar = true, description = "我的成功操作", provideSelection=true)
+@View(name = "userViewMorePage", withToolbar = true, description = "xxx的成功操作", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_view_more_layout")
 public abstract class UserViewMorePage extends PageBase implements
 		IModelUpdater {
@@ -84,6 +86,8 @@ public abstract class UserViewMorePage extends PageBase implements
 	
 	@Bean
 	boolean isVirtual;
+	
+	String nickName;
 
 	/** 用户--参赛交易盘每页初始条目 */
 	@Bean
@@ -103,6 +107,15 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Bean(type=BindingType.Pojo, express="${userId!=null?usrService.getUserInfoById(userId):usrService.myUserInfo}")
 	UserBean user;
+	
+	@OnShow
+	void initData(){
+		if(!StringUtils.isBlank(userId)){
+			getAppToolbar().setTitle(nickName+"的成功操作", null);
+		} else {
+			getAppToolbar().setTitle("我的成功操作", null);
+		}
+	}
 	
 	@SuppressWarnings("unused")
 	@Menu(items = { "left", "right" })
@@ -380,6 +393,13 @@ public abstract class UserViewMorePage extends PageBase implements
 						String userId = (String) tempt;
 						this.userId = userId;
 						registerBean("userId", userId);
+					}
+				}
+				
+				if (tempt != null && Constants.KEY_USER_NAME_FLAG.equals(key)) {
+					if (tempt instanceof String) {
+						String userNickName = (String) tempt;
+						this.nickName = userNickName;
 					}
 				}
 			}
