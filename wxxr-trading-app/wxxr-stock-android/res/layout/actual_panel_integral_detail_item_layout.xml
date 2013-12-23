@@ -16,7 +16,7 @@
         android:gravity="center"
         android:layout_marginLeft="5dp"
         >
-        <TextView 
+        <com.wxxr.mobile.stock.client.widget.MarqueeText 
             android:id="@+id/tv_integral_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,6 +24,9 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:text="充入现金"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
             bind:field="scoreCatagory"
             />
         <TextView 
