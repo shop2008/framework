@@ -30,7 +30,7 @@ public abstract class UserSelfDefinePage extends PageBase {
 
 	
 	
-	@Field(valueKey = "imageURI", binding = "${user.userPic!=null?user.userPic:'resourceId:drawable/head1'}")
+	@Field(valueKey = "imageURI", binding = "${user.userPic!=null?user.userPic:'resourceId:drawable/head4'}")
 	String userIcon;
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user.homeBack!=null?user.homeBack:'resourceId:drawable/back1'}")
