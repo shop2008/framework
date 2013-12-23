@@ -8,7 +8,7 @@ import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
@@ -81,14 +81,17 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 			log.debug("show notification :["+message+"]");
 		}
 		TextView msgTv = (TextView) findViewById(R.id.time);
+		TextView push = (TextView) findViewById(R.id.push);
 		if(StringUtils.isBlank(message)) {
 			msgTv.setText("");
+			push.setText("");
 			return;
 		}
 		if(mShowing)
 			return;
 		mShowing = true;
 		msgTv.setText(message);
+		push.setText(message);
 		setRorateUp();
 		showNext();
 		handler.sendEmptyMessageDelayed(0, 1500);
@@ -102,6 +105,8 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 			super.handleMessage(msg);
 			setRorateUp();
 			setDisplayedChild(0);
+			TextView push = (TextView) findViewById(R.id.push);
+			push.setVisibility(View.INVISIBLE);
 			mShowing = false;
 		}
 	};

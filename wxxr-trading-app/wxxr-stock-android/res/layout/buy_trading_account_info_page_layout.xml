@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left|center_vertical"
             android:maxLines="2"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
@@ -315,7 +315,7 @@
                         android:shadowDx="1"
                         android:shadowDy="1"
                         android:shadowRadius="1"
-                        android:text="价量"
+                        android:text="成本价量"
                         android:textColor="#cccccc"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -335,7 +335,7 @@
                         android:shadowDx="1"
                         android:shadowDy="1"
                         android:shadowRadius="1"
-                        android:text="盈亏"
+                        android:text="浮动盈亏"
                         android:textColor="#cccccc"
                         android:textSize="15sp"
                         android:textStyle="bold" />

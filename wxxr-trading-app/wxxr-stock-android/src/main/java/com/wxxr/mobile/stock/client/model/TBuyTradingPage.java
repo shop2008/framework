@@ -41,6 +41,7 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * @author duzhen
@@ -186,8 +187,9 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 			public void run() {
 				if (messages != null && count[0] < messages.length) {
 					RemindMessageBean msg = messages[count[0]++];
-					messageField.setValue(msg.getCreatedDate() + "，"
-							+ msg.getTitle() + "，" + msg.getContent());
+					String time = Utils.getCurrentTime("HH:mm");
+					messageField.setValue(time + ", "
+							+ msg.getTitle() + ", " + msg.getContent());
 					messageLayoutField.setValue(true);
 					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
 				}
@@ -199,11 +201,12 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 	
 	@OnHide
 	void unRegisterEventListener() {
+		messageLayoutField.setValue(false);
 		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
 	}
 
 	/**
-	 * 交易详情点击
+	 * 推送信息关闭
 	 * 
 	 * @param event
 	 * @return

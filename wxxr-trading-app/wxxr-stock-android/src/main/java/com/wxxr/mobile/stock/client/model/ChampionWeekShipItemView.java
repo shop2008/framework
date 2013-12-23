@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
@@ -13,6 +15,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
 @View(name = "ChampionWeekShipItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.champion_week_ship_page_layout_item")
@@ -54,7 +57,10 @@ public abstract class ChampionWeekShipItemView extends ViewBase implements
 	CommandResult handlerUserClicked(InputEvent event) {
 		CommandResult result = new CommandResult();
 
-		result.setPayload(weekRank.getUserId());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(Constants.KEY_USER_ID_FLAG, weekRank.getUserId());
+		map.put(Constants.KEY_USER_NAME_FLAG, weekRank.getNickName());
+		result.setPayload(map);
 		result.setResult("");
 		return result;
 	}

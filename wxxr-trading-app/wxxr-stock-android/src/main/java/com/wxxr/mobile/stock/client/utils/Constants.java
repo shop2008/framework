@@ -45,4 +45,13 @@ public class Constants {
 	 * 市场代码
 	 */
 	public static final String KEY_MARKET_FLAG = "market";
+	/**
+	 * 用户ID
+	 */
+	public static final String KEY_USER_ID_FLAG = "userid";
+	
+	/**
+	 * 用户名称
+	 */
+	public static final String KEY_USER_NAME_FLAG = "username";
 }

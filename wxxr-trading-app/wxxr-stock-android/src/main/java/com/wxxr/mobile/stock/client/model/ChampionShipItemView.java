@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
@@ -15,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name = "ChampionShipItemView")
@@ -71,8 +74,10 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
 	CommandResult handlerUserClicked(InputEvent event) {
 		CommandResult result = new CommandResult();
-
-		result.setPayload(msgRank.getUserId());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put(Constants.KEY_USER_ID_FLAG, msgRank.getUserId());
+		map.put(Constants.KEY_USER_NAME_FLAG, msgRank.getNickName());
+		result.setPayload(map);
 		result.setResult("");
 		return result;
 	}

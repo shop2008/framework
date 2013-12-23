@@ -4,11 +4,18 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.event.api.IBroadcastEvent;
+import com.wxxr.mobile.core.event.api.IEventListener;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
@@ -16,7 +23,10 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
  * @author neillin
@@ -24,7 +34,7 @@ import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
  */
 @View(name="toolbarView",singleton=true)
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.layout_animation_tool_bar_view")
-public abstract class ToolBarView extends StockAppToolbar {
+public abstract class ToolBarView extends StockAppToolbar implements IEventListener {
 
 
 	@Field(valueKey="imageURI")
@@ -52,6 +62,10 @@ public abstract class ToolBarView extends StockAppToolbar {
 	
 	DataField<String> titleField;
 
+	@Field(valueKey="visible")
+	boolean pushMessage;
+	
+	DataField<Boolean> pushMessageField;
 	@Command
 	String handleClick(InputEvent event){
 		String name = event.getEventSource().getName();
@@ -116,5 +130,40 @@ public abstract class ToolBarView extends StockAppToolbar {
 		return super.getChild(name);
 	}
 
+	/*********************消息推送********************/
+	@OnShow
+	void registerEventListener() {
+		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
+	}
+	
+	@Override
+	public void onEvent(IBroadcastEvent event) {
+		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
+		final RemindMessageBean[] messages = e.getReceivedMessages();
 
+		final int[] count = new int[1];
+		count[0] = 0;
+		final Runnable[] tasks = new Runnable[1];
+		tasks[0] = new Runnable() {
+
+			@Override
+			public void run() {
+				if (messages != null && count[0] < messages.length) {
+					RemindMessageBean msg = messages[count[0]++];
+					String time = Utils.getCurrentTime("HH:mm");
+					pushMessageField.setValue(true);
+					messageField.setValue(time + ", "
+							+ msg.getTitle() + ", " + msg.getContent());
+					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+				}
+			}
+		};
+		if (messages != null)
+			AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void unRegisterEventListener() {
+		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
+	}
 }

@@ -47,6 +47,18 @@ public class Utils {
 		return sdf.format(new Date());
 	}
 	
+	public static String getCurrentTime(String format) {
+		SimpleDateFormat sdf;
+		try {
+			sdf = new SimpleDateFormat(format);
+		} catch (NullPointerException e) {
+			return null;
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+		return sdf.format(new Date());
+	}
+	
 	public static String getDate(long data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
 		if (data > 0) {
