@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:background="@drawable/listview_selected_item1"
     android:orientation="horizontal"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="5dp"
         android:orientation="vertical" >
         
-        <TextView
+        <com.wxxr.mobile.stock.client.widget.MarqueeText
             android:id="@+id/tv_income_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,6 +23,9 @@
             android:ellipsize="end"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
             bind:field="incomeCatagory" />
 
         <TextView
