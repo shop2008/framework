@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.trade.command;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 @NetworkConstraint(allowConnectionTypes={})
@@ -37,7 +38,9 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
 
     @Override
     public void validate() {
-        
+    	if(getCaptitalAmount()==null || getCaptitalAmount()<=0){
+    		throw new StockAppBizException("请输入申购金额！");
+    	}
     }
 
     public Long getCaptitalAmount() {
