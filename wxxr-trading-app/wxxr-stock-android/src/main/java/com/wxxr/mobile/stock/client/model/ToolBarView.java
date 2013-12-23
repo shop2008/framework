@@ -151,10 +151,13 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 				if (messages != null && count[0] < messages.length) {
 					RemindMessageBean msg = messages[count[0]++];
 					String time = Utils.getCurrentTime("HH:mm");
+					pushMessageField.setValue(!pushMessageField.getValue());
 					pushMessageField.setValue(true);
-					messageField.setValue(time + ", "
-							+ msg.getTitle() + ", " + msg.getContent());
-					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+					showNotification(time + ", "
+							+ msg.getTitle() + ", " + msg.getContent(), "", null);
+//					messageField.setValue(time + ", "
+//							+ msg.getTitle() + ", " + msg.getContent());
+					AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
 				}
 			}
 		};
@@ -164,6 +167,7 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	
 	@OnHide
 	void unRegisterEventListener() {
+		pushMessageField.setValue(false);
 		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
 	}
 }

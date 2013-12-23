@@ -101,16 +101,24 @@ public class Rotate3DViewSwitcher extends ViewSwitcher {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			setRorateUp();
 			setDisplayedChild(0);
-			TextView push = (TextView) findViewById(R.id.push);
-			push.setVisibility(View.INVISIBLE);
+			hidePushMessage.sendEmptyMessageDelayed(0, 600);
 			mShowing = false;
 		}
 	};
 	
+	Handler hidePushMessage = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			TextView push = (TextView) findViewById(R.id.push);
+			push.setVisibility(View.INVISIBLE);
+		}
+	};
+		
 	private Rotate3dAnimation createAnim(float start, float end,
 			boolean turnIn, boolean turnUp) {
 		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,

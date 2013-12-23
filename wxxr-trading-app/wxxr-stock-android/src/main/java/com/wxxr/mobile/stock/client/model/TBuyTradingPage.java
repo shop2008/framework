@@ -191,7 +191,7 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 					messageField.setValue(time + ", "
 							+ msg.getTitle() + ", " + msg.getContent());
 					messageLayoutField.setValue(true);
-					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+					AppUtils.runOnUIThread(tasks[0], 6, TimeUnit.SECONDS);
 				}
 			}
 		};
