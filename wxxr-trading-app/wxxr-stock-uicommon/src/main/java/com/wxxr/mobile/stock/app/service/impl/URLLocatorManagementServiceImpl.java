@@ -67,6 +67,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		loadDefaultSettings();//加载出厂设置
 		this.urlCheckServerURL = getURL("url_checker_server");
 		this.serverUrl = getURL("server");
+		getService(IRestProxyService.class).setDefautTarget(this.serverUrl);
 		this.magnoliaUrl = getURL("magnolia");
 		if (log.isDebugEnabled()) {
 			log.debug("Local settings:"+defaultSettings);
