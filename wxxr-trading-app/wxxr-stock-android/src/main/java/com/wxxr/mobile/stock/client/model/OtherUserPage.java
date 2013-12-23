@@ -26,6 +26,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -235,7 +236,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+					
+					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
@@ -284,7 +286,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
+					
+					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 				}
 				if ("UNCLOSE".equals(tradeStatus)) {
 					int status = actualBean.getStatus();
