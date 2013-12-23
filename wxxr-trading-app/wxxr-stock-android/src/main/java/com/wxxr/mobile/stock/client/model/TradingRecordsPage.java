@@ -44,7 +44,7 @@ public abstract class TradingRecordsPage extends PageBase implements
 	BindableListWrapper<TradingRecordBean> recordListBean;
 	// List
 
-	@Field(valueKey = "options", binding = "${recordListBean != null?recordListBean.data:null}")
+	@Field(valueKey = "options", binding = "${recordListBean != null?recordListBean.data:null}", visibleWhen="${recordListBean != null?(recordListBean.data!=null?(recordListBean.data.size()>0?true:false):false):false}")
 	List<TradingRecordBean> tradingRecordBean;
 	// RadioButton
 
