@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -269,18 +272,26 @@ public class Utils {
 
 				if (i == 0) {
 					curLabelObj = labelObj;
-					retList.add(stringTimeFormat(curLabelObj.toString()));
+					if(obj instanceof RemindMessageBean)
+						retList.add(remindStringTimeFormat(curLabelObj.toString()));
+					else if (obj instanceof PullMessageBean){
+						retList.add(pullStringTimeFormat(curLabelObj.toString()));
+					}
 					retList.add(obj);
 				} else {
 					if (labelObj.equals(curLabelObj)) {
 						retList.add(obj);
 					} else {
 						curLabelObj = labelObj;
-						retList.add(stringTimeFormat(curLabelObj.toString()));
+						if(obj instanceof RemindMessageBean)
+							retList.add(remindStringTimeFormat(curLabelObj.toString()));
+						else if(obj instanceof PullMessageBean) {
+							retList.add(pullStringTimeFormat(curLabelObj.toString()));
+						}
+							
 						retList.add(obj);
 					}
 				}
-				
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -290,11 +301,24 @@ public class Utils {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		}
 		return retList.toArray();
+	}
+
+	private static String pullStringTimeFormat(String time) throws NumberFormatException {
+		Long lTime = Long.parseLong(time);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+		Date date = new Date(lTime);
+		return formatter.format(date);
+	}
+
+	private static String remindStringTimeFormat(String time) throws ParseException {
+		long lTime = stringTime2Long(time);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date(lTime);
+		return formatter.format(date);
 	}
 
 	/**
@@ -402,13 +426,13 @@ public class Utils {
 	private static Long stringTime2Long(String time) throws ParseException {
 		SimpleDateFormat formatter = null;
 		if (time.length()==8) {
-			
 			formatter = new SimpleDateFormat("yyyyMMdd");
-		} else if (time.length() == 10) {
-			formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = formatter.parse(time);
+			return date.getTime();
+		} else {
+			return 0l;
 		}
-		Date date = formatter.parse(time);
-		return date.getTime();
+		
 	}
 	
 	private static String stringTimeFormat(String time) throws ParseException {
