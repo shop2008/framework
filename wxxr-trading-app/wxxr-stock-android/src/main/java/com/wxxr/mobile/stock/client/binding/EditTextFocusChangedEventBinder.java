@@ -17,7 +17,7 @@ public class EditTextFocusChangedEventBinder implements IEventBinder {
 	public IEventBinding createBinding(IBindingContext context,
 			String fieldName, String cmdName, Map<String, String> attrs) {
 		IAndroidBindingContext ctx = (IAndroidBindingContext)context;
-		return new EditTextFocusChangedEnventBinding(ctx.getBindingControl(), cmdName, fieldName);
+		return new EditTextFocusChangedEventBinding(ctx.getBindingControl(), cmdName, fieldName);
 	}
 
 	@Override
