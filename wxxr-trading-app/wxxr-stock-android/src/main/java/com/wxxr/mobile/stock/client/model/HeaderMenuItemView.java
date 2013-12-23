@@ -52,7 +52,7 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Pojo, express="${usrMgr.remindMessageBean}")
 	BindableListWrapper<RemindMessageBean> messageBeans;
 	
-	@Field(valueKey="imageURI", binding="${(userInfo!=null&&userInfo.userPic!=null)?userInfo.userPic:'resourceId:drawable/head4'}")
+	@Field(valueKey="imageURI", binding="${(userInfo!=null&&userInfo.userPic!=null)?userInfo.userPic:'resourceId:drawable/head1'}")
 	String headIcon;
 	
 	@Field(valueKey="text", binding="${userInfo != null ? userInfo.nickName : '登录账号'}")
