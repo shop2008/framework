@@ -118,6 +118,9 @@
 #if(${model.beanBindings})
     updateBindingBeans();
 #end
+#if(${model.serviceBindings})
+       injectServices();
+#end
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(binding); 

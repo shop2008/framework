@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.annotation.StatefulService;
 import com.wxxr.mobile.core.api.IProgressMonitor;
 import com.wxxr.mobile.core.event.api.ApplicationShutdownEvent;
 import com.wxxr.mobile.core.event.api.ApplicationStartedEvent;
@@ -444,7 +445,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			list = this.moduleListeners.toArray(new IModuleListener[this.moduleListeners.size()]);
 		}
 		if(list != null){
-			for (IModuleListener l : list) {
+ 			for (IModuleListener l : list) {
 					l.kernelStarted();
 			}
 		}
@@ -512,8 +513,16 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	}
 
 	protected <T> T getLocalService(Class<T> interfaceClazz) {
-		ServiceFuture<T> handlers = getServiceFuture(interfaceClazz);
-		return handlers.getService();
+		StatefulService statefulService=interfaceClazz.getAnnotation(StatefulService.class);
+		if(statefulService!=null){
+			ServiceFuture<? extends IStatefulServiceFactory> handlers =getServiceFuture(statefulService.factoryClass());
+			IStatefulServiceFactory t=handlers.getService();
+			return (T) t.createService();
+		}else{
+			ServiceFuture<T> handlers = getServiceFuture(interfaceClazz);
+			return handlers.getService();
+		}
+
 	}
 
 	protected <T> void registerLocalService(Class<T> interfaceClazz, Object handler) {
@@ -743,6 +752,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 */
 	@Override
 	public <S> S getService(Class<S> interfaceClazz) {
+		
 		return getContext().getService(interfaceClazz);
 	}
 
