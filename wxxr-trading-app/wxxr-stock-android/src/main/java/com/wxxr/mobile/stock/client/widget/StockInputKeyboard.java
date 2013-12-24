@@ -2,7 +2,6 @@ package com.wxxr.mobile.stock.client.widget;
 
 import java.util.IllegalFormatException;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
@@ -16,10 +15,10 @@ import android.widget.TextView;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.widget.wheel.ArrayWheelAdapter;
 import com.wxxr.mobile.stock.client.widget.wheel.OnWheelChangedListener;
 import com.wxxr.mobile.stock.client.widget.wheel.OnWheelScrollListener;
 import com.wxxr.mobile.stock.client.widget.wheel.WheelView;
+import com.wxxr.mobile.stock.client.widget.wheel.adapters.ArrayWheelAdapter;
 
 public class StockInputKeyboard extends FrameLayout implements OnClickListener, View.OnTouchListener {
 
@@ -110,15 +109,8 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 	}
 	
 	private void init() {
-	FrameLayout.inflate(context, R.layout.stock_input_view, this);
-			
-		if(context instanceof Activity) {
-			int currHeight = ((Activity)context).getWindowManager().getDefaultDisplay().getHeight();
-			
-			if(currHeight < 800 && currHeight != 0){
-				WheelView.TEXT_SIZE = 20;
-			}
-		}
+		FrameLayout.inflate(context, R.layout.stock_input_view, this);
+
 		Resources resources = getResources();
 		String[] first = resources.getStringArray(R.array.head1);
 		String[] second = resources.getStringArray(R.array.head2);
@@ -244,7 +236,7 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		
 		wv_sn_middle.setOnTouchListener(this);
 		
-		wv_sn_middle.setAdapter(new ArrayWheelAdapter<String>((String[]) data2[0]));
+		wv_sn_middle.setViewAdapter(new ArrayWheelAdapter<String>(context, (String[]) data2[0]));
 		wv_sn_middle.addChangingListener(new MyOnWheelChangedListener());
 		wv_sn_middle.addScrollingListener(new MyOnWheelScrollListener());
 	}
@@ -271,9 +263,9 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		findViewById(R.id.bt_123).setOnClickListener(this);
 		findViewById(R.id.bt_finish).setOnClickListener(this);
 
-		wv_left.setAdapter(new ArrayWheelAdapter<String>((String[]) data[0]));
-		wv_middle.setAdapter(new ArrayWheelAdapter<String>((String[]) data[1]));
-		wv_right.setAdapter(new ArrayWheelAdapter<String>((String[]) data[2]));
+		wv_left.setViewAdapter(new ArrayWheelAdapter<String>(context, (String[]) data[0]));
+		wv_middle.setViewAdapter(new ArrayWheelAdapter<String>(context, (String[]) data[1]));
+		wv_right.setViewAdapter(new ArrayWheelAdapter<String>(context, (String[]) data[2]));
 
 		wv_left.addChangingListener(new MyOnWheelChangedListener());
 		wv_middle.addChangingListener(new MyOnWheelChangedListener());
