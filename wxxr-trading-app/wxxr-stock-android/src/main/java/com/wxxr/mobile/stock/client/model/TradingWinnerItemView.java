@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -32,6 +33,8 @@ import com.wxxr.mobile.stock.client.biz.AccidSelection;
 @View(name="earnRankListItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.earn_money_rank_layout_item")
 public abstract class TradingWinnerItemView extends ViewBase implements IModelUpdater,ISelectionChangedListener,IReusableUIModel {
+	
+	static Trace log = Trace.getLogger(TradingWinnerItemView.class);
 	@Bean
 	EarnRankItemBean earnRank;
 	
@@ -53,6 +56,8 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	
 	int postion = 0;
 	
+	private boolean flag = true;
+	
 	@Field(valueKey="enabled",binding="${isOpen}")
 	boolean isClose;
 	
@@ -60,7 +65,9 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	public void updateModel(Object value) {
 		if(value instanceof EarnRankItemBean){
 			earnRank = (EarnRankItemBean) value;
+			log.info("TradingWinnerItemView acctId= "+earnRank.getAcctId()+ "ImgUrl= " +earnRank.getImgUrl());
 			registerBean("earnRank", value);
+			
 		}
 	}
 	
@@ -94,7 +101,11 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 				if(selectedPosition.equals(myPosition)){
 					this.isOpen = true;
 					if(earnRank!=null){
-						this.imgUrl = earnRank.getImgUrl();
+						if(earnRank.getImgUrl().endsWith(".jpg") || earnRank.getImgUrl().endsWith(".gif") || earnRank.getImgUrl().endsWith(".png")){
+	                		this.imgUrl = earnRank.getImgUrl();
+	                	}else{
+	                		this.imgUrl = "resourceId:drawable/defimage";
+	                	}
 						registerBean("imgUrl", this.imgUrl);
 					}
 				}else{

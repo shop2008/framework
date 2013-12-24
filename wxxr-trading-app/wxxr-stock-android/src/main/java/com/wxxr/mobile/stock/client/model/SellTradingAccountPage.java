@@ -65,20 +65,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	TradingAccountBean tradingAccount;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple",value="100"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="100"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor1;
-	
-	@Convertor(params={
 			@Parameter(name="format",value="M月d日买入"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -88,21 +74,8 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 			@Parameter(name="format",value="M月d日卖出"),
 			@Parameter(name="nullString",value="--")
 	})
-	LongTime2StringConvertor longTime2StringConvertorSell;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f元"),
-			@Parameter(name="multiple", value="100.00"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringConvertor stockLong2StringConvertorYuan;	
+	LongTime2StringConvertor longTime2StringConvertorSell;	
 
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00"),
-			@Parameter(name="nullString",value="--")
-	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;	
 	/** 交易盘编号*/
 	private long id;
 	
@@ -113,26 +86,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	/**卖出日期 */
 	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:null}", converter = "longTime2StringConvertorSell")
 	String sellDay;  
-	
-	/**申购金额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.applyFee:null}",converter="stockLong2StringAutoUnitConvertor")
-	String applyFee;
-	
-	/**可用资金*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.avalibleFee:null}",converter="stockLong2StringAutoUnitConvertor1")
-	String avalibleFee;
-	
-	/**总盈亏率*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.gainRate:null}",converter="stockLong2StringConvertorSpecial",attributes={
-			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.gainRate>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.gainRate<0)?'resourceId:color/green':'resourceId:color/white')}")
-			})
-	String gainRate;  
-	
-	/**总盈亏额*/
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.totalGain:null}", converter = "stockLong2StringConvertorYuan" ,attributes={
-			@Attribute(name = "textColor", value = "${(tradingAccount!=null && tradingAccount.totalGain>0)?'resourceId:color/red':((tradingAccount!=null && tradingAccount.totalGain<0)?'resourceId:color/green':'resourceId:color/white')}")
-			})
-	String totalGain;
 	
 	/**交易订单列表*/
 	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}")
@@ -218,25 +171,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	}
 	
 	
-	@Command(navigations = { 
-			@Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
-			@Navigation(on = "ShiPanBuyStockInfoPage", showPage = "ShiPanBuyStockInfoPage") 
-			})
-	CommandResult handleStockClick(InputEvent event) {
-		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
-			CommandResult resutl = new CommandResult();
-			if (tradingAccount != null) {
-				resutl.setPayload(tradingAccount.getId());
-				if(tradingAccount.getVirtual()){
-					resutl.setResult("TBuyStockInfoPage");
-				}else{
-					resutl.setResult("ShiPanBuyStockInfoPage");
-				}
-				return resutl;
-			}
-		}
-		return null;
-	}
 	
 	@Override
 	public void updateModel(Object value) {
@@ -378,7 +312,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * @param acctID - 交易盘Id
 	 */	
 	@Command(navigations = { @Navigation(on = "*", message = "是否确定清仓？", params = {
-			@Parameter(name = "title", value = ""),
+			@Parameter(name = "title", value = "提示"),
 			@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
 			@Parameter(name = "onOK", value = "leftok"),
 			@Parameter(name = "onCanceled", value = "取消") }) })

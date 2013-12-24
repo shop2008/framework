@@ -195,12 +195,12 @@ public abstract class TradingMainView extends ViewBase{
 					if("CLOSED".equals(over)){
 						resutl.setPayload(map);
 						resutl.setResult("operationDetails");
-						updateSelection(new AccidSelection(acctId, isVirtual));
 					}
 					if("UNCLOSE".equals(over)){
 						resutl.setResult("sellTradingAccount");
 						resutl.setPayload(map);
 					}
+					updateSelection(new AccidSelection(acctId, isVirtual));
 					return resutl;
 				}
 			}

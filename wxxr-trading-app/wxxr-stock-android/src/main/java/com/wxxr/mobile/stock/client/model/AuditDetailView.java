@@ -25,7 +25,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
-@View(name="auditDetail",description="实盘")
+@View(name="auditDetail",description="操作详情")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.audit_detail_page_layout")
 public abstract class AuditDetailView extends ViewBase implements IModelUpdater,ISelectionChangedListener{
 

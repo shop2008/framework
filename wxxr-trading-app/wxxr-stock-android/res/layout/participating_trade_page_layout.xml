@@ -23,7 +23,7 @@
 	        android:id="@+id/textView1"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="终止止损：" 
+	        android:text="中止止损：" 
 	        android:textSize="14sp"
 	        android:textColor="@color/white"
 	        android:layout_marginTop="8dp"/>

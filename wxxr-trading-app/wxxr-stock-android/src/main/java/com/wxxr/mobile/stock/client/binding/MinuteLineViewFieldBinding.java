@@ -119,44 +119,46 @@ public class MinuteLineViewFieldBinding extends BasicFieldBinding implements IOb
 	 */
 	@Override
 	protected void updateUI(boolean arg0) {
-		this.listAdapter.updateDataIfNeccessary();
 		if(this.listener != null){
+			this.listAdapter.updateDataIfNeccessary();
 			this.listener.dataSetChanged();
 		}
 		IUIComponent comp = getField();
-		MinuteLineView view = (MinuteLineView)getUIControl();
-		String stockClose = comp.getAttribute(MinuteLineViewKeys.stockClose);
-		if(stockClose!=null){
-			view.setStockClose(stockClose);
-		}
-		
-		String stockType = comp.getAttribute(MinuteLineViewKeys.stockType);
-		if(stockType!=null){
-			view.setStockType(stockType);
-		}
-		String border = comp.getAttribute(MinuteLineViewKeys.stockBorderColor);
-		if(border != null){
-			view.setBorderColor(getColor(border));
-		}
-		
-		String up = comp.getAttribute(MinuteLineViewKeys.stockUpColor);
-		if(up!=null){
-			view.setStockUpColor(getColor(up));
-		}
-		
-		String down = comp.getAttribute(MinuteLineViewKeys.stockDownColor);
-		if(down!=null){
-			view.setStockDownColor(getColor(down));
-		}
-		
-		String close = comp.getAttribute(MinuteLineViewKeys.stockCloseColor);
-		if(close!=null){
-			view.setStockCloseColor(getColor(close));
-		}
-		
-		String average = comp.getAttribute(MinuteLineViewKeys.stockAverageLineColor);
-		if(average!=null){
-			view.setStockAverageLineColor(getColor(average));
+		if(comp!=null){
+			MinuteLineView view = (MinuteLineView)getUIControl();
+			String stockClose = comp.getAttribute(MinuteLineViewKeys.stockClose);
+			if(stockClose!=null){
+				view.setStockClose(stockClose);
+			}
+			
+			String stockType = comp.getAttribute(MinuteLineViewKeys.stockType);
+			if(stockType!=null){
+				view.setStockType(stockType);
+			}
+			String border = comp.getAttribute(MinuteLineViewKeys.stockBorderColor);
+			if(border != null){
+				view.setBorderColor(getColor(border));
+			}
+			
+			String up = comp.getAttribute(MinuteLineViewKeys.stockUpColor);
+			if(up!=null){
+				view.setStockUpColor(getColor(up));
+			}
+			
+			String down = comp.getAttribute(MinuteLineViewKeys.stockDownColor);
+			if(down!=null){
+				view.setStockDownColor(getColor(down));
+			}
+			
+			String close = comp.getAttribute(MinuteLineViewKeys.stockCloseColor);
+			if(close!=null){
+				view.setStockCloseColor(getColor(close));
+			}
+			
+			String average = comp.getAttribute(MinuteLineViewKeys.stockAverageLineColor);
+			if(average!=null){
+				view.setStockAverageLineColor(getColor(average));
+			}
 		}
 		super.updateUI(arg0);
 	}

@@ -228,7 +228,7 @@
 	    		        android:layout_width="wrap_content"
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentLeft="true"
-	    		        android:text="终止止损" 
+	    		        android:text="中止止损" 
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	
 	    		    <TextView

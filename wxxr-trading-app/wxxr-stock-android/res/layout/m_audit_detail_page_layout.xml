@@ -118,6 +118,7 @@
 		        android:layout_marginRight="16dp"
 		        android:paddingBottom="18dp"
 		        android:orientation="vertical"
+		        android:visibility="gone"
 		        android:background="@drawable/qsxq_item_bj">
 	
 	    		<TextView
@@ -214,7 +215,7 @@
 	    		    android:id="@+id/textView1"
 	    		    android:layout_width="wrap_content"
 	    		    android:layout_height="wrap_content"
-	    		    android:text="风险保证金清算" 
+	    		    android:text="其它" 
 					style="@style/qsxqTextTitleStyle"
 	    		    android:layout_marginTop="10dp"/>
 				<RelativeLayout
@@ -228,7 +229,7 @@
 	    		        android:layout_width="wrap_content"
 	    		        android:layout_height="wrap_content"
 	    		        android:layout_alignParentLeft="true"
-	    		        android:text="终止止损" 
+	    		        android:text="中止止损" 
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	
 	    		    <TextView

@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -379,6 +380,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
+	@ExeGuard(title="提示", message="正处理数据，请稍后...", silentPeriod=1, cancellable=false)
 	String CanSaiBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			String market = null;
@@ -409,6 +411,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
+	@ExeGuard(title="提示", message="正处理数据，请稍后...", silentPeriod=1, cancellable=false)
 	String TiaoZhanBuyStockClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			long captitalAmount = changeMoney * 10000 * 100; //-申请额度

@@ -62,7 +62,7 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="multiple", value="100.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
@@ -89,11 +89,11 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	String applyFee;
 
 	/*** 交易综合费*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:null}",converter="stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.usedFee:null}",converter="stockLong2StringConvertorSpecial")
 	String usedFee;
 	
 	/*** 冻结资金*/
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:null}",converter="stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:null}",converter="stockLong2StringConvertorSpecial")
 	String frozenVol;
 	
 	/*** 止损*/

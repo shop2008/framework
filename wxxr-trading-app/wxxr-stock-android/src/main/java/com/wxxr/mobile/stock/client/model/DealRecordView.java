@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
@@ -46,6 +47,9 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	ITradingManagementService tradingService;
 	@Bean(type=BindingType.Pojo,express="${tradingService.getDealDetail(accId)}")
 	DealDetailBean dealDetail;
+	
+	@Bean(type=BindingType.Pojo,express="${tradingService.getAuditDetail(accId)}")
+	AuditDetailBean auditData;
 
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
@@ -177,12 +181,14 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	CommandResult detailsAction(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
-			if(isVirtual){
-				resutl.setResult("TBuyStockInfoPage");
-			}else{
-				resutl.setResult("ShiPanStockInfoPage");
+			if(auditData!=null){
+				if(auditData.getVirtual()){
+					resutl.setResult("TBuyStockInfoPage");
+				}else{
+					resutl.setResult("ShiPanStockInfoPage");
+				}
+				resutl.setPayload(accId);
 			}
-			resutl.setPayload(accId);
 			return resutl;
 		}
 

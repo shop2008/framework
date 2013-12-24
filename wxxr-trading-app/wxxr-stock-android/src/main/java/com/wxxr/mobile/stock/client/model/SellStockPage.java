@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -24,6 +25,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -93,6 +95,16 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@ViewGroup(viewIds={"StockQuotationView","SellFiveDayMinuteLineView","StockKLineView"})
 	private IViewGroup contents;	
+	
+	@Bean
+	int size;
+	@Bean
+	int indexGroupPosition;
+	
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "size", value = "${size}"),
+			@Attribute(name = "position", value = "${indexGroupPosition}") })
+	String indexGroup;
 	
 	@Bean
 	String stockCode; //股票代码
@@ -172,6 +184,20 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "visible")
 	boolean refresh = true;
 	
+	@Command
+	String handlerPageChanged(InputEvent event) {
+		Object p = event.getProperty("position");
+		Object s = event.getProperty("size");
+		if(p  instanceof Integer) {
+			this.indexGroupPosition = (Integer)p;
+			this.size = (Integer)s;
+		}
+		registerBean("size", size);
+		registerBean("indexGroupPosition", indexGroupPosition);
+		log.debug("GeGuStockPage handlerPageChanged position: " + indexGroupPosition + "size: "+size);
+		return null;
+	}
+	
 	@Command()
 	String handlerRefreshClicked(InputEvent event) {
 		// 需要回调
@@ -212,36 +238,6 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				//刷新viewpager
 				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice));
 			}
-		}
-		return null;
-	}
-	/**
-	 * 卖出股票
-	 * @param acctID -交易盘ID
-	 * @param market -市场代码： SH，SZ各代表上海，深圳
-	 * @param code -股票代码
-	 * @param price -委托价
-	 * @param amount -委托数量
-	 * @throws StockAppBizException
-	 */
-	@Command(commandName="sellStock",navigations = { 
-			@Navigation(on = "StockAppBizException", message = "%m", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
-			}
-	)
-	String sellStock(InputEvent event){
-		String price = null;
-		if(isSelected == 0) {
-			try {
-				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice))
-				price = Long.parseLong(sellPrice)/10 + "";
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-		if(tradingService!=null){
-			tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		}
 		return null;
 	}
@@ -318,6 +314,8 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Override
 	public void updateModel(Object data) {
+		registerBean("size", 3);
+		registerBean("indexGroupPosition", 0);
 		HashMap<String, String> tempMap = new HashMap<String, String>();
 		if(data instanceof Map){
 			Map temp = (Map) data;
@@ -373,4 +371,26 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			}
 		}
 	}
+	
+	@Command(commandName="sellStockClick",navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			}
+	)
+	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
+	String sellStockClick(InputEvent event){
+		String price = null;
+		if(isSelected == 0) {
+			try {
+				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice))
+				price = Long.parseLong(sellPrice)/10 + "";
+			}catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
+		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		v.hide();
+		return "";
+	}	
 }

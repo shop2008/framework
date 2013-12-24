@@ -24,7 +24,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
-@View(name="mnAuditDetail",description="模拟盘")
+@View(name="mnAuditDetail",description="操作详情")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.m_audit_detail_page_layout")
 public abstract class MoNiAuditDetailView extends ViewBase implements IModelUpdater,ISelectionChangedListener {
 
