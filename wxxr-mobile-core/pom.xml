@@ -13,6 +13,7 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+	    <!--  -->
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
