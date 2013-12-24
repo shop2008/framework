@@ -6,11 +6,11 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -20,7 +20,7 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 @View(name="TradingBuyInfoItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.trading_buy_info_item")
-public abstract class TradingBuyInfoItemView extends ViewBase implements IModelUpdater {
+public abstract class TradingBuyInfoItemView extends ViewBase implements IModelUpdater{
 	final Trace log = Trace.register(TradingBuyInfoItemView.class);
 	
 	@Convertor(params={
@@ -66,11 +66,11 @@ public abstract class TradingBuyInfoItemView extends ViewBase implements IModelU
 	/**交易盘类型  0-模拟盘；1-实盘*/
 	@Field(valueKey="enabled",binding="${trading!=null && !trading.virtual}")
 	boolean type;
-	
 	@Override
 	public void updateModel(Object data) {
 		if(data instanceof TradingAccInfoBean){
-			registerBean("trading", data);
+			this.trading = (TradingAccInfoBean) data;
+			registerBean("trading", this.trading);
 		}
 	}
 }

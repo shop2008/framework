@@ -103,6 +103,9 @@ public class TradingManagementServiceImpl extends
 		
 		@Override
 		public int compare(EarnRankItemBean o1, EarnRankItemBean o2) {
+			if(o1!=null && o2!=null){
+				return Integer.valueOf(o2.getAcctId()) - Integer.valueOf(o1.getAcctId());
+			}
 			return 0;
 		}
 	};
@@ -257,7 +260,7 @@ public class TradingManagementServiceImpl extends
 			if(this.earnRankCache == null){
 				this.earnRankCache = new GenericReloadableEntityCache<String, EarnRankItemBean, HomePageVO>("earnRank");
 			}
-			this.earnRank = this.earnRankCache.getEntities(null, null);
+			this.earnRank = this.earnRankCache.getEntities(null, earnRankComparator);
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);

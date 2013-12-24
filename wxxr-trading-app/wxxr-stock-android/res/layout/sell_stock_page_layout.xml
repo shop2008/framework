@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/page_background_color"
     android:orientation="vertical" >
-
     <com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         bind:field="inputView" >
 
         <com.wxxr.mobile.stock.client.widget.NewScrollView
@@ -38,9 +37,18 @@
                         <android.support.v4.view.ViewPager
                             android:id="@+id/content_frame"
                             android:layout_width="match_parent"
-                            android:layout_height="220dp"
-                            bind:field="contents" >
+                            android:layout_height="202dp"
+                            bind:field="contents" 
+                            bind:on_PageChange="handlerPageChanged">
                         </android.support.v4.view.ViewPager>
+						<com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup
+		                     android:layout_width="wrap_content"
+		                     android:layout_height="wrap_content"
+		                     android:layout_gravity="center_horizontal"
+		                     bind:field="indexGroup" 
+		                     android:layout_marginTop="6dp"
+		                     android:layout_marginBottom="8dp">
+		                </com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup>                        
                     </LinearLayout>
 
                     <View
@@ -175,20 +183,21 @@
                         bind:field="*"
                         bind:on_TextChanged="countTextChanged" />
 
-                    <Button
-                        android:id="@+id/button1"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/blue_button_style"
-                        android:padding="0dp"
-                        android:text="下单卖出"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        bind:field="isSellBuyBtn"
-                        bind:on_Click="sellStock@BuyStockClickedDecorator" />
+
                 </LinearLayout>
 
+                <Button
+                     android:id="@+id/button1"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="8dp"
+                     android:background="@drawable/blue_button_style"
+                     android:padding="0dp"
+                     android:text="下单卖出"
+                     android:textColor="@color/white"
+                     android:textSize="14sp"
+                     bind:field="isSellBuyBtn"
+                     bind:on_Click="sellStockClick@BuyStockClickedDecorator" />                
                 <com.wxxr.mobile.stock.client.widget.StockInputKeyboard
                     android:id="@+id/keyboard_view"
                     android:layout_width="fill_parent"
@@ -200,5 +209,5 @@
             </LinearLayout>
         </com.wxxr.mobile.stock.client.widget.NewScrollView>
     </com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView>
-
+ 
 </LinearLayout>
