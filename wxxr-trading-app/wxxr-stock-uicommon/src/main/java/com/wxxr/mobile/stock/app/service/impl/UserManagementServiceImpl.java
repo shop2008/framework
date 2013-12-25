@@ -621,17 +621,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 		@Override
 		public int compare(GainBean o1, GainBean o2) {
-			try {
-				long o1Time = formatDate2Long(o1.getCloseTime());
-				long o2Time = formatDate2Long(o2.getCloseTime());
-				
-				return (int)(o2Time - o1Time);
-			} catch (ParseException e) {
-				
-				e.printStackTrace();
-				return 0;
-			}
-
+			return o2.getCloseTime().compareTo(o1.getCloseTime());
 		}
 	};
 	
