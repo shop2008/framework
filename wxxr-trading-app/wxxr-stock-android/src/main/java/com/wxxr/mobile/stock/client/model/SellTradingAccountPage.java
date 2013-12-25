@@ -3,9 +3,14 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.event.api.IBroadcastEvent;
+import com.wxxr.mobile.core.event.api.IEventListener;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -15,6 +20,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -24,9 +30,12 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
@@ -37,7 +46,7 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 
 @View(name="sellTradingAccount",withToolbar=true, description="实盘/模拟",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY,layoutId="R.layout.sell_trading_account_info_page_layout")
-public abstract class SellTradingAccountPage extends PageBase implements IModelUpdater {
+public abstract class SellTradingAccountPage extends PageBase implements IModelUpdater , IEventListener  {
 
 	static Trace log = Trace.getLogger(SellTradingAccountPage.class);
 	
@@ -139,8 +148,21 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
 	String tradingTitle = "模拟盘";
 	
+	//消息推送
+	@Field(valueKey = "text")
+	String message;
+	DataField<String> messageField;
+	
+	@Field(valueKey = "visible")
+	boolean messageLayout;
+	DataField<Boolean> messageLayoutField;
+	
+	@Field(valueKey = "text")
+	String closeBtn;
+	
 	@Bean
 	Utils utils = Utils.getInstance();
+	
 	@OnShow
 	void initData(){
 		if(this.virtual){
@@ -148,7 +170,54 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		}else{
 			getAppToolbar().setTitle("挑战交易盘", null);
 		}
+		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
 	}
+	
+	@Override
+	public void onEvent(IBroadcastEvent event) {
+		if(tradingService != null)
+			tradingService.getTradingAccountInfo(accid);
+		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
+		final RemindMessageBean[] messages = e.getReceivedMessages();
+
+		final int[] count = new int[1];
+		count[0] = 0;
+		final Runnable[] tasks = new Runnable[1];
+		tasks[0] = new Runnable() {
+
+			@Override
+			public void run() {
+				if (messages != null && count[0] < messages.length) {
+					RemindMessageBean msg = messages[count[0]++];
+					messageField.setValue(msg.getCreatedDate() + "，"
+							+ msg.getTitle() + "，" + msg.getContent());
+					messageLayoutField.setValue(true);
+					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+				}
+			}
+		};
+		if (messages != null)
+			AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void unRegisterEventListener() {
+		messageLayoutField.setValue(false);
+		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
+	}	
+
+	/**
+	 * 推送信息关闭
+	 * 
+	 * @param event
+	 * @return
+	 */
+	@Command
+	String handleCloseBtnClick(InputEvent event) {
+		messageLayoutField.setValue(false);
+		return "";
+	}
+	
 	
 	/**
 	 * 订单详情点击

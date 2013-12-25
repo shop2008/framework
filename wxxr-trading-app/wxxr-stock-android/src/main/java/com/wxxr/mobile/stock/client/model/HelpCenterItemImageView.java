@@ -22,9 +22,6 @@ public abstract class HelpCenterItemImageView extends ViewBase implements IModel
 	@Field(valueKey = "text",binding="${article!=null?article.title:'--'}")
 	String title;
 	
-//	@Field(valueKey = "text",binding="${article!=null?article.abstractInfo:'--'}")
-//	String abstractInfo;
-	
 	@Field(valueKey="imageURI",binding="${(article!=null && article.imageUrl!=null)?article.imageUrl:'--'}")
 	String imgUrl;
 	

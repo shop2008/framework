@@ -9,17 +9,14 @@ import com.wxxr.mobile.stock.app.bean.ArticleBean;
 @View(name = "helpCenterItemView",provideSelection=true)
 public abstract class HelpCenterItemView extends ViewBase implements ItemViewSelector {
 	static Trace log = Trace.getLogger(HelpCenterItemView.class);
-	int currentIndex = 0;
+	boolean currentIndex = true;
 	@Override
 	public String getItemViewId(Object itemData) {
 		if(itemData instanceof ArticleBean){
 			ArticleBean tempBean = (ArticleBean) itemData;
 			String imgUrl = tempBean.getImageUrl();
-			String imgType = imgUrl.substring(imgUrl.length() - 4, imgUrl.length());
-			imgType = imgType.toLowerCase();
-			log.info("getItemViewId="+itemData.toString());
-			if(currentIndex==0 && (imgType.equals(".png") || imgType.equals(".jpg") || imgType.equals(".gif"))){
-				currentIndex++;
+			log.info("helpCenterItemView imgUrl:" +imgUrl);
+			if(imgUrl.endsWith(".jpg") || imgUrl.endsWith(".png") || imgUrl.endsWith(".gif")){
 				return "helpCenterItemImageView";
 			}else{
 				return "helpCenterItemTextView";
@@ -27,9 +24,6 @@ public abstract class HelpCenterItemView extends ViewBase implements ItemViewSel
 		}
 		return null;
 	}
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.ui.ItemViewSelector#getAllViewIds()
-	 */
 	@Override
 	public String[] getAllViewIds() {
 		return new String[] {"helpCenterItemImageView","helpCenterItemTextView"};

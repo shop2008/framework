@@ -41,7 +41,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="SellTradingAccountHeaderView")
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.sell_trading_listview_header_page_layout")
-public abstract class SellTradingAccountHeaderView extends ViewBase implements IModelUpdater,ISelectionChangedListener, IEventListener  {
+public abstract class SellTradingAccountHeaderView extends ViewBase implements IModelUpdater,ISelectionChangedListener{
 
 	static Trace log = Trace.getLogger(SellTradingAccountHeaderView.class);
 	
@@ -111,17 +111,6 @@ public abstract class SellTradingAccountHeaderView extends ViewBase implements I
 	@Bean
 	boolean virtual;
 	
-	//消息推送
-	@Field(valueKey = "text")
-	String message;
-	DataField<String> messageField;
-	
-	@Field(valueKey = "visible")
-	boolean messageLayout;
-	DataField<Boolean> messageLayoutField;
-	
-	@Field(valueKey = "text")
-	String closeBtn;
 	
 	@Command(navigations = { 
 			@Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
@@ -141,43 +130,6 @@ public abstract class SellTradingAccountHeaderView extends ViewBase implements I
 			}
 		}
 		return null;
-	}
-	
-	@OnShow
-	void registerEventListener() {
-		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
-	}
-	
-	@Override
-	public void onEvent(IBroadcastEvent event) {
-		if(tradingService != null)
-			tradingService.getTradingAccountInfo(accid);
-		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
-		final RemindMessageBean[] messages = e.getReceivedMessages();
-
-		final int[] count = new int[1];
-		count[0] = 0;
-		final Runnable[] tasks = new Runnable[1];
-		tasks[0] = new Runnable() {
-
-			@Override
-			public void run() {
-				if (messages != null && count[0] < messages.length) {
-					RemindMessageBean msg = messages[count[0]++];
-					messageField.setValue(msg.getCreatedDate() + "，"
-							+ msg.getTitle() + "，" + msg.getContent());
-					messageLayoutField.setValue(true);
-					AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
-				}
-			}
-		};
-		if (messages != null)
-			AppUtils.runOnUIThread(tasks[0], 5, TimeUnit.SECONDS);
-	}
-	
-	@OnHide
-	void unRegisterEventListener() {
-		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
 	}
 	
 	@OnCreate
