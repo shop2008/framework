@@ -18,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
@@ -30,7 +31,6 @@ import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -268,6 +268,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	}
 	
 	//挂单
+	@Command
 	String GuaDanOnClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			this.isSelected = 0;
@@ -276,6 +277,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		return null;
 	}
 	//市价
+	@Command
 	String ShiJiaOnClick(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
 			this.isSelected = 1;
@@ -379,7 +381,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	)
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String sellStockClick(InputEvent event){
-		String price = null;
+		String price = "0";
 		if(isSelected == 0) {
 			try {
 				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice))
@@ -392,5 +394,22 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
 		v.hide();
 		return "";
-	}	
+	}
+	
+	@OnUIDestroy
+	void destroyData() {
+		isSelected = 0;
+		stockMarket = null;
+		stockCode = null;
+		amount = null;
+		accid = null;
+		sellPrice = null;
+		closePriceBean = null;
+		registerBean("stockMarket", "");
+		registerBean("stockCode", "");
+		registerBean("amount", "");
+		registerBean("accid", "");
+		registerBean("sellPrice", "");
+		registerBean("closePriceBean", "");
+	}
 }
