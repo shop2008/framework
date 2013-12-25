@@ -408,6 +408,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	
 	@OnUIDestroy
 	protected void clearData() {
+		this.userId = null;
 		registerBean("userId", null);
 		usrService.getMorePersonalRecords(0, 0, this.isVirtual);
 		usrService.getMoreOtherPersonal(this.userId, 0, 0, this.isVirtual);
