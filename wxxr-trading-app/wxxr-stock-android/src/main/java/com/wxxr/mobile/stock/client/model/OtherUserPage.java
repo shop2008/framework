@@ -27,6 +27,7 @@ import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
+import com.wxxr.mobile.stock.client.biz.MyPageSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -176,7 +177,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "challengeViewMore", description = "To Challenge View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
+	@Command(commandName = "challengeViewMore", description = "To Challenge View More", navigations = { @Navigation(on = "OK", showPage = "OtherViewMorePage") })
 	CommandResult challengeViewMore(InputEvent event) {
 
 		CommandResult result = new CommandResult();
@@ -187,6 +188,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		map.put(Constants.KEY_USER_NAME_FLAG, userName);
 		result.setPayload(map);
 		result.setResult("OK");
+		updateSelection(new MyPageSelection(this.userId));
 		return result;
 	}
 
@@ -197,7 +199,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "joinViewMore", description = "To Join View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
+	@Command(commandName = "joinViewMore", description = "To Join View More", navigations = { @Navigation(on = "OK", showPage = "OtherViewMorePage") })
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
 
@@ -207,7 +209,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		map.put(Constants.KEY_USER_NAME_FLAG, userName);
 		result.setPayload(map);
 		result.setResult("OK");
-
+		updateSelection(new MyPageSelection(this.userId));
 		return result;
 	}
 
