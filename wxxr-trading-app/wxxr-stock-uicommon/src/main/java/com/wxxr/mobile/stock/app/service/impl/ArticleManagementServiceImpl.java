@@ -107,7 +107,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 			
 				@Override
 				public int compare(ArticleBean o1, ArticleBean o2) {
-					return o1.getPower() - o2.getPower();
+					return o2.getPower() - o1.getPower();
 				}
 			});
 		}
