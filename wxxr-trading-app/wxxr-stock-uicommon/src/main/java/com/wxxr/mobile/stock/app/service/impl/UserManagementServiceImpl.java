@@ -3,8 +3,11 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -603,7 +606,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
                 return false;
             }
             
-        }, null);
+        }, viewMoreComparator);
      
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
@@ -613,6 +616,31 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       gainBean_cache.setCommandParameters(p);
      return gainBeans;
     }
+    
+    private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
+
+		@Override
+		public int compare(GainBean o1, GainBean o2) {
+			try {
+				long o1Time = formatDate2Long(o1.getCloseTime());
+				long o2Time = formatDate2Long(o2.getCloseTime());
+				
+				return (int)(o2Time - o1Time);
+			} catch (ParseException e) {
+				
+				e.printStackTrace();
+				return 0;
+			}
+
+		}
+	};
+	
+	private static long formatDate2Long(String time) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日");
+		Date date = formatter.parse(time);
+		return date.getTime();
+	}
+	
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
@@ -623,7 +651,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
                 return false;
             }
             
-        }, null);
+        }, viewMoreComparator);
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
       p.put("start", start);
