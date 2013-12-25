@@ -80,6 +80,9 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	
 	String nickName;
 	
+	@Bean
+	int curItemId = 1;
+	
 	@SuppressWarnings("unused")
 	@Menu(items = { "left"})
 	private IMenu toolbar;
@@ -98,7 +101,8 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showActualRecords(InputEvent event) {
-		registerBean("curItemId", 0);
+		curItemId = 0;
+		registerBean("curItemId", curItemId);
 
 		// 用户自己的挑战交易记录
 		if (usrService != null) {
@@ -116,7 +120,8 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showVirtualRecords(InputEvent event) {
-		registerBean("curItemId", 1);
+		curItemId = 1;
+		registerBean("curItemId", curItemId);
 
 		if (usrService != null) {
 			usrService.getMoreOtherPersonal(userId, 0, otherHomeVLimit, true);
