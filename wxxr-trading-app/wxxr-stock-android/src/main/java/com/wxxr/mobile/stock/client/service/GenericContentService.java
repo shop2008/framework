@@ -3,7 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
-import android.content.ActivityNotFoundException;
+ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -90,4 +90,14 @@ public class GenericContentService extends AbstractModule<IStockAppContext> impl
 		} catch(ActivityNotFoundException e) {
 		}
 	}
+
+	@Override
+	public void startDownloadService(String downloadUrl) {
+		Intent intent = new Intent();
+		intent.setClass(AppUtils.getFramework().getAndroidApplication(), DownloadApkService.class);
+		intent.putExtra("downUrl", downloadUrl);
+		IAndroidPageNavigator navigator = (IAndroidPageNavigator)AppUtils.getService(IWorkbenchManager.class).getPageNavigator();
+		navigator.startService(intent);
+	}
+	
 }

@@ -13,4 +13,5 @@ public interface IGenericContentService {
 	void browseContent(String contentUrl);
 	void showEmailUI(String email);
 	void showMarket(String packageName);
+	void startDownloadService(String downloadUrl);
 }

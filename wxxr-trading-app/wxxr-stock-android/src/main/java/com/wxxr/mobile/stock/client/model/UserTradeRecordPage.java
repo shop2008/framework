@@ -38,20 +38,20 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?false:true):true):true}")
 	boolean recordNullVisible;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(0,10):null}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(start,limit):null}")
 	BindableListWrapper<GainBean> allTradeAccountListBean;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,10):null}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(start,limit):null}")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
 	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "false") })
+			@Attribute(name = "enablePullUpRefresh", value = "true") })
 	List<GainBean> allRecordsList;
 
 	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "false") })
+			@Attribute(name = "enablePullUpRefresh", value = "true") })
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
@@ -70,6 +70,12 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
+	
+	@Bean
+	private int start = 0;
+	
+	@Bean
+	private int limit = 20;
 	@Bean
 	int curItemId = 1;
 
@@ -184,14 +190,23 @@ public abstract class UserTradeRecordPage extends PageBase {
 
 	@Command
 	String handleSucTopRefresh(InputEvent event) {
-		showSucRecords(null);
+		//showSucRecords(null);
+		successTradeAccountListBean = tradingService.getGain(start,limit);
 		return null;
 	}
 
 	@Command
 	String handleAllTopRefresh(InputEvent event) {
-		showAllRecords(null);
+		//showAllRecords(null);
+		allTradeAccountListBean = tradingService.getTotalGain(start, limit);
 		return null;
 	}
 
+	@Command
+	String handleSucBottomRefresh(InputEvent event) {
+		/*start = limit +1;
+		limit = */
+	//	successTradeAccountListBean = tradingService.getGain(start, );
+		return null;
+	}
 }

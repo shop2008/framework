@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 public abstract class NewsTitleItemView extends ViewBase implements IModelUpdater {
 
 	
-	@Field(valueKey="text", binding="${title}")
+	@Field(valueKey="text", binding="${title!=null?title:''}")
 	String title;
 	
 	@Override

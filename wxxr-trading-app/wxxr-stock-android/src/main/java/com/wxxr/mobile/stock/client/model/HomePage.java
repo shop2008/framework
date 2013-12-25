@@ -3,9 +3,8 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import android.app.AlertDialog;
-import android.util.Log;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -14,7 +13,6 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -23,9 +21,12 @@ import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
+import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
 /**
  * @author neillin
@@ -38,6 +39,9 @@ public abstract class HomePage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 	
+	@Bean(type=BindingType.Pojo, express="${usrMgr.clientInfo}")
+	ClientInfoBean vertionInfoBean;
+	
 	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean userInfo;
 //	@Menu(items={"home","page1","page2","page3","page4","page5","page6"})
@@ -49,6 +53,10 @@ public abstract class HomePage extends PageBase {
 //	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","todayHotRankView","masterRankView","helpCenter"})
 	@ViewGroup(viewIds={"tradingMain","tradingWinner","infoCenter","championShip","helpCenter"})
 	IViewGroup contents;
+	
+	String curVertion;
+	
+	String remoteVertion;
 	
 	
 	@Command(description="Invoke when a toolbar item was clicked",
@@ -148,7 +156,8 @@ public abstract class HomePage extends PageBase {
 				@UIItem(id="rhome",label="我的主页",icon="resourceId:drawable/rz",visibleWhen="${userInfo != null}"),
 				@UIItem(id="rpage1",label="交易记录",icon="resourceId:drawable/jyjl",visibleWhen="${userInfo != null}"),
 				@UIItem(id="rpage2",label="设置",icon="resourceId:drawable/seting"),
-				@UIItem(id="rpage3",label="版本:1.4.0",icon="resourceId:drawable/v_default")
+				@UIItem(id="rpage3",label="版本:1.0.0",icon="resourceId:drawable/v_default"/*, 
+				enableWhen="${(remoteVertion!=null&&curVertion!=null)?(curVertion!=remoteVertion?true:false):false}"*/)
 			},
 			navigations={
 				@Navigation(on="rhome",showPage="userPage",keepMenuOpen=true),
@@ -164,13 +173,24 @@ public abstract class HomePage extends PageBase {
 			if(log.isDebugEnabled()){
 				log.debug("Menu item :"+name+" was clicked !");
 			}
-			
 			if(name!=null&& name.equals("rpage3")) {
-				//调用服务里面检查版本接口
-				boolean isLastest = true;
+				curVertion = AppUtils.getFramework().getApplicationVersion();
+			
+				if(vertionInfoBean == null) {
+					return "NO_UPDATE";
+				}
+				
+				remoteVertion = vertionInfoBean.getVersion();
+				
+				if(remoteVertion == null) {
+					return "NO_UPDATE";
+				}
+				
+				boolean isLastest = curVertion.equals(remoteVertion)?true:false;
 				if(isLastest) {
 					return "NO_UPDATE";
 				} else {
+					updateSelection(new VertionUpdateSelection(vertionInfoBean.getUrl()));
 					return "ALERT_UPDATE";
 				}
 			}
