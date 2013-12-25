@@ -442,4 +442,12 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 		}
 	}
 
+	@Override
+	public void startService(Intent intent) {
+		Activity activity = getCurrentActivity();
+		if(activity != null) {
+			activity.startService(intent);
+		}
+	}
+
 }
