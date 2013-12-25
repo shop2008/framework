@@ -163,6 +163,7 @@ public abstract class TradingMainView extends ViewBase{
 			map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 			map.put(Constants.KEY_SELF_FLAG, isSelf);
 			resutl.setPayload(map);
+			updateSelection(new AccidSelection(acctId+"", isVirtual));
 			return resutl;
 		}
 		return null;

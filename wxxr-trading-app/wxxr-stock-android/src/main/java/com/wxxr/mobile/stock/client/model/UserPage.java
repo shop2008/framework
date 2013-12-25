@@ -226,9 +226,8 @@ public abstract class UserPage extends PageBase  {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
-				}
-				if ("UNCLOSE".equals(tradeStatus)) {
+					
+				} else if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
@@ -238,6 +237,7 @@ public abstract class UserPage extends PageBase  {
 						result.setResult("BuyIn");
 					}
 				}
+				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}
@@ -276,10 +276,7 @@ public abstract class UserPage extends PageBase  {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					
-					updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
-				}
-				if ("UNCLOSE".equals(tradeStatus)) {
+				} else if ("UNCLOSE".equals(tradeStatus)) {
 					int status = actualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
@@ -289,6 +286,7 @@ public abstract class UserPage extends PageBase  {
 						result.setResult("BuyIn");
 					}
 				}
+				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}

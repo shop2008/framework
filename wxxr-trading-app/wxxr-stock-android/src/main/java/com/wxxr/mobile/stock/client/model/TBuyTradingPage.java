@@ -39,8 +39,6 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
 /**
@@ -84,30 +82,6 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 	})
 	LongTime2StringConvertor longTime2StringConvertorSell;
 	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00")
-	})
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f元"),
-			@Parameter(name="multiple", value="100.00")
-	})
-	StockLong2StringConvertor stockLong2StringConvertorYuan;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="100")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple",value="100")
-	})
-	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
-	
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
@@ -119,22 +93,6 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.sellDay==0?'-1':tradingBean.sellDay):'-1'}", converter = "longTime2StringConvertorSell")
 	String sellDay;
-
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
-	String applyFee;
-
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:''}", converter = "stockLong2StringAutoUnitConvertor")
-	String avalibleFee;
-
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:''}", converter = "stockLong2StringConvertorSpecial", attributes={
-			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.gainRate>0?'resourceId:color/stock_text_up':(tradingBean.gainRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
-			})
-	String gainRate;
-
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:''}", converter = "stockLong2StringConvertorYuan", attributes={
-			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.totalGain>0?'resourceId:color/stock_text_up':(tradingBean.totalGain<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
-			})
-	String totalGain;
 
 	@Field(valueKey = "options", binding = "${tradingBean != null ? tradingBean.tradingOrders : null}")
 	List<StockTradingOrderBean> tradingOrders;
@@ -278,31 +236,6 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 		}
 		tradingService.getTradingAccountInfo(acctId);
 //		registerBean("tradingBean", tradingBean);
-		return null;
-	}
-
-	/**
-	 * 模拟盘点击
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(navigations = { @Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
-			@Navigation(on = "ShiPanBuyStockInfoPage", showPage = "ShiPanBuyStockInfoPage") })
-	CommandResult handleStockClick(InputEvent event) {
-		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
-			CommandResult resutl = new CommandResult();
-			if (tradingBean != null) {
-				resutl.setPayload(tradingBean.getId());
-			}
-			if(isVirtual){
-				resutl.setResult("TBuyStockInfoPage");
-			}else{
-				resutl.setResult("ShiPanBuyStockInfoPage");
-			}
-			return resutl;
-		}
-
 		return null;
 	}
 

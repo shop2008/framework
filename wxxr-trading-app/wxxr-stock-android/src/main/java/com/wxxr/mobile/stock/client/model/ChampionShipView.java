@@ -61,7 +61,7 @@ public abstract class ChampionShipView extends ViewBase {
 	@Field(valueKey = "options", binding = "${t1RankListBean.data}")
 	List<MegagameRankBean> ChampionT1Ship;
 
-	@Field(valueKey = "options", binding = "${weekRankListBean.data}")
+	@Field(valueKey = "options", binding = "${weekRankListBean.data}", visibleWhen="${weekRankListBean != null && weekRankListBean.data!=null && weekRankListBean.data.size()>0?true:false}")
 	List<WeekRankBean> ChampionWeekShip;
 
 	@Field(valueKey = "options", binding = "${rtRankListBean.data}")
@@ -200,6 +200,7 @@ public abstract class ChampionShipView extends ViewBase {
 				map.put(Constants.KEY_VIRTUAL_FLAG, true);
 				map.put(Constants.KEY_SELF_FLAG, false);
 				result.setPayload(map);
+				updateSelection(new AccidSelection(acctId, true));
 			}
 		}
 		result.setResult("");
@@ -234,11 +235,11 @@ public abstract class ChampionShipView extends ViewBase {
 				if("CLOSED".equals(over)){
 					result.setPayload(map);
 					result.setResult("operationDetails");
-					updateSelection(new AccidSelection(acctId, true));
 				} else if("UNCLOSE".equals(over)){
 					result.setResult("sellTradingAccount");
 					result.setPayload(map);
 				}
+				updateSelection(new AccidSelection(acctId, true));
 			}
 		}
 		return result;
