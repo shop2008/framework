@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/date_layout"
         android:layout_margin="2dp"
-        android:background="@drawable/precssiong"
+        android:background="@drawable/bu_message_radius"
         android:gravity="center"
         bind:field="messageLayout" >
 

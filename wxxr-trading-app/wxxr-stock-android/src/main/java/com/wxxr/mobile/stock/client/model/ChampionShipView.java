@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -117,7 +118,10 @@ public abstract class ChampionShipView extends ViewBase {
 	// registerBean("currentViewId", currentViewId);
 	// }
 
-	@Command
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
 	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadTRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -129,7 +133,10 @@ public abstract class ChampionShipView extends ViewBase {
 		return null;
 	}
 
-	@Command
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
 	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadT1Rank(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -141,7 +148,10 @@ public abstract class ChampionShipView extends ViewBase {
 		return null;
 	}
 
-	@Command
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
 	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadWeekRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -153,7 +163,10 @@ public abstract class ChampionShipView extends ViewBase {
 		return null;
 	}
 
-	@Command
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
 	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadRegularTicketRank(InputEvent event) {
 		if (log.isDebugEnabled()) {

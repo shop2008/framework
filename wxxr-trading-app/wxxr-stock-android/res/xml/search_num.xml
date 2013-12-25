@@ -28,9 +28,9 @@
     </Row>
     <Row>
         <Key
-            android:codes="54002"
+            android:codes="54601"
             android:keyEdgeFlags="left"
-            android:keyLabel="002" />
+            android:keyLabel="601" />
         <Key
             android:codes="52"
             android:keyLabel="4" />
@@ -47,9 +47,9 @@
     </Row>
     <Row>
         <Key
-            android:codes="54300"
+            android:codes="54002"
             android:keyEdgeFlags="left"
-            android:keyLabel="300" />
+            android:keyLabel="002" />
         <Key
             android:codes="55"
             android:keyLabel="7" />

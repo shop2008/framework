@@ -118,11 +118,11 @@ public class StockSearchView extends RelativeLayout implements
 		case 54600:
 			editable.insert(start, "600");
 			break;
+		case 54601:
+			editable.insert(start, "601");
+			break;
 		case 54002:
 			editable.insert(start, "002");
-			break;
-		case 54300:
-			editable.insert(start, "300");
 			break;
 		case 5400:
 			editable.insert(start, "00");

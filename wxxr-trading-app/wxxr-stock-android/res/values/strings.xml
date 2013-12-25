@@ -97,7 +97,7 @@
     <string name="tv_title_create_trade">创建</string>
     <!-- 搜索股票 -->
     <string name="tv_title_stock_search">搜索股票</string>
-    <string name="search_hint">代码/拼音/首字母</string>
+    <string name="search_hint">拼音/股票代码</string>
 	<!-- 买入股票 -->
 	<string name="buy_stock_count_hint">输入最大可买股数</string>
 	<string name="confirm_cancel_order">是否要撤单</string>
