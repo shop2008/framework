@@ -34,6 +34,7 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -734,6 +735,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	public boolean usrHasRoles(String... roles) {
 		return false;
 	}
+
+	
+	private static final Comparator<GainPayDetailBean> gainPayDetailComparator = new Comparator<GainPayDetailBean>() {
+
+		@Override
+		public int compare(GainPayDetailBean o1, GainPayDetailBean o2) {
+			
+			return (int)(o2.getTime() - o1.getTime());
+		}
+	};
 	
     @Override
     public BindableListWrapper<GainPayDetailBean> getGPDetails(int start, int limit) {
@@ -741,7 +752,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
             if(gainPayDetails==null){
                 gainPayDetail_cache=new GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO>("gainPayDetailBean");
             }
-            gainPayDetails=gainPayDetail_cache.getEntities(null, null);
+            gainPayDetails = gainPayDetail_cache.getEntities(null, gainPayDetailComparator);
         }
         Map<String, Object> params=new HashMap<String, Object>();
         params.put("start", start);

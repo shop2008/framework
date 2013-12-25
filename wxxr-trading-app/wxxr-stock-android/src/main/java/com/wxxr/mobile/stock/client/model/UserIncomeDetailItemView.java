@@ -39,7 +39,8 @@ public abstract class UserIncomeDetailItemView extends ViewBase implements
 	
 	@Convertor(params={@Parameter(name="nullString",value="0"),
 			@Parameter(name="format", value="%.2f"),
-			@Parameter(name="multiple", value="100.0f")
+			@Parameter(name="multiple", value="100.0f"),
+			@Parameter(name="formatUnit", value="元")
 	})
 	StockLong2StringConvertor stockL2StrConvertor;
 	@Override
