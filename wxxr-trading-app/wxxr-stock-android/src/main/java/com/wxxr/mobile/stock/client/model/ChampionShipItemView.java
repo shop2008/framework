@@ -75,6 +75,7 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	CommandResult handlerUserClicked(InputEvent event) {
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 		map.put(Constants.KEY_USER_ID_FLAG, msgRank.getUserId());
 		map.put(Constants.KEY_USER_NAME_FLAG, msgRank.getNickName());
 		result.setPayload(map);

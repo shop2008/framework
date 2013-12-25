@@ -27,7 +27,6 @@ import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -108,7 +107,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	
 	@OnShow
 	void initData(){
-		if(user != null){
+		if(userName != null){
 			getAppToolbar().setTitle(userName+"的主页", null);
 		}
 	}
@@ -159,6 +158,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 					}
 					registerBean("userId", userId);
 				}
+				
+				
 				
 				if (tempt != null && Constants.KEY_USER_NAME_FLAG.equals(key)) {
 					if (tempt instanceof String) {
