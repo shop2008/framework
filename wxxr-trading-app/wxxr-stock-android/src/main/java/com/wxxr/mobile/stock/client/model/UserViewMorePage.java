@@ -47,10 +47,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.data:null}", visibleWhen = "${curItemId == 1}")
 	List<GainBean> virtualRecordsList;
 
-	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}"), })
+	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
 	boolean actualRecordBtn;
 
-	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}"), })
+	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}")})
 	boolean virtualRecordBtn;
 
 	@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((myJoinListBean.data!=null)?(myJoinListBean.data.size()>0?false:true):true))}")

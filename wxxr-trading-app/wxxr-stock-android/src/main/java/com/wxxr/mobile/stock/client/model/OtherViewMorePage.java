@@ -45,10 +45,10 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Field(valueKey = "options", binding = "${otherJoinListBean!=null?otherJoinListBean.data:null}", visibleWhen = "${curItemId == 1}")
 	List<GainBean> virtualRecordsList;
 
-	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}"), })
+	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
 	boolean actualRecordBtn;
 
-	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}"), })
+	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}")})
 	boolean virtualRecordBtn;
 
 	@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((otherJoinListBean.data!=null)?(otherJoinListBean.data.size()>0?false:true):true))}")
