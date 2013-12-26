@@ -327,4 +327,5 @@
     <string name="label_today_decrease">当日减少</string>
     <string name="label_score_balance">余额</string>
     <string name="label_score_details">积分明细</string>
+    <string name="article_body_loading_text">正在加载数据，请稍侯...</string>
 </resources>
