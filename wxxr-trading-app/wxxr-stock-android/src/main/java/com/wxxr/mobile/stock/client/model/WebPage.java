@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -33,9 +34,11 @@ public abstract class WebPage extends PageBase implements IModelUpdater{
 	@Bean
 	String tempUrl = "#";
 	
-	@Field(valueKey="webUrl",binding="${tempUrl!=null?tempUrl:'#'}")
-	String webUrl;
+	/*@Field(valueKey="webUrl",binding="${tempUrl!=null?tempUrl:'#'}")
+	String webUrl;*/
 	
+	@Field(valueKey="text",binding="${tempUrl!=null?tempUrl:'#'}")
+	String webUrl;
 	
 	@OnShow
 	void initUrl(){
@@ -50,11 +53,17 @@ public abstract class WebPage extends PageBase implements IModelUpdater{
 	            String tempt = (String)temp.get(key);
 	            if (tempt != null && "result".equals(key)) {
 	            	log.info("WebPage webUrl=" + tempt);
-	            	this.webUrl = tempt;
+	            	//this.webUrl = tempt;
 	            	this.tempUrl = tempt;
 	            	registerBean("tempUrl", tempt);
 	            }
 	        }
 	    }
+	}
+	
+	@OnUIDestroy
+	void clearData() {
+		this.tempUrl = null;
+		registerBean("tempUrl", this.tempUrl);
 	}
 }
