@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 
 public class ArticleBodyView extends ViewGroup {
 	
 	private MyWebViewClient webClient;
 	private WebSettings webSettings;
-	private ProgressBar mProgressBar; 
+	private LinearLayout loadingBody; 
 	private WebView mWebView;
 	private View view;
 	private boolean isLoading = false;
@@ -43,7 +43,7 @@ public class ArticleBodyView extends ViewGroup {
 		
 		LayoutInflater inflater = LayoutInflater.from(context);
 		view = inflater.inflate(R.layout.article_body_layout,this, false);
-		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_article_body);
+		loadingBody = (LinearLayout) view.findViewById(R.id.ll_article_body);
 		mWebView = (WebView) view.findViewById(R.id.wv_article_body);
 		webSettings = mWebView.getSettings();
 		webClient = new MyWebViewClient();
@@ -77,14 +77,14 @@ public class ArticleBodyView extends ViewGroup {
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
 			isLoading = true;
-			mProgressBar.setVisibility(View.VISIBLE);
+			loadingBody.setVisibility(View.VISIBLE);
 		}
 		
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			isLoading = false;
-			mProgressBar.setVisibility(View.GONE);
+			loadingBody.setVisibility(View.GONE);
 		}
 		
 		
