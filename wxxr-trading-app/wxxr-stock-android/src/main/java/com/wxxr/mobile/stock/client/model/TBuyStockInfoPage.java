@@ -42,7 +42,8 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	String acctId;
 
 	@Convertor(params={
-			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss")
+			@Parameter(name="format",value="yyyy-MM-dd HH:mm:ss"),
+			@Parameter(name="nullString",value="--")
 	})
 	LongTime2StringConvertor longTime2StringConvertor;
 	
