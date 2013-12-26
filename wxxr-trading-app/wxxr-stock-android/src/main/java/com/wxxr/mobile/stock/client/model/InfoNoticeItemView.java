@@ -61,7 +61,7 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 		}
 	}
 	
-	@Command(navigations = { @Navigation(on = "*", showPage = "webPage") })
+	@Command(navigations = { @Navigation(on = "*", showPage = "ArticleBodyPage") })
 	CommandResult handleNoticesItemClick(InputEvent event) {
 		if (usrService != null) {
 			usrService.readPullMesage(message.getId());

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://wxxr.com.cn/binding"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@color/black"
     >
 
+	<WebView 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:id="@+id/wv_article_body"
+	    />
+   
+	 <ProgressBar
+	     android:id="@+id/pb_article_body"
+	     style="?android:attr/progressBarStyleLarge"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_centerHorizontal="true"
+	     android:layout_centerVertical="true" />
 
-    <com.wxxr.mobile.stock.client.widget.ArticleBodyView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bind:field="articleBodyVisible"
-        android:visibility="gone"
-        />
-</FrameLayout>
+</RelativeLayout>

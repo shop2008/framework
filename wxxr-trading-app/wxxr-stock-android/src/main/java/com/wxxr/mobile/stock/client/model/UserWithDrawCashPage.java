@@ -181,7 +181,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	
 	@Command(
 			commandName="withDrawCashRules",
-			navigations={@Navigation(on="OK", showPage="webPage")}
+			navigations={@Navigation(on="OK", showPage="ArticleBodyPage")}
 			)
 	
 	CommandResult withDrawCashRules(InputEvent event) { 
