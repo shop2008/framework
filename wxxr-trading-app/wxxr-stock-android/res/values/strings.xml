@@ -100,6 +100,7 @@
     <string name="search_hint">拼音/股票代码</string>
 	<!-- 买入股票 -->
 	<string name="buy_stock_count_hint">输入最大可买股数</string>
+	<string name="buy_stock_count_suspension_hint">最大可买股数:--</string>
 	<string name="confirm_cancel_order">是否要撤单</string>
     <!-- 快速买入 -->
     <string name="bt_hang_order_text">挂单</string>

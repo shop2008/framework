@@ -88,6 +88,20 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
 	StockQuotationBean stockQuotationBean;
+	//停牌
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2}")
+	String priceLayout;
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2}")
+	String suspension;
+	
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2}")
+	String changeLayout;
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2}")
+	String changeSuspension;
+	
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2}")
+	String quotationSuspension;
+	
 	//Title
 	@Field(valueKey = "text", binding= "${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String name;
@@ -191,7 +205,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 			})
 	String buySum;
 	
-	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean!=null}")
+	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean!=null && stockQuotationBean.status!=2}")
 	String quotation;
 	
 	@Field(valueKey = "text", visibleWhen= "${stockQuotationBean==null}")

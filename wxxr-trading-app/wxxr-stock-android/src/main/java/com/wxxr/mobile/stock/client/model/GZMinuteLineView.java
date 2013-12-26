@@ -225,6 +225,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
+			registerBean("minuteHeaderType", this.minuteHeaderType);
 			if(this.codeBean!=null && this.marketBean!=null){
 				minuteMap.put("code", this.codeBean);
 				minuteMap.put("market", this.marketBean);

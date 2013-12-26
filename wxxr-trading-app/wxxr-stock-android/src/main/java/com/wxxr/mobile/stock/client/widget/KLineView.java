@@ -165,7 +165,10 @@ public class KLineView extends View implements IDataChangedListener {
 	public void setBgData(Canvas c) {
 		cWidth = this.getWidth(); // 画布宽
 		cHeight = this.getHeight(); // 画布高
-		wBi = (float) 65 / cWidth; // 从逻辑的65开始
+		if(getPaintTextSize() > 10)
+			wBi = (float) 65 / cWidth; // 从逻辑的65开始
+		else
+			wBi = (float) 45 / cWidth; // 从逻辑的45开始
 		mStartX = cWidth * wBi; // 算实际画布开始位置
 		mStartY = cHeight * hBi;
 		mEndX = cWidth - 1;
@@ -218,22 +221,22 @@ public class KLineView extends View implements IDataChangedListener {
 	// updateCanvas();
 	// }
 
-	void setPaintTextSize(Paint p) {
+	int getPaintTextSize() {
 		if (cWidth >= 1000) {
-			mPaint.setTextSize(18);
+			return 18;
 		} else if (cWidth >= 700) {
-			mPaint.setTextSize(16);
+			return 16;
 		} else if (cWidth >= 570) {
-			mPaint.setTextSize(14);
+			return 12;
 		} else if (cWidth >= 450) {
-			mPaint.setTextSize(10);
+			return 10;
 		} else if (cWidth >= 330) {
-			mPaint.setTextSize(10);
+			return 10;
 		} else {
-			mPaint.setTextSize(10);
+			return 8;
 		}
 	}
-
+	
 	public void drawKline(Canvas canvas) {
 		// 在背景表格上画数据
 		if (dataProvider == null) {
@@ -242,10 +245,11 @@ public class KLineView extends View implements IDataChangedListener {
 		if (dataProvider.getItemCounts() == 0) {
 			return;
 		}
+		mPaint.reset();
 		mPaint.setStyle(Paint.Style.FILL);
 		mPaint.setAntiAlias(true);
 		/** 设置表格左边的股票价格文字 */
-		setPaintTextSize(mPaint);
+		mPaint.setTextSize(getPaintTextSize());
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		mPaint.setColor(Color.parseColor("#C43F32"));
 
@@ -274,7 +278,7 @@ public class KLineView extends View implements IDataChangedListener {
 				mPaint);
 
 		/** 设置表格底边时间文字 */
-		setPaintTextSize(mPaint);
+		mPaint.setTextSize(getPaintTextSize());
 		mPaint.setTextAlign(Paint.Align.CENTER);
 		mPaint.setColor(Color.WHITE);
 		canvas.drawText(
@@ -298,14 +302,14 @@ public class KLineView extends View implements IDataChangedListener {
 				mPaint);
 
 		/** 画成交量柱状图的值 */
-		setPaintTextSize(mPaint);
+		mPaint.setTextSize(getPaintTextSize());
 		/** 成交量（万） */
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		canvas.drawText(formatNum(maxSecuvolume / 100), mStartX - 6,
 				zzTopY + 10, mPaint);
 		canvas.drawText(formatNum(maxSecuvolume / 200), mStartX - 6, zzTopY
 				+ (zzBottomY - zzTopY) / 2 + 8, mPaint);
-		mPaint.setTextSize(16);
+		mPaint.setTextSize(getPaintTextSize()+2);
 		/** 单位（手） */
 		canvas.drawText("单位:手", mStartX - 6, zzBottomY + 4, mPaint);
 
@@ -367,6 +371,8 @@ public class KLineView extends View implements IDataChangedListener {
 				mPaint.setStrokeWidth(2);
 				canvas.drawLine(left, top, right, bottom, mPaint);
 			} else {
+				if(Math.abs(top - bottom) < 1)
+					top = bottom -1;
 				canvas.drawRect(left, top, right, bottom, mPaint);
 			}
 			mPaint.setStrokeWidth(1);
@@ -404,7 +410,11 @@ public class KLineView extends View implements IDataChangedListener {
 			stopY = (float) (mStartY - (low - minPrice) * fenshiHeight
 					/ (maxPrice - minPrice));
 			// 画中线
-			mPaint.setStrokeWidth(2);
+			mPaint.setStyle(Paint.Style.FILL);
+			if(getPaintTextSize() > 10)
+				mPaint.setStrokeWidth(2);
+			else
+				mPaint.setStrokeWidth(1);
 			canvas.drawLine(startX, startY, startX, stopY, mPaint);
 
 			left += fenshiWidth / count;
@@ -435,6 +445,7 @@ public class KLineView extends View implements IDataChangedListener {
 		/** 设置虚线样式 */
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
 				| Paint.FILTER_BITMAP_FLAG));
+		mPaint.reset();
 		mPaint.setColor(Color.parseColor("#535353"));
 		mPaint.setStyle(Paint.Style.STROKE);
 

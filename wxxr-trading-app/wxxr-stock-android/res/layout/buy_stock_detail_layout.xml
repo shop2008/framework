@@ -63,115 +63,123 @@
                     bind:field="stock"
                     bind:on_Click="handlerStockClicked" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:layout_marginTop="5dip"
-                    android:orientation="horizontal" >
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" >
-
-                        <EditText
-                            android:id="@+id/price"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/inpunt_2"
-                            android:hint="最新行情价"
-                            android:inputType="numberDecimal"
-                            android:maxLength="6"
-                            android:paddingLeft="8dp"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            bind:field="price"
-                            bind:on_TextChanged="priceTextChanged" />
-
-                        <FrameLayout
-                            android:id="@+id/refresh_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/inpunt_right_btn" >
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:src="@drawable/refresh"
-                                bind:field="refresh"
-                                bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" />
-
-                            <ProgressBar
-                                style="?android:attr/progressBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:visibility="gone"
-                                bind:field="progress" />
-                        </FrameLayout>
-                    </LinearLayout>
-
-                    <RadioGroup
-                        android:id="@+id/radio_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dip"
-                        android:layout_weight="1"
-                        android:orientation="horizontal" >
-
-                        <RadioButton
-                            android:id="@+id/order_price"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/on_off_radiobuttn_left"
-                            android:button="@null"
-                            android:checked="true"
-                            android:gravity="center"
-                            android:text="@string/bt_hang_order_text"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            bind:field="*"
-                            bind:on_Click="handleOrderBtnClick" />
-
-                        <RadioButton
-                            android:id="@+id/market_price"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/on_off_radiobuttn_right"
-                            android:button="@null"
-                            android:gravity="center"
-                            android:text="@string/bt_market_price_text"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            bind:field="*"
-                            bind:on_Click="handleMarketBtnClick" />
-                    </RadioGroup>
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/count"
+                <include layout="@layout/buy_stock_detail_suspension_layout" />
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:layout_marginTop="5dip"
-                    android:background="@drawable/inpunt_bj"
-                    android:gravity="center_vertical"
-                    android:hint="@string/buy_stock_count_hint"
-                    android:inputType="number"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    bind:field="count"
-                    bind:on_TextChanged="countTextChanged" />
+                    android:orientation="vertical"
+                    bind:field="inputLayout" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:layout_marginTop="5dip"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" >
+
+                            <EditText
+                                android:id="@+id/price"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/inpunt_2"
+                                android:hint="最新行情价"
+                                android:inputType="numberDecimal"
+                                android:maxLength="6"
+                                android:paddingLeft="8dp"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                bind:field="price"
+                                bind:on_TextChanged="priceTextChanged" />
+
+                            <FrameLayout
+                                android:id="@+id/refresh_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/inpunt_right_btn" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/refresh"
+                                    bind:field="refresh"
+                                    bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" />
+
+                                <ProgressBar
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:visibility="gone"
+                                    bind:field="progress" />
+                            </FrameLayout>
+                        </LinearLayout>
+
+                        <RadioGroup
+                            android:id="@+id/radio_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dip"
+                            android:layout_weight="1"
+                            android:orientation="horizontal" >
+
+                            <RadioButton
+                                android:id="@+id/order_price"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/on_off_radiobuttn_left"
+                                android:button="@null"
+                                android:checked="true"
+                                android:gravity="center"
+                                android:text="@string/bt_hang_order_text"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                bind:field="*"
+                                bind:on_Click="handleOrderBtnClick" />
+
+                            <RadioButton
+                                android:id="@+id/market_price"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/on_off_radiobuttn_right"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="@string/bt_market_price_text"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                bind:field="*"
+                                bind:on_Click="handleMarketBtnClick" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="10dip"
+                        android:layout_marginRight="10dip"
+                        android:layout_marginTop="5dip"
+                        android:background="@drawable/inpunt_bj"
+                        android:gravity="center_vertical"
+                        android:hint="@string/buy_stock_count_hint"
+                        android:inputType="number"
+                        android:paddingLeft="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        bind:field="count"
+                        bind:on_TextChanged="countTextChanged" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/buy_btn"
@@ -193,7 +201,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="10dip"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+                    bind:field="keyboard" >
                 </com.wxxr.mobile.stock.client.widget.StockInputKeyboard>
             </LinearLayout>
         </com.wxxr.mobile.stock.client.widget.NewScrollView>

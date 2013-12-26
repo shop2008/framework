@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -132,10 +133,13 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	@Field(valueKey = "text", binding="${stockInfoBean!=null?stockInfoBean.name:''}${' '}${codeBean}")
 	String stock;
 	
-	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:null}", converter="stockLong2StringConvertor")
+	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:null}", converter="stockLong2StringConvertor", 
+			attributes={@Attribute(name = "enabled", value="${stockQuotationBean!=null&&stockQuotationBean.status!=2}")})
 	String price;
+	DataField<String> priceField;
 	
-	@Field(valueKey = "text", binding="${amountBean}")
+	@Field(valueKey = "text", binding="${amountBean}", 
+			attributes={@Attribute(name = "enabled", value="${stockQuotationBean!=null&&stockQuotationBean.status!=2}")})
 	String count;
 	
 	@Field(valueKey = "enabled", attributes={
@@ -151,6 +155,10 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	boolean refresh = true;
 	DataField<Boolean> refreshField;
 	
+	@Field(valueKey = "visible")
+	boolean keyboard = true;
+	DataField<Boolean> keyboardField;
+	
 	@Bean
 	int size;
 	@Bean
@@ -160,6 +168,19 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			@Attribute(name = "size", value = "${size}"),
 			@Attribute(name = "position", value = "${position}") })
 	String indexGroup;
+	//停牌
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2}")
+	String inputLayout;
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2}")
+	String inputSuspension;
+	
+	@Field(valueKey = "visible")
+	boolean refreshSus = true;
+	DataField<Boolean> refreshSusField;
+	@Field(valueKey = "visible")
+	boolean progressSus;
+	DataField<Boolean> progressSusField;
+	
 	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
@@ -174,8 +195,10 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	CommandResult handlerStockClicked(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult result = new CommandResult();
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("result", 1);
 			result.setResult("stockSearchPage");
-			result.setPayload(this);
+			result.setPayload(map);
 			return result;
 		}
 		return null;
@@ -183,6 +206,12 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Command
 	String handlerRefreshClicked(InputEvent event) {
+		if(stockQuotationBean!=null) {
+			long price = stockQuotationBean.getNewprice();
+			String val = Utils.roundHalfUp(price/1000f, 2)+"";
+			priceField.setValue("");
+			priceField.setValue(val);
+		}
 		infoCenterService.getStockQuotation(codeBean, marketBean);
 		//同步
 		StockQuotationBean bean = infoCenterService.getSyncStockQuotation(codeBean, marketBean);
@@ -398,6 +427,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 				}
 			}, 100, TimeUnit.MILLISECONDS);
 		}
+	}
+	
+	@OnHide
+	void setKeyboardHide() {
+		keyboardField.setValue(false);
 	}
 	
 	@OnUIDestroy

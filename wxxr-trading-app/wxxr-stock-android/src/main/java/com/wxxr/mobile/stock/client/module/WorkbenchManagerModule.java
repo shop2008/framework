@@ -36,6 +36,7 @@ import com.wxxr.mobile.stock.client.binding.SellFiveDayMinuteLineViewFieldBinder
 import com.wxxr.mobile.stock.client.binding.SpinnerItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.SpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.StockRefreshClickedDecorator;
+import com.wxxr.mobile.stock.client.binding.StockSuspensionRefreshClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
@@ -113,6 +114,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 	@Override
 	protected void initBindingDecorators(IBindingDecoratorRegistry registry) {
 		registry.registerDecorator("StockRefreshClickedDecorator", StockRefreshClickedDecorator.class);
+		registry.registerDecorator("StockSuspensionRefreshClickedDecorator", StockSuspensionRefreshClickedDecorator.class);
 		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
 		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
 	}
