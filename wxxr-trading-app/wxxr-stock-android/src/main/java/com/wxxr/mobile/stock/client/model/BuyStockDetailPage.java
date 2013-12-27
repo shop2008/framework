@@ -400,7 +400,6 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		}else{
 			tradingService.buyStock(acctIdBean, marketBean, codeBean, "0", amountBean);
 		}
-		tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
 		if(v != null)
 			v.hide();
