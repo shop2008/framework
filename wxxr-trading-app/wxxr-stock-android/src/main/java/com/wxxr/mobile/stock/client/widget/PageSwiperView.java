@@ -29,8 +29,8 @@ public class PageSwiperView extends LinearLayout  {
 //	private ImageSwiperViewGroup swiperViewGroup;
 	private ViewPager swiperPager;
 	private int mViewCount = 0;
-	private int mCurSel = 0;
 	private List<View> viewList = null;
+	private boolean flag = true;
 	private DataSetObserver observer = new DataSetObserver() {
 
 		/* (non-Javadoc)
@@ -138,12 +138,12 @@ public class PageSwiperView extends LinearLayout  {
 					viewList.add(image);
 					paginationImgView[i] = new View(mContext);
 					paginationImgView[i].setPadding(8, 8, 8, 8);
+					paginationImgView[i].setBackgroundResource(0);
+					paginationImgView[i].setEnabled(true);
 					paginationImgView[i].setBackgroundResource(R.drawable.guide_round);
 					paginationImgView[i].setTag(i);
 					if(i==0){
 						paginationImgView[0].setEnabled(false);
-					}else{
-						paginationImgView[i].setEnabled(true);
 					}
 					if(paginationLayout!=null){
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(14,14);
@@ -159,7 +159,6 @@ public class PageSwiperView extends LinearLayout  {
 	}
 
 	private class ViewPagerAdapter extends PagerAdapter{
-
 		private List<View> viewlist;
 		public ViewPagerAdapter(List<View> list){
 			this.viewlist = list;
@@ -187,6 +186,8 @@ public class PageSwiperView extends LinearLayout  {
 		}
 	}	
 	public class ViewOnPageChangeListener implements OnPageChangeListener{
+		private int mCurSel = 0;
+
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
 			
@@ -199,14 +200,13 @@ public class PageSwiperView extends LinearLayout  {
 
 		@Override
 		public void onPageSelected(int position) {
-			if (position < 0 || position > mViewCount - 1 || mCurSel == position)
+			if (position < 0 || position > mViewCount - 1 || this.mCurSel == position)
 	    	{
 	    		return ;
 	    	}
-	    	paginationImgView[mCurSel].setEnabled(true);
+	    	paginationImgView[this.mCurSel].setEnabled(true);
 	    	paginationImgView[position].setEnabled(false);
-	    	mCurSel = position;			
+	    	this.mCurSel = position;			
 		}
 	}	
-	
 }
