@@ -81,12 +81,14 @@ public class BuyStockCommand implements ICommand<StockResultVO>{
     @Override
     public void validate() {
     	if(getPrice()==null || StringUtils.isEmpty(getPrice())){
-    		throw new StockAppBizException("股票价格不能为空！");
+    		throw new StockAppBizException("股票价格不能为0！");
     	}else if(getAmount()==null || StringUtils.isEmpty(getAmount())){
         	throw new StockAppBizException("购买数量不能为空！");
+        }else if(Long.valueOf(getAmount())==0){
+        	throw new StockAppBizException("购买数量不能为0");
         }else if(Long.valueOf(getAmount()) % 100!=0){
-        	throw new StockAppBizException("购买数量为100的整数倍！");
-        }       
+        	throw new StockAppBizException("购买数量必须是100的整数倍");
+        }
     }
 
     @Override

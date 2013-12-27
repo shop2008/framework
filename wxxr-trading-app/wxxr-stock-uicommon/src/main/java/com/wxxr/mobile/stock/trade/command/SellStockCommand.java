@@ -40,8 +40,10 @@ public class SellStockCommand implements ICommand<StockResultVO>{
         	throw new StockAppBizException("卖出股票价格不能为0！");
         }else if(getAmount()==null || StringUtils.isEmpty(getAmount())){
         	throw new StockAppBizException("卖出的股票数量不能为空");
+        }else if(Long.valueOf(getAmount())==0){
+        	throw new StockAppBizException("卖出数量不能为0");
         }else if(Long.valueOf(getAmount()) % 100!=0){
-        	throw new StockAppBizException("卖出的股票数量应为100的整数倍！");
+        	throw new StockAppBizException("卖出数量必须是100的整数倍");
         }
     }
 
