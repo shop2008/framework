@@ -44,6 +44,14 @@ public class StockSelection implements ISelection {
 		this.type = type;
 	}
 	
+	public StockSelection(String market, String code, String name, long buy, int type){
+		this.market = market;
+		this.code = code;
+		this.name = name;
+		this.buyPrice = buy;
+		this.type = type;
+	}
+	
 	public StockSelection(String accid, boolean virtual){
 		this.accid = accid;
 		this.virtual = virtual;

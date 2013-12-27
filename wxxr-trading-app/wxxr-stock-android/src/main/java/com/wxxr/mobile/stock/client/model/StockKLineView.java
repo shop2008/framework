@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Date;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -27,7 +26,6 @@ import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.BTTime2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -135,6 +133,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	String capital;
 	@Field(valueKey = "text", visibleWhen = "${type == 1}")
 	String buyRateLayout;
+	
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
@@ -142,7 +141,6 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		service.addSelectionListener(this);
 	}
 	
-
 	@OnDestroy
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
@@ -163,8 +161,16 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
 			registerBean("type", this.type);
-			if(infoCenterService != null)
-				infoCenterService.getDayStockline(codeBean, marketBean);
+			if(infoCenterService != null) {
+				BindableListWrapper<StockLineBean> bean = infoCenterService.getDayStockline(codeBean, marketBean);
+				this.lineListBean = bean;
+				registerBean("lineListBean", this.lineListBean);
+			}
+			if(stockInfoSyncService != null) {
+				StockBaseInfo info  = stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+				this.stockInfoBean = info;
+				registerBean("stockInfoBean", this.stockInfoBean);
+			}
 		}
 	}
 	

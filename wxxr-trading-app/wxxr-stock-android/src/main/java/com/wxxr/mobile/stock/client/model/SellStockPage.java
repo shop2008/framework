@@ -246,7 +246,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				this.stockQuotation = this.infoCenterService.getStockQuotation(stockCode, stockMarket);
 				registerBean("stockQuotation", this.stockQuotation);
 				//刷新viewpager
-				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice));
+				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice, 1));
 			}
 		}
 		return null;
