@@ -29,6 +29,8 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.ui.api.IDialog;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
@@ -37,7 +39,6 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
-import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -133,6 +134,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	private IReloadableEntityCache<String,UserAssetBean> userAssetBeanCache;
 	
+	
 	private ClientInfoBean clientInfoBean;
 	private VoucherBean voucherBean;
 	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
@@ -185,6 +187,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	    
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
+		registry.registerEntityLoader("clientInfo", new UserAssetLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
@@ -246,8 +249,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			}
 //			
 //			
-//			IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
-//			dialog.show();
+			//IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
+			//dialog.show();
 //			
 		}
 		Dictionary<String, String> d = mgr.getPreference(getModuleName());
@@ -262,32 +265,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public UserBean getMyUserInfo() {
-		
-//		if (context.getApplication().isInDebugMode()) {
-//			myUserInfo = MockDataUtils.mockUserInfo();
-//			return myUserInfo;
-//		}
-//		context.invokeLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					UserVO vo = context.getService(IRestProxyService.class)
-//							.getRestService(StockUserResource.class).getUser();
-//					if (vo != null) {
-//						myUserInfo.setNickName(vo.getNickName());
-//						myUserInfo.setUsername(vo.getUserName());
-//						myUserInfo.setPhoneNumber(vo.getMoblie());
-//						myUserInfo.setUserPic(vo.getIcon());
-//					}else{
-//						
-//					}
-//					
-//				} catch (Exception e) {
-//					log.warn("Error when get user info", e);
-//				}
-//			}
-//		}, 1, TimeUnit.SECONDS);
-
 		return myUserInfo;
 	}
 
@@ -327,6 +304,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     					myUserInfo.setPhoneNumber(vo.getMoblie());
     					myUserInfo.setUserPic(vo.getIcon());
     					saveUserBean(myUserInfo);
+    					context.setAttribute("currentUser", myUserInfo);
     					 //根据用户密码登录成功
     	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
     	                if(pref == null){
@@ -550,6 +528,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
        if (httpService != null) {
            httpService.resetHttpClientContext();
        }
+       context.removeAttribute("currentUser");
       // getService(IEventRouter.class).routeEvent(new LogoutEvent());
 	}
 
@@ -954,7 +933,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       try{
           Future<ClientInfoVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
               try {
-                  ClientInfoVO vo=future.get(30,TimeUnit.SECONDS);
+                  ClientInfoVO vo=future.get(3,TimeUnit.SECONDS);
                   if (vo!=null) {
                      clientInfoBean.setStatus(vo.getStatus());
                      clientInfoBean.setDescription(vo.getDescription());
@@ -962,10 +941,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
                      clientInfoBean.setVersion(vo.getVersion());
                   }
               } catch (Exception e) {
-                  throw new StockAppBizException("系统错误");
+                 return clientInfoBean;
+                  //throw new StockAppBizException("系统错误");
               }
           }catch(CommandException e){
-              throw new StockAppBizException(e.getMessage());
+             return clientInfoBean;
+              //throw new StockAppBizException(e.getMessage());
           }
       return clientInfoBean;
    }
