@@ -55,16 +55,19 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 			IReloadableEntityCache<String, MegagameRankBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;
-		for (MegagameRankVO vo : result) {
-			String id = String.valueOf(vo.getAcctID());
-			MegagameRankBean bean = cache.getEntity(id);
-			if(bean == null) {
-				bean = ConverterUtils.fromVO(vo);
-				bean.setRankSeq(rankNo++);
-				cache.putEntity(id, bean);
-				updated = true;
-			}
-		}
+		if (result!=null&&result.size()>0) {
+		   cache.clear();
+		   for (MegagameRankVO vo : result) {
+	            String id = String.valueOf(vo.getAcctID());
+	            MegagameRankBean bean = cache.getEntity(id);
+	            if(bean == null) {
+	                bean = ConverterUtils.fromVO(vo);
+	                bean.setRankSeq(rankNo++);
+	                cache.putEntity(id, bean);
+	                updated = true;
+	            }
+	        }
+        }
 		return updated;
 	}
 
