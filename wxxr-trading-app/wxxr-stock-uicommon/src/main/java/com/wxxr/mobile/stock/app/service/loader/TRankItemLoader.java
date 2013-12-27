@@ -65,7 +65,9 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	                bean.setRankSeq(rankNo++);
 	                cache.putEntity(id, bean);
 	                updated = true;
-	            }
+	            }else{
+                   bean.setRankSeq(rankNo++);
+                }
 	        }
         }
 		return updated;

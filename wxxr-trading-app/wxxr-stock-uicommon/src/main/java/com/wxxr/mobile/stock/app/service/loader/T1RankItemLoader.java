@@ -65,8 +65,11 @@ public class T1RankItemLoader extends AbstractEntityLoader<String, MegagameRankB
                     bean.setRankSeq(rankNo++);
                     cache.putEntity(id, bean);
                     updated = true;
+                }else{
+                   bean.setRankSeq(rankNo++);
                 }
             }
+           
         }
 		return updated;
 	}
