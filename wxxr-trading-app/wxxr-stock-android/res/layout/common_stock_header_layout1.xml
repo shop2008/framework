@@ -62,6 +62,14 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 bind:field="newprice" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="停盘"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                bind:field="newprice1" />
 
             <ImageView
                 android:layout_width="wrap_content"

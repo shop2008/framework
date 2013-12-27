@@ -142,7 +142,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String close;
 	
 	/**开盘*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.status==1) ?quotationBean.open:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.open > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.open < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String open;
@@ -153,7 +153,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String openLabel;
 	
 	/**最高*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.high:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.high > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.high < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String high;
@@ -164,7 +164,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String highLabel;
 	
 	/**最底*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.low:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.low > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.low < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String low;
@@ -175,7 +175,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String lowLabel;
 	
 	/**均价*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.averageprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.averageprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
 			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.averageprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.averageprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String averageprice;
@@ -190,28 +190,34 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String profitrate;
 	
 	/**量比*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.lb:null}",converter="stockLong2StringAutoUnitConvertor")
 	String lb;
 	
 	/**换手率*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.handrate:null}",converter="stockLong2StringConvertorSpecial")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.handrate:null}",converter="stockLong2StringConvertorSpecial")
 	String handrate; 
 	
 	/**成交量*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuvolume:null}",converter="convertorSecuvolume")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.secuvolume:null}",converter="convertorSecuvolume")
 	String secuvolume;
 	
 	/**成交额*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.secuamount:null}",converter="convertorSecuamount")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.secuamount:null}",converter="convertorSecuamount")
 	String secuamount;
 	
 	/**流通盘*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.capital:null}",converter="convertorSecuamount")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.capital:null}",converter="convertorSecuamount")
 	String capital;
 	
 	/**市值*/
-	@Field(valueKey="text",binding="${quotationBean!=null?quotationBean.marketvalue:null}",converter="convertorSecuamount")
+	@Field(valueKey="text",binding="${quotationBean!=null && quotationBean.status==1?quotationBean.marketvalue:null}",converter="convertorSecuamount")
 	String marketvalue;
+	
+	@Field(valueKey="visible",visibleWhen="${quotationBean!=null && quotationBean.status==2}")
+	boolean stopStockTrading;
+	
+	@Field(valueKey="visible",visibleWhen="${quotationBean!=null && quotationBean.status==1}")
+	boolean goingStockTrading;
 	
 	@OnShow
 	protected void initData(){

@@ -29,6 +29,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -150,6 +151,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:0}",converter="stockLong2StringAutoUnitConvertor")
 	String newprice;
+	DataField<String> newpriceField;
 	
 	@Bean
 	String sellPrice; //卖出价格，卖出点击使用
@@ -200,8 +202,16 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Command()
 	String handlerRefreshClicked(InputEvent event) {
-		// 需要回调
+		if(stockQuotation!=null) {
+			long price = stockQuotation.getNewprice();
+			String val = String.format("%.2f", price/1000f);
+			newpriceField.setValue("");
+			newpriceField.setValue(val);
+		}
 		infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
+		
+		// 需要回调
+		StockQuotationBean stockQuotation = infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
 		String sellPrice = stockQuotation.getNewprice() + "";
 		closePriceBean = stockQuotation.getClose() + "";
 		registerBean("closePriceBean", closePriceBean);
@@ -381,16 +391,19 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	)
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String sellStockClick(InputEvent event){
-		String price = "0";
+		String price = null;
 		if(isSelected == 0) {
 			try {
-				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice))
-				price = Long.parseLong(sellPrice)/10 + "";
+				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice)){
+					price = Long.parseLong(sellPrice)/10 + "";
+				}
+				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
+		}else{
+			tradingService.sellStock(accid, stockMarket, stockCode, "0", amount);
 		}
-		tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
 		v.hide();
 		return "";

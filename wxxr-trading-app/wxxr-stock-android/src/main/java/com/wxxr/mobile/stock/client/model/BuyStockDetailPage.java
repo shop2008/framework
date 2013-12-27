@@ -208,7 +208,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	String handlerRefreshClicked(InputEvent event) {
 		if(stockQuotationBean!=null) {
 			long price = stockQuotationBean.getNewprice();
-			String val = Utils.roundHalfUp(price/1000f, 2)+"";
+			String val = String.format("%.2f", price/1000f);
+//			String val = Utils.roundHalfUp(price/1000f, 2)+"";
 			priceField.setValue("");
 			priceField.setValue(val);
 		}
@@ -268,8 +269,11 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		String key = (String) event.getProperty("changedText");
 		String value = "0";
 		try {
-			if(!StringUtils.isEmpty(key))
+			if(!StringUtils.isEmpty(key)){
 				value = (long) Utils.roundUp(Float.parseFloat(key) * 1000, 0) + "";
+			}else{
+				value = key;
+			}
 			orderPriceBean = value;
 			orderPriceInput = value;
 			registerBean("orderPriceBean", value);
@@ -384,13 +388,17 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	)
 	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
 	String handleBuyBtnClick(InputEvent event) {
-		String price = "0";
+		String price = null;
 		if(!isMarket) {
 			try {
+				if(orderPriceBean!=null && !StringUtils.isEmpty(orderPriceBean))
 				price = Long.parseLong(orderPriceBean)/10 + "";
+				tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
+		}else{
+			tradingService.buyStock(acctIdBean, marketBean, codeBean, "0", amountBean);
 		}
 		tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);

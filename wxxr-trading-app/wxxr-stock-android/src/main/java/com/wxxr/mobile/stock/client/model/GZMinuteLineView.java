@@ -59,6 +59,13 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000f"),
+			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringConvertor stockLong2StringAutoUnitConvertorStop;
+	
+	@Convertor(params={
+			@Parameter(name="multiple",value="1000f"),
 			@Parameter(name="format",value="%+.2f"),
 			@Parameter(name="nullString",value="--")
 	})
@@ -80,7 +87,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Convertor(params={
 			@Parameter(name="format",value="(%+.2f%%)"),
 			@Parameter(name="multiple", value="1000f"),
-			@Parameter(name="nullString",value="--")
+			@Parameter(name="nullString",value="(--)")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial1;
 	
@@ -124,10 +131,12 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	boolean minuteHeaderTwo = false;
 	
 	/**箭头*/
-	@Field(valueKey="text",enableWhen="${quotationBean!=null && quotationBean.newprice > quotationBean.close}",visibleWhen="${quotationBean!=null && quotationBean.newprice != quotationBean.close}")
+	@Field(valueKey="text",enableWhen="${quotationBean!=null && quotationBean.newprice > quotationBean.close}",visibleWhen="${quotationBean!=null && quotationBean.newprice != quotationBean.close && quotationBean.status == 1}")
 	String arrows;	
 	
 	/**股票名称*/
+	
+//	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.status == 1)?nameBean:((quotationBean!=null && quotationBean.status == 2)?'停牌':'--')}")
 	@Field(valueKey="text",binding="${nameBean!=null?nameBean:'--'}")
 	String name;
 	
@@ -156,10 +165,16 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	String change;
 	
 	/**最新价*/
-	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:null}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
+//	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null && quotationBean.status == 1)?quotationBean.newprice:(quotationBean!=null && quotationBean.status == 2)?'停盘':null}",converter="stockLong2StringAutoUnitConvertorStop",attributes={
+//			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_down':(quotationBean!=null && quotationBean.newprice == quotationBean.close && quotationBean.status == 1)?'resourceId:color/white':'resourceId:color/tv_gray_color')}")
+//	})
+	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:null}",visibleWhen="${quotationBean.status == 1}",converter="stockLong2StringAutoUnitConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_down':(quotationBean!=null && quotationBean.newprice == quotationBean.close && quotationBean.status == 1)?'resourceId:color/white':'resourceId:color/tv_gray_color')}")
 	})
 	String newprice;
+	
+	@Field(valueKey="text",binding="${'停盘'}",visibleWhen="${quotationBean.status == 2}")
+	String newprice1;
 	
 	/**时间*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.datetime!=null)?quotationBean.datetime:null}",converter="btTime2StringConvertor")
