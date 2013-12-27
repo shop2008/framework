@@ -155,7 +155,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List> otherpersonalHomePageBean_cache;
     private GenericReloadableEntityCache<String,GainBean,List> gainBean_cache;
 
-    
+    private GenericReloadableEntityCache<String,GainBean,List> otherGainBean_cache;
 	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
 	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
     
@@ -209,6 +209,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
 	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List> ("gainBean");
+	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List>("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
@@ -632,7 +633,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 	
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
-        BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+        BindableListWrapper<GainBean> gainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
                 if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
@@ -647,8 +648,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       p.put("start", start);
       p.put("limit", limit);
       p.put("userId", userId);
-      gainBean_cache.forceReload(p,false);
-      gainBean_cache.setCommandParameters(p);
+      otherGainBean_cache.forceReload(p,false);
+      otherGainBean_cache.setCommandParameters(p);
      return gainBeans;
     }
 	@Override
