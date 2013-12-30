@@ -24,7 +24,7 @@
     <string name="org.hibernate.validator.constraints.ScriptAssert.message">script expression "{script}" didn\'t evaluate to true</string>
     
     <string name="stock_app_title">短线放大镜</string>
-    <string name="app_name">财经频道</string>
+    <string name="app_name">短线放大镜</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="network_not_available">你要展示的页面需要从网络下载数据，你需要打开网络连接...</string>
