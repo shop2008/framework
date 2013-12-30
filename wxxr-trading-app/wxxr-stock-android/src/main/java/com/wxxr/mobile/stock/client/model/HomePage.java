@@ -13,20 +13,22 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
+import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
-import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
 /**
  * @author neillin
@@ -58,6 +60,30 @@ public abstract class HomePage extends PageBase {
 	
 	String remoteVertion;
 	
+	@OnShow
+	void initData() {
+		
+		curVertion = AppUtils.getFramework().getApplicationVersion();
+		
+		if(vertionInfoBean == null) {
+			return;
+		}
+		
+		remoteVertion = vertionInfoBean.getVersion();
+		
+		if(remoteVertion == null) {
+			return;
+		}
+		
+		boolean isLastest = curVertion.equals(remoteVertion)?true:false;
+		if(isLastest) {
+			return;
+		} else {
+			IUIComponent vertionItem = getChild("rpage3");
+			vertionItem.setAttribute(AttributeKeys.icon,"resourceId:drawable/v_update");
+		}
+		
+	}
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
@@ -163,8 +189,8 @@ public abstract class HomePage extends PageBase {
 				@Navigation(on="rhome",showPage="userPage",keepMenuOpen=true),
 				@Navigation(on="rpage1",showPage="userTradeRecordPage", keepMenuOpen=true),
 				@Navigation(on="rpage2",showPage="appSetPage", keepMenuOpen=true),
-				@Navigation(on="NO_UPDATE", showDialog="noVerUpdateDialog", keepMenuOpen=true),
-				@Navigation(on="ALERT_UPDATE",showDialog="updateVertionDialog",keepMenuOpen=true)
+				@Navigation(on="*", showDialog="noVerUpdateDialog", keepMenuOpen=true),
+				@Navigation(on="+",showDialog="updateVertionDialog",keepMenuOpen=true)
 			}
 	)
 	String menuRightClicked(InputEvent event){
@@ -177,21 +203,21 @@ public abstract class HomePage extends PageBase {
 				curVertion = AppUtils.getFramework().getApplicationVersion();
 			
 				if(vertionInfoBean == null) {
-					return "NO_UPDATE";
+					return "";
 				}
 				
 				remoteVertion = vertionInfoBean.getVersion();
 				
 				if(remoteVertion == null) {
-					return "NO_UPDATE";
+					return "";
 				}
 				
 				boolean isLastest = curVertion.equals(remoteVertion)?true:false;
 				if(isLastest) {
-					return "NO_UPDATE";
+					return "";
 				} else {
 					updateSelection(new VertionUpdateSelection(vertionInfoBean.getUrl()));
-					return "ALERT_UPDATE";
+					return "+";
 				}
 			}
 			
