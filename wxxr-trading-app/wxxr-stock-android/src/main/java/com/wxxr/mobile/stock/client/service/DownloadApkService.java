@@ -9,12 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.client.R;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,12 +22,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -78,7 +75,7 @@ public class DownloadApkService extends Service implements OnClickListener {
 	int downloadSize = 0;
 	NotificationManager mNotifiManager;
 
-	AlertDialog dialog;
+	Dialog dialog;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -115,16 +112,14 @@ public class DownloadApkService extends Service implements OnClickListener {
 	}
 
 	private void alertUserSaveFlow() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		dialog = builder.create();
+		dialog = new Dialog(this, R.style.myDialogStyle);
 		View view = View.inflate(this, R.layout.download_dialog, null);
-		builder.setView(view);
+		dialog.setContentView(view);
 		Button done = (Button) view.findViewById(R.id.download_done);
 		Button cancel = (Button) view.findViewById(R.id.download_cancel);
 		done.setOnClickListener(this);
 		cancel.setOnClickListener(this);
-
+		dialog.show();
 	}
 
 	private boolean isNetworkConnected() {
@@ -333,6 +328,8 @@ public class DownloadApkService extends Service implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.download_done:
+			if (dialog.isShowing())
+				dialog.dismiss();
 			downloadFile();
 			break;
 		case R.id.download_cancel:
