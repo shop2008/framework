@@ -915,7 +915,32 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			log.warn("updatToken error",e);
 		}
 	}
-
+	 @Override
+	   public ClientInfoBean getClientInfo() {	   
+	      if (clientInfoBean==null) {
+	         clientInfoBean = new ClientInfoBean();
+	      }
+	      ReadClientInfoCommand cmd=new ReadClientInfoCommand();
+	      try{
+	          Future<ClientInfoVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+	              try {
+	                  ClientInfoVO vo=future.get(3,TimeUnit.SECONDS);
+	                  if (vo!=null) {
+	                     clientInfoBean.setStatus(vo.getStatus());
+	                     clientInfoBean.setDescription(vo.getDescription());
+	                     clientInfoBean.setUrl(vo.getUrl());
+	                     clientInfoBean.setVersion(vo.getVersion());
+	                  }
+	              } catch (Exception e) {
+	                 return clientInfoBean;
+	                  //throw new StockAppBizException("系统错误");
+	              }
+	          }catch(CommandException e){
+	             return clientInfoBean;
+	              //throw new StockAppBizException(e.getMessage());
+	          }
+	      return clientInfoBean;
+	   }
 	@Override
 	public void readPullMesage(long id) {
 		ReadPullMessageCommand command=new ReadPullMessageCommand();
@@ -928,31 +953,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}
 	}
 
-   @Override
-   public ClientInfoBean getClientInfo() {
-      if (clientInfoBean==null) {
-         clientInfoBean = new ClientInfoBean();
-      }
-      ReadClientInfoCommand cmd=new ReadClientInfoCommand();
-      try{
-          Future<ClientInfoVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-              try {
-                  ClientInfoVO vo=future.get(3,TimeUnit.SECONDS);
-                  if (vo!=null) {
-                     clientInfoBean.setStatus(vo.getStatus());
-                     clientInfoBean.setDescription(vo.getDescription());
-                     clientInfoBean.setUrl(vo.getUrl());
-                     clientInfoBean.setVersion(vo.getVersion());
-                  }
-              } catch (Exception e) {
-                 return clientInfoBean;
-                  //throw new StockAppBizException("系统错误");
-              }
-          }catch(CommandException e){
-             return clientInfoBean;
-              //throw new StockAppBizException(e.getMessage());
-          }
-      return clientInfoBean;
-   }
+  
 	
 }

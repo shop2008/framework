@@ -84,6 +84,7 @@ public class ClientResourceTest extends TestCase {
             };
          }
       });
+    
       AbstractHttpRpcService service = new AbstractHttpRpcService() {
          public HttpRequest createRequest(String endpointUrl,
                Map<String, Object> params) {
@@ -122,13 +123,15 @@ public class ClientResourceTest extends TestCase {
             "http://192.168.123.44:8480/mobilestock2");
    }
 
-   public void testGetClientInfo() throws Exception {
-      this.appName = "trading";
-      this.appVer = "1.0.0-SNAPSHOT";
-      ClientInfoVO vo = resource.getClientInfo();
-      System.out.println(vo);
-     
-   }
-
+  
+   
+   
+   public void testGetClientInfo2() throws Exception {
+       this.appName = "trading";
+       this.appVer = "1.0.0-SNAPSHOT";
+       ClientInfoVO vo = resource.getClientInfo();
+       System.out.println(vo);
+      
+    }
  
 }
