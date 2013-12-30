@@ -167,4 +167,13 @@
         <item name="android:layout_margin">2dip</item>
     </style>
 
+    <style name="myDialogStyle" parent="@android:style/Theme.Dialog">
+       <item name="android:windowFrame">@null</item>
+       <item name="android:windowNoTitle">true</item>
+       <item name="android:windowIsTranslucent">false</item><!--半透明 -->                      
+       <item name="android:windowBackground">@android:color/transparent</item>            
+       <item name="android:windowIsFloating">true</item>
+       <item name="android:windowContentOverlay">@null</item>
+       <item name="android:backgroundDimEnabled">false</item><!--模糊 -->
+    </style>
 </resources>
