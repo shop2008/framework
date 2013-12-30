@@ -64,6 +64,9 @@ public abstract class HomePage extends PageBase {
 	void initData() {
 		
 		curVertion = AppUtils.getFramework().getApplicationVersion();
+		if(log.isDebugEnabled()){
+			log.debug("CurVertion:"+curVertion);
+		}
 		IUIComponent vertionItem = getChild("rpage3");
 		vertionItem.setAttribute(AttributeKeys.title, "版本:"+curVertion);
 		if(vertionInfoBean == null) {
@@ -72,10 +75,14 @@ public abstract class HomePage extends PageBase {
 		
 		remoteVertion = vertionInfoBean.getVersion();
 		
+		
 		if(remoteVertion == null) {
 			return;
 		}
 		
+		if(log.isDebugEnabled()){
+			log.debug("RemoteVertion:"+remoteVertion);
+		}
 		boolean isLastest = curVertion.equals(remoteVertion)?true:false;
 		if(isLastest) {
 			return;
@@ -216,8 +223,18 @@ public abstract class HomePage extends PageBase {
 				if(isLastest) {
 					return "";
 				} else {
-					updateSelection(new VertionUpdateSelection(vertionInfoBean.getUrl()));
-					return "+";
+					int downloadStatus = vertionInfoBean.getStatus();
+					if (downloadStatus == 0) {
+						//没必要必须更新到最新
+						updateSelection(new VertionUpdateSelection(
+								vertionInfoBean.getUrl()));
+						return "+";
+					} else if(downloadStatus == 1) {
+						//强制更新
+						updateSelection(new VertionUpdateSelection(
+								vertionInfoBean.getUrl()));
+						return "+";
+					}
 				}
 			}
 			
