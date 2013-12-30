@@ -29,8 +29,6 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
-import com.wxxr.mobile.core.ui.api.IDialog;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
@@ -251,8 +249,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			}
 //			
 //			
-			IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
-			dialog.show();
+			//IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
+			//dialog.show();
 //			
 		}
 		Dictionary<String, String> d = mgr.getPreference(getModuleName());
