@@ -67,6 +67,16 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 	                updated = true;
 	            }else{
                    bean.setRankSeq(rankNo++);
+                   bean.setAcctID(vo.getAcctID());
+                   bean.setGainRate(vo.getGainRate());
+                   bean.setGainRates(vo.getGainRates());
+                   bean.setMaxStockCode(vo.getMaxStockCode());
+                   bean.setMaxStockMarket(vo.getMaxStockMarket());
+                   bean.setNickName(vo.getNickName());
+                   bean.setOver(vo.getOver());
+                   bean.setStatus(vo.getStatus());
+                   bean.setTotalGain(vo.getTotalGain());
+                   bean.setUserId(vo.getUesrId());
                 }
 	        }
         }
