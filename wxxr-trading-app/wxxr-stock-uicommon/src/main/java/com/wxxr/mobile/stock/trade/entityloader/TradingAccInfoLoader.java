@@ -67,7 +67,10 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
 
     @Override
     protected List<TradingAccInfoVO> executeCommand(ICommand<List<TradingAccInfoVO>> command) throws Exception {
-    		TradingAccInfoVOs vos=getRestService(ITradingProtectedResource.class).getTradingAccountList();
+    	TradingAccInfoVOs vos = null;
+    	if ( this.cmdCtx.getKernelContext().getAttribute("currentUser")!=null) {//用户登录后方可获取列表信息
+    		 vos=getRestService(ITradingProtectedResource.class).getTradingAccountList();
+		}
         return vos==null?null:vos.getTradingAccInfos();
     }
    
