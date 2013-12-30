@@ -64,7 +64,8 @@ public abstract class HomePage extends PageBase {
 	void initData() {
 		
 		curVertion = AppUtils.getFramework().getApplicationVersion();
-		
+		IUIComponent vertionItem = getChild("rpage3");
+		vertionItem.setAttribute(AttributeKeys.title, "版本:"+curVertion);
 		if(vertionInfoBean == null) {
 			return;
 		}
@@ -79,7 +80,6 @@ public abstract class HomePage extends PageBase {
 		if(isLastest) {
 			return;
 		} else {
-			IUIComponent vertionItem = getChild("rpage3");
 			vertionItem.setAttribute(AttributeKeys.icon,"resourceId:drawable/v_update");
 		}
 		
