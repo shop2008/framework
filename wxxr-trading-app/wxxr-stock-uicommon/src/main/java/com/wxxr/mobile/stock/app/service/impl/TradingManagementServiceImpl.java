@@ -266,7 +266,6 @@ public class TradingManagementServiceImpl extends
 		params.put("start", start);
 		params.put("limit", limit);
 		this.earnRankCache.doReloadIfNeccessay(params);
-		this.earnRankCache.clear();
 		return this.earnRank;
 	}
 
