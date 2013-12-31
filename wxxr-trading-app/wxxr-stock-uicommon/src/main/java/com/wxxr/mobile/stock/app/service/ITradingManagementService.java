@@ -16,6 +16,7 @@ import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
@@ -235,4 +236,6 @@ public interface ITradingManagementService {
 	 * @param amount
 	 */
 	void applyDrawMoney(long amount);
+	
+	VoucherDetailsBean getVoucherDetails(int start, int limit);
 }
