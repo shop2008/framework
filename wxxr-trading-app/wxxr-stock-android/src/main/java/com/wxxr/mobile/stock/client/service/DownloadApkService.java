@@ -82,7 +82,10 @@ public class DownloadApkService extends Service implements OnClickListener {
 
 		if (!isDownloading) {
 			downloadUrl = intent.getStringExtra("downUrl");
-			String apkName = downloadUrl
+			
+			if(StringUtils.isBlank(downloadUrl))
+				return -1;
+				String apkName = downloadUrl
 					.substring(downloadUrl.lastIndexOf("/")+1);
 
 			// SD卡存在
