@@ -170,7 +170,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 			@Attribute(name = "position", value = "${position}") })
 	String indexGroup;
 	//停牌
-	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2}")
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null?stockQuotationBean.status!=2:true}")
 	String inputLayout;
 	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2}")
 	String inputSuspension;
