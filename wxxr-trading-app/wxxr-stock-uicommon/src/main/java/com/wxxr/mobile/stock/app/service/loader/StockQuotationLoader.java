@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
@@ -51,7 +52,11 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
         }
 
         @Override
-        public void validate() {}
+        public void validate() {
+        	if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
+				throw new IllegalArgumentException("Invalid market or code");
+			}
+        }
 
     }
 
