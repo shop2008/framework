@@ -280,7 +280,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 						throw new StockAppBizException(vo.getMessage());
 					}
 				} catch (Exception e) {
-					throw new StockAppBizException("系统错误");
+					throw new StockAppBizException(e.getMessage());
 				}
 			}catch(CommandException e){
 				throw new StockAppBizException(e.getMessage());
