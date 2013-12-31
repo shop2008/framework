@@ -542,7 +542,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dip"
+            android:paddingBottom="6dip"
             android:paddingTop="10dip" >
 
             <LinearLayout

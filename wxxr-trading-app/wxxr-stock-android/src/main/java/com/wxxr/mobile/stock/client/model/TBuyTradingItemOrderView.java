@@ -6,11 +6,13 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
@@ -82,7 +84,11 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		return "";
 	}
 
-	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"))
+	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"), navigations = { 
+		@Navigation(on = "StockAppBizException", message = "%m", params = {
+				@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+		})
+	@ExeGuard(title = "提示", message = "正在取消订单，请稍后...", silentPeriod = 0, cancellable = true)
 	String confirmCancelClick(InputEvent event) {
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
 		if(v != null)

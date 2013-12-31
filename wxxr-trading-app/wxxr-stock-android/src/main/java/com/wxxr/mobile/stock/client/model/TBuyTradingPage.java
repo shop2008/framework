@@ -36,6 +36,7 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -133,6 +134,8 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 	public void onEvent(IBroadcastEvent event) {
 		if(tradingService != null)
 			tradingService.getTradingAccountInfo(acctId);
+		if(!AppUtils.getService(IUserManagementService.class).getPushMessageSetting())
+			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 

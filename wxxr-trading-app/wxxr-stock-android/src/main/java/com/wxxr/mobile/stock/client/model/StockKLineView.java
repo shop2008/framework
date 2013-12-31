@@ -133,7 +133,16 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	String capital;
 	@Field(valueKey = "text", visibleWhen = "${type == 1}")
 	String buyRateLayout;
-	
+	//停牌
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2&&type==0}")
+	String priceLayout;
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2&&type==0}")
+	String suspension;
+
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status!=2&&type==0}")
+	String changeLayout;
+	@Field(valueKey = "text", visibleWhen = "${stockQuotationBean!=null&&stockQuotationBean.status==2&&type==0}")
+	String changeSuspension;
 	@OnCreate
 	void registerSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();

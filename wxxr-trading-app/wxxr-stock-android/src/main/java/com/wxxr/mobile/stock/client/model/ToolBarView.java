@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
@@ -138,6 +139,8 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	
 	@Override
 	public void onEvent(IBroadcastEvent event) {
+		if(!AppUtils.getService(IUserManagementService.class).getPushMessageSetting())
+			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 

@@ -37,11 +37,10 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
 @View(name="sellTradingAccount",withToolbar=true, description="实盘/模拟",provideSelection=true)
@@ -177,6 +176,8 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	public void onEvent(IBroadcastEvent event) {
 		if(tradingService != null)
 			tradingService.getTradingAccountInfo(accid);
+		if(!AppUtils.getService(IUserManagementService.class).getPushMessageSetting())
+			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 

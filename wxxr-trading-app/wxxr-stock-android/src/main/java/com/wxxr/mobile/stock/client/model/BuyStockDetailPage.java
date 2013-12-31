@@ -132,6 +132,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	
 	@Field(valueKey = "text", binding="${stockInfoBean!=null?stockInfoBean.name:''}${' '}${codeBean}")
 	String stock;
+	DataField<String> stockField;
 	
 	@Field(valueKey = "text", binding="${stockQuotationBean!=null?stockQuotationBean.newprice:null}", converter="stockLong2StringConvertor", 
 			attributes={@Attribute(name = "enabled", value="${stockQuotationBean!=null&&stockQuotationBean.status!=2}")})
@@ -212,11 +213,14 @@ public abstract class BuyStockDetailPage extends PageBase implements
 //			String val = Utils.roundHalfUp(price/1000f, 2)+"";
 			priceField.setValue("");
 			priceField.setValue(val);
+			stockField.setValue("");
+			stockField.setValue(stockInfoBean.getName() + " " + codeBean);
 		}
 		infoCenterService.getStockQuotation(codeBean, marketBean);
 		//同步
 		StockQuotationBean bean = infoCenterService.getSyncStockQuotation(codeBean, marketBean);
-		
+		this.stockQuotationBean = bean;
+		registerBean("stockQuotationBean", this.stockQuotationBean);
 		orderPriceBean = bean.getNewprice() + "";
 		marketPriceBean = bean.getClose() + "";
 		registerBean("orderPriceBean", orderPriceBean);
