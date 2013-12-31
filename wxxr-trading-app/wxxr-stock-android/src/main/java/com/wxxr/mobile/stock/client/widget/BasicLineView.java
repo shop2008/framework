@@ -41,8 +41,8 @@ public class BasicLineView extends View {
 	public float minuteTopPadding = 8f;
 	public float minuteBottomPadding = 8f;
 	public float textLineHeight = 20f;
-	private float marginLeft = 60f;
-	private float marginRight = 60f;
+	private float marginLeft = 70f;
+	private float marginRight = 70f;
 	private float mLineNumber = 240f; //240条股票信息
 	public float fHeight;//分钟线框的高度
 	public float fWidth; //分钟线框的宽度
