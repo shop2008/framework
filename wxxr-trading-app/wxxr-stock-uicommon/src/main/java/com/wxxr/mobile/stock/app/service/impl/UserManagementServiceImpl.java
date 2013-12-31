@@ -867,6 +867,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
             myUserInfo.setUsername(user_name);
             myUserInfo.setPhoneNumber(pn);
             myUserInfo.setUserPic(icon);
+            context.setAttribute("currentUser", myUserInfo);
         }
           
 	}

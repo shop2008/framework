@@ -30,7 +30,7 @@ public interface UserResource {
 	@GET
 	@Path("/regUser")
 	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
+	@Consumes({ "application/json;charset=utf-8" })
 	public SimpleResultVo register(@QueryParam("phone") String phoneNum)
 			throws RestBizException;
 	

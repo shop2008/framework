@@ -17,6 +17,7 @@ import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.BindMobileVO;
+import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UpdatePwdVO;
 import com.wxxr.security.vo.UserAuthenticaVO;
 import com.wxxr.security.vo.UserBaseInfoVO;
@@ -26,6 +27,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
+import com.wxxr.stock.restful.json.SimpleVO;
 
 
 public class StockUserResourceTest extends TestCase{
@@ -99,12 +101,12 @@ public class StockUserResourceTest extends TestCase{
 			}
 		});
 		
-		MockRestClient builder = new MockRestClient();
+		builder = new MockRestClient();
 		builder.init(context);
 		stockUserResource=builder.getRestService(StockUserResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
 
-	
+	MockRestClient builder= null;
 
 	
 	//public Response resetPassword(@QueryParam("phone") String phoneNum)throws RestBizException;
@@ -124,7 +126,10 @@ public class StockUserResourceTest extends TestCase{
 
 //	public SimpleResultVo isBindApp() throws RestBizException;
 
-//	public Response regist(RegistVO query) throws RestBizException;
+	public void testRegist() throws RestBizException{
+		SimpleResultVo vo = builder.getRestService(UserResource.class,"http://192.168.123.44:8480/mobilestock2").register("13671279085");
+		System.out.println(vo);
+	}
 
 //历史遗留问题，新锐财经使用
 //	public UserBaseInfoVO info() throws RestBizException;	
