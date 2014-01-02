@@ -29,4 +29,5 @@ public interface IUserLoginManagementService {
 	 */
 	void logout();
 
+	void resetPassword(String userName);
 }
