@@ -72,7 +72,7 @@ public abstract class UserNewsPage extends PageBase {
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Field(attributes = {
+	@Field(valueKey="text",visibleWhen="${curItemId == 1}",attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
 			@Attribute(name = "enablePullUpRefresh", value = "${infoNoticeListBean!=null&&infoNoticeListBean.data!=null&&infoNoticeListBean.data.size()>0?true:false}") })
 	String noticeRefreshView;

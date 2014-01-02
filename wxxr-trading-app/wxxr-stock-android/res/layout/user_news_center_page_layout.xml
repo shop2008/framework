@@ -51,6 +51,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 bind:field="accountTradeInfos"
+                android:scrollbars="none"
                 bind:itemViewId="NewsContentItem"
                 bind:on_ItemClick="handleNewsItemClick" />
 
@@ -85,6 +86,7 @@
                     android:visibility="visible"
                     bind:itemViewId="InfoNoticesItemView"
                     bind:field="noticeInfos"
+                    android:scrollbars="none"
                     bind:on_ItemClick="handleNoticesItemClick" 
                     />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
