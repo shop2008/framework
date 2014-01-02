@@ -199,4 +199,15 @@ public interface IUserManagementService {
 	void readPullMesage(long id);
 	
 	ClientInfoBean getClientInfo();
+	
+	/**
+	 * 更新提示更新状态
+	 * @param isEnabled 
+	 */
+	void setAlertUpdateEnabled(boolean isEnabled);
+	
+	/**
+	 * 是否提示更新
+	 */
+	boolean alertUpdateEnabled();
 }

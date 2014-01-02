@@ -830,6 +830,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
     private static final String KEY_NICKNAME = "NickName";
     private static final String KEY_PHONENUMBER = "PhoneNumber";
     private static final String KEY_USERPIC = "UserPic";
+    private static final String KEY_ALERT_ENABLED = "AlertEnabled";
 	private void saveUserBean(UserBean b){
 	    Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
         if(pref == null){
@@ -953,5 +954,26 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 
   
-	
+	@Override
+	public void setAlertUpdateEnabled(boolean isEnabled) {
+		IPreferenceManager mgr = getPrefManager();
+		Dictionary<String, String> dictionary = mgr.getPreference(getModuleName());
+		if(dictionary != null) {
+			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
+		} else {
+			dictionary = new Hashtable<String, String>();
+			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
+			mgr.newPreference(getModuleName(), dictionary);
+		}
+		mgr.putPreference(getModuleName(), dictionary);
+	}
+
+	@Override
+	public boolean alertUpdateEnabled() {
+		Dictionary<String, String> dictionary = getPrefManager().getPreference(getModuleName());
+		if(dictionary != null) {
+			return Boolean.parseBoolean(dictionary.get(KEY_ALERT_ENABLED));
+		}
+		return true;
+	}
 }

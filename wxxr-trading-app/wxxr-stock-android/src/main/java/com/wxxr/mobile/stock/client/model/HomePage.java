@@ -3,10 +3,15 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+
+import android.os.SystemClock;
+
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -59,7 +64,9 @@ public abstract class HomePage extends PageBase {
 	String curVertion;
 
 	String remoteVertion;
-
+	
+	boolean alertUpdateEnabled = true;
+	
 	@OnShow
 	void initData() {
 
@@ -88,6 +95,35 @@ public abstract class HomePage extends PageBase {
 		} else {
 			vertionItem.setAttribute(AttributeKeys.icon,
 					"resourceId:drawable/v_update");
+			
+			if(usrMgr!=null) {
+				alertUpdateEnabled = usrMgr.alertUpdateEnabled();
+			}
+			if (alertUpdateEnabled) {
+				updateSelection(new VertionUpdateSelection(
+						vertionInfoBean.getUrl()));
+				KUtils.executeTask(new Runnable() {
+
+					@Override
+					public void run() {
+
+						SystemClock.sleep(5000);
+						AppUtils.runOnUIThread(new Runnable() {
+
+							@Override
+							public void run() {
+								getUIContext()
+										.getWorkbenchManager()
+										.getWorkbench()
+										.createDialog("AlertVertionUpdate",
+												new HashMap<String, Object>())
+										.show();
+							}
+						});
+					}
+				});
+			}
+			
 		}
 
 	}
@@ -125,6 +161,7 @@ public abstract class HomePage extends PageBase {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
+		updateSelection(new StockSelection());
 		return "";
 	}
 
