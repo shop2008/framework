@@ -3,6 +3,9 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import com.wxxr.mobile.core.annotation.StatefulService;
+import com.wxxr.mobile.core.microkernel.api.IStatefulService;
+import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
@@ -14,7 +17,6 @@ import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
-import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
@@ -26,7 +28,8 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
  * @author wangxuyang
  * 
  */
-public interface ITradingManagementService {
+@StatefulService(factoryClass=ITradingManagementServiceFactory.class)
+public interface ITradingManagementService extends IStatefulService<IStockAppContext>{
     
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList();
     

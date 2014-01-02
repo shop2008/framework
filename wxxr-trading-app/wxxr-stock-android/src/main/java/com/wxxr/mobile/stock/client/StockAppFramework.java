@@ -42,9 +42,10 @@ import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.SyncConnector;
 import com.wxxr.mobile.stock.app.service.impl.TadingCalendarServiceImpl;
-import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceFactory;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
-import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.UserLoginManagementServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceFactory;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 import com.wxxr.mobile.stock.client.service.ClientInfoService;
 import com.wxxr.mobile.stock.client.service.GenericContentService;
@@ -121,8 +122,10 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new StockInfoSyncServiceImpl());
 		registerKernelModule(new NetworkCheckServiceImpl());
 		registerKernelModule(new URLLocatorManagementServiceImpl());
-		registerKernelModule(new TradingManagementServiceImpl());
-		registerKernelModule(new UserManagementServiceImpl());
+//		registerKernelModule(new TradingManagementServiceImpl());
+		registerKernelModule(new TradingManagementServiceFactory());
+//		registerKernelModule(new UserManagementServiceImpl());
+		registerKernelModule(new UserManagementServiceFactory());
 		registerKernelModule(new ArticleManagementServiceImpl());
 		registerKernelModule(new InfoCenterManagementServiceImpl());	
 		registerKernelModule(new AndroidI10NServiceModule<IStockAppContext>());
@@ -130,6 +133,9 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	    registerKernelModule(new TadingCalendarServiceImpl());
 	    registerKernelModule(new DBServiceImpl());
 	    registerKernelModule(new GenericContentService());
+
+	    registerKernelModule(new UserLoginManagementServiceImpl());
+
 	    registerKernelModule(new ClientInfoService());
 
 	}
