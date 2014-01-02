@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.api.RequiredNetNotAvailablexception;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -21,7 +22,6 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -226,33 +226,39 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 		if(selection instanceof StockSelection){
 			HashMap<String, String> minuteMap = new HashMap<String, String>();
 			StockSelection stockSelection = (StockSelection) selection;
-			if(stockSelection!=null){
-				this.codeBean = stockSelection.getCode();
-				this.marketBean = stockSelection.getMarket();
-				this.minuteHeaderType = stockSelection.getType();
-				if(this.marketBean!=null && this.codeBean!=null){
-					StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
-					if(baseInfo!=null && baseInfo.getName()!=null){
-						this.nameBean = baseInfo.getName();
+			try {
+				if(stockSelection!=null){
+					this.codeBean = stockSelection.getCode();
+					this.marketBean = stockSelection.getMarket();
+					this.minuteHeaderType = stockSelection.getType();
+					if(this.marketBean!=null && this.codeBean!=null){
+						StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
+						if(baseInfo!=null && baseInfo.getName()!=null){
+							this.nameBean = baseInfo.getName();
+						}
 					}
 				}
-			}
-			registerBean("codeBean", this.codeBean);
-			registerBean("nameBean", this.nameBean);
-			registerBean("marketBean", this.marketBean);
-			registerBean("minuteHeaderType", this.minuteHeaderType);
-			if(this.codeBean!=null && this.marketBean!=null){
-				minuteMap.put("code", this.codeBean);
-				minuteMap.put("market", this.marketBean);
-				this.map = minuteMap;
-				registerBean("map", this.map);
-				if(infoCenterService!=null){
-					infoCenterService.getMinuteline(this.map);
+				registerBean("codeBean", this.codeBean);
+				registerBean("nameBean", this.nameBean);
+				registerBean("marketBean", this.marketBean);
+				registerBean("minuteHeaderType", this.minuteHeaderType);
+				if(this.codeBean!=null && this.marketBean!=null){
+					minuteMap.put("code", this.codeBean);
+					minuteMap.put("market", this.marketBean);
+					this.map = minuteMap;
+					registerBean("map", this.map);
+					if(infoCenterService!=null){
+						infoCenterService.getMinuteline(this.map);
+					}
 				}
+				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
+					this.stockType = "0";
+				}	
+			} catch (RequiredNetNotAvailablexception e) {
+				log.warn("selectionChanged getMinuteline", e);
+			} catch (Exception e) {
+				log.warn("selectionChanged getMinuteline", e);
 			}
-			if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
-				this.stockType = "0";
-			}	
 		}
 	}
 	

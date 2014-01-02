@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.api.RequiredNetNotAvailablexception;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -213,6 +214,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@OnShow
 	void initBeans() {
+		registerBean("stockQuotationBean", this.stockQuotationBean);
 	}
 	
 	@OnCreate
@@ -237,7 +239,15 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
 				this.stockInfoBean = this.stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-				this.stockQuotationBean = this.infoCenterService.getStockQuotation(codeBean, marketBean);
+				try {
+					StockQuotationBean bean = this.infoCenterService
+							.getStockQuotation(codeBean, marketBean);
+					this.stockQuotationBean = bean;
+				} catch (RequiredNetNotAvailablexception e) {
+					log.warn("selectionChanged getStockQuotation", e);
+				} catch (Exception e) {
+					log.warn("selectionChanged getStockQuotation", e);
+				}
 				registerBean("stockQuotationBean", this.stockQuotationBean);
 				registerBean("stockInfoBean", this.stockInfoBean);
 			}
