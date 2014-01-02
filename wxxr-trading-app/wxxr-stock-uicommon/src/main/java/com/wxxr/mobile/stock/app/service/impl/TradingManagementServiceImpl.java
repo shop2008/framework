@@ -17,7 +17,6 @@ import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
@@ -41,7 +40,6 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
@@ -87,9 +85,9 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * @author wangxuyang
  * 
  */
-public class TradingManagementServiceImpl extends
-		AbstractModule<IStockAppContext> implements ITradingManagementService {
+public class TradingManagementServiceImpl implements ITradingManagementService {
 
+	private IStockAppContext context;
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
@@ -198,14 +196,14 @@ public class TradingManagementServiceImpl extends
 	// =================module life cycle methods=============================
 	
 	
-	@Override
-	protected void initServiceDependency() {
-		addRequiredService(IRestProxyService.class);
-		addRequiredService(IEntityLoaderRegistry.class);
-	}
+//	@Override
+//	protected void initServiceDependency() {
+//		addRequiredService(IRestProxyService.class);
+//		addRequiredService(IEntityLoaderRegistry.class);
+//	}
 
 	@Override
-	protected void startService() {
+	public void startService() {
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("earnRank", new EarnRankItemLoader());
 		registry.registerEntityLoader("tRank", new TRankItemLoader());
@@ -238,11 +236,11 @@ public class TradingManagementServiceImpl extends
         context.getService(ICommandExecutor.class).registerCommandHandler(ClearTradingAccountCommand.Name, new ClearTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(ApplyDrawMoneyHandler.COMMAND_NAME, new ApplyDrawMoneyHandler());
 
-		context.registerService(ITradingManagementService.class, this);
+//		context.registerService(ITradingManagementService.class, this);
 	}
 
 	@Override
-	protected void stopService() {
+	public void stopService() {
 		context.unregisterService(ITradingManagementService.class, this);
 	}
 
@@ -389,10 +387,7 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountListBean getMyAllTradingAccountList(final int start,
 			final int limit) {
-		if (context.getApplication().isInDebugMode()) {
-			myTradingAccounts.setAllTradingAccounts(MockDataUtils.mockTradeRecord(1));
-			return myTradingAccounts;
-		}
+
 		List<GainVO> volist = null;
 		try {
 			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
@@ -428,10 +423,7 @@ public class TradingManagementServiceImpl extends
 	@Override
 	public TradingAccountListBean getMySuccessTradingAccountList(
 			final int start, final int limit) {
-		if (context.getApplication().isInDebugMode()) {
-			myTradingAccounts.setSuccessTradingAccounts(MockDataUtils.mockTradeRecord(0));
-			return myTradingAccounts;
-		}
+
 		List<GainVO> volist = null;
 		try {
 			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
@@ -919,5 +911,13 @@ public class TradingManagementServiceImpl extends
         voucherDetailsBean_cache.clear();
 	}
 
+	@Override
+	public void init(IStockAppContext context) {
+		this.context=context;
+	}
+
+	protected <S> S getService(Class<S> clazz) {
+		return this.context.getService(clazz);
+	}
 }
 

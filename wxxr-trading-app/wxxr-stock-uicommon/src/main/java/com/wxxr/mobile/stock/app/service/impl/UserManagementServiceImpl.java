@@ -8,31 +8,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.javax.ws.rs.NotAuthorizedException;
-import com.wxxr.mobile.android.preference.DictionaryUtils;
-import com.wxxr.mobile.core.api.IUserAuthCredential;
-import com.wxxr.mobile.core.api.IUserAuthManager;
-import com.wxxr.mobile.core.api.UsernamePasswordCredential;
+import com.wxxr.mobile.core.annotation.StatefulService;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.microkernel.api.AbstractModule;
-import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.util.StringUtils;
-import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
-import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -55,6 +43,7 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementServiceFactory;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler.ReadClientInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
@@ -66,11 +55,8 @@ import com.wxxr.mobile.stock.app.service.handler.ReadPullMessageHandler.ReadPull
 import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler;
 import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler.ReadRemindMessageCommand;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
-import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
-import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
-import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
@@ -92,6 +78,7 @@ import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UNReadRemindingMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
@@ -101,7 +88,6 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.json.ClientInfoVO;
-import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
@@ -110,16 +96,11 @@ import com.wxxr.stock.trading.ejb.api.UserAssetVO;
  * @author neillin
  * 
  */
-public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
-		implements IUserManagementService, IUserAuthManager,IUserIdentityManager {
+@StatefulService(factoryClass=IUserManagementServiceFactory.class)
+public class UserManagementServiceImpl implements IUserManagementService{
+	
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl");
-	private static final String KEY_USERNAME = "U";
-	private static final String KEY_PASSWORD = "P";
-	private static final String KEY_UPDATE_DATE = "UD";
-	private IPreferenceManager prefManager;
-	private UsernamePasswordCredential usernamePasswordCredential4Login;
-	// ==================beans =============================
-	private UserBean myUserInfo ;
+
 	private UserBean otherUserInfo = new UserBean();
 	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
@@ -160,6 +141,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
 	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
     
+
+	private UserBean myUserInfo;
+	private IReloadableEntityCache<String,UserBean> myUserInfoCache;
+
+	private IStockAppContext context;
 	/*private IEventListener listener = new IEventListener() {
       @Override
       public void onEvent(IBroadcastEvent event) {
@@ -172,17 +158,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
       
    }*/
 	//==============  module life cycle =================
-	@Override
-	protected void initServiceDependency() {
-		addRequiredService(IRestProxyService.class);
-		addRequiredService(IEntityLoaderRegistry.class);
-		addRequiredService(ICommandExecutor.class);
-	    addRequiredService(IPreferenceManager.class);
+//	@Override
+//	protected void initServiceDependency() {
+//		addRequiredService(IRestProxyService.class);
+//		addRequiredService(IEntityLoaderRegistry.class);
+//		addRequiredService(ICommandExecutor.class);
+//	    addRequiredService(IPreferenceManager.class);
+//
+//	}
 
-	}
 
-	@Override
-	protected void startService() {
+	public void startService() {
 	    
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
@@ -194,6 +180,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
         registry.registerEntityLoader("gainPayDetailBean", new GainPayDetailLoader());
         registry.registerEntityLoader("unreadRemindingMsg", new UNReadRemindingMessageLoader());
         
+        registry.registerEntityLoader("myUserInfo", new UserInfoLoader());
+
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpPwdHandler.COMMAND_NAME, new UpPwdHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(UpdateAuthHandler.COMMAND_NAME, new UpdateAuthHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SumitAuthHandler.COMMAND_NAME, new SumitAuthHandler());
@@ -218,134 +206,41 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
        // context.getService(IEventRouter.class).registerEventListener(LogoutEvent.class, listener);
 		context.registerService(IUserManagementService.class, this);
-		context.registerService(IUserAuthManager.class, this);
-		context.registerService(IUserIdentityManager.class, this);
+	
 		updateToken();
-		restoreUserBean();
 	}
 
-	@Override
-	protected void stopService() {
+
+
+	public void stopService() {
 	   // context.getService(IEventRouter.class).unregisterEventListener(LogoutEvent.class, listener);
-		context.unregisterService(IUserIdentityManager.class, this);
 		context.unregisterService(IUserManagementService.class, this);
-		context.unregisterService(IUserAuthManager.class, this);
 	}
 
-	protected IPreferenceManager getPrefManager() {
-		if (this.prefManager == null) {
-			this.prefManager = context.getService(IPreferenceManager.class);
-		}
-		return this.prefManager;
-	}
 
-	@Override
-	public IUserAuthCredential getAuthCredential(String host, String realm) {
-		IPreferenceManager mgr = getPrefManager();
-		if (!mgr.hasPreference(getModuleName())
-				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
-			if (usernamePasswordCredential4Login != null) {
-				return usernamePasswordCredential4Login;
-			}
-//			
-//			
-			//IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
-			//dialog.show();
-//			
-		}
-		Dictionary<String, String> d = mgr.getPreference(getModuleName());
-		String userName = null;
-        String passwd = null;
-		if (d!=null) {
-		   userName = d.get(KEY_USERNAME);
-		   passwd = d.get(KEY_PASSWORD);
-        }
-		return new UsernamePasswordCredential(userName, passwd);
-	}
 
 	@Override
 	public UserBean getMyUserInfo() {
+		if(!getService(IUserIdentityManager.class).isUserAuthenticated()){
+			return null;
+		}
+		if(myUserInfo==null){
+			if(myUserInfoCache==null){
+				myUserInfoCache=new GenericReloadableEntityCache<String, UserBean, UserVO>("myUserInfo");
+			}
+			myUserInfo=myUserInfoCache.getEntity(UserBean.class.getCanonicalName());
+			if(myUserInfo==null){
+				myUserInfo=new UserBean();
+				myUserInfoCache.putEntity(UserBean.class.getCanonicalName(), myUserInfo);
+			}
+		}
+		myUserInfoCache.doReloadIfNeccessay();
 		return myUserInfo;
 	}
 
-	@Override
-	public void register(final String phoneNumber) throws StockAppBizException {
-		UserRegisterCommand cmd=new UserRegisterCommand();
-		cmd.setUserName(phoneNumber);
-		try{
-			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-				try {
-					SimpleResultVo vo=future.get(30,TimeUnit.SECONDS);
-					if(vo.getResult()!=0){
-						throw new StockAppBizException(vo.getMessage());
-					}
-				} catch (Exception e) {
-					throw new StockAppBizException(e.getMessage());
-				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
-			}
 
-	}
 
-	@Override
-	public void login(final String userId, final String pwd) throws LoginFailedException {
-		Future<?> future = context.getExecutor().submit(new Runnable() {
-			@Override
-			public void run() {
-                usernamePasswordCredential4Login = new UsernamePasswordCredential(
-                        userId, pwd);
-				try {
-					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
-					if (vo!=null){
-    					myUserInfo = new UserBean();
-    					myUserInfo.setNickName(vo.getNickName());
-    					myUserInfo.setUsername(vo.getUserName());
-    					myUserInfo.setPhoneNumber(vo.getMoblie());
-    					myUserInfo.setUserPic(vo.getIcon());
-    					saveUserBean(myUserInfo);
-    					
-    					context.setAttribute("currentUser", myUserInfo);
-    					 //根据用户密码登录成功
-    	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
-    	                if(pref == null){
-    	                    pref= new Hashtable<String, String>();
-    	                    getPrefManager().newPreference(getModuleName(), pref);
-    	                }else{
-    	                    pref = DictionaryUtils.clone(pref);
-    	                }
-    	                pref.put(KEY_USERNAME, userId);
-    	                pref.put(KEY_PASSWORD, pwd);
-    	                pref.put(KEY_UPDATE_DATE, String.valueOf(System.currentTimeMillis()));
-    	                getPrefManager().putPreference(getModuleName(), pref);
-					}
-					
-				} catch (NotAuthorizedException e) {
-					log.warn("Failed to login user due to invalid user name and/or password",e);
-					usernamePasswordCredential4Login = null;
-					throw new LoginFailedException("用户名或密码错误");
-				} catch (Throwable e) {
-					log.warn("Failed to login user due to unexpected exception",e);
-					usernamePasswordCredential4Login = null;
-					throw new LoginFailedException("登录失败，请稍后再试...");
-				}
-				
-			}
-		});
-		if (future != null) {
-			try {
-				future.get(20, TimeUnit.SECONDS);
-			} catch (ExecutionException e) {
-				throw (StockAppBizException)e.getCause();
-			} catch(Throwable e){
-				log.warn("连接超时",e);
-				throw new LoginFailedException("登录超时，请稍后再试...");
-			}
-		}
 
-	}
-
-	@Override
 	public String getModuleName() {
 		return "UserManagementService";
 	}
@@ -521,18 +416,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return null;
 	}
 
-	@Override
-	public void logout(){
-	   myUserInfo=null;
-       getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
-       HttpRpcService httpService = context.getService(HttpRpcService.class);
-       if (httpService != null) {
-           httpService.resetHttpClientContext();
-       }
-       
-       context.removeAttribute("currentUser");
-      // getService(IEventRouter.class).routeEvent(new LogoutEvent());
-	}
+
 
 	@Override
 	public ScoreInfoBean getMyUserScoreInfo() {
@@ -721,20 +605,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		return pullMessages;
 	}
 
-	@Override
-	public boolean isUserAuthenticated() {
-		return myUserInfo != null;
-	}
-
-	@Override
-	public String getUserId() {
-		return myUserInfo.getPhoneNumber();
-	}
-
-	@Override
-	public boolean usrHasRoles(String... roles) {
-		return false;
-	}
+	
 
 	
 	private static final Comparator<GainPayDetailBean> gainPayDetailComparator = new Comparator<GainPayDetailBean>() {
@@ -782,40 +653,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 	@Override
 	public UserBean refreshUserInfo() {
-		RefreshUserInfoCommand cmd=new RefreshUserInfoCommand();
-		try{
-			Future<UserVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-				try {
-					UserVO vo=future.get(30,TimeUnit.SECONDS);
-					myUserInfo.setNickName(vo.getNickName());
-					myUserInfo.setUsername(vo.getUserName());
-					myUserInfo.setPhoneNumber(vo.getMoblie());
-					myUserInfo.setUserPic(vo.getIcon());
-					saveUserBean(myUserInfo);
-				} catch (Exception e) {
-					throw new StockAppBizException("系统错误");
-				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
-			}
-		return null;
+		return getMyUserInfo();
 	}
 
-	@Override
-	public void resetPassword(String userName) {
-		RestPasswordCommand command=new RestPasswordCommand();
-		command.setUserName(userName);
-		try{
-			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
-				try {
-					future.get(30,TimeUnit.SECONDS);
-				} catch (Exception e) {
-					throw new StockAppBizException("系统错误");
-				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
-			}
-	}
+
 	
 	protected void updateToken() {
 		UpdateTokenCommand command=new UpdateTokenCommand();
@@ -827,51 +668,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	}
 	
 
-    private static final String KEY_NICKNAME = "NickName";
-    private static final String KEY_PHONENUMBER = "PhoneNumber";
-    private static final String KEY_USERPIC = "UserPic";
-    private static final String KEY_ALERT_ENABLED = "AlertEnabled";
-	private void saveUserBean(UserBean b){
-	    Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
-        if(pref == null){
-            pref= new Hashtable<String, String>();
-            getPrefManager().newPreference(getModuleName(), pref);
-        }else{
-            pref = DictionaryUtils.clone(pref);
-        }
-        if (b.getNickName()!=null){
-            pref.put(KEY_NICKNAME, b.getNickName());
-        }
-        if (b.getUsername()!=null){
-            pref.put(KEY_USERNAME, b.getUsername());
-        }
-        if (b.getPhoneNumber()!=null){
-            pref.put(KEY_PHONENUMBER,b.getPhoneNumber());
-        }
-        if (b.getUserPic()!=null){
-            pref.put(KEY_USERPIC, b.getUserPic());
-        }
-        getPrefManager().putPreference(getModuleName(), pref);
 
-	}
-	private void restoreUserBean(){
-	    IPreferenceManager mgr = getPrefManager();
-        Dictionary<String, String> d = mgr.getPreference(getModuleName());
-        String nickName = d != null ? d.get(KEY_NICKNAME) : null;
-        String user_name = d != null ? d.get(KEY_USERNAME) : null;
-        String pn = d != null ? d.get(KEY_PHONENUMBER) : null;
-        String icon = d != null ? d.get(KEY_USERPIC) : null;
-
-        if(user_name != null && this.myUserInfo==null){
-            myUserInfo=new UserBean();
-            myUserInfo.setNickName(nickName);
-            myUserInfo.setUsername(user_name);
-            myUserInfo.setPhoneNumber(pn);
-            myUserInfo.setUserPic(icon);
-            context.setAttribute("currentUser", myUserInfo);
-        }
-          
-	}
 
 	@Override
 	public void readRemindMessage(String read) {
@@ -953,27 +750,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		}
 	}
 
-  
 	@Override
-	public void setAlertUpdateEnabled(boolean isEnabled) {
-		IPreferenceManager mgr = getPrefManager();
-		Dictionary<String, String> dictionary = mgr.getPreference(getModuleName());
-		if(dictionary != null) {
-			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
-		} else {
-			dictionary = new Hashtable<String, String>();
-			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
-			mgr.newPreference(getModuleName(), dictionary);
-		}
-		mgr.putPreference(getModuleName(), dictionary);
+	public void init(IStockAppContext context) {
+		this.context=context;
 	}
 
-	@Override
-	public boolean alertUpdateEnabled() {
-		Dictionary<String, String> dictionary = getPrefManager().getPreference(getModuleName());
-		if(dictionary != null) {
-			return Boolean.parseBoolean(dictionary.get(KEY_ALERT_ENABLED));
-		}
-		return true;
+	protected <S> S getService(Class<S> clazz) {
+		return this.context.getService(clazz);
 	}
+
+
+
+	
+	
 }
