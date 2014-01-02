@@ -20,7 +20,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserRegCallback;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 @View(name = "userRegPage")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
 public abstract class UserRegPage extends PageBase {
@@ -37,7 +37,7 @@ public abstract class UserRegPage extends PageBase {
 	String registerBtn;
 	
 	@Bean(type=BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 
 	
 	@Bean

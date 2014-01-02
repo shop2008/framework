@@ -23,7 +23,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserLoginCallback;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 
 @View(name = "userLoginPage" ,withToolbar=true, description="登录")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.login_layout")
@@ -39,7 +39,7 @@ public abstract class UserLoginPage extends PageBase {
 	String loginBtn;
 	
 	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
