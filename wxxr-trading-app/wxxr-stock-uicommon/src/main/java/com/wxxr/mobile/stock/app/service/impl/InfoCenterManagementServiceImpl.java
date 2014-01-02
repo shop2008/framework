@@ -168,6 +168,8 @@ public class InfoCenterManagementServiceImpl extends
 	//分钟线
 	@Override
 	public StockMinuteKBean getMinuteline(Map<String, String> params) {
+		if(params == null)
+			return null;
 	   String market= params.get("market");
 	   String code= params.get("code");
 	   if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
@@ -241,6 +243,9 @@ public class InfoCenterManagementServiceImpl extends
     private BindableListWrapper<StockTaxisBean> stockTaxisList;
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
+		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
+			return new StockQuotationBean();//fix闪退问题
+		}
 	    String mc=market+code;
 	    if (stockQuotationBean_cache.getEntity(market+code)==null){
 	        StockQuotationBean b=new StockQuotationBean();
@@ -255,6 +260,9 @@ public class InfoCenterManagementServiceImpl extends
     }
 	@Override
     public StockQuotationBean getSyncStockQuotation(String code, String market) {
+		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
+			return new StockQuotationBean();//fix闪退问题
+		}
 	    String mc=market+code;
 	    if (stockQuotationBean_cache.getEntity(market+code)==null){
 	        StockQuotationBean b=new StockQuotationBean();
