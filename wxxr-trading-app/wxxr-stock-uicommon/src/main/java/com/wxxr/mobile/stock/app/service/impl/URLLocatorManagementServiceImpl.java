@@ -39,19 +39,19 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	private long lastCheckTime;
 	private int checkIntervalInSeconds = 30*60;		// 30 minutes
 	private String serverUrl;
-	private String magnoliaUrl;
-	private String urlCheckServerURL;
+	private final static String  RELATIVE_URI_APPLICATION ="/mobilestock2";
+	private final static String  RELATIVE_URI_MAGNOLIA ="/magnoliaPublic";
 	private Dictionary<String, String> defaultSettings = new Hashtable<String, String>();
 	private Timer timer;
 	Map<String,String> remoteConfig;
 	@Override
 	public String getServerURL() {
-		return serverUrl;
+		return serverUrl+RELATIVE_URI_APPLICATION;
 	}
 
 	@Override
 	public String getMagnoliaURL() {
-		return magnoliaUrl;
+		return serverUrl+RELATIVE_URI_MAGNOLIA;
 	}
 
 	@Override
@@ -65,10 +65,8 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			log.debug("Loading default settings...");
 		}
 		loadDefaultSettings();//加载出厂设置
-		this.urlCheckServerURL = getURL("url_checker_server");
 		this.serverUrl = getURL("server");
-		getService(IRestProxyService.class).setDefautTarget(this.serverUrl);
-		this.magnoliaUrl = getURL("magnolia");
+		getService(IRestProxyService.class).setDefautTarget(getServerURL());
 		if (log.isDebugEnabled()) {
 			log.debug("Local settings:"+defaultSettings);
 		}
@@ -85,7 +83,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 					lastCheckTime = System.currentTimeMillis();
 				}
 			}
-		}, 60000,60000);
+		}, 1000,60000);
 		context.registerService(IURLLocatorManagementService.class, this);
 	}
 
@@ -120,9 +118,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			}
 		}
 	}
-	private String getUrlCheckServerURL() {
-		return urlCheckServerURL;
-	}
+
 	private void loadRemoteSettings() {
 		try {
 		    byte[] localData = toBytes(remoteConfig);
@@ -130,7 +126,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		    if (localData!=null) {
 		       digest = Base64.encodeToString(localData, Base64.NO_WRAP);
             }
-			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class,getUrlCheckServerURL()).getURLSettings(digest);
+			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class).getURLSettings(digest);
 			if (data==null||(remoteConfig = fromBytes(data))==null) {
 				return;
 			}
@@ -141,18 +137,11 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 				prefManager.newPreference(prefName, d);
 			}
 			String sUrl =  remoteConfig.get("server");
-			String mUrl =  remoteConfig.get("magnolia");
 			if (StringUtils.isNotBlank(sUrl)) {
 				this.serverUrl = sUrl;
 				if (isChanged(getModuleName(), "server", sUrl)) {
-				    getService(IRestProxyService.class).setDefautTarget(sUrl);
+				    getService(IRestProxyService.class).setDefautTarget(getServerURL());
 					prefManager.updatePreference(prefName, "server", sUrl);
-				}
-			}
-			if (StringUtils.isNotBlank(mUrl)) {
-				this.magnoliaUrl = mUrl;
-				if (isChanged(getModuleName(), "magnolia", mUrl)) {
-					prefManager.updatePreference(prefName, "magnolia", mUrl);
 				}
 			}
 		} catch (Exception e) {
