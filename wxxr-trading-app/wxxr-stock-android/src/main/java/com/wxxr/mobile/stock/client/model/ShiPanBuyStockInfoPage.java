@@ -77,11 +77,11 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	String id;
 
 	/*** 买入日期  */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:null}",converter="longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.buyDay==0?'-1':tradingBean.buyDay):'-1'}",converter="longTime2StringConvertorBuy")
 	String buyDay;
 	
 	/*** 卖出日期 */
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:null}",converter="longTime2StringConvertorBuy")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.sellDay==0?'-1':tradingBean.sellDay):'-1'}",converter="longTime2StringConvertorBuy")
 	String sellDay;
 
 	/*** 申购金额*/

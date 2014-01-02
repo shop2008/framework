@@ -88,11 +88,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	private long id;
 	
 	/**买入日期  */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.buyDay:null}", converter = "longTime2StringConvertorBuy")
+	@Field(valueKey="text",binding="${tradingAccount!=null?(tradingAccount.buyDay==0?'-1':tradingAccount.buyDay):'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;  
 	
 	/**卖出日期 */
-	@Field(valueKey="text",binding="${tradingAccount!=null?tradingAccount.sellDay:null}", converter = "longTime2StringConvertorSell")
+	@Field(valueKey="text",binding="${tradingAccount!=null?(tradingAccount.sellDay==0?'-1':tradingAccount.sellDay):'-1'}", converter = "longTime2StringConvertorSell")
 	String sellDay;  
 	
 	/**交易订单列表*/

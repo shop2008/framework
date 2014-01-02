@@ -67,10 +67,10 @@ public abstract class TBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.id:'--'}")
 	String id;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.buyDay:'-1'}", converter = "longTime2StringConvertor")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.buyDay==0?'-1':tradingBean.buyDay):'-1'}", converter = "longTime2StringConvertor")
 	String buyDay;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.sellDay:'-1'}", converter = "longTime2StringConvertor")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.sellDay==0?'-1':tradingBean.sellDay):'-1'}", converter = "longTime2StringConvertor")
 	String sellDay;
 
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:'0'}", converter = "stockLong2StringAutoUnitConvertorInt")
