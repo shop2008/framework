@@ -58,7 +58,7 @@ public abstract class AbstractStatefulServiceFactory<T extends IKernelContext>  
 		});
 	}
 
-	protected abstract IKernelContext getContext();
+	protected abstract T getContext();
 
 	protected abstract IStatefulService createStatefulService();
 }

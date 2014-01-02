@@ -115,12 +115,13 @@
 #macro(onShow $model $methods)
     @Override
     protected void onShow(IBinding<IView> binding) {
+#if(${model.serviceBindings})
+       injectServices();
+#end
 #if(${model.beanBindings})
     updateBindingBeans();
 #end
-#if(${model.serviceBindings})
-       //injectServices();
-#end
+
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(binding); 
