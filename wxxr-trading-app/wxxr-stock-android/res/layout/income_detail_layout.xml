@@ -19,7 +19,6 @@
             style="@style/mListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
             bind:field="incomeDetails"
             bind:itemViewId="incomeDetailsItemView" />
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
