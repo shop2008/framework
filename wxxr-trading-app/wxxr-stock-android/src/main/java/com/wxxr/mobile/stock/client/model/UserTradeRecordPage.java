@@ -220,7 +220,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 				completeSize = allTradeAccountListBean.getData().size();
 			allStart += completeSize;
 			if(tradingService != null) {
-				tradingService.getGain(allStart, allLimit);
+				tradingService.getTotalGain(allStart, allLimit);
 			}
 		}
 		return null;
