@@ -91,9 +91,8 @@ public class StockSearchView extends RelativeLayout implements
 						"setShowSoftInputOnFocus", boolean.class);
 				setShowSoftInputOnFocus.setAccessible(false);
 				setShowSoftInputOnFocus.invoke(et, false);
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			try {
 				Method setSoftInputShownOnFocus;
@@ -101,8 +100,8 @@ public class StockSearchView extends RelativeLayout implements
 						"setSoftInputShownOnFocus", boolean.class);
 				setSoftInputShownOnFocus.setAccessible(true);
 				setSoftInputShownOnFocus.invoke(et, false);
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		} else {
 			et.setInputType(InputType.TYPE_NULL);

@@ -180,6 +180,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 						"setShowSoftInputOnFocus", boolean.class);
 				setShowSoftInputOnFocus.setAccessible(true);
 				setShowSoftInputOnFocus.invoke(et, false);
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 			}
 			try {
@@ -188,6 +189,7 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 						"setSoftInputShownOnFocus", boolean.class);
 				setSoftInputShownOnFocus.setAccessible(true);
 				setSoftInputShownOnFocus.invoke(et, false);
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 			}
 		} else {

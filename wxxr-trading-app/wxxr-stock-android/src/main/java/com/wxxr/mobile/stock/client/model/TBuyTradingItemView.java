@@ -13,7 +13,7 @@ public abstract class TBuyTradingItemView extends ViewBase implements ItemViewSe
 		if (value instanceof StockTradingOrderBean) {
 			StockTradingOrderBean order = (StockTradingOrderBean)value;
 			
-			if("PROCESSING".equals(order.getStatus())) {
+			if("PROCESSING".equals(order.getStatus()) || "100".equals(order.getStatus())) {
 				return "TBuyTradingItemOrderView";
 			} else {
 				return "TBuyTradingItemDealView";
