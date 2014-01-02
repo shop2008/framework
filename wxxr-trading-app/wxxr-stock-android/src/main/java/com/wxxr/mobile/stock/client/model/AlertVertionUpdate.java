@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
+import com.wxxr.mobile.stock.client.service.IClientInfoService;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
 @View(name="AlertVertionUpdate", provideSelection=true)
@@ -77,9 +78,7 @@ public abstract class AlertVertionUpdate extends ViewBase  implements ISelection
 	String setReadChecked(InputEvent event) {
 		checked = !checked;
 		registerBean("checked", checked);
-		if(userService!= null) {
-			userService.setAlertUpdateEnabled(!checked);
-		}
+		AppUtils.getFramework().getService(IClientInfoService.class).setAlertUpdateEnabled(!checked);
 		return null;
 	}
 	

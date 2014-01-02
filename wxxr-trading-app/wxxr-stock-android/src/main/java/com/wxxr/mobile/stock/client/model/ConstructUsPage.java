@@ -3,9 +3,11 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -17,11 +19,13 @@ import com.wxxr.mobile.stock.client.service.IGenericContentService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.constract_us_page_layout")
 public abstract class ConstructUsPage extends PageBase {
 
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${'版本：'}${vertionValue}")
 	String version;
 
 	@Menu(items={"left"})
 	private IMenu toolbar;
+	
+	String vertionValue;
 	
 	@Command(
 			uiItems={
@@ -33,6 +37,11 @@ public abstract class ConstructUsPage extends PageBase {
 		return null;
 	}
 	
+	@OnShow
+	void initData() {
+		vertionValue = AppUtils.getFramework().getApplicationVersion();
+		registerBean("vertionValue", vertionValue);
+	}
 	/**
 	 * 标题栏-"返回"按钮事件处理
 	 * 

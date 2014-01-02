@@ -33,6 +33,7 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
+import com.wxxr.mobile.stock.client.service.IClientInfoService;
 
 /**
  * @author neillin
@@ -95,10 +96,7 @@ public abstract class HomePage extends PageBase {
 		} else {
 			vertionItem.setAttribute(AttributeKeys.icon,
 					"resourceId:drawable/v_update");
-			
-			if(usrMgr!=null) {
-				alertUpdateEnabled = usrMgr.alertUpdateEnabled();
-			}
+			alertUpdateEnabled = AppUtils.getFramework().getService(IClientInfoService.class).alertUpdateEnabled();
 			if (alertUpdateEnabled) {
 				updateSelection(new VertionUpdateSelection(
 						vertionInfoBean.getUrl()));
