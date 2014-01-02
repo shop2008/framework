@@ -7,17 +7,25 @@
     android:background="@color/page_background_color"
     >
     
-    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView 
-        android:id="@+id/lv_integral_detail"
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="#00000000"
-        bind:itemViewId="actualScoreItemView"
-        bind:on_ItemClick="itemClicked"
-        bind:field="actualScores"
-        android:scrollbars="none"
+        android:orientation="vertical"
+        bind:field="acctRefreshView"
         bind:on_BottomRefresh="refreshBottomData"
         bind:on_TopRefresh="refreshTopData"
-        />
+        >
+
+        <ListView
+            android:id="@+id/listView1"
+            style="@style/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            bind:field="actualScores"
+            android:scrollbars="none"
+            bind:on_ItemClick="itemClicked"
+            bind:itemViewId="actualScoreItemView"
+            />
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
     
 </LinearLayout>

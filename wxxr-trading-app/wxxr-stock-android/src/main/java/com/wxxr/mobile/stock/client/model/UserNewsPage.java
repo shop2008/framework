@@ -2,7 +2,6 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
 
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -23,20 +22,20 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
-@View(name = "userNewsPage", withToolbar = true, description = "消息", provideSelection=true)
+@View(name = "userNewsPage", withToolbar = true, description = "消息", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_news_center_page_layout")
 public abstract class UserNewsPage extends PageBase {
 
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
+
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.remindMessageBean}")
 	BindableListWrapper<RemindMessageBean> accountTradeListBean;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getPullMessageBean(0,10)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getPullMessageBean(start,limit)}")
 	BindableListWrapper<PullMessageBean> infoNoticeListBean;
 
 	/** 账户&交易-数据 */
@@ -65,12 +64,17 @@ public abstract class UserNewsPage extends PageBase {
 	@Bean
 	int curItemId = 0;
 
+	@Bean
+	int start = 0;
+
+	@Bean
+	int limit = 10;
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
 	@Field(attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "false") })
+			@Attribute(name = "enablePullUpRefresh", value = "${infoNoticeListBean!=null&&infoNoticeListBean.data!=null&&infoNoticeListBean.data.size()>0?true:false}") })
 	String noticeRefreshView;
 
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
@@ -89,8 +93,8 @@ public abstract class UserNewsPage extends PageBase {
 		curItemId = 1;
 		registerBean("curItemId", curItemId);
 
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			infoNoticeListBean.getData();
+		if (usrService != null) {
+			usrService.getPullMessageBean(0, infoNoticeListBean.getData().size());
 		}
 		return null;
 	}
@@ -100,13 +104,40 @@ public abstract class UserNewsPage extends PageBase {
 		curItemId = 0;
 		registerBean("curItemId", curItemId);
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			//accountTradeListBean.getData();
+			// accountTradeListBean.getData();
+			if (usrService != null) {
+				usrService.getRemindMessageBean();
+			}
 		}
 		return null;
 	}
 
 	@Command
 	String handleNoticeTopRefresh(InputEvent event) {
+		if(event.getEventType().equals("TopRefresh")) {
+			
+			showInfoNotices(event);
+		} else if(event.getEventType().equals("BottomRefresh")) {
+			int completeLoadSize = 0;
+			if (infoNoticeListBean != null)
+				completeLoadSize += infoNoticeListBean.getData().size();
+			start += completeLoadSize;
+			if (usrService != null) {
+				usrService.getPullMessageBean(start, limit);
+			}
+		}
+		return null;
+	}
+
+	@Command
+	String handleNoticeBottomRefresh(InputEvent event) {
+		int completeLoadSize = 0;
+		if (infoNoticeListBean != null)
+			completeLoadSize += infoNoticeListBean.getData().size();
+		start += completeLoadSize;
+		if (usrService != null) {
+			usrService.getPullMessageBean(start, limit);
+		}
 		return null;
 	}
 }

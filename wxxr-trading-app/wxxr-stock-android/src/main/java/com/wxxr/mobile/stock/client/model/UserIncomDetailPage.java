@@ -22,69 +22,89 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 /**
  * 收支明细界面
+ * 
  * @author renwenjie
- *
+ * 
  */
-@View(name="userIncomDetailPage", withToolbar=true, description="收支明细")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.income_detail_layout")
+@View(name = "userIncomDetailPage", withToolbar = true, description = "收支明细")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.income_detail_layout")
 public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
-	
-	@Field(valueKey = "options", binding="${gainPayDetailListBean!=null?gainPayDetailListBean.data:null}",
-			visibleWhen="${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?true:false):false):false}",
-				attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="true")})
+
+	@Field(valueKey = "options", binding = "${gainPayDetailListBean!=null?gainPayDetailListBean.data:null}", visibleWhen = "${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?true:false):false):false}")
 	List<GainPayDetailBean> incomeDetails;
-	
-	@Bean(type=BindingType.Service)
+
+	@Field(valueKey = "text", attributes = {
+			@Attribute(name = "enablePullDownRefresh", value = "true"),
+			@Attribute(name = "enablePullUpRefresh", value = "${gainPayDetailListBean!=null&&gainPayDetailListBean.data!=null&&gainPayDetailListBean.data.size()>0?true:false}") })
+	String acctRefreshView;
+
+	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
+
 	@Field(valueKey = "visible", binding = "${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?false:true):true):true}")
 	boolean noDataVisible;
-	
-	
-	@Bean(type=BindingType.Pojo, express="${usrService.getGPDetails(start,limit)}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.getGPDetails(start,limit)}")
 	BindableListWrapper<GainPayDetailBean> gainPayDetailListBean;
-	
+
 	@Menu(items = { "left" })
 	private IMenu toolbar;
-	
+
 	@Bean
 	int start = 0;
-	
+
 	@Bean
 	int limit = 10;
+
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
-	
-	/**处理下拉刷新*/
+
+	/** 处理下拉刷新 */
 	@Command
 	String handleTopRefresh(InputEvent event) {
-		if(log.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			log.debug("UserIncomDetailPage : handleTopRefresh");
 		}
-		
-		if(usrService != null) {
-			usrService.getGPDetails(start, limit).getData();
+		if (event.getEventType().equals("TopRefresh")) {
+			if (usrService != null) {
+				usrService.getGPDetails(0, gainPayDetailListBean.getData()
+						.size());
+			}
+		} else if (event.getEventType().equals("BottomRefresh")) {
+			int completeSize = 0;
+			if (gainPayDetailListBean != null)
+				completeSize = gainPayDetailListBean.getData().size();
+			start += completeSize;
+
+			if (usrService != null) {
+				usrService.getGPDetails(start, limit);
+			}
 		}
-		
 		return null;
-		
+
 	}
-	
-	/**处理上拉刷新*/
+
+	/** 处理上拉刷新 */
 	@Command
 	String handleBottomRefresh(InputEvent event) {
-		if(log.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			log.debug("UserIncomDetailPage : handleBottomRefresh");
 		}
+
+		int completeSize = 0;
+		if (gainPayDetailListBean != null)
+			completeSize = gainPayDetailListBean.getData().size();
+		start += completeSize;
+
+		if (usrService != null) {
+			usrService.getGPDetails(start, limit);
+		}
 		return null;
-		
 	}
-	
-	
+
 }

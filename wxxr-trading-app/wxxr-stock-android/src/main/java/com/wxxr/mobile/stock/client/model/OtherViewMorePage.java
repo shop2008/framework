@@ -33,10 +33,10 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,0,otherHomeALimit,false)):null}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeAStart,otherHomeALimit,false)):null}")
 	BindableListWrapper<GainBean> otherChallengeListBean;
 
-	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,0,otherHomeVLimit,true)):null}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeVStart,otherHomeVLimit,true)):null}")
 	BindableListWrapper<GainBean> otherJoinListBean;
 	
 	@Field(valueKey = "options", binding = "${otherChallengeListBean!=null?otherChallengeListBean.data:null}", visibleWhen = "${curItemId == 0}")
@@ -60,14 +60,27 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	/** 其它用户--挑战交易盘每页初始条目 */
 	@Bean
-	int otherHomeALimit = 15;
+	int otherHomeALimit = 10;
 
 	/** 其它用户--参赛交易盘每页初始条目 */
 	@Bean
-	int otherHomeVLimit = 15;
+	int otherHomeVLimit = 10;
 	
 	@Bean
+	int otherHomeVStart = 0;
+	
+	@Bean
+	int otherHomeAStart = 0;
+	@Bean
 	boolean isVirtual;
+	
+	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${otherJoinListBean!=null&&otherJoinListBean.data!=null&&otherJoinListBean.data.size()>0?true:false}")})
+	String virtualRefreshView;
+	
+	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${otherChallengeListBean!=null&&otherChallengeListBean.data!=null&&otherChallengeListBean.data.size()>0?true:false}")})
+	String actualRefreshView;
 	
 	@OnShow
 	void initData() {
@@ -101,12 +114,11 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showActualRecords(InputEvent event) {
-		curItemId = 0;
-		registerBean("curItemId", curItemId);
+		registerBean("curItemId", 0);
 
 		// 用户自己的挑战交易记录
 		if (usrService != null) {
-			usrService.getMoreOtherPersonal(userId, 0, otherHomeALimit, false);
+			usrService.getMorePersonalRecords(0, otherChallengeListBean.getData().size(), false);
 		}
 
 		return null;
@@ -120,11 +132,10 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showVirtualRecords(InputEvent event) {
-		curItemId = 1;
-		registerBean("curItemId", curItemId);
+		registerBean("curItemId", 1);
 
 		if (usrService != null) {
-			usrService.getMoreOtherPersonal(userId, 0, otherHomeVLimit, true);
+			usrService.getMorePersonalRecords(0, otherJoinListBean.getData().size(), true);
 		}
 
 		return null;
@@ -230,44 +241,42 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	
 	@Command
 	String handleActualTopRefresh(InputEvent event) {
-		
-			if (usrService != null) {
-				usrService.getMoreOtherPersonal(userId,0, this.otherHomeALimit, true);
-			}
-		
+			showActualRecords(event);
 		return null;
 	}
 
-	@Command
-	String handleActualBottomRefresh(InputEvent event) {
-		
-			// 用户自己的挑战交易记录
-			if (usrService != null) {
-				this.otherHomeALimit += 10;
-				usrService.getMoreOtherPersonal(userId,0, this.otherHomeALimit, true);
-			}
-		
-		return null;
-	}
+	
 
 	@Command
 	String handleVirtualBottomRefresh(InputEvent event) {
 		
-			if (usrService != null) {
-				this.otherHomeVLimit += 10;
-				usrService.getMoreOtherPersonal(userId,0, this.otherHomeVLimit, true);
-			}
-		
+		int completeSize = 0;
+		if(otherJoinListBean != null)
+			completeSize = otherJoinListBean.getData().size();
+		otherHomeVStart += completeSize;
+		if(usrService != null) {
+			usrService.getMorePersonalRecords(otherHomeVStart, otherHomeVLimit, true);
+		}
+		return null;
+	}
+	
+	
+	@Command
+	String handleActualBottomRefresh(InputEvent event) {
+		int completeSize = 0;
+		if(otherChallengeListBean != null)
+			completeSize = otherChallengeListBean.getData().size();
+		otherHomeAStart += completeSize;
+		if(usrService != null) {
+			usrService.getMorePersonalRecords(otherHomeAStart, otherHomeALimit, false);
+		}
 		return null;
 	}
 
 	@Command
 	String handleVirtualTopRefresh(InputEvent event) {
-		
-			// 用户自己的挑战交易记录
-			if (usrService != null) {
-				usrService.getMoreOtherPersonal(userId,0, this.otherHomeVLimit, true);
-			}
+			
+		showVirtualRecords(event);
 		
 		return null;
 	}

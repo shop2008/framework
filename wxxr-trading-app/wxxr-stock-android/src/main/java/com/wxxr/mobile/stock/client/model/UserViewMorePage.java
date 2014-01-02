@@ -35,10 +35,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(0,myHomeALimit,false)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeAStart,myHomeALimit,false)}")
 	BindableListWrapper<GainBean> myChallengeListBean;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(0,myHomeVLimit,true)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeVStart,myHomeVLimit,true)}")
 	BindableListWrapper<GainBean> myJoinListBean;
 
 	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.data:null}", visibleWhen = "${curItemId == 0}")
@@ -64,11 +64,17 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	/** 用户--参赛交易盘每页初始条目 */
 	@Bean
-	int myHomeVLimit = 15;
+	int myHomeVLimit = 10;
 
 	/** 用户--挑战交易盘每页初始条目 */
 	@Bean
-	int myHomeALimit = 15;
+	int myHomeALimit = 10;
+	
+	@Bean
+	int myHomeVStart = 0;
+	
+	@Bean
+	int myHomeAStart = 0;
 
 	@Bean(type = BindingType.Pojo, express = "${userId!=null?usrService.getUserInfoById(userId):usrService.myUserInfo}")
 	UserBean user;
@@ -83,6 +89,15 @@ public abstract class UserViewMorePage extends PageBase implements
 		return null;
 	}
 
+	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${myJoinListBean!=null&&myJoinListBean.data!=null&&myJoinListBean.data.size()>0?true:false}")})
+	String virtualRefreshView;
+	
+	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${myChallengeListBean!=null&&myChallengeListBean.data!=null&&myChallengeListBean.data.size()>0?true:false}")})
+	String actualRefreshView;
+	
+	
 	/**
 	 * 挑战交易盘交易记录
 	 * 
@@ -95,7 +110,7 @@ public abstract class UserViewMorePage extends PageBase implements
 
 		// 用户自己的挑战交易记录
 		if (usrService != null) {
-			usrService.getMorePersonalRecords(0, 15, false);
+			usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false);
 		}
 
 		return null;
@@ -112,7 +127,7 @@ public abstract class UserViewMorePage extends PageBase implements
 		registerBean("curItemId", 1);
 
 		if (usrService != null) {
-			usrService.getMorePersonalRecords(0, myHomeVLimit, true);
+			usrService.getMorePersonalRecords(0, myJoinListBean.getData().size(), true);
 		}
 
 		return null;
@@ -217,47 +232,68 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handleActualTopRefresh(InputEvent event) {
-		
+			
+		if(event.getEventType().equals("TopRefresh")) {
 			if (usrService != null) {
-
-				usrService.getMorePersonalRecords(0, this.myHomeALimit, true);
+					usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false);
+				}
+		} else if(event.getEventType().equals("BottomRefresh")) {
+			int completeSize = 0;
+			if(myChallengeListBean != null)
+				completeSize = myChallengeListBean.getData().size();
+			myHomeAStart += completeSize;
+			if(usrService != null) {
+				usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
 			}
-		
+		}
 		return null;
 	}
 
-	@Command
-	String handleActualBottomRefresh(InputEvent event) {
-		
-			// 用户自己的挑战交易记录
-			if (usrService != null) {
-
-				this.myHomeALimit += 10;
-				usrService.getMorePersonalRecords(0, this.myHomeALimit, true);
-			}
-		
-		return null;
-	}
+	
 
 	@Command
 	String handleVirtualBottomRefresh(InputEvent event) {
 		
-			if (usrService != null) {
-				this.myHomeVLimit += 10;
-				usrService.getMorePersonalRecords(0, this.myHomeVLimit, true);
-			}
-		
+		int completeSize = 0;
+		if(myJoinListBean != null)
+			completeSize = myJoinListBean.getData().size();
+		myHomeVStart += completeSize;
+		if(usrService != null) {
+			usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true);
+		}
+		return null;
+	}
+	
+	
+	@Command
+	String handleActualBottomRefresh(InputEvent event) {
+		int completeSize = 0;
+		if(myChallengeListBean != null)
+			completeSize = myChallengeListBean.getData().size();
+		myHomeAStart += completeSize;
+		if(usrService != null) {
+			usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
+		}
 		return null;
 	}
 
 	@Command
 	String handleVirtualTopRefresh(InputEvent event) {
-		
-			// 用户自己的挑战交易记录
-			if (usrService != null) {
-				usrService.getMorePersonalRecords(0, this.myHomeVLimit, true);
+			if (event.getEventType().equals("TopRefresh")) {
+				// 用户自己的挑战交易记录
+				if (usrService != null) {
+					usrService.getMorePersonalRecords(0, myJoinListBean
+							.getData().size(), true);
+				}
+			} else if(event.getEventType().equals("BottomRefresh")) {
+				int completeSize = 0;
+				if(myJoinListBean != null)
+					completeSize = myJoinListBean.getData().size();
+				myHomeVStart += completeSize;
+				if(usrService != null) {
+					usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true);
+				}
 			}
-		
 		return null;
 	}
 
@@ -278,31 +314,6 @@ public abstract class UserViewMorePage extends PageBase implements
 			}
 		}
 	}
-
-	/*@OnShow
-	void registerListener() {
-		ISelectionService service = getUIContext().getWorkbenchManager()
-				.getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("otherUserPage");
-		selectionChanged("otherUserPage", selection);
-		service.addSelectionListener("otherUserPage", this);
-	}
-
-	@Override
-	public void selectionChanged(String providerId, ISelection selection) {
-		if (selection instanceof MyPageSelection) {
-			MyPageSelection simpleSelection = (MyPageSelection) selection;
-			this.userId = simpleSelection.getUsrId();
-			registerBean("userId", this.userId);
-		}
-	}
-
-	@OnHide
-	void unregisterListener() {
-		getUIContext().getWorkbenchManager().getWorkbench()
-				.getSelectionService()
-				.removeSelectionListener("otherUserPage", this);
-	}*/
 
 	@OnUIDestroy
 	protected void clearData() {

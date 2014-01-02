@@ -3,24 +3,21 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/page_background_color"
-    >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical" >
 
         <RadioGroup
             android:id="@id/rg_game_rank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" 
             android:background="@drawable/title_background"
-            >
+            android:gravity="center"
+            android:orientation="horizontal" >
 
             <RadioButton
                 android:layout_width="0dip"
@@ -32,12 +29,12 @@
                 android:text="@string/label_join_trade_panel"
                 bind:field="virtualRecordBtn"
                 bind:on_Click="showVirtualRecords" />
-            
+
             <RadioButton
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-               	android:background="@drawable/tab_right_btn_background"
+                android:background="@drawable/tab_right_btn_background"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/label_challenge_trade_panel"
@@ -106,49 +103,61 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                bind:field="virtualRecordsList"
-                bind:itemViewId="tradeRecordMoreItemView"
-                android:scrollbars="none"
+                android:orientation="vertical"
+                bind:field="virtualRefreshView"
                 bind:on_BottomRefresh="handleVirtualBottomRefresh"
-                bind:on_ItemClick="virtualRecordItemClicked"
                 bind:on_TopRefresh="handleVirtualTopRefresh" >
-            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
-            
-            <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+
+                <ListView
+                    android:id="@+id/listView1"
+                    style="@style/mListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    bind:field="virtualRecordsList"
+                    bind:itemViewId="tradeRecordMoreItemView"
+                    bind:on_ItemClick="virtualRecordItemClicked" />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                bind:field="actualRecordList"
-                bind:itemViewId="tradeRecordMoreItemView"
-                android:scrollbars="none"
+                android:orientation="vertical"
+                bind:field="actualRefreshView"
                 bind:on_BottomRefresh="handleActualBottomRefresh"
-                bind:on_ItemClick="actualRecordItemClicked"
                 bind:on_TopRefresh="handleActualTopRefresh" >
-            </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
-            
-            <TextView 
+
+                <ListView
+                    android:id="@+id/listView2"
+                    style="@style/mListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    bind:field="actualRecordList"
+                    bind:itemViewId="tradeRecordMoreItemView"
+                    bind:on_ItemClick="actualRecordItemClicked" />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:visibility="gone"
                 android:background="@color/black"
+                android:gravity="center"
                 android:text="@string/no_more_virtual_record"
-                bind:field="noMoreVirtualRecordVisible"
-                />
-            
-            <TextView 
+                android:visibility="gone"
+                bind:field="noMoreVirtualRecordVisible" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:background="@color/black"
-                android:visibility="gone"
+                android:gravity="center"
                 android:text="@string/no_more_actual_record"
-                bind:field="noMoreActualRecordVisible"
-                />
+                android:visibility="gone"
+                bind:field="noMoreActualRecordVisible" />
         </FrameLayout>
     </LinearLayout>
+
 </LinearLayout>

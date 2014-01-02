@@ -27,13 +27,22 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo, express="${tradingService.getVoucherDetails(0,10)}")
+	@Bean(type=BindingType.Pojo, express="${tradingService.getVoucherDetails(start,limit)}")
 	VoucherDetailsBean voucherDetailsBean;
 	
-	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.list:null}",attributes = {@Attribute(name = "enablePullDownRefresh", value="true"),
-			  @Attribute(name = "enablePullUpRefresh", value="true")})
+	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.list:null}")
 	List<GainPayDetailBean> actualScores;
 	
+	
+	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${voucherDetailsBean!=null&&voucherDetailsBean.list!=null&&voucherDetailsBean.list.size()>0?true:false}")})
+	String acctRefreshView;
+	
+	@Bean
+	int start = 0;
+	
+	@Bean
+	int limit = 10;
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
@@ -45,11 +54,32 @@ public abstract class URealPanelScorePage extends PageBase{
 	
 	@Command
 	String refreshTopData(InputEvent event) {
+		
+		if(event.getEventType().equals("TopRefresh")) {
+			if(tradingService != null) {
+				tradingService.getVoucherDetails(0, voucherDetailsBean.getList().size());
+			}
+		} else if(event.getEventType().equals("BottomRefresh")) {
+			int completeSize = 0;
+			if(voucherDetailsBean != null)
+				completeSize = voucherDetailsBean.getList().size();
+			start += completeSize;
+			if(tradingService != null) {
+				tradingService.getVoucherDetails(start, limit);
+			}
+		}
 		return null;
 	}
 	
 	@Command
 	String refreshBottomData(InputEvent event) {
+		int completeSize = 0;
+		if(voucherDetailsBean != null)
+			completeSize = voucherDetailsBean.getList().size();
+		start += completeSize;
+		if(tradingService != null) {
+			tradingService.getVoucherDetails(start, limit);
+		}
 		return null;
 	}
 	

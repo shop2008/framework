@@ -3,9 +3,8 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/page_background_color"
-    >
+    android:orientation="vertical" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -21,8 +20,8 @@
                 android:id="@id/rg_game_rank"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:background="@drawable/title_background"
+                android:gravity="center"
                 android:orientation="horizontal" >
 
                 <RadioButton
@@ -113,17 +112,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
-                    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="visible"
-                        bind:field="successRecordsList"
-                        android:scrollbars="none"
-                        bind:itemViewId="tradeRecordItemView"
+                        android:orientation="vertical"
+                        bind:field="sucRefreshView"
                         bind:on_BottomRefresh="handleSucBottomRefresh"
-                        bind:on_ItemClick="sucRecordItemClicked"
                         bind:on_TopRefresh="handleSucTopRefresh" >
-                    </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+                        <ListView
+                            android:id="@+id/listView1"
+                            style="@style/mListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            bind:field="successRecordsList"
+                            bind:itemViewId="tradeRecordItemView"
+                            bind:on_ItemClick="sucRecordItemClicked" />
+                    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -131,20 +136,26 @@
                         android:layout_gravity="center"
                         android:text="@string/sucess_record_null_text"
                         bind:field="sucRecordNullVisible" />
-                    
                 </FrameLayout>
 
-                <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+                <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="invisible"
-                    android:scrollbars="none"
-                    bind:field="allRecordsList"
-                    bind:itemViewId="tradeRecordItemView"
+                    android:orientation="vertical"
+                    bind:field="allRefreshView"
                     bind:on_BottomRefresh="handleAllBottomRefresh"
-                    bind:on_ItemClick="allRecordItemClicked"
                     bind:on_TopRefresh="handleAllTopRefresh" >
-                </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+
+                    <ListView
+                        android:id="@+id/listView2"
+                        style="@style/mListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        bind:field="allRecordsList"
+                        bind:itemViewId="tradeRecordItemView"
+                        bind:on_ItemClick="allRecordItemClicked" />
+                </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
             </FrameLayout>
         </LinearLayout>
 
@@ -152,8 +163,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="invisible"
             android:text="@string/record_null_text"
+            android:visibility="invisible"
             bind:field="recordNullVisible" />
     </FrameLayout>
 

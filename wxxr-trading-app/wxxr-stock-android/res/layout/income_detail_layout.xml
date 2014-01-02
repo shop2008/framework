@@ -3,30 +3,34 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/page_background_color"
-    >
-    <com.wxxr.mobile.stock.client.widget.PullToRefreshListView
+    android:orientation="vertical" >
+
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        bind:field="acctRefreshView"
+        bind:on_BottomRefresh="handleBottomRefresh"
+        bind:on_TopRefresh="handleTopRefresh" >
+
+        <ListView
             android:id="@+id/listView1"
-            android:cacheColorHint="#00000000"
+            style="@style/mListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:scrollbars="none"
             bind:field="incomeDetails"
-            android:listSelector="@color/gray"
-            bind:itemViewId="incomeDetailsItemView"
-            bind:on_TopRefresh="handleTopRefresh"
-            bind:on_BottomRefresh="handleBottomRefresh" 
-            >
-    </com.wxxr.mobile.stock.client.widget.PullToRefreshListView>
+            bind:itemViewId="incomeDetailsItemView" />
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-    <TextView 
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:gravity="center"
         android:text="无收支数据"
-        android:layout_centerInParent="true"
         android:visibility="gone"
-        bind:field="noDataVisible"
-        />
+        bind:field="noDataVisible" />
+
 </RelativeLayout>
