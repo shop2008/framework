@@ -54,7 +54,7 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
         @Override
         public void validate() {
         	if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
-				//throw new IllegalArgumentException("Invalid market or code");//fix闪退问题
+				throw new IllegalArgumentException("Invalid market or code");//fix闪退问题
 			}
         }
 
