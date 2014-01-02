@@ -309,7 +309,6 @@ public abstract class TBuyTradingPage extends PageBase implements IModelUpdater,
 		map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 		result.setResult("BuyStockDetailPage");
 		result.setPayload(map);
-		updateSelection(new StockSelection());
 		return result;
 	}
 }

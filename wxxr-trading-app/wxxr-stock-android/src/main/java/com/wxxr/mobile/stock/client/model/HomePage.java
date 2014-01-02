@@ -125,7 +125,6 @@ public abstract class HomePage extends PageBase {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
-		updateSelection(new StockSelection());
 		return "";
 	}
 
