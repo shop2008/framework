@@ -25,6 +25,7 @@ import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -46,6 +47,8 @@ import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDraw
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
+import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
+import com.wxxr.mobile.stock.app.service.loader.GainPayDetailsEntityLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
 import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
@@ -190,7 +193,10 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
     private GenericReloadableEntityCache<String,DealDetailBean,List> dealDetailBean_cache;
     private GenericReloadableEntityCache<String,AuditDetailBean,List> auditDetailBean_cache;
     private GenericReloadableEntityCache<String,VoucherDetailsBean,List> voucherDetailsBean_cache;
+    
+    private GenericReloadableEntityCache<String,GainPayDetailBean,List> gainPayDetailBean_cache;
 
+    protected BindableListWrapper<GainPayDetailBean> vgainPayDetails;
 
 
 	// =================module life cycle methods=============================
@@ -218,7 +224,8 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
         auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
         voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List>("voucherDetailsBean");
-        
+      
+        		
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
@@ -226,6 +233,7 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
         registry.registerEntityLoader("dealDetailBean", new DealDetailLoader());
         registry.registerEntityLoader("auditDetailBean", new AuditDetailLoader());
         registry.registerEntityLoader("voucherDetailsBean", new VoucherDetailsLoader());
+        registry.registerEntityLoader("vgainPayDetails", new GainPayDetailsEntityLoader());
 
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
@@ -275,7 +283,6 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
 			this.tRank = this.tRankCache.getEntities(null, tRankComparator);
 		}
 		this.tRankCache.doReloadIfNeccessay();
-		this.tRank.clear();
 		return this.tRank;
 	}
 
@@ -288,7 +295,6 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
 			this.t1Rank = this.t1RankCache.getEntities(null, tRankComparator);
 		}
 		this.t1RankCache.doReloadIfNeccessay();
-		this.t1Rank.clear();
 		return this.t1Rank;
 
 	}
@@ -900,7 +906,32 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
         this.voucherDetailsBean_cache.forceReload(params, false);
         return voucherDetailsBean_cache.getEntity(key);
 	}
-	
+	private static final Comparator<GainPayDetailBean> vgainPayDetailsComparator = new Comparator<GainPayDetailBean>() {
+		
+		@Override
+		public int compare(GainPayDetailBean o1, GainPayDetailBean o2) {
+			if(o1!=null && o2!=null){
+				return (int) (o2.getTime() - o1.getTime());
+			}
+			return 0;
+		}
+	};
+	public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit){
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
+		}
+		if(this.vgainPayDetails == null){
+			if(this.gainPayDetailBean_cache == null){
+				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List>("vgainPayDetails");
+			}
+			this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("start", start);
+		params.put("limit", limit);
+		this.gainPayDetailBean_cache.doReloadIfNeccessay(params);
+		return this.vgainPayDetails;
+	}
 	
 	void clearCache(){
 		tradingAccInfo_cache.clear();

@@ -11,6 +11,7 @@ import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -241,4 +242,8 @@ public interface ITradingManagementService extends IStatefulService<IStockAppCon
 	void applyDrawMoney(long amount);
 	
 	VoucherDetailsBean getVoucherDetails(int start, int limit);
+	/**
+	 * 去积分明细 
+	 * */
+	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit);
 }
