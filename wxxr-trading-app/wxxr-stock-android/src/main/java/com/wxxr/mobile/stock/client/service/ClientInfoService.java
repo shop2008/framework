@@ -37,7 +37,7 @@ public class ClientInfoService extends AbstractModule<IStockAppContext> implemen
 		} else {
 			dictionary = new Hashtable<String, String>();
 			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
-			mgr.newPreference(getModuleName(), dictionary);
+			mgr.newPreference(MODULE_NAME, dictionary);
 		}
 		mgr.putPreference(getModuleName(), dictionary);
 	}
