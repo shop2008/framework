@@ -11,7 +11,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 public class ClientInfoService extends AbstractModule<IStockAppContext> implements IClientInfoService {
 
 	private static final String KEY_ALERT_ENABLED = "AlertEnabled";
-	
+	private static final String MODULE_NAME = "ClientInfo";
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IWorkbenchManager.class);
@@ -31,7 +31,7 @@ public class ClientInfoService extends AbstractModule<IStockAppContext> implemen
 	@Override
 	public void setAlertUpdateEnabled(boolean isEnabled) {
 		IPreferenceManager mgr = getPrefManager();
-		Dictionary<String, String> dictionary = mgr.getPreference(getModuleName());
+		Dictionary<String, String> dictionary = mgr.getPreference(MODULE_NAME);
 		if(dictionary != null) {
 			dictionary.put(KEY_ALERT_ENABLED, String.valueOf(isEnabled));
 		} else {
@@ -44,7 +44,7 @@ public class ClientInfoService extends AbstractModule<IStockAppContext> implemen
 
 	@Override
 	public boolean alertUpdateEnabled() {
-		Dictionary<String, String> dictionary = getPrefManager().getPreference(getModuleName());
+		Dictionary<String, String> dictionary = getPrefManager().getPreference(MODULE_NAME);
 		if(dictionary != null) {
 			return Boolean.parseBoolean(dictionary.get(KEY_ALERT_ENABLED));
 		}
