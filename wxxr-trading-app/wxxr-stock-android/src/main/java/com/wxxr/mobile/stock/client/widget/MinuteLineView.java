@@ -345,7 +345,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					mPaint.setColor(Color.parseColor("#3d3e38"));
 					if(i==0){
 						canvas.drawLine(startX, startY + 2 , startX, fStopY+minuteBottomPadding-1, mPaint);
-					}
+					} 
 					canvas.drawLine(stopX, stopY + 2, stopX, fStopY+minuteBottomPadding-1, mPaint);
 					mPaint.setColor(getStockCloseColor());
 					canvas.drawLine(startX, startY, stopX, stopY, mPaint);

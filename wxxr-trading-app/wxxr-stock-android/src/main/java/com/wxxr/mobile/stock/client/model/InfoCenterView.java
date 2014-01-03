@@ -236,7 +236,7 @@ public abstract class InfoCenterView extends ViewBase {
 		}else if(event.getEventType().equals("BottomRefresh")){
 			if(stockTaxis!=null && this.stockTaxis.getData()!=null){
 				this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 20);
-			}
+			} 
 		}
 		return null;
 	}
