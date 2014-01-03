@@ -3,10 +3,8 @@ package com.wxxr.mobile.stock.client.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Path;
 import android.util.AttributeSet;
 
 import com.wxxr.mobile.core.log.api.Trace;
@@ -326,41 +324,32 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 			scale = (lowPrice - highPrice) / fHeight;
 		}
 		float width = (float) (zWidth / 240.0);
-		Path path = new Path();
-		mPaint.setAntiAlias(true);
-		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-		mPaint.setStrokeWidth(1);
-		mPaint.setColor(Color.parseColor("#3d3e38"));
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size - 1; i++)
 		{
-			StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
-			if (stockMinute!=null)
+			if (i <= 239)
 			{
-				float newprice = stockMinute.getPrice();
-				// (最新价-昨收)*中间到上边框的像素/(昨收*变化量) ==像素变化量
-				startX = fStartX + (width*i)+1.0f;
-				startY = fStopY - ((newprice - lowPrice)/scale)-1.0f;
-				canvas.drawLine(startX, startY + 1 , startX, fStopY+minuteBottomPadding-1, mPaint);
-				if(i==0){
-					path.moveTo(fStartX, startY); 
+				mPaint.setAntiAlias(true);
+				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
+				mPaint.setStrokeWidth(1);
+				StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
+				StockMinuteLineBean stockMinute1 = (StockMinuteLineBean)dataProvider.getItem(i+1);
+				if (i <= 239 && stockMinute!=null && stockMinute1!=null)
+				{
+					float newprice = stockMinute.getPrice();
+					// (最新价-昨收)*中间到上边框的像素/(昨收*变化量) ==像素变化量
+					startX = fStartX + (width*i)+1.0f;
+					stopX = fStartX + (width*(i+1))+1.0f;
+					startY = fStopY - ((newprice - lowPrice)/scale);
+					float newprice1 = stockMinute1.getPrice();
+					stopY = fStopY - ((newprice1 - lowPrice)/scale);
+					mPaint.setColor(Color.parseColor("#3d3e38"));
+					canvas.drawLine(startX, startY + 3 , startX, fStopY+minuteBottomPadding-1, mPaint);
+					canvas.drawLine(stopX, stopY + 3, stopX, fStopY+minuteBottomPadding-1, mPaint);
+					mPaint.setColor(getStockCloseColor());
+					canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 				}
-				path.lineTo(startX,startY);
 			}
-		}	
-		drawPath(canvas,path);
-	}
-	
-	private void drawPath(Canvas canvas,Path path){
-		if(canvas!=null && path!=null){
-			Paint mPaint = new Paint();
-			mPaint.setAntiAlias(true);
-			mPaint.setStyle(Paint.Style.STROKE);
-			canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-			mPaint.setColor(getStockCloseColor());
-			mPaint.setStrokeWidth(1);
-			mPaint.setPathEffect(new CornerPathEffect(10));
-			canvas.drawPath(path, mPaint); 
-		}
+		}		
 	}
 	/**
 	 * 画均线
