@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 @View(name="uRealPanelScorePage", withToolbar=true, description="实盘积分明细")
@@ -27,15 +28,14 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo, express="${tradingService.getVoucherDetails(start,limit)}")
-	VoucherDetailsBean voucherDetailsBean;
-	
 	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.list:null}")
 	List<GainPayDetailBean> actualScores;
 	
+	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
+	BindableListWrapper<GainPayDetailBean> voucherDetailsBean;
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
-			@Attribute(name = "enablePullUpRefresh", value= "${voucherDetailsBean!=null&&voucherDetailsBean.list!=null&&voucherDetailsBean.list.size()>0?true:false}")})
+			@Attribute(name = "enablePullUpRefresh", value= "${voucherDetailsBean!=null&&voucherDetailsBean.data!=null&&voucherDetailsBean.data.size()>0?true:false}")})
 	String acctRefreshView;
 	
 	@Bean
@@ -57,12 +57,12 @@ public abstract class URealPanelScorePage extends PageBase{
 		
 		if(event.getEventType().equals("TopRefresh")) {
 			if(tradingService != null) {
-				tradingService.getVoucherDetails(0, voucherDetailsBean.getList().size());
+				tradingService.getVoucherDetails(0, voucherDetailsBean.getData().size());
 			}
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
 			if(voucherDetailsBean != null)
-				completeSize = voucherDetailsBean.getList().size();
+				completeSize = voucherDetailsBean.getData().size();
 			start += completeSize;
 			if(tradingService != null) {
 				tradingService.getVoucherDetails(start, limit);
@@ -75,7 +75,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	String refreshBottomData(InputEvent event) {
 		int completeSize = 0;
 		if(voucherDetailsBean != null)
-			completeSize = voucherDetailsBean.getList().size();
+			completeSize = voucherDetailsBean.getData().size();
 		start += completeSize;
 		if(tradingService != null) {
 			tradingService.getVoucherDetails(start, limit);
