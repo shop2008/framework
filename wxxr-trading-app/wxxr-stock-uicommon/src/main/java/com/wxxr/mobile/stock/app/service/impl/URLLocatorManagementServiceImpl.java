@@ -39,6 +39,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	private long lastCheckTime;
 	private int checkIntervalInSeconds = 30*60;		// 30 minutes
 	private String serverUrl;
+	private String magnoliaUrl;
 	private final static String  RELATIVE_URI_APPLICATION ="/mobilestock2";
 	private final static String  RELATIVE_URI_MAGNOLIA ="/magnoliaPublic";
 	private Dictionary<String, String> defaultSettings = new Hashtable<String, String>();
@@ -51,7 +52,10 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 
 	@Override
 	public String getMagnoliaURL() {
-		return serverUrl+RELATIVE_URI_MAGNOLIA;
+		if (StringUtils.isBlank(magnoliaUrl)) {
+			magnoliaUrl = serverUrl+RELATIVE_URI_MAGNOLIA;
+		}
+		return magnoliaUrl;
 	}
 
 	@Override
@@ -66,6 +70,8 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		}
 		loadDefaultSettings();//加载出厂设置
 		this.serverUrl = getURL("server");
+		this.magnoliaUrl = getURL("magnolia");
+		
 		getService(IRestProxyService.class).setDefautTarget(getServerURL());
 		if (log.isDebugEnabled()) {
 			log.debug("Local settings:"+defaultSettings);
@@ -137,11 +143,18 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 				prefManager.newPreference(prefName, d);
 			}
 			String sUrl =  remoteConfig.get("server");
+			String mUrl =  remoteConfig.get("magnolia");
 			if (StringUtils.isNotBlank(sUrl)) {
-				this.serverUrl = sUrl;
+				this.serverUrl = sUrl;				
 				if (isChanged(getModuleName(), "server", sUrl)) {
 				    getService(IRestProxyService.class).setDefautTarget(getServerURL());
 					prefManager.updatePreference(prefName, "server", sUrl);
+				}
+			}
+			if (StringUtils.isNotBlank(mUrl)) {
+				this.magnoliaUrl = mUrl;
+				if (isChanged(getModuleName(), "magnolia", mUrl)) {
+					prefManager.updatePreference(prefName, "magnolia", sUrl);
 				}
 			}
 		} catch (Exception e) {
