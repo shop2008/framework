@@ -54,7 +54,7 @@ public abstract class TradingWinnerView extends ViewBase {
 		}else if(event.getEventType().equals("BottomRefresh")){
 			if(rankBean!=null && rankBean.getData()!=null){
 				this.start = rankBean.getData().size();
-				this.service.getEarnRank(start+1,20);
+				this.service.getEarnRank(start,20);
 			}
 		}
 		return null;

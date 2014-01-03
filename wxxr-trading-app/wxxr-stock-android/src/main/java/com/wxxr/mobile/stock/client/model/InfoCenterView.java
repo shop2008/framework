@@ -234,7 +234,7 @@ public abstract class InfoCenterView extends ViewBase {
 			this.infoCenterService.getStockQuotation("399001","SZ");
 			this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
 		}else if(event.getEventType().equals("BottomRefresh")){
-			if(stockTaxis!=null){
+			if(stockTaxis!=null && this.stockTaxis.getData()!=null){
 				this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 20);
 			}
 		}
