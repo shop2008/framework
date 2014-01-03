@@ -24,6 +24,8 @@ public class RemindMessageInfo {
 	private String attrs;
 	@Column
 	private boolean read;
+	@Column
+	private String userId;
 	
 	public Long getId() {
 		return id;
@@ -89,12 +91,20 @@ public class RemindMessageInfo {
 		this.read = read;
 	}
 
-	@Override
-	public String toString() {
-		return "RemindMessageInfo [id=" + id + ", type=" + type + ", title="
-				+ title + ", content=" + content + ", createdDate="
-				+ createdDate + ", acctId=" + acctId + ", attrs=" + attrs
-				+ ", read=" + read + "]";
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
 	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	
 
 }

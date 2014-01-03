@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
@@ -32,8 +35,11 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
     private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader");
 	private static String COMMAND_NAME="GetRemindMessageCommand";
 
+	@SecurityConstraint(allowRoles={})
+	@NetworkConstraint
 	private static class GetRemindMessageCommand implements ICommand<List<MessageVO>>{
 
+		private String userId;
 		/* (non-Javadoc)
 		 * @see com.wxxr.mobile.core.command.api.ICommand#getCommandName()
 		 */
@@ -60,13 +66,15 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 			
 		}
 		
+		
 	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
 	public ICommand<List<MessageVO>> createCommand(Map<String, Object> params) {
-		return new GetRemindMessageCommand();
+		GetRemindMessageCommand cmd=new GetRemindMessageCommand();
+		return cmd;
 	}
 
 	/* (non-Javadoc)
@@ -93,6 +101,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 						bean.setId(vo.getId());
 						cache.putEntity(bean.getId(), bean);
 					}
+					
 					bean.setAcctId(vo.getId());
 					bean.setAttrs(vo.getAttributes());
 					bean.setContent(vo.getContent());
@@ -116,7 +125,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	
 	protected void insertOrUpdateDB(RemindMessageBean bean) {
 		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
-		List<RemindMessageInfo> list=dao.queryRaw("where _id =?", bean.getId());
+		List<RemindMessageInfo> list=dao.queryRaw("where _id =? and USER_ID=?", bean.getId(),getUserId());
 		RemindMessageInfo entity;
 		boolean insert=false;
 		if(list==null || list.size()>0){
@@ -139,7 +148,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 		entity.setCreatedDate(bean.getCreatedDate());
 		entity.setTitle(bean.getAttrs().get("title"));
 		entity.setType(bean.getType());
-		entity.setType(bean.getType());
+		entity.setUserId(getUserId());
 		if(insert)
 			dao.insert(entity);
 		else
@@ -149,7 +158,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 	protected List<RemindMessageBean> queryRemindMessages() {
 		RemindMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
-		List<RemindMessageInfo> list=dao.loadAll();
+		List<RemindMessageInfo> list=dao.queryRaw("where USER_ID=?",getUserId());
 		if(list!=null ){
 			for(RemindMessageInfo entity:list){
 				RemindMessageBean bean=new RemindMessageBean();
@@ -198,4 +207,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 		return vos==null ?null: vos.getMessages();
 	}
 
+	protected String getUserId() {
+		return this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).getUserId();
+	}
 }

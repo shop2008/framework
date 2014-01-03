@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.PullMessageInfo;
-import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
-import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.restful.json.PullMessageVOs;
 import com.wxxr.stock.restful.resource.ArticleResource;
@@ -24,7 +22,7 @@ import com.wxxr.stock.trading.ejb.api.PullMessageVO;
  * @author wangyan
  *
  */
-public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBean, PullMessageVO> {
+public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageBean, PullMessageVO> {
 
 	private final static String COMMAND_NAME="GetPullMessasge";
 	
@@ -106,14 +104,15 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 	 */
 	@Override
 	public boolean handleCommandResult(ICommand<?> cmd,List<PullMessageVO> result,
-			IReloadableEntityCache<Long, PullMessageBean> cache) {
+			IReloadableEntityCache<String, PullMessageBean> cache) {
 		
 		
 		boolean updated = false;
 
 			List<PullMessageBean> pullMessageBeans=queryRemindMessages();
 			for(PullMessageBean bean:pullMessageBeans){
-				cache.putEntity(bean.getId(), bean);
+				String key=bean.getId()+getUserId();
+				cache.putEntity(key, bean);
 				updated=true;
 			}
 
@@ -121,11 +120,12 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 		if(result!=null && !result.isEmpty()){
 			boolean insert=false;
 			for (PullMessageVO vo : result) {
-					PullMessageBean bean=cache.getEntity(vo.getId());
+					String key=vo.getId()+getUserId();
+					PullMessageBean bean=cache.getEntity(key);
 					if(bean==null){
 						bean=new PullMessageBean();
 						bean.setId(vo.getId());
-						cache.putEntity(bean.getId(), bean);
+						cache.putEntity(key, bean);
 						insert=true;
 					}
 					bean.setArticleUrl(vo.getArticleUrl());
@@ -143,7 +143,7 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 
 	protected void insertOrUpdateDB(PullMessageBean bean) {
 		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
-		List<PullMessageInfo> list=dao.queryRaw("where _id =?", String.valueOf(bean.getId()));
+		List<PullMessageInfo> list=dao.queryRaw("where _id =? and USER_ID=?", String.valueOf(bean.getId()),getUserId());
 		PullMessageInfo entity;
 		boolean insert=false;
 		if(list==null || list.size()>0){
@@ -159,6 +159,7 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 		entity.setCreateDate(bean.getCreateDate());
 		entity.setTitle(bean.getTitle());
 		entity.setRead(false);
+		entity.setUserId(getUserId());
 		if(insert)
 			dao.insert(entity);
 		else
@@ -168,7 +169,7 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 	protected List<PullMessageBean> queryRemindMessages() {
 		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
 		List<PullMessageBean> pullMessageBeans=new ArrayList<PullMessageBean>();
-		List<PullMessageInfo> list=dao.loadAll();
+		List<PullMessageInfo> list=dao.queryRaw("where USER_ID=?",getUserId());
 		if(list!=null ){
 			for(PullMessageInfo entity:list){
 				PullMessageBean bean=new PullMessageBean();
@@ -201,5 +202,7 @@ public class PullMessageLoader extends AbstractEntityLoader<Long, PullMessageBea
 		PullMessageVOs vos= getRestService(ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit());
 		return vos==null ?null:vos.getPullMessages();
 	}
-
+	protected String getUserId() {
+		return this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).getUserId();
+	}
 }

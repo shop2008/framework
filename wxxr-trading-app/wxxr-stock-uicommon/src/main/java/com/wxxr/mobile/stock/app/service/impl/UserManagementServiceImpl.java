@@ -124,7 +124,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 	private GenericReloadableEntityCache<String, RemindMessageBean,MessageVO> remindMessagesCache;
 	
 	private BindableListWrapper<PullMessageBean> pullMessages;
-	private GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO> pullMessagesCache;
+	private GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO> pullMessagesCache;
 
 	
 	private BindableListWrapper<UserAttributeBean> userAttrbutes;
@@ -213,8 +213,20 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 
 	public void stopService() {
+		userAssetBeanCache=null;
+		voucherBeanCache=null;
+		remindMessagesCache=null;
+		pullMessagesCache=null;
+		userAttributeCache=null;
+		gainPayDetail_cache=null;
+		personalHomePageBean_cache=null;
+		otherpersonalHomePageBean_cache=null;
+		gainBean_cache=null;
+		otherGainBean_cache=null;
+		unreadRemindMessagesCache=null;
 	   // context.getService(IEventRouter.class).unregisterEventListener(LogoutEvent.class, listener);
 		context.unregisterService(IUserManagementService.class, this);
+		
 	}
 
 
@@ -559,7 +571,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 	public BindableListWrapper<RemindMessageBean> getRemindMessageBean() {
 		if(remindMessages==null){
 			if(remindMessagesCache==null){
-				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean",60);
+				remindMessagesCache=new GenericReloadableEntityCache<String, RemindMessageBean, MessageVO>("remindMessageBean",300);
 			}
 			remindMessages=remindMessagesCache.getEntities(null, new Comparator<RemindMessageBean>() {
 				
@@ -587,7 +599,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		params.put("limit", limit);
 		if(pullMessages==null){
 			if(pullMessagesCache==null){
-				pullMessagesCache=new GenericReloadableEntityCache<Long, PullMessageBean, PullMessageVO>("pullMessageBean",60);
+				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean",300);
 				pullMessagesCache.setCommandParameters(params);
 			}
 			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {

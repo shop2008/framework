@@ -23,6 +23,8 @@ public class PullMessageInfo {
 	private String phone;
 	@Column
 	private boolean read;
+	@Column
+	private String userId;
 	
 	public Long getId() {
 		return id;
@@ -80,10 +82,19 @@ public class PullMessageInfo {
 		this.read = read;
 	}
 
-	@Override
-	public String toString() {
-		return "PullMessageInfo [id=" + id + ", createDate=" + createDate
-				+ ", title=" + title + ", message=" + message + ", articleUrl="
-				+ articleUrl + ", phone=" + phone + ", read=" + read + "]";
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
 	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	
 }

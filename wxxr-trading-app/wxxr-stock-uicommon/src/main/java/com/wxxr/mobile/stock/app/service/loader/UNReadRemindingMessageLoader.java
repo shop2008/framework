@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.RemindMessageInfo;
@@ -51,7 +52,7 @@ public class UNReadRemindingMessageLoader extends AbstractEntityLoader<String, R
 			throws Exception {
 		RemindMessageInfoDao dao=cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getRemindMessageInfoDao();
 		List<RemindMessageBean> remindMessages=new ArrayList<RemindMessageBean>();
-		List<RemindMessageInfo> list=dao.queryRaw(" where read=0 ");
+		List<RemindMessageInfo> list=dao.queryRaw(" where read=0 and USER_ID=?",getUserId());
 		if(list!=null ){
 			for(RemindMessageInfo entity:list){
 				RemindMessageBean bean=new RemindMessageBean();
@@ -96,5 +97,8 @@ public class UNReadRemindingMessageLoader extends AbstractEntityLoader<String, R
 			
 		}
 		
+	}
+	protected String getUserId() {
+		return this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).getUserId();
 	}
 }
