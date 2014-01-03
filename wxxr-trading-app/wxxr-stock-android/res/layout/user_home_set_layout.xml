@@ -3,7 +3,11 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/page_background_color"
+    >
+    
+    
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,9 +44,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/back1"
                     bind:field="*"
-                    bind:on_Click="back1Click"
-                    android:background="@drawable/back1" />
+                    bind:on_Click="back1Click" />
 
                 <ImageView
                     android:layout_width="0dip"
@@ -50,19 +54,9 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/back2"
                     bind:field="*"
-                    bind:on_Click="back2Click"
-                    android:background="@drawable/back2" />
-
-                <ImageView
-                    android:layout_width="0dip"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    bind:field="*"
-                    bind:on_Click="back3Click"
-                    android:background="@drawable/back3" />
+                    bind:on_Click="back2Click" />
             </TableRow>
 
             <TableRow
@@ -75,11 +69,30 @@
                 <ImageView
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/back3"
                     bind:field="*"
-                    bind:on_Click="back4Click"
-                    android:background="@drawable/back4" />
+                    bind:on_Click="back3Click" />
+
+                <ImageView
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back4"
+                    bind:field="*"
+                    bind:on_Click="back4Click" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
 
                 <ImageView
                     android:layout_width="0dip"
@@ -87,9 +100,9 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/back5"
                     bind:field="*"
-                    bind:on_Click="back5Click"
-                    android:background="@drawable/back5" />
+                    bind:on_Click="back5Click" />
 
                 <ImageView
                     android:layout_width="0dip"
@@ -97,9 +110,9 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/back6"
                     bind:field="*"
-                    bind:on_Click="back6Click"
-                    android:background="@drawable/back6" />
+                    bind:on_Click="back6Click" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
