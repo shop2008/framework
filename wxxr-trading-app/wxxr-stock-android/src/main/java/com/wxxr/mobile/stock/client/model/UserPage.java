@@ -119,7 +119,7 @@ public abstract class UserPage extends PageBase  {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
+				@UIItem(id="right",label="",icon="resourceId:drawable/seting")
 			},
 			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
 	)
