@@ -224,14 +224,20 @@ public abstract class InfoCenterView extends ViewBase {
 	}
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
-			@Attribute(name = "enablePullUpRefresh", value= "false")})
+			@Attribute(name = "enablePullUpRefresh", value= "true")})
 	String acctRefreshView;
 	
 	@Command
 	String handleTopRefresh(InputEvent event){
-		this.infoCenterService.getStockQuotation("000001","SH");
-		this.infoCenterService.getStockQuotation("399001","SZ");
-		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		if(event.getEventType().equals("TopRefresh")){
+			this.infoCenterService.getStockQuotation("000001","SH");
+			this.infoCenterService.getStockQuotation("399001","SZ");
+			this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		}else if(event.getEventType().equals("BottomRefresh")){
+			if(stockTaxis!=null){
+				this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 20);
+			}
+		}
 		return null;
 	}
 	

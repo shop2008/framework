@@ -111,7 +111,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="nullString",value="--")
+			@Parameter(name="nullString",value="0.00")
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;
 	
@@ -119,7 +119,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	String nameCode;
 	
 	//最新价
-	@Field(valueKey="text",binding="${stockQuotation!=null?stockQuotation.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
+	@Field(valueKey="text",binding="${(stockQuotation!=null && stockQuotation.status==1)?stockQuotation.newprice:null}",converter="stockLong2StringAutoUnitConvertor")
 	String newprice;
 	
 	//申购金额

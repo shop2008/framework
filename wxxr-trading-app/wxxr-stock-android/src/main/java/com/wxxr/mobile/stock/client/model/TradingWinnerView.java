@@ -44,9 +44,26 @@ public abstract class TradingWinnerView extends ViewBase {
 			@Attribute(name = "enablePullUpRefresh", value= "true")})
 	String acctRefreshView;
 	
+	int start = 0;
+	
 	@Command
 	String handleTopRefresh(InputEvent event) {
-		this.service.getEarnRank(0,20);
+		if(event.getEventType().equals("TopRefresh")){
+			this.start = 0;
+			this.service.getEarnRank(0,20);
+		}else if(event.getEventType().equals("BottomRefresh")){
+			if(rankBean!=null && rankBean.getData()!=null){
+				this.start = rankBean.getData().size();
+				this.service.getEarnRank(start+1,20);
+			}
+		}
+		return null;
+	}
+	
+	@Command
+	String handleBottomRefresh(InputEvent event){
+		start = start+1;
+		this.service.getEarnRank((start*20)+1,20);
 		return null;
 	}
 	
