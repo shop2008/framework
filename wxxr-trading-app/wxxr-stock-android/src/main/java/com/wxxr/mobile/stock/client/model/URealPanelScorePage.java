@@ -28,7 +28,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.list:null}")
+	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.data:null}")
 	List<GainPayDetailBean> actualScores;
 	
 	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
@@ -57,7 +57,7 @@ public abstract class URealPanelScorePage extends PageBase{
 		
 		if(event.getEventType().equals("TopRefresh")) {
 			if(tradingService != null) {
-				tradingService.getVoucherDetails(0, voucherDetailsBean.getData().size());
+				tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size());
 			}
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
@@ -65,7 +65,7 @@ public abstract class URealPanelScorePage extends PageBase{
 				completeSize = voucherDetailsBean.getData().size();
 			start += completeSize;
 			if(tradingService != null) {
-				tradingService.getVoucherDetails(start, limit);
+				tradingService.getGainPayDetailDetails(start, limit);
 			}
 		}
 		return null;
@@ -78,7 +78,7 @@ public abstract class URealPanelScorePage extends PageBase{
 			completeSize = voucherDetailsBean.getData().size();
 		start += completeSize;
 		if(tradingService != null) {
-			tradingService.getVoucherDetails(start, limit);
+			tradingService.getGainPayDetailDetails(start, limit);
 		}
 		return null;
 	}
