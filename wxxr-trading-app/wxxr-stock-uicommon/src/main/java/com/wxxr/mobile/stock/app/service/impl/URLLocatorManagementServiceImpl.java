@@ -154,7 +154,7 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 			if (StringUtils.isNotBlank(mUrl)) {
 				this.magnoliaUrl = mUrl;
 				if (isChanged(getModuleName(), "magnolia", mUrl)) {
-					prefManager.updatePreference(prefName, "magnolia", sUrl);
+					prefManager.updatePreference(prefName, "magnolia", mUrl);
 				}
 			}
 		} catch (Exception e) {
