@@ -1,62 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/listview_selected_item1"
-    >
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
 
-    
     <LinearLayout
-        android:id="@+id/ll_real_score" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:gravity="center"
-        android:layout_marginLeft="5dp"
-        >
-        <com.wxxr.mobile.stock.client.widget.MarqueeText 
-            android:id="@+id/tv_integral_category"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:text="充入现金"
-            android:singleLine="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:ellipsize="marquee"
-            bind:field="scoreCatagory"
-            />
-        <TextView 
-            android:id="@+id/tv_integral_date"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/white"
-            android:text="2012-11-11"
-            bind:field="gainDate"
-            />
-    </LinearLayout>
-    
-    <TextView 
-        android:id="@+id/tv_integral_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginRight="5dp"
-        android:textColor="@color/white"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        bind:field="gainNum"
-        />
-    <LinearLayout 
-        android:layout_below="@id/ll_real_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <include layout="@layout/hlines" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical" >
+
+            <com.wxxr.mobile.stock.client.widget.MarqueeText
+                android:id="@+id/tv_income_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                bind:field="scoreCatagory" />
+
+            <TextView
+                android:id="@+id/tv_income_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                bind:field="gainDate" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_income_amount_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            bind:field="gainNum" />
     </LinearLayout>
-</RelativeLayout>
+
+    <include layout="@layout/hlines" />
+
+</LinearLayout>
