@@ -153,7 +153,7 @@ public abstract class UserWithDrawCashPage extends PageBase{
 				if (!StringUtils.isBlank(callBack.getApplyAmount())) {
 					tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount())*100);
 				} else {
-					tradingService.applyDrawMoney(-1);
+					tradingService.applyDrawMoney(-1l);
 				}
 			}
 			hide();
