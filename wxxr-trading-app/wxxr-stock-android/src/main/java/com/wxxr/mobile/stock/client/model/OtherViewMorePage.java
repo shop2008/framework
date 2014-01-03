@@ -118,7 +118,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 		// 用户自己的挑战交易记录
 		if (usrService != null) {
-			usrService.getMorePersonalRecords(0, otherChallengeListBean.getData().size(), false);
+			usrService.getMoreOtherPersonal(userId,0, otherChallengeListBean.getData().size(), false);
 		}
 
 		return null;
@@ -135,7 +135,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 		registerBean("curItemId", 1);
 
 		if (usrService != null) {
-			usrService.getMorePersonalRecords(0, otherJoinListBean.getData().size(), true);
+			usrService.getMoreOtherPersonal(userId,0, otherChallengeListBean.getData().size(), true);
 		}
 
 		return null;
@@ -241,7 +241,19 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	
 	@Command
 	String handleActualTopRefresh(InputEvent event) {
+			
+		
+		if (event.getEventType().equals("TopRefresh")) {
 			showActualRecords(event);
+		} else if(event.getEventType().equals("BottomRefresh")) {
+			int completeSize = 0;
+			if(otherChallengeListBean != null)
+				completeSize = otherChallengeListBean.getData().size();
+			otherHomeAStart += completeSize;
+			if(usrService != null) {
+				usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
+			}
+		}
 		return null;
 	}
 
@@ -255,7 +267,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 			completeSize = otherJoinListBean.getData().size();
 		otherHomeVStart += completeSize;
 		if(usrService != null) {
-			usrService.getMorePersonalRecords(otherHomeVStart, otherHomeVLimit, true);
+			usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
 		}
 		return null;
 	}
@@ -268,15 +280,24 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 			completeSize = otherChallengeListBean.getData().size();
 		otherHomeAStart += completeSize;
 		if(usrService != null) {
-			usrService.getMorePersonalRecords(otherHomeAStart, otherHomeALimit, false);
+			usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
 		}
 		return null;
 	}
 
 	@Command
 	String handleVirtualTopRefresh(InputEvent event) {
-			
-		showVirtualRecords(event);
+		if(event.getEventType().equals("TopRefresh")) {
+			showVirtualRecords(event);
+		} else if(event.getEventType().equals("BottomRefresh")) {
+			int completeSize = 0;
+			if(otherJoinListBean != null)
+				completeSize = otherJoinListBean.getData().size();
+			otherHomeVStart += completeSize;
+			if(usrService != null) {
+				usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
+			}
+		}
 		
 		return null;
 	}
