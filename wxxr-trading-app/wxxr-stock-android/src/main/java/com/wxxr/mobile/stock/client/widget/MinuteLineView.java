@@ -343,8 +343,8 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					float newprice1 = stockMinute1.getPrice();
 					stopY = fStopY - ((newprice1 - lowPrice)/scale);
 					mPaint.setColor(Color.parseColor("#3d3e38"));
-					canvas.drawLine(startX, startY + 3 , startX, fStopY+minuteBottomPadding-1, mPaint);
-					canvas.drawLine(stopX, stopY + 3, stopX, fStopY+minuteBottomPadding-1, mPaint);
+//					canvas.drawLine(startX, startY + 3 , startX, fStopY+minuteBottomPadding-1, mPaint);
+					canvas.drawLine(stopX, stopY + 2, stopX, fStopY+minuteBottomPadding-1, mPaint);
 					mPaint.setColor(getStockCloseColor());
 					canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 				}
