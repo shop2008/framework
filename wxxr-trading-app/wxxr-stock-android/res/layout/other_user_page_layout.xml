@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background_color"
-    android:orientation="vertical" 
-    >
+    android:orientation="vertical" >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,10 +19,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="180dp"
-               	bind:field="userHomeBack"
-                android:orientation="vertical"
                 android:background="@drawable/back1"
-                android:padding="8dp" >
+                android:orientation="vertical"
+                android:padding="8dp"
+                bind:field="userHomeBack" >
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -45,10 +45,9 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/imageView1"
                         android:paddingLeft="10dp"
-                        android:textColor="@color/white"
                         android:text="@string/tv_default_text"
-                        bind:field="userNickName" 
-                        />
+                        android:textColor="@color/white"
+                        bind:field="userNickName" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -79,9 +78,9 @@
                     </LinearLayout>
 
                     <View
-                        android:layout_width="0.5dp"
+                        android:layout_width="2dp"
                         android:layout_height="fill_parent"
-                        android:background="@color/white" />
+                        android:background="@color/gray" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -104,8 +103,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
-            
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -152,9 +149,8 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="30dp" 
-                    android:background="#252324"
-                    >
+                    android:layout_height="30dp"
+                    android:background="#252324" >
 
                     <TextView
                         android:layout_width="match_parent"
@@ -169,7 +165,6 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/label_amount" />
-
 
                     <TextView
                         android:layout_width="match_parent"
@@ -193,10 +188,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical" 
+                        android:orientation="vertical"
                         android:visibility="gone"
-                       	bind:field="jSharedVisiable"
-                        >
+                        bind:field="jSharedVisiable" >
 
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
@@ -208,27 +202,24 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="45dp"
+                            android:background="@drawable/bg_view_more"
                             android:gravity="center"
                             android:text="@string/view_more_text"
                             bind:field="*"
-                            bind:on_Click="joinViewMore" 
-                            android:background="@drawable/bg_view_more"
-                            />
+                            bind:on_Click="joinViewMore" />
                     </LinearLayout>
-                    
-                    
-                    <TextView 
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
-                        android:text="@string/user_no_shared_text"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        bind:field="jNoSharedVisiable"
+                        android:text="@string/user_no_shared_text"
                         android:textSize="18sp"
-                        />
+                        bind:field="jNoSharedVisiable" />
                 </FrameLayout>
             </LinearLayout>
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -237,8 +228,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:gravity="center_vertical"
                     android:background="@drawable/share"
+                    android:gravity="center_vertical"
                     android:padding="8dp" >
 
                     <TextView
@@ -274,10 +265,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp" 
-                    android:background="#252324"
-                    
-                    >
+                    android:layout_height="30dp"
+                    android:background="#252324" >
 
                     <TextView
                         android:layout_width="match_parent"
@@ -286,16 +275,12 @@
                         android:gravity="center"
                         android:text="@string/label_stock" />
 
-                    
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/label_amount" />
-
-                   
 
                     <TextView
                         android:layout_width="match_parent"
@@ -304,7 +289,6 @@
                         android:gravity="center"
                         android:text="@string/label_profit_loss" />
 
-                   
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -316,7 +300,6 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-                    
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -335,9 +318,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="45dp"
+                            android:background="@drawable/bg_view_more"
                             android:gravity="center"
                             android:text="@string/view_more_text"
-                            android:background="@drawable/bg_view_more"
                             bind:field="*"
                             bind:on_Click="challengeViewMore" />
                     </LinearLayout>
@@ -347,9 +330,9 @@
                         android:layout_height="80dp"
                         android:layout_gravity="center"
                         android:gravity="center"
+                        android:text="@string/user_no_shared_text"
                         android:textSize="18sp"
                         android:visibility="visible"
-                        android:text="@string/user_no_shared_text"
                         bind:field="cNoSharedVisiable" />
                 </FrameLayout>
             </LinearLayout>

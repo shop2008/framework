@@ -50,7 +50,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	String userHomeBack;
 
 	/** 用户头像 */
-	@Field(valueKey = "imageURI", binding = "${user!=null?user.userPic:null}")
+	@Field(valueKey = "imageURI", binding = "${(user!=null&&user.userPic!=null)?user.userPic:'resourceId:drawable/head4'}")
 	String userIcon;
 
 	/**
