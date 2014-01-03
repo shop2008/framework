@@ -56,7 +56,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	private UserBean myUserInfo ;
 	
 	@Override
-	public void login(final String userId, final String pwd) throws LoginFailedException {
+	public  void login(final String userId, final String pwd) throws LoginFailedException {
 		Future<?> future = context.getExecutor().submit(new Runnable() {
 			@Override
 			public void run() {
@@ -133,7 +133,8 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	}
 	
 	@Override
-	public void logout(){
+	public synchronized void logout(){
+
 	   myUserInfo=null;
        getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
        HttpRpcService httpService = context.getService(HttpRpcService.class);
@@ -196,7 +197,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	}
 
 	@Override
-	public IUserAuthCredential getAuthCredential(String host, String realm) {
+	public synchronized IUserAuthCredential getAuthCredential(String host, String realm) {
 		IPreferenceManager mgr = getPrefManager();
 		if (!mgr.hasPreference(getModuleName())
 				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
@@ -234,12 +235,15 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 			}
 	}
 	@Override
-	public boolean isUserAuthenticated() {
+	public synchronized boolean isUserAuthenticated() {
 		return myUserInfo != null;
 	}
 
 	@Override
-	public String getUserId() {
+	public synchronized String getUserId() {
+		if(myUserInfo==null){
+			return "";
+		}
 		return myUserInfo.getPhoneNumber();
 	}
 
