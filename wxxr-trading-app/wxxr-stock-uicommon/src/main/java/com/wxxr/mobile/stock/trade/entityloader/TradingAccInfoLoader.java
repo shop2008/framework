@@ -6,6 +6,7 @@ import java.util.Map;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader;
@@ -68,7 +69,7 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
     @Override
     protected List<TradingAccInfoVO> executeCommand(ICommand<List<TradingAccInfoVO>> command) throws Exception {
     	TradingAccInfoVOs vos = null;
-    	if ( this.cmdCtx.getKernelContext().getAttribute("currentUser")!=null) {//用户登录后方可获取列表信息
+    	if ( this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).isUserAuthenticated()) {//用户登录后方可获取列表信息
     		 vos=getRestService(ITradingProtectedResource.class).getTradingAccountList();
 		}
         return vos==null?null:vos.getTradingAccInfos();

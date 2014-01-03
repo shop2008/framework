@@ -72,7 +72,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
     					myUserInfo.setUserPic(vo.getIcon());
     					saveUserBean(myUserInfo);
     					
-    					context.setAttribute("currentUser", myUserInfo);
+    					//context.setAttribute("currentUser", myUserInfo);
     					 //根据用户密码登录成功
     	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
     	                if(pref == null){
@@ -143,7 +143,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
            
        }
        
-       context.removeAttribute("currentUser");
+      // context.removeAttribute("currentUser");
       // getService(IEventRouter.class).routeEvent(new LogoutEvent());
 	}
 	
@@ -184,7 +184,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
             myUserInfo.setUsername(user_name);
             myUserInfo.setPhoneNumber(pn);
             myUserInfo.setUserPic(icon);
-            context.setAttribute("currentUser", myUserInfo);
+            //context.setAttribute("currentUser", myUserInfo);
         }
           
 	}
