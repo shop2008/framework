@@ -17,7 +17,6 @@ public class ArticleBodyAttributeUpdater implements
 			IUIComponent field, Object value) {
 		String url = (String)field.getAttribute(attrType);
 		control.loadURL(url);
-		System.out.println("--AttributeUpdater--"+url);
 	}
 
 	@Override
