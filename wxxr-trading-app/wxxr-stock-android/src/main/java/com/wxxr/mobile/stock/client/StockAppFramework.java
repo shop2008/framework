@@ -5,6 +5,7 @@ package com.wxxr.mobile.stock.client;
 
 import java.io.File;
 import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.Dictionary;
 import java.util.Properties;
 
@@ -93,10 +94,28 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		return context;
 	}
 
+	private DummySiteSecurityModule<IStockAppContext> siteSecurityModule = new DummySiteSecurityModule<IStockAppContext>(){
+		private KeyStore trustKeyStore;
+		@Override
+		protected void startService() {
+			try {
+				trustKeyStore = KeyStore.getInstance("JKS");
+				InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
+				trustKeyStore.load(in,   "wxxr_123456".toCharArray());
+			} catch (Exception e) {
+				log.warn("Failed to load trust key store",e);
+			}
+			super.startService();
+		}
+		@Override
+		public KeyStore getTrustKeyStore() {
+			return trustKeyStore;
+		}
+	};
 
 	@Override
 	protected void initModules() {
-		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
+		registerKernelModule(siteSecurityModule);
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
