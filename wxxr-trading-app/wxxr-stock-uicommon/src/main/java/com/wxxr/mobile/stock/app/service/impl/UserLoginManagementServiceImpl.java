@@ -142,7 +142,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
            httpService.resetHttpClientContext();
            
        }
-       
+       usernamePasswordCredential4Login=null;
       // context.removeAttribute("currentUser");
       // getService(IEventRouter.class).routeEvent(new LogoutEvent());
 	}

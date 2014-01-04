@@ -143,7 +143,7 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 
 	protected void insertOrUpdateDB(PullMessageBean bean) {
 		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
-		List<PullMessageInfo> list=dao.queryRaw("where _id =? and USER_ID=?", String.valueOf(bean.getId()),getUserId());
+		List<PullMessageInfo> list=dao.queryRaw("where PULL_ID =? and USER_ID =?", String.valueOf(bean.getId()),getUserId());
 		PullMessageInfo entity;
 		boolean insert=false;
 		if(list==null || list.size()>0){
@@ -152,14 +152,16 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 			entity=new PullMessageInfo();
 			insert=true;
 		}
-		entity.setId(Long.valueOf(bean.getId()));
+		String id=bean.getId()+getUserId();
+		entity.setUserId(getUserId());
+		entity.setPullId(bean.getId());
 		entity.setArticleUrl(bean.getArticleUrl());
 		entity.setMessage(bean.getMessage());
 		entity.setPhone(bean.getPhone());
 		entity.setCreateDate(bean.getCreateDate());
 		entity.setTitle(bean.getTitle());
 		entity.setRead(false);
-		entity.setUserId(getUserId());
+
 		if(insert)
 			dao.insert(entity);
 		else
@@ -175,7 +177,7 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 				PullMessageBean bean=new PullMessageBean();
 				bean.setArticleUrl(entity.getArticleUrl());
 				bean.setCreateDate(entity.getCreateDate());
-				bean.setId(entity.getId());
+				bean.setId(entity.getPullId());
 				bean.setMessage(entity.getMessage());
 				bean.setPhone(entity.getPhone());
 				bean.setRead(entity.getRead());

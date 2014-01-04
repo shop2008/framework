@@ -26,6 +26,7 @@ public class PullMessageInfo {
 	@Column
 	private String userId;
 	
+	private Long pullId;
 	public Long getId() {
 		return id;
 	}
@@ -95,6 +96,24 @@ public class PullMessageInfo {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
+	/**
+	 * @return the pullId
+	 */
+	public Long getPullId() {
+		return pullId;
+	}
+
+	/**
+	 * @param pullId the pullId to set
+	 */
+	public void setPullId(Long pullId) {
+		this.pullId = pullId;
+	}
+
+
+
+
 
 	
 }
