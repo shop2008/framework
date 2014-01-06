@@ -46,7 +46,7 @@ public class Utils {
 		}
 		return sdf.format(new Date());
 	}
-	
+
 	public static String getCurrentTime(String format) {
 		SimpleDateFormat sdf;
 		try {
@@ -58,7 +58,7 @@ public class Utils {
 		}
 		return sdf.format(new Date());
 	}
-	
+
 	public static String getDate(long data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
 		if (data > 0) {
@@ -129,6 +129,7 @@ public class Utils {
 
 	/**
 	 * 获取状态栏高度
+	 * 
 	 * @return
 	 */
 	public static int getStatusBarHeight(Context context) {
@@ -269,7 +270,7 @@ public class Utils {
 		if (data == null) {
 			return null;
 		}
-		
+
 		if (data.size() <= 0) {
 			return data.toArray();
 		}
@@ -284,24 +285,38 @@ public class Utils {
 
 				if (i == 0) {
 					curLabelObj = labelObj;
-					if(obj instanceof RemindMessageBean)
-						retList.add(remindStringTimeFormat(curLabelObj.toString()));
-					else if (obj instanceof PullMessageBean){
+					if (obj instanceof RemindMessageBean)
+						retList.add(remindStringTimeFormat(curLabelObj
+								.toString()));
+					else if (obj instanceof PullMessageBean) {
 						retList.add(pullStringTimeFormat(curLabelObj.toString()));
 					}
 					retList.add(obj);
 				} else {
-					if (labelObj.equals(curLabelObj)) {
-						retList.add(obj);
-					} else {
-						curLabelObj = labelObj;
-						if(obj instanceof RemindMessageBean)
-							retList.add(remindStringTimeFormat(curLabelObj.toString()));
-						else if(obj instanceof PullMessageBean) {
-							retList.add(pullStringTimeFormat(curLabelObj.toString()));
+					if (obj instanceof RemindMessageBean) {
+						if (remindStringTimeFormat(labelObj.toString()).equals(
+								remindStringTimeFormat(curLabelObj.toString()))) {
+							retList.add(obj);
+						} else {
+							curLabelObj = labelObj;
+
+							retList.add(remindStringTimeFormat(curLabelObj
+									.toString()));
+
+							retList.add(obj);
 						}
-							
-						retList.add(obj);
+					}
+
+					if (obj instanceof PullMessageBean) {
+						if (pullStringTimeFormat(labelObj.toString()).equals(
+								pullStringTimeFormat(curLabelObj.toString()))) {
+							retList.add(obj);
+						} else {
+							curLabelObj = labelObj;
+							retList.add(pullStringTimeFormat(curLabelObj
+									.toString()));
+							retList.add(obj);
+						}
 					}
 				}
 			} catch (NoSuchMethodException e) {
@@ -314,19 +329,21 @@ public class Utils {
 				e.printStackTrace();
 			} catch (ParseException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
 		return retList.toArray();
 	}
 
-	private static String pullStringTimeFormat(String time) throws NumberFormatException {
+	private static String pullStringTimeFormat(String time)
+			throws NumberFormatException {
 		Long lTime = Long.parseLong(time);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
 		Date date = new Date(lTime);
 		return formatter.format(date);
 	}
 
-	private static String remindStringTimeFormat(String time) throws ParseException {
+	private static String remindStringTimeFormat(String time)
+			throws ParseException {
 		long lTime = stringTime2Long(time);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date(lTime);
@@ -358,7 +375,7 @@ public class Utils {
 					Method rMethod = rhs.getClass().getMethod(method, null);
 					Object lValue = lMethod.invoke(lhs, null);
 					Object rValue = rMethod.invoke(rhs, null);
-					
+
 					if (lValue instanceof String || rValue instanceof String) {
 						long lTime = stringTime2Long((String) lValue);
 						long rTime = stringTime2Long((String) rValue);
@@ -370,11 +387,11 @@ public class Utils {
 							return 1;
 						}
 					}
-					
+
 					if (lValue instanceof Long || rValue instanceof Long) {
 						long ltime = (Long) lValue;
 						long rtime = (Long) rValue;
-						if (ltime >rtime) {
+						if (ltime > rtime) {
 							return -1;
 						} else if (ltime == rtime) {
 							return 0;
@@ -382,7 +399,7 @@ public class Utils {
 							return 1;
 						}
 					}
-					
+
 				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
@@ -419,7 +436,7 @@ public class Utils {
 						retList.add(obj);
 					}
 				}
-				
+
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -437,23 +454,23 @@ public class Utils {
 
 	private static Long stringTime2Long(String time) throws ParseException {
 		SimpleDateFormat formatter = null;
-		if (time.length()==8) {
+		if (time.length() == 8) {
 			formatter = new SimpleDateFormat("yyyyMMdd");
 			Date date = formatter.parse(time);
 			return date.getTime();
 		} else {
 			return 0l;
 		}
-		
+
 	}
-	
+
 	private static String stringTimeFormat(String time) throws ParseException {
 		long lTime = stringTime2Long(time);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date(lTime);
 		return formatter.format(date);
 	}
-	
+
 	/**
 	 * 处理已排序的数据-交易记录使用
 	 * 
@@ -463,12 +480,13 @@ public class Utils {
 	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
 	 * @return 分组后的数据
 	 */
-	public static Object[] getSortedGroupDataLongTime(List<Object> data, String method) {
+	public static Object[] getSortedGroupDataLongTime(List<Object> data,
+			String method) {
 
 		if (data == null) {
 			return null;
 		}
-		
+
 		if (data.size() <= 0) {
 			return data.toArray();
 		}
@@ -480,8 +498,8 @@ public class Utils {
 				Method m = obj.getClass().getMethod(method, null);
 				m.setAccessible(true);
 				Object labelObj = m.invoke(obj, null);
-				if(labelObj instanceof Long) {
-					labelObj = longTimeFormat((Long)labelObj);
+				if (labelObj instanceof Long) {
+					labelObj = longTimeFormat((Long) labelObj);
 				}
 				if (i == 0) {
 					curLabelObj = labelObj;
@@ -496,7 +514,7 @@ public class Utils {
 						retList.add(obj);
 					}
 				}
-				
+
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -519,12 +537,13 @@ public class Utils {
 	 *            方法的名称，这里是标签数据在相应Bean里的getter方法名
 	 * @return 分组后的数据
 	 */
-	public static Object[] getSortedGroupTimeData(List<Object> data, String method) {
+	public static Object[] getSortedGroupTimeData(List<Object> data,
+			String method) {
 
 		if (data == null) {
 			return null;
 		}
-		
+
 		if (data.size() <= 0) {
 			return data.toArray();
 		}
@@ -550,7 +569,7 @@ public class Utils {
 						retList.add(obj);
 					}
 				}
-				
+
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -563,7 +582,7 @@ public class Utils {
 		}
 		return retList.toArray();
 	}
-	
+
 	private static String longTimeFormat(long time) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
@@ -576,23 +595,24 @@ public class Utils {
 		}
 		return "";
 	}
-	
-	public static void setListViewHeightBasedOnChildren(ListView listView) {  
-        ListAdapter listAdapter = listView.getAdapter();   
-        if (listAdapter == null) {  
-            // pre-condition  
-            return;  
-        }  
-  
-        int totalHeight = 0;  
-        for (int i = 0; i < listAdapter.getCount(); i++) {  
-            View listItem = listAdapter.getView(i, null, listView);  
-            listItem.measure(0, 0);  
-            totalHeight += listItem.getMeasuredHeight();  
-        }  
-  
-        ViewGroup.LayoutParams params = listView.getLayoutParams();  
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));  
-        listView.setLayoutParams(params);  
-    }  
+
+	public static void setListViewHeightBasedOnChildren(ListView listView) {
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) {
+			// pre-condition
+			return;
+		}
+
+		int totalHeight = 0;
+		for (int i = 0; i < listAdapter.getCount(); i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			listItem.measure(0, 0);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height = totalHeight
+				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+		listView.setLayoutParams(params);
+	}
 }
