@@ -29,7 +29,7 @@ public class ImageURIAttributeUpdater implements IAttributeUpdater<View> {
 		final String val = (String)value;
 		if((val != null)&&(attrType == AttributeKeys.imageURI)){
 			try {
-				ImageUtils.updateImage(val, imgV);
+				ImageUtils.updateViewBackgroupImage(val, imgV);
 			} catch (Exception e) {
 				log.error("Failed to set image for field :"+field.getName(), e);
 			}
