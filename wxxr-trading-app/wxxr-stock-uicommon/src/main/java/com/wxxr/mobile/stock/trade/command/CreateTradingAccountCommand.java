@@ -2,8 +2,13 @@ package com.wxxr.mobile.stock.trade.command;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
+
 
 @NetworkConstraint(allowConnectionTypes={})
 public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
@@ -41,6 +46,10 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
     	if(getCaptitalAmount()==null || getCaptitalAmount()<=0){
     		throw new StockAppBizException("请输入申购金额！");
     	}
+    	UserBean user = KUtils.getService(IUserManagementService.class).getMyUserInfo();
+    	if (user==null||StringUtils.isBlank(user.getNickName())) {
+    		throw new StockAppBizException("请先设置用户昵称！");
+		}
     }
 
     public Long getCaptitalAmount() {
