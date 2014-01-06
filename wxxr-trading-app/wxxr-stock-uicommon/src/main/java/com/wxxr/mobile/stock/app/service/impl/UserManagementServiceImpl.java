@@ -197,8 +197,8 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(GetClientInfoHandler.COMMAND_NAME, new GetClientInfoHandler());
 		
-		personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
-	    otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
+		
+	   
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List> ("gainBean");
 	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List>("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
@@ -451,6 +451,9 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 	@Override
 	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
+		if (otherpersonalHomePageBean_cache==null) {
+			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
+		}
 	    String key=userId;
         if (otherpersonalHomePageBean_cache.getEntity(key)==null){
             PersonalHomePageBean b=new PersonalHomePageBean();
@@ -465,6 +468,9 @@ public class UserManagementServiceImpl implements IUserManagementService{
 	
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
+		if (personalHomePageBean_cache==null) {
+			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
+		}
 	    String key="PersonalHomePageBean";
 	    if (personalHomePageBean_cache.getEntity(key)==null){
 	        PersonalHomePageBean b=new PersonalHomePageBean();
