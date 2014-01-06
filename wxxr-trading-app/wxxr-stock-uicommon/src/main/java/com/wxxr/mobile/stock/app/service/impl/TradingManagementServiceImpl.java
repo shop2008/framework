@@ -630,7 +630,7 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
             }
             
         }, new  TradingAccInfoBeanComparator());
-        tradingAccInfo_cache.forceReload(false);
+        tradingAccInfo_cache.forceReload(true);
         return t0s;
     }
     //获取我的T+1日交易盘
@@ -645,7 +645,7 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
             }
             
         }, new TradingAccInfoBeanComparator());
-        tradingAccInfo_cache.forceReload(false);
+        tradingAccInfo_cache.forceReload(true);
         return t1s;
     }
     //根据交易盘创建时间排序
