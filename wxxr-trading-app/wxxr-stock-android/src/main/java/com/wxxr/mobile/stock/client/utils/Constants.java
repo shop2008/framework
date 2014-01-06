@@ -16,6 +16,10 @@ public class Constants {
 	 */
 	public static final String KEY_DOWN_REFRESH_DATE = "down_refresh_time";
 
+	/**
+	 * 取消的订单IDs
+	 */
+	public static final String KEY_CANCEL_ORDERS = "key_cancel_orders";
 	
 	/**
 	 * 模拟盘标记

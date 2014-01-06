@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -110,11 +111,11 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                     mHeaderViewHeight = mHeaderViewContent.getHeight();
                     ViewTreeObserver observer = getViewTreeObserver();
                     if (null != observer) {
-//                    	if(Build.VERSION.SDK_INT>=16){  
-//                    		observer.removeOnGlobalLayoutListener(this);  
-//                        }else{  
+                    	if(Build.VERSION.SDK_INT>=16){  
+                    		observer.removeOnGlobalLayoutListener(this);  
+                        }else{  
                         	observer.removeGlobalOnLayoutListener(this);  
-//                        }
+                        }
                     }
                 }
             });

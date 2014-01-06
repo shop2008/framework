@@ -214,7 +214,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	
 	@OnShow
 	void initBeans() {
-		registerBean("stockQuotationBean", this.stockQuotationBean);
+//		registerBean("stockQuotationBean", this.stockQuotationBean);
 	}
 	
 	@OnCreate

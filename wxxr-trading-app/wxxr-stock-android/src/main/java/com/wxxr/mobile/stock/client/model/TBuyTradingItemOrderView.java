@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -19,9 +20,12 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
+import com.wxxr.mobile.stock.client.utils.SpUtil;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
@@ -62,13 +66,19 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${orderBean!=null?(orderBean.status=='PROCESSING'?'撤  单':(orderBean.status=='100'?'正在撤单':'正在撤单')):'撤  单'}")
 	String status;
 
-	@Menu(items={"left","right","search"})
+	@Menu(items = { "left", "right", "search" })
 	IMenu toolbar;
-	
+
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof StockTradingOrderBean) {
 			orderBean = (StockTradingOrderBean) value;
+			String orders = SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).find(Constants.KEY_CANCEL_ORDERS);
+			if (!StringUtils.isBlank(orders)) {
+				if (orders.contains(orderBean.getId() + "")) {
+					orderBean.setStatus("100");
+				}
+			}
 			registerBean("orderBean", value);
 		}
 	}
@@ -84,17 +94,24 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		return "";
 	}
 
-	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"), navigations = { 
-		@Navigation(on = "StockAppBizException", message = "%m", params = {
-				@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
-		})
+	@Command(uiItems = @UIItem(id = "leftok", label = "确定", icon = "resourceId:drawable/home"), navigations = { @Navigation(on = "StockAppBizException", message = "%m", params = { @Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2") }) })
 	@ExeGuard(title = "提示", message = "正在取消订单，请稍后...", silentPeriod = 0, cancellable = true)
 	String confirmCancelClick(InputEvent event) {
-		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
-		if(v != null)
+		IView v = (IView) event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if (v != null)
 			v.hide();
-		manageService.cancelOrder(orderBean.getId() + "");
+		String id = orderBean.getId() + "";
+		manageService.cancelOrder(id);
 		orderBean.setStatus("100");
+		
+		String orders = SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).find(Constants.KEY_CANCEL_ORDERS);
+		if(StringUtils.isBlank(orders))	{
+			orders = id;
+		} else {
+			if(!orders.contains(id))
+				orders += ("," + id);
+		}
+		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, orders);
 		return null;
 	}
 }
