@@ -124,7 +124,6 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 					PullMessageBean bean=cache.getEntity(key);
 					if(bean==null){
 						bean=new PullMessageBean();
-						bean.setId(vo.getId());
 						cache.putEntity(key, bean);
 						insert=true;
 					}
@@ -161,11 +160,12 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 		entity.setCreateDate(bean.getCreateDate());
 		entity.setTitle(bean.getTitle());
 		entity.setRead(false);
-
+		
 		if(insert)
-			dao.insert(entity);
+			bean.setId(dao.insert(entity));
 		else
 			dao.update(entity);
+		
 	}
 	
 	protected List<PullMessageBean> queryRemindMessages() {

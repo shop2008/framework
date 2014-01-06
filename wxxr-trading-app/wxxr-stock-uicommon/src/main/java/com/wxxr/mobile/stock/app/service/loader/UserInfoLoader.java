@@ -73,7 +73,7 @@ public class UserInfoLoader extends AbstractEntityLoader<String, UserBean, UserV
 				bean.setNickName(vo.getNickName());
 				bean.setUsername(vo.getUserName());
 				bean.setPhoneNumber(vo.getMoblie());
-				bean.setUserPic(vo.getIcon());
+//				bean.setUserPic(vo.getIcon());
 				updated = true;
 			}
 		}
