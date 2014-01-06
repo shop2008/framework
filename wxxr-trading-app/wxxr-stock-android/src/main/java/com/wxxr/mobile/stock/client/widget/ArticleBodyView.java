@@ -66,7 +66,7 @@ public class ArticleBodyView extends ViewGroup {
 	@SuppressLint("SetJavaScriptEnabled")
 	private void setWebViewAttribute() {
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setBuiltInZoomControls(true);
+		webSettings.setBuiltInZoomControls(false);
 		// webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 		mWebView.setInitialScale(0);
