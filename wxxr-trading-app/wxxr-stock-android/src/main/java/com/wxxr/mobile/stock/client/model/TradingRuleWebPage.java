@@ -39,7 +39,7 @@ public abstract class TradingRuleWebPage extends PageBase implements IModelUpdat
 	@Bean(express="${articleService.getTradingRuleArticle()}")
 	BindableListWrapper<ArticleBean> ruleArticle;
 	
-	@Field(valueKey="webUrl",binding="${(ruleArticle!=null && ruleArticle.getData()!=null && ruleArticle.getData().size()>0)?ruleArticle.getData().get(0).getArticleUrl():'#'}")
+	@Field(valueKey="text",binding="${(ruleArticle!=null && ruleArticle.getData()!=null && ruleArticle.getData().size()>0)?ruleArticle.getData().get(0).getArticleUrl():'#'}")
 	String webUrl;
 	
 	@Override

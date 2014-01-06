@@ -6,6 +6,7 @@
     android:orientation="vertical" 
     bind:field="*"
     bind:on_Click="linkItemClick"
+    android:gravity="center"
     >
 
     <TextView
@@ -25,7 +26,7 @@
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="140dp"
         bind:field="swiperImage"
         />
 
