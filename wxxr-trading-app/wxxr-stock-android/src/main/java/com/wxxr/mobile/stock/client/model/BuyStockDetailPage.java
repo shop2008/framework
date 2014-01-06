@@ -144,7 +144,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 	String count;
 	
 	@Field(valueKey = "enabled", attributes={
-			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}")
+			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/blue_button_style':'resourceId:drawable/red_button_style'}")
 			})
 	boolean buyBtn = true;
 	
