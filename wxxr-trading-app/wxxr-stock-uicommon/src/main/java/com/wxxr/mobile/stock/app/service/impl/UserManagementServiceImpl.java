@@ -505,15 +505,15 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 		@Override
 		public int compare(GainBean o1, GainBean o2) {
-			return o2.getCloseTime().compareTo(o1.getCloseTime());
+			if (o2!=null&&o1!=null) {
+				return (int)(o2.getTradingAccountId()-o1.getTradingAccountId());
+			}
+			return 0;
+			//return o2.getCloseTime().compareTo(o1.getCloseTime());
 		}
 	};
 	
-	private static long formatDate2Long(String time) throws ParseException {
-		SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日");
-		Date date = formatter.parse(time);
-		return date.getTime();
-	}
+
 	
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
         BindableListWrapper<GainBean> gainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
