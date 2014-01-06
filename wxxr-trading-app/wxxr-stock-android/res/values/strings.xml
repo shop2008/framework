@@ -292,7 +292,7 @@
 	<string name="vertion_lastest_text">当前已是最新版本</string>
 	<string name="btn_konwn">知道了</string>
 	
-	<string name="error_message">数据加载失败，点击重试</string>
+	<string name="error_message">数据加载失败，请重试</string>
 	<string name="cansai_message">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算</string>
 	<!-- 他人主页 -->
 	<string name="other_user_title_append">的主页</string>
