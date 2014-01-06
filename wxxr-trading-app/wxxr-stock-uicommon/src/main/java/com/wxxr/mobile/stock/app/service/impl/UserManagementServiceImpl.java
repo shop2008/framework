@@ -612,7 +612,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 				@Override
 				public int compare(PullMessageBean lhs, PullMessageBean rhs) {
-					long c=lhs.getCreateDate().compareTo(lhs.getCreateDate());
+					long c=lhs.getCreateDate().compareTo(rhs.getCreateDate());
 					return c>=0?1:-1;
 				}
 				
