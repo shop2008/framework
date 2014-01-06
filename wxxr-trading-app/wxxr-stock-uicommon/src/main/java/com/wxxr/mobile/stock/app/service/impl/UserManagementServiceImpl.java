@@ -458,7 +458,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
         }
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("userId", userId);
-        this.otherpersonalHomePageBean_cache.forceReload(p,false);
+        this.otherpersonalHomePageBean_cache.forceReload(p,true);
         return otherpersonalHomePageBean_cache.getEntity(key);
 	}
 	
@@ -470,7 +470,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 	        PersonalHomePageBean b=new PersonalHomePageBean();
 	        personalHomePageBean_cache.putEntity(key,b);
         }
-        this.personalHomePageBean_cache.forceReload(null,false);
+        this.personalHomePageBean_cache.forceReload(null,true);
         return personalHomePageBean_cache.getEntity(key);
 	}
 
