@@ -48,7 +48,7 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
     	}
     	UserBean user = KUtils.getService(IUserManagementService.class).getMyUserInfo();
     	if (user==null||StringUtils.isBlank(user.getNickName())) {
-    		throw new StockAppBizException("请先设置用户昵称！");
+    		throw new StockAppBizException("请先设置昵称！");
 		}
     }
 
