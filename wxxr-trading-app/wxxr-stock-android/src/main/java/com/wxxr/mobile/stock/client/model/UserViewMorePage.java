@@ -64,11 +64,11 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	/** 用户--参赛交易盘每页初始条目 */
 	@Bean
-	int myHomeVLimit = 10;
+	int myHomeVLimit = 20;
 
 	/** 用户--挑战交易盘每页初始条目 */
 	@Bean
-	int myHomeALimit = 10;
+	int myHomeALimit = 20;
 	
 	@Bean
 	int myHomeVStart = 0;

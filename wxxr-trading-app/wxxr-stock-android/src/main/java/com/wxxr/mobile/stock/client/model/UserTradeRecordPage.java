@@ -70,13 +70,13 @@ public abstract class UserTradeRecordPage extends PageBase {
 	private int sucStart = 0;
 	
 	@Bean
-	private int sucLimit = 10;
+	private int sucLimit = 20;
 	
 	@Bean
 	private int allStart = 0;
 	
 	@Bean
-	private int allLimit = 10;
+	private int allLimit = 20;
 	@Bean
 	int curItemId = 1;
 	

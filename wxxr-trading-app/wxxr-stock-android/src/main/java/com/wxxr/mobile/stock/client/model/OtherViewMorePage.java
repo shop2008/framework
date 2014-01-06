@@ -60,11 +60,11 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	/** 其它用户--挑战交易盘每页初始条目 */
 	@Bean
-	int otherHomeALimit = 10;
+	int otherHomeALimit = 20;
 
 	/** 其它用户--参赛交易盘每页初始条目 */
 	@Bean
-	int otherHomeVLimit = 10;
+	int otherHomeVLimit = 20;
 	
 	@Bean
 	int otherHomeVStart = 0;

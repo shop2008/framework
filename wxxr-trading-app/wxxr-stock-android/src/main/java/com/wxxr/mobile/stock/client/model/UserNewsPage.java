@@ -68,7 +68,7 @@ public abstract class UserNewsPage extends PageBase {
 	int start = 0;
 
 	@Bean
-	int limit = 10;
+	int limit = 20;
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 

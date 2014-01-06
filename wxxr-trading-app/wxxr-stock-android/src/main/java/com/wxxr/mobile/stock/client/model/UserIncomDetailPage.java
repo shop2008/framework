@@ -56,7 +56,7 @@ public abstract class UserIncomDetailPage extends PageBase {
 	int start = 0;
 
 	@Bean
-	int limit = 10;
+	int limit = 20;
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
