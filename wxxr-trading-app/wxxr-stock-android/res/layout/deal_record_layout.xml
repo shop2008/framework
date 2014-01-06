@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+        
    <com.wxxr.mobile.stock.client.widget.ScrollViewExtend 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -123,8 +123,9 @@
 		    <ImageView
 		        android:id="@+id/imageView1"
 		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
+		        android:layout_height="140dp"
 		        android:background="@color/black"
+		        android:layout_gravity="center"
 		        bind:field="imgUrl" />
 		    
 		    <LinearLayout
@@ -190,7 +191,6 @@
 		            android:textColor="@android:color/white"
 		            android:textSize="15sp" />
 		    </LinearLayout>
-		   
 		    <com.wxxr.mobile.stock.client.widget.AutoHeightListView
 		        android:id="@+id/lv_deal_record"
 		        android:layout_width="match_parent"
@@ -198,8 +198,9 @@
 		        style="@style/mListView"
 		        bind:itemViewId="TradingRecordDetailItemView"
 		        bind:field="tradingRecords"
+		        bind:on_ScrollChange="onScrollChange"
 		        bind:on_ItemClick="StockQuotationAction">
-		    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>                        
+		    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
         </LinearLayout>
    </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
 </LinearLayout>
