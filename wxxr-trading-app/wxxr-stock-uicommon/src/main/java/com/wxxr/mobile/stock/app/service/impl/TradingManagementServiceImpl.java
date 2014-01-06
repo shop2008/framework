@@ -620,6 +620,8 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
   
     //获取我的T日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
+    	tradingAccInfo_cache.clear();
+        tradingAccInfo_cache.forceReload(true);
         BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
             public boolean doFilter(TradingAccInfoBean entity) {
@@ -630,11 +632,12 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
             }
             
         }, new  TradingAccInfoBeanComparator());
-        tradingAccInfo_cache.forceReload(true);
         return t0s;
     }
     //获取我的T+1日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList(){
+    	tradingAccInfo_cache.clear();
+        tradingAccInfo_cache.forceReload(true);
         BindableListWrapper<TradingAccInfoBean> t1s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
             public boolean doFilter(TradingAccInfoBean entity) {
@@ -645,7 +648,6 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
             }
             
         }, new TradingAccInfoBeanComparator());
-        tradingAccInfo_cache.forceReload(true);
         return t1s;
     }
     //根据交易盘创建时间排序
