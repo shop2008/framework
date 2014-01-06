@@ -122,7 +122,7 @@ public abstract class ChampionShipView extends ViewBase {
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
-	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadTRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMegaTopRefresh");
@@ -137,7 +137,7 @@ public abstract class ChampionShipView extends ViewBase {
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
-	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadT1Rank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleTMega1TopRefresh");
@@ -152,7 +152,7 @@ public abstract class ChampionShipView extends ViewBase {
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
-	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadWeekRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleWeekTopRefresh");
@@ -167,7 +167,7 @@ public abstract class ChampionShipView extends ViewBase {
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
-	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadRegularTicketRank(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("ChampionShipView : handleRegularTicketTopRefresh");
