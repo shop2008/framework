@@ -295,7 +295,7 @@ public class InfoCenterManagementServiceImpl extends
 		params.put("orderby", orderby);
 		params.put("start", (long)start);
 		params.put("limit", (long)limit);
-		this.stockTaxis_cache.forceReload(params, false);
+		this.stockTaxis_cache.forceReload(params, true);
 	}
 	
 	
