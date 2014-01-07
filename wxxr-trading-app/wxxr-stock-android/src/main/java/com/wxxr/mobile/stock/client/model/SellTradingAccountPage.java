@@ -321,6 +321,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						if(amount!=null){
 							map.put("amount", amount);
 						}
+						map.put(Constants.KEY_VIRTUAL_FLAG, virtual);
 						for(int i=0; i<stockOrder.size();i++){
 							StockTradingOrderBean temp = stockOrder.get(i);
 							if(stockCode!=null && stockCode.equals(temp.getStockCode()) && temp.getStatus()==null){

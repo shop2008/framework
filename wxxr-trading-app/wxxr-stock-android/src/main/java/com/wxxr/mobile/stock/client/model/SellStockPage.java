@@ -39,6 +39,7 @@ import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -159,7 +160,9 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean
 	String amount; //卖出数量;
 	
-	@Field(valueKey="enabled",enableWhen="${amount!=null}")
+	@Field(valueKey="enabled",enableWhen="${amount!=null}", attributes={
+			@Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/blue_button_style':'resourceId:drawable/red_button_style'}")
+			})
 	boolean isSellBuyBtn = false;
 	
 	@Bean
@@ -185,6 +188,9 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 
 	@Field(valueKey = "visible")
 	boolean refresh = true;
+	
+	@Bean
+	boolean isVirtual = true; //true模拟盘，false实盘
 	
 	@Command
 	String handlerPageChanged(InputEvent event) {
@@ -338,43 +344,42 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		        			this.accid = (String) temp.get(key);
 		        			registerBean("accid", this.accid);
 		        		}
-		        	}
-		        	if("orderId".equals(key)){
+		        	} else if("orderId".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.orderId = (Long) temp.get(key);
 		        			registerBean("orderId", this.orderId);
 		        		}
-		        	}
-		        	if("name".equals(key)){
+		        	} else if("name".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.stockName = (String) temp.get(key);
 		        			registerBean("stockName", this.stockName);
 		        		}
-		        	}
-		        	if("code".equals(key)){
+		        	} else if("code".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.stockCode = (String) temp.get(key);
 		        			registerBean("stockCode", this.stockCode);
 		        		}
-		        	}
-		        	if("market".equals(key)){
+		        	} else if("market".equals(key)){
 		        		if(temp.get(key) instanceof String){
 		        			this.stockMarket = (String) temp.get(key);
 		        			registerBean("stockMarket", this.stockMarket);
 		        		}
-		        	}
-		        	if("amount".equals(key)){
+		        	} else if("amount".equals(key)){
 		        		if(temp.get(key) instanceof Long){
 		        			this.maxAmountBean = temp.get(key) + "";
 		        			registerBean("maxAmountBean", this.maxAmountBean);
 		        		}
-		        	}
-		        	if("position".equals(key)){
+		        	} else if("position".equals(key)){
 		        		if(temp.get(key) instanceof Integer){
 		        			this.position = (Integer) temp.get(key);
 		        			registerBean("position", this.position);
 		        		}
-		        	}
+		        	} else if (Constants.KEY_VIRTUAL_FLAG.equals(key)) {
+						if(temp.get(key) instanceof Boolean) {
+							isVirtual = (Boolean)temp.get(key);
+						}
+						registerBean("isVirtual", isVirtual);
+					}
 		        }
 				 if(this.stockName!=null && this.stockCode!=null){
 					 this.defStockNameCode = this.stockName+""+this.stockCode;

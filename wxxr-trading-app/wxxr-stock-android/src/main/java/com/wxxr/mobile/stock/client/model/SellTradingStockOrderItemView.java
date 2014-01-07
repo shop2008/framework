@@ -77,13 +77,13 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	
 	/**当前价*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.currentPirce:null}",converter = "stockLong2StringConvertorNoSign",attributes={
-			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.currentPirce>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.currentPirce<0)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.changeRate>0?'resourceId:color/stock_text_up':(stockTradingOrder.changeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 	})
 	String currentPirce;
 	
 	/** 当前涨幅*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.changeRate:null}",converter = "stockLong2StringConvertorSpecial1",attributes={
-			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.changeRate>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.changeRate<0)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.changeRate>0?'resourceId:color/stock_text_up':(stockTradingOrder.changeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 	})
 	String changeRate;
 	
@@ -97,13 +97,13 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	
 	/**当前收益*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.gain:null}",converter = "stockLong2StringConvertorYuan",attributes={
-			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.gain>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.gain<0)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.gain>0?'resourceId:color/stock_text_up':(stockTradingOrder.gain<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 	})
 	String gain;
 	
 	/**当前收益率*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.gainRate:null}",converter = "stockLong2StringConvertorSpecial",attributes={
-			@Attribute(name = "textColor", value = "${(stockTradingOrder!=null && stockTradingOrder.gainRate>0)?'resourceId:color/red':((stockTradingOrder!=null && stockTradingOrder.gainRate<0)?'resourceId:color/green':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.gainRate>0?'resourceId:color/stock_text_up':(stockTradingOrder.gainRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 	})
 	String gainRate;
 	
