@@ -26,7 +26,7 @@
 	            android:orientation="vertical">
 				<com.wxxr.mobile.stock.client.widget.PageSwiperView 
 				    android:layout_width="fill_parent"
-				    android:layout_height="160dp"
+				    android:layout_height="170dp"
 				    bind:itemViewId="ImageSwiperItemView"
 				    bind:field="articles"
 				    android:background="@color/gray">
