@@ -139,7 +139,6 @@ public abstract class UserPage extends PageBase  {
 			private void checkLoadStatus() {
 				int virtualSize = -1;
 				int actualSize = -1;
-				System.out.println("----------1--------");
 				if(personalBean!=null && personalBean.getVirtualList()!=null) {
 					virtualSize = personalBean.getVirtualList().size();
 				}
