@@ -607,8 +607,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		params.put("limit", limit);
 		if(pullMessages==null){
 			if(pullMessagesCache==null){
-				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean",60);
-				pullMessagesCache.setCommandParameters(params);
+				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean");
 			}
 			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {
 
