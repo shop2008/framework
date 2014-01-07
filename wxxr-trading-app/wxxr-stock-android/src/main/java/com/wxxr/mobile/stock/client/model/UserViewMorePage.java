@@ -242,6 +242,7 @@ public abstract class UserViewMorePage extends PageBase implements
 			if(myChallengeListBean != null)
 				completeSize = myChallengeListBean.getData().size();
 			myHomeAStart += completeSize;
+			
 			if(usrService != null) {
 				usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
 			}

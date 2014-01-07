@@ -505,6 +505,8 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 		@Override
 		public int compare(GainBean o1, GainBean o2) {
+			
+			
 			if (o2!=null&&o1!=null) {
 				return (int)(o2.getTradingAccountId()-o1.getTradingAccountId());
 			}
@@ -605,7 +607,7 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		params.put("limit", limit);
 		if(pullMessages==null){
 			if(pullMessagesCache==null){
-				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean",300);
+				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean",60);
 				pullMessagesCache.setCommandParameters(params);
 			}
 			pullMessages=pullMessagesCache.getEntities(null, new Comparator<PullMessageBean>() {
