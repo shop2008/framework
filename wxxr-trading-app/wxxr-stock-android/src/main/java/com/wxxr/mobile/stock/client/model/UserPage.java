@@ -5,14 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 
+import android.os.SystemClock;
+
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -20,6 +25,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -61,6 +67,10 @@ public abstract class UserPage extends PageBase  {
 	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
 	String userNickName;
 
+	@Field(valueKey="visible", binding="${((personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)&&(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)?false:true)&&(!ExpireTimeFlag)}")
+	boolean loading;
+	
+	boolean loadingExpireTime = false;
 	/**
 	 * 累计实盘积分
 	 */
@@ -107,6 +117,42 @@ public abstract class UserPage extends PageBase  {
 	String userHomeBack = "resourceId:drawable/back1";
 
 	
+	@OnShow
+	void initData() {
+		loadingExpireTime = false;
+		registerBean("ExpireTimeFlag", loadingExpireTime);
+		KUtils.executeTask(new Runnable() {
+			
+			@Override
+			public void run() {
+				checkLoadStatus();
+				if(loadingExpireTime == true) {
+					return;
+				} else {
+					do{
+						checkLoadStatus();
+					} while(loadingExpireTime == true);
+				}
+			}
+
+			private void checkLoadStatus() {
+				int virtualSize = -1;
+				int actualSize = -1;
+				if(personalBean!=null && personalBean.getVirtualList()!=null) {
+					virtualSize = personalBean.getVirtualList().size();
+				}
+				
+				if(personalBean!=null && personalBean.getActualList()!=null) {
+					actualSize = personalBean.getActualList().size();
+				}
+				
+				if(virtualSize == 0 || actualSize ==0) {
+					loadingExpireTime = true;
+					registerBean("ExpireTimeFlag", loadingExpireTime);
+				}
+			}
+		});
+	}
 	@Command(
 			uiItems={
 				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
@@ -119,7 +165,7 @@ public abstract class UserPage extends PageBase  {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="right",label="",icon="resourceId:drawable/seting")
+				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
 			},
 			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
 	)

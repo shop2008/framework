@@ -4,8 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.SystemClock;
+
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
@@ -104,12 +108,50 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
+	@Field(valueKey="visible", binding="${((personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)&&(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)?false:true)&&(!ExpireTimeFlag)}")
+	boolean loading;
+	
+	boolean loadingExpireTime = false;
 	
 	@OnShow
 	void initData(){
 		if(userName != null){
 			getAppToolbar().setTitle(userName+"的主页", null);
 		}
+		
+		loadingExpireTime = false;
+		registerBean("ExpireTimeFlag", loadingExpireTime);
+		KUtils.executeTask(new Runnable() {
+			
+			@Override
+			public void run() {
+				checkLoadStatus();
+				if(loadingExpireTime == true) {
+					return;
+				} else {
+					do{
+						checkLoadStatus();
+					} while(loadingExpireTime == true);
+				}
+			}
+
+			private void checkLoadStatus() {
+				int virtualSize = -1;
+				int actualSize = -1;
+				if(personalBean!=null && personalBean.getVirtualList()!=null) {
+					virtualSize = personalBean.getVirtualList().size();
+				}
+				
+				if(personalBean!=null && personalBean.getActualList()!=null) {
+					actualSize = personalBean.getActualList().size();
+				}
+				
+				if(virtualSize == 0 || actualSize ==0) {
+					loadingExpireTime = true;
+					registerBean("ExpireTimeFlag", loadingExpireTime);
+				}
+			}
+		});
 	}
 	
 	
