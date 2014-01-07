@@ -396,7 +396,9 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		if(!isMarket) {
 			try {
 				if(orderPriceBean!=null && !StringUtils.isEmpty(orderPriceBean))
-				price = Long.parseLong(orderPriceBean)/10 + "";
+					price = Long.parseLong(orderPriceBean)/10 + "";
+				if("0".equals(price))
+					price = "00000";
 				tradingService.buyStock(acctIdBean, marketBean, codeBean, price, amountBean);
 			}catch(NumberFormatException e) {
 				e.printStackTrace();

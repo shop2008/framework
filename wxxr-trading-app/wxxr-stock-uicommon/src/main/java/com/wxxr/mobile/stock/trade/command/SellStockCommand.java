@@ -36,13 +36,15 @@ public class SellStockCommand implements ICommand<StockResultVO>{
 
     @Override
     public void validate() {
-        if(getPrice()==null || StringUtils.isEmpty(getPrice())){
+    	if("00000".equals(getPrice())) {
+    		throw new StockAppBizException("挂单卖出时价格不能为0");
+    	} else if(getPrice()==null || StringUtils.isEmpty(getPrice())){
         	throw new StockAppBizException("卖出股票价格不能为0！");
-        }else if(getAmount()==null || StringUtils.isEmpty(getAmount())){
+        } else if(getAmount()==null || StringUtils.isEmpty(getAmount())){
         	throw new StockAppBizException("卖出的股票数量不能为空");
-        }else if(Long.valueOf(getAmount())==0){
+        } else if(Long.valueOf(getAmount())==0){
         	throw new StockAppBizException("卖出数量不能为0");
-        }else if(Long.valueOf(getAmount()) % 100!=0){
+        } else if(Long.valueOf(getAmount()) % 100!=0){
         	throw new StockAppBizException("卖出数量必须是100的整数倍");
         }
     }

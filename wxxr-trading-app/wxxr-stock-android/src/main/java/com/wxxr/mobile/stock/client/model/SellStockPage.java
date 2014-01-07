@@ -397,6 +397,8 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice)){
 					price = Long.parseLong(sellPrice)/10 + "";
 				}
+				if("0".equals(price))
+					price = "00000";
 				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
