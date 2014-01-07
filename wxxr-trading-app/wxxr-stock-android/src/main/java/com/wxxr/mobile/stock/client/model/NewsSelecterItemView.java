@@ -57,7 +57,7 @@ public abstract class NewsSelecterItemView extends ViewBase implements IModelUpd
 			})
 	CommandResult handleNewsItemClick(InputEvent event) {
 		
-		String accId = message.getAcctId();
+		String accId = message.getAttrs().get("accId");
 		TradingAccountBean accountBean = null;
 		if(tradingService != null) {
 			 accountBean = tradingService.getTradingAccountInfo(accId);
