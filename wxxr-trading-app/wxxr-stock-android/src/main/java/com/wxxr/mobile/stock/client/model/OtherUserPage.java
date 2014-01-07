@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -131,7 +132,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				} else {
 					do{
 						checkLoadStatus();
-					} while(loadingExpireTime == true);
+					} while(loadingExpireTime == false);
 				}
 			}
 
@@ -233,6 +234,11 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		return result;
 	}
 
+	@OnHide
+	void onHidePage() {
+		loadingExpireTime = true;
+	}
+	
 	/**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
