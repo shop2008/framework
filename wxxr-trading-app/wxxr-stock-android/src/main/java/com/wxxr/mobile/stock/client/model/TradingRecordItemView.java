@@ -62,7 +62,7 @@ public abstract class TradingRecordItemView extends ViewBase implements
 	String code;
 	
 	@Field(valueKey = "text", binding = "${recordBean!=null?recordBean.describe:'--'}", attributes={
-			@Attribute(name = "textColor", value = "${recordBean.beDone?'resourceId:color/red':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value = "${recordBean==null?'resourceId:color/gray':(recordBean.beDone?(recordBean.day==0?'resourceId:color/red':'resourceId:color/green'):'resourceId:color/gray')}")
 			})
 	String describe;
 
