@@ -21,6 +21,7 @@ public class PullMessageBean implements IBindableBean {
 	private String createDate;
 	private String articleUrl;
 	private boolean read;
+	private Long pullId;
 	/**
 	 * @param listener
 	 */
@@ -159,6 +160,20 @@ public class PullMessageBean implements IBindableBean {
 				+ ", id=" + id + ", phone=" + phone + ", title=" + title
 				+ ", createDate=" + createDate + ", articleUrl=" + articleUrl
 				+ ", read=" + read + "]";
+	}
+
+	/**
+	 * @return the pullId
+	 */
+	public Long getPullId() {
+		return pullId;
+	}
+
+	/**
+	 * @param pullId the pullId to set
+	 */
+	public void setPullId(Long pullId) {
+		this.pullId = pullId;
 	}
 
 	

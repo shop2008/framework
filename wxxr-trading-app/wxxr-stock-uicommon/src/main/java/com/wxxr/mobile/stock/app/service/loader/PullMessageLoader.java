@@ -109,32 +109,31 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 		
 		boolean updated = false;
 
-			List<PullMessageBean> pullMessageBeans=queryRemindMessages();
-			for(PullMessageBean bean:pullMessageBeans){
-				String key=bean.getId()+getUserId();
-				cache.putEntity(key, bean);
-				updated=true;
-			}
+		List<PullMessageBean> pullMessageBeans=queryRemindMessages();
+		for(PullMessageBean bean:pullMessageBeans){
+			String key=bean.getPullId()+getUserId();
+			cache.putEntity(key, bean);
+			updated=true;
+		}
 
-		
 		if(result!=null && !result.isEmpty()){
-			boolean insert=false;
 			for (PullMessageVO vo : result) {
 					String key=vo.getId()+getUserId();
 					PullMessageBean bean=cache.getEntity(key);
 					if(bean==null){
 						bean=new PullMessageBean();
 						cache.putEntity(key, bean);
-						insert=true;
-					}
-					bean.setArticleUrl(vo.getArticleUrl());
-					bean.setCreateDate(vo.getCreateDate());
-					bean.setMessage(vo.getMessage());
-					bean.setPhone(vo.getPhone());
-					bean.setTitle(vo.getTitle());
-					if(insert)
+						bean.setPullId(vo.getId());
+						bean.setArticleUrl(vo.getArticleUrl());
+						bean.setCreateDate(vo.getCreateDate());
+						bean.setMessage(vo.getMessage());
+						bean.setPhone(vo.getPhone());
+						bean.setTitle(vo.getTitle());
 						insertOrUpdateDB(bean);
-					updated = true;
+						updated = true;
+					}
+
+					
 			}
 		}		
 		return updated;
@@ -151,15 +150,13 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 			entity=new PullMessageInfo();
 			insert=true;
 		}
-		String id=bean.getId()+getUserId();
 		entity.setUserId(getUserId());
-		entity.setPullId(bean.getId());
+		entity.setPullId(bean.getPullId());
 		entity.setArticleUrl(bean.getArticleUrl());
 		entity.setMessage(bean.getMessage());
 		entity.setPhone(bean.getPhone());
 		entity.setCreateDate(bean.getCreateDate());
 		entity.setTitle(bean.getTitle());
-		entity.setRead(false);
 		
 		if(insert)
 			bean.setId(dao.insert(entity));
@@ -177,11 +174,12 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 				PullMessageBean bean=new PullMessageBean();
 				bean.setArticleUrl(entity.getArticleUrl());
 				bean.setCreateDate(entity.getCreateDate());
-				bean.setId(entity.getPullId());
+				bean.setId(entity.getId());
 				bean.setMessage(entity.getMessage());
 				bean.setPhone(entity.getPhone());
 				bean.setRead(entity.getRead());
 				bean.setTitle(entity.getTitle());
+				bean.setPullId(entity.getPullId());
 				pullMessageBeans.add(bean);
 			}
 		}
@@ -202,7 +200,11 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	protected List<PullMessageVO> executeCommand(
 			ICommand<List<PullMessageVO>> command) throws Exception {
 		PullMessageVOs vos= getRestService(ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit());
-		return vos==null ?null:vos.getPullMessages();
+		if(vos==null || vos.getPullMessages()==null){
+			return new ArrayList<PullMessageVO>();
+		}else{
+			return vos.getPullMessages();
+		}
 	}
 	protected String getUserId() {
 		return this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).getUserId();
