@@ -68,7 +68,7 @@ public abstract class UserPage extends PageBase  {
 	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
 	String userNickName;
 
-	@Field(valueKey="visible", binding="${((personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)&&(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)?false:true)&&(!ExpireTimeFlag)}")
+	@Field(valueKey="visible", binding="${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
 	boolean loading;
 	
 	boolean loadingExpireTime = false;
@@ -139,6 +139,7 @@ public abstract class UserPage extends PageBase  {
 			private void checkLoadStatus() {
 				int virtualSize = -1;
 				int actualSize = -1;
+				System.out.println("----------1--------");
 				if(personalBean!=null && personalBean.getVirtualList()!=null) {
 					virtualSize = personalBean.getVirtualList().size();
 				}

@@ -109,7 +109,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
-	@Field(valueKey="visible", binding="${((personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)&&(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0)?false:true)&&(!ExpireTimeFlag)}")
+	@Field(valueKey="visible", binding="${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
 	boolean loading;
 	
 	boolean loadingExpireTime = false;
