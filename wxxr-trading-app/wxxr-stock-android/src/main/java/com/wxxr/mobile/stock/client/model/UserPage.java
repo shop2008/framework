@@ -17,6 +17,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -131,7 +132,7 @@ public abstract class UserPage extends PageBase  {
 				} else {
 					do{
 						checkLoadStatus();
-					} while(loadingExpireTime == true);
+					} while(loadingExpireTime == false);
 				}
 			}
 
@@ -146,7 +147,7 @@ public abstract class UserPage extends PageBase  {
 					actualSize = personalBean.getActualList().size();
 				}
 				
-				if(virtualSize == 0 || actualSize ==0) {
+				if(virtualSize ==0 || actualSize ==0) {
 					loadingExpireTime = true;
 					registerBean("ExpireTimeFlag", loadingExpireTime);
 				}
@@ -196,7 +197,10 @@ public abstract class UserPage extends PageBase  {
 	StockLong2StringConvertor shareNumConvertor;
 	
 
-
+	@OnHide
+	void onHidePage() {
+		loadingExpireTime = true;
+	}
 
 	/**
 	 * 挑战交易盘-"查看更多"事件处理
