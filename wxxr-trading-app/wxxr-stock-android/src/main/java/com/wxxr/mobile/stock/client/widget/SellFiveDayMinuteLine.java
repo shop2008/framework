@@ -400,6 +400,7 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 	
 	private void drawArrows(Canvas canvas,float left, float top, Paint mPaint){
 		if(drawArrows){
+			this.flag = true;
 			canvas.save();
 			Bitmap photo = BitmapFactory.decodeResource(this.getResources(), R.drawable.min_arrows).copy(Bitmap.Config.ARGB_8888, true);
 			Bitmap newBitmap = Bitmap.createBitmap(photo);
