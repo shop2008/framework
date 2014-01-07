@@ -307,6 +307,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 		map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 		result.setResult("BuyStockDetailPage");
 		result.setPayload(map);
+		updateSelection(new StockSelection()); //清空之前各种stockPage update出来的数据
 		return result;
 	}
 
