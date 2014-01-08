@@ -3,12 +3,9 @@
  */
 package com.wxxr.mobile.android.ui.updater;
 
-import java.net.URL;
-
-import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.wxxr.mobile.android.ui.RUtils;
+import com.wxxr.mobile.android.ui.ImageUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
@@ -27,12 +24,13 @@ public class BackgroupImageURIAttributeUpdater implements IAttributeUpdater<View
 		String val = (String)value;
 		if((val != null)&&(attrType == AttributeKeys.backgroundImageURI)){
 			try {
-				if(RUtils.isResourceIdURI(val)){
-					control.setBackgroundResource(RUtils.getInstance().getResourceIdByURI(val));
-				}else{
-					URL url = new URL(val);
-					control.setBackgroundDrawable(Drawable.createFromStream(url.openStream(), null));
-				}
+//				if(RUtils.isResourceIdURI(val)){
+//					control.setBackgroundResource(RUtils.getInstance().getResourceIdByURI(val));
+//				}else{
+//					URL url = new URL(val);
+//					control.setBackgroundDrawable(Drawable.createFromStream(url.openStream(), null));
+//				}
+				ImageUtils.updateViewBackgroupImage(val, control);
 			} catch (Exception e) {
 				log.error("Failed to set background image for field :"+field.getName(), e);
 			}
