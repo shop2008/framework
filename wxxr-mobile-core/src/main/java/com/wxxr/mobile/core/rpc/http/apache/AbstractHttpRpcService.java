@@ -193,6 +193,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 					new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 			Scheme httpsScheme = new Scheme("https", sslsf, 443);
 			registry.register(httpsScheme);
+			registry.register(new Scheme("https", sslsf, 8443));
 			ClientConnectionManager cm = null;
 			if (connectionPoolSize > 0)
 			{
