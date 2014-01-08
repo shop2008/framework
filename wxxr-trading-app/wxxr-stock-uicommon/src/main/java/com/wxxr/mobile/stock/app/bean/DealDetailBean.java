@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.bean;
 
+import java.util.Arrays;
 import java.util.List;
 import com.wxxr.mobile.core.ui.common.ListDecorator;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
@@ -17,7 +18,7 @@ public class DealDetailBean implements IBindableBean {
 	
 	private final BindableBeanSupport emitter = new BindableBeanSupport(this);
 	private List<TradingRecordBean> tradingRecords;
-	private String[] imgUrl;
+	private List<String> imgUrl;
 	private float totalGain;
 	private float userGain;
 	private String fund;
@@ -61,7 +62,7 @@ public class DealDetailBean implements IBindableBean {
 	/**
 	 * @return the imgUrl
 	 */
-	public String[] getImgUrl() {
+	public List<String> getImgUrl() {
 		return imgUrl;
 	}
 
@@ -69,8 +70,8 @@ public class DealDetailBean implements IBindableBean {
 	 * @param imgUrl the imgUrl to set
 	 */
 	public void setImgUrl(String[] imgUrl) {
-		String[] old = this.imgUrl;
-		this.imgUrl = imgUrl;
+		List<String> old = this.imgUrl;
+		this.imgUrl = Arrays.asList(imgUrl);
 		this.emitter.firePropertyChange("imgUrl", old, this.imgUrl);
 	}
 
