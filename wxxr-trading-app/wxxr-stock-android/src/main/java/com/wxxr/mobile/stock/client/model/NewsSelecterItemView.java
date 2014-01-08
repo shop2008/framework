@@ -50,14 +50,13 @@ public abstract class NewsSelecterItemView extends ViewBase implements IModelUpd
 	ITradingManagementService tradingService;
 	
 	@Command(navigations={
-			@Navigation(on="operationDetails",showPage="OperationDetails",params={
-					@Parameter(name = "add2BackStack", value = "false")
-			}),
-			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount")
+			@Navigation(on="operationDetails",showPage="OperationDetails"),
+			@Navigation(on="SellOut",showPage="sellTradingAccount"),
+			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
 			})
 	CommandResult handleNewsItemClick(InputEvent event) {
 		
-		String accId = message.getAttrs().get("accId");
+		String accId = message.getAttrs().get("acctID");
 		TradingAccountBean accountBean = null;
 		if(tradingService != null) {
 			 accountBean = tradingService.getTradingAccountInfo(accId);
@@ -73,17 +72,25 @@ public abstract class NewsSelecterItemView extends ViewBase implements IModelUpd
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put(Constants.KEY_ACCOUNT_ID_FLAG, accId);
 			map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
+			map.put("isSelf", true);
+			result.setPayload(map);
 			if("CLOSED".equals(tradeStatus)){
-				result.setPayload(map);
+				//result.setPayload(map);
 				result.setResult("operationDetails");
-				updateSelection(new AccidSelection(accId, isVirtual));
+				//updateSelection(new AccidSelection(accId, isVirtual));
 			} 
 			
 			if("UNCLOSE".equals(tradeStatus)){
-				result.setResult("sellTradingAccount");
-				result.setPayload(map);
+				
+				int accountStatus = accountBean.getStatus();
+				if(accountStatus == 0) {
+					result.setResult("SellOut");
+				} else if(accountStatus == 1) {
+					result.setResult("BuyIn");
+				}
+				//result.setPayload(map);
 			}
-			
+			updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
 			return result;
 		}
 		
