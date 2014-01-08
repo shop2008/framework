@@ -5,7 +5,6 @@ package com.wxxr.mobile.stock.client;
 
 import java.io.File;
 import java.io.InputStream;
-import java.security.KeyStore;
 import java.util.Dictionary;
 import java.util.Properties;
 
@@ -21,7 +20,6 @@ import com.wxxr.mobile.android.http.HttpRpcServiceModule;
 import com.wxxr.mobile.android.network.NetworkManagementModule;
 import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.android.preference.PreferenceManagerModule;
-import com.wxxr.mobile.android.security.DummySiteSecurityModule;
 import com.wxxr.mobile.android.ui.module.AndroidI10NServiceModule;
 import com.wxxr.mobile.android.validation.ValidationMessageInterpolator;
 import com.wxxr.mobile.core.command.impl.CommandExecutorModule;
@@ -31,7 +29,6 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
-import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.IStockAppFramework;
@@ -48,6 +45,7 @@ import com.wxxr.mobile.stock.app.service.impl.TradingManagementServiceFactory;
 import com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserLoginManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.UserManagementServiceFactory;
+import com.wxxr.mobile.stock.client.module.StockSiteSecurityModule;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 import com.wxxr.mobile.stock.client.service.ClientInfoService;
 import com.wxxr.mobile.stock.client.service.GenericContentService;
@@ -99,26 +97,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
-		DummySiteSecurityModule<IStockAppContext> siteSecurityModule = new DummySiteSecurityModule<IStockAppContext>(){
-			private KeyStore trustKeyStore;
-			@Override
-			protected void startService() {
-				try {
-					trustKeyStore = KeyStore.getInstance("JKS");
-					InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
-					trustKeyStore.load(in,   "111111".toCharArray());
-				} catch (Exception e) {
-					log.warn("Failed to load trust key store",e);
-				}
-				context.registerService(ISiteSecurityService.class, this);
-			}
-			@Override
-			public KeyStore getTrustKeyStore() {
-				return trustKeyStore;
-			}
-		};
-		registerKernelModule(siteSecurityModule);
-		//registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
+		registerKernelModule(new StockSiteSecurityModule());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
@@ -161,6 +140,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	    registerKernelModule(new ClientInfoService());
 
 	}
+
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.app.AndroidApplication#start()
 	 */
