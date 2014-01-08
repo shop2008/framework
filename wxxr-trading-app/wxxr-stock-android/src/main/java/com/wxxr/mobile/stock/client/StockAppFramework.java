@@ -95,29 +95,30 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		return context;
 	}
 
-	private DummySiteSecurityModule<IStockAppContext> siteSecurityModule = new DummySiteSecurityModule<IStockAppContext>(){
-		private KeyStore trustKeyStore;
-		@Override
-		protected void startService() {
-			try {
-				trustKeyStore = KeyStore.getInstance("JKS");
-				InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
-				trustKeyStore.load(in,   "111111".toCharArray());
-			} catch (Exception e) {
-				log.warn("Failed to load trust key store",e);
-			}
-			this.context.registerService(ISiteSecurityService.class, this);
-		}
-		@Override
-		public KeyStore getTrustKeyStore() {
-			return trustKeyStore;
-		}
-	};
+	
 
 	@Override
 	protected void initModules() {
-		//registerKernelModule(siteSecurityModule);
-		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
+		DummySiteSecurityModule<IStockAppContext> siteSecurityModule = new DummySiteSecurityModule<IStockAppContext>(){
+			private KeyStore trustKeyStore;
+			@Override
+			protected void startService() {
+				try {
+					trustKeyStore = KeyStore.getInstance("JKS");
+					InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
+					trustKeyStore.load(in,   "111111".toCharArray());
+				} catch (Exception e) {
+					log.warn("Failed to load trust key store",e);
+				}
+				context.registerService(ISiteSecurityService.class, this);
+			}
+			@Override
+			public KeyStore getTrustKeyStore() {
+				return trustKeyStore;
+			}
+		};
+		registerKernelModule(siteSecurityModule);
+		//registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
