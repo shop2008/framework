@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -13,6 +14,8 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -34,8 +37,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?true:false):false):false}")
 	boolean recordNotNullVisible;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?false:true):true):true}")
-	boolean recordNullVisible;
+
 
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(allStart,allLimit):null}")
 	BindableListWrapper<GainBean> allTradeAccountListBean;
@@ -62,6 +64,9 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true}")
 	boolean sucRecordNullVisible;
 
+	
+
+	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
@@ -108,7 +113,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 			tradingService.getGain(0, successTradeAccountListBean.getData().size());
 		return null;
 	}
+	
+	@OnShow
+	void initData() {
+		
+	}
 
+	
+	
 	/**
 	 * 显示所有交易记录
 	 * 
