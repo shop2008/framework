@@ -101,7 +101,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			try {
 				trustKeyStore = KeyStore.getInstance("JKS");
 				InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
-				trustKeyStore.load(in,   "wxxr_123456".toCharArray());
+				trustKeyStore.load(in,   "111111".toCharArray());
 			} catch (Exception e) {
 				log.warn("Failed to load trust key store",e);
 			}
@@ -115,8 +115,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
-		//registerKernelModule(siteSecurityModule);
-		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
+		registerKernelModule(siteSecurityModule);
+		//registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
