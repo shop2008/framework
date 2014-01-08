@@ -390,7 +390,7 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
 	)
-	@ExeGuard(title="提示", message="正在获取数据，请稍后...", silentPeriod=1, cancellable=false)
+	@ExeGuard(title="提示", message="正在提交订单，请稍后...", silentPeriod=1, cancellable=false)
 	String handleBuyBtnClick(InputEvent event) {
 		String price = null;
 		if(!isMarket) {

@@ -69,19 +69,19 @@ public abstract class ChampionShipView extends ViewBase {
 
 	@Field(valueKey = "text", visibleWhen = "${currentViewId == 1}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "${tRankListBean!=null&&tRankListBean.data!=null&&tRankListBean.data.size()>0?true:false}") })
+			@Attribute(name = "enablePullUpRefresh", value = "${false&&tRankListBean!=null&&tRankListBean.data!=null&&tRankListBean.data.size()>0?true:false}") })
 	String TRefreshView;
 	@Field(valueKey = "text", visibleWhen = "${currentViewId == 2}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "${t1RankListBean!=null&&t1RankListBean.data!=null&&t1RankListBean.data.size()>0?true:false}") })
+			@Attribute(name = "enablePullUpRefresh", value = "${false&&t1RankListBean!=null&&t1RankListBean.data!=null&&t1RankListBean.data.size()>0?true:false}") })
 	String T1RefreshView;
 	@Field(valueKey = "text", visibleWhen = "${currentViewId == 3}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "${weekRankListBean!=null&&weekRankListBean.data!=null&&weekRankListBean.data.size()>0?true:false}") })
+			@Attribute(name = "enablePullUpRefresh", value = "${false&&weekRankListBean!=null&&weekRankListBean.data!=null&&weekRankListBean.data.size()>0?true:false}") })
 	String WeekRefreshView;
 	@Field(valueKey = "text", visibleWhen = "${currentViewId == 4}", attributes = {
 			@Attribute(name = "enablePullDownRefresh", value = "true"),
-			@Attribute(name = "enablePullUpRefresh", value = "${rtRankListBean!=null&&rtRankListBean.data!=null&&rtRankListBean.data.size()>0?true:false}") })
+			@Attribute(name = "enablePullUpRefresh", value = "${false&&rtRankListBean!=null&&rtRankListBean.data!=null&&rtRankListBean.data.size()>0?true:false}") })
 	String RegularRefreshView;
 
 	// RadioButton
