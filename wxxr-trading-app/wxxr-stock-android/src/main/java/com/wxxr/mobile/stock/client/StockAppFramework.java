@@ -116,8 +116,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
-		registerKernelModule(siteSecurityModule);
-		//registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
+		//registerKernelModule(siteSecurityModule);
+		registerKernelModule(new DummySiteSecurityModule<IStockAppContext>());
 		registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
