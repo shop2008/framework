@@ -30,7 +30,7 @@ public class PageSwiperView extends LinearLayout  {
 	private ViewPager swiperPager;
 	private int mViewCount = 0;
 	private List<View> viewList = null;
-	private boolean flag = true;
+	private boolean showPagination = true;
 	private DataSetObserver observer = new DataSetObserver() {
 
 		/* (non-Javadoc)
@@ -114,6 +114,15 @@ public class PageSwiperView extends LinearLayout  {
 	}
 	public ListAdapter getAdapter(){
 		return mAdapter;
+	}
+	
+	public void setShowPagination(boolean val){
+		this.showPagination = val;
+		if(showPagination){
+			paginationLayout.setVisibility(View.VISIBLE);
+		}else{
+			paginationLayout.setVisibility(View.GONE);
+		}
 	}
 	
 	@Override
@@ -208,5 +217,5 @@ public class PageSwiperView extends LinearLayout  {
 	    	paginationImgView[position].setEnabled(false);
 	    	this.mCurSel = position;			
 		}
-	}	
+	}
 }

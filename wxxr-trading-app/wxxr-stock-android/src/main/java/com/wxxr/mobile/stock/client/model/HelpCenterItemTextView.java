@@ -38,7 +38,7 @@ public abstract class HelpCenterItemTextView extends ViewBase implements IModelU
 	})
 	String backgroundColor;
 	
-	@Field(valueKey="imageURI",binding="${(article!=null && article.imageUrl!=null && index==0)?article.imageUrl:null}")
+	@Field(valueKey="backgroundImageURI",binding="${(article!=null && article.imageUrl!=null && index==0)?article.imageUrl:null}")
 	String imgUrl;
 	
 	@Field(valueKey="visible",visibleWhen="${index==0}")

@@ -156,7 +156,8 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 //	@Bean
 //	List<String> moneyData;
 	
-	int currentViewId = 0;
+	@Bean
+	int currentViewId = 1;
 	
 
 	String zhfzf,djDeposit;
@@ -419,7 +420,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@OnShow
 	protected void initData(){
 
-		this.radioBtn = 0;
+//		this.radioBtn = 0;
 		registerBean("radioBtn", this.radioBtn);
 		this.checkedbox = 0;
 		this.checkedbox1 = 0;
@@ -430,19 +431,15 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 		this.djDeposit = "0元";
 		this.changeMoney = 0;
 		this.costRate = 0;
-		this.currentViewId = 1;
+//		this.currentViewId = 1;
 		this.currentRadioBtnId = 1;
 		registerBean("zhfzf", zhfzf);
 		registerBean("djDeposit", djDeposit);
-		registerBean("currentViewId", currentViewId);
+		registerBean("currentViewId", this.currentViewId);
 		registerBean("currentRadioBtnId", currentRadioBtnId);
 		registerBean("rateData1", "--");
 		registerBean("rateData2", "--");
 		registerBean("rateData3", "--");	
-//		 if(userCreateTradAccInfo!=null){
-//		     String CapitalRate  = String.format("%.0f", userCreateTradAccInfo.getCapitalRate()*100)+"%";
-//		     registerBean("CapitalRate", CapitalRate);
-//		 }
 	}
 	
 	@Override
