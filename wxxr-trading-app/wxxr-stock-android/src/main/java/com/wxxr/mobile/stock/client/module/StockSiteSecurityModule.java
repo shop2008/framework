@@ -25,7 +25,7 @@ public class StockSiteSecurityModule extends DummySiteSecurityModule<IStockAppCo
 	@Override
 	protected void startService() {
 		try {
-			trustKeyStore = KeyStore.getInstance("JKS");
+			trustKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			InputStream in =context.getApplication().getAndroidApplication().getAssets().open("trust.keystore");
 			trustKeyStore.load(in,   "111111".toCharArray());
 		} catch (Exception e) {
