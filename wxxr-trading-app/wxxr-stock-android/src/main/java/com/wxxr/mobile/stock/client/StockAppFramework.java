@@ -31,6 +31,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
+import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.IStockAppFramework;
@@ -105,7 +106,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			} catch (Exception e) {
 				log.warn("Failed to load trust key store",e);
 			}
-			super.startService();
+			this.context.registerService(ISiteSecurityService.class, this);
 		}
 		@Override
 		public KeyStore getTrustKeyStore() {
