@@ -3,11 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +52,7 @@ import com.wxxr.mobile.stock.app.service.handler.ReadPullMessageHandler.ReadPull
 import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler;
 import com.wxxr.mobile.stock.app.service.handler.ReadRemindMessageHandler.ReadRemindMessageCommand;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
+import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
@@ -237,16 +235,18 @@ public class UserManagementServiceImpl implements IUserManagementService{
 			return null;
 		}
 		if(myUserInfo==null){
-			if(myUserInfoCache==null){
-				myUserInfoCache=new GenericReloadableEntityCache<String, UserBean, UserVO>("myUserInfo");
-			}
-			myUserInfo=myUserInfoCache.getEntity(UserBean.class.getCanonicalName());
-			if(myUserInfo==null){
-				myUserInfo=new UserBean();
-				myUserInfoCache.putEntity(UserBean.class.getCanonicalName(), myUserInfo);
+			myUserInfo=new UserBean();
+			RefresUserInfoHandler.RefreshUserInfoCommand command=new RefreshUserInfoCommand();
+			Future<UserVO> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			try {
+				UserVO userVO=future.get(30,TimeUnit.SECONDS);
+				myUserInfo.setNickName(userVO.getNickName());
+				myUserInfo.setUsername(userVO.getUserName());
+				myUserInfo.setPhoneNumber(userVO.getMoblie());
+			} catch (Exception e) {
+				new StockAppBizException("系统错误");
 			}
 		}
-		myUserInfoCache.doReloadIfNeccessay();
 		return myUserInfo;
 	}
 
@@ -672,7 +672,20 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 	@Override
 	public UserBean refreshUserInfo() {
-		return getMyUserInfo();
+		if(myUserInfo==null){
+			myUserInfo=new UserBean();
+		}
+		RefresUserInfoHandler.RefreshUserInfoCommand command=new RefreshUserInfoCommand();
+		Future<UserVO> future=context.getService(ICommandExecutor.class).submitCommand(command);
+		try {
+			UserVO userVO=future.get(30,TimeUnit.SECONDS);
+			myUserInfo.setNickName(userVO.getNickName());
+			myUserInfo.setUsername(userVO.getUserName());
+			myUserInfo.setPhoneNumber(userVO.getMoblie());
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
+		return myUserInfo;
 	}
 
 
