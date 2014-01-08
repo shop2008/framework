@@ -5,10 +5,12 @@ import com.wxxr.mobile.stock.client.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.webkit.WebView;
@@ -94,6 +96,12 @@ public class ArticleBodyView extends ViewGroup {
 			loadingBody.setVisibility(View.GONE);
 		}
 
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler,
+				SslError error) {
+			handler.proceed();  // 接受所有网站的证书
+		}
+		
 	}
 
 	public void loadURL(final String url) {
