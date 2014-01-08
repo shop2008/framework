@@ -99,14 +99,18 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 				Integer selectedPosition = selectionTemp.getPosition();
 				Integer myPosition = (Integer)getProperty("_item_position");
 				if(selectedPosition.equals(myPosition)){
-					this.isOpen = true;
-					if(earnRank!=null){
-						if(earnRank.getImgUrl().endsWith(".jpg") || earnRank.getImgUrl().endsWith(".gif") || earnRank.getImgUrl().endsWith(".png")){
-	                		this.imgUrl = earnRank.getImgUrl();
-	                	}else{
-	                		this.imgUrl = "resourceId:drawable/defimage";
-	                	}
-						registerBean("imgUrl", this.imgUrl);
+					if(!this.isOpen){
+						this.isOpen = true;
+						if(earnRank!=null){
+							if(earnRank.getImgUrl().endsWith(".jpg") || earnRank.getImgUrl().endsWith(".gif") || earnRank.getImgUrl().endsWith(".png")){
+								this.imgUrl = earnRank.getImgUrl();
+							}else{
+								this.imgUrl = "resourceId:drawable/defimage";
+							}
+							registerBean("imgUrl", this.imgUrl);
+						}
+					}else{
+						this.isOpen = false;
 					}
 				}else{
 					this.isOpen = false;
