@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/buy_tv"
-            android:src="@drawable/sell_buy" />
+            android:src="@drawable/buy_btn" />
     </RelativeLayout>
 
     <TextView
