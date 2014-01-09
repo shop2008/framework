@@ -19,7 +19,7 @@ public interface IMicroKernel<C extends IKernelContext, T extends IKernelModule<
    
    <S> S getService(Class<S> interfaceClazz);
    
-   <S> ServiceFuture<S> getServiceAsync(Class<S> interfaceClazz);
+   <S> IServiceFuture<S> getServiceAsync(Class<S> interfaceClazz);
    
    <S> void checkServiceAvailable(Class<S> interfaceClazz, IServiceAvailableCallback<S> callback);
 

@@ -7,7 +7,7 @@
  * WXXR PROPRIETARY/CONFIDENTIAL.
  */
 
-package com.wxxr.mobile.core.event.api;
+package com.wxxr.mobile.core.common;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -17,24 +17,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import com.wxxr.mobile.core.event.api.IBroadcastEvent;
+import com.wxxr.mobile.core.event.api.IEventListener;
+import com.wxxr.mobile.core.event.api.IEventObject;
+import com.wxxr.mobile.core.event.api.IEventRouter;
+import com.wxxr.mobile.core.event.api.IEventSelector;
+import com.wxxr.mobile.core.event.api.IListenerChain;
+import com.wxxr.mobile.core.event.api.IStreamEvent;
+import com.wxxr.mobile.core.event.api.IStreamEventListener;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.core.microkernel.api.IKernelComponent;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 
 /**
- * @class desc A SimpleEventRouter.
+ * @class desc A EventRouterModule.
  * 
  * @author Neil
  * @version v1.0 
  * @created time May 18, 2011  3:49:19 PM
  */
-public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T> implements IEventRouter {
+public class EventRouterImpl implements IEventRouter,IKernelComponent {
 
 	private static final Trace log = Trace.register(EventRouterImpl.class);
 	
-	protected LinkedList<ListenerHolder> listeners = new LinkedList<ListenerHolder>();
-	protected LinkedList<WeakReference<IStreamEventListener>> streamListeners = new LinkedList<WeakReference<IStreamEventListener>>();
-
+	private LinkedList<ListenerHolder> listeners = new LinkedList<ListenerHolder>();
+	private LinkedList<WeakReference<IStreamEventListener>> streamListeners = new LinkedList<WeakReference<IStreamEventListener>>();
+	private IKernelContext context;
+	
 	private static class ListenerHolder {
 		WeakReference<IEventSelector> selector;
 		WeakReference<IEventListener> listener;
@@ -144,6 +153,7 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		return this.listeners.toArray(new ListenerHolder[this.listeners.size()]);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private synchronized WeakReference<IStreamEventListener>[] getAllStreamListeners() {
 		return this.streamListeners.toArray(new WeakReference[this.streamListeners.size()]);
 	}
@@ -263,20 +273,6 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 		}
 	}
 
-	@Override
-	protected void initServiceDependency() {
-	}
-
-	@Override
-	protected void startService() {
-		context.registerService(IEventRouter.class, this);
-		
-	}
-
-	@Override
-	protected void stopService() {
-		context.unregisterService(IEventRouter.class, this);
-	}
 	
 	private WeakReference<IStreamEventListener> findListener(IStreamEventListener listener){
 		for (WeakReference<IStreamEventListener> l : this.streamListeners) {
@@ -309,6 +305,18 @@ public class EventRouterImpl<T extends IKernelContext> extends AbstractModule<T>
 	public synchronized boolean removeListener(IStreamEventListener listener) {
 		WeakReference<IStreamEventListener> l = findListener(listener);
 		return l != null ? this.streamListeners.remove(l) : false;
+	}
+
+	@Override
+	public void init(IKernelContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public void destroy() {
+		this.listeners.clear();
+		this.listeners.clear();
+		this.context = null;
 	}
 
 }
