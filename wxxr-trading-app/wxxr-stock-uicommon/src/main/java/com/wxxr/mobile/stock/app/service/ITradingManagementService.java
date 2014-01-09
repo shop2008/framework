@@ -3,9 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import com.wxxr.mobile.core.annotation.StatefulService;
-import com.wxxr.mobile.core.microkernel.api.IStatefulService;
-import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
@@ -29,8 +26,7 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
  * @author wangxuyang
  * 
  */
-@StatefulService(factoryClass=ITradingManagementServiceFactory.class)
-public interface ITradingManagementService extends IStatefulService<IStockAppContext>{
+public interface ITradingManagementService {
     
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList();
     

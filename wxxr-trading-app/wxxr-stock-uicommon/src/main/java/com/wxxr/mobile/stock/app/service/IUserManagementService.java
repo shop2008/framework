@@ -3,9 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import com.wxxr.mobile.core.annotation.StatefulService;
-import com.wxxr.mobile.core.microkernel.api.IStatefulService;
-import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -25,8 +22,7 @@ import com.wxxr.mobile.stock.app.model.AuthInfo;
  * @author neillin
  *
  */
-@StatefulService(factoryClass=IUserManagementServiceFactory.class)
-public interface IUserManagementService extends IStatefulService<IStockAppContext> {
+public interface IUserManagementService {
 	
 	/**
 	 * 获取当前用户信息

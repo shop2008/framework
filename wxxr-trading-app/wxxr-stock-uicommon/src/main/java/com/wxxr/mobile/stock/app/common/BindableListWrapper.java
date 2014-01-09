@@ -17,7 +17,7 @@ import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
  * @author neillin
  *
  */
-public class BindableListWrapper<E> implements IBindableBean {
+public abstract class BindableListWrapper<E> implements IBindableBean {
 	private Trace xlog;
 	
 	private List<E> data;
@@ -111,6 +111,12 @@ public class BindableListWrapper<E> implements IBindableBean {
 		pSupport.removePropertyChangeListener(listener);
 	}
 
+	public synchronized List<E> getData(boolean forceReload){
+		if(forceReload){
+			doReload();
+		}
+		return getData();
+	}
 	
 	public synchronized List<E> getData() {
 		if(this.data == null){
@@ -138,5 +144,7 @@ public class BindableListWrapper<E> implements IBindableBean {
 		}
 		return this.data;
 	}
+	
+	protected abstract void doReload();
 	
 }

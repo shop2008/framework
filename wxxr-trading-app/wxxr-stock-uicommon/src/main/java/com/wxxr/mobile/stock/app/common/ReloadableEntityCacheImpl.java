@@ -465,7 +465,14 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	@Override
 	public BindableListWrapper<V> getEntities(IEntityFilter<V> filter,
 			Comparator<V> comparator) {
-		return new BindableListWrapper<V>(this,filter,comparator);
+		return new BindableListWrapper<V>(this,filter,comparator) {
+
+			@Override
+			protected void doReload() {
+					forceReload(true);
+			}
+			
+		};
 	}
 
 	/* (non-Javadoc)
