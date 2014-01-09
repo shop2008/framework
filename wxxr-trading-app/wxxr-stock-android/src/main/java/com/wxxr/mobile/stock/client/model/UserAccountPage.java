@@ -86,12 +86,10 @@ public abstract class UserAccountPage extends PageBase {
 					@Navigation(on="WITHDRAW", showPage="userWithDrawCashPage"),
 					@Navigation(
 							on="ALERTBIND", 
-							showDialog="messageBox", params={
-						    @Parameter(name="left_button", value="是"),
-						    @Parameter(name="right_button", value="否"),
-						    @Parameter(name="message", value="尚未绑定银行卡，是否现在绑定?"),
-						    @Parameter(name="onOK", value="toWithDrawCashPage"),
-						    @Parameter(name="progressDialogVisible", value="false")
+							showDialog="messageBox", message="尚未绑定银行卡，是否现在绑定?",params={
+						    @Parameter(name="title", value="提示"),
+						    @Parameter(name="onOK", value="leftOk"),
+						    @Parameter(name="onCanceled", value="否")
 						    })
 					}
 			)
@@ -108,7 +106,7 @@ public abstract class UserAccountPage extends PageBase {
 	}
 	
 	@Command(
-			commandName="toWithDrawCashPage",
+			uiItems=@UIItem(id="leftOk",label="确定",icon="resourceId:drawable/home"),
 			navigations={@Navigation(on="*",showPage="withDrawCashAuthPage")})
 	String toWithDrawCashPage(InputEvent event) {
 		return "*";
