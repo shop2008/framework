@@ -5,16 +5,12 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
-import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -61,14 +57,4 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 		}
 	}
 	
-	@Command(navigations = { @Navigation(on = "*", showPage = "webPage") })
-	CommandResult handleNoticesItemClick(InputEvent event) {
-		if (usrService != null) {
-			usrService.readPullMesage(message.getId());
-		}
-		CommandResult result = new CommandResult();
-		result.setPayload(message.getArticleUrl());
-		result.setResult("*");
-		return result;
-	}
 }

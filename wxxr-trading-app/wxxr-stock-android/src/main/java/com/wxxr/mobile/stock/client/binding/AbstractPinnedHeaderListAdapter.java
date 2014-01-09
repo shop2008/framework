@@ -3,6 +3,11 @@
  */
 package com.wxxr.mobile.stock.client.binding;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -148,6 +153,23 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 		return -1;
 	}
 
+	
+	public List<Integer> getTitleSection() {
+	//	int count = 0;
+		List<Integer> positions = null;
+		if(this.dataProvider != null) {
+			positions = new ArrayList<Integer>();
+			for(int i=0;i<dataProvider.getItemCounts();i++) {
+				Object obj = this.dataProvider.getItem(i);
+				if(isHeaderData(obj)) {
+					positions.add(i);
+					//count ++;
+				}
+			}
+		}
+		return positions;
+	}
+	
 	protected int getPosition4PreviousSection(int position){
 		for(int i=position-1;i>=0; i--){
 			Object data = this.dataProvider.getItem(i);

@@ -23,6 +23,7 @@ import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
+import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
@@ -91,6 +92,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());
 		mgr.registerFieldBinder("PageChange", new PageChangeEventBinder());
 		mgr.registerFieldBinder("FocusChanged", new EditTextFocusChangedEventBinder());
+		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
 	}
 
 	@Override

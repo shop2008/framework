@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@drawable/listview_selected_item1"
-    bind:field="*"
-    bind:on_Click="handleNewsItemClick"
+
     >
 
     <RelativeLayout

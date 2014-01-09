@@ -53,7 +53,7 @@
                 bind:field="accountTradeInfos"
                 android:scrollbars="none"
                 bind:itemViewId="NewsContentItem"
-                bind:on_ItemClick="handleNewsItemClick" />
+                bind:on_PinItemClick="handleNewsItemClick" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                     bind:itemViewId="InfoNoticesItemView"
                     bind:field="noticeInfos"
                     android:scrollbars="none"
-                    bind:on_ItemClick="handleNoticesItemClick" 
+                    bind:on_PinItemClick="handleNoticesItemClick" 
                     />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
