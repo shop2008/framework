@@ -31,10 +31,10 @@
 #if(${fld.convertor})
         this.${fld.name}Field.setDomainModel(
             new ELDomainValueModel<${fld.simpleBoxedType},${fld.convertor.simpleSourceType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.convertor.simpleSourceType}.class).
-            setConvertor(this.${fld.convertor.name})
+            setConvertor(this.${fld.convertor.name}).setUpdateAsync(${fld.binding.updateAsync})
         );
 #else
-        this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType},${fld.simpleBoxedType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class));
+        this.${fld.name}Field.setDomainModel(new ELDomainValueModel<${fld.simpleBoxedType},${fld.simpleBoxedType}>(getEvaluatorContext(), "${fld.binding.expression}", this.${fld.name}Field,${fld.simpleBoxedType}.class).setUpdateAsync(${fld.binding.updateAsync}));
 #end
 #end
         add(this.${fld.name}Field);        
@@ -115,13 +115,9 @@
 #macro(onShow $model $methods)
     @Override
     protected void onShow(IBinding<IView> binding) {
-#if(${model.serviceBindings})
-       injectServices();
-#end
 #if(${model.beanBindings})
     updateBindingBeans();
 #end
-
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(binding); 

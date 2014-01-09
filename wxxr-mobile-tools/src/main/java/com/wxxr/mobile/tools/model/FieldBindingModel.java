@@ -11,7 +11,7 @@ package com.wxxr.mobile.tools.model;
 public class FieldBindingModel {
 	private String expression;
 	private String javaStatement;
-	private boolean updatable;
+	private boolean updateAsync;
 	
 	/**
 	 * @return the expression
@@ -39,15 +39,15 @@ public class FieldBindingModel {
 		this.javaStatement = javaStatement;
 	}
 	/**
-	 * @return the updatable
+	 * @return the updateAsync
 	 */
-	public boolean isUpdatable() {
-		return updatable;
+	public boolean isUpdateAsync() {
+		return updateAsync;
 	}
 	/**
-	 * @param updatable the updatable to set
+	 * @param updateAsync the updateAsync to set
 	 */
-	public void setUpdatable(boolean updatable) {
-		this.updatable = updatable;
+	public void setUpdateAsync(boolean updateAsync) {
+		this.updateAsync = updateAsync;
 	}
 }

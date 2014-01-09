@@ -98,45 +98,55 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			if(log.isDebugEnabled()){
 				log.debug("Command :"+cmdName+" will be executed asynchronously with monitor guard :"+guard);
 			}
-			InvocationMonitor monitor = new InvocationMonitor(context) {
+			if(StringUtils.isNotBlank(guard.getMessage())){
+				InvocationMonitor monitor = new InvocationMonitor(context) {
+					
+					@Override
+					protected void handleFailed(Throwable cause) {
+						log.warn("Command :"+cmdName+" executed failed", cause);
+						CommandResult result = new CommandResult();
+						result.setResult("failed");
+						result.setPayload(cause);
+						if(callback != null){
+							callback.failed(cause);
+						}
+						processCommandResult(view, cmdHandler, result);
+					}
+					
+					@Override
+					protected void handleDone(Object returnVal) {
+						if(callback != null){
+							callback.success(returnVal);
+						}
+						processCommandResult(view, cmdHandler, returnVal);
+					}
+				};
 				
-				@Override
-				protected void handleFailed(Throwable cause) {
-					log.warn("Command :"+cmdName+" executed failed", cause);
-					CommandResult result = new CommandResult();
-					result.setResult("failed");
-					result.setPayload(cause);
-					if(callback != null){
-						callback.failed(cause);
+				monitor.setCancellable(guard.isCancellable());
+				monitor.setIcon(guard.getIcon());
+				monitor.setMessage(guard.getMessage());
+				monitor.setSilentPeriod(guard.getSilentPeriod());
+				monitor.setTitle(guard.getTitle());
+				monitor.executeOnMonitor(new Callable<Object>() {			
+					@Override
+					public Object call() throws Exception {
+						try {
+							checkCommandConstraint(cmdHandler);
+							return cmdHandler.execute(event);
+						}catch(ExecAsyncException e){
+							return e.getTaskControl().getFuture().get();
+						}
 					}
-					processCommandResult(view, cmdHandler, result);
-				}
-				
-				@Override
-				protected void handleDone(Object returnVal) {
-					if(callback != null){
-						callback.success(returnVal);
+				});
+			}else{
+				KUtils.executeTask(new Runnable() {
+					
+					@Override
+					public void run() {
+						doExecute(cmdName, view, cmdHandler, event);
 					}
-					processCommandResult(view, cmdHandler, returnVal);
-				}
-			};
-			
-			monitor.setCancellable(guard.isCancellable());
-			monitor.setIcon(guard.getIcon());
-			monitor.setMessage(guard.getMessage());
-			monitor.setSilentPeriod(guard.getSilentPeriod());
-			monitor.setTitle(guard.getTitle());
-			monitor.executeOnMonitor(new Callable<Object>() {			
-				@Override
-				public Object call() throws Exception {
-					try {
-						checkCommandConstraint(cmdHandler);
-						return cmdHandler.execute(event);
-					}catch(ExecAsyncException e){
-						return e.getTaskControl().getFuture().get();
-					}
-				}
-			});
+				});
+			}
 		}else if(callback != null){
 			KUtils.executeTask(new Runnable() {
 				

@@ -5,10 +5,7 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import com.wxxr.javax.validation.ConstraintViolation;
 import com.wxxr.javax.validation.Validator;
@@ -95,8 +92,6 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 			log.debug("Going to evaluate expr :["+express+"] for data field:/["+field+"]");
 		}
 
-		this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
-		this.field.removeAttribute(AttributeKeys.valueUpdating);
 		if(!updateAsync){
 			return updateFieldValue();
 		}else{
@@ -104,20 +99,19 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 
 				@Override
 				public T call() throws Exception {
-					T val = updateFieldValue();
-					field.removeAttribute(AttributeKeys.valueUpdating);
-					return val;
+					return updateFieldValue();
 				}
 			});
-			try {
-				return future.get(1, TimeUnit.SECONDS);
-			}catch(InterruptedException e){
-				return null;
-			}catch(ExecutionException e){
-				return null;
-			}catch(TimeoutException e){
-				this.field.setAttribute(AttributeKeys.valueUpdating, future);
-			}
+			this.field.setAttribute(AttributeKeys.valueUpdating, future);
+//			try {
+//				return future.get(1, TimeUnit.SECONDS);
+//			}catch(InterruptedException e){
+//				return null;
+//			}catch(ExecutionException e){
+//				return null;
+//			}catch(TimeoutException e){
+//				this.field.setAttribute(AttributeKeys.valueUpdating, future);
+//			}
 			return null;
 		}
 	}
@@ -130,10 +124,13 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		try {
 			T val = getValue();
 			this.field.setValue(val);
+			this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
+			this.field.removeAttribute(AttributeKeys.valueUpdating);
 			return val;
 		}catch(Throwable t){
 			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
 			this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
+			this.field.removeAttribute(AttributeKeys.valueUpdating);
 			IView view = ModelUtils.getView(field);
 			if(view instanceof ViewBase){
 				((ViewBase)view).handleStartupException(t);
@@ -181,8 +178,9 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 	/**
 	 * @param updateAsync the updateAsync to set
 	 */
-	public void setUpdateAsync(boolean updateAsync) {
+	public ELDomainValueModel<T,V> setUpdateAsync(boolean updateAsync) {
 		this.updateAsync = updateAsync;
+		return this;
 	}
 
 

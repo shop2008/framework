@@ -24,4 +24,5 @@ public @interface Field {
 	String valueKey() default "";
 	String binding()default "";
 	String converter() default "";
+	boolean upateAsync() default false;
 }

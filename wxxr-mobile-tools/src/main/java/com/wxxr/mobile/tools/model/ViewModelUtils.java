@@ -744,6 +744,7 @@ public abstract class ViewModelUtils {
 		if((s = StringUtils.trimToNull(field.binding())) != null){
 			FieldBindingModel binding = new FieldBindingModel();
 			binding.setExpression(s);
+			binding.setUpdateAsync(field.upateAsync());
 			model.setBinding(binding);
 		}
 		String key = field.valueKey();
