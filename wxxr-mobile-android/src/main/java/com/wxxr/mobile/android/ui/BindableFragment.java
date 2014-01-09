@@ -6,6 +6,9 @@ package com.wxxr.mobile.android.ui;
 import static com.wxxr.mobile.android.ui.BindingUtils.getBindingDescriptor;
 import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
 import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
+
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -112,6 +115,12 @@ public abstract class BindableFragment extends Fragment {
 			public void hideView() {
 				((IBindableActivity)getActivity()).hideFragment(getViewId());
 			}
+
+			@Override
+			public Map<String, String> getBindingAttrSet() {
+				return null;
+			}
+			
 		}, getBindingDescriptor(getViewId()));
 		
 		if(bindingView instanceof ViewBase){

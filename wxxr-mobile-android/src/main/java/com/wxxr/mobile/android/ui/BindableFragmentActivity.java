@@ -87,6 +87,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				@Override
 				public void hideView() {
 				}
+
+				@Override
+				public Map<String, String> getBindingAttrSet() {
+					return null;
+				}
 			}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
 			this.contentRoot = (View)toolbarViewBingding.getUIControl();
 			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
@@ -121,6 +126,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			@Override
 			public void hideView() {
 				finish();
+			}
+
+			@Override
+			public Map<String, String> getBindingAttrSet() {
+				return null;
 			}
 		}, getBindingDescriptor(getBindingPageId()));
 

@@ -1,5 +1,7 @@
 package com.wxxr.mobile.android.ui.binding;
 
+import java.util.Map;
+
 import android.content.Context;
 import android.view.View;
 
@@ -63,6 +65,11 @@ public class CascadeAndroidBindingCtx implements IAndroidBindingContext {
 	@Override
 	public void hideView() {
 		this.parent.hideView();
+	}
+
+	@Override
+	public Map<String, String> getBindingAttrSet() {
+		return this.parent.getBindingAttrSet();
 	}
 
 }

@@ -92,7 +92,14 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					public void hideView() {
 						bindingContext.hideView();
 					}
+
+					@Override
+					public Map<String, String> getBindingAttrSet() {
+						return params;
+					}
+					
 				}, fieldName, params);
+				
 				binding.init(runtimeContext);				
 				if(decoratorName != null){
 					binding.doDecorate(StringUtils.split(decoratorName,','));
@@ -214,7 +221,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 					fieldDecor = val.substring(idx+1);
 					val = val.substring(0,idx);
 				}
-				HashMap<String, String> params = new HashMap<String, String>();
+				final HashMap<String, String> params = new HashMap<String, String>();
 				HashMap<String, String> events = new HashMap<String, String>();
 				int cnt = attrSet.getAttributeCount();
 				for (int i = 0; i < cnt; i++) {
@@ -275,6 +282,12 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 								public void hideView() {
 									bindingContext.hideView();
 								}
+
+								@Override
+								public Map<String, String> getBindingAttrSet() {
+									return params;
+								}
+								
 							}, val, cmdName, params);
 							if(eventDecor != null){
 								eBinding.doDecorate(StringUtils.split(eventDecor,','));

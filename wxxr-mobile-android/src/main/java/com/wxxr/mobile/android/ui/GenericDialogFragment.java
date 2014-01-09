@@ -4,6 +4,9 @@
 package com.wxxr.mobile.android.ui;
 
 import static com.wxxr.mobile.android.ui.BindingUtils.getNavigator;
+
+import java.util.Map;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -166,6 +169,12 @@ public class GenericDialogFragment extends DialogFragment {
 			public void hideView() {
 				getDialog().dismiss();
 			}
+
+			@Override
+			public Map<String, String> getBindingAttrSet() {
+				return null;
+			}
+			
 		}, bDesc);
 		View view = (View)binding.getUIControl();
 		view.setTag(binding);
