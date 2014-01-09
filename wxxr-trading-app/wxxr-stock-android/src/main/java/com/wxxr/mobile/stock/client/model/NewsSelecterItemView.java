@@ -21,7 +21,7 @@ import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
-@View(name="NewsSelecterItemView")
+@View(name="NewsSelecterItemView",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.news_item_layout")
 public abstract class NewsSelecterItemView extends ViewBase implements IModelUpdater{
 
