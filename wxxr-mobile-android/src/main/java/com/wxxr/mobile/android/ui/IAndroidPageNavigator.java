@@ -29,5 +29,4 @@ public interface IAndroidPageNavigator extends IPageNavigator {
 	
 	void startActivity(Intent intent);
 	
-	void startService(Intent intent);
 }
