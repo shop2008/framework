@@ -18,6 +18,9 @@ import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
+import com.wxxr.mobile.core.microkernel.api.IServiceDelegateHolder;
+import com.wxxr.mobile.core.microkernel.api.IStatefulService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.session.api.ISessionManager;
@@ -90,7 +93,7 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * @author wangxuyang
  * 
  */
-public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService {
+public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService, IStatefulService {
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
@@ -162,27 +165,27 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	/**
 	 * 我的交易盘列表
 	 */
-	protected TradingAccountListBean myTradingAccounts = new TradingAccountListBean();
+	protected TradingAccountListBean myTradingAccounts;
 	/**
 	 * 我的交易盘详情
 	 */
-	protected TradingAccountBean myTradingAccount = new TradingAccountBean();
+	protected TradingAccountBean myTradingAccount;
 	/**
 	 * 成交详情
 	 */
-	protected DealDetailBean dealDetailBean = new DealDetailBean();
+	protected DealDetailBean dealDetailBean;
 	/**
 	 * 清算详情
 	 */
-	protected AuditDetailBean auditDetailBean = new AuditDetailBean();
+	protected AuditDetailBean auditDetailBean;
 	/**
 	 * 创建交易盘的参数配置
 	 */
-	protected UserCreateTradAccInfoBean createTDConfig = new UserCreateTradAccInfoBean();
+	protected UserCreateTradAccInfoBean createTDConfig;
 	/**
 	 * 交易订单记录
 	 */
-	protected TradingRecordListBean recordsBean = new TradingRecordListBean();
+	protected TradingRecordListBean recordsBean;
 	
 	//交易盘
     private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
@@ -218,15 +221,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
-		
-        tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
-        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo",30);
-        tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
-        dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
-        auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
-        voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List>("voucherDetailsBean");
-      
-        		
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
@@ -246,6 +240,24 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         context.getService(ICommandExecutor.class).registerCommandHandler(ApplyDrawMoneyHandler.COMMAND_NAME, new ApplyDrawMoneyHandler());
 
 		context.registerService(ITradingManagementService.class, this);
+	}
+
+	/**
+	 * 
+	 */
+	protected void doInit() {
+		myTradingAccounts = new TradingAccountListBean();
+		myTradingAccount = new TradingAccountBean();
+		dealDetailBean = new DealDetailBean();
+		auditDetailBean = new AuditDetailBean();
+		createTDConfig = new UserCreateTradAccInfoBean();
+		recordsBean = new TradingRecordListBean();
+		tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo",30);
+        tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
+        dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
+        auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
+        voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List>("voucherDetailsBean");
 	}
 
 	@Override
@@ -956,6 +968,381 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 	    addRequiredService(IUserIdentityManager.class);
+	}
+
+	@Override
+	public void destroy(Object serviceHandler) {
+		
+	}
+
+	@Override
+	public IServiceDecoratorBuilder getDecoratorBuilder() {
+		return new IServiceDecoratorBuilder() {
+			
+			@Override
+			public <T> T createServiceDecorator(Class<T> clazz,
+					final IServiceDelegateHolder<T> holder) {
+				if(clazz == ITradingManagementService.class){
+					return clazz.cast(new ITradingManagementService(){
+						
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getT0TradingAccountList()
+						 */
+						public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList() {
+							return ((ITradingManagementService)holder.getDelegate()).getT0TradingAccountList();
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getT1TradingAccountList()
+						 */
+						public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList() {
+							return ((ITradingManagementService)holder.getDelegate()).getT1TradingAccountList();
+						}
+
+						/**
+						 * @param strat
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getMyAllTradingAccountList(int, int)
+						 */
+						public TradingAccountListBean getMyAllTradingAccountList(
+								int strat, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getMyAllTradingAccountList(strat,
+									limit);
+						}
+
+						/**
+						 * @param strat
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getMySuccessTradingAccountList(int, int)
+						 */
+						public TradingAccountListBean getMySuccessTradingAccountList(
+								int strat, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getMySuccessTradingAccountList(
+									strat, limit);
+						}
+
+						/**
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getHomePageTradingAccountList()
+						 */
+						public TradingAccountListBean getHomePageTradingAccountList()
+								throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getHomePageTradingAccountList();
+						}
+
+						/**
+						 * @param acctID
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getTradingAccountInfo(java.lang.String)
+						 */
+						public TradingAccountBean getTradingAccountInfo(
+								String acctID) throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getTradingAccountInfo(acctID);
+						}
+
+						/**
+						 * @param captitalAmount
+						 * @param capitalRate
+						 * @param virtual
+						 * @param depositRate
+						 * @param assetType
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#createTradingAccount(java.lang.Long, float, boolean, float, java.lang.String)
+						 */
+						public void createTradingAccount(Long captitalAmount,
+								float capitalRate, boolean virtual,
+								float depositRate, String assetType)
+								throws StockAppBizException {
+							((ITradingManagementService)holder.getDelegate()).createTradingAccount(captitalAmount,
+									capitalRate, virtual, depositRate,
+									assetType);
+						}
+
+						/**
+						 * @param acctID
+						 * @param market
+						 * @param code
+						 * @param price
+						 * @param amount
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#buyStock(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void buyStock(String acctID, String market,
+								String code, String price, String amount)
+								throws StockAppBizException {
+							((ITradingManagementService)holder.getDelegate()).buyStock(acctID, market, code, price,
+									amount);
+						}
+
+						/**
+						 * @param acctID
+						 * @param market
+						 * @param code
+						 * @param price
+						 * @param amount
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#sellStock(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void sellStock(String acctID, String market,
+								String code, String price, String amount)
+								throws StockAppBizException {
+							((ITradingManagementService)holder.getDelegate()).sellStock(acctID, market, code, price,
+									amount);
+						}
+
+						/**
+						 * @param orderID
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#cancelOrder(java.lang.String)
+						 */
+						public void cancelOrder(String orderID) {
+							((ITradingManagementService)holder.getDelegate()).cancelOrder(orderID);
+						}
+
+						/**
+						 * @param acctID
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#clearTradingAccount(java.lang.String)
+						 */
+						public void clearTradingAccount(String acctID) {
+							((ITradingManagementService)holder.getDelegate()).clearTradingAccount(acctID);
+						}
+
+						/**
+						 * @param captitalAmount
+						 * @param capitalRate
+						 * @param virtual
+						 * @param stockMarket
+						 * @param stockCode
+						 * @param stockBuyAmount
+						 * @param depositRate
+						 * @param assetType
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#quickBuy(java.lang.Long, java.lang.String, boolean, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void quickBuy(Long captitalAmount,
+								String capitalRate, boolean virtual,
+								String stockMarket, String stockCode,
+								String stockBuyAmount, String depositRate,
+								String assetType) throws StockAppBizException {
+							((ITradingManagementService)holder.getDelegate()).quickBuy(captitalAmount, capitalRate,
+									virtual, stockMarket, stockCode,
+									stockBuyAmount, depositRate, assetType);
+						}
+
+						/**
+						 * @param accId
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getDealDetail(java.lang.String)
+						 */
+						public DealDetailBean getDealDetail(String accId) {
+							return ((ITradingManagementService)holder.getDelegate()).getDealDetail(accId);
+						}
+
+						/**
+						 * @param accId
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getAuditDetail(java.lang.String)
+						 */
+						public AuditDetailBean getAuditDetail(String accId) {
+							return ((ITradingManagementService)holder.getDelegate()).getAuditDetail(accId);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getEarnRank(int, int)
+						 */
+						public BindableListWrapper<EarnRankItemBean> getEarnRank(
+								int start, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getEarnRank(start, limit);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadEarnRank(int, int, boolean)
+						 */
+						public void reloadEarnRank(int start, int limit,
+								boolean wait4Finish) {
+							((ITradingManagementService)holder.getDelegate()).reloadEarnRank(start, limit, wait4Finish);
+						}
+
+						/**
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getTMegagameRank()
+						 */
+						public BindableListWrapper<MegagameRankBean> getTMegagameRank()
+								throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getTMegagameRank();
+						}
+
+						/**
+						 * @param wait4Finish
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadTMegagameRank(boolean)
+						 */
+						public void reloadTMegagameRank(boolean wait4Finish) {
+							((ITradingManagementService)holder.getDelegate()).reloadTMegagameRank(wait4Finish);
+						}
+
+						/**
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getT1MegagameRank()
+						 */
+						public BindableListWrapper<MegagameRankBean> getT1MegagameRank()
+								throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getT1MegagameRank();
+						}
+
+						/**
+						 * @param wait4Finish
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadT1MegagameRank(boolean)
+						 */
+						public void reloadT1MegagameRank(boolean wait4Finish) {
+							((ITradingManagementService)holder.getDelegate()).reloadT1MegagameRank(wait4Finish);
+						}
+
+						/**
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getRegularTicketRank()
+						 */
+						public BindableListWrapper<RegularTicketBean> getRegularTicketRank()
+								throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getRegularTicketRank();
+						}
+
+						/**
+						 * @param wait4Finish
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadRegularTicketRank(boolean)
+						 */
+						public void reloadRegularTicketRank(boolean wait4Finish) {
+							((ITradingManagementService)holder.getDelegate()).reloadRegularTicketRank(wait4Finish);
+						}
+
+						/**
+						 * @return
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getWeekRank()
+						 */
+						public BindableListWrapper<WeekRankBean> getWeekRank()
+								throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getWeekRank();
+						}
+
+						/**
+						 * @param wait4Finish
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadWeekRank(boolean)
+						 */
+						public void reloadWeekRank(boolean wait4Finish) {
+							((ITradingManagementService)holder.getDelegate()).reloadWeekRank(wait4Finish);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getUserCreateTradAccInfo()
+						 */
+						public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
+							return ((ITradingManagementService)holder.getDelegate()).getUserCreateTradAccInfo();
+						}
+
+						/**
+						 * @param acctID
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getTradingAccountRecord(java.lang.String, int, int)
+						 */
+						public BindableListWrapper<TradingRecordBean> getTradingAccountRecord(
+								String acctID, int start, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getTradingAccountRecord(acctID,
+									start, limit);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getTotalGain(int, int)
+						 */
+						public BindableListWrapper<GainBean> getTotalGain(
+								int start, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getTotalGain(start, limit);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+						 */
+						public BindableListWrapper<GainBean> getGain(int start,
+								int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getGain(start, limit);
+						}
+
+						/**
+						 * @param amount
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#applyDrawMoney(long)
+						 */
+						public void applyDrawMoney(long amount) {
+							((ITradingManagementService)holder.getDelegate()).applyDrawMoney(amount);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getVoucherDetails(int, int)
+						 */
+						public VoucherDetailsBean getVoucherDetails(int start,
+								int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getVoucherDetails(start, limit);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGainPayDetailDetails(int, int)
+						 */
+						public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(
+								int start, int limit) {
+							return ((ITradingManagementService)holder.getDelegate()).getGainPayDetailDetails(start,
+									limit);
+						}
+						
+						
+						
+					});
+				}else{
+					throw new IllegalArgumentException("Invalid service class :"+clazz);
+				}
+			}
+		};
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() {
+		try {
+			TradingManagementServiceImpl impl = (TradingManagementServiceImpl)super.clone();
+			impl.doInit();
+			return impl;
+		}catch (CloneNotSupportedException e) {
+			throw new RuntimeException("SHOULD NOT HAPPEN !");
+		}
 	}
 }
 
