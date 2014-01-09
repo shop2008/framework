@@ -135,17 +135,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	private BindableListWrapper<GainPayDetailBean> gainPayDetails;
     private GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO> gainPayDetail_cache;
 	
-    private GenericReloadableEntityCache<String,PersonalHomePageBean,List> personalHomePageBean_cache;
-    private GenericReloadableEntityCache<String,PersonalHomePageBean,List> otherpersonalHomePageBean_cache;
-    private GenericReloadableEntityCache<String,GainBean,List> gainBean_cache;
+    private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> personalHomePageBean_cache;
+    private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> otherpersonalHomePageBean_cache;
+    private GenericReloadableEntityCache<String,GainBean,List<GainBean>> gainBean_cache;
 
-    private GenericReloadableEntityCache<String,GainBean,List> otherGainBean_cache;
+    private GenericReloadableEntityCache<String,GainBean,List<GainBean>> otherGainBean_cache;
 	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
 	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
     
 
 	private UserBean myUserInfo;
-	private IReloadableEntityCache<String,UserBean> myUserInfoCache;
 
 	private IStockAppContext context;
 	/*private IEventListener listener = new IEventListener() {
@@ -201,8 +200,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		
 		
 	   
-	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List> ("gainBean");
-	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List>("gainBean");
+	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
+	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
@@ -228,8 +227,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		gainBean_cache=null;
 		otherGainBean_cache=null;
 		unreadRemindMessagesCache=null;
-	   // context.getService(IEventRouter.class).unregisterEventListener(LogoutEvent.class, listener);
-		
 	}
 
 
@@ -457,7 +454,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	@Override
 	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
 		if (otherpersonalHomePageBean_cache==null) {
-			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("otherpersonalHomePageBean");
+			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("otherpersonalHomePageBean");
 		}
 	    String key=userId;
         if (otherpersonalHomePageBean_cache.getEntity(key)==null){
@@ -474,7 +471,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
 		if (personalHomePageBean_cache==null) {
-			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List>("personalHomePageBean");
+			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("personalHomePageBean");
 		}
 	    String key="PersonalHomePageBean";
 	    if (personalHomePageBean_cache.getEntity(key)==null){
