@@ -16,6 +16,8 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -94,13 +96,22 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	String totalGain;
 	
 	
+	@Bean
+	List<String> imgList;
 	/**交易图片*/
-	@Field(valueKey="imageURI",binding="${dealDetail!=null?dealDetail.imgUrl[0]:'--'}",visibleWhen="${dealDetail!=null&&dealDetail.imgUrl!=null}")
-	String imgUrl;
+	@Field(valueKey="options",binding="${dealDetail.imgUrl!=null?dealDetail.imgUrl:null}",attributes={
+			@Attribute(name = "visible", value = "${(dealDetail!=null && dealDetail.getImgUrl()!=null && dealDetail.getImgUrl().size()>0)?true:false}")
+	})
+	List<String> imgData;
 	
 	/**
 	 * 初始化
 	 * */
+	@OnShow
+	protected void initData(){
+
+	}
+	
 	
 	@Override
 	public void updateModel(Object value) {
@@ -194,4 +205,9 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 
 		return null;
 	}	
+	
+	@OnUIDestroy
+	void destory(){
+		imgList = null;
+	}
 }

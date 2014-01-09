@@ -22,10 +22,11 @@ import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
+import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
+import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
-import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
@@ -56,6 +57,7 @@ import com.wxxr.mobile.stock.client.widget.RefreshableLayout;
 import com.wxxr.mobile.stock.client.widget.SellFiveDayMinuteLine;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 import com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup;
+import com.wxxr.mobile.stock.client.widget.imageViewPager;
 
 /**
  * @author neillin
@@ -77,6 +79,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(ViewGroupBase.class,ViewPager.class, new ViewPagerAdapterViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, Spinner.class, new SpinnerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, imageViewPager.class, new ImageViewPagerViewFieldBinder());
 	}
 
 	@Override

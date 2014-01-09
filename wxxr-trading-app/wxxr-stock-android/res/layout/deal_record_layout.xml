@@ -120,14 +120,12 @@
 			    android:layout_height="0.5dp"
 			    android:background="#303030"
 			    />
-		    <ImageView
-		        android:id="@+id/imageView1"
-		        android:layout_width="fill_parent"
-		        android:layout_height="140dp"
-		        android:background="@color/black"
-		        android:layout_gravity="center" 
-		        bind:field="imgUrl" />
-		    
+		    <com.wxxr.mobile.stock.client.widget.imageViewPager 
+			    android:layout_width="fill_parent"
+			    android:layout_height="140dp"
+			    bind:field="imgData"
+			    android:background="@color/black">
+			</com.wxxr.mobile.stock.client.widget.imageViewPager>
 		    <LinearLayout
 		        android:id="@+id/deal_record_label"
 		        android:layout_width="match_parent"
