@@ -245,15 +245,15 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 				registerBean("nameBean", this.nameBean);
 				registerBean("marketBean", this.marketBean);
 				registerBean("minuteHeaderType", this.minuteHeaderType);
-//				if(this.codeBean!=null && this.marketBean!=null){
-//					minuteMap.put("code", this.codeBean);
-//					minuteMap.put("market", this.marketBean);
-//					this.map = minuteMap;
-//					registerBean("map", this.map);
+				if(this.codeBean!=null && this.marketBean!=null){
+					minuteMap.put("code", this.codeBean);
+					minuteMap.put("market", this.marketBean);
+					this.map = minuteMap;
+					registerBean("map", this.map);
 //					if(infoCenterService!=null){
 //						infoCenterService.getMinuteline(this.map);
 //					}
-//				}
+				}
 				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
 					this.stockType = "0";
 				}	
