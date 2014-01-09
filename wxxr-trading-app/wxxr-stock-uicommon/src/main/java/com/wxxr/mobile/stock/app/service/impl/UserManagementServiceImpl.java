@@ -11,12 +11,18 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.annotation.StatefulService;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
+import com.wxxr.mobile.core.microkernel.api.IServiceDelegateHolder;
+import com.wxxr.mobile.core.microkernel.api.IStatefulService;
+import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.session.api.ISessionManager;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
@@ -40,7 +46,6 @@ import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.app.service.IUserManagementServiceFactory;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler.ReadClientInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
@@ -94,8 +99,7 @@ import com.wxxr.stock.trading.ejb.api.UserAssetVO;
  * @author neillin
  * 
  */
-@StatefulService(factoryClass=IUserManagementServiceFactory.class)
-public class UserManagementServiceImpl implements IUserManagementService{
+public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> implements IUserManagementService, IStatefulService {
 	
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl");
 
@@ -211,6 +215,8 @@ public class UserManagementServiceImpl implements IUserManagementService{
 
 
 	public void stopService() {
+		context.unregisterService(IUserManagementService.class, this);
+
 		userAssetBeanCache=null;
 		voucherBeanCache=null;
 		remindMessagesCache=null;
@@ -223,7 +229,6 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		otherGainBean_cache=null;
 		unreadRemindMessagesCache=null;
 	   // context.getService(IEventRouter.class).unregisterEventListener(LogoutEvent.class, listener);
-		context.unregisterService(IUserManagementService.class, this);
 		
 	}
 
@@ -782,13 +787,324 @@ public class UserManagementServiceImpl implements IUserManagementService{
 		}
 	}
 
-	@Override
-	public void init(IStockAppContext context) {
-		this.context=context;
-	}
 
 	protected <S> S getService(Class<S> clazz) {
 		return this.context.getService(clazz);
+	}
+
+
+
+	@Override
+	public void destroy(Object serviceHandler) {
+		
+	}
+
+
+
+	@Override
+	public IServiceDecoratorBuilder getDecoratorBuilder() {
+		return new IServiceDecoratorBuilder() {
+			
+			@Override
+			public <T> T createServiceDecorator(Class<T> clazz,
+					final IServiceDelegateHolder<T> holder) {
+				if(clazz == IUserManagementService.class){
+					return clazz.cast(new IUserManagementService() {
+						
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyUserInfo()
+						 */
+						public UserBean getMyUserInfo() {
+							return ((IUserManagementService)holder.getDelegate()).getMyUserInfo();
+						}
+
+						/**
+						 * @param userId
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserInfoById(java.lang.String)
+						 */
+						public UserBean getUserInfoById(String userId) {
+							return ((IUserManagementService)holder.getDelegate()).getUserInfoById(userId);
+						}
+
+						/**
+						 * @param oldPwd
+						 * @param newPwd
+						 * @param newPwd2
+						 * @throws StockAppBizException
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#updatePassword(java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void updatePassword(String oldPwd,
+								String newPwd, String newPwd2)
+								throws StockAppBizException {
+							((IUserManagementService)holder.getDelegate()).updatePassword(oldPwd, newPwd, newPwd2);
+						}
+
+						/**
+						 * @param on
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#pushMessageSetting(boolean)
+						 */
+						public void pushMessageSetting(boolean on) {
+							((IUserManagementService)holder.getDelegate()).pushMessageSetting(on);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPushMessageSetting()
+						 */
+						public boolean getPushMessageSetting() {
+							return ((IUserManagementService)holder.getDelegate()).getPushMessageSetting();
+						}
+
+						/**
+						 * @param isRead
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#setRegRulesReaded(boolean)
+						 */
+						public void setRegRulesReaded(boolean isRead) {
+							((IUserManagementService)holder.getDelegate()).setRegRulesReaded(isRead);
+						}
+
+						/**
+						 * @param userId
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#fetchUserScoreInfo(java.lang.String)
+						 */
+						public ScoreInfoBean fetchUserScoreInfo(String userId) {
+							return ((IUserManagementService)holder.getDelegate()).fetchUserScoreInfo(userId);
+						}
+
+						/**
+						 * @param bankName
+						 * @param bankAddr
+						 * @param bankNum
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#switchBankCard(java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void switchBankCard(String bankName,
+								String bankAddr, String bankNum) {
+							((IUserManagementService)holder.getDelegate()).switchBankCard(bankName, bankAddr, bankNum);
+						}
+
+						/**
+						 * @param accountName
+						 * @param bankName
+						 * @param bankAddr
+						 * @param bankNum
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#withDrawCashAuth(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+						 */
+						public void withDrawCashAuth(String accountName,
+								String bankName, String bankAddr, String bankNum) {
+							((IUserManagementService)holder.getDelegate()).withDrawCashAuth(accountName, bankName,
+									bankAddr, bankNum);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserAuthInfo()
+						 */
+						public AuthInfo getUserAuthInfo() {
+							return ((IUserManagementService)holder.getDelegate()).getUserAuthInfo();
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyUserScoreInfo()
+						 */
+						public ScoreInfoBean getMyUserScoreInfo() {
+							return ((IUserManagementService)holder.getDelegate()).getMyUserScoreInfo();
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyTradeDetailInfo()
+						 */
+						public TradeDetailListBean getMyTradeDetailInfo() {
+							return ((IUserManagementService)holder.getDelegate()).getMyTradeDetailInfo();
+						}
+
+						/**
+						 * @param userId
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getOtherPersonalHomePage(java.lang.String)
+						 */
+						public PersonalHomePageBean getOtherPersonalHomePage(
+								String userId) {
+							return ((IUserManagementService)holder.getDelegate()).getOtherPersonalHomePage(userId);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyPersonalHomePage()
+						 */
+						public PersonalHomePageBean getMyPersonalHomePage() {
+							return ((IUserManagementService)holder.getDelegate()).getMyPersonalHomePage();
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @param virtual
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMorePersonalRecords(int, int, boolean)
+						 */
+						public BindableListWrapper<GainBean> getMorePersonalRecords(
+								int start, int limit, boolean virtual) {
+							return ((IUserManagementService)holder.getDelegate()).getMorePersonalRecords(start,
+									limit, virtual);
+						}
+
+						/**
+						 * @param userId
+						 * @param start
+						 * @param limit
+						 * @param virtual
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMoreOtherPersonal(java.lang.String, int, int, boolean)
+						 */
+						public BindableListWrapper<GainBean> getMoreOtherPersonal(
+								String userId, int start, int limit,
+								boolean virtual) {
+							return ((IUserManagementService)holder.getDelegate()).getMoreOtherPersonal(userId, start,
+									limit, virtual);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserAssetBean()
+						 */
+						public UserAssetBean getUserAssetBean() {
+							return ((IUserManagementService)holder.getDelegate()).getUserAssetBean();
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getVoucherBean()
+						 */
+						public VoucherBean getVoucherBean() {
+							return ((IUserManagementService)holder.getDelegate()).getVoucherBean();
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getRemindMessageBean()
+						 */
+						public BindableListWrapper<RemindMessageBean> getRemindMessageBean() {
+							return ((IUserManagementService)holder.getDelegate()).getRemindMessageBean();
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPullMessageBean(int, int)
+						 */
+						public BindableListWrapper<PullMessageBean> getPullMessageBean(
+								int start, int limit) {
+							return ((IUserManagementService)holder.getDelegate()).getPullMessageBean(start, limit);
+						}
+
+						/**
+						 * @param nickName
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#updateNickName(java.lang.String)
+						 */
+						public void updateNickName(String nickName) {
+							((IUserManagementService)holder.getDelegate()).updateNickName(nickName);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getGPDetails(int, int)
+						 */
+						public BindableListWrapper<GainPayDetailBean> getGPDetails(
+								int start, int limit) {
+							return ((IUserManagementService)holder.getDelegate()).getGPDetails(start, limit);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#refreshUserInfo()
+						 */
+						public UserBean refreshUserInfo() {
+							return ((IUserManagementService)holder.getDelegate()).refreshUserInfo();
+						}
+
+						/**
+						 * @param id
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#readRemindMessage(java.lang.String)
+						 */
+						public void readRemindMessage(String id) {
+							((IUserManagementService)holder.getDelegate()).readRemindMessage(id);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUnreadRemindMessages()
+						 */
+						public BindableListWrapper<RemindMessageBean> getUnreadRemindMessages() {
+							return ((IUserManagementService)holder.getDelegate()).getUnreadRemindMessages();
+						}
+
+						/**
+						 * 
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#readAllUnremindMessage()
+						 */
+						public void readAllUnremindMessage() {
+							((IUserManagementService)holder.getDelegate()).readAllUnremindMessage();
+						}
+
+						/**
+						 * @param id
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#readPullMesage(long)
+						 */
+						public void readPullMesage(long id) {
+							((IUserManagementService)holder.getDelegate()).readPullMesage(id);
+						}
+
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getClientInfo()
+						 */
+						public ClientInfoBean getClientInfo() {
+							return ((IUserManagementService)holder.getDelegate()).getClientInfo();
+						}
+						
+					});
+				}
+				throw new IllegalArgumentException("Invalid service class :"+clazz);
+			}
+		};
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone()  {
+		try {
+			UserManagementServiceImpl impl = (UserManagementServiceImpl)super.clone();
+			impl.otherUserInfo = new UserBean();
+			impl.myScoreInfo = new ScoreInfoBean();
+			impl.myTradeDetails = new TradeDetailListBean();
+			return impl;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException("SHOULD NOT HAPPEN !");
+		}
+	}
+
+
+
+	@Override
+	protected void initServiceDependency() {
+		addRequiredService(ISessionManager.class);
+		addRequiredService(IRestProxyService.class);
+		addRequiredService(IEntityLoaderRegistry.class);
+		addRequiredService(ICommandExecutor.class);
+	    addRequiredService(IPreferenceManager.class);
+	    addRequiredService(IUserIdentityManager.class);
 	}
 
 

@@ -17,7 +17,10 @@ import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.session.api.ISessionManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
@@ -47,7 +50,6 @@ import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDraw
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
-import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.GainPayDetailsEntityLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
@@ -88,9 +90,8 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
  * @author wangxuyang
  * 
  */
-public class TradingManagementServiceImpl implements ITradingManagementService {
+public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService {
 
-	private IStockAppContext context;
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
@@ -244,7 +245,7 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
         context.getService(ICommandExecutor.class).registerCommandHandler(ClearTradingAccountCommand.Name, new ClearTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(ApplyDrawMoneyHandler.COMMAND_NAME, new ApplyDrawMoneyHandler());
 
-//		context.registerService(ITradingManagementService.class, this);
+		context.registerService(ITradingManagementService.class, this);
 	}
 
 	@Override
@@ -944,13 +945,17 @@ public class TradingManagementServiceImpl implements ITradingManagementService {
         voucherDetailsBean_cache.clear();
 	}
 
-	@Override
-	public void init(IStockAppContext context) {
-		this.context=context;
-	}
 
 	protected <S> S getService(Class<S> clazz) {
 		return this.context.getService(clazz);
+	}
+
+	@Override
+	protected void initServiceDependency() {
+		addRequiredService(ISessionManager.class);
+		addRequiredService(IRestProxyService.class);
+		addRequiredService(IEntityLoaderRegistry.class);
+	    addRequiredService(IUserIdentityManager.class);
 	}
 }
 
