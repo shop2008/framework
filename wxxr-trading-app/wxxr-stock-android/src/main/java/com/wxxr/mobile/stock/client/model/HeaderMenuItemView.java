@@ -49,8 +49,8 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Field(valueKey="visible", binding="${userInfo != null ? true : false}")
 	boolean userRegistered;
 	
-	@Bean(type=BindingType.Pojo, express="${usrMgr.remindMessageBean}")
-	BindableListWrapper<RemindMessageBean> messageBeans;
+	/*@Bean(type=BindingType.Pojo, express="${usrMgr.remindMessageBean}")
+	BindableListWrapper<RemindMessageBean> messageBeans;*/
 	
 	@Field(valueKey="imageURI", binding="${(userInfo!=null&&userInfo.userPic!=null)?userInfo.userPic:'resourceId:drawable/head4'}")
 	String headIcon;
