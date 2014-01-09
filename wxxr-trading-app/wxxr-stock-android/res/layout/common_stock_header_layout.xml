@@ -35,7 +35,6 @@
                 android:text="--"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 bind:field="name1" />
 
             <TextView

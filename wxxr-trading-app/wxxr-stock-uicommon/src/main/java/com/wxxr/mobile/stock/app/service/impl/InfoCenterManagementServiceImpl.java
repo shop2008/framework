@@ -185,7 +185,7 @@ public class InfoCenterManagementServiceImpl extends
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("code", code);
         p.put("market", market);
-        this.stockMinuteKBean_cache.forceReload(p,false);
+        this.stockMinuteKBean_cache.forceReload(p,true);
         return stockMinuteKBean_cache.getEntity(mc);
 	}
 	//K线
@@ -212,7 +212,7 @@ public class InfoCenterManagementServiceImpl extends
           Map<String, Object> p=new HashMap<String, Object>(); 
           p.put("code", code);
           p.put("market", market);
-          this.dayStockLineBean_cache.forceReload(p,false);
+          this.dayStockLineBean_cache.forceReload(p,true);
           dayStockLineBean_cache.setCommandParameters(p);
           return dayline;
 
@@ -255,7 +255,7 @@ public class InfoCenterManagementServiceImpl extends
         params.put("code", code);
         params.put("market", market);
 
-        this.stockQuotationBean_cache.forceReload(params,false);
+        this.stockQuotationBean_cache.forceReload(params,true);
         return stockQuotationBean_cache.getEntity(mc);
     }
 	@Override
@@ -354,7 +354,7 @@ public class InfoCenterManagementServiceImpl extends
 	        Map<String, Object> p=new HashMap<String, Object>(); 
 	        p.put("code", code);
 	        p.put("market", market);
-	        this.fiveDaystockMinuteKBean_cache.forceReload(p,false);
+	        this.fiveDaystockMinuteKBean_cache.forceReload(p,true);
 		return stockMinuteKBeans;
 	}
 	class StockMinuteKBeanComparator implements Comparator<StockMinuteKBean>{

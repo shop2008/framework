@@ -50,6 +50,9 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 		
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	StockBaseInfo stockInfoBean;
+	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000f"),
 			@Parameter(name="format",value="%.2f"),
@@ -137,11 +140,11 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	/**股票名称*/
 	
 //	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.status == 1)?nameBean:((quotationBean!=null && quotationBean.status == 2)?'停牌':'--')}")
-	@Field(valueKey="text",binding="${nameBean!=null?nameBean:'--'}")
+	@Field(valueKey="text",binding="${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String name;
 	
 	/**股票名称*/
-	@Field(valueKey="text",binding="${nameBean!=null?nameBean:'--'}")
+	@Field(valueKey="text",binding="${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String name1;
 	
 	/**股票代码+市场代码*/
@@ -232,25 +235,25 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					this.marketBean = stockSelection.getMarket();
 					this.minuteHeaderType = stockSelection.getType();
 					if(this.marketBean!=null && this.codeBean!=null){
-						StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
-						if(baseInfo!=null && baseInfo.getName()!=null){
-							this.nameBean = baseInfo.getName();
-						}
+//						StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
+//						if(baseInfo!=null && baseInfo.getName()!=null){
+//							this.nameBean = baseInfo.getName();
+//						}
 					}
 				}
 				registerBean("codeBean", this.codeBean);
 				registerBean("nameBean", this.nameBean);
 				registerBean("marketBean", this.marketBean);
 				registerBean("minuteHeaderType", this.minuteHeaderType);
-				if(this.codeBean!=null && this.marketBean!=null){
-					minuteMap.put("code", this.codeBean);
-					minuteMap.put("market", this.marketBean);
-					this.map = minuteMap;
-					registerBean("map", this.map);
-					if(infoCenterService!=null){
-						infoCenterService.getMinuteline(this.map);
-					}
-				}
+//				if(this.codeBean!=null && this.marketBean!=null){
+//					minuteMap.put("code", this.codeBean);
+//					minuteMap.put("market", this.marketBean);
+//					this.map = minuteMap;
+//					registerBean("map", this.map);
+//					if(infoCenterService!=null){
+//						infoCenterService.getMinuteline(this.map);
+//					}
+//				}
 				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
 					this.stockType = "0";
 				}	

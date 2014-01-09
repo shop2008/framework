@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUICreate;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -412,22 +413,8 @@ public abstract class BuyStockDetailPage extends PageBase implements
 		return "";
 	}
 	
-	@OnCreate
+	@OnUICreate
 	protected void initStock() {
-		
-	}
-	
-	@OnShow
-	void startStockSearch() {
-		if(hasShow) {
-			if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
-				hide();
-			} else {
-				
-			}
-			return;
-		} else {
-		}
 		if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
 			AppUtils.invokeLater(new Runnable() {
 				
@@ -439,6 +426,19 @@ public abstract class BuyStockDetailPage extends PageBase implements
 					hasShow = true;
 				}
 			}, 100, TimeUnit.MILLISECONDS);
+		}
+	}
+	
+	@OnShow
+	protected void startStockSearch() {
+		if(hasShow) {
+			if(StringUtils.isBlank(marketBean) || StringUtils.isBlank(codeBean)) {
+				hide();
+			} else {
+				
+			}
+			return;
+		} else {
 		}
 	}
 	

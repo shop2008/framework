@@ -171,22 +171,22 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 			registerBean("nameBean", this.nameBean);
 			registerBean("marketBean", this.marketBean);
 			registerBean("type", this.type);
-			try {
-				if(infoCenterService != null) {
-					BindableListWrapper<StockLineBean> bean = infoCenterService.getDayStockline(codeBean, marketBean);
-					this.lineListBean = bean;
-					registerBean("lineListBean", this.lineListBean);
-				}
-				if(stockInfoSyncService != null) {
-					StockBaseInfo info  = stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-					this.stockInfoBean = info;
-					registerBean("stockInfoBean", this.stockInfoBean);
-				}
-			} catch (RequiredNetNotAvailablexception e) {
-				log.warn("selectionChanged getDayStockline", e);
-			} catch (Exception e) {
-				log.warn("selectionChanged getDayStockline", e);
-			}
+//			try {
+//				if(infoCenterService != null) {
+//					BindableListWrapper<StockLineBean> bean = infoCenterService.getDayStockline(codeBean, marketBean);
+//					this.lineListBean = bean;
+//					registerBean("lineListBean", this.lineListBean);
+//				}
+//				if(stockInfoSyncService != null) {
+//					StockBaseInfo info  = stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+//					this.stockInfoBean = info;
+//					registerBean("stockInfoBean", this.stockInfoBean);
+//				}
+//			} catch (RequiredNetNotAvailablexception e) {
+//				log.warn("selectionChanged getDayStockline", e);
+//			} catch (Exception e) {
+//				log.warn("selectionChanged getDayStockline", e);
+//			}
 		}
 	}
 	
