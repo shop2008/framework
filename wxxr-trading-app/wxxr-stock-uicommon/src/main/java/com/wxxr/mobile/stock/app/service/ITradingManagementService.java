@@ -44,13 +44,7 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	TradingAccountListBean getMySuccessTradingAccountList(int strat,int limit);
-	/**
-	 * 获取当前用户首页交易盘列表
-	 * 
-	 * @return
-	 * @throws StockAppBizException
-	 */
-	TradingAccountListBean getHomePageTradingAccountList() throws StockAppBizException;
+	
 	/***
 	 * 
 	 * @param acctID - 交易盘Id

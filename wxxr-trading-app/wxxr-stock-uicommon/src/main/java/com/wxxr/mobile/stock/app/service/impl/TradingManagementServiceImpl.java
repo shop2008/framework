@@ -188,30 +188,22 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	protected TradingRecordListBean recordsBean;
 	
 	//交易盘
-    private GenericReloadableEntityCache<String,TradingAccInfoBean,List> tradingAccInfo_cache;
+    private GenericReloadableEntityCache<String,TradingAccInfoBean,List<TradingAccInfoBean>> tradingAccInfo_cache;
     //交易盘详细信息
-    private GenericReloadableEntityCache<Long,TradingAccountBean,List> tradingAccountBean_cache;
+    private GenericReloadableEntityCache<Long,TradingAccountBean,List<TradingAccountBean>> tradingAccountBean_cache;
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
     
-    private GenericReloadableEntityCache<String,DealDetailBean,List> dealDetailBean_cache;
-    private GenericReloadableEntityCache<String,AuditDetailBean,List> auditDetailBean_cache;
-    private GenericReloadableEntityCache<String,VoucherDetailsBean,List> voucherDetailsBean_cache;
+    private GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> dealDetailBean_cache;
+    private GenericReloadableEntityCache<String,AuditDetailBean,List<AuditDetailBean>> auditDetailBean_cache;
+    private GenericReloadableEntityCache<String,VoucherDetailsBean,List<VoucherDetailsBean>> voucherDetailsBean_cache;
     
-    private GenericReloadableEntityCache<String,GainPayDetailBean,List> gainPayDetailBean_cache;
+    private GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>> gainPayDetailBean_cache;
 
     protected BindableListWrapper<GainPayDetailBean> vgainPayDetails;
 
 
 	// =================module life cycle methods=============================
-	
-	
-//	@Override
-//	protected void initServiceDependency() {
-//		addRequiredService(IRestProxyService.class);
-//		addRequiredService(IEntityLoaderRegistry.class);
-//	}
-
 	@Override
 	public void startService() {
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
@@ -252,12 +244,12 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		auditDetailBean = new AuditDetailBean();
 		createTDConfig = new UserCreateTradAccInfoBean();
 		recordsBean = new TradingRecordListBean();
-		tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List>("tradingAccInfo",30);
-        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List>("TradingAccountInfo",30);
-        tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List>("tradingRecordBean");
-        dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List> ("dealDetailBean");
-        auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List> ("auditDetailBean");
-        voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List>("voucherDetailsBean");
+		tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List<TradingAccInfoBean>>("tradingAccInfo",30);
+        tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List<TradingAccountBean>>("TradingAccountInfo",30);
+        tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List<TradingRecordBean>>("tradingRecordBean");
+        dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> ("dealDetailBean");
+        auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List<AuditDetailBean>> ("auditDetailBean");
+        voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List<VoucherDetailsBean>>("voucherDetailsBean");
 	}
 
 	@Override
@@ -371,7 +363,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	public void clearTradingAccount(final String acctID) {
 		try {
-			Future f = context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID));
+			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID));
 			Object result = f.get();
 			if (result != null && result instanceof StockResultVO) {
 	            StockResultVO vo=(StockResultVO) result;
@@ -478,13 +470,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				}
 			}
 			myTradingAccounts.setSuccessTradingAccounts(beanList);
-//			myTradingAccounts.setVirtualTradingAccounts(vbeanList);
-//			myTradingAccounts.setRealTradingAccounts(rbeanList);
 		}
 		return myTradingAccounts;
 	}
 	//交易记录
-    private GenericReloadableEntityCache<Long,TradingRecordBean,List> tradingRecordBean_cache;
+    private GenericReloadableEntityCache<Long,TradingRecordBean,List<TradingRecordBean>> tradingRecordBean_cache;
 
 	public BindableListWrapper<TradingRecordBean> getTradingAccountRecord(final String acctID,
             final int start, final int limit){
@@ -657,7 +647,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
                 if (entity.getStatus()!=1){
                     return true;
                 }
-                return false;
+               return false;
             }
             
         }, new TradingAccInfoBeanComparator());
@@ -674,14 +664,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
             return 0;
         }
     }
-    //delete
-    @Override
-    public TradingAccountListBean getHomePageTradingAccountList() throws StockAppBizException {
-        TradingAccountListBean b=new TradingAccountListBean();
-        
-        return null;
-    }
-    
    //获取参数
     @Override
     public UserCreateTradAccInfoBean getUserCreateTradAccInfo() {
@@ -699,7 +681,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     @Override
     public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate,String assetType) throws StockAppBizException {
 		try {
-			Future f = context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
+			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
 			Object result = f.get();
 			if (result != null && result instanceof StockResultVO) {
 	            StockResultVO vo=(StockResultVO) result;
@@ -734,10 +716,10 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     @Override
     public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
         try {
-        	Future f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
-           Object result= f.get();
-           if (result != null && result instanceof StockResultVO) {
-               StockResultVO vo=(StockResultVO) result;
+        	Future<StockResultVO> f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
+        	StockResultVO result= f.get();
+           if (result != null ) {
+               StockResultVO vo=result;
                    if (vo.getSuccOrNot() == 0) {
                        if (log.isDebugEnabled()) {
                            log.debug("Failed to buyStock, caused by "
@@ -769,9 +751,9 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     @Override
     public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
 		try {
-			Future f = context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount));
-			Object result = f.get();
-	    	if (result != null && result instanceof StockResultVO) {
+			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount));
+			StockResultVO result = f.get();
+	    	if (result != null) {
 	            StockResultVO vo=(StockResultVO) result;
 	                if (vo.getSuccOrNot() == 0) {
 	                    if (log.isDebugEnabled()) {
@@ -803,11 +785,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     @Override
     public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate,String assetType ) throws StockAppBizException {
     	try {
-    		Future f = context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType));
-			Object result = f.get();
-			if (result != null && result instanceof StockResultVO) {
+    		Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType));
+    		StockResultVO result = f.get();
+			if (result != null) {
               StockResultVO vo=(StockResultVO) result;
-                  if (vo.getSuccOrNot() == 0) {
+              if (vo.getSuccOrNot() == 0) {
                       if (log.isDebugEnabled()) {
                           log.debug("Failed quickBuy, caused by "
                                   + vo.getCause());
@@ -855,7 +837,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     @Override
     public void cancelOrder(String orderID) {
 		try {
-			Future f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
+			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
 			Object result = f.get();
 	    	if (result != null && result instanceof StockResultVO) {
 	            StockResultVO vo=(StockResultVO) result;
@@ -937,7 +919,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		if(this.vgainPayDetails == null){
 			if(this.gainPayDetailBean_cache == null){
-				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List>("vgainPayDetails");
+				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>>("vgainPayDetails");
 			}
 			this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
 		}
@@ -1024,16 +1006,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 								int strat, int limit) {
 							return ((ITradingManagementService)holder.getDelegate()).getMySuccessTradingAccountList(
 									strat, limit);
-						}
-
-						/**
-						 * @return
-						 * @throws StockAppBizException
-						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getHomePageTradingAccountList()
-						 */
-						public TradingAccountListBean getHomePageTradingAccountList()
-								throws StockAppBizException {
-							return ((ITradingManagementService)holder.getDelegate()).getHomePageTradingAccountList();
 						}
 
 						/**
