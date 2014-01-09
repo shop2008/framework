@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.os.SystemClock;
 
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
@@ -25,14 +24,12 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
@@ -149,7 +146,7 @@ public abstract class UserPage extends PageBase {
 		return null;
 	}
 
-	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting_small") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
 	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
