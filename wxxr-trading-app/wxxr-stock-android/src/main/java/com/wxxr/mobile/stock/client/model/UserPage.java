@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import android.os.SystemClock;
 
 import com.wxxr.mobile.android.app.AppUtils;
@@ -41,65 +40,65 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  * 
  * @author renwenjie
  */
-@View(name = "userPage", withToolbar=true, description="我的主页", provideSelection=true)
+@View(name = "userPage", withToolbar = true, description = "我的主页", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
-public abstract class UserPage extends PageBase  {
+public abstract class UserPage extends PageBase {
 
-	@Bean(type=BindingType.Service)
+	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
-	
-	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;
-	
-	@Menu(items={"left","right"})
+
+	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
-	
-	@Bean(type=BindingType.Pojo, express="${usrService.myPersonalHomePage}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.myPersonalHomePage}")
 	PersonalHomePageBean personalBean;
 	/**
 	 * 用户形象照
 	 */
-	@Field(valueKey = "imageURI", binding="${(user!=null&&user.userPic!=null)?user.userPic:'resourceId:drawable/head4'}")
+	@Field(valueKey = "imageURI", binding = "${(user!=null&&user.userPic!=null)?user.userPic:'resourceId:drawable/head4'}")
 	String userIcon;
 
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding="${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
+	@Field(valueKey = "text", binding = "${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
 	String userNickName;
 
-	@Field(valueKey="visible", binding="${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
+	@Field(valueKey = "visible", binding = "${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
 	boolean loading;
-	
+
 	boolean loadingExpireTime = false;
 	/**
 	 * 累计实盘积分
 	 */
-	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.voucherVol:null}",converter="scoreConvertor")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.voucherVol:null}", converter = "scoreConvertor")
 	String totalScore;
 
 	/**
 	 * 累计总收益
 	 */
-	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.totalProfit:null}", converter="profitConvertor")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.totalProfit:null}", converter = "profitConvertor")
 	String totalProfit;
 
 	/**
 	 * 挑战交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.actualCount:null}",converter="shareNumConvertor")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.actualCount:null}", converter = "shareNumConvertor")
 	String challengeSharedNum;
 
 	/**
 	 * 参赛交易盘分享多少笔
 	 */
-	@Field(valueKey = "text", binding="${personalBean!=null?personalBean.virtualCount:null}",converter="shareNumConvertor")
+	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter = "shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding="${personalBean!=null?personalBean.virtualList:null}")
+	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.virtualList:null}")
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding="${personalBean!=null?personalBean.actualList:null}")
+	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.actualList:null}")
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
@@ -114,88 +113,59 @@ public abstract class UserPage extends PageBase  {
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?false:true):true):true}")
 	boolean jNoSharedVisiable;
 
-	@Field(valueKey = "backgroundImageURI", binding="${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
+	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
 	String userHomeBack = "resourceId:drawable/back1";
 
-	
 	@OnShow
 	void initData() {
 		loadingExpireTime = false;
 		registerBean("ExpireTimeFlag", loadingExpireTime);
 		KUtils.executeTask(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				checkLoadStatus();
-				if(loadingExpireTime == true) {
+				/*if (loadingExpireTime == true) {
 					return;
 				} else {
-					do{
+					do {
 						checkLoadStatus();
-					} while(loadingExpireTime == false);
-				}
+						SystemClock.sleep(500);
+					} while (loadingExpireTime == false);
+				}*/
 			}
 
 			private void checkLoadStatus() {
-				int virtualSize = -1;
-				int actualSize = -1;
-				if(personalBean!=null && personalBean.getVirtualList()!=null) {
-					virtualSize = personalBean.getVirtualList().size();
-				}
-				
-				if(personalBean!=null && personalBean.getActualList()!=null) {
-					actualSize = personalBean.getActualList().size();
-				}
-				
-				if(virtualSize ==0 || actualSize ==0) {
-					loadingExpireTime = true;
-					registerBean("ExpireTimeFlag", loadingExpireTime);
-				}
+				SystemClock.sleep(5000);
+				loadingExpireTime = true;
+				registerBean("ExpireTimeFlag", loadingExpireTime);
 			}
 		});
 	}
-	@Command(
-			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
-			}
-	)
-	String toolbarClickedLeft(InputEvent event){
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);	
+
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	String toolbarClickedLeft(InputEvent event) {
+		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
-	
-	@Command(
-			uiItems={
-				@UIItem(id="right",label="",icon="resourceId:drawable/setting")
-			},
-			navigations={@Navigation(on="OK", showPage="userSelfDefine")}
-	)
-	String toolbarClickedRight(InputEvent event){
+
+	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
-	
-	@Convertor(params={
-				@Parameter(name="format",value="%.0f"),
-				@Parameter(name="nullString", value="0")
-			}
-		)
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
+			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor scoreConvertor;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="nullString", value="0.00"),
-			@Parameter(name="multiple", value="100.00f")
-		}
-	)
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.2f"),
+			@Parameter(name = "nullString", value = "0.00"),
+			@Parameter(name = "multiple", value = "100.00f") })
 	StockLong2StringConvertor profitConvertor;
-	
-	@Convertor(params={
-			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="nullString", value="0")
-		}
-	)
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
+			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor shareNumConvertor;
-	
 
 	@OnHide
 	void onHidePage() {
@@ -208,11 +178,7 @@ public abstract class UserPage extends PageBase  {
 	 * @param event
 	 * @return
 	 */
-	@Command(
-			commandName = "challengeViewMore", 
-			description = "To Challenge View More",
-			navigations={@Navigation(on="OK", showPage="userViewMorePage")}
-			)
+	@Command(commandName = "challengeViewMore", description = "To Challenge View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
 	CommandResult challengeViewMore(InputEvent event) {
 
 		CommandResult result = new CommandResult();
@@ -220,21 +186,18 @@ public abstract class UserPage extends PageBase  {
 		map.put("isVirtual", false);
 		result.setPayload(map);
 		result.setResult("OK");
-		
+
 		return result;
 	}
 
 	/**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
+	 * 
 	 * @param event
 	 * @return
 	 */
-	@Command(
-			commandName = "joinViewMore", 
-			description = "To Join View More",
-			navigations={@Navigation(on="OK", showPage="userViewMorePage")}
-			)
+	@Command(commandName = "joinViewMore", description = "To Join View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -244,12 +207,10 @@ public abstract class UserPage extends PageBase  {
 		return result;
 	}
 
-
-	@Command(commandName = "joinItemClick",navigations={
-			@Navigation(on="operationDetails",showPage="OperationDetails"),
-			@Navigation(on="SellOut",showPage="sellTradingAccount"),
-			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
-			})
+	@Command(commandName = "joinItemClick", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
 	CommandResult joinItemClick(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -276,7 +237,7 @@ public abstract class UserPage extends PageBase  {
 				result.setPayload(map);
 				if ("CLOSED".equals(tradeStatus)) {
 					result.setResult("operationDetails");
-					
+
 				} else if ("UNCLOSE".equals(tradeStatus)) {
 					int status = virtualBean.getStatus();
 					if (status == 0) {
@@ -287,18 +248,18 @@ public abstract class UserPage extends PageBase  {
 						result.setResult("BuyIn");
 					}
 				}
-				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
+				updateSelection(new AccidSelection(String.valueOf(accId),
+						isVirtual));
 			}
 			return result;
 		}
 		return null;
 	}
 
-	@Command(commandName = "challengeItemClick",navigations={
-			@Navigation(on="operationDetails",showPage="OperationDetails"),
-			@Navigation(on="SellOut",showPage="sellTradingAccount"),
-			@Navigation(on="BuyIn",showPage="TBuyTradingPage")
-			})
+	@Command(commandName = "challengeItemClick", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
 	CommandResult challengeItemClick(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
@@ -336,30 +297,23 @@ public abstract class UserPage extends PageBase  {
 						result.setResult("BuyIn");
 					}
 				}
-				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
+				updateSelection(new AccidSelection(String.valueOf(accId),
+						isVirtual));
 			}
 			return result;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 设置昵称
+	 * 
 	 * @param event
 	 * @return
 	 */
-	@Command(
-			commandName = "setNickName", 
-			description = "To Personal_setting UI", 
-			navigations = { 
-					@Navigation(
-							on = "SUCCESS", 
-							showPage = "userNickSet"
-					)
-			}
-	)
+	@Command(commandName = "setNickName", description = "To Personal_setting UI", navigations = { @Navigation(on = "SUCCESS", showPage = "userNickSet") })
 	String setNickName(InputEvent event) {
-		
+
 		return "SUCCESS";
 	}
 }
