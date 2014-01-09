@@ -396,6 +396,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			public boolean isOnShow() {
 				return dialog.isVisible();
 			}
+
+			@Override
+			public void setCancelable(boolean cancelable) {
+				dialog.setCancelable(cancelable);
+			}
 		};
 	}
 

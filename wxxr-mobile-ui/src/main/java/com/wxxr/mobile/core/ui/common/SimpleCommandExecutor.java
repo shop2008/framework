@@ -341,6 +341,13 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 			}
 			params.put(UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE, message);
 			final IDialog dialog = context.getWorkbenchManager().getWorkbench().createDialog(UIConstants.MESSAGE_BOX_ID, params);
+			Object back = params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_CANCELABLE);
+			if (back instanceof String) {
+				if(back.equals("false"))
+					dialog.setCancelable(Boolean.parseBoolean((String) back));
+				else
+					dialog.setCancelable(true);
+			}
 			dialog.show();
 			Object val = params.get(UIConstants.MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED);
 			int autoCloseInSeconds = -1;

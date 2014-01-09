@@ -18,6 +18,7 @@ public interface UIConstants {
 	String MESSAGEBOX_ATTRIBUTE_ON_OK = "onOK";					// correspondent value should be type of String, which should be the name of a command in view/page model
 	String MESSAGEBOX_ATTRIBUTE_AUTO_CLOSED = "autoClosed";		// correspondent value should be type of int, which indicates the message box should be closed after the specific seconds elapsed
 	String MESSAGEBOX_ATTRIBUTE_HANDBACK = "handback";
+	String MESSAGEBOX_ATTRIBUTE_CANCELABLE = "cancelable";
 	
 	String HOME_PAGE_ID = "home";
 	String MESSAGE_BOX_ID = "messageBox";

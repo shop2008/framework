@@ -17,4 +17,5 @@ public interface IDialog {
 	void dismiss();
 	void show();
 	boolean isOnShow();
+	void setCancelable(boolean cancelable);
 }
