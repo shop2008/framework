@@ -20,9 +20,10 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import com.wxxr.mobile.core.annotation.StatefulService;
 import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.common.EventRouterImpl;
 import com.wxxr.mobile.core.event.api.ApplicationShutdownEvent;
 import com.wxxr.mobile.core.event.api.ApplicationStartedEvent;
 import com.wxxr.mobile.core.event.api.IEventRouter;
@@ -58,7 +59,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 
 		@Override
-		public <T> ServiceFuture<T> getServiceAsync(Class<T> interfaceClazz) {
+		public <T> IServiceFuture<T> getServiceAsync(Class<T> interfaceClazz) {
 			return getServiceFuture(interfaceClazz);
 		}
 
@@ -164,11 +165,25 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		}
 	};
 	
+	private class PluginChain implements IServicePluginChain {
+		private int idx = 0;
+		@Override
+		public <T> T invokeNext(Class<T> serviceInterface, Object serviceHandler) {
+			synchronized(plugins){
+				if(idx >= plugins.size()){
+					return serviceInterface.cast(serviceHandler);
+				}else{
+					return plugins.get(idx++).buildServiceHandler(serviceInterface, serviceHandler, this);
+				}
+			}
+		}
+	}
+	
 //	private Element moduleConfigure;
 
 	private LinkedList<M> modules = new LinkedList<M>();
 
-//	private LinkedList<M> createdModules = new LinkedList<M>();
+	private LinkedList<IServiceFeaturePlugin> plugins = new LinkedList<IServiceFeaturePlugin>();
 
 //	private boolean started = false;
 	
@@ -176,7 +191,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	private Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
-	private HashMap<Class<?>, ServiceFuture<?>> serviceHandlers = new HashMap<Class<?>, ServiceFuture<?>>();
+	private HashMap<Class<?>, IServiceFuture<?>> serviceHandlers = new HashMap<Class<?>, IServiceFuture<?>>();
 	private HashMap<Class<?>, List<WeakReference<IServiceAvailableCallback<?>>>> callbacks = new HashMap<Class<?>, List<WeakReference<IServiceAvailableCallback<?>>>>();
 
 	private LinkedList<IKernelServiceListener> serviceListeners = new LinkedList<IKernelServiceListener>();
@@ -184,6 +199,12 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	
 	private Timer timer;
 
+	private IEventRouter eventRouter;
+	
+	public AbstractMicroKernel() {
+		initInternalServices();
+	}
+	
 	public void attachStartMonitor(IProgressMonitor monitor){
 		monitor.setTaskName("Startup Kernel");
 		switch(this.status){
@@ -254,6 +275,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	}
 	@SuppressWarnings("unchecked")
 	public void start() throws Exception{
+		initServicePlugins();
 		IProgressMonitor monitor = null;
 		setStatus(MStatus.STARTING);
 		try {
@@ -335,6 +357,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		}
 		setStatus(MStatus.STOPED);
 		fireKernelStopped();
+		clearServiceFeaturePlugins();
 		if((monitor = getStartMonitor()) != null){
 			monitor.done(this);
 		}
@@ -445,7 +468,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			list = this.moduleListeners.toArray(new IModuleListener[this.moduleListeners.size()]);
 		}
 		if(list != null){
- 			for (IModuleListener l : list) {
+			for (IModuleListener l : list) {
 					l.kernelStarted();
 			}
 		}
@@ -513,16 +536,8 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	}
 
 	protected <T> T getLocalService(Class<T> interfaceClazz) {
-		StatefulService statefulService=interfaceClazz.getAnnotation(StatefulService.class);
-		if(statefulService!=null){
-			ServiceFuture<? extends IStatefulServiceFactory> handlers =getServiceFuture(statefulService.factoryClass());
-			IStatefulServiceFactory t=handlers.getService();
-			return (T) t.createService();
-		}else{
-			ServiceFuture<T> handlers = getServiceFuture(interfaceClazz);
-			return handlers.getService();
-		}
-
+		IServiceFuture<T> handlers = getServiceFuture(interfaceClazz);
+		return handlers.getService();
 	}
 
 	protected <T> void registerLocalService(Class<T> interfaceClazz, Object handler) {
@@ -561,18 +576,27 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		list.add(clazz);
 	}
 
+	protected IServicePluginChain createServicePluginChain() {
+		return new PluginChain();
+	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T> ServiceFuture<T> getServiceFuture(Class<T> interfaceClazz) {
-		ServiceFuture<T> handlers = null;
+	protected <T> IServiceFuture<T> getServiceFuture(final Class<T> interfaceClazz) {
+		IServiceFuture<T> future = null;
 		synchronized(serviceHandlers){
-			handlers = (ServiceFuture<T>)serviceHandlers.get(interfaceClazz);
-			if(handlers == null){
-				handlers = new ServiceFuture<T>();
-				serviceHandlers.put(interfaceClazz, handlers);
+			future = (IServiceFuture<T>)serviceHandlers.get(interfaceClazz);
+			if(future == null){
+				future = new ServiceFuture<T>(this,interfaceClazz);
+				serviceHandlers.put(interfaceClazz, future);
 			}
 		}
-		return handlers;
+		return future;
+	}
+	
+	protected boolean hasDecorators() {
+		synchronized(this.plugins){
+			return this.plugins.size() > 0;
+		}
 	}
 
 	protected <T> void unregisterLocalService(Class<T> interfaceClazz, Object handler) {
@@ -589,7 +613,59 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		return attributes.remove(key);
 	}
 
+	protected void destroyInternalServices() {
+		if(this.eventRouter instanceof IKernelComponent){
+			((IKernelComponent)this.eventRouter).destroy();
+		}
+		this.eventRouter = null;
+	}
 	
+	
+	protected void initInternalServices() {
+		this.serviceHandlers.put(IEventRouter.class, new IServiceFuture<IEventRouter>() {
+
+			@Override
+			public IEventRouter[] getServices(IEventRouter[] vals) {
+				return new IEventRouter[] {  getService() };
+			}
+
+			@Override
+			public IEventRouter getService() {
+				if(eventRouter == null){
+					eventRouter = createEventRouter();
+					if(eventRouter instanceof IKernelComponent){
+						((IKernelComponent)eventRouter).init(getContext());
+					}
+				}
+				return eventRouter;
+			}
+
+			@Override
+			public IEventRouter get(long timeout, TimeUnit unit)
+					throws InterruptedException, TimeoutException {
+				return getService();
+			}
+
+			@Override
+			public IEventRouter get() throws InterruptedException {
+				return getService();
+			}
+
+			@Override
+			public boolean removeService(IEventRouter object) {
+				throw new IllegalStateException("IEventRouter service is internal kernel serice !!!");
+			}
+
+			@Override
+			public boolean addService(IEventRouter object) {
+				throw new IllegalStateException("IEventRouter service is internal kernel serice !!!");
+			}
+		});
+	}
+	
+	protected IEventRouter createEventRouter() {
+		return new EventRouterImpl();
+	}
 	protected void addLocalKernelServiceListener(IKernelServiceListener listener) {
 		synchronized(serviceListeners){
 			if(!serviceListeners.contains(listener)){
@@ -604,12 +680,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			return serviceListeners.remove(listener);
 		}
 	}
-
-//	public void setModuleConfigure(Element serviceConfigure) {
-//		if(null != serviceConfigure){
-//			this.moduleConfigure = serviceConfigure;
-//		}
-//	}
 
 	public void registerKernelModule(M module) {
 		boolean added = false;
@@ -669,54 +739,9 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 
 	abstract protected C getContext();
 
-
-//	protected void destroyModules() {
-//		for (M mod : this.createdModules) {
-//			try {
-//				unregisterKernelModule(mod);
-//			}catch(Exception e){
-//				log.warn("Failed to unregister module :"+mod, e);
-//			}
-//		}
-//		this.createdModules.clear();
-//	}
-
-//	protected void initModules() throws Exception {
-//		if(moduleConfigure == null){
-//			return;
-//		}
-//		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-//		NodeList nodes = moduleConfigure.getElementsByTagName("module");
-//		int len = nodes.getLength();
-//		for (int i = 0; i < len; i++) {
-//			Node node = nodes.item(i);
-//			if(node instanceof Element){
-//				Element elem = (Element)node;
-//				String clsName = elem.getAttribute("class");
-//				clsName = clsName != null ? clsName.trim() : null;
-//				clsName = clsName != null && clsName.length() > 0 ? clsName : null;
-//				if(clsName != null){
-//					@SuppressWarnings("unchecked")
-//					Class<M> clazz = (Class<M>)cl.loadClass(clsName);
-//					M mod = clazz.newInstance();
-//					Method initMethod = null;
-//					try {
-//						initMethod = clazz.getMethod("init", new Class[]{Element.class});
-//					}catch(Exception e){
-//						log.warn("Cannot find init(Element) method to init module :"+mod, e);
-//					}
-//					if(initMethod != null){
-//						initMethod.invoke(mod, new Object[]{elem});
-//					}
-//					registerKernelModule(mod);
-//					this.createdModules.add(mod);
-//				}
-//			}
-//		}
-//	}
-
 	protected abstract void initModules();
 	
+	@SuppressWarnings("unchecked")
 	public IKernelModule<C>[] getAllModules() {
 		synchronized(modules){
 			if(modules.isEmpty()){
@@ -752,7 +777,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 */
 	@Override
 	public <S> S getService(Class<S> interfaceClazz) {
-		
 		return getContext().getService(interfaceClazz);
 	}
 
@@ -760,7 +784,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	 * @see com.wxxr.mobile.core.microkernel.api.IMicroKernel#getServiceAsync(java.lang.Class)
 	 */
 	@Override
-	public <S> ServiceFuture<S> getServiceAsync(Class<S> interfaceClazz) {
+	public <S> IServiceFuture<S> getServiceAsync(Class<S> interfaceClazz) {
 		return getContext().getServiceAsync(interfaceClazz);
 	}
 
@@ -811,4 +835,39 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		this.status  = stat;
 	}
 	
+	protected void initServicePlugins() {
+		
+	}
+	
+	public AbstractMicroKernel<C, M> addServiceFeaturePlugin(IServiceFeaturePlugin decorator){
+		if(this.status != MStatus.INIT){
+			throw new IllegalStateException("Plugin could be only be added before kernel starting !");
+		}
+		if(decorator == null){
+			throw new IllegalArgumentException("decorator cannot be NULL!");
+		}
+		synchronized(this.plugins){
+			if(!this.plugins.contains(decorator)){
+				this.plugins.add(decorator);
+				if(decorator instanceof IKernelComponent){
+					((IKernelComponent)decorator).init(getContext());
+				}
+			}
+		}
+		return this;
+	}
+	
+		
+	protected void clearServiceFeaturePlugins() {
+		synchronized(this.plugins){
+			if(this.plugins.size() > 0){
+				for (IServiceFeaturePlugin decor : this.plugins) {
+					if(decor instanceof IKernelComponent){
+						((IKernelComponent)decor).destroy();
+					}
+				}
+				this.plugins.clear();
+			}
+		}
+	}
 }

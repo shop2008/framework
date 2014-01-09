@@ -4,11 +4,11 @@
 package com.wxxr.mobile.core.microkernel.api;
 
 /**
- * @author wangyan
+ * @author neillin
  *
  */
-public interface IStatefulService<T extends IKernelContext> {
-	 void init(T context);
-	 void startService();
-	 void stopService();
+public interface IStatefulService extends Cloneable {
+	Object clone();
+	void destroy(Object serviceHandler);
+	IServiceDecoratorBuilder getDecoratorBuilder();
 }
