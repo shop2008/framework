@@ -184,22 +184,6 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#refresh()
-	 */
-	@Override
-	public void doUpdate() {
-		if(this.listAdapter != null){
-			this.listAdapter.refresh();
-		}
-		super.doUpdate();
-		if(headerBinding != null) {
-			headerBinding.doUpdate();
-		}
-		if(footerBinding != null) {
-			footerBinding.doUpdate();
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.android.ui.binding.BasicFieldBinding#handleValueChangedCallback(com.wxxr.mobile.core.ui.common.UIComponent, com.wxxr.mobile.core.ui.api.AttributeKey<?>[])
@@ -210,6 +194,12 @@ public class AdapterViewFieldBinding extends BasicFieldBinding {
 			this.listAdapter.refresh();
 		}
 		super.updateUI(recursive);
+		if(headerBinding != null) {
+			headerBinding.doUpdate();
+		}
+		if(footerBinding != null) {
+			footerBinding.doUpdate();
+		}
 	}
 
 	/* (non-Javadoc)
