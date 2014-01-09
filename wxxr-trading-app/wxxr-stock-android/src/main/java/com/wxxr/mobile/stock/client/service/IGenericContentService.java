@@ -16,5 +16,5 @@ public interface IGenericContentService {
 	void showEmailUI(String email);
 	void showMarket(String packageName);
 	void startAndroidIntent(Intent intent);
-	void startDownloadService(String downloadUrl);
+	//void startDownloadService(String downloadUrl);
 }

@@ -103,13 +103,13 @@ public class GenericContentService extends AbstractModule<IStockAppContext> impl
 		}
 	}
 	
-	@Override
+/*	@Override
 	public void startDownloadService(String downloadUrl) {
 		Intent intent = new Intent();
 		intent.setClass(AppUtils.getFramework().getAndroidApplication(), DownloadApkService.class);
 		intent.putExtra("downUrl", downloadUrl);
 		IAndroidPageNavigator navigator = (IAndroidPageNavigator)AppUtils.getService(IWorkbenchManager.class).getPageNavigator();
 		navigator.startService(intent);
-	}
+	}*/
 	
 }

@@ -105,7 +105,7 @@ public abstract class HomePage extends PageBase {
 					@Override
 					public void run() {
 
-						SystemClock.sleep(5000);
+						SystemClock.sleep(10000);
 						AppUtils.runOnUIThread(new Runnable() {
 
 							@Override

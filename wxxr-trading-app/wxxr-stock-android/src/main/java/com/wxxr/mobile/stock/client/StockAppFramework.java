@@ -49,6 +49,7 @@ import com.wxxr.mobile.stock.client.module.StockSiteSecurityModule;
 import com.wxxr.mobile.stock.client.module.WorkbenchManagerModule;
 import com.wxxr.mobile.stock.client.service.ClientInfoService;
 import com.wxxr.mobile.stock.client.service.GenericContentService;
+import com.wxxr.mobile.stock.client.service.UpdateVertionService;
 
 /**
  * @author neillin
@@ -138,6 +139,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	    registerKernelModule(new UserLoginManagementServiceImpl());
 
 	    registerKernelModule(new ClientInfoService());
+	    
+	    registerKernelModule(new UpdateVertionService());
 
 	}
 

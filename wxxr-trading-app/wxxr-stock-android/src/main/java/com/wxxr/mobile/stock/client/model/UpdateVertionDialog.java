@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
+import com.wxxr.mobile.stock.client.service.IUpdateVertionService;
 
 @View(name="updateVertionDialog")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.update_vertion_dialog")
@@ -24,7 +25,8 @@ public abstract class UpdateVertionDialog extends ViewBase implements ISelection
 	@Command
 	String downloadApk(InputEvent event) {
 		//下载最新Apk
-		AppUtils.getFramework().getService(IGenericContentService.class).startDownloadService(url);
+		//AppUtils.getFramework().getService(IGenericContentService.class).startDownloadService(url);
+		AppUtils.getFramework().getService(IUpdateVertionService.class).startDownload(url);
 		hide();
 		return null;
 	}

@@ -57,9 +57,7 @@
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserScorePage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TradingRuleWebPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.OtherViewMorePage" android:screenOrientation="portrait"/>
-    	<service 
-    	    android:name="com.wxxr.mobile.stock.client.service.DownloadApkService"
-    	    />
+    	
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

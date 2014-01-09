@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
 import com.wxxr.mobile.stock.client.service.IClientInfoService;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
+import com.wxxr.mobile.stock.client.service.IUpdateVertionService;
 
 @View(name="AlertVertionUpdate", provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.alert_vertion_update")
@@ -41,7 +42,9 @@ public abstract class AlertVertionUpdate extends ViewBase  implements ISelection
 	@Command
 	String downloadApk(InputEvent event) {
 		//下载最新Apk
-		AppUtils.getFramework().getService(IGenericContentService.class).startDownloadService(url);
+	//	AppUtils.getFramework().getService(IGenericContentService.class).startDownloadService(url);
+		
+		AppUtils.getFramework().getService(IUpdateVertionService.class).startDownload(url);
 		hide();
 		return null;
 	}
