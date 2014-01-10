@@ -140,6 +140,7 @@ public class PinnedHeaderListView extends ListView {
 		/*AbstractPinnedHeaderListAdapter adapter = (AbstractPinnedHeaderListAdapter)getAdapter();
 		List<Integer>  titleSection = adapter.getTitleSection();*/
 		if(getHeaderViewsCount()>0 && (position == 0)) {
+			mHeaderViewVisible = false;
 			return;
 		}
 		
