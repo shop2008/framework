@@ -124,13 +124,17 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		try {
 			T val = getValue();
 			this.field.setValue(val);
-			this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
-			this.field.removeAttribute(AttributeKeys.valueUpdating);
+			if(updateAsync){
+				this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
+				this.field.removeAttribute(AttributeKeys.valueUpdating);
+			}
 			return val;
 		}catch(Throwable t){
 			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
-			this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
-			this.field.removeAttribute(AttributeKeys.valueUpdating);
+			if(updateAsync){
+				this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
+				this.field.removeAttribute(AttributeKeys.valueUpdating);
+			}
 			IView view = ModelUtils.getView(field);
 			if(view instanceof ViewBase){
 				((ViewBase)view).handleStartupException(t);
