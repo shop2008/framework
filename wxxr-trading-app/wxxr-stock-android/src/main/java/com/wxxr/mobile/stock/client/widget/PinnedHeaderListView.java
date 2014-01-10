@@ -50,7 +50,7 @@ public class PinnedHeaderListView extends ListView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (mHeaderView != null) {
-            mHeaderView.layout(0, headerViewHeight, mHeaderViewWidth, mHeaderViewHeight);
+            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
             configureHeaderView(getFirstVisiblePosition());
         }
     }
@@ -59,16 +59,11 @@ public class PinnedHeaderListView extends ListView {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		
-		int headerViewCount = getHeaderViewsCount();
+		//int headerViewCount = getHeaderViewsCount();
 		
 		//View[] headerViews = new View[headerViewCount];
 		
-		if(headerViewCount >0) {
-			for(int i=0;i<headerViewCount;i++) {
-				View view =  getAdapter().getView(i, null, null);
-				headerViewHeight += view.getWidth();
-			}
-		}
+		
 		if (mHeaderView != null) {
 			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
 			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
@@ -132,6 +127,10 @@ public class PinnedHeaderListView extends ListView {
      */
     synchronized public void configureHeaderView(int position) {
 		if (mHeaderView == null) {
+			return;
+		}
+		
+		if(getHeaderViewsCount()>0 && (position == 0)) {
 			return;
 		}
 		int state = mAdapter.getPinnedHeaderState(position);
