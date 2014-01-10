@@ -85,11 +85,11 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	
 	protected synchronized void notifyCacheChanged() {
 		Object oldVal = this.data;
-		this.data = null;
+		this.data = getData();
 		if(getLog().isDebugEnabled()){
 			getLog().debug("Received cache changed, Clear list data and fire property changed event. ");
 		}
-		this.pSupport.firePropertyChange("data", oldVal, null);
+		this.pSupport.firePropertyChange("data", oldVal, this.data);
 	}
 	
 	public synchronized void clear() {
