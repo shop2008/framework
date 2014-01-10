@@ -4,14 +4,14 @@ package com.wxxr.mobile.stock.client.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class PinnedHeaderListView extends ListView {
 
-	
-	
+	private float xDistance, yDistance, xLast, yLast;  
 	public interface PinnedHeaderAdapter {
 		public static final int PINNED_HEADER_GONE = 0;
 		public static final int PINNED_HEADER_VISIBLE = 1;
@@ -31,7 +31,7 @@ public class PinnedHeaderListView extends ListView {
 	protected boolean mHeaderViewVisible;
 	protected int mHeaderViewWidth;
 	protected int mHeaderViewHeight;
-	//private int headerViewHeight = 0;
+
 	public PinnedHeaderListView(Context context) {
 		super(context);
 	}
@@ -57,21 +57,6 @@ public class PinnedHeaderListView extends ListView {
     @Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		/*
-		int count = getHeaderViewsCount();
-		View[] headViews = null;
-		if(count>0)
-			headViews = new View[count];
-		for(int i=0;i<count;i++) {
-			//headViews[i] = getRootView().get;
-			
-			
-			measureChild(headViews[i], widthMeasureSpec, heightMeasureSpec);
-			headerViewHeight += headViews[i].getMeasuredHeight();
-		}*/
-		
-		
-		
 		if (mHeaderView != null) {
 			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
 			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
@@ -96,6 +81,27 @@ public class PinnedHeaderListView extends ListView {
 		requestLayout();
 	}
 	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {  
+        case MotionEvent.ACTION_DOWN:  
+            xDistance = yDistance = 0f;  
+            xLast = ev.getX();  
+            yLast = ev.getY();  
+            break;  
+        case MotionEvent.ACTION_MOVE:  
+            final float curX = ev.getX();  
+            final float curY = ev.getY();             
+            xDistance += Math.abs(curX - xLast);  
+            yDistance += Math.abs(curY - yLast);  
+            xLast = curX;  
+            yLast = curY;  
+            if(xDistance > yDistance){  
+                return false;  
+            }    
+    } 
+		return super.onInterceptTouchEvent(ev);
+	}
 	
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
