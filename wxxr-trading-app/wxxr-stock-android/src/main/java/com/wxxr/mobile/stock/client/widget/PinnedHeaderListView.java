@@ -54,10 +54,8 @@ public class PinnedHeaderListView extends ListView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (mHeaderView != null) {
-        	if(getHeaderViewsCount()>0&& getFirstVisiblePosition()>0) { 
-	            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
-	            configureHeaderView(getFirstVisiblePosition());
-        	}
+        	mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+            configureHeaderView(getFirstVisiblePosition());
         }
     }
 	
