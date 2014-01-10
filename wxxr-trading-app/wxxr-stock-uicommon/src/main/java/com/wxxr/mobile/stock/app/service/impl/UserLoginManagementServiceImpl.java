@@ -16,17 +16,20 @@ import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.security.api.LoginAction;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
+import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
@@ -71,8 +74,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
     					myUserInfo.setPhoneNumber(vo.getMoblie());
     					myUserInfo.setUserPic(vo.getIcon());
     					saveUserBean(myUserInfo);
-    					
-    					//context.setAttribute("currentUser", myUserInfo);
+    					getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGIN));
     					 //根据用户密码登录成功
     	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
     	                if(pref == null){
@@ -134,7 +136,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	
 	@Override
 	public synchronized void logout(){
-
+	   String userId = myUserInfo.getUsername();
 	   myUserInfo=null;
        getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
        HttpRpcService httpService = context.getService(HttpRpcService.class);
@@ -143,8 +145,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
            
        }
        usernamePasswordCredential4Login=null;
-      // context.removeAttribute("currentUser");
-      // getService(IEventRouter.class).routeEvent(new LogoutEvent());
+       getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGOUT));
 	}
 	
 	private void saveUserBean(UserBean b){
@@ -257,7 +258,8 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 		addRequiredService(ICommandExecutor.class);
-	    addRequiredService(IPreferenceManager.class);		
+	    addRequiredService(IPreferenceManager.class);	
+	    addRequiredService(IEventRouter.class);
 	}
 
 	@Override
