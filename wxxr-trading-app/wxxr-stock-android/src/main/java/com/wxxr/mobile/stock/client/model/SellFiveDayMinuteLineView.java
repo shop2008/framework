@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -137,7 +138,7 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
 	}, upateAsync=true)
-	BindableListWrapper<StockMinuteKBean> fiveDayMinute;
+	List<StockMinuteKBean> fiveDayMinute;
 	
 	@OnCreate
 	void registerSelectionListener() {

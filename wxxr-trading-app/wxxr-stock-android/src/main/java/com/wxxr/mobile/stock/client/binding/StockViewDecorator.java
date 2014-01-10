@@ -12,25 +12,45 @@ import com.wxxr.mobile.stock.client.R;
 public class StockViewDecorator implements IUIDecorator {
 
 	private IUIDecorator delegate;
+
 	public StockViewDecorator(IUIDecorator delagate) {
 		this.delegate = delagate;
 	}
-	
+
 	@Override
 	public void handleUIUpdating(IUIUpdatingContext context, IUIComponent comp,
 			Object uiControl) {
-		if(comp.hasAttribute(AttributeKeys.valueUpdating)) {
-			((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.progress).setVisibility(View.VISIBLE);
-			((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.failed).setVisibility(View.GONE);
+		View v = null;
+		if (comp.hasAttribute(AttributeKeys.valueUpdating)) {
+			v = ((ViewGroup) ((View) uiControl).getParent())
+					.findViewById(R.id.progress);
+			if (v != null)
+				v.setVisibility(View.VISIBLE);
+			v = ((ViewGroup) ((View) uiControl).getParent())
+					.findViewById(R.id.failed);
+			if (v != null)
+				v.setVisibility(View.GONE);
 			return;
 		}
-		if(comp.hasAttribute(AttributeKeys.valueUpdatedFailed)) {
-			((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.progress).setVisibility(View.GONE);
-			((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.failed).setVisibility(View.VISIBLE);
+		if (comp.hasAttribute(AttributeKeys.valueUpdatedFailed)) {
+			v = ((ViewGroup) ((View) uiControl).getParent())
+					.findViewById(R.id.progress);
+			if (v != null)
+				v.setVisibility(View.GONE);
+			v = ((ViewGroup) ((View) uiControl).getParent())
+					.findViewById(R.id.failed);
+			if (v != null)
+				v.setVisibility(View.VISIBLE);
 			return;
 		}
-		((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.progress).setVisibility(View.GONE);
-		((ViewGroup)((View)uiControl).getParent()).findViewById(R.id.failed).setVisibility(View.GONE);
+		v = ((ViewGroup) ((View) uiControl).getParent())
+				.findViewById(R.id.progress);
+		if (v != null)
+			v.setVisibility(View.GONE);
+		v = ((ViewGroup) ((View) uiControl).getParent())
+				.findViewById(R.id.failed);
+		if (v != null)
+			v.setVisibility(View.GONE);
 		this.delegate.handleUIUpdating(context, comp, uiControl);
 	}
 
