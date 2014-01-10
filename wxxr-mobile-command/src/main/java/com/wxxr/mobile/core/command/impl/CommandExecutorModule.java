@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
@@ -23,8 +25,10 @@ import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.command.api.ICommandValidator;
 import com.wxxr.mobile.core.command.api.UnsupportedCommandException;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.IAsyncCallback;
 
@@ -34,7 +38,7 @@ import com.wxxr.mobile.core.util.IAsyncCallback;
  */
 public class CommandExecutorModule<T extends IKernelContext> extends AbstractModule<T> implements
 		ICommandExecutor {
-
+	private static final Trace log = Trace.getLogger("com.wxxr.mobile.core.command.CommandExecutor");
 	private int maxThread = 5;
 	private int minThread = 3;
 	private int commandQueueSize = 100;
@@ -48,17 +52,77 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			return context;
 		}
 	};
+	
+	protected <V> Future<V> asFuture(final Future<V> f) {
+		return new Future<V>() {
+
+			/**
+			 * @param arg0
+			 * @return
+			 * @see java.util.concurrent.Future#cancel(boolean)
+			 */
+			public boolean cancel(boolean arg0) {
+				return f.cancel(arg0);
+			}
+
+			/**
+			 * @return
+			 * @throws InterruptedException
+			 * @throws ExecutionException
+			 * @see java.util.concurrent.Future#get()
+			 */
+			public V get() throws InterruptedException, ExecutionException {
+				if(KUtils.isCurrentUIThread()){
+					log.error("Current thread is UIThread, calling get() method of Future which will cause UI frozen !!!", new Throwable());
+				}
+				return f.get();
+			}
+
+			/**
+			 * @param arg0
+			 * @param arg1
+			 * @return
+			 * @throws InterruptedException
+			 * @throws ExecutionException
+			 * @throws TimeoutException
+			 * @see java.util.concurrent.Future#get(long, java.util.concurrent.TimeUnit)
+			 */
+			public V get(long arg0, TimeUnit arg1) throws InterruptedException,
+					ExecutionException, TimeoutException {
+				if(KUtils.isCurrentUIThread()){
+					log.error("Current thread is UIThread , calling get() method of Future will cause UI frozen !!!", new Throwable());
+				}
+				return f.get(arg0, arg1);
+			}
+
+			/**
+			 * @return
+			 * @see java.util.concurrent.Future#isCancelled()
+			 */
+			public boolean isCancelled() {
+				return f.isCancelled();
+			}
+
+			/**
+			 * @return
+			 * @see java.util.concurrent.Future#isDone()
+			 */
+			public boolean isDone() {
+				return f.isDone();
+			}
+		};
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.command.api.ICommandExecutor#submitCommand(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	public <V> Future<V> submitCommand(final ICommand<V> command) {
 		final ICommandHandler handler = validateCommand(command);
-		return this.executor.submit(new Callable<V>() {
+		return asFuture(this.executor.submit(new Callable<V>() {
 
 			public V call() throws Exception {
 				return handler.execute(command);
 			}
-		});
+		}));
 	}
 
 	/**
