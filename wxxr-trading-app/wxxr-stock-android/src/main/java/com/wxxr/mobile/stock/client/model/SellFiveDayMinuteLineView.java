@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -129,7 +128,7 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 	String capital;
 
 	
-	@Field(valueKey="options",binding="${fiveDayMinuteBean!=null?fiveDayMinuteBean.data:null}",attributes={
+	@Field(valueKey="options",binding="${fiveDayMinuteBean!=null?fiveDayMinuteBean.getData(true):null}",attributes={
 			@Attribute(name="stockType",value="${stockType}"),
 			@Attribute(name="buyPrice",value="${buyPrice}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
@@ -137,8 +136,8 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 			@Attribute(name = "stockDownColor",value="#3C7F00"),
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	})
-	List<StockMinuteKBean> fiveDayMinute;
+	}, upateAsync=true)
+	BindableListWrapper<StockMinuteKBean> fiveDayMinute;
 	
 	@OnCreate
 	void registerSelectionListener() {
