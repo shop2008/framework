@@ -10,6 +10,8 @@ import android.widget.ListView;
 
 public class PinnedHeaderListView extends ListView {
 
+	
+	
 	public interface PinnedHeaderAdapter {
 		public static final int PINNED_HEADER_GONE = 0;
 		public static final int PINNED_HEADER_VISIBLE = 1;
@@ -29,7 +31,7 @@ public class PinnedHeaderListView extends ListView {
 	protected boolean mHeaderViewVisible;
 	protected int mHeaderViewWidth;
 	protected int mHeaderViewHeight;
-
+	private int headerViewHeight = 0;
 	public PinnedHeaderListView(Context context) {
 		super(context);
 	}
@@ -47,7 +49,7 @@ public class PinnedHeaderListView extends ListView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (mHeaderView != null) {
-            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
+            mHeaderView.layout(0, headerViewHeight, mHeaderViewWidth, mHeaderViewHeight);
             configureHeaderView(getFirstVisiblePosition());
         }
     }
@@ -55,6 +57,19 @@ public class PinnedHeaderListView extends ListView {
     @Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		
+		int count = getHeaderViewsCount();
+		View[] headViews = null;
+		if(count>0)
+			headViews = new View[count];
+		for(int i=0;i<count;i++) {
+			headViews[i] = getChildAt(i);
+			measureChild(headViews[i], widthMeasureSpec, heightMeasureSpec);
+			headerViewHeight += headViews[i].getMeasuredHeight();
+		}
+		
+		
+		
 		if (mHeaderView != null) {
 			measureChild(mHeaderView, widthMeasureSpec, heightMeasureSpec);
 			mHeaderViewWidth = mHeaderView.getMeasuredWidth();
