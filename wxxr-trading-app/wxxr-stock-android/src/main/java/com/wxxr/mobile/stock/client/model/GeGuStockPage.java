@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUICreate;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -340,17 +341,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		}
 	}
 	
-	@OnShow
-	void startStockSearch() {
-		if(hasShow) {
-			if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
-				hide();
-			} else {
-				
-			}
-			return;
-		} else {
-		}
+	@OnUICreate
+	void initSearchView() {
 		if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
 			AppUtils.invokeLater(new Runnable() {
 				
@@ -362,6 +354,19 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 					hasShow = true;
 				}
 			}, 100, TimeUnit.MILLISECONDS);
+		}
+	}
+	
+	@OnShow
+	void startStockSearch() {
+		if(hasShow) {
+			if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
+				hide();
+			} else {
+				
+			}
+			return;
+		} else {
 		}
 	}
 	

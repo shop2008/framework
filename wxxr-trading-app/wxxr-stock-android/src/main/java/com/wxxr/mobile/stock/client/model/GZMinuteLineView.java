@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
@@ -21,6 +22,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
@@ -208,7 +210,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			@Attribute(name = "stockDownColor",value="#3C7F00"),
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	})
+	}, upateAsync=true)
 	List<StockMinuteLineBean> stockMinuteData;
 	
 	@OnCreate
@@ -222,6 +224,12 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	void removeSelectionListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
 		service.removeSelectionListener(this);
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		infoCenterService.getMinuteline(map);
+		return null;
 	}
 	
 	@Override

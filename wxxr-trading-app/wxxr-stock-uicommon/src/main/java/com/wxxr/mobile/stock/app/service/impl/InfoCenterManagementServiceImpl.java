@@ -188,7 +188,7 @@ public class InfoCenterManagementServiceImpl extends
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("code", code);
         p.put("market", market);
-        this.stockMinuteKBean_cache.forceReload(p,true);
+        this.stockMinuteKBean_cache.forceReload(p,false);
         return stockMinuteKBean_cache.getEntity(mc);
 	}
 	//K线
@@ -218,7 +218,7 @@ public class InfoCenterManagementServiceImpl extends
 	          Map<String, Object> p=new HashMap<String, Object>(); 
 	          p.put("code", code);
 	          p.put("market", market);
-	          this.dayStockLineBean_cache.forceReload(p,true);
+	          this.dayStockLineBean_cache.forceReload(p,false);
 	          dayStockLineBean_cache.setCommandParameters(p);
 	          dayline.setReloadParameters(p);
 	          this.dayLineCache.put(key, dayline);
@@ -264,9 +264,9 @@ public class InfoCenterManagementServiceImpl extends
 	    if (stockQuotationBean_cache.getEntity(market+code)==null){
 	        StockQuotationBean b=new StockQuotationBean();
             stockQuotationBean_cache.putEntity(mc,b);
-            this.stockQuotationBean_cache.forceReload(params,true);
+            this.stockQuotationBean_cache.forceReload(params,false);
         }else{
-            this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
+            this.stockQuotationBean_cache.doReloadIfNeccessay(params);
 
         }
          return stockQuotationBean_cache.getEntity(mc);
@@ -286,7 +286,7 @@ public class InfoCenterManagementServiceImpl extends
             stockQuotationBean_cache.putEntity(mc,b);
             this.stockQuotationBean_cache.forceReload(params,true);
         }else{
-        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
+        	this.stockQuotationBean_cache.doReloadIfNeccessay(params);
         }
         return stockQuotationBean_cache.getEntity(mc);
     }
@@ -377,10 +377,10 @@ public class InfoCenterManagementServiceImpl extends
 	        p.put("code", code);
 	        p.put("market", market);
 	        stockMinuteKBeans.setReloadParameters(p);
-	        this.fiveDaystockMinuteKBean_cache.forceReload(p,true);
+	        this.fiveDaystockMinuteKBean_cache.forceReload(p,false);
 	        this.fiveDayMinKCache.put(key, stockMinuteKBeans);
 	    }else{
-	    	 this.fiveDaystockMinuteKBean_cache.doReloadIfNeccessay(stockMinuteKBeans.getReloadParameters(),true);
+	    	 this.fiveDaystockMinuteKBean_cache.doReloadIfNeccessay(stockMinuteKBeans.getReloadParameters());
 	    }
 	    
 		return stockMinuteKBeans;

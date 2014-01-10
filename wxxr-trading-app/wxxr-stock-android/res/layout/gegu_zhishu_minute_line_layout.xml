@@ -19,10 +19,19 @@
         <include layout="@layout/common_stock_header_layout" />
     </LinearLayout>
 
-    <com.wxxr.mobile.stock.client.widget.MinuteLineView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginLeft="4dip"
-        android:layout_marginRight="4dip"
-        bind:field="stockMinuteData" />
+        android:layout_height="wrap_content" >
+
+        <com.wxxr.mobile.stock.client.widget.MinuteLineView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:layout_marginTop="2dip"
+            bind:field="stockMinuteData@StockViewDecorator" />
+
+        <include layout="@layout/stock_loading_progress_layout"/>
+    </FrameLayout>
+
 </LinearLayout>

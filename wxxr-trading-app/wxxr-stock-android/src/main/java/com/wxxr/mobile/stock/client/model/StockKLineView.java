@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.command.api.RequiredNetNotAvailablexception;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -96,7 +97,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayStockline(codeBean, marketBean)}")
 	BindableListWrapper<StockLineBean> lineListBean;
 	//K 线
-	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.getData() : null}")
+	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.getData(true) : null}", upateAsync=true)
 	List<StockLineBean> dayLineList;
 	//Title数据
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
@@ -189,7 +190,11 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 //			}
 		}
 	}
-	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		infoCenterService.getDayStockline(this.codeBean, this.marketBean);
+		return null;
+	}
 	@OnShow
 	void initStockData() {
 	}
