@@ -74,7 +74,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		
 	};
 	
-	private ComHelperAppContextImpl context = new ComHelperAppContextImpl();
+	private ComHelperAppContextImpl context;
 	public StockAppFramework(StockApplication app){
 		this.app = app;
 		this.userAgent = new WebView(app).getSettings().getUserAgentString();
@@ -93,6 +93,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected IStockAppContext getContext() {
+		if(context == null)
+			context = new ComHelperAppContextImpl();
 		return context;
 	}
 
@@ -100,8 +102,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initInternalServices() {
-		addServiceFeaturePlugin(new StatefullServicePlugin());
 		super.initInternalServices();
+		addServiceFeaturePlugin(new StatefullServicePlugin());
 	}
 	@Override
 	protected void initModules() {
