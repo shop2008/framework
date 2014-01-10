@@ -21,7 +21,6 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.security.api.LoginAction;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
