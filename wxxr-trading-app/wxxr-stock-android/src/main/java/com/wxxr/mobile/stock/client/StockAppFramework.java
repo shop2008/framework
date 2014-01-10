@@ -202,9 +202,6 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		}
 		return dataDir;
 	}
-	@Override
-	public boolean isCurrentUIThread() {
-		return false;
-	}	
+	
 
 }
