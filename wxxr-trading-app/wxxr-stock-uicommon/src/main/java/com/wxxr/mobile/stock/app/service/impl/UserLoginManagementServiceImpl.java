@@ -41,7 +41,7 @@ import com.wxxr.stock.restful.resource.StockUserResource;
  * @author wangyan
  *
  */
-public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppContext> implements IUserLoginManagementService,IUserAuthManager,IUserIdentityManager {
+public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppContext> implements IUserLoginManagementService,IUserAuthManager{
 
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.UserLoginManagementServiceImpl");
 	private static final String KEY_USERNAME = "U";
@@ -235,44 +235,26 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 				throw new StockAppBizException(e.getMessage());
 			}
 	}
-	@Override
-	public synchronized boolean isUserAuthenticated() {
-		return myUserInfo != null;
-	}
-
-	@Override
-	public synchronized String getUserId() {
-		if(myUserInfo==null){
-			return "";
-		}
-		return myUserInfo.getPhoneNumber();
-	}
-
-	@Override
-	public boolean usrHasRoles(String... roles) {
-		return false;
-	}
+	
 
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(IEventRouter.class);
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 		addRequiredService(ICommandExecutor.class);
 	    addRequiredService(IPreferenceManager.class);	
-	    addRequiredService(IEventRouter.class);
 	}
 
 	@Override
 	protected void startService() {
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
-		context.registerService(IUserIdentityManager.class, this);
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(IUserLoginManagementService.class, this);
-		context.unregisterService(IUserIdentityManager.class, this);
 		context.unregisterService(IUserAuthManager.class, this);
 	}
 	
