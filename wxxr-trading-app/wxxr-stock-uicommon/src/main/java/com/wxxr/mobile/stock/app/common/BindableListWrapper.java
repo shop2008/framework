@@ -159,13 +159,13 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	/**
 	 * @return the reloadParameters
 	 */
-	protected Map<String, Object> getReloadParameters() {
+	public Map<String, Object> getReloadParameters() {
 		return reloadParameters;
 	}
 	/**
 	 * @param reloadParameters the reloadParameters to set
 	 */
-	protected void setReloadParameters(Map<String, Object> reloadParameters) {
+	public void setReloadParameters(Map<String, Object> reloadParameters) {
 		this.reloadParameters = reloadParameters;
 	}
 	
