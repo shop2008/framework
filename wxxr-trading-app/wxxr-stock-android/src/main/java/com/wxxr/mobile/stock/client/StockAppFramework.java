@@ -99,11 +99,13 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	
 
 	@Override
-	protected void initModules() {
+	protected void initInternalServices() {
 		addServiceFeaturePlugin(new StatefullServicePlugin());
-		
+		super.initInternalServices();
+	}
+	@Override
+	protected void initModules() {
 		registerKernelModule(new StockSiteSecurityModule());
-		
 		//registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
