@@ -211,6 +211,10 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	}
 	
 	public void doReloadIfNeccessay(Map<String, Object> params) {
+		doReloadIfNeccessay(params, false);
+	}
+	
+	public void doReloadIfNeccessay(Map<String, Object> params, boolean wait4Finish) {
 		if(inReloading){
 			if(getLog().isDebugEnabled()){
 				getLog().debug("cache is still in loading, reloading aborted, cache name :"+getEntityTypeName());
@@ -227,7 +231,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		if(getLog().isDebugEnabled()){
 			getLog().debug("cache is going to be reloaded ...");
 		}
-		doReload(false,params);
+		doReload(wait4Finish,params);
 	}
 
 	/* (non-Javadoc)
@@ -275,6 +279,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 						}
 					}finally {
 						inReloading = false;
+						lastUpdateTime = System.currentTimeMillis();
 					}
 			}
 			

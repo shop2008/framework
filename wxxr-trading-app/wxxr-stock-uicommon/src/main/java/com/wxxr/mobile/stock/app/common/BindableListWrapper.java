@@ -38,11 +38,14 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	private IEntityFilter<E> filter;
 	private BindableBeanSupport pSupport = new BindableBeanSupport(this);
 	private final IBindableEntityCache<?, E> cache;
+	private boolean disableEvent;
 	private ICacheUpdatedCallback callback = new ICacheUpdatedCallback() {
 		
 		@Override
 		public void dataChanged(IBindableEntityCache<?, ?> cache) {
-			notifyCacheChanged();
+			if(!disableEvent){
+				notifyCacheChanged();
+			}
 		}
 	};
 	
@@ -113,7 +116,12 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 
 	public synchronized List<E> getData(boolean forceReload){
 		if(forceReload){
-			doReload();
+			this.disableEvent = true;
+			try {
+				doReload();
+			}finally {
+				this.disableEvent = false;
+			}
 		}
 		return getData();
 	}
