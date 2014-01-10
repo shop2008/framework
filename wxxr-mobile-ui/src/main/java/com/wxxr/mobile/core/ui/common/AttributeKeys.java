@@ -15,7 +15,7 @@ public abstract class AttributeKeys {
 			
 	public static final AttributeKey<Boolean> enabled = new AttributeKey<Boolean>(Boolean.class,"enabled");
 	
-	public static final AttributeKey<Integer> backgroundColor = new AttributeKey<Integer>(Integer.class,"backgroundColor");
+	public static final AttributeKey<String> backgroundColor = new AttributeKey<String>(String.class,"backgroundColor");
 	
 	public static final AttributeKey<Integer> foregroundColor = new AttributeKey<Integer>(Integer.class,"foregroundColor");
 

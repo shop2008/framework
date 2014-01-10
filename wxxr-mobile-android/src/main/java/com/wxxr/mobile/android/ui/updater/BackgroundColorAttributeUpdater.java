@@ -3,8 +3,11 @@
  */
 package com.wxxr.mobile.android.ui.updater;
 
+import android.graphics.Color;
 import android.view.View;
 
+import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.android.ui.RUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
@@ -19,9 +22,15 @@ public class BackgroundColorAttributeUpdater implements IAttributeUpdater<View> 
 	@Override
 	public <T> void updateControl(View control, AttributeKey<T> attrType,
 			IUIComponent field, Object value) {
-		Integer val = (Integer)value;
-		if((val != null)&&(attrType == AttributeKeys.backgroundColor)){
-			control.setBackgroundColor(val.intValue());
+		if(value instanceof String){
+			String val = (String)value;
+			if((val != null)&&(attrType == AttributeKeys.backgroundColor)){
+				if(RUtils.isResourceIdURI(val)){
+					control.setBackgroundColor(AppUtils.getFramework().getAndroidApplication().getResources().getColor(RUtils.getInstance().getResourceIdByURI(val)));
+				}else{
+					control.setBackgroundColor(Color.parseColor(val));
+				}
+			}
 		}
 	}
 
