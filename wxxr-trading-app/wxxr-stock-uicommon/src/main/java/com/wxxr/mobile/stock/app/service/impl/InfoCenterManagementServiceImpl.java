@@ -7,12 +7,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.LRUMap;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
@@ -33,10 +32,11 @@ import com.wxxr.mobile.stock.app.service.loader.FiveDayStockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockMinuteKLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.mobile.stock.app.service.loader.StockTaxisLoader;
+import com.wxxr.stock.hq.ejb.api.StockLineVO;
+import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
+import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
-import com.wxxr.stock.restful.json.QuotationListVO;
-import com.wxxr.stock.restful.resource.StockResource;
 
 /**
  * @author wangxuyang
@@ -48,6 +48,8 @@ public class InfoCenterManagementServiceImpl extends
 
 	private static final Trace log = Trace
 			.register("com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl");
+	
+	@SuppressWarnings("unused")
 	private static class StockTaxisComparator implements Comparator<StockTaxisBean> {
 
 		private String fieldName,order;
@@ -110,8 +112,9 @@ public class InfoCenterManagementServiceImpl extends
 		}
 	}
 	private SearchStockListBean stockListbean = new SearchStockListBean();
-	private StockQuotationBean stockQuotationbean = new StockQuotationBean();
 	protected LineListBean lineListBean = new LineListBean();
+	private LRUMap<String, BindableListWrapper<StockLineBean>> dayLineCache = new LRUMap<String, BindableListWrapper<StockLineBean>>(100, 10*60);
+	private LRUMap<String, BindableListWrapper<StockMinuteKBean>> fiveDayMinKCache = new LRUMap<String, BindableListWrapper<StockMinuteKBean>>(100, 10*60);
 	
 	// ====================module life cycle methods ==================
 	@Override
@@ -126,18 +129,18 @@ public class InfoCenterManagementServiceImpl extends
 	    
 		context.registerService(IInfoCenterManagementService.class, this);
         IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
-        stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List>("StockQuotation",30);
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockQuotation", new StockQuotationLoader());
+        stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List<StockQuotationVO>>("StockQuotation",30);
+        registry.registerEntityLoader("StockQuotation", new StockQuotationLoader());
         
         
-        stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("StockMinuteK");
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
-        fiveDaystockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List>("FiveDayStockMinuteK");
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("FiveDayStockMinuteK", new FiveDayStockMinuteKLoader());
+        stockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List<StockMinuteKVO>>("StockMinuteK");
+        registry.registerEntityLoader("StockMinuteK", new StockMinuteKLoader());
+        fiveDaystockMinuteKBean_cache=new GenericReloadableEntityCache<String, StockMinuteKBean, List<StockMinuteKVO>>("FiveDayStockMinuteK");
+        registry.registerEntityLoader("FiveDayStockMinuteK", new FiveDayStockMinuteKLoader());
         
-        dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List>("DayStockLine");
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("DayStockLine", new DayStockLineLoader());
-        context.getService(IEntityLoaderRegistry.class).registerEntityLoader("StockTaxis", new StockTaxisLoader());
+        dayStockLineBean_cache=new GenericReloadableEntityCache<String, StockLineBean, List<StockLineVO>>("DayStockLine");
+        registry.registerEntityLoader("DayStockLine", new DayStockLineLoader());
+        registry.registerEntityLoader("StockTaxis", new StockTaxisLoader());
 	}
 
 	@Override
@@ -161,10 +164,10 @@ public class InfoCenterManagementServiceImpl extends
 		return this.stockListbean;
 	}
 
-	private <T> T getRestService(Class<T> restResouce) {
-		return context.getService(IRestProxyService.class).getRestService(
-				restResouce);
-	}
+//	private <T> T getRestService(Class<T> restResouce) {
+//		return context.getService(IRestProxyService.class).getRestService(
+//				restResouce);
+//	}
 	//分钟线
 	@Override
 	public StockMinuteKBean getMinuteline(Map<String, String> params) {
@@ -198,7 +201,11 @@ public class InfoCenterManagementServiceImpl extends
 	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
              return null;
          }
-	     BindableListWrapper<StockLineBean> dayline = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
+	     String key = new StringBuffer().append(market).append(code).toString();
+	     
+	     BindableListWrapper<StockLineBean> dayline = dayLineCache.get(key);
+	     if(dayline == null) {
+	    	 dayline = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
 	            @Override
 	            public boolean doFilter(StockLineBean entity) {
 	                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
@@ -208,15 +215,19 @@ public class InfoCenterManagementServiceImpl extends
 	            }
 	            
 	        }, new  StockLineBeanComparator());
-	     
-          Map<String, Object> p=new HashMap<String, Object>(); 
-          p.put("code", code);
-          p.put("market", market);
-          this.dayStockLineBean_cache.forceReload(p,true);
-          dayStockLineBean_cache.setCommandParameters(p);
+	          Map<String, Object> p=new HashMap<String, Object>(); 
+	          p.put("code", code);
+	          p.put("market", market);
+	          this.dayStockLineBean_cache.forceReload(p,true);
+	          dayStockLineBean_cache.setCommandParameters(p);
+	          dayline.setReloadParameters(p);
+	          this.dayLineCache.put(key, dayline);
+	     }else{
+	    	 this.dayStockLineBean_cache.doReloadIfNeccessay(dayline.getReloadParameters());
+	     }
           return dayline;
-
 	 }
+	 
 	class StockLineBeanComparator implements Comparator<StockLineBean>{
         @Override
         public int compare(StockLineBean b1, StockLineBean b2) {
@@ -229,13 +240,13 @@ public class InfoCenterManagementServiceImpl extends
         }
 	}
 	//行情信息
-    private GenericReloadableEntityCache<String,StockQuotationBean,List> stockQuotationBean_cache;
+    private GenericReloadableEntityCache<String,StockQuotationBean,List<StockQuotationVO>> stockQuotationBean_cache;
     //分钟线信息
-    private GenericReloadableEntityCache<String,StockMinuteKBean,List> stockMinuteKBean_cache;
+    private GenericReloadableEntityCache<String,StockMinuteKBean,List<StockMinuteKVO>> stockMinuteKBean_cache;
     //5日分钟线信息
-    private GenericReloadableEntityCache<String,StockMinuteKBean,List> fiveDaystockMinuteKBean_cache;
+    private GenericReloadableEntityCache<String,StockMinuteKBean,List<StockMinuteKVO>> fiveDaystockMinuteKBean_cache;
     //日K
-    private GenericReloadableEntityCache<String,StockLineBean,List> dayStockLineBean_cache;
+    private GenericReloadableEntityCache<String,StockLineBean,List<StockLineVO>> dayStockLineBean_cache;
     
 	//查询股票行情
     private GenericReloadableEntityCache<String,StockTaxisBean,StockTaxisVO> stockTaxis_cache;
@@ -247,32 +258,36 @@ public class InfoCenterManagementServiceImpl extends
 			return new StockQuotationBean();//fix闪退问题
 		}
 	    String mc=market+code;
-	    if (stockQuotationBean_cache.getEntity(market+code)==null){
-	        StockQuotationBean b=new StockQuotationBean();
-            stockQuotationBean_cache.putEntity(mc,b);
-        }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("code", code);
         params.put("market", market);
+	    if (stockQuotationBean_cache.getEntity(market+code)==null){
+	        StockQuotationBean b=new StockQuotationBean();
+            stockQuotationBean_cache.putEntity(mc,b);
+            this.stockQuotationBean_cache.forceReload(params,true);
+        }else{
+            this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
 
-        this.stockQuotationBean_cache.forceReload(params,true);
-        return stockQuotationBean_cache.getEntity(mc);
+        }
+         return stockQuotationBean_cache.getEntity(mc);
     }
+	
 	@Override
     public StockQuotationBean getSyncStockQuotation(String code, String market) {
 		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
 			return new StockQuotationBean();//fix闪退问题
 		}
 	    String mc=market+code;
-	    if (stockQuotationBean_cache.getEntity(market+code)==null){
-	        StockQuotationBean b=new StockQuotationBean();
-            stockQuotationBean_cache.putEntity(mc,b);
-        }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("code", code);
         params.put("market", market);
-
-        this.stockQuotationBean_cache.forceReload(params,true);
+	    if (stockQuotationBean_cache.getEntity(market+code)==null){
+	        StockQuotationBean b=new StockQuotationBean();
+            stockQuotationBean_cache.putEntity(mc,b);
+            this.stockQuotationBean_cache.forceReload(params,true);
+        }else{
+        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
+        }
         return stockQuotationBean_cache.getEntity(mc);
     }
 //=====================beans =====================
@@ -323,40 +338,54 @@ public class InfoCenterManagementServiceImpl extends
 
 	@Override
 	public QuotationListBean getQuotations() {
-		Future<QuotationListVO> future = context.getExecutor().submit(new Callable<QuotationListVO>() {
-			public QuotationListVO call() throws Exception {
-				QuotationListVO vo = getRestService(StockResource.class).getQuotation(null);
-				return vo;
-			}
-		});
-		try {
-			QuotationListVO volist = future.get();
-		}catch (Exception e) {
-			log.warn("Failed to fetch quotation",e);
-		}
+		//TODO fix it
+//		Future<QuotationListVO> future = context.getExecutor().submit(new Callable<QuotationListVO>() {
+//			public QuotationListVO call() throws Exception {
+//				QuotationListVO vo = getRestService(StockResource.class).getQuotation(null);
+//				return vo;
+//			}
+//		});
+//		try {
+//			QuotationListVO volist = future.get();
+//		}catch (Exception e) {
+//			log.warn("Failed to fetch quotation",e);
+//		}
 		return quotationListBean;
 	}
 	
 	
 
 	public BindableListWrapper<StockMinuteKBean> getFiveDayMinuteline(final String code, final String market) {
-	    BindableListWrapper<StockMinuteKBean> stockMinuteKBeans = fiveDaystockMinuteKBean_cache.getEntities(new IEntityFilter<StockMinuteKBean>(){
-            @Override
-            public boolean doFilter(StockMinuteKBean entity) {
-                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
-                    return true;
-                }
-                return false;
-            }
+	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
+             return null;
+         }
+	     String key = new StringBuffer().append(market).append(code).toString();
+
+	    BindableListWrapper<StockMinuteKBean> stockMinuteKBeans = this.fiveDayMinKCache.get(key);
+	    if(stockMinuteKBeans == null) {
+	    	stockMinuteKBeans = fiveDaystockMinuteKBean_cache.getEntities(new IEntityFilter<StockMinuteKBean>(){
+	            @Override
+	            public boolean doFilter(StockMinuteKBean entity) {
+	                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
+	                    return true;
+	                }
+	                return false;
+	            }
             
-        }, new StockMinuteKBeanComparator());
-	    
+	    	}, new StockMinuteKBeanComparator());
 	        Map<String, Object> p=new HashMap<String, Object>(); 
 	        p.put("code", code);
 	        p.put("market", market);
+	        stockMinuteKBeans.setReloadParameters(p);
 	        this.fiveDaystockMinuteKBean_cache.forceReload(p,true);
+	        this.fiveDayMinKCache.put(key, stockMinuteKBeans);
+	    }else{
+	    	 this.fiveDaystockMinuteKBean_cache.doReloadIfNeccessay(stockMinuteKBeans.getReloadParameters(),true);
+	    }
+	    
 		return stockMinuteKBeans;
 	}
+	
 	class StockMinuteKBeanComparator implements Comparator<StockMinuteKBean>{
         @Override
         public int compare(StockMinuteKBean b1, StockMinuteKBean b2) {
