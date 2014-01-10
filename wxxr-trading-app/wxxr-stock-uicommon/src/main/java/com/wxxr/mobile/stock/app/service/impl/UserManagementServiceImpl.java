@@ -45,6 +45,7 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler.ReadClientInfoCommand;
@@ -233,21 +234,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public UserBean getMyUserInfo() {
-		if(!getService(IUserIdentityManager.class).isUserAuthenticated()){
-			return null;
-		}
 		if(myUserInfo==null){
-			myUserInfo=new UserBean();
-			RefresUserInfoHandler.RefreshUserInfoCommand command=new RefreshUserInfoCommand();
-			Future<UserVO> future=context.getService(ICommandExecutor.class).submitCommand(command);
-			try {
-				UserVO userVO=future.get(30,TimeUnit.SECONDS);
-				myUserInfo.setNickName(userVO.getNickName());
-				myUserInfo.setUsername(userVO.getUserName());
-				myUserInfo.setPhoneNumber(userVO.getMoblie());
-			} catch (Exception e) {
-				new StockAppBizException("系统错误");
-			}
+			myUserInfo = getService(IUserLoginManagementService.class).getMyUserInfo();
 		}
 		return myUserInfo;
 	}
@@ -1102,6 +1090,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		addRequiredService(ICommandExecutor.class);
 	    addRequiredService(IPreferenceManager.class);
 	    addRequiredService(IUserIdentityManager.class);
+	    addRequiredService(IUserLoginManagementService.class);
 	}
 
 

@@ -141,7 +141,6 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
        HttpRpcService httpService = context.getService(HttpRpcService.class);
        if (httpService != null) {
            httpService.resetHttpClientContext();
-           
        }
        usernamePasswordCredential4Login=null;
        getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGOUT));
@@ -173,18 +172,14 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	private void restoreUserBean(){
 	    IPreferenceManager mgr = getPrefManager();
         Dictionary<String, String> d = mgr.getPreference(getModuleName());
-        String nickName = d != null ? d.get(KEY_NICKNAME) : null;
+        String pwd = d != null ? d.get(KEY_PASSWORD) : null;
         String user_name = d != null ? d.get(KEY_USERNAME) : null;
-        String pn = d != null ? d.get(KEY_PHONENUMBER) : null;
-        String icon = d != null ? d.get(KEY_USERPIC) : null;
-
         if(user_name != null && this.myUserInfo==null){
-            myUserInfo=new UserBean();
-            myUserInfo.setNickName(nickName);
-            myUserInfo.setUsername(user_name);
-            myUserInfo.setPhoneNumber(pn);
-            myUserInfo.setUserPic(icon);
-            //context.setAttribute("currentUser", myUserInfo);
+        	try {
+				login(user_name, pwd);
+			} catch (Exception e) {
+				log.warn("Failed to login by cookie",e);
+			}
         }
           
 	}
@@ -246,9 +241,10 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	}
 
 	@Override
-	protected void startService() {
+	protected void startService() {		
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
+		restoreUserBean();
 	}
 
 	@Override
@@ -260,5 +256,10 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	@Override
 	public String getModuleName() {
 		return "UserLoginManagementService";
+	}
+
+	@Override
+	public UserBean getMyUserInfo() {
+		return myUserInfo;
 	}
 }

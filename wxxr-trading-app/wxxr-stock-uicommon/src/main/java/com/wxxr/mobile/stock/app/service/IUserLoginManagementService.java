@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.UserBean;
 
 public interface IUserLoginManagementService {
 
@@ -30,4 +31,6 @@ public interface IUserLoginManagementService {
 	void logout();
 
 	void resetPassword(String userName);
+	
+	UserBean getMyUserInfo();
 }
