@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
@@ -22,6 +23,7 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	
 	private List<E> data;
 	private Comparator<E> comparator;
+	private Map<String, Object> reloadParameters;
 	/**
 	 * @return the comparator
 	 */
@@ -118,7 +120,7 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		if(forceReload){
 			this.disableEvent = true;
 			try {
-				doReload();
+				doReload(getReloadParameters());
 			}finally {
 				this.disableEvent = false;
 			}
@@ -153,6 +155,18 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		return this.data;
 	}
 	
-	protected abstract void doReload();
+	protected abstract void doReload(Map<String, Object> params);
+	/**
+	 * @return the reloadParameters
+	 */
+	protected Map<String, Object> getReloadParameters() {
+		return reloadParameters;
+	}
+	/**
+	 * @param reloadParameters the reloadParameters to set
+	 */
+	protected void setReloadParameters(Map<String, Object> reloadParameters) {
+		this.reloadParameters = reloadParameters;
+	}
 	
 }
