@@ -1,6 +1,10 @@
 package com.wxxr.mobile.stock.client.widget;
 
 
+import java.util.List;
+
+import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -130,9 +134,14 @@ public class PinnedHeaderListView extends ListView {
 			return;
 		}
 		
+		
+		/*AbstractPinnedHeaderListAdapter adapter = (AbstractPinnedHeaderListAdapter)getAdapter();
+		List<Integer>  titleSection = adapter.getTitleSection();*/
 		if(getHeaderViewsCount()>0 && (position == 0)) {
 			return;
 		}
+		
+		position = position - getHeaderViewsCount();
 		int state = mAdapter.getPinnedHeaderState(position);
 		
 		switch (state) {

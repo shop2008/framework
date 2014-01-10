@@ -42,10 +42,10 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 			long id) {
 		SimpleInputEvent event = new SimpleInputEvent("PinItemClick",getModel());
 		Object list = getUIControl();
-		
+		PinnedHeaderListView l = null;
 		int titleCountBeforeCurPos = 0;
 		if (list instanceof PinnedHeaderListView) {
-			PinnedHeaderListView l = ((PinnedHeaderListView) list);
+			l = ((PinnedHeaderListView) list);
 			ListAdapter adapter = l.getAdapter();
 			if(adapter instanceof AbstractPinnedHeaderListAdapter) {
 				AbstractPinnedHeaderListAdapter groupAdapter = (AbstractPinnedHeaderListAdapter)l.getAdapter();
@@ -68,17 +68,17 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 			}
 			
 			
-			if(position < l.getHeaderViewsCount()) {
+			/*if(position < l.getHeaderViewsCount()) {
 				return;
 			} else if(position >= l.getCount() + l.getHeaderViewsCount()) {
 				return;
 			} else {
 				position -= l.getHeaderViewsCount();
-			}
+			}*/
 			
 			
 		}
-		event.addProperty("position", position - titleCountBeforeCurPos);
+		event.addProperty("position", position - titleCountBeforeCurPos -(l!=null?l.getHeaderViewsCount():0));
 		handleInputEvent(event);
 	}
 
