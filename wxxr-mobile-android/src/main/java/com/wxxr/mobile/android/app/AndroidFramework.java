@@ -281,6 +281,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		}
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.api.IApplication#runOnUIThread(java.lang.Runnable)
 	 */
@@ -291,6 +292,14 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	    }else{
 	    	this.uiThreadHandler.post(safeRunnable(task));
 	    }
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.api.IApplication#isCurrentUIThread()
+	 */
+	@Override
+	public boolean isCurrentUIThread() {
+		return Looper.myLooper() == this.uiThreadHandler.getLooper();
 	}
 
 }

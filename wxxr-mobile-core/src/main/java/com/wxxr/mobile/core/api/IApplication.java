@@ -24,5 +24,7 @@ public interface IApplication<C extends IKernelContext, M extends IKernelModule<
 	
 	boolean isInDebugMode();
 	
+	boolean isCurrentUIThread();
+	
 	
 }

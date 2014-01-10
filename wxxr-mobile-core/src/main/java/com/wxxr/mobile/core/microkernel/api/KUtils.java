@@ -42,6 +42,11 @@ public abstract class KUtils {
 	public static <V> Future<V> executeTask(Callable<V> task){
 		return getApplication().getExecutor().submit(task);
 	}
+	
+	
+	public static boolean isCurrentUIThread() {
+		return getApplication().isCurrentUIThread();
+	}
 
 
 }
