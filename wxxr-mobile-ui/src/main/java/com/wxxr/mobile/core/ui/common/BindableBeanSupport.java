@@ -39,6 +39,10 @@ public class BindableBeanSupport implements IBindableBean {
 			listeners.add(listener);
 		}
 	}
+	
+	private synchronized boolean hasListeners() {
+		return (this.listeners != null) && (this.listeners.size() > 0);
+	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#removePropertyChangeListener(com.wxxr.mobile.core.bean.api.PropertyChangeListener)
@@ -67,6 +71,9 @@ public class BindableBeanSupport implements IBindableBean {
 	
 	public synchronized void firePropertyChange(String propertyName, 
 			Object oldValue, Object newValue) {
+		if(!hasListeners()){
+			return;
+		}
 		if (ObjectUtils.isEquals(oldValue, newValue)) {
 			return;
 		}
