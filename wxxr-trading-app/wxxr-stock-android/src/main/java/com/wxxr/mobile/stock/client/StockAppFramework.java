@@ -24,11 +24,10 @@ import com.wxxr.mobile.android.ui.module.AndroidI10NServiceModule;
 import com.wxxr.mobile.android.validation.ValidationMessageInterpolator;
 import com.wxxr.mobile.core.command.impl.CommandExecutorModule;
 import com.wxxr.mobile.core.common.SimpleUserIdentityManagerModule;
+import com.wxxr.mobile.core.common.StatefullServicePlugin;
 import com.wxxr.mobile.core.common.UserBasedSessionManagerModule;
-import com.wxxr.mobile.core.event.api.EventRouterImpl;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
-import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.microkernel.api.IServiceAvailableCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.rest.RestEasyClientModule;
@@ -101,8 +100,11 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 
 	@Override
 	protected void initModules() {
+		addServiceFeaturePlugin(new StatefullServicePlugin());
+		
 		registerKernelModule(new StockSiteSecurityModule());
-		registerKernelModule(new EventRouterImpl<IStockAppContext>());
+		
+		//registerKernelModule(new EventRouterImpl<IStockAppContext>());
 		registerKernelModule(new NetworkManagementModule<IStockAppContext>());
 		registerKernelModule(new PreferenceManagerModule<IStockAppContext>());
 		registerKernelModule(new SimpleUserIdentityManagerModule<IStockAppContext>());
@@ -195,6 +197,10 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 			dataDir= getAndroidApplication().getDir(name, mode);
 		}
 		return dataDir;
+	}
+	@Override
+	public boolean isCurrentUIThread() {
+		return false;
 	}	
 
 }
