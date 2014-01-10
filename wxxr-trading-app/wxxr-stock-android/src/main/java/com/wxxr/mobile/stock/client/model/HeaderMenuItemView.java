@@ -22,6 +22,7 @@ import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -37,7 +38,10 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService usrMgr;
 
-	@Bean(type=BindingType.Pojo, express="${usrMgr.myUserInfo}")
+	@Bean(type=BindingType.Service)
+	IUserLoginManagementService loginMgr;
+	
+	@Bean(type=BindingType.Pojo, express="${loginMgr.myUserInfo}")
 	UserBean userInfo;
 	
 	
