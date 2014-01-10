@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.wxxr.mobile.core.command.annotation.AllowUIThread;
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
@@ -53,7 +54,8 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 		}
 	};
 	
-	protected <V> Future<V> asFuture(final Future<V> f) {
+	protected <V> Future<V> asFuture(final Future<V> f, AllowUIThread ann) {
+		final boolean allUI = ann != null;
 		return new Future<V>() {
 
 			/**
@@ -72,8 +74,8 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			 * @see java.util.concurrent.Future#get()
 			 */
 			public V get() throws InterruptedException, ExecutionException {
-				if(KUtils.isCurrentUIThread()){
-					log.error("Current thread is UIThread, calling get() method of Future which will cause UI frozen !!!", new Throwable());
+				if(KUtils.isCurrentUIThread()&&(allUI == false)){
+					throw new IllegalStateException("Current thread is UIThread, calling get() method of Future is not allowed, which may cause UI frozen !!!");
 				}
 				return f.get();
 			}
@@ -89,8 +91,8 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			 */
 			public V get(long arg0, TimeUnit arg1) throws InterruptedException,
 					ExecutionException, TimeoutException {
-				if(KUtils.isCurrentUIThread()){
-					log.error("Current thread is UIThread , calling get() method of Future will cause UI frozen !!!", new Throwable());
+				if(KUtils.isCurrentUIThread()&&(allUI == false)){
+					log.error("Current thread is UIThread, calling get() method of Future is not allowed, which may cause UI frozen !!!");
 				}
 				return f.get(arg0, arg1);
 			}
@@ -122,7 +124,7 @@ public class CommandExecutorModule<T extends IKernelContext> extends AbstractMod
 			public V call() throws Exception {
 				return handler.execute(command);
 			}
-		}));
+		}),command.getClass().getAnnotation(AllowUIThread.class));
 	}
 
 	/**
