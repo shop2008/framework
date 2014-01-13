@@ -15,7 +15,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
  * SiteSecurityModule
  * android 系统中使用的证书要求以BKS的库文件结构保存，
  * 通常情况下，我们使用java的keytool只能生成jks的证书库，如果生成BKS的则需要下载BC库，
- * 如是JDK1.6则下载bcprov-jdk16-141.jar，且将该文件放到jdk1.6.0_03\jre\lib\ext目录下，
+ * 如是JDK1.6则下载bcprov-jdk16-141.jar，且将该文件放到jre\lib\ext目录下，
  * 然后运行以下命令即可以生成BKS的证书库和相应的证书。
  * keytool -importcert -file CA证书文件  -keystore 库文件名称  -storetype BKS -provider org.bouncycastle.jce.provider.BouncyCastleProvider
  * @author wangxuyang
