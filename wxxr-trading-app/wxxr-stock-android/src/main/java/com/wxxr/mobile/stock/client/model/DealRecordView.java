@@ -105,7 +105,7 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	List<String> imgData;
 	
 	/**
-	 * 初始化
+	 * 初始化 
 	 * */
 	@OnShow
 	protected void initData(){

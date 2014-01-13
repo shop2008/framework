@@ -39,7 +39,7 @@ public class imageViewPager extends ViewPager implements IDataChangedListener {
 	public void setDataProvider(IObservableListDataProvider dataProvider) {
 		IObservableListDataProvider oldProv = this.dataProvider;
 		this.dataProvider = dataProvider;
-		if(this.dataProvider != null){
+		if(this.dataProvider != null){ 
 			this.dataProvider.registerDataChangedListener(this);
 		}else if(oldProv != null){
 			oldProv.unregisterDataChangedListener(this);

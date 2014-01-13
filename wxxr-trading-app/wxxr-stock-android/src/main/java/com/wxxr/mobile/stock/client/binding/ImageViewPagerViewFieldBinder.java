@@ -22,7 +22,7 @@ public class ImageViewPagerViewFieldBinder implements IFieldBinder {
 	@Override
 	public void init(IWorkbenchRTContext mngCtx) {
 		this.mngContext = mngCtx;
-	}
+	} 
 
 	@Override
 	public void destory() {

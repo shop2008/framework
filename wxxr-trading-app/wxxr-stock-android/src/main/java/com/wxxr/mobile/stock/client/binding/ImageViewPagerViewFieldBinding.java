@@ -23,7 +23,7 @@ public class ImageViewPagerViewFieldBinding extends BasicFieldBinding implements
 		super(ctx, fieldName, attrSet);
 		
 	}
-
+ 
 	@Override
 	public void activate(IView model) {
 		IUIComponent comp = model.getChild(getFieldName());
