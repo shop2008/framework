@@ -1,10 +1,26 @@
 package com.wxxr.mobile.stock.app;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
+
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.api.DataEntity;
+import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
+import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
+import com.wxxr.mobile.core.rpc.http.api.HttpParamsBean;
+import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
+import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
+import com.wxxr.mobile.core.rpc.http.api.HttpStatus;
+import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 
 public class SSLHttpRpcServiceTest extends TestCase {
 	private KeyStore trustKeyStore;
@@ -26,15 +42,13 @@ public class SSLHttpRpcServiceTest extends TestCase {
 		super.tearDown();
 	}
 
-/*	public void testCreateRequest() throws Exception {
+	public void testCreateRequest() throws Exception {
 
 		MockApplication app = new MockApplication() {
 			ExecutorService executor = Executors.newFixedThreadPool(3);
 
 			
-			 * (non-Javadoc)
-			 * 
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
+			
 			 
 			@Override
 			public ExecutorService getExecutorService() {
@@ -97,7 +111,7 @@ public class SSLHttpRpcServiceTest extends TestCase {
 		byte[] data = aos.toByteArray();
 		System.out.print(new String(data));
 	}
-*/
+
 	public void testHttpClient() throws Exception {
 		/*Protocol.registerProtocol("https", new Protocol("https",
 				new MySSLSocketFactory(), 443));
