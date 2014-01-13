@@ -1,9 +1,7 @@
 package com.wxxr.mobile.stock.client.widget;
 
 
-import java.util.List;
 
-import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 
 import android.content.Context;
 import android.graphics.Canvas;
