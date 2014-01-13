@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 
 /**
+ * SiteSecurityModule
  * @author wangxuyang
  *
  */
