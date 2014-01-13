@@ -147,7 +147,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	private UserBean myUserInfo;
 
-	private IStockAppContext context;
 	/*private IEventListener listener = new IEventListener() {
       @Override
       public void onEvent(IBroadcastEvent event) {
