@@ -323,7 +323,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		}else{
 			scale = (lowPrice - highPrice) / fHeight;
 		}
-		float width = (float) (zWidth / 240.0);
+		float width = (float) (zWidth / 241.0);
 		for (int i = 0; i < size - 1; i++)
 		{
 			if (i <= 239)
@@ -358,7 +358,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	 * @param canvas
 	 */
 	private void setOnDrawAverageLine(Canvas canvas){
-		float width = (float) (zWidth / 240.0);
+		float width = (float) (zWidth / 241.0);
 		float scale = 0.0f;
 		if(highPrice - lowPrice>0){
 			scale = (highPrice - lowPrice) / fHeight;
@@ -447,28 +447,30 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	private void setOnDrawSecuVolume(Canvas canvas){
 		mPaint.setColor(getStockAverageLineColor());
 		float scale = maxSecuvolume/zHeight;
-		float width = (float) (zWidth / 240.0);
-		for (int i = 0; i < size; i++)
+		float width = (float) (zWidth / 241.0);
+		for (int i = 0; i < size-1; i++)
 		{
-			mPaint.setAntiAlias(true);
-			canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG)); 
-			mPaint.setStrokeWidth(2);
-			StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
-			// 成交量
-			if (stockMinute!=null)
-			{
+			if(i <= 239){
 				mPaint.setAntiAlias(true);
-				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-//				mPaint.setStrokeWidth(3);
-				float secuvolume =stockMinute.getSecuvolume() >= 0 ? stockMinute.getSecuvolume() : 0;
-				if (secuvolume >= 0)
+				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG)); 
+				mPaint.setStrokeWidth(2);
+				StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
+				// 成交量
+				if (stockMinute!=null)
 				{
-					// 柱状图顶点
-					startX = zStartX+ (width*i)+(float)1.0;
-					startY = zStopY - (secuvolume/scale);
-					canvas.drawLine(startX, startY, startX, zStopY, mPaint);
+					mPaint.setAntiAlias(true);
+					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
+	//				mPaint.setStrokeWidth(3);
+					float secuvolume =stockMinute.getSecuvolume() >= 0 ? stockMinute.getSecuvolume() : 0;
+					if (secuvolume >= 0)
+					{
+						// 柱状图顶点
+						startX = zStartX+ (width*i)+(float)1.0;
+						startY = zStopY - (secuvolume/scale);
+						canvas.drawLine(startX, startY, startX, zStopY, mPaint);
+					}
 				}
-			}
-		}		
+			}	
+		}
 	}
 }

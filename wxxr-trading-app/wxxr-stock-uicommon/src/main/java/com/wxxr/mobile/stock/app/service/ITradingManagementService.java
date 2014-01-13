@@ -32,6 +32,7 @@ public interface ITradingManagementService {
     
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList();
     
+    public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList();
 	/**
 	 * 获取当前用户全部交易盘记录
 	 * 

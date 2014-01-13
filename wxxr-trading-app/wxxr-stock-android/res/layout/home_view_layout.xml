@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tlist="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" 
@@ -16,135 +15,14 @@
 	    android:orientation="vertical"
 	    bind:field="acctRefreshView"
 	    bind:on_TopRefresh="handleTopRefresh" >
-	    <com.wxxr.mobile.stock.client.widget.ScrollViewExtend 
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:scrollbars="none"
-	        android:fadingEdge="none">
-	        <LinearLayout android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical">
-				<com.wxxr.mobile.stock.client.widget.PageSwiperView 
-				    android:layout_width="fill_parent"
-				    android:layout_height="170dp"
-				    bind:itemViewId="ImageSwiperItemView"
-				    bind:field="articles"
-				    android:background="@color/gray">
-				</com.wxxr.mobile.stock.client.widget.PageSwiperView>
-				<LinearLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:orientation="horizontal" 
-				    android:background="@drawable/title_background"
-				    android:gravity="center">
-					<TextView
-					    android:id="@+id/textView1"
-					    android:layout_width="fill_parent"
-					    android:layout_height="wrap_content"
-					    android:text="最大持股" 
-					    android:layout_weight="1"
-					    android:gravity="center"
-					    android:textSize="15sp"
-					    android:textColor="@color/white"
-					    />
-					<ImageView
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content"
-			                android:src="@drawable/title_line"/>
-
-					<TextView
-					    android:id="@+id/textView2"
-					    android:layout_width="fill_parent"
-					    android:layout_height="wrap_content"
-					    android:layout_weight="1"
-					    android:gravity="center"
-					    android:text="额度"
-					    android:textColor="@color/white"
-					    android:textSize="15sp" />
-
-					<ImageView
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content"
-			                android:src="@drawable/title_line"/>
-					<TextView
-					    android:id="@+id/textView3"
-					    android:layout_width="fill_parent"
-					    android:layout_height="wrap_content"
-					    android:text="盈亏" 
-					    android:layout_weight="1"
-					    android:gravity="center"
-					    android:textSize="15sp"
-					    android:textColor="@color/white"
-					    />
-				    
-				</LinearLayout>
-			
-				<LinearLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:orientation="horizontal"
-				    android:gravity="center" 
-				    bind:field="*"
-				    bind:on_Click="createBuyClick"
-				    android:padding="12dp">
-						<ImageView
-			                android:id="@id/ic_create_buy"
-			                android:layout_width="20dip"
-			                android:layout_height="20dip"
-			                android:src="@drawable/ic_create_buy" />
-			
-			            <TextView
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content"
-			                android:layout_marginLeft="8dip"
-			                android:layout_toRightOf="@id/ic_create_buy"
-			                android:text="创建买入"
-			                android:textColor="@android:color/white"
-			                android:textSize="16sp" />		
-				</LinearLayout>
-			    <TextView 
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:text="T日"
-			        android:id="@+id/listview_header_title"
-			        android:padding="4dp"
-			        android:textColor="#808080"
-			        android:textSize="15sp"
-			        android:background="#2D2C2A"
-			        bind:field="isVisibleT"/>
-				<com.wxxr.mobile.stock.client.widget.AutoHeightListView
-				    android:id="@+id/t_listView1"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    tlist:tHeaderTitle="T日"
-				    bind:field="tradingT"
-				    style="@style/mListView"
-				    bind:itemViewId="TradingBuyInfoItemView"
-				    bind:on_ItemClick="T_TradingMessageClick"
-				    >
-				</com.wxxr.mobile.stock.client.widget.AutoHeightListView>
-				
-				<TextView 
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:text="T+1日"
-			        android:id="@+id/listview_header_title"
-			        android:padding="4dp"
-			        android:textColor="#808080"
-			        android:textSize="15sp"
-			        bind:field="isVisibleT1"
-			        android:background="#2D2C2A"/>
-				<com.wxxr.mobile.stock.client.widget.AutoHeightListView
-				    android:id="@+id/t_listView2"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    tlist:tHeaderTitle="T+1日"
-				    bind:field="tradingT1"
-				    style="@style/mListView"
-				    bind:itemViewId="TradingBuyInfoItemView"
-				    bind:on_ItemClick="tradingMessageClick">
-				</com.wxxr.mobile.stock.client.widget.AutoHeightListView>                 
-	        </LinearLayout>
-	    </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
+	    <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
+	        style="@style/mListView"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        bind:field="alltrading"
+	        bind:headerViewId="TradingMainListHeaderView"
+	        bind:itemViewId="TradingBuySelectorItemView"
+	        bind:on_PinItemClick="tradingMessageClick">
+	    </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>	
 	</com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 </LinearLayout>
