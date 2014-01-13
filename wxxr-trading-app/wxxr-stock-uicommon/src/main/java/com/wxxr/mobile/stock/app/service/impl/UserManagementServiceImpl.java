@@ -457,7 +457,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	
 	@Override
 	public PersonalHomePageBean getMyPersonalHomePage() {
-		if (personalHomePageBean_cache==null) {
+        this.personalHomePageBean_cache.forceReload(null,true);
+        if (personalHomePageBean_cache==null) {
 			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("personalHomePageBean");
 		}
 	    String key="PersonalHomePageBean";
@@ -465,7 +466,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	        PersonalHomePageBean b=new PersonalHomePageBean();
 	        personalHomePageBean_cache.putEntity(key,b);
         }
-        this.personalHomePageBean_cache.forceReload(null,false);
         return personalHomePageBean_cache.getEntity(key);
 	}
 
