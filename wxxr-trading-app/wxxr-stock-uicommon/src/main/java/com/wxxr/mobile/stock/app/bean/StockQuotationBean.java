@@ -830,6 +830,316 @@ public class StockQuotationBean implements IBindableBean {
                 " , buyprice5=" + this.buyprice5 +
                 " , buyvolume1=" + this.buyvolume1 +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((averageprice == null) ? 0 : averageprice.hashCode());
+		result = prime * result
+				+ ((buyprice1 == null) ? 0 : buyprice1.hashCode());
+		result = prime * result
+				+ ((buyprice2 == null) ? 0 : buyprice2.hashCode());
+		result = prime * result
+				+ ((buyprice3 == null) ? 0 : buyprice3.hashCode());
+		result = prime * result
+				+ ((buyprice4 == null) ? 0 : buyprice4.hashCode());
+		result = prime * result
+				+ ((buyprice5 == null) ? 0 : buyprice5.hashCode());
+		result = prime * result + ((buysum == null) ? 0 : buysum.hashCode());
+		result = prime * result
+				+ ((buyvolume1 == null) ? 0 : buyvolume1.hashCode());
+		result = prime * result
+				+ ((buyvolume2 == null) ? 0 : buyvolume2.hashCode());
+		result = prime * result
+				+ ((buyvolume3 == null) ? 0 : buyvolume3.hashCode());
+		result = prime * result
+				+ ((buyvolume4 == null) ? 0 : buyvolume4.hashCode());
+		result = prime * result
+				+ ((buyvolume5 == null) ? 0 : buyvolume5.hashCode());
+		result = prime * result + ((capital == null) ? 0 : capital.hashCode());
+		result = prime * result + ((change == null) ? 0 : change.hashCode());
+		result = prime * result + ((close == null) ? 0 : close.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result
+				+ ((datetime == null) ? 0 : datetime.hashCode());
+		result = prime * result
+				+ ((handrate == null) ? 0 : handrate.hashCode());
+		result = prime * result + ((high == null) ? 0 : high.hashCode());
+		result = prime * result + ((lb == null) ? 0 : lb.hashCode());
+		result = prime * result + ((low == null) ? 0 : low.hashCode());
+		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		result = prime * result
+				+ ((marketvalue == null) ? 0 : marketvalue.hashCode());
+		result = prime * result
+				+ ((newprice == null) ? 0 : newprice.hashCode());
+		result = prime * result + ((open == null) ? 0 : open.hashCode());
+		result = prime * result + ((ppjs == null) ? 0 : ppjs.hashCode());
+		result = prime * result
+				+ ((profitrate == null) ? 0 : profitrate.hashCode());
+		result = prime * result
+				+ ((risefallrate == null) ? 0 : risefallrate.hashCode());
+		result = prime * result
+				+ ((secuamount == null) ? 0 : secuamount.hashCode());
+		result = prime * result
+				+ ((secuvolume == null) ? 0 : secuvolume.hashCode());
+		result = prime * result
+				+ ((sellprice1 == null) ? 0 : sellprice1.hashCode());
+		result = prime * result
+				+ ((sellprice2 == null) ? 0 : sellprice2.hashCode());
+		result = prime * result
+				+ ((sellprice3 == null) ? 0 : sellprice3.hashCode());
+		result = prime * result
+				+ ((sellprice4 == null) ? 0 : sellprice4.hashCode());
+		result = prime * result
+				+ ((sellprice5 == null) ? 0 : sellprice5.hashCode());
+		result = prime * result + ((sellsum == null) ? 0 : sellsum.hashCode());
+		result = prime * result
+				+ ((sellvolume1 == null) ? 0 : sellvolume1.hashCode());
+		result = prime * result
+				+ ((sellvolume2 == null) ? 0 : sellvolume2.hashCode());
+		result = prime * result
+				+ ((sellvolume3 == null) ? 0 : sellvolume3.hashCode());
+		result = prime * result
+				+ ((sellvolume4 == null) ? 0 : sellvolume4.hashCode());
+		result = prime * result
+				+ ((sellvolume5 == null) ? 0 : sellvolume5.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((szjs == null) ? 0 : szjs.hashCode());
+		result = prime * result + ((xdjs == null) ? 0 : xdjs.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockQuotationBean other = (StockQuotationBean) obj;
+		if (averageprice == null) {
+			if (other.averageprice != null)
+				return false;
+		} else if (!averageprice.equals(other.averageprice))
+			return false;
+		if (buyprice1 == null) {
+			if (other.buyprice1 != null)
+				return false;
+		} else if (!buyprice1.equals(other.buyprice1))
+			return false;
+		if (buyprice2 == null) {
+			if (other.buyprice2 != null)
+				return false;
+		} else if (!buyprice2.equals(other.buyprice2))
+			return false;
+		if (buyprice3 == null) {
+			if (other.buyprice3 != null)
+				return false;
+		} else if (!buyprice3.equals(other.buyprice3))
+			return false;
+		if (buyprice4 == null) {
+			if (other.buyprice4 != null)
+				return false;
+		} else if (!buyprice4.equals(other.buyprice4))
+			return false;
+		if (buyprice5 == null) {
+			if (other.buyprice5 != null)
+				return false;
+		} else if (!buyprice5.equals(other.buyprice5))
+			return false;
+		if (buysum == null) {
+			if (other.buysum != null)
+				return false;
+		} else if (!buysum.equals(other.buysum))
+			return false;
+		if (buyvolume1 == null) {
+			if (other.buyvolume1 != null)
+				return false;
+		} else if (!buyvolume1.equals(other.buyvolume1))
+			return false;
+		if (buyvolume2 == null) {
+			if (other.buyvolume2 != null)
+				return false;
+		} else if (!buyvolume2.equals(other.buyvolume2))
+			return false;
+		if (buyvolume3 == null) {
+			if (other.buyvolume3 != null)
+				return false;
+		} else if (!buyvolume3.equals(other.buyvolume3))
+			return false;
+		if (buyvolume4 == null) {
+			if (other.buyvolume4 != null)
+				return false;
+		} else if (!buyvolume4.equals(other.buyvolume4))
+			return false;
+		if (buyvolume5 == null) {
+			if (other.buyvolume5 != null)
+				return false;
+		} else if (!buyvolume5.equals(other.buyvolume5))
+			return false;
+		if (capital == null) {
+			if (other.capital != null)
+				return false;
+		} else if (!capital.equals(other.capital))
+			return false;
+		if (change == null) {
+			if (other.change != null)
+				return false;
+		} else if (!change.equals(other.change))
+			return false;
+		if (close == null) {
+			if (other.close != null)
+				return false;
+		} else if (!close.equals(other.close))
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (datetime == null) {
+			if (other.datetime != null)
+				return false;
+		} else if (!datetime.equals(other.datetime))
+			return false;
+		if (handrate == null) {
+			if (other.handrate != null)
+				return false;
+		} else if (!handrate.equals(other.handrate))
+			return false;
+		if (high == null) {
+			if (other.high != null)
+				return false;
+		} else if (!high.equals(other.high))
+			return false;
+		if (lb == null) {
+			if (other.lb != null)
+				return false;
+		} else if (!lb.equals(other.lb))
+			return false;
+		if (low == null) {
+			if (other.low != null)
+				return false;
+		} else if (!low.equals(other.low))
+			return false;
+		if (market == null) {
+			if (other.market != null)
+				return false;
+		} else if (!market.equals(other.market))
+			return false;
+		if (marketvalue == null) {
+			if (other.marketvalue != null)
+				return false;
+		} else if (!marketvalue.equals(other.marketvalue))
+			return false;
+		if (newprice == null) {
+			if (other.newprice != null)
+				return false;
+		} else if (!newprice.equals(other.newprice))
+			return false;
+		if (open == null) {
+			if (other.open != null)
+				return false;
+		} else if (!open.equals(other.open))
+			return false;
+		if (ppjs == null) {
+			if (other.ppjs != null)
+				return false;
+		} else if (!ppjs.equals(other.ppjs))
+			return false;
+		if (profitrate == null) {
+			if (other.profitrate != null)
+				return false;
+		} else if (!profitrate.equals(other.profitrate))
+			return false;
+		if (risefallrate == null) {
+			if (other.risefallrate != null)
+				return false;
+		} else if (!risefallrate.equals(other.risefallrate))
+			return false;
+		if (secuamount == null) {
+			if (other.secuamount != null)
+				return false;
+		} else if (!secuamount.equals(other.secuamount))
+			return false;
+		if (secuvolume == null) {
+			if (other.secuvolume != null)
+				return false;
+		} else if (!secuvolume.equals(other.secuvolume))
+			return false;
+		if (sellprice1 == null) {
+			if (other.sellprice1 != null)
+				return false;
+		} else if (!sellprice1.equals(other.sellprice1))
+			return false;
+		if (sellprice2 == null) {
+			if (other.sellprice2 != null)
+				return false;
+		} else if (!sellprice2.equals(other.sellprice2))
+			return false;
+		if (sellprice3 == null) {
+			if (other.sellprice3 != null)
+				return false;
+		} else if (!sellprice3.equals(other.sellprice3))
+			return false;
+		if (sellprice4 == null) {
+			if (other.sellprice4 != null)
+				return false;
+		} else if (!sellprice4.equals(other.sellprice4))
+			return false;
+		if (sellprice5 == null) {
+			if (other.sellprice5 != null)
+				return false;
+		} else if (!sellprice5.equals(other.sellprice5))
+			return false;
+		if (sellsum == null) {
+			if (other.sellsum != null)
+				return false;
+		} else if (!sellsum.equals(other.sellsum))
+			return false;
+		if (sellvolume1 == null) {
+			if (other.sellvolume1 != null)
+				return false;
+		} else if (!sellvolume1.equals(other.sellvolume1))
+			return false;
+		if (sellvolume2 == null) {
+			if (other.sellvolume2 != null)
+				return false;
+		} else if (!sellvolume2.equals(other.sellvolume2))
+			return false;
+		if (sellvolume3 == null) {
+			if (other.sellvolume3 != null)
+				return false;
+		} else if (!sellvolume3.equals(other.sellvolume3))
+			return false;
+		if (sellvolume4 == null) {
+			if (other.sellvolume4 != null)
+				return false;
+		} else if (!sellvolume4.equals(other.sellvolume4))
+			return false;
+		if (sellvolume5 == null) {
+			if (other.sellvolume5 != null)
+				return false;
+		} else if (!sellvolume5.equals(other.sellvolume5))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (szjs == null) {
+			if (other.szjs != null)
+				return false;
+		} else if (!szjs.equals(other.szjs))
+			return false;
+		if (xdjs == null) {
+			if (other.xdjs != null)
+				return false;
+		} else if (!xdjs.equals(other.xdjs))
+			return false;
+		return true;
+	}	
 
 }

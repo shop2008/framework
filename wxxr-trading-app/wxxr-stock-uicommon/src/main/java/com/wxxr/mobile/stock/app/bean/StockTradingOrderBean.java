@@ -236,6 +236,95 @@ public class StockTradingOrderBean implements IBindableBean {
                 " , gain=" + this.gain +
                 " , marketCode=" + this.marketCode +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + ((buy == null) ? 0 : buy.hashCode());
+		result = prime * result
+				+ ((changeRate == null) ? 0 : changeRate.hashCode());
+		result = prime * result
+				+ ((currentPirce == null) ? 0 : currentPirce.hashCode());
+		result = prime * result + ((gain == null) ? 0 : gain.hashCode());
+		result = prime * result
+				+ ((gainRate == null) ? 0 : gainRate.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((marketCode == null) ? 0 : marketCode.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result
+				+ ((stockCode == null) ? 0 : stockCode.hashCode());
+		result = prime * result
+				+ ((stockName == null) ? 0 : stockName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockTradingOrderBean other = (StockTradingOrderBean) obj;
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
+			return false;
+		if (buy == null) {
+			if (other.buy != null)
+				return false;
+		} else if (!buy.equals(other.buy))
+			return false;
+		if (changeRate == null) {
+			if (other.changeRate != null)
+				return false;
+		} else if (!changeRate.equals(other.changeRate))
+			return false;
+		if (currentPirce == null) {
+			if (other.currentPirce != null)
+				return false;
+		} else if (!currentPirce.equals(other.currentPirce))
+			return false;
+		if (gain == null) {
+			if (other.gain != null)
+				return false;
+		} else if (!gain.equals(other.gain))
+			return false;
+		if (gainRate == null) {
+			if (other.gainRate != null)
+				return false;
+		} else if (!gainRate.equals(other.gainRate))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (marketCode == null) {
+			if (other.marketCode != null)
+				return false;
+		} else if (!marketCode.equals(other.marketCode))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (stockCode == null) {
+			if (other.stockCode != null)
+				return false;
+		} else if (!stockCode.equals(other.stockCode))
+			return false;
+		if (stockName == null) {
+			if (other.stockName != null)
+				return false;
+		} else if (!stockName.equals(other.stockName))
+			return false;
+		return true;
+	}	
 
 }

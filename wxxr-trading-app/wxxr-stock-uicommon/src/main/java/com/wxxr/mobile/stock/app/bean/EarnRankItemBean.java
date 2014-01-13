@@ -92,6 +92,43 @@ public class EarnRankItemBean implements IBindableBean {
                 " , title=" + this.title +
                 " , acctId=" + this.acctId +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acctId == null) ? 0 : acctId.hashCode());
+		result = prime * result + ((imgUrl == null) ? 0 : imgUrl.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EarnRankItemBean other = (EarnRankItemBean) obj;
+		if (acctId == null) {
+			if (other.acctId != null)
+				return false;
+		} else if (!acctId.equals(other.acctId))
+			return false;
+		if (imgUrl == null) {
+			if (other.imgUrl != null)
+				return false;
+		} else if (!imgUrl.equals(other.imgUrl))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
+	}	
 
 }

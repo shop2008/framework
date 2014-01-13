@@ -92,6 +92,42 @@ public class BindMobileBean implements IBindableBean {
                 " , code=" + this.code +
                 " , type=" + this.type +
         "]";
-    }	
+    }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result
+				+ ((mobileNum == null) ? 0 : mobileNum.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BindMobileBean other = (BindMobileBean) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (mobileNum == null) {
+			if (other.mobileNum != null)
+				return false;
+		} else if (!mobileNum.equals(other.mobileNum))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}	
+    
 }

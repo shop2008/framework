@@ -200,6 +200,68 @@ public class StockBasicMarketInfoBean implements IBindableBean {
                 " , lowestPrice=" + this.lowestPrice +
                 " , pyCode=" + this.pyCode +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + Float.floatToIntBits(currentPrice);
+		result = prime * result
+				+ ((currentTime == null) ? 0 : currentTime.hashCode());
+		result = prime * result + Float.floatToIntBits(highestPrice);
+		result = prime * result + Float.floatToIntBits(lastDayPrice);
+		result = prime * result + Float.floatToIntBits(lowestPrice);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((pyCode == null) ? 0 : pyCode.hashCode());
+		result = prime * result + Float.floatToIntBits(todayInitPrice);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockBasicMarketInfoBean other = (StockBasicMarketInfoBean) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (Float.floatToIntBits(currentPrice) != Float
+				.floatToIntBits(other.currentPrice))
+			return false;
+		if (currentTime == null) {
+			if (other.currentTime != null)
+				return false;
+		} else if (!currentTime.equals(other.currentTime))
+			return false;
+		if (Float.floatToIntBits(highestPrice) != Float
+				.floatToIntBits(other.highestPrice))
+			return false;
+		if (Float.floatToIntBits(lastDayPrice) != Float
+				.floatToIntBits(other.lastDayPrice))
+			return false;
+		if (Float.floatToIntBits(lowestPrice) != Float
+				.floatToIntBits(other.lowestPrice))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (pyCode == null) {
+			if (other.pyCode != null)
+				return false;
+		} else if (!pyCode.equals(other.pyCode))
+			return false;
+		if (Float.floatToIntBits(todayInitPrice) != Float
+				.floatToIntBits(other.todayInitPrice))
+			return false;
+		return true;
+	}	
 
 }

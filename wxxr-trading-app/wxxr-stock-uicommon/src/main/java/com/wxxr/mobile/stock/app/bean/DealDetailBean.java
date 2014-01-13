@@ -152,6 +152,56 @@ public class DealDetailBean implements IBindableBean {
                 " , fund=" + this.fund +
                 " , plRisk=" + this.plRisk +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fund == null) ? 0 : fund.hashCode());
+		result = prime * result + ((imgUrl == null) ? 0 : imgUrl.hashCode());
+		result = prime * result + ((plRisk == null) ? 0 : plRisk.hashCode());
+		result = prime * result + Float.floatToIntBits(totalGain);
+		result = prime * result
+				+ ((tradingRecords == null) ? 0 : tradingRecords.hashCode());
+		result = prime * result + Float.floatToIntBits(userGain);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DealDetailBean other = (DealDetailBean) obj;
+		if (fund == null) {
+			if (other.fund != null)
+				return false;
+		} else if (!fund.equals(other.fund))
+			return false;
+		if (imgUrl == null) {
+			if (other.imgUrl != null)
+				return false;
+		} else if (!imgUrl.equals(other.imgUrl))
+			return false;
+		if (plRisk == null) {
+			if (other.plRisk != null)
+				return false;
+		} else if (!plRisk.equals(other.plRisk))
+			return false;
+		if (Float.floatToIntBits(totalGain) != Float
+				.floatToIntBits(other.totalGain))
+			return false;
+		if (tradingRecords == null) {
+			if (other.tradingRecords != null)
+				return false;
+		} else if (!tradingRecords.equals(other.tradingRecords))
+			return false;
+		if (Float.floatToIntBits(userGain) != Float
+				.floatToIntBits(other.userGain))
+			return false;
+		return true;
+	}	
 
 }

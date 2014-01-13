@@ -146,6 +146,62 @@ public class StockMinuteLineBean implements IBindableBean {
                 " , secuamount=" + this.secuamount +
                 " , secuvolume=" + this.secuvolume +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((avgChangeRate == null) ? 0 : avgChangeRate.hashCode());
+		result = prime * result + ((avprice == null) ? 0 : avprice.hashCode());
+		result = prime * result + ((hqTime == null) ? 0 : hqTime.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result
+				+ ((secuamount == null) ? 0 : secuamount.hashCode());
+		result = prime * result
+				+ ((secuvolume == null) ? 0 : secuvolume.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockMinuteLineBean other = (StockMinuteLineBean) obj;
+		if (avgChangeRate == null) {
+			if (other.avgChangeRate != null)
+				return false;
+		} else if (!avgChangeRate.equals(other.avgChangeRate))
+			return false;
+		if (avprice == null) {
+			if (other.avprice != null)
+				return false;
+		} else if (!avprice.equals(other.avprice))
+			return false;
+		if (hqTime == null) {
+			if (other.hqTime != null)
+				return false;
+		} else if (!hqTime.equals(other.hqTime))
+			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
+		if (secuamount == null) {
+			if (other.secuamount != null)
+				return false;
+		} else if (!secuamount.equals(other.secuamount))
+			return false;
+		if (secuvolume == null) {
+			if (other.secuvolume != null)
+				return false;
+		} else if (!secuvolume.equals(other.secuvolume))
+			return false;
+		return true;
+	}	
 
 }

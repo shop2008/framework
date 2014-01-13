@@ -349,6 +349,93 @@ public class TradingAccountBean implements IBindableBean {
                 " , maxStockMarket=" + this.maxStockMarket +
                 " , gainRate=" + this.gainRate +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (applyFee ^ (applyFee >>> 32));
+		result = prime * result + (int) (avalibleFee ^ (avalibleFee >>> 32));
+		result = prime * result + (int) (buyDay ^ (buyDay >>> 32));
+		result = prime * result + (int) (frozenVol ^ (frozenVol >>> 32));
+		result = prime * result + (int) (gainRate ^ (gainRate >>> 32));
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + Float.floatToIntBits(lossLimit);
+		result = prime * result
+				+ ((maxStockCode == null) ? 0 : maxStockCode.hashCode());
+		result = prime * result
+				+ ((maxStockMarket == null) ? 0 : maxStockMarket.hashCode());
+		result = prime * result + ((over == null) ? 0 : over.hashCode());
+		result = prime * result + (int) (sellDay ^ (sellDay >>> 32));
+		result = prime * result + status;
+		result = prime * result + (int) (totalGain ^ (totalGain >>> 32));
+		result = prime * result
+				+ ((tradingOrders == null) ? 0 : tradingOrders.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (int) (usedFee ^ (usedFee >>> 32));
+		result = prime * result + (virtual ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TradingAccountBean other = (TradingAccountBean) obj;
+		if (applyFee != other.applyFee)
+			return false;
+		if (avalibleFee != other.avalibleFee)
+			return false;
+		if (buyDay != other.buyDay)
+			return false;
+		if (frozenVol != other.frozenVol)
+			return false;
+		if (gainRate != other.gainRate)
+			return false;
+		if (id != other.id)
+			return false;
+		if (Float.floatToIntBits(lossLimit) != Float
+				.floatToIntBits(other.lossLimit))
+			return false;
+		if (maxStockCode == null) {
+			if (other.maxStockCode != null)
+				return false;
+		} else if (!maxStockCode.equals(other.maxStockCode))
+			return false;
+		if (maxStockMarket == null) {
+			if (other.maxStockMarket != null)
+				return false;
+		} else if (!maxStockMarket.equals(other.maxStockMarket))
+			return false;
+		if (over == null) {
+			if (other.over != null)
+				return false;
+		} else if (!over.equals(other.over))
+			return false;
+		if (sellDay != other.sellDay)
+			return false;
+		if (status != other.status)
+			return false;
+		if (totalGain != other.totalGain)
+			return false;
+		if (tradingOrders == null) {
+			if (other.tradingOrders != null)
+				return false;
+		} else if (!tradingOrders.equals(other.tradingOrders))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (usedFee != other.usedFee)
+			return false;
+		if (virtual != other.virtual)
+			return false;
+		return true;
+	}	
 
 }

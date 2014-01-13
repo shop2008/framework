@@ -61,6 +61,29 @@ public class StockTaxisListBean implements IBindableBean {
         return "StockTaxisListBean ["+
                 "list=" + this.list +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockTaxisListBean other = (StockTaxisListBean) obj;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		return true;
+	}	
 
 }

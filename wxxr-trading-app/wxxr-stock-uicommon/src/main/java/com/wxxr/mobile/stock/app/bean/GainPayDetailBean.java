@@ -69,4 +69,39 @@ public class GainPayDetailBean implements IBindableBean {
         return "GainPayDetailBean [id=" + id + ", comment=" + comment + ", amount=" + amount + ", time=" + time + "]";
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (amount ^ (amount >>> 32));
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (time ^ (time >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GainPayDetailBean other = (GainPayDetailBean) obj;
+		if (amount != other.amount)
+			return false;
+		if (comment == null) {
+			if (other.comment != null)
+				return false;
+		} else if (!comment.equals(other.comment))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (time != other.time)
+			return false;
+		return true;
+	}
+
 }

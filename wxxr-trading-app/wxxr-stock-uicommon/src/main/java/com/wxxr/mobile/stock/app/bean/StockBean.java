@@ -92,6 +92,41 @@ public class StockBean implements IBindableBean {
                 " , code=" + this.code +
                 " , pyCode=" + this.pyCode +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((pyCode == null) ? 0 : pyCode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockBean other = (StockBean) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (pyCode == null) {
+			if (other.pyCode != null)
+				return false;
+		} else if (!pyCode.equals(other.pyCode))
+			return false;
+		return true;
+	}	
 
 }

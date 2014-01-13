@@ -236,6 +236,82 @@ public class MegagameRankBean implements IBindableBean {
                 " , gainRates=" + this.gainRates +
                 " , gainRate=" + this.gainRate +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (acctID ^ (acctID >>> 32));
+		result = prime * result
+				+ ((gainRate == null) ? 0 : gainRate.hashCode());
+		result = prime * result + gainRates;
+		result = prime * result
+				+ ((maxStockCode == null) ? 0 : maxStockCode.hashCode());
+		result = prime * result
+				+ ((maxStockMarket == null) ? 0 : maxStockMarket.hashCode());
+		result = prime * result
+				+ ((nickName == null) ? 0 : nickName.hashCode());
+		result = prime * result + ((over == null) ? 0 : over.hashCode());
+		result = prime * result + rankSeq;
+		result = prime * result + status;
+		result = prime * result
+				+ ((totalGain == null) ? 0 : totalGain.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MegagameRankBean other = (MegagameRankBean) obj;
+		if (acctID != other.acctID)
+			return false;
+		if (gainRate == null) {
+			if (other.gainRate != null)
+				return false;
+		} else if (!gainRate.equals(other.gainRate))
+			return false;
+		if (gainRates != other.gainRates)
+			return false;
+		if (maxStockCode == null) {
+			if (other.maxStockCode != null)
+				return false;
+		} else if (!maxStockCode.equals(other.maxStockCode))
+			return false;
+		if (maxStockMarket == null) {
+			if (other.maxStockMarket != null)
+				return false;
+		} else if (!maxStockMarket.equals(other.maxStockMarket))
+			return false;
+		if (nickName == null) {
+			if (other.nickName != null)
+				return false;
+		} else if (!nickName.equals(other.nickName))
+			return false;
+		if (over == null) {
+			if (other.over != null)
+				return false;
+		} else if (!over.equals(other.over))
+			return false;
+		if (rankSeq != other.rankSeq)
+			return false;
+		if (status != other.status)
+			return false;
+		if (totalGain == null) {
+			if (other.totalGain != null)
+				return false;
+		} else if (!totalGain.equals(other.totalGain))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		return true;
+	}	
 
 }

@@ -176,6 +176,70 @@ public class PullMessageBean implements IBindableBean {
 		this.pullId = pullId;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((articleUrl == null) ? 0 : articleUrl.hashCode());
+		result = prime * result
+				+ ((createDate == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((pullId == null) ? 0 : pullId.hashCode());
+		result = prime * result + (read ? 1231 : 1237);
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PullMessageBean other = (PullMessageBean) obj;
+		if (articleUrl == null) {
+			if (other.articleUrl != null)
+				return false;
+		} else if (!articleUrl.equals(other.articleUrl))
+			return false;
+		if (createDate == null) {
+			if (other.createDate != null)
+				return false;
+		} else if (!createDate.equals(other.createDate))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
+			return false;
+		if (pullId == null) {
+			if (other.pullId != null)
+				return false;
+		} else if (!pullId.equals(other.pullId))
+			return false;
+		if (read != other.read)
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
+	}
+
 	
 
 }

@@ -92,6 +92,32 @@ public class UserAssetBean implements IBindableBean {
                 " , usableBal=" + this.usableBal +
                 " , frozen=" + this.frozen +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (balance ^ (balance >>> 32));
+		result = prime * result + (int) (frozen ^ (frozen >>> 32));
+		result = prime * result + (int) (usableBal ^ (usableBal >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserAssetBean other = (UserAssetBean) obj;
+		if (balance != other.balance)
+			return false;
+		if (frozen != other.frozen)
+			return false;
+		if (usableBal != other.usableBal)
+			return false;
+		return true;
+	}	
 
 }

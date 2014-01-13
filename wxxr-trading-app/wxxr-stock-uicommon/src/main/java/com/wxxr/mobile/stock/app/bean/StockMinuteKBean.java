@@ -133,6 +133,53 @@ public class StockMinuteKBean implements IBindableBean {
                 " , date=" + this.date +
                 " , close=" + this.close +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((close == null) ? 0 : close.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockMinuteKBean other = (StockMinuteKBean) obj;
+		if (close == null) {
+			if (other.close != null)
+				return false;
+		} else if (!close.equals(other.close))
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		if (market == null) {
+			if (other.market != null)
+				return false;
+		} else if (!market.equals(other.market))
+			return false;
+		return true;
+	}	
 
 }

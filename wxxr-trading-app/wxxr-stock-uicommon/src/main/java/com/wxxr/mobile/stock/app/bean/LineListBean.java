@@ -103,6 +103,44 @@ public class LineListBean implements IBindableBean {
                 " , day_list=" + this.day_list +
                 " , month_list=" + this.month_list +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((day_list == null) ? 0 : day_list.hashCode());
+		result = prime * result
+				+ ((month_list == null) ? 0 : month_list.hashCode());
+		result = prime * result
+				+ ((week_list == null) ? 0 : week_list.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LineListBean other = (LineListBean) obj;
+		if (day_list == null) {
+			if (other.day_list != null)
+				return false;
+		} else if (!day_list.equals(other.day_list))
+			return false;
+		if (month_list == null) {
+			if (other.month_list != null)
+				return false;
+		} else if (!month_list.equals(other.month_list))
+			return false;
+		if (week_list == null) {
+			if (other.week_list != null)
+				return false;
+		} else if (!week_list.equals(other.week_list))
+			return false;
+		return true;
+	}	
 
 }

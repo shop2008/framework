@@ -62,6 +62,30 @@ public class SearchStockListBean implements IBindableBean {
         return "SearchStockListBean ["+
                 "searchResult=" + this.searchResult +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((searchResult == null) ? 0 : searchResult.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchStockListBean other = (SearchStockListBean) obj;
+		if (searchResult == null) {
+			if (other.searchResult != null)
+				return false;
+		} else if (!searchResult.equals(other.searchResult))
+			return false;
+		return true;
+	}	
 
 }

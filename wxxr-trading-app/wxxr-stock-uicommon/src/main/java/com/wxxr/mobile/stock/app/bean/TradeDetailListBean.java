@@ -61,6 +61,30 @@ public class TradeDetailListBean implements IBindableBean {
         return "TradeDetailListBean ["+
                 "tradeDetails=" + this.tradeDetails +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((tradeDetails == null) ? 0 : tradeDetails.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TradeDetailListBean other = (TradeDetailListBean) obj;
+		if (tradeDetails == null) {
+			if (other.tradeDetails != null)
+				return false;
+		} else if (!tradeDetails.equals(other.tradeDetails))
+			return false;
+		return true;
+	}	
 
 }

@@ -182,6 +182,65 @@ public class WeekRankBean implements IBindableBean {
                 " , gainCount=" + this.gainCount +
                 " , gainRate=" + this.gainRate +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dates == null) ? 0 : dates.hashCode());
+		result = prime * result + gainCount;
+		result = prime * result
+				+ ((gainRate == null) ? 0 : gainRate.hashCode());
+		result = prime * result + gainRates;
+		result = prime * result
+				+ ((nickName == null) ? 0 : nickName.hashCode());
+		result = prime * result + rankSeq;
+		result = prime * result
+				+ ((totalGain == null) ? 0 : totalGain.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WeekRankBean other = (WeekRankBean) obj;
+		if (dates == null) {
+			if (other.dates != null)
+				return false;
+		} else if (!dates.equals(other.dates))
+			return false;
+		if (gainCount != other.gainCount)
+			return false;
+		if (gainRate == null) {
+			if (other.gainRate != null)
+				return false;
+		} else if (!gainRate.equals(other.gainRate))
+			return false;
+		if (gainRates != other.gainRates)
+			return false;
+		if (nickName == null) {
+			if (other.nickName != null)
+				return false;
+		} else if (!nickName.equals(other.nickName))
+			return false;
+		if (rankSeq != other.rankSeq)
+			return false;
+		if (totalGain == null) {
+			if (other.totalGain != null)
+				return false;
+		} else if (!totalGain.equals(other.totalGain))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		return true;
+	}	
 
 }

@@ -326,6 +326,120 @@ public class UserBean implements IBindableBean {
                 " , login=" + this.login +
                 " , totoalScore=" + this.totoalScore +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
+		result = prime * result + (bindCard ? 1231 : 1237);
+		result = prime * result
+				+ ((challengeShared == null) ? 0 : challengeShared.hashCode());
+		result = prime * result
+				+ ((homeBack == null) ? 0 : homeBack.hashCode());
+		result = prime * result
+				+ ((joinShared == null) ? 0 : joinShared.hashCode());
+		result = prime * result + (login ? 1231 : 1237);
+		result = prime * result + (messagePushSettingOn ? 1231 : 1237);
+		result = prime * result
+				+ ((nickName == null) ? 0 : nickName.hashCode());
+		result = prime * result
+				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result
+				+ ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result + ((score == null) ? 0 : score.hashCode());
+		result = prime * result
+				+ ((totoalProfit == null) ? 0 : totoalProfit.hashCode());
+		result = prime * result
+				+ ((totoalScore == null) ? 0 : totoalScore.hashCode());
+		result = prime * result
+				+ ((unReadMsg == null) ? 0 : unReadMsg.hashCode());
+		result = prime * result + ((userPic == null) ? 0 : userPic.hashCode());
+		result = prime * result
+				+ ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserBean other = (UserBean) obj;
+		if (balance == null) {
+			if (other.balance != null)
+				return false;
+		} else if (!balance.equals(other.balance))
+			return false;
+		if (bindCard != other.bindCard)
+			return false;
+		if (challengeShared == null) {
+			if (other.challengeShared != null)
+				return false;
+		} else if (!challengeShared.equals(other.challengeShared))
+			return false;
+		if (homeBack == null) {
+			if (other.homeBack != null)
+				return false;
+		} else if (!homeBack.equals(other.homeBack))
+			return false;
+		if (joinShared == null) {
+			if (other.joinShared != null)
+				return false;
+		} else if (!joinShared.equals(other.joinShared))
+			return false;
+		if (login != other.login)
+			return false;
+		if (messagePushSettingOn != other.messagePushSettingOn)
+			return false;
+		if (nickName == null) {
+			if (other.nickName != null)
+				return false;
+		} else if (!nickName.equals(other.nickName))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (score == null) {
+			if (other.score != null)
+				return false;
+		} else if (!score.equals(other.score))
+			return false;
+		if (totoalProfit == null) {
+			if (other.totoalProfit != null)
+				return false;
+		} else if (!totoalProfit.equals(other.totoalProfit))
+			return false;
+		if (totoalScore == null) {
+			if (other.totoalScore != null)
+				return false;
+		} else if (!totoalScore.equals(other.totoalScore))
+			return false;
+		if (unReadMsg == null) {
+			if (other.unReadMsg != null)
+				return false;
+		} else if (!unReadMsg.equals(other.unReadMsg))
+			return false;
+		if (userPic == null) {
+			if (other.userPic != null)
+				return false;
+		} else if (!userPic.equals(other.userPic))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}	
 
 }

@@ -110,6 +110,39 @@ public class RegularTicketBean implements IBindableBean {
                 " , nickName=" + this.nickName +
                 " , gainCount=" + this.gainCount +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + gainCount;
+		result = prime * result
+				+ ((nickName == null) ? 0 : nickName.hashCode());
+		result = prime * result + rankSeq;
+		result = prime * result + (int) (regular ^ (regular >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RegularTicketBean other = (RegularTicketBean) obj;
+		if (gainCount != other.gainCount)
+			return false;
+		if (nickName == null) {
+			if (other.nickName != null)
+				return false;
+		} else if (!nickName.equals(other.nickName))
+			return false;
+		if (rankSeq != other.rankSeq)
+			return false;
+		if (regular != other.regular)
+			return false;
+		return true;
+	}	
 
 }

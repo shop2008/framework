@@ -97,6 +97,41 @@ public class QuotationListBean implements IBindableBean {
                 " , list=" + this.list +
                 " , szBean=" + this.szBean +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		result = prime * result + ((shBean == null) ? 0 : shBean.hashCode());
+		result = prime * result + ((szBean == null) ? 0 : szBean.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		QuotationListBean other = (QuotationListBean) obj;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		if (shBean == null) {
+			if (other.shBean != null)
+				return false;
+		} else if (!shBean.equals(other.shBean))
+			return false;
+		if (szBean == null) {
+			if (other.szBean != null)
+				return false;
+		} else if (!szBean.equals(other.szBean))
+			return false;
+		return true;
+	}	
 
 }

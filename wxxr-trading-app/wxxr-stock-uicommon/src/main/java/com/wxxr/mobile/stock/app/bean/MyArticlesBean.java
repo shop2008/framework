@@ -82,6 +82,37 @@ public class MyArticlesBean implements IBindableBean {
                 "helpArticles=" + this.helpArticles +
                 " , homeArticles=" + this.homeArticles +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((helpArticles == null) ? 0 : helpArticles.hashCode());
+		result = prime * result
+				+ ((homeArticles == null) ? 0 : homeArticles.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MyArticlesBean other = (MyArticlesBean) obj;
+		if (helpArticles == null) {
+			if (other.helpArticles != null)
+				return false;
+		} else if (!helpArticles.equals(other.helpArticles))
+			return false;
+		if (homeArticles == null) {
+			if (other.homeArticles != null)
+				return false;
+		} else if (!homeArticles.equals(other.homeArticles))
+			return false;
+		return true;
+	}	
 
 }

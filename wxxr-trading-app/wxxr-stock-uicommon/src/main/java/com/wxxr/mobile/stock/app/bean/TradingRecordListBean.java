@@ -61,6 +61,29 @@ public class TradingRecordListBean implements IBindableBean {
         return "TradingRecordListBean ["+
                 "records=" + this.records +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((records == null) ? 0 : records.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TradingRecordListBean other = (TradingRecordListBean) obj;
+		if (records == null) {
+			if (other.records != null)
+				return false;
+		} else if (!records.equals(other.records))
+			return false;
+		return true;
+	}	
 
 }

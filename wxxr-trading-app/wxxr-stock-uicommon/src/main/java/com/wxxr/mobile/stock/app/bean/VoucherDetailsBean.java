@@ -67,4 +67,36 @@ public class VoucherDetailsBean implements IBindableBean {
         emitter.removePropertyChangeListener(listener);
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (addToday ^ (addToday >>> 32));
+		result = prime * result + (int) (bal ^ (bal >>> 32));
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		result = prime * result + (int) (reduceToday ^ (reduceToday >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VoucherDetailsBean other = (VoucherDetailsBean) obj;
+		if (addToday != other.addToday)
+			return false;
+		if (bal != other.bal)
+			return false;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		if (reduceToday != other.reduceToday)
+			return false;
+		return true;
+	}
+
 }

@@ -276,6 +276,78 @@ public class TradingRecordBean implements IBindableBean {
                 " , code=" + this.code +
                 " , date=" + this.date +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acctID == null) ? 0 : acctID.hashCode());
+		result = prime * result + (int) (amount ^ (amount >>> 32));
+		result = prime * result + (beDone ? 1231 : 1237);
+		result = prime * result + (int) (brokerage ^ (brokerage >>> 32));
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + (int) (date ^ (date >>> 32));
+		result = prime * result + day;
+		result = prime * result
+				+ ((describe == null) ? 0 : describe.hashCode());
+		result = prime * result + (int) (fee ^ (fee >>> 32));
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		result = prime * result + (int) (price ^ (price >>> 32));
+		result = prime * result + (int) (tax ^ (tax >>> 32));
+		result = prime * result + (int) (vol ^ (vol >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TradingRecordBean other = (TradingRecordBean) obj;
+		if (acctID == null) {
+			if (other.acctID != null)
+				return false;
+		} else if (!acctID.equals(other.acctID))
+			return false;
+		if (amount != other.amount)
+			return false;
+		if (beDone != other.beDone)
+			return false;
+		if (brokerage != other.brokerage)
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (date != other.date)
+			return false;
+		if (day != other.day)
+			return false;
+		if (describe == null) {
+			if (other.describe != null)
+				return false;
+		} else if (!describe.equals(other.describe))
+			return false;
+		if (fee != other.fee)
+			return false;
+		if (id != other.id)
+			return false;
+		if (market == null) {
+			if (other.market != null)
+				return false;
+		} else if (!market.equals(other.market))
+			return false;
+		if (price != other.price)
+			return false;
+		if (tax != other.tax)
+			return false;
+		if (vol != other.vol)
+			return false;
+		return true;
+	}	
 
 }

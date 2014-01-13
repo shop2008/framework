@@ -79,6 +79,35 @@ public class ScoreInfoBean implements IBindableBean {
                 "balance=" + this.balance +
                 " , scores=" + this.scores +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
+		result = prime * result + ((scores == null) ? 0 : scores.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ScoreInfoBean other = (ScoreInfoBean) obj;
+		if (balance == null) {
+			if (other.balance != null)
+				return false;
+		} else if (!balance.equals(other.balance))
+			return false;
+		if (scores == null) {
+			if (other.scores != null)
+				return false;
+		} else if (!scores.equals(other.scores))
+			return false;
+		return true;
+	}	
 
 }

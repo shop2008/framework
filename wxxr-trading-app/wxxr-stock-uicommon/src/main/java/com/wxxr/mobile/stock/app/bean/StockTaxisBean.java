@@ -236,6 +236,96 @@ public class StockTaxisBean implements IBindableBean {
                 " , secuvolume=" + this.secuvolume +
                 " , handrate=" + this.handrate +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result
+				+ ((handrate == null) ? 0 : handrate.hashCode());
+		result = prime * result + ((lb == null) ? 0 : lb.hashCode());
+		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		result = prime * result
+				+ ((marketvalue == null) ? 0 : marketvalue.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((newprice == null) ? 0 : newprice.hashCode());
+		result = prime * result
+				+ ((profitrate == null) ? 0 : profitrate.hashCode());
+		result = prime * result
+				+ ((risefallrate == null) ? 0 : risefallrate.hashCode());
+		result = prime * result
+				+ ((secuamount == null) ? 0 : secuamount.hashCode());
+		result = prime * result
+				+ ((secuvolume == null) ? 0 : secuvolume.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockTaxisBean other = (StockTaxisBean) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (handrate == null) {
+			if (other.handrate != null)
+				return false;
+		} else if (!handrate.equals(other.handrate))
+			return false;
+		if (lb == null) {
+			if (other.lb != null)
+				return false;
+		} else if (!lb.equals(other.lb))
+			return false;
+		if (market == null) {
+			if (other.market != null)
+				return false;
+		} else if (!market.equals(other.market))
+			return false;
+		if (marketvalue == null) {
+			if (other.marketvalue != null)
+				return false;
+		} else if (!marketvalue.equals(other.marketvalue))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (newprice == null) {
+			if (other.newprice != null)
+				return false;
+		} else if (!newprice.equals(other.newprice))
+			return false;
+		if (profitrate == null) {
+			if (other.profitrate != null)
+				return false;
+		} else if (!profitrate.equals(other.profitrate))
+			return false;
+		if (risefallrate == null) {
+			if (other.risefallrate != null)
+				return false;
+		} else if (!risefallrate.equals(other.risefallrate))
+			return false;
+		if (secuamount == null) {
+			if (other.secuamount != null)
+				return false;
+		} else if (!secuamount.equals(other.secuamount))
+			return false;
+		if (secuvolume == null) {
+			if (other.secuvolume != null)
+				return false;
+		} else if (!secuvolume.equals(other.secuvolume))
+			return false;
+		return true;
+	}	
 
 }

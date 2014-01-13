@@ -154,6 +154,56 @@ public class PersonalHomePageBean implements IBindableBean {
                 " , virtualCount=" + this.virtualCount +
                 " , actualCount=" + this.actualCount +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (actualCount ^ (actualCount >>> 32));
+		result = prime * result
+				+ ((actualList == null) ? 0 : actualList.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(totalProfit);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (virtualCount ^ (virtualCount >>> 32));
+		result = prime * result
+				+ ((virtualList == null) ? 0 : virtualList.hashCode());
+		result = prime * result
+				+ ((voucherVol == null) ? 0 : voucherVol.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PersonalHomePageBean other = (PersonalHomePageBean) obj;
+		if (actualCount != other.actualCount)
+			return false;
+		if (actualList == null) {
+			if (other.actualList != null)
+				return false;
+		} else if (!actualList.equals(other.actualList))
+			return false;
+		if (Double.doubleToLongBits(totalProfit) != Double
+				.doubleToLongBits(other.totalProfit))
+			return false;
+		if (virtualCount != other.virtualCount)
+			return false;
+		if (virtualList == null) {
+			if (other.virtualList != null)
+				return false;
+		} else if (!virtualList.equals(other.virtualList))
+			return false;
+		if (voucherVol == null) {
+			if (other.voucherVol != null)
+				return false;
+		} else if (!voucherVol.equals(other.voucherVol))
+			return false;
+		return true;
+	}	
 
 }

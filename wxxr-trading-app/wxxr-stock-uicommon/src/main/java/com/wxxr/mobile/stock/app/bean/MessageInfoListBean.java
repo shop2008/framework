@@ -61,6 +61,30 @@ public class MessageInfoListBean implements IBindableBean {
         return "MessageInfoListBean ["+
                 "messageInfos=" + this.messageInfos +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((messageInfos == null) ? 0 : messageInfos.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MessageInfoListBean other = (MessageInfoListBean) obj;
+		if (messageInfos == null) {
+			if (other.messageInfos != null)
+				return false;
+		} else if (!messageInfos.equals(other.messageInfos))
+			return false;
+		return true;
+	}	
 
 }

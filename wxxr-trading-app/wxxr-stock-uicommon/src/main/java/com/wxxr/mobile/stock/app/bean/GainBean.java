@@ -246,6 +246,97 @@ public class GainBean implements IBindableBean {
                 " , userGain=" + this.userGain +
                 " , maxStockName=" + this.maxStockName +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((closeTime == null) ? 0 : closeTime.hashCode());
+		result = prime * result
+				+ ((maxStockCode == null) ? 0 : maxStockCode.hashCode());
+		result = prime * result
+				+ ((maxStockMarket == null) ? 0 : maxStockMarket.hashCode());
+		result = prime * result
+				+ ((maxStockName == null) ? 0 : maxStockName.hashCode());
+		result = prime * result + ((over == null) ? 0 : over.hashCode());
+		result = prime * result + status;
+		result = prime * result + ((sum == null) ? 0 : sum.hashCode());
+		result = prime * result
+				+ ((totalGain == null) ? 0 : totalGain.hashCode());
+		result = prime
+				* result
+				+ ((tradingAccountId == null) ? 0 : tradingAccountId.hashCode());
+		result = prime * result
+				+ ((userGain == null) ? 0 : userGain.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + (virtual ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GainBean other = (GainBean) obj;
+		if (closeTime == null) {
+			if (other.closeTime != null)
+				return false;
+		} else if (!closeTime.equals(other.closeTime))
+			return false;
+		if (maxStockCode == null) {
+			if (other.maxStockCode != null)
+				return false;
+		} else if (!maxStockCode.equals(other.maxStockCode))
+			return false;
+		if (maxStockMarket == null) {
+			if (other.maxStockMarket != null)
+				return false;
+		} else if (!maxStockMarket.equals(other.maxStockMarket))
+			return false;
+		if (maxStockName == null) {
+			if (other.maxStockName != null)
+				return false;
+		} else if (!maxStockName.equals(other.maxStockName))
+			return false;
+		if (over == null) {
+			if (other.over != null)
+				return false;
+		} else if (!over.equals(other.over))
+			return false;
+		if (status != other.status)
+			return false;
+		if (sum == null) {
+			if (other.sum != null)
+				return false;
+		} else if (!sum.equals(other.sum))
+			return false;
+		if (totalGain == null) {
+			if (other.totalGain != null)
+				return false;
+		} else if (!totalGain.equals(other.totalGain))
+			return false;
+		if (tradingAccountId == null) {
+			if (other.tradingAccountId != null)
+				return false;
+		} else if (!tradingAccountId.equals(other.tradingAccountId))
+			return false;
+		if (userGain == null) {
+			if (other.userGain != null)
+				return false;
+		} else if (!userGain.equals(other.userGain))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		if (virtual != other.virtual)
+			return false;
+		return true;
+	}	
 
 }

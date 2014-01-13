@@ -182,6 +182,69 @@ public class ArticleBean implements IBindableBean {
                 " , createDate=" + this.createDate +
                 " , articleUrl=" + this.articleUrl +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((abstractInfo == null) ? 0 : abstractInfo.hashCode());
+		result = prime * result
+				+ ((articleUrl == null) ? 0 : articleUrl.hashCode());
+		result = prime * result
+				+ ((createDate == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((imageUrl == null) ? 0 : imageUrl.hashCode());
+		result = prime * result + power;
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + type;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArticleBean other = (ArticleBean) obj;
+		if (abstractInfo == null) {
+			if (other.abstractInfo != null)
+				return false;
+		} else if (!abstractInfo.equals(other.abstractInfo))
+			return false;
+		if (articleUrl == null) {
+			if (other.articleUrl != null)
+				return false;
+		} else if (!articleUrl.equals(other.articleUrl))
+			return false;
+		if (createDate == null) {
+			if (other.createDate != null)
+				return false;
+		} else if (!createDate.equals(other.createDate))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (imageUrl == null) {
+			if (other.imageUrl != null)
+				return false;
+		} else if (!imageUrl.equals(other.imageUrl))
+			return false;
+		if (power != other.power)
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}	
 
 }

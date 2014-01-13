@@ -380,6 +380,145 @@ public class AuditDetailBean implements IBindableBean {
                 " , tradingDate=" + this.tradingDate +
                 " , plRisk=" + this.plRisk +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accountPay == null) ? 0 : accountPay.hashCode());
+		result = prime * result
+				+ ((buyAverage == null) ? 0 : buyAverage.hashCode());
+		result = prime * result + ((buyDay == null) ? 0 : buyDay.hashCode());
+		result = prime * result
+				+ ((capitalRate == null) ? 0 : capitalRate.hashCode());
+		result = prime * result + ((cost == null) ? 0 : cost.hashCode());
+		result = prime * result
+				+ ((deadline == null) ? 0 : deadline.hashCode());
+		result = prime * result
+				+ ((frozenAmount == null) ? 0 : frozenAmount.hashCode());
+		result = prime * result + ((fund == null) ? 0 : fund.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((payOut == null) ? 0 : payOut.hashCode());
+		result = prime * result + ((plRisk == null) ? 0 : plRisk.hashCode());
+		result = prime * result
+				+ ((sellAverage == null) ? 0 : sellAverage.hashCode());
+		result = prime * result
+				+ ((totalGain == null) ? 0 : totalGain.hashCode());
+		result = prime * result
+				+ ((tradingCost == null) ? 0 : tradingCost.hashCode());
+		result = prime * result
+				+ ((tradingDate == null) ? 0 : tradingDate.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result
+				+ ((unfreezeAmount == null) ? 0 : unfreezeAmount.hashCode());
+		result = prime * result
+				+ ((userGain == null) ? 0 : userGain.hashCode());
+		result = prime * result + (virtual ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuditDetailBean other = (AuditDetailBean) obj;
+		if (accountPay == null) {
+			if (other.accountPay != null)
+				return false;
+		} else if (!accountPay.equals(other.accountPay))
+			return false;
+		if (buyAverage == null) {
+			if (other.buyAverage != null)
+				return false;
+		} else if (!buyAverage.equals(other.buyAverage))
+			return false;
+		if (buyDay == null) {
+			if (other.buyDay != null)
+				return false;
+		} else if (!buyDay.equals(other.buyDay))
+			return false;
+		if (capitalRate == null) {
+			if (other.capitalRate != null)
+				return false;
+		} else if (!capitalRate.equals(other.capitalRate))
+			return false;
+		if (cost == null) {
+			if (other.cost != null)
+				return false;
+		} else if (!cost.equals(other.cost))
+			return false;
+		if (deadline == null) {
+			if (other.deadline != null)
+				return false;
+		} else if (!deadline.equals(other.deadline))
+			return false;
+		if (frozenAmount == null) {
+			if (other.frozenAmount != null)
+				return false;
+		} else if (!frozenAmount.equals(other.frozenAmount))
+			return false;
+		if (fund == null) {
+			if (other.fund != null)
+				return false;
+		} else if (!fund.equals(other.fund))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (payOut == null) {
+			if (other.payOut != null)
+				return false;
+		} else if (!payOut.equals(other.payOut))
+			return false;
+		if (plRisk == null) {
+			if (other.plRisk != null)
+				return false;
+		} else if (!plRisk.equals(other.plRisk))
+			return false;
+		if (sellAverage == null) {
+			if (other.sellAverage != null)
+				return false;
+		} else if (!sellAverage.equals(other.sellAverage))
+			return false;
+		if (totalGain == null) {
+			if (other.totalGain != null)
+				return false;
+		} else if (!totalGain.equals(other.totalGain))
+			return false;
+		if (tradingCost == null) {
+			if (other.tradingCost != null)
+				return false;
+		} else if (!tradingCost.equals(other.tradingCost))
+			return false;
+		if (tradingDate == null) {
+			if (other.tradingDate != null)
+				return false;
+		} else if (!tradingDate.equals(other.tradingDate))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (unfreezeAmount == null) {
+			if (other.unfreezeAmount != null)
+				return false;
+		} else if (!unfreezeAmount.equals(other.unfreezeAmount))
+			return false;
+		if (userGain == null) {
+			if (other.userGain != null)
+				return false;
+		} else if (!userGain.equals(other.userGain))
+			return false;
+		if (virtual != other.virtual)
+			return false;
+		return true;
+	}	
 
 }

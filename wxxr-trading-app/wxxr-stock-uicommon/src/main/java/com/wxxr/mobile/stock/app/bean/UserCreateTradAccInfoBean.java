@@ -349,6 +349,111 @@ public class UserCreateTradAccInfoBean implements IBindableBean {
                 " , depositRate=" + this.depositRate +
                 " , capitalRate=" + this.capitalRate +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(capitalRate);
+		result = prime * result + Float.floatToIntBits(costRate);
+		result = prime * result + Float.floatToIntBits(deposit1);
+		result = prime * result + Float.floatToIntBits(deposit2);
+		result = prime * result + Float.floatToIntBits(deposit3);
+		result = prime * result + Float.floatToIntBits(depositRate);
+		result = prime * result
+				+ ((maxAmount == null) ? 0 : maxAmount.hashCode());
+		result = prime * result + Float.floatToIntBits(rateData1);
+		result = prime * result + Float.floatToIntBits(rateData2);
+		result = prime * result + Float.floatToIntBits(rateData3);
+		result = prime * result
+				+ ((rateString == null) ? 0 : rateString.hashCode());
+		result = prime * result
+				+ ((rateString1 == null) ? 0 : rateString1.hashCode());
+		result = prime * result
+				+ ((rateString2 == null) ? 0 : rateString2.hashCode());
+		result = prime * result
+				+ ((rateString3 == null) ? 0 : rateString3.hashCode());
+		result = prime * result
+				+ ((requestamount == null) ? 0 : requestamount.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + Float.floatToIntBits(voucherCostRate);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserCreateTradAccInfoBean other = (UserCreateTradAccInfoBean) obj;
+		if (Float.floatToIntBits(capitalRate) != Float
+				.floatToIntBits(other.capitalRate))
+			return false;
+		if (Float.floatToIntBits(costRate) != Float
+				.floatToIntBits(other.costRate))
+			return false;
+		if (Float.floatToIntBits(deposit1) != Float
+				.floatToIntBits(other.deposit1))
+			return false;
+		if (Float.floatToIntBits(deposit2) != Float
+				.floatToIntBits(other.deposit2))
+			return false;
+		if (Float.floatToIntBits(deposit3) != Float
+				.floatToIntBits(other.deposit3))
+			return false;
+		if (Float.floatToIntBits(depositRate) != Float
+				.floatToIntBits(other.depositRate))
+			return false;
+		if (maxAmount == null) {
+			if (other.maxAmount != null)
+				return false;
+		} else if (!maxAmount.equals(other.maxAmount))
+			return false;
+		if (Float.floatToIntBits(rateData1) != Float
+				.floatToIntBits(other.rateData1))
+			return false;
+		if (Float.floatToIntBits(rateData2) != Float
+				.floatToIntBits(other.rateData2))
+			return false;
+		if (Float.floatToIntBits(rateData3) != Float
+				.floatToIntBits(other.rateData3))
+			return false;
+		if (rateString == null) {
+			if (other.rateString != null)
+				return false;
+		} else if (!rateString.equals(other.rateString))
+			return false;
+		if (rateString1 == null) {
+			if (other.rateString1 != null)
+				return false;
+		} else if (!rateString1.equals(other.rateString1))
+			return false;
+		if (rateString2 == null) {
+			if (other.rateString2 != null)
+				return false;
+		} else if (!rateString2.equals(other.rateString2))
+			return false;
+		if (rateString3 == null) {
+			if (other.rateString3 != null)
+				return false;
+		} else if (!rateString3.equals(other.rateString3))
+			return false;
+		if (requestamount == null) {
+			if (other.requestamount != null)
+				return false;
+		} else if (!requestamount.equals(other.requestamount))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		if (Float.floatToIntBits(voucherCostRate) != Float
+				.floatToIntBits(other.voucherCostRate))
+			return false;
+		return true;
+	}	
 
 }

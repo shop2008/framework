@@ -272,6 +272,103 @@ public class StockLineBean implements IBindableBean {
                 " , secuamount=" + this.secuamount +
                 " , low=" + this.low +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((close == null) ? 0 : close.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((high == null) ? 0 : high.hashCode());
+		result = prime * result + ((limit == null) ? 0 : limit.hashCode());
+		result = prime * result + ((low == null) ? 0 : low.hashCode());
+		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		result = prime * result + ((open == null) ? 0 : open.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result
+				+ ((secuamount == null) ? 0 : secuamount.hashCode());
+		result = prime * result
+				+ ((secuvolume == null) ? 0 : secuvolume.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		result = prime * result + ((time == null) ? 0 : time.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockLineBean other = (StockLineBean) obj;
+		if (close == null) {
+			if (other.close != null)
+				return false;
+		} else if (!close.equals(other.close))
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (high == null) {
+			if (other.high != null)
+				return false;
+		} else if (!high.equals(other.high))
+			return false;
+		if (limit == null) {
+			if (other.limit != null)
+				return false;
+		} else if (!limit.equals(other.limit))
+			return false;
+		if (low == null) {
+			if (other.low != null)
+				return false;
+		} else if (!low.equals(other.low))
+			return false;
+		if (market == null) {
+			if (other.market != null)
+				return false;
+		} else if (!market.equals(other.market))
+			return false;
+		if (open == null) {
+			if (other.open != null)
+				return false;
+		} else if (!open.equals(other.open))
+			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
+		if (secuamount == null) {
+			if (other.secuamount != null)
+				return false;
+		} else if (!secuamount.equals(other.secuamount))
+			return false;
+		if (secuvolume == null) {
+			if (other.secuvolume != null)
+				return false;
+		} else if (!secuvolume.equals(other.secuvolume))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		if (time == null) {
+			if (other.time != null)
+				return false;
+		} else if (!time.equals(other.time))
+			return false;
+		return true;
+	}	
 
 }

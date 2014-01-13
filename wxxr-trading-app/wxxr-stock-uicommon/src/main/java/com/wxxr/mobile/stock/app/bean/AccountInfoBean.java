@@ -154,6 +154,62 @@ public class AccountInfoBean implements IBindableBean {
                 " , freeze=" + this.freeze +
                 " , avalible=" + this.avalible +
         "]";
-    }	
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((avalible == null) ? 0 : avalible.hashCode());
+		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
+		result = prime * result + ((freeze == null) ? 0 : freeze.hashCode());
+		result = prime * result
+				+ ((scoreBalance == null) ? 0 : scoreBalance.hashCode());
+		result = prime * result + ((scores == null) ? 0 : scores.hashCode());
+		result = prime * result
+				+ ((tradeDetails == null) ? 0 : tradeDetails.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccountInfoBean other = (AccountInfoBean) obj;
+		if (avalible == null) {
+			if (other.avalible != null)
+				return false;
+		} else if (!avalible.equals(other.avalible))
+			return false;
+		if (balance == null) {
+			if (other.balance != null)
+				return false;
+		} else if (!balance.equals(other.balance))
+			return false;
+		if (freeze == null) {
+			if (other.freeze != null)
+				return false;
+		} else if (!freeze.equals(other.freeze))
+			return false;
+		if (scoreBalance == null) {
+			if (other.scoreBalance != null)
+				return false;
+		} else if (!scoreBalance.equals(other.scoreBalance))
+			return false;
+		if (scores == null) {
+			if (other.scores != null)
+				return false;
+		} else if (!scores.equals(other.scores))
+			return false;
+		if (tradeDetails == null) {
+			if (other.tradeDetails != null)
+				return false;
+		} else if (!tradeDetails.equals(other.tradeDetails))
+			return false;
+		return true;
+	}	
 
 }
