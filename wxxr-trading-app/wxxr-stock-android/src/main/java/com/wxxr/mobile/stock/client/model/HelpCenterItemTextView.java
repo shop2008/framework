@@ -42,7 +42,7 @@ public abstract class HelpCenterItemTextView extends ViewBase implements IModelU
 	String imgUrl;
 	
 	@Field(valueKey="visible",visibleWhen="${index==0}")
-	boolean imgItem;
+	boolean imgItem;  
 	
 	@Field(valueKey="visible",visibleWhen="${index==1}")
 	boolean textItem;
