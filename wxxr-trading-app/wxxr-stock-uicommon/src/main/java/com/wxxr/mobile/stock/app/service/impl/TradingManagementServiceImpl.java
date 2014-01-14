@@ -38,6 +38,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
@@ -858,7 +859,19 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     }
 
     @Override
-    public void cancelOrder(String orderID) {
+    public void cancelOrder(String accId,String orderID) {
+    	TradingAccountBean bean = getTradingAccountInfo(accId);
+    	if (bean!=null) {
+			List<StockTradingOrderBean>  orders = bean.getTradingOrders();
+			if (orders!=null) {
+				for (StockTradingOrderBean order : orders) {
+					if (order.getId().toString().equals(orderID)) {
+						order.setStatus("正在撤单");
+						break;
+					}
+				}
+			}
+		}
 		try {
 			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
 			Object result = f.get();
@@ -876,7 +889,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("cancelOrder successfully.");
 	                    }
-	                    tradingAccountBean_cache.forceReload(true);
+	                    //tradingAccountBean_cache.forceReload(true);
 	                }
 	            }			
 		} catch (InterruptedException e) {
@@ -1109,8 +1122,8 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						 * @param orderID
 						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#cancelOrder(java.lang.String)
 						 */
-						public void cancelOrder(String orderID) {
-							((ITradingManagementService)holder.getDelegate()).cancelOrder(orderID);
+						public void cancelOrder(String accId,String orderID) {
+							((ITradingManagementService)holder.getDelegate()).cancelOrder(accId,orderID);
 						}
 
 						/**
