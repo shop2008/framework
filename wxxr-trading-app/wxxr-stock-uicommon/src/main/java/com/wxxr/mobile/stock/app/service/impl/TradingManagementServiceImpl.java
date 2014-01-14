@@ -954,12 +954,25 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	}
 	
 	void clearCache(){
-		tradingAccInfo_cache.clear();
-        tradingAccountBean_cache.clear();
-        tradingRecordBean_cache.clear();
-        dealDetailBean_cache.clear();
-        auditDetailBean_cache.clear();
-        voucherDetailsBean_cache.clear();
+		if (tradingAccInfo_cache!=null) {
+			tradingAccInfo_cache.clear();
+		}
+		if (tradingAccountBean_cache!=null) {
+			tradingAccountBean_cache.clear();
+		}
+        if (tradingRecordBean_cache!=null) {
+        	tradingRecordBean_cache.clear();
+		}
+        if (dealDetailBean_cache!=null) {
+        	dealDetailBean_cache.clear();
+		}
+        if (auditDetailBean_cache!=null) {
+        	auditDetailBean_cache.clear();
+		}
+        if (voucherDetailsBean_cache!=null) {
+        	 voucherDetailsBean_cache.clear();
+		}
+       
 	}
 
 
