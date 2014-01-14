@@ -780,7 +780,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public void destroy(Object serviceHandler) {
-		
+		userAssetBeanCache=null;
+		voucherBeanCache=null;
+		remindMessagesCache=null;
+		pullMessagesCache=null;
+		userAttributeCache=null;
+		gainPayDetail_cache=null;
+		personalHomePageBean_cache=null;
+		otherpersonalHomePageBean_cache=null;
+		gainBean_cache=null;
+		otherGainBean_cache=null;
+		unreadRemindMessagesCache=null;
 	}
 
 
