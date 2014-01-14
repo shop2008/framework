@@ -50,7 +50,7 @@ public abstract class UserPage extends PageBase {
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.myPersonalHomePage}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMyPersonalHomePage(false)}")
 	PersonalHomePageBean personalBean;
 	/**
 	 * 用户形象照
@@ -61,13 +61,13 @@ public abstract class UserPage extends PageBase {
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding = "${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}")
+	@Field(valueKey = "text", binding = "${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}", enableWhen="${(user!=null&&user.nickName!=null)?false:true}")
 	String userNickName;
 
-	@Field(valueKey = "visible", binding = "${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
+	/*@Field(valueKey = "visible", binding = "${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
 	boolean loading;
 
-	boolean loadingExpireTime = false;
+	boolean loadingExpireTime = false;*/
 	/**
 	 * 累计实盘积分
 	 */
@@ -92,10 +92,10 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter = "shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.virtualList:null}")
+	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).virtualList}", upateAsync=true)
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.actualList:null}")
+	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).actualList}",upateAsync=true)
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
@@ -113,7 +113,7 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
 	String userHomeBack = "resourceId:drawable/back1";
 
-	@OnShow
+	/*@OnShow
 	void initData() {
 		loadingExpireTime = false;
 		registerBean("ExpireTimeFlag", loadingExpireTime);
@@ -122,14 +122,14 @@ public abstract class UserPage extends PageBase {
 			@Override
 			public void run() {
 				checkLoadStatus();
-				/*if (loadingExpireTime == true) {
+				if (loadingExpireTime == true) {
 					return;
 				} else {
 					do {
 						checkLoadStatus();
 						SystemClock.sleep(500);
 					} while (loadingExpireTime == false);
-				}*/
+				}
 			}
 
 			private void checkLoadStatus() {
@@ -138,7 +138,7 @@ public abstract class UserPage extends PageBase {
 				registerBean("ExpireTimeFlag", loadingExpireTime);
 			}
 		});
-	}
+	}*/
 
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
@@ -164,11 +164,11 @@ public abstract class UserPage extends PageBase {
 			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor shareNumConvertor;
 
-	@OnHide
+	/*@OnHide
 	void onHidePage() {
 		loadingExpireTime = true;
 	}
-
+*/
 	/**
 	 * 挑战交易盘-"查看更多"事件处理
 	 * 
