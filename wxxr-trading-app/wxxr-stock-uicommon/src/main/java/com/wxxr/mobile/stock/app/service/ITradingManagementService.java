@@ -106,7 +106,7 @@ public interface ITradingManagementService {
 	 * 撤单
 	 * @param orderID -交易订单ID
 	 */
-	void cancelOrder(String orderID);
+	void cancelOrder(String accId,String orderID);
 	/**
 	 * 清算交易盘
 	 * @param acctID - 交易盘Id
