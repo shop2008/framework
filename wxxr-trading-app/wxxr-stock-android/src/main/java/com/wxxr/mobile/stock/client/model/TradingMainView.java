@@ -62,7 +62,7 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Pojo,express="${tradingService.getAllTradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
     BindableListWrapper<TradingAccInfoBean> AllTradingAccountList;
 	
-	@Field(valueKey="options",binding="${AllTradingAccountList!=null?AllTradingAccountList.data:null}")
+	@Field(valueKey="options",binding="${AllTradingAccountList!=null?AllTradingAccountList.getData(true):null}", upateAsync=true)
 	List<TradingAccInfoBean> alltrading;	   
 	
 	
@@ -82,7 +82,12 @@ public abstract class TradingMainView extends ViewBase{
 		return null;
 	}	
 	
-
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		tradingService.getAllTradingAccountList();
+		return null;
+	}
+	
 	/**
 	 * 创建买入页跳转
 	 * 
@@ -143,13 +148,13 @@ public abstract class TradingMainView extends ViewBase{
 						if("CLOSED".equals(over)){
 							resutl.setPayload(map);
 							resutl.setResult("operationDetails");
-							updateSelection(new AccidSelection(acctId, isVirtual));
 						}
 						else if("UNCLOSE".equals(over)){
 							resutl.setResult("sellTradingAccount");
 							resutl.setPayload(map);
 						}
 					}
+					updateSelection(new AccidSelection(acctId, isVirtual));
 					return resutl;
 				}
 			}		

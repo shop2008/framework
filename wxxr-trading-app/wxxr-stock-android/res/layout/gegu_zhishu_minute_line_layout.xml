@@ -29,6 +29,9 @@
             android:layout_marginLeft="4dip"
             android:layout_marginRight="4dip"
             android:layout_marginTop="2dip"
+            bind:updatingViewId="resourceId:id/progress"
+            bind:updateFaieldId="resourceId:id/failed"
+            bind:updateAllId="resourceId:id/all"
             bind:field="stockMinuteData@StockViewDecorator" />
 
         <include layout="@layout/stock_loading_progress_layout"/>
