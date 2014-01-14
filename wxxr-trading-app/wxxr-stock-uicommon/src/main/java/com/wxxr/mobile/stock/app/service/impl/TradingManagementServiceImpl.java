@@ -721,6 +721,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("Create trading account successfully.");
 	                    }
+	                    tradingAccInfo_cache.forceReload(true);
 	                }
 	           }			
 		}catch (ExecutionException e) {
