@@ -116,7 +116,7 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		pSupport.removePropertyChangeListener(listener);
 	}
 
-	public synchronized List<E> getData(boolean forceReload){
+	public List<E> getData(boolean forceReload){
 		if(forceReload){
 			this.disableEvent = true;
 			try {
