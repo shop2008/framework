@@ -218,7 +218,8 @@
             android:paddingBottom="10dip"
             android:paddingLeft="10dip"
             android:paddingRight="20dip"
-            android:paddingTop="10dip" >
+            android:paddingTop="10dip" 
+            bind:field="djassetType">
 
             <TextView
                 android:id="@+id/lossLimit"
@@ -239,6 +240,36 @@
                 android:textColor="@color/black"
                 bind:field="frozenVol" />
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="10dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="20dip"
+            android:paddingTop="10dip" 
+            android:visibility="gone"
+            bind:field="jfassetType">
+
+            <TextView
+                android:id="@+id/lossLimit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="扣除实盘积分:"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/lossLimit"
+                android:gravity="right"
+                android:textColor="@color/black"
+                bind:field="jifenfrozenVol" />
+        </RelativeLayout>        
     </LinearLayout>
 
 </LinearLayout>

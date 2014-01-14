@@ -162,16 +162,16 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 				this.nameBean = stockSelection.getName();
 				this.marketBean = stockSelection.getMarket();
 				this.buyPrice = stockSelection.getBuyPrice();
-//				StockQuotationBean stockQuo = infoCenterService.getStockQuotation(codeBean,marketBean);
-//				this.quotationBean = stockQuo;
-//				BindableListWrapper<StockMinuteKBean> minuteBean = infoCenterService.getFiveDayMinuteline(codeBean,marketBean);
-//				this.fiveDayMinuteBean = minuteBean;
-//				StockBaseInfo stockInfo = stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-//				this.stockInfoBean = stockInfo;
+				StockQuotationBean stockQuo = infoCenterService.getStockQuotation(codeBean,marketBean);
+				this.quotationBean = stockQuo;
+				BindableListWrapper<StockMinuteKBean> minuteBean = infoCenterService.getFiveDayMinuteline(codeBean,marketBean);
+				this.fiveDayMinuteBean = minuteBean;
+				StockBaseInfo stockInfo = stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+				this.stockInfoBean = stockInfo;
 				
-//				registerBean("quotationBean", this.quotationBean);
-//				registerBean("fiveDayMinuteBean", this.fiveDayMinuteBean);
-//				registerBean("stockInfoBean", this.stockInfoBean);
+				registerBean("quotationBean", this.quotationBean);
+				registerBean("fiveDayMinuteBean", this.fiveDayMinuteBean);
+				registerBean("stockInfoBean", this.stockInfoBean);
 			}
 			registerBean("codeBean", this.codeBean);
 			registerBean("nameBean", this.nameBean);

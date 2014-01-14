@@ -59,7 +59,7 @@
                     android:paddingLeft="8dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     bind:field="stock"
                     bind:on_Click="handlerStockClicked" />
 
@@ -95,7 +95,7 @@
                                 android:maxLength="6"
                                 android:paddingLeft="8dp"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
                                 bind:field="price"
                                 bind:on_TextChanged="priceTextChanged" />
 
@@ -176,7 +176,7 @@
                         android:inputType="number"
                         android:paddingLeft="8dp"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="14sp"
                         bind:field="count"
                         bind:on_TextChanged="countTextChanged" />
                 </LinearLayout>

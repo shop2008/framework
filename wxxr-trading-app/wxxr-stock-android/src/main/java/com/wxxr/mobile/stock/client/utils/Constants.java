@@ -58,4 +58,9 @@ public class Constants {
 	 * 用户名称
 	 */
 	public static final String KEY_USER_NAME_FLAG = "username";
+	
+	/**
+	 * 创建交易盘类型
+	 * */
+	public static final String KEY_ASSET_TYPE = "assetType";
 }

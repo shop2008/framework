@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.Float2PercentStringConvertor;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
@@ -41,6 +42,9 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 
 	@Bean
 	String acctId;
+	
+	@Bean
+	String assetType;
 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
@@ -62,10 +66,15 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
 	@Convertor(params={
-			@Parameter(name="format",value="%.2f"),
+			@Parameter(name="format",value="%.2f元"),
 			@Parameter(name="multiple", value="100.00")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f元")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorSpecial1;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="-%.0f")
@@ -96,9 +105,19 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:null}",converter="stockLong2StringConvertorSpecial")
 	String frozenVol;
 	
+	/*** 扣除实盘积分*/
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.frozenVol:null}",converter="stockLong2StringConvertorSpecial1")
+	String jifenfrozenVol;
+	
 	/*** 止损*/
 	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.lossLimit:''}",converter="float2PercentStringConvertor")
 	String lossLimit;
+	
+	@Field(valueKey = "visible",visibleWhen="${assetType!=null && assetType!='VOUCHER'}")
+	boolean djassetType = true;
+	
+	@Field(valueKey = "visible",visibleWhen="${assetType!=null && assetType == 'VOUCHER'}")
+	boolean jfassetType;
 
 	@Menu(items = { "left" })
 	private IMenu toolbar;
@@ -120,10 +139,14 @@ public abstract class ShiPanBuyStockInfoPage extends PageBase implements
 		if (data instanceof Map) {
 			Map result = (Map) data;
 			for (Object key : result.keySet()) {
-				if("result".equals(key)){
-					Object tempt = result.get(key);
-					registerBean("acctId", tempt);
-				}
+				if(key.equals(Constants.KEY_ACCOUNT_ID_FLAG)){
+	            	String accid = result.get(key)+"";
+	            	registerBean("acctId", accid);
+	            }
+				if(key.equals(Constants.KEY_ASSET_TYPE)){
+	            	String assetType = (String)result.get(key);
+	            	registerBean("assetType", assetType);
+	            }
 			}
 		}
 	}

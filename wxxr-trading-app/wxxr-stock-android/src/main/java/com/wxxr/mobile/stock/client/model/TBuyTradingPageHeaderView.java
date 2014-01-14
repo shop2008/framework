@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -24,6 +26,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -100,12 +103,16 @@ public abstract class TBuyTradingPageHeaderView extends ViewBase implements IMod
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
 			if (tradingBean != null) {
-				resutl.setPayload(tradingBean.getId());
-			}
-			if(isVirtual){
-				resutl.setResult("TBuyStockInfoPage");
-			}else{
-				resutl.setResult("ShiPanBuyStockInfoPage");
+				if(isVirtual){
+					resutl.setPayload(tradingBean.getId());
+					resutl.setResult("TBuyStockInfoPage");
+				}else{
+					HashMap<String, Object> data = new HashMap<String, Object>();
+					data.put(Constants.KEY_ASSET_TYPE, tradingBean.getType());
+					data.put(Constants.KEY_ACCOUNT_ID_FLAG, tradingBean.getId());
+					resutl.setPayload(data);
+					resutl.setResult("ShiPanBuyStockInfoPage");
+				}
 			}
 			return resutl;
 		}
