@@ -52,6 +52,7 @@ public class UpdateNickNameHandler implements ICommandHandler {
 				throw new CommandException("昵称不能为空");
 			}
 			
+			
 			if (!Pattern.matches("[\u4E00-\u9FA5]{2,6}", nickName)) {
 				throw new CommandException("昵称必须为2到6个中文字符！");
 			}
