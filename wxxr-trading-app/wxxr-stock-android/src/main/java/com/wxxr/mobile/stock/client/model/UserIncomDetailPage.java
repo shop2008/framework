@@ -32,7 +32,7 @@ public abstract class UserIncomDetailPage extends PageBase {
 
 	static Trace log;
 
-	@Field(valueKey = "options", binding = "${gainPayDetailListBean!=null?gainPayDetailListBean.data:null}", visibleWhen = "${gainPayDetailListBean!=null?(gainPayDetailListBean.data!=null?(gainPayDetailListBean.data.size()>0?true:false):false):false}")
+	@Field(valueKey = "options", upateAsync=true,binding = "${gainPayDetailListBean!=null?gainPayDetailListBean.getData(true):null}")
 	List<GainPayDetailBean> incomeDetails;
 
 	@Field(valueKey = "text", attributes = {
@@ -107,4 +107,12 @@ public abstract class UserIncomDetailPage extends PageBase {
 		return null;
 	}
 
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		
+		if(usrService != null) {
+			usrService.getGPDetails(0, 20);
+		}
+		return null;
+	}
 }

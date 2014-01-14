@@ -16,8 +16,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
-import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
-import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+  import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 
 @View(name="uRealPanelScorePage", withToolbar=true, description="实盘积分明细")
@@ -28,7 +27,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.data:null}")
+	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.getData(true):null}", upateAsync=true)
 	List<GainPayDetailBean> actualScores;
 	
 	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
@@ -63,7 +62,7 @@ public abstract class URealPanelScorePage extends PageBase{
 			int completeSize = 0;
 			if(voucherDetailsBean != null)
 				completeSize = voucherDetailsBean.getData().size();
-			start += completeSize;
+			start = completeSize;
 			if(tradingService != null) {
 				tradingService.getGainPayDetailDetails(start, limit);
 			}
@@ -76,11 +75,19 @@ public abstract class URealPanelScorePage extends PageBase{
 		int completeSize = 0;
 		if(voucherDetailsBean != null)
 			completeSize = voucherDetailsBean.getData().size();
-		start += completeSize;
+		start = completeSize;
 		if(tradingService != null) {
 			tradingService.getGainPayDetailDetails(start, limit);
 		}
 		return null;
 	}
 	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		
+		if(tradingService != null) {
+			tradingService.getGainPayDetailDetails(0, limit);
+		}
+		return null;
+	}
 }
