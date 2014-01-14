@@ -120,10 +120,12 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		if(forceReload){
 			this.disableEvent = true;
 			try {
-				doReload(getReloadParameters());
+				doReload(getReloadParameters(),false);
 			}finally {
 				this.disableEvent = false;
 			}
+		}else{
+			doReload(getReloadParameters(), true);
 		}
 		return getData();
 	}
@@ -155,7 +157,7 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		return this.data;
 	}
 	
-	protected abstract void doReload(Map<String, Object> params);
+	protected abstract void doReload(Map<String, Object> params, boolean async);
 	/**
 	 * @return the reloadParameters
 	 */

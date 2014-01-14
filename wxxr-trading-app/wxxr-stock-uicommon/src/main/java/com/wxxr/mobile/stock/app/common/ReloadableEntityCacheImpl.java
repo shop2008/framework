@@ -473,8 +473,8 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		return new BindableListWrapper<V>(this,filter,comparator) {
 
 			@Override
-			protected void doReload(Map<String, Object> params) {
-					forceReload(params,true);
+			protected void doReload(Map<String, Object> params, boolean async) {
+					forceReload(params,async == false);
 			}
 			
 		};
