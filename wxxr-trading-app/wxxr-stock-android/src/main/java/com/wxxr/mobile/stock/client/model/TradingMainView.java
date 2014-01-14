@@ -131,21 +131,24 @@ public abstract class TradingMainView extends ViewBase{
 					boolean isSelf = true;
 					Long accid = tempTradingA.getAcctID();
 					String over = tempTradingA.getOver();
+					int status = tempTradingA.getStatus();
 					HashMap<String, Object> map = new HashMap<String, Object>();
 					map.put(Constants.KEY_ACCOUNT_ID_FLAG, accid);
 					map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
 					map.put(Constants.KEY_SELF_FLAG, isSelf);
-					if("CLOSED".equals(over)){
-						resutl.setPayload(map);
-						resutl.setResult("operationDetails");
-						updateSelection(new AccidSelection(acctId, isVirtual));
-					}
-					else if("UNCLOSE".equals(over)){
-						resutl.setResult("sellTradingAccount");
-						resutl.setPayload(map);
-					}else{
+					if(status==1){
 						resutl.setPayload(map);
 						resutl.setResult("TBuyTradingPage");
+					}else if(status==0){
+						if("CLOSED".equals(over)){
+							resutl.setPayload(map);
+							resutl.setResult("operationDetails");
+							updateSelection(new AccidSelection(acctId, isVirtual));
+						}
+						else if("UNCLOSE".equals(over)){
+							resutl.setResult("sellTradingAccount");
+							resutl.setPayload(map);
+						}
 					}
 					return resutl;
 				}
