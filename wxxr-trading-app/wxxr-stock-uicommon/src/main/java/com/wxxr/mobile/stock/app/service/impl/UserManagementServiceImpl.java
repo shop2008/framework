@@ -201,7 +201,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		
 	   
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
-	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("gainBean");
+	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
@@ -470,6 +470,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	}
 
     public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
+    	if (gainBean_cache==null) {
+    		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
+		}
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
@@ -507,7 +510,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
-        BindableListWrapper<GainBean> gainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+    	if (otherGainBean_cache==null) {
+    		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
+		}
+    	BindableListWrapper<GainBean> gainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
                 if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
@@ -515,7 +521,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
                 }
                 return false;
             }
-            
         }, viewMoreComparator);
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
