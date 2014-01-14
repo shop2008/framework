@@ -128,7 +128,7 @@ public abstract class UserNewsPage extends PageBase {
 			int completeLoadSize = 0;
 			if (infoNoticeListBean != null)
 				completeLoadSize += infoNoticeListBean.getData().size();
-			start += completeLoadSize;
+			start = completeLoadSize;
 			if (usrService != null) {
 				usrService.getPullMessageBean(start, limit);
 			}
