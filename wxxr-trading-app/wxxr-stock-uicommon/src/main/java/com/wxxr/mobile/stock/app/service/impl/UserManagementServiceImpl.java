@@ -47,8 +47,6 @@ import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler;
-import com.wxxr.mobile.stock.app.service.handler.GetClientInfoHandler.ReadClientInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.ReadAllUnreadMessageHandler;
@@ -82,6 +80,7 @@ import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UNReadRemindingMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserClientInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
@@ -119,6 +118,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	
 	
 	private ClientInfoBean clientInfoBean;
+	private IReloadableEntityCache<String, ClientInfoBean> clientInfoBean_cache;
 	private VoucherBean voucherBean;
 	private IReloadableEntityCache<String,VoucherBean> voucherBeanCache;
 	
@@ -147,33 +147,14 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	private UserBean myUserInfo;
 
-	/*private IEventListener listener = new IEventListener() {
-      @Override
-      public void onEvent(IBroadcastEvent event) {
-        if (event instanceof LogoutEvent) {
-           clearCache();
-        }
-      }
-   };
-   protected void clearCache(){
-      
-   }*/
 	//==============  module life cycle =================
-//	@Override
-//	protected void initServiceDependency() {
-//		addRequiredService(IRestProxyService.class);
-//		addRequiredService(IEntityLoaderRegistry.class);
-//		addRequiredService(ICommandExecutor.class);
-//	    addRequiredService(IPreferenceManager.class);
-//
-//	}
 
 
 	public void startService() {
 	    
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
-		registry.registerEntityLoader("clientInfo", new UserAssetLoader());
+		registry.registerEntityLoader("clientInfo", new UserClientInfoLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
@@ -196,7 +177,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadRemindMessageHandler.COMMAND_NAME, new ReadRemindMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadAllUnreadMessageHandler.COMMAND_NAME, new ReadAllUnreadMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
-		context.getService(ICommandExecutor.class).registerCommandHandler(GetClientInfoHandler.COMMAND_NAME, new GetClientInfoHandler());
 		
 		
 	   
@@ -205,7 +185,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
-       // context.getService(IEventRouter.class).registerEventListener(LogoutEvent.class, listener);
 		context.registerService(IUserManagementService.class, this);
 	
 		updateToken();
@@ -738,30 +717,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			log.warn("updatToken error",e);
 		}
 	}
+	
 	 @Override
-	   public ClientInfoBean getClientInfo() {	   
+	 public ClientInfoBean getClientInfo() {	
+		  if (clientInfoBean_cache==null) {
+			  clientInfoBean_cache = new GenericReloadableEntityCache<String, ClientInfoBean, ClientInfoVO>("clientInfo");
+		   }
+		  clientInfoBean =  clientInfoBean_cache.getEntity(ClientInfoBean.class.getCanonicalName());
 	      if (clientInfoBean==null) {
 	         clientInfoBean = new ClientInfoBean();
+	         clientInfoBean_cache.putEntity(ClientInfoBean.class.getCanonicalName(), clientInfoBean);
 	      }
-	      ReadClientInfoCommand cmd=new ReadClientInfoCommand();
-	      try{
-	          Future<ClientInfoVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-	              try {
-	                  ClientInfoVO vo=future.get(3,TimeUnit.SECONDS);
-	                  if (vo!=null) {
-	                     clientInfoBean.setStatus(vo.getStatus());
-	                     clientInfoBean.setDescription(vo.getDescription());
-	                     clientInfoBean.setUrl(vo.getUrl());
-	                     clientInfoBean.setVersion(vo.getVersion());
-	                  }
-	              } catch (Exception e) {
-	                 return clientInfoBean;
-	                  //throw new StockAppBizException("系统错误");
-	              }
-	          }catch(CommandException e){
-	             return clientInfoBean;
-	              //throw new StockAppBizException(e.getMessage());
-	          }
+	      clientInfoBean_cache.doReloadIfNeccessay();
 	      return clientInfoBean;
 	   }
 	@Override
