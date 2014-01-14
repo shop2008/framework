@@ -636,20 +636,18 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		return rightTotalGainCache;
 	}
-	
+	BindableListWrapper<TradingAccInfoBean> allT;
 	
 	//获取我的T日 和 T+1日交易盘
 	public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList(){
-    	tradingAccInfo_cache.clear();
-        tradingAccInfo_cache.forceReload(false);
-        BindableListWrapper<TradingAccInfoBean> allT = tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
+    	if(allT == null)
+    		allT = tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
         return allT;		
 	}
 	
   
     //获取我的T日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
-    	tradingAccInfo_cache.clear();
         tradingAccInfo_cache.forceReload(false);
         BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
@@ -665,7 +663,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     }
     //获取我的T+1日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList(){
-    	tradingAccInfo_cache.clear();
         tradingAccInfo_cache.forceReload(false);
         BindableListWrapper<TradingAccInfoBean> t1s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
