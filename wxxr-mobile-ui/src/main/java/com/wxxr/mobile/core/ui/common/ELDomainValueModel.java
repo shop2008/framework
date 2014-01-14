@@ -95,14 +95,16 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		if(!updateAsync){
 			return updateFieldValue();
 		}else{
-			final Future<T> future = KUtils.executeTask(new Callable<T>() {
+			@SuppressWarnings("unchecked")
+			final Future<T>[] future = new Future[1];
+			future[0] = KUtils.executeTask(new Callable<T>() {
 
 				@Override
 				public T call() throws Exception {
+					field.setAttribute(AttributeKeys.valueUpdating, future[0]);
 					return updateFieldValue();
 				}
 			});
-			this.field.setAttribute(AttributeKeys.valueUpdating, future);
 //			try {
 //				return future.get(1, TimeUnit.SECONDS);
 //			}catch(InterruptedException e){
