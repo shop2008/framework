@@ -861,18 +861,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
     @Override
     public void cancelOrder(String accId,String orderID) {
-    	TradingAccountBean bean = getTradingAccountInfo(accId);
-    	if (bean!=null) {
-			List<StockTradingOrderBean>  orders = bean.getTradingOrders();
-			if (orders!=null) {
-				for (StockTradingOrderBean order : orders) {
-					if (order.getId().toString().equals(orderID)) {
-						order.setStatus("正在撤单");
-						break;
-					}
-				}
-			}
-		}
+    	TradingAccountBean bean = tradingAccountBean_cache.getEntity(Long.valueOf(accId));
 		try {
 			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
 			Object result = f.get();
@@ -890,7 +879,17 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("cancelOrder successfully.");
 	                    }
-	                    //tradingAccountBean_cache.forceReload(true);
+	                    if (bean!=null) {
+	            			List<StockTradingOrderBean>  orders = bean.getTradingOrders();
+	            			if (orders!=null) {
+	            				for (StockTradingOrderBean order : orders) {
+	            					if (order.getId().toString().equals(orderID)) {
+	            						order.setStatus("100");
+	            						break;
+	            					}
+	            				}
+	            			}
+	            		}
 	                }
 	            }			
 		} catch (InterruptedException e) {
