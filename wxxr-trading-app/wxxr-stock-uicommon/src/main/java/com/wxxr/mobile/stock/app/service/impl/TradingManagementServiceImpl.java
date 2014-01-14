@@ -4,10 +4,14 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -96,6 +100,7 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService, IStatefulService {
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
+	private Timer timer = new Timer();
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
 		@Override
@@ -230,7 +235,18 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         context.getService(ICommandExecutor.class).registerCommandHandler(CancelOrderCommand.Name, new CancelOrderHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(ClearTradingAccountCommand.Name, new ClearTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(ApplyDrawMoneyHandler.COMMAND_NAME, new ApplyDrawMoneyHandler());
-
+        Calendar calendar = Calendar.getInstance();  
+        // 指定01:00:00点执行  
+        calendar.set(Calendar.HOUR_OF_DAY, 8);  
+        calendar.set(Calendar.MINUTE, 0);  
+        calendar.set(Calendar.SECOND, 0);  
+        Date date = calendar.getTime();  
+        timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				clearCache();
+			}
+		}, date, 24*60*60*1000);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -244,7 +260,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		auditDetailBean = new AuditDetailBean();
 		createTDConfig = new UserCreateTradAccInfoBean();
 		recordsBean = new TradingRecordListBean();
-		tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List<TradingAccInfoBean>>("tradingAccInfo",30);
+		tradingAccInfo_cache=new GenericReloadableEntityCache<String,TradingAccInfoBean,List<TradingAccInfoBean>>("tradingAccInfo",60);
         tradingAccountBean_cache=new GenericReloadableEntityCache<Long, TradingAccountBean, List<TradingAccountBean>>("TradingAccountInfo",30);
         tradingRecordBean_cache=new  GenericReloadableEntityCache<Long, TradingRecordBean, List<TradingRecordBean>>("tradingRecordBean");
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> ("dealDetailBean");
@@ -964,7 +980,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	@Override
 	public void destroy(Object serviceHandler) {
-		
+		clearCache();
 	}
 
 	@Override
