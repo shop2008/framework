@@ -3,6 +3,7 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -11,12 +12,17 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.ISelection;
+import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
+import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -24,6 +30,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.SpUtil;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -32,7 +39,8 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 @View(name = "TBuyTradingItemOrderView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.buy_trading_stock_order_item")
 public abstract class TBuyTradingItemOrderView extends ViewBase implements
-		IModelUpdater {
+		IModelUpdater,ISelectionChangedListener {
+	private static final Trace log = Trace.register(TBuyTradingItemOrderView.class);
 	// 交易服务
 	@Bean(type = BindingType.Service)
 	ITradingManagementService manageService;
@@ -69,6 +77,9 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Menu(items = { "left", "right", "search" })
 	IMenu toolbar;
 
+	@Bean
+	String accid;
+	
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof StockTradingOrderBean) {
@@ -83,6 +94,30 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		}
 	}
 
+	@OnCreate
+	void registerSelectionListener() {
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		selectionChanged("",service.getSelection(AccidSelection.class));
+		service.addSelectionListener(this);
+	}
+	
+	@OnDestroy
+	void removeSelectionListener() {
+		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
+		service.removeSelectionListener(this);
+	}
+	
+	@Override
+	public void selectionChanged(String providerId, ISelection selection) {
+		if(selection instanceof AccidSelection){
+			AccidSelection accidSelection = (AccidSelection) selection;
+			if(accidSelection!=null){
+				this.accid = accidSelection.getAccid();
+			}
+			registerBean("accid", this.accid);
+		}
+	}	
+	
 	@Command(navigations = { @Navigation(on = "*", message = "resourceId:message/confirm_cancel_order", params = {
 			@Parameter(name = "title", value = ""),
 			@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
@@ -101,8 +136,8 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		if (v != null)
 			v.hide();
 		String id = orderBean.getId() + "";
-		manageService.cancelOrder(id);
-		orderBean.setStatus("100");
+		manageService.cancelOrder(accid, id);
+//		orderBean.setStatus("100");
 		
 		String orders = SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).find(Constants.KEY_CANCEL_ORDERS);
 		if(StringUtils.isBlank(orders))	{
@@ -111,7 +146,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 			if(!orders.contains(id))
 				orders += ("," + id);
 		}
-		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, orders);
+//		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, orders);
 		return null;
 	}
 }

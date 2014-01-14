@@ -46,7 +46,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeBean,marketBean)}")
 	StockQuotationBean quotationBean;	
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map)}")
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map, false)}")
 	StockMinuteKBean minute;
 	
 	@Bean(type = BindingType.Service)
@@ -201,7 +201,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.capital:null}", converter = "stockLong2StringAutoUnitConvertor2")
 	String capital;
 	
-	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
+	@Field(valueKey="options",binding="${infoCenterService.getMinuteline(map, true)!=null?infoCenterService.getMinuteline(map, false).list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name="stockType",value="${stockType}"),
@@ -228,7 +228,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getMinuteline(map);
+		infoCenterService.getMinuteline(map, true);
 		return null;
 	}
 	

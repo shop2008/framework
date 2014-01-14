@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.binding;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import android.view.View;
