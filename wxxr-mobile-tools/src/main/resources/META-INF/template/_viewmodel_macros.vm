@@ -87,27 +87,24 @@
 #macro(initBeanUpdaters $model $bindings)
     private void initBeanUpdaters() {
 #foreach($binding in $bindings) 
-        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", #if(${binding.enabledWhen}) "${binding.enabledWhen}" #else null #end ,${binding.field.simpleBoxedType}.class);
+        this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", #if(${binding.enabledWhen}) "${binding.enabledWhen}" #else null #end ,${binding.field.simpleBoxedType}.class) {
+            @Override
+            protected void updateRegisteredBean(${binding.field.simpleBoxedType} val) {
+                    ${binding.field.name} = val;
+                    registerBean("${binding.field.name}", val);
+            }
+        };
         #if(${binding.enabledWhen})
         this.${binding.field.name}Updater.setDefaultValue(this.${binding.field.name});
         #end
+        addBeanUpdater(this.${binding.field.name}Updater);
 #end
     }
 #end
 
 #macro(updateBindingBeans $model $bindings)
     private void updateBindingBeans() {
-#foreach($binding in $bindings) 
-    try {
-        ${binding.field.simpleType} v_${binding.field.name} = this.${binding.field.name}Updater.doEvaluate();
-        this.${binding.field.name} = v_${binding.field.name};
-        registerBean("${binding.field.name}", this.${binding.field.name});
-    }catch(Throwable t) {
-        getLog().warn("Caught throwable when updating binding bean :[${binding.field.name}]", t);
-        handleStartupException(t);
-    }
-    
-#end
+       super.updateBeans();
     }
 #end
 

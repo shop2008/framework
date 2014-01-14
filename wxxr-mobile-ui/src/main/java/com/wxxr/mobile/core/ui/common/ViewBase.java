@@ -150,6 +150,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private ELManager elm;
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
+	private List<IValueEvaluator<?>> beanUpdaters;
 	private List<IDomainValueModel<?>> domainModels;
 	private LinkedList<Throwable> startupExceptions = new LinkedList<Throwable>();
 	private List<String> handledExceptions = new ArrayList<String>();
@@ -293,6 +294,23 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		return this;
 	}
+	
+	protected void addBeanUpdater(IValueEvaluator<?> evaluator){
+		if(this.beanUpdaters == null){
+			this.beanUpdaters = new ArrayList<IValueEvaluator<?>>();
+		}
+		if(!this.beanUpdaters.contains(evaluator)){
+			this.beanUpdaters.add(evaluator);
+		}
+	}
+
+	protected ViewBase removeBeanUpdater(IValueEvaluator<?> evaluator){
+		if(this.beanUpdaters != null){
+			this.beanUpdaters.remove(evaluator);
+		}
+		return this;
+	}
+
 
 	public void hide() {
 		getUIContext().getWorkbenchManager().getPageNavigator().hideView(this);
@@ -541,6 +559,13 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		onDataChanged(event);
 		if(event instanceof DomainValueChangedEvent){
+			if(this.beanUpdaters != null){
+				for (IValueEvaluator<?> eval : this.beanUpdaters) {
+					if(eval.valueEffectedBy(event)){
+						eval.doEvaluate();
+					}
+				}
+			}
 			if(this.domainModels != null){
 				for (IDomainValueModel<?> m : this.domainModels) {
 					if(m.valueEffectedBy(event)){
@@ -575,6 +600,19 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					eval.doEvaluate();
 				} catch (Throwable e) {
 					getLog().warn("Failed to update field attribute value from evaludator :"+eval, e);
+					handleStartupException(e);
+				}
+			}
+		}
+	}
+	
+	protected void updateBeans() {
+		if(this.beanUpdaters != null){
+			for (IValueEvaluator<?> eval : this.beanUpdaters) {
+				try {
+					eval.doEvaluate();
+				} catch (Throwable e) {
+					getLog().warn("Failed to update bean value from evaludator :"+eval, e);
 					handleStartupException(e);
 				}
 			}

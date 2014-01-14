@@ -59,10 +59,17 @@ public class ELBeanValueEvaluator<T> extends AbstractELValueEvaluator<T, T> {
 		if(log.isDebugEnabled()){
 			log.debug("Going to evaluate express :["+express+"], expected type :"+expectedType.getCanonicalName());
 		}
+		T val = null;
 		if(checkEnableCondition()){
-			return super.doEvaluate();
+			val = super.doEvaluate();
 		}else{
-			return this.defaultValue;
+			val = this.defaultValue;
 		}
+		updateRegisteredBean(val);
+		return val;
+	}
+	
+	protected void updateRegisteredBean(T val){
+		
 	}
 }
