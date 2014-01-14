@@ -15,10 +15,10 @@ import com.wxxr.mobile.core.util.LRUMap;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
-import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -46,8 +46,7 @@ public class InfoCenterManagementServiceImpl extends
 		AbstractModule<IStockAppContext> implements
 		IInfoCenterManagementService {
 
-	private static final Trace log = Trace
-			.register("com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl");
+	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl");
 	
 	@SuppressWarnings("unused")
 	private static class StockTaxisComparator implements Comparator<StockTaxisBean> {
@@ -163,14 +162,9 @@ public class InfoCenterManagementServiceImpl extends
 		stockListbean.setSearchResult(ret);
 		return this.stockListbean;
 	}
-
-//	private <T> T getRestService(Class<T> restResouce) {
-//		return context.getService(IRestProxyService.class).getRestService(
-//				restResouce);
-//	}
 	//分钟线
 	@Override
-	public StockMinuteKBean getMinuteline(Map<String, String> params) {
+	public StockMinuteKBean getMinuteline(Map<String, String> params,boolean wait4finish) {
 		if(params == null)
 			return null;
 	   String market= params.get("market");
@@ -188,7 +182,7 @@ public class InfoCenterManagementServiceImpl extends
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("code", code);
         p.put("market", market);
-        this.stockMinuteKBean_cache.forceReload(p,false);
+        this.stockMinuteKBean_cache.forceReload(p,wait4finish);
         return stockMinuteKBean_cache.getEntity(mc);
 	}
 	//K线
@@ -291,7 +285,6 @@ public class InfoCenterManagementServiceImpl extends
         return stockQuotationBean_cache.getEntity(mc);
     }
 //=====================beans =====================
-	private QuotationListBean quotationListBean = new QuotationListBean();
 	
 	@Override
 	public void reloadStocktaxis(String taxis, String orderby,long start, long limit){
@@ -336,25 +329,6 @@ public class InfoCenterManagementServiceImpl extends
 		return this.stockTaxisList;
 	}
 
-	@Override
-	public QuotationListBean getQuotations() {
-		//TODO fix it
-//		Future<QuotationListVO> future = context.getExecutor().submit(new Callable<QuotationListVO>() {
-//			public QuotationListVO call() throws Exception {
-//				QuotationListVO vo = getRestService(StockResource.class).getQuotation(null);
-//				return vo;
-//			}
-//		});
-//		try {
-//			QuotationListVO volist = future.get();
-//		}catch (Exception e) {
-//			log.warn("Failed to fetch quotation",e);
-//		}
-		return quotationListBean;
-	}
-	
-	
-
 	public BindableListWrapper<StockMinuteKBean> getFiveDayMinuteline(final String code, final String market) {
 	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
              return null;
@@ -397,5 +371,11 @@ public class InfoCenterManagementServiceImpl extends
             return 0;
         }
     }
+
+	@Override
+	public BindableListWrapper<StockMinuteLineBean> forceReload(
+			Map<String, String> params, boolean wait4finish) {
+		return null;
+	}
 
 }

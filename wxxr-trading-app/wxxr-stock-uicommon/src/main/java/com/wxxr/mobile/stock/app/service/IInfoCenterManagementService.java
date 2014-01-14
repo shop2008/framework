@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.wxxr.mobile.stock.app.bean.LineListBean;
@@ -11,6 +10,7 @@ import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -50,8 +50,7 @@ public interface IInfoCenterManagementService {
 	 *            -第几页
 	 * @return
 	 */
-	StockMinuteKBean getMinuteline(Map<String/* code */, String/* market */> params);
-
+	StockMinuteKBean getMinuteline(Map<String/* code */, String/* market */> params,boolean wait4finish);
 	/**
 	 * 日K数据
 	 * 
@@ -74,10 +73,7 @@ public interface IInfoCenterManagementService {
 	
 	public void reloadStocktaxis(String orderby, String direction,long start, long limit);
 	
-	/**
-	 * 获取指数行情数据
-	 */
-	public QuotationListBean getQuotations();
+
 	/**
 	 * 
 	 * 获取个股行情数据
