@@ -163,7 +163,6 @@ public class InfoCenterManagementServiceImpl extends
 		return this.stockListbean;
 	}
 	//分钟线
-	@Override
 	public StockMinuteKBean getMinuteline(Map<String, String> params,boolean wait4finish) {
 		if(params == null)
 			return null;
@@ -372,10 +371,5 @@ public class InfoCenterManagementServiceImpl extends
         }
     }
 
-	@Override
-	public BindableListWrapper<StockMinuteLineBean> forceReload(
-			Map<String, String> params, boolean wait4finish) {
-		return null;
-	}
-
+	
 }
