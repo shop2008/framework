@@ -20,9 +20,9 @@ import java.lang.annotation.Target;
 public @interface Command {
 	String commandName() default "";
 	String description() default "";
-	Class<?> validationGroup() default Void.class;
 	String enableWhen() default "";
 	String visibleWhen() default "";
 	Navigation[] navigations() default {};
 	UIItem[] uiItems() default {};
+	BeanValidation[] validations() default {};
 }
