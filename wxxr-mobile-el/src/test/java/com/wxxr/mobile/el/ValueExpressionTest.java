@@ -32,6 +32,7 @@ public class ValueExpressionTest {
     @Test
     public void testExpr() {
     	elp.defineBean("date", new Date(2001,12,30));
+    	elp.defineBean("month",10);
         ValueExpression valExpr = null;
         ELContext ctxt = elm.getELContext();
         	valExpr = factory.createValueExpression(
@@ -42,6 +43,13 @@ public class ValueExpressionTest {
         assertEquals(1,valExpr.getReferringPropertyNames().size());
         assertEquals("year",valExpr.getReferringPropertyNames().get(0));
         assertTrue(valExpr.isReadOnly(ctxt) == false);
+    	valExpr = factory.createValueExpression(
+                ctxt, "#{date.setMonth(month)}", Object.class);
+        assertEquals(2,valExpr.getReferringBeanNames().size());
+        assertTrue(valExpr.getReferringBeanNames().contains("date"));
+        assertTrue(valExpr.getReferringBeanNames().contains("month"));
+   	
+
     }
 
  }
