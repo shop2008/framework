@@ -10,8 +10,7 @@ package com.wxxr.mobile.core.ui.api;
 public class ValidationException extends RuntimeException {
 
 	private static final long serialVersionUID = 1815627271659979265L;
-	
-	private String errorCode;
+	private ValidationError[] detals;
 	/**
 	 * 
 	 */
@@ -26,32 +25,17 @@ public class ValidationException extends RuntimeException {
 	}
 
 	/**
-	 * @param cause
+	 * @return the detals
 	 */
-	public ValidationException(Throwable cause) {
-		super(cause);
+	public ValidationError[] getDetals() {
+		return detals;
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * @param detals the detals to set
 	 */
-	public ValidationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * @return the errorCode
-	 */
-	public String getErrorCode() {
-		return errorCode;
-	}
-
-	/**
-	 * @param errorCode the errorCode to set
-	 */
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
+	public void setDetals(ValidationError[] detals) {
+		this.detals = detals;
 	}
 
 }
