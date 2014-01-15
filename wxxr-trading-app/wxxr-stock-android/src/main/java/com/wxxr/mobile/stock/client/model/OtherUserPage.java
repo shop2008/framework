@@ -305,4 +305,13 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		}
 		return null;
 	}
+	
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		if(usrService!=null) {
+			usrService.getOtherPersonalHomePage(userId, false);
+		}
+		return null;
+	}
 }

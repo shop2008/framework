@@ -195,9 +195,13 @@
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            bind:field="joinTradeInfos"
+                            bind:field="joinTradeInfos@StockViewDecorator"
                             bind:itemViewId="uPageItemView"
-                            bind:on_ItemClick="joinItemClick" />
+                            bind:on_ItemClick="joinItemClick" 
+                            bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -311,9 +315,13 @@
                         <com.wxxr.mobile.stock.client.widget.NoScrollListView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            bind:field="challengeTradeInfos"
+                            bind:field="challengeTradeInfos@StockViewDecorator"
                             bind:itemViewId="uPageItemView"
-                            bind:on_ItemClick="challengeItemClick" />
+                            bind:on_ItemClick="challengeItemClick" 
+                            bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -338,8 +346,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <include 
-        layout="@layout/loading_layout"
-        />
+ 	<include layout="@layout/stock_loading_progress_layout"/>
+   
 </RelativeLayout>

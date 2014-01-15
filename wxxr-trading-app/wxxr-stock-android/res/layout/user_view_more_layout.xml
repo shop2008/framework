@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background_color"
-    android:orientation="vertical" >
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,9 +118,12 @@
                     android:layout_height="match_parent"
                     bind:field="virtualRecordsList"
                     bind:itemViewId="tradeRecordMoreItemView"
+                    bind:updatingViewId="resourceId:id/progress"
+            		bind:updateFaieldId="resourceId:id/failed"
+            		bind:updateAllId="resourceId:id/all"
                     bind:on_ItemClick="virtualRecordItemClicked" />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-
+			
             <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -134,30 +137,15 @@
                     style="@style/mListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    bind:field="actualRecordList"
+                    bind:field="actualRecordList@StockViewDecorator"
                     bind:itemViewId="tradeRecordMoreItemView"
+                    bind:updatingViewId="resourceId:id/progress"
+            		bind:updateFaieldId="resourceId:id/failed"
+            		bind:updateAllId="resourceId:id/all"
                     bind:on_ItemClick="actualRecordItemClicked" />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black"
-                android:gravity="center"
-                android:text="@string/no_more_virtual_record"
-                android:visibility="gone"
-                bind:field="noMoreVirtualRecordVisible" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black"
-                android:gravity="center"
-                android:text="@string/no_more_actual_record"
-                android:visibility="gone"
-                bind:field="noMoreActualRecordVisible" />
         </FrameLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <include layout="@layout/stock_loading_progress_layout"/>
+</RelativeLayout>

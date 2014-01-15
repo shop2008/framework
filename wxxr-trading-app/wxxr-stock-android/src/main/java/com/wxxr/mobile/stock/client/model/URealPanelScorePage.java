@@ -37,6 +37,8 @@ public abstract class URealPanelScorePage extends PageBase{
 			@Attribute(name = "enablePullUpRefresh", value= "${voucherDetailsBean!=null&&voucherDetailsBean.data!=null&&voucherDetailsBean.data.size()>0?true:false}")})
 	String acctRefreshView;
 	
+	
+	
 	@Bean
 	int start = 0;
 	

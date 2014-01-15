@@ -39,10 +39,10 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeVStart,otherHomeVLimit,true)):null}")
 	BindableListWrapper<GainBean> otherJoinListBean;
 	
-	@Field(valueKey = "options", binding = "${otherChallengeListBean!=null?otherChallengeListBean.data:null}", visibleWhen = "${curItemId == 0}")
+	@Field(valueKey = "options", upateAsync=true,binding = "${otherChallengeListBean!=null?otherChallengeListBean.getData(true):null}", visibleWhen = "${curItemId == 0}")
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", binding = "${otherJoinListBean!=null?otherJoinListBean.data:null}", visibleWhen = "${curItemId == 1}")
+	@Field(valueKey = "options", upateAsync=true,binding = "${otherJoinListBean!=null?otherJoinListBean.getData(true):null}", visibleWhen = "${curItemId == 1}")
 	List<GainBean> virtualRecordsList;
 
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
@@ -51,11 +51,11 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}")})
 	boolean virtualRecordBtn;
 
-	@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((otherJoinListBean.data!=null)?(otherJoinListBean.data.size()>0?false:true):true))}")
+	/*@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((otherJoinListBean.data!=null)?(otherJoinListBean.data.size()>0?false:true):true))}")
 	boolean noMoreVirtualRecordVisible;
 
 	@Field(valueKey = "visible", binding = "${(curItemId==0)&&(((otherChallengeListBean.data!=null)?(otherChallengeListBean.data.size()>0?false:true):true))}")
-	boolean noMoreActualRecordVisible;
+	boolean noMoreActualRecordVisible;*/
 
 
 	/** 其它用户--挑战交易盘每页初始条目 */
@@ -114,6 +114,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showActualRecords(InputEvent event) {
+		curItemId = 0;
 		registerBean("curItemId", 0);
 
 		// 用户自己的挑战交易记录
@@ -132,6 +133,8 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 */
 	@Command
 	String showVirtualRecords(InputEvent event) {
+		
+		curItemId = 1;
 		registerBean("curItemId", 1);
 
 		if (usrService != null) {
@@ -249,7 +252,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 			int completeSize = 0;
 			if(otherChallengeListBean != null)
 				completeSize = otherChallengeListBean.getData().size();
-			otherHomeAStart += completeSize;
+			otherHomeAStart = completeSize;
 			if(usrService != null) {
 				usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
 			}
@@ -265,7 +268,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 		int completeSize = 0;
 		if(otherJoinListBean != null)
 			completeSize = otherJoinListBean.getData().size();
-		otherHomeVStart += completeSize;
+		otherHomeVStart = completeSize;
 		if(usrService != null) {
 			usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
 		}
@@ -293,7 +296,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 			int completeSize = 0;
 			if(otherJoinListBean != null)
 				completeSize = otherJoinListBean.getData().size();
-			otherHomeVStart += completeSize;
+			otherHomeVStart = completeSize;
 			if(usrService != null) {
 				usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
 			}
@@ -331,5 +334,16 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 				}
 			}
 		}
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		
+		if(curItemId == 0) {
+			usrService.getMoreOtherPersonal(userId, 0, 20, false);
+		} else if(curItemId == 1) {
+			usrService.getMoreOtherPersonal(userId, 0, 20, true);
+		}
+		return null;
 	}
 }

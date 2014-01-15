@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            bind:field="recordNotNullVisible" >
+            >
 
             <RadioGroup
                 android:id="@id/rg_game_rank"
@@ -125,40 +125,48 @@
                             style="@style/mListView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            bind:field="successRecordsList"
+                            bind:field="successRecordsList@StockViewDecorator"
                             bind:itemViewId="tradeRecordItemView"
-                            bind:on_ItemClick="sucRecordItemClicked" />
+                            bind:on_ItemClick="sucRecordItemClicked" 
+                            bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
+                            />
                     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/sucess_record_null_text"
-                        bind:field="sucRecordNullVisible" />
                 </FrameLayout>
 
-                <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    bind:field="allRefreshView"
-                    bind:on_BottomRefresh="handleAllBottomRefresh"
-                    bind:on_TopRefresh="handleAllTopRefresh" >
+                    android:layout_height="match_parent" >
 
-                    <ListView
-                        android:id="@+id/listView2"
-                        style="@style/mListView"
+                    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        bind:field="allRecordsList"
-                        bind:itemViewId="tradeRecordItemView"
-                        bind:on_ItemClick="allRecordItemClicked" />
-                </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+                        android:orientation="vertical"
+                        bind:field="allRefreshView"
+                        bind:on_BottomRefresh="handleAllBottomRefresh"
+                        bind:on_TopRefresh="handleAllTopRefresh" >
 
+                        <ListView
+                            android:id="@+id/listView2"
+                            style="@style/mListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            bind:field="allRecordsList@StockViewDecorator"
+                            bind:itemViewId="tradeRecordItemView"
+                            bind:on_ItemClick="allRecordItemClicked" 
+                            bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
+                            />
+                    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+                    
+                </FrameLayout>
+                
+                <include layout="@layout/stock_loading_progress_layout"/>
             </FrameLayout>
         </LinearLayout>
-
     </FrameLayout>
 
 </RelativeLayout>

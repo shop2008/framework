@@ -76,6 +76,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean
 	int myHomeAStart = 0;
 
+	int curItemId = 0;
 	@SuppressWarnings("unused")
 	@Menu(items = { "left"})
 	private IMenu toolbar;
@@ -103,6 +104,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	 */
 	@Command
 	String showActualRecords(InputEvent event) {
+		curItemId = 0;
 		registerBean("curItemId", 0);
 
 		// 用户自己的挑战交易记录
@@ -121,6 +123,8 @@ public abstract class UserViewMorePage extends PageBase implements
 	 */
 	@Command
 	String showVirtualRecords(InputEvent event) {
+		
+		curItemId = 1;
 		registerBean("curItemId", 1);
 
 		if (usrService != null) {
@@ -313,8 +317,14 @@ public abstract class UserViewMorePage extends PageBase implements
 		}
 	}
 
-	@OnUIDestroy
-	protected void clearData() {
-
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		
+		if(curItemId == 0) {
+			usrService.getMorePersonalRecords(0, 20, false);
+		} else if(curItemId == 1) {
+			usrService.getMorePersonalRecords(0, 20, true);
+		}
+		return null;
 	}
 }

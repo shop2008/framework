@@ -50,9 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                bind:field="accountTradeInfos"
+                bind:field="accountTradeInfos@StockViewDecorator"
                 android:scrollbars="none"
                 bind:itemViewId="NewsContentItem"
+                bind:updatingViewId="resourceId:id/progress"
+            	bind:updateFaieldId="resourceId:id/failed"
+            	bind:updateAllId="resourceId:id/all"
                 bind:on_PinItemClick="handleNewsItemClick" />
 
             <TextView
@@ -85,12 +88,17 @@
                     android:layout_height="match_parent"
                     android:visibility="visible"
                     bind:itemViewId="InfoNoticesItemView"
-                    bind:field="noticeInfos"
+                    bind:field="noticeInfos@StockViewDecorator"
                     android:scrollbars="none"
+                    bind:updatingViewId="resourceId:id/progress"
+            		bind:updateFaieldId="resourceId:id/failed"
+            		bind:updateAllId="resourceId:id/all"
                     bind:on_PinItemClick="handleNoticesItemClick" 
                     />
             </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
+           
+            
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -102,6 +110,8 @@
                 android:visibility="gone"
                 bind:field="noticeInfosNullVisible" />
         </FrameLayout>
+        
+        <include layout="@layout/stock_loading_progress_layout"/>
     </FrameLayout>
-
+	
 </LinearLayout>

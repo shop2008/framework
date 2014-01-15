@@ -34,9 +34,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?true:false):false):false}")
-	boolean recordNotNullVisible;
-
+	/*@Field(valueKey = "visible", binding = "${allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?true:false):false):false}")
+	boolean recordNotNullVisible;*/
 
 
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(allStart,allLimit):null}")
@@ -45,10 +44,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(sucStart,sucLimit):null}")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
-	@Field(valueKey = "options", binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.data:null}", visibleWhen = "${curItemId==2}")
+	@Field(valueKey = "options",upateAsync=true,binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==2}")
 	List<GainBean> allRecordsList;
 
-	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.data:null}", visibleWhen = "${curItemId==1}")
+	@Field(valueKey = "options",upateAsync=true, binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==1}")
 	List<GainBean> successRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
@@ -61,11 +60,11 @@ public abstract class UserTradeRecordPage extends PageBase {
 			@Attribute(name = "textColor", value = "${curItemId == 2?'resourceId:color/white':'resourceId:color/gray'}") })
 	boolean allRecordBtn;
 
-	@Field(valueKey = "visible", binding = "${successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true}")
-	boolean sucRecordNullVisible;
+	/*@Field(valueKey = "visible", binding = "${(curItemId == 1)&&(successTradeAccountListBean!=null?(successTradeAccountListBean.data!=null?(successTradeAccountListBean.data.size()>0?false:true):true):true)}")
+	boolean sucRecordNullVisible;*/
 
-	
-
+	/*@Field(valueKey = "visible", binding = "${(curItemId == 2)&&(allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?false:true):true):true)}")
+	boolean wholeRecordNullVisible;*/
 	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
@@ -214,7 +213,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 			int completeSize = 0;
 			if(successTradeAccountListBean != null)
 				completeSize = successTradeAccountListBean.getData().size();
-			sucStart += completeSize;
+			sucStart = completeSize;
 			if(tradingService != null) {
 				tradingService.getGain(sucStart, sucLimit);
 			}
@@ -230,7 +229,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 			int completeSize = 0;
 			if(allTradeAccountListBean != null)
 				completeSize = allTradeAccountListBean.getData().size();
-			allStart += completeSize;
+			allStart = completeSize;
 			if(tradingService != null) {
 				tradingService.getTotalGain(allStart, allLimit);
 			}
@@ -260,6 +259,21 @@ public abstract class UserTradeRecordPage extends PageBase {
 		if(tradingService != null) {
 			tradingService.getGain(allStart, allLimit);
 		}
+		return null;
+	}
+	
+	@Command
+	String handleRetryClick(InputEvent event) {
+		if(curItemId  == 1) {
+			if(tradingService != null) {
+				int completeSize = successTradeAccountListBean.getData().size();
+				tradingService.getGain(completeSize, sucLimit);
+			}
+		} else if(curItemId == 0) {
+			int completeSize = allTradeAccountListBean.getData().size();
+			tradingService.getTotalGain(completeSize, allLimit);
+		}
+		
 		return null;
 	}
 }
