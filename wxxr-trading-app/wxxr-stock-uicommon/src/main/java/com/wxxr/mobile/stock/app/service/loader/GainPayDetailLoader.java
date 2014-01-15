@@ -48,8 +48,14 @@ public class GainPayDetailLoader  extends AbstractEntityLoader<String, GainPayDe
     @Override
     public ICommand<List<GainPayDetailsVO>> createCommand(Map<String, Object> params) {
         GetGainPayDetailCommand cmd = new GetGainPayDetailCommand();
-        cmd.setLimit((Integer) params.get("limit"));
-        cmd.setStart((Integer) params.get("start"));
+        
+        if(params == null) {
+        	cmd.setLimit(20);
+        	cmd.setStart(0);
+        } else {
+        	cmd.setLimit((Integer) params.get("limit"));
+        	cmd.setStart((Integer) params.get("start"));
+        }
         return cmd;
     }
 
