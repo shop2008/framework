@@ -101,13 +101,13 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?false:true):true):true}")
+	@Field(valueKey = "visible",upateAsync=true, binding = "${usrService.getMyPersonalHomePage(true).getActualList().size()>0?false:true}")
 	boolean cNoSharedVisiable;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?false:true):true):true}")
+	@Field(valueKey = "visible", upateAsync=true,binding = "${usrService.getMyPersonalHomePage(true).getVirtualList().size()>0?false:true}")
 	boolean jNoSharedVisiable;
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
@@ -286,5 +286,13 @@ public abstract class UserPage extends PageBase {
 	String setNickName(InputEvent event) {
 
 		return "SUCCESS";
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		if(usrService!=null) {
+			usrService.getMyPersonalHomePage(false);
+		}
+		return null;
 	}
 }
