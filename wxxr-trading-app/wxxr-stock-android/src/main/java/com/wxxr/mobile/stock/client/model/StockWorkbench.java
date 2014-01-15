@@ -22,6 +22,10 @@ import com.wxxr.mobile.core.ui.common.WorkbenchBase;
  */
 @View
 @Workbench(title="Mobile Stock client",description="Mobile Stock client description",exceptionNavigations={
+		@Navigation(on="ValidationException",message = "%m%n",params={
+				@Parameter(name="title",value="输入验证"),
+				@Parameter(name="onOK",value="确 认"),
+				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")}),
 		@Navigation(on="LoginFailedException",message="resourceId:message/login_required",params={
 				@Parameter(name="title",value="安全验证"),
 				@Parameter(name="onOK",value="确 认"),
