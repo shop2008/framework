@@ -43,6 +43,7 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		
 		SimpleInputEvent event = new SimpleInputEvent("PinItemClick",
 				getModel());
 		Object list = getUIControl();

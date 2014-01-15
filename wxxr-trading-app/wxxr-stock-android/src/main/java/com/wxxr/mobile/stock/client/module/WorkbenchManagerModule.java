@@ -28,9 +28,11 @@ import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.ListViewDecorator;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.PersonalPageViewDecorator;
 import com.wxxr.mobile.stock.client.binding.RefreshEventBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshListViewAdapterBinder;
 import com.wxxr.mobile.stock.client.binding.RefreshViewFieldBinder;
@@ -93,6 +95,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());
 		mgr.registerFieldBinder("PageChange", new PageChangeEventBinder());
 		mgr.registerFieldBinder("FocusChanged", new EditTextFocusChangedEventBinder());
+		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
 	}
 
@@ -124,6 +127,8 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
 		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
 		registry.registerDecorator("StockViewDecorator", StockViewDecorator.class);
+		registry.registerDecorator("ListViewDecorator",ListViewDecorator.class);
+		registry.registerDecorator("PersonalPageViewDecorator", PersonalPageViewDecorator.class);
 	}
 
 }

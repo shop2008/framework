@@ -17,6 +17,7 @@ public class GroupByItemClickEventBinder implements IEventBinder {
 	@Override
 	public IEventBinding createBinding(IBindingContext context,
 			String fieldName, String cmdName, Map<String, String> attrs) {
+		
 		IAndroidBindingContext ctx = (IAndroidBindingContext)context;
 		GroupByItemClickEventBinding binding = new GroupByItemClickEventBinding(ctx.getBindingControl(), cmdName, fieldName);
 		binding.init(this.context);
