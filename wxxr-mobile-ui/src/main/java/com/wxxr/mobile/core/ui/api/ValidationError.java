@@ -19,21 +19,21 @@ public class ValidationError {
 	/**
 	 * @return the errorCode
 	 */
-	protected String getErrorCode() {
+	public String getErrorCode() {
 		return errorCode;
 	}
 
 	/**
 	 * @return the errorMessage
 	 */
-	protected String getErrorMessage() {
+	public String getErrorMessage() {
 		return errorMessage;
 	}
 
 	/**
 	 * @return the fieldId
 	 */
-	protected String getFieldId() {
+	public String getFieldId() {
 		return fieldId;
 	}
 
