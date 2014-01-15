@@ -35,7 +35,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
-	@Bean(type=BindingType.Pojo,express="${articleService.getHelpArticles(0,10)}")
+	@Bean(type=BindingType.Pojo,express="${articleService.getHelpArticles(0,20)}")
 	BindableListWrapper<ArticleBean> articlesBean;
 	
 	@Field(valueKey="options",binding="${articlesBean.data}")
