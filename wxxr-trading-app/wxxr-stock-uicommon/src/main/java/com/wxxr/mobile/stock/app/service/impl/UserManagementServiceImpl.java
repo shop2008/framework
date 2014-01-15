@@ -185,6 +185,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
+        registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
 		context.registerService(IUserManagementService.class, this);
 	
 		updateToken();

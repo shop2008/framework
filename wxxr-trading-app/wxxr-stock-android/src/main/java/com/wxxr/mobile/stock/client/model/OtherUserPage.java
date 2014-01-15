@@ -4,19 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.os.SystemClock;
 
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -45,11 +41,10 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo, express = "${usrService.getUserInfoById(userId)}")
 	UserBean user;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getOtherPersonalHomePage(userId)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getOtherPersonalHomePage(userId,false)}")
 	PersonalHomePageBean personalBean;
 
-	@Field(valueKey = "text", binding = "${user!=null&&user.nickName!=null?user.nickName:'---'}${'的主页'}")
-	String otherUserPageTitle;
+	
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack:null}")
 	String userHomeBack;
@@ -88,73 +83,33 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter="shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.virtualList:null}")
+	@Field(valueKey = "options", binding = "${usrService.getOtherPersonalHomePage(userId,true).getVirtualList()}",upateAsync=true)
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding = "${personalBean!=null?personalBean.actualList:null}")
+	@Field(valueKey = "options", binding = "${usrService.getOtherPersonalHomePage(userId,true).getActualList()}",upateAsync=true)
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?false:true):true):true}")
+	@Field(valueKey = "visible", binding = "${usrService.getOtherPersonalHomePage(userId,true).getActualList().size()>0?false:true}",upateAsync=true)
 	boolean cNoSharedVisiable;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?false:true):true):true}")
+	@Field(valueKey = "visible", binding = "${usrService.getOtherPersonalHomePage(userId,true).getVirtualList().size()>0?false:true}", upateAsync=true)
 	boolean jNoSharedVisiable;
 
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
-	@Field(valueKey="visible", binding="${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
-	boolean loading;
-	
-	boolean loadingExpireTime = false;
+
 	
 	@OnShow
-	void initData(){
-		if(userName != null){
-			getAppToolbar().setTitle(userName+"的主页", null);
-		}
-		
-		loadingExpireTime = false;
-		registerBean("ExpireTimeFlag", loadingExpireTime);
-		KUtils.executeTask(new Runnable() {
-			
-			@Override
-			public void run() {
-				checkLoadStatus();
-				if(loadingExpireTime == true) {
-					return;
-				} else {
-					do{
-						checkLoadStatus();
-					} while(loadingExpireTime == false);
-				}
-			}
-
-			private void checkLoadStatus() {
-				int virtualSize = -1;
-				int actualSize = -1;
-				if(personalBean!=null && personalBean.getVirtualList()!=null) {
-					virtualSize = personalBean.getVirtualList().size();
-				}
-				
-				if(personalBean!=null && personalBean.getActualList()!=null) {
-					actualSize = personalBean.getActualList().size();
-				}
-				
-				if(virtualSize == 0 || actualSize ==0) {
-					loadingExpireTime = true;
-					registerBean("ExpireTimeFlag", loadingExpireTime);
-				}
-			}
-		});
+	void initData() {
+		getAppToolbar().setTitle(userName+"的主页", null);
 	}
-	
 	
 	@Command(
 			uiItems={
@@ -234,11 +189,6 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		return result;
 	}
 
-	@OnHide
-	void onHidePage() {
-		loadingExpireTime = true;
-	}
-	
 	/**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
