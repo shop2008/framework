@@ -26,7 +26,7 @@ public class IntegerValueConvertor implements IValueConvertor<Integer,String> {
 		try {
 			return Integer.valueOf(input);
 		}catch(NumberFormatException e){
-			throw new ValidationException("Invalid integer value :"+input,e);
+			throw new ValidationException("Invalid integer value :"+input);
 		}
 	}
 

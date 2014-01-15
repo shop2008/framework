@@ -26,7 +26,7 @@ public class LongValueConvertor implements IValueConvertor<Long,String> {
 		try {
 			return Long.valueOf(input);
 		}catch(NumberFormatException e){
-			throw new ValidationException("Invalid long value :"+input,e);
+			throw new ValidationException("Invalid long value :"+input);
 		}
 	}
 
