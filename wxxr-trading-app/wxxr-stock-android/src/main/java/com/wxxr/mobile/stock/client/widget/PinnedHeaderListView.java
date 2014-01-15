@@ -140,8 +140,8 @@ public class PinnedHeaderListView extends ListView {
 			mHeaderViewVisible = false;
 			return;
 		}
-		
 		position = position - getHeaderViewsCount();
+		
 		int state = mAdapter.getPinnedHeaderState(position);
 		
 		switch (state) {
