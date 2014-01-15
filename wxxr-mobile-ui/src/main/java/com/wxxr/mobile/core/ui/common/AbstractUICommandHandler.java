@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IProgressGuard;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValidationException;
 
 /**
@@ -58,10 +59,19 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 				errs = validator.validate(bean);
 			}
 			if((errs != null)&&(errs.size() > 0)){
-				throw new ValidationException(message);
+				int size = errs.size();
+				ValidationError[] vErrs  = new ValidationError[size];
+				int cnt = 0;
+				for (ConstraintViolation<?> cerr : errs) {
+					String property = cerr.getPropertyPath() != null ? cerr.getPropertyPath().toString() : null;
+					vErrs[cnt] = new ValidationError(cerr.getMessageTemplate(), cerr.getMessage(),property);
+					cnt++;			
+				}
+				ValidationException ex = new ValidationException(message);
+				ex.setDetals(vErrs);
+				throw ex;
 			}
 		}
-
 	}
 	
 	public AbstractUICommandHandler removeConstraint(ConstraintLiteral constraint){
