@@ -169,6 +169,8 @@ public abstract class UserNewsPage extends PageBase {
 		return null;
 	}
 
+	
+	
 	@Command(navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
