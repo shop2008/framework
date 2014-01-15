@@ -91,11 +91,17 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	@Override
 	public ICommand<List<PullMessageVO>> createCommand(
 			Map<String, Object> params) {
-		Integer start=(Integer) params.get("start");
-		Integer limit=(Integer) params.get("limit");
+		
 		GetPullMessasgeCommand command=new GetPullMessasgeCommand();
-		command.setLimit(limit);
-		command.setStart(start);
+		if(params == null) {
+			command.setStart(0);
+			command.setLimit(20);
+		} else {
+			Integer start=(Integer) params.get("start");
+			Integer limit=(Integer) params.get("limit");
+			command.setLimit(limit);
+			command.setStart(start);
+		}
 		return command;
 	}
 
