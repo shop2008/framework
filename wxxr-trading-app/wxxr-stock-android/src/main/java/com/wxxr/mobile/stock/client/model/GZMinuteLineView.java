@@ -243,10 +243,6 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					this.marketBean = stockSelection.getMarket();
 					this.minuteHeaderType = stockSelection.getType();
 					if(this.marketBean!=null && this.codeBean!=null){
-//						StockBaseInfo baseInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.codeBean, this.marketBean);
-//						if(baseInfo!=null && baseInfo.getName()!=null){
-//							this.nameBean = baseInfo.getName();
-//						}
 					}
 				}
 				registerBean("codeBean", this.codeBean);
@@ -258,11 +254,8 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 					minuteMap.put("market", this.marketBean);
 					this.map = minuteMap;
 					registerBean("map", this.map);
-//					if(infoCenterService!=null){
-//						infoCenterService.getMinuteline(this.map);
-//					}
 				}
-				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean))){
+				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean)) || ("399005".equals(this.codeBean) && "SZ".equals(this.marketBean))){
 					this.stockType = "0";
 				}	
 			} catch (RequiredNetNotAvailablexception e) {
