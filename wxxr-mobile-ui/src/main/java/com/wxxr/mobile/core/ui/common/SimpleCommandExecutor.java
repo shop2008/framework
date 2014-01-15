@@ -132,6 +132,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 					public Object call() throws Exception {
 						try {
 							checkCommandConstraint(cmdHandler);
+							cmdHandler.validateUserInput();
 							return cmdHandler.execute(event);
 						}catch(ExecAsyncException e){
 							return e.getTaskControl().getFuture().get();
@@ -154,6 +155,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 				public void run() {
 					try {
 						checkCommandConstraint(cmdHandler);
+						cmdHandler.validateUserInput();
 						Object val = cmdHandler.execute(event);
 						callback.success(val);
 					}catch(ExecAsyncException e){
@@ -221,6 +223,7 @@ public class SimpleCommandExecutor implements IUICommandExecutor,IUIExceptionHan
 		Object cmdResult = null;
 		try {
 			checkCommandConstraint(cmdHandler);
+			cmdHandler.validateUserInput();
 			cmdResult = cmdHandler.execute(event);
 		}catch(ExecAsyncException e){
 			final IAsyncTaskControl taskControl = e.getTaskControl();

@@ -14,4 +14,5 @@ public interface IUICommandHandler {
 	INavigationDescriptor[] getNavigations();
 	IProgressGuard getProgressGuard();
 	ConstraintLiteral[] getConstraints();
+	void validateUserInput() throws ValidationException;
 }

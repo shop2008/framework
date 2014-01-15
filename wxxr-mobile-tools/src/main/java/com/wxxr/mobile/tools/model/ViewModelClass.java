@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.ValidationException;
 import com.wxxr.mobile.core.ui.common.ELDomainValueModel;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -361,6 +362,16 @@ public class ViewModelClass extends AbstractClassModel {
 
 		List<UICommandModel> cmds = getCommands();
 		if((cmds != null)&&(cmds.size() > 0)){
+			boolean hasBeanValidation = false;
+			for (UICommandModel uiCommandModel : cmds) {
+				if((uiCommandModel.getBeanValidations() != null)&&(uiCommandModel.getBeanValidations().length >0)){
+					hasBeanValidation = true;
+					break;
+				}
+			}
+			if(hasBeanValidation){
+				addImport(ValidationException.class.getCanonicalName());
+			}
 			MethodModel m = ViewModelUtils.createInitCommandsMethod(context, this, cmds);
 			addMethod(m);
 		}

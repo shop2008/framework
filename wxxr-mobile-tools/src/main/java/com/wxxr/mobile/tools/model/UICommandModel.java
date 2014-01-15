@@ -24,6 +24,7 @@ public class UICommandModel implements JavaModel{
 	private String enabledWhenExpress,visibleWhenExpress;
 	private LinkedList<MenuItemModel> menuItems;
 	private LinkedList<NavigationModel> navigations;
+	private LinkedList<BeanValidationModel> beanValidations;
 	private IProgressGuard progressGuard;
 	private NetworkConstraintLiteral networkConstraint;
 	private SecurityConstraintLiteral securityConstraint;
@@ -74,6 +75,10 @@ public class UICommandModel implements JavaModel{
 	 */
 	public NavigationModel[] getNavigations() {
 		return navigations != null ? navigations.toArray(new NavigationModel[0]) : new NavigationModel[0];
+	}
+	
+	public BeanValidationModel[] getBeanValidations() {
+		return beanValidations != null ? beanValidations.toArray(new BeanValidationModel[0]) : null;
 	}
 	/**
 	 * @param commandName the commandName to set
@@ -130,6 +135,16 @@ public class UICommandModel implements JavaModel{
 			this.navigations.add(item);
 		}
 	}
+	
+	public void addBeanValidations(BeanValidationModel item){
+		if(this.beanValidations == null){
+			this.beanValidations = new LinkedList<BeanValidationModel>();
+		}
+		if(!this.beanValidations.contains(item)){
+			this.beanValidations.add(item);
+		}
+	}
+
 	
 	/**
 	 * @return the classModel

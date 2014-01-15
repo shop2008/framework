@@ -48,11 +48,12 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		if(this.valueExpr.isReadOnly(this.elm.getELContext())){
 			throw new IllegalStateException("Binding expression on field :"+field.getName()+" is read only, cannot be updated :["+this.valueExpr.getExpressionString()+"]");
 		}
+		this.valueExpr.setValue(this.elm.getELContext(), value);
 		Validator validator = this.elm.getUIContext().getWorkbenchManager().getValidator();
 		if(validator != null){
 			String beanName = this.valueExpr.getReferringBeanNames().get(0);
 			String propertyName = this.valueExpr.getReferringPropertyNames().get(0);
-			Set<?> errors  = validator.validateValue(this.elm.getBean(beanName).getClass(), propertyName, value);
+			Set<?> errors  = validator.validateProperty(this.elm.getBean(beanName), propertyName);
 			if((errors != null)&&(errors.size() > 0)){
 				int size = errors.size();
 				ValidationError[] vErrs  = new ValidationError[size];
@@ -65,7 +66,6 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 				return vErrs;
 			}
 		}
-		this.valueExpr.setValue(this.elm.getELContext(), value);
 		return null;
 	}
 

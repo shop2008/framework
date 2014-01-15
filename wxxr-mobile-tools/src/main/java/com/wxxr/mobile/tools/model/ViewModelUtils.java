@@ -31,6 +31,7 @@ import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraintLiteral;
 import com.wxxr.mobile.core.tools.ICodeGenerationContext;
 import com.wxxr.mobile.core.tools.generator.UIViewModelGenerator;
+import com.wxxr.mobile.core.ui.annotation.BeanValidation;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
@@ -1070,6 +1071,28 @@ public abstract class ViewModelUtils {
 			processProgressGuard(model, elem, cmdModel);
 			processSecurityConstraint(model, elem, cmdModel);
 			processNetworkConstraint(model, elem, cmdModel);
+			BeanValidation[] validations = ann.validations();
+			if((validations != null)&&(validations.length > 0)){
+				for (BeanValidation validation : validations) {
+					Class<?>[] groups = validation.groups();
+					if((groups != null)&&(groups.length > 0)){
+						for (Class<?> class1 : groups) {
+							BeanValidationModel validModel = new BeanValidationModel();
+							validModel.setBeanName(validation.bean());
+							validModel.setMessage(validation.message());
+							model.addImport(class1.getCanonicalName());
+							validModel.setGroup(class1.getSimpleName());
+							cmdModel.addBeanValidations(validModel);
+						}
+					}else{
+						BeanValidationModel validModel = new BeanValidationModel();
+						validModel.setBeanName(validation.bean());
+						validModel.setMessage(validation.message());
+						cmdModel.addBeanValidations(validModel);
+
+					}
+				}
+			}
 			Navigation[] navs = ann.navigations();
 			if(navs != null){
 				for (Navigation nav : navs) {

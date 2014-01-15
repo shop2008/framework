@@ -237,7 +237,20 @@
 #if(${cmd.className})
     handler = new ${model.addImport(${cmd.className})}();
 #else
-    handler = new AbstractUICommandHandler() {           
+    handler = new AbstractUICommandHandler() {    
+#if(${cmd.beanValidations}) 
+        @Override
+        public void validateUserInput() throws ValidationException {
+#foreach($valid in ${cmd.beanValidations})
+#if(${valid.group})
+            validateBean(getUIContext(), ${valid.beanName}, "${valid.message}", ${valid.group}.class);
+#else
+            validateBean(getUIContext(), ${valid.beanName}, "${valid.message}");
+#end
+#end
+        }
+    
+#end      
         @Override
         public Object execute(InputEvent event) {
              return ${cmd.methodName}(event);

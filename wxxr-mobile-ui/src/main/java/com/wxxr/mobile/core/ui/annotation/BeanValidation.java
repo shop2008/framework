@@ -10,4 +10,5 @@ package com.wxxr.mobile.core.ui.annotation;
 public @interface BeanValidation {
 	String bean();
 	Class<?>[] groups() default {};
+	String message();
 }

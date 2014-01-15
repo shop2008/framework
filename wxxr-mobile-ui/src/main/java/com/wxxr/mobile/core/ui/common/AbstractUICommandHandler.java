@@ -5,11 +5,16 @@ package com.wxxr.mobile.core.ui.common;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import com.wxxr.javax.validation.ConstraintViolation;
+import com.wxxr.javax.validation.Validator;
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IProgressGuard;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
+import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.ValidationException;
 
 /**
  * @author neillin
@@ -32,6 +37,31 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 			this.constraints.add(constraint);
 		}
 		return this;
+	}
+	
+	public void validateUserInput() throws ValidationException {
+		
+	}
+	
+	protected void validateBean(IWorkbenchRTContext ctx,Object bean,String message, Class<?>... groups) throws ValidationException{
+		Validator validator = ctx.getWorkbenchManager().getValidator();
+		if(validator != null){
+			Set<ConstraintViolation<Object>> errs = null;
+			if((groups != null)&&(groups.length > 0)){
+				for (Class<?> grp : groups) {
+					errs = validator.validate(bean, grp);
+					if((errs != null)&&(errs.size() > 0)){
+						break;
+					}
+				}
+			}else{
+				errs = validator.validate(bean);
+			}
+			if((errs != null)&&(errs.size() > 0)){
+				throw new ValidationException(message);
+			}
+		}
+
 	}
 	
 	public AbstractUICommandHandler removeConstraint(ConstraintLiteral constraint){
