@@ -4,6 +4,7 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.BeanValidation;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -54,7 +55,18 @@ public abstract class UserNickSetPage extends PageBase {
 	 * @return
 	 */
 	@Command(
+			validations = {
+					@BeanValidation(bean="user",message="请输入正确的昵称")
+			},
 			navigations = { 
+					@Navigation(
+							on="ValidationException",
+							message = "%m%n", 
+							params = {
+									@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
+									@Parameter(name = "title", value = "输入验证错误")
+									}
+							),
 					@Navigation(
 							on = "StockAppBizException", 
 							message = "%m%n", 
