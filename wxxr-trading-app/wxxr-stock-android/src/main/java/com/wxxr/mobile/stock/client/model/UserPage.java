@@ -92,10 +92,10 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter = "shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).virtualList}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).getVirtualList()}", upateAsync=true)
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).actualList}",upateAsync=true)
+	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).getActualList()}",upateAsync=true)
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
@@ -113,32 +113,6 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
 	String userHomeBack = "resourceId:drawable/back1";
 
-	/*@OnShow
-	void initData() {
-		loadingExpireTime = false;
-		registerBean("ExpireTimeFlag", loadingExpireTime);
-		KUtils.executeTask(new Runnable() {
-
-			@Override
-			public void run() {
-				checkLoadStatus();
-				if (loadingExpireTime == true) {
-					return;
-				} else {
-					do {
-						checkLoadStatus();
-						SystemClock.sleep(500);
-					} while (loadingExpireTime == false);
-				}
-			}
-
-			private void checkLoadStatus() {
-				SystemClock.sleep(5000);
-				loadingExpireTime = true;
-				registerBean("ExpireTimeFlag", loadingExpireTime);
-			}
-		});
-	}*/
 
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {

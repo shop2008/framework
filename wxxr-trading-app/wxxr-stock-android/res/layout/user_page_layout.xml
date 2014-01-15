@@ -205,11 +205,13 @@
                             android:layout_height="wrap_content"
                             android:divider="@null"
                             android:dividerHeight="0dp"
-                            bind:field="joinTradeInfos"
+                            bind:field="joinTradeInfos@StockViewDecorator"
                             bind:itemViewId="uPageItemView"
                             bind:on_ItemClick="joinItemClick" 
                             android:footerDividersEnabled="true"
-                            
+                            bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
                             />
 
                         <TextView
@@ -338,10 +340,13 @@
                             android:layout_height="wrap_content"
                             android:divider="@null"
                             android:dividerHeight="0dp"
-                            bind:field="challengeTradeInfos"
+                            bind:field="challengeTradeInfos@StockViewDecorator"
                             bind:itemViewId="uPageItemView"
                             bind:on_ItemClick="challengeItemClick" 
                            	android:footerDividersEnabled="true"
+                           	bind:updatingViewId="resourceId:id/progress"
+            				bind:updateFaieldId="resourceId:id/failed"
+            				bind:updateAllId="resourceId:id/all"
                             />
 
                         <TextView
@@ -369,7 +374,5 @@
         </LinearLayout>
     </ScrollView>
 
-    <include 
-        layout="@layout/loading_layout"
-        />
+   <include layout="@layout/stock_loading_progress_layout"/>
 </RelativeLayout>
