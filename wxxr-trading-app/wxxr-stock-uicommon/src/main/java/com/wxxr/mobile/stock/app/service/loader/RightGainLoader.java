@@ -86,8 +86,14 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	@Override
 	public ICommand<List<GainVO>> createCommand(Map<String, Object> params) {
 		GetRightGainCommand command=new GetRightGainCommand();
-		command.setStart((Integer)params.get("start"));
-		command.setLimit((Integer)params.get("limit"));
+		if(params == null) {
+			command.setStart(0);
+			command.setLimit(20);
+		} else {
+			
+			command.setStart((Integer)params.get("start"));
+			command.setLimit((Integer)params.get("limit"));
+		}
 		return command;
 	}
 
