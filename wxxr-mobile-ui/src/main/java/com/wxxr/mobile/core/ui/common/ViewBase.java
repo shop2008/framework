@@ -364,12 +364,22 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 		this.binding = (IViewBinding)binding;
 		forceValueEvalution();
+		clearValidationErrors();
 		if(this.beans != null){
 			for (Entry<String,Object> entry: this.beans.entrySet()) {
 				Object bean = entry.getValue();
 				if(bean instanceof IBindableBean){
 					((IBindableBean)bean).addPropertyChangeListener(getBeanListener(entry.getKey()));
 				}
+			}
+		}
+	}
+	
+	protected void clearValidationErrors() {
+		List<IDataField> list = getChildren(IDataField.class);
+		if(list != null){
+			for (IDataField f : list) {
+				f.removeAttribute(AttributeKeys.validationErrors);
 			}
 		}
 	}
