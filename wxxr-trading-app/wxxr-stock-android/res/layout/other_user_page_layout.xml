@@ -220,6 +220,7 @@
                         android:gravity="center"
                         android:text="@string/user_no_shared_text"
                         android:textSize="18sp"
+                        android:visibility="gone"
                         bind:field="jNoSharedVisiable" />
                 </FrameLayout>
             </LinearLayout>
@@ -340,7 +341,7 @@
                         android:gravity="center"
                         android:text="@string/user_no_shared_text"
                         android:textSize="18sp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         bind:field="cNoSharedVisiable" />
                 </FrameLayout>
             </LinearLayout>
