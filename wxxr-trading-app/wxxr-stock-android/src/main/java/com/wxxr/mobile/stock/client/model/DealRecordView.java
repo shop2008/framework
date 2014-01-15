@@ -65,7 +65,8 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100"),
+			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	

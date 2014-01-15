@@ -105,11 +105,12 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	String payOut;
 	
 	/**解冻数量*/
-	@Field(valueKey="text",binding="${auditData!=null ? (auditData.frozenAmount - auditData.payOut):null}",converter="stockLong2StringConvertorYuan")
+	@Field(valueKey="text",binding="${(auditData!=null && auditData.frozenAmount!=null && auditData.payOut!=null)?(auditData.frozenAmount - Math.abs(auditData.payOut)):null}",converter="stockLong2StringConvertorYuan")
 	String unfreezeAmount;
 	
 	@OnShow
 	void initData(){
+		
 	}
 	
 	@OnCreate

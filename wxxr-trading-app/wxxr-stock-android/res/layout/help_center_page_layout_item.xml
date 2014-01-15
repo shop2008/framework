@@ -55,6 +55,8 @@
 	            android:text="--" 
 	            bind:field="abstractInfo"
 	            android:textColor="@color/white"
+	            android:lines="2"
+	            android:ellipsize="end"
 	            android:textSize="12sp"/>	        		    
 		</LinearLayout>
         <TextView

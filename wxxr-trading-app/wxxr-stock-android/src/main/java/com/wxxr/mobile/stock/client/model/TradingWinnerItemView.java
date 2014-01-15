@@ -41,7 +41,7 @@ public abstract class TradingWinnerItemView extends ViewBase implements IModelUp
 	@Field(valueKey="text",binding="${earnRank!=null?earnRank.title:'--'}")
 	String text;
 	
-	@Field(valueKey="imageURI",binding="${imgUrl!=null?imgUrl:null}",visibleWhen="${isOpen}")
+	@Field(valueKey="backgroundImageURI",binding="${imgUrl!=null?imgUrl:null}",visibleWhen="${isOpen}")
 	String imageUrl;
 	
 	@Bean
