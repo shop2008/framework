@@ -45,7 +45,7 @@ public abstract class UserNewsPage extends PageBase {
 	BindableListWrapper<PullMessageBean> infoNoticeListBean;
 
 	/** 账户&交易-数据 */
-	@Field(valueKey = "options", binding = "${accountTradeListBean!=null?accountTradeListBean.data:null}", visibleWhen = "${(curItemId==0)&&(accountTradeListBean.data!=null?(accountTradeListBean.data.size()>0?true:false):false)}")
+	@Field(valueKey = "options", upateAsync=true,binding = "${accountTradeListBean!=null?accountTradeListBean.getData(true):null}", visibleWhen = "${(curItemId==0)&&(accountTradeListBean.data!=null?(accountTradeListBean.data.size()>0?true:false):false)}")
 	List<RemindMessageBean> accountTradeInfos;
 
 	/** 当账户&交易数据为空时显示 */
@@ -61,7 +61,7 @@ public abstract class UserNewsPage extends PageBase {
 	boolean infoNotices;
 
 	/** 资讯&公告-数据 */
-	@Field(valueKey = "options", binding = "${infoNoticeListBean!=null?infoNoticeListBean.data:null}", visibleWhen = "${(curItemId==1)&&(infoNoticeListBean.data!=null?(infoNoticeListBean.data.size()>0?true:false):false)}")
+	@Field(valueKey = "options", binding = "${infoNoticeListBean!=null?infoNoticeListBean.getData(true):null}", upateAsync=true,visibleWhen = "${(curItemId==1)&&(infoNoticeListBean.data!=null?(infoNoticeListBean.data.size()>0?true:false):false)}")
 	List<PullMessageBean> noticeInfos;
 
 	@Field(valueKey = "visible", binding = "${false}")
