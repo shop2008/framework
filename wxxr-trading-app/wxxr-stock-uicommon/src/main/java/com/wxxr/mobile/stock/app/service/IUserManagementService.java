@@ -119,13 +119,14 @@ public interface IUserManagementService {
 	 * @param userId
 	 * @return
 	 */
-	PersonalHomePageBean getOtherPersonalHomePage(String userId);
+	PersonalHomePageBean getOtherPersonalHomePage(String userId, boolean isAsync);
 	/**
 	 * 获取当前用户个人主页
 	 * @param userId
 	 * @return
 	 */
-	PersonalHomePageBean getMyPersonalHomePage();
+	PersonalHomePageBean getMyPersonalHomePage(boolean isAsync);
+
 	/**
 	 * 获取当前用户自己的主页更多条数地址
 	 * @param start

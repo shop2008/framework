@@ -418,7 +418,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	}
 
 	@Override
-	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
+	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
 		if (otherpersonalHomePageBean_cache==null) {
 			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("otherpersonalHomePageBean");
 		}
@@ -429,17 +429,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         }
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("userId", userId);
-        this.otherpersonalHomePageBean_cache.forceReload(p,false);
+        this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
         return otherpersonalHomePageBean_cache.getEntity(key);
 	}
 	
 	
 	@Override
-	public PersonalHomePageBean getMyPersonalHomePage() {
+	public PersonalHomePageBean getMyPersonalHomePage(boolean isAsync) {
 		if (personalHomePageBean_cache==null) {
 			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("personalHomePageBean");
 		}
-        this.personalHomePageBean_cache.forceReload(null,true);
+        this.personalHomePageBean_cache.forceReload(null,isAsync);
 	    String key="PersonalHomePageBean";
 	    if (personalHomePageBean_cache.getEntity(key)==null){
 	        PersonalHomePageBean b=new PersonalHomePageBean();
@@ -447,7 +447,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         }
         return personalHomePageBean_cache.getEntity(key);
 	}
-
+	
     public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
     	if (gainBean_cache==null) {
     		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
@@ -764,10 +764,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		otherGainBean_cache=null;
 		unreadRemindMessagesCache=null;
 	}
-
-
-
-	@Override
+	
 	public IServiceDecoratorBuilder getDecoratorBuilder() {
 		return new IServiceDecoratorBuilder() {
 			
@@ -894,16 +891,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getOtherPersonalHomePage(java.lang.String)
 						 */
 						public PersonalHomePageBean getOtherPersonalHomePage(
-								String userId) {
-							return ((IUserManagementService)holder.getDelegate()).getOtherPersonalHomePage(userId);
+								String userId, boolean isAsync) {
+							return ((IUserManagementService)holder.getDelegate()).getOtherPersonalHomePage(userId,isAsync);
 						}
 
 						/**
 						 * @return
 						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyPersonalHomePage()
 						 */
-						public PersonalHomePageBean getMyPersonalHomePage() {
-							return ((IUserManagementService)holder.getDelegate()).getMyPersonalHomePage();
+						public PersonalHomePageBean getMyPersonalHomePage(boolean isAsync) {
+							return ((IUserManagementService)holder.getDelegate()).getMyPersonalHomePage(isAsync);
 						}
 
 						/**
@@ -1035,7 +1032,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						public ClientInfoBean getClientInfo() {
 							return ((IUserManagementService)holder.getDelegate()).getClientInfo();
 						}
-						
+
 					});
 				}
 				throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1073,9 +1070,5 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	    addRequiredService(IUserIdentityManager.class);
 	    addRequiredService(IUserLoginManagementService.class);
 	}
-
-
-
-	
 	
 }
