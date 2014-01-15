@@ -134,7 +134,7 @@ public abstract class UIComponent implements IUIComponent {
 			this.attrs = new HashMap<AttributeKey<?>, Object>();
 		}
 		T old = getAttribute(key);
-		if(!ObjectUtils.isEquals(old, val)){
+		if((hasAttribute(key) == false)||(!ObjectUtils.isEquals(old, val))){
 			this.attrs.put(key, val);
 			fireDataChangedEvent(key);
 		}else if((old instanceof ICollectionDecorator)&&((ICollectionDecorator)old).checkChangedNClear()){
