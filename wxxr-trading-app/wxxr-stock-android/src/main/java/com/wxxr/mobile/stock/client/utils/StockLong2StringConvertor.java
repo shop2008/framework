@@ -73,7 +73,7 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 		try {
 			return (long) (Float.parseFloat(s) * multiple);
 		} catch (NumberFormatException e) {
-			throw new ValidationException("Invalid Long value :" + s, e);
+			throw new ValidationException("Invalid Long value :" + s);
 		}
 	}
 

@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.client.binding.ArticleBodyAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.EditTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
@@ -109,7 +110,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
-		//mgr.registerAttributeUpdater("label", new EditTextAttributeUpdater());
+		mgr.registerAttributeUpdater("validationErrors", new EditTextAttributeUpdater());
 	}
 
 	@Override

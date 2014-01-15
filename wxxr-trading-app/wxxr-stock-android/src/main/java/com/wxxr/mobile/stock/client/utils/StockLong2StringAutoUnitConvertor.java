@@ -98,7 +98,7 @@ public class StockLong2StringAutoUnitConvertor implements
 			}
 			return (long) (Float.parseFloat(s)) * multiple;
 		} catch (NumberFormatException e) {
-			throw new ValidationException("Invalid Long value :" + s, e);
+			throw new ValidationException("Invalid Long value :" + s);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.app.validate;
 
+import java.util.regex.Pattern;
+
 import com.wxxr.javax.validation.ConstraintValidator;
 import com.wxxr.javax.validation.ConstraintValidatorContext;
 
@@ -9,6 +11,10 @@ public class ChineseCharsValidator implements ConstraintValidator<ChineseChars,S
 	}
 
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		return true;
+		if(value == null)
+			return true;
+		else {
+			return	Pattern.matches("[\u4E00-\u9FA5]+", value);
+		}
 	}
 }

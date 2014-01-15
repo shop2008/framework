@@ -1,86 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@color/mid_gray"
-    >
-    
+    android:background="@color/mid_gray" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/et_stock_input"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:background="@null"
+                android:hint="@string/hint_please_input_new_nick"
+                android:maxLength="6"
+                android:singleLine="true"
+                bind:field="newNickName"
+                bind:on_FocusChanged="_updateValue" />
+        </LinearLayout>
 
         <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/title_set_nick" />
-
-        <ImageButton
-            android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-    </RelativeLayout>
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/et_stock_input"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_margin="5dp"
-        >
-        
-        <EditText 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            bind:field="newNickName"
-            bind:on_TextChanged="_updateValue"
-            android:layout_marginLeft="5dp"
-            android:hint="@string/hint_please_input_new_nick"
-            />
-        
-    </LinearLayout>
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textColor="@color/white"
-        android:text="@string/nick_set_instruction"
-        />
-    <LinearLayout
-        android:layout_marginTop="10dip"
-        android:layout_width="match_parent"
-        android:layout_height="60dip"
-        android:background="@drawable/text_back"
-        android:gravity="center"
-        android:orientation="vertical" 
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
-        >
+            android:layout_margin="5dp"
+            android:text="@string/nick_set_instruction"
+            android:textColor="@color/white" />
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:background="@drawable/bg_red_btn"
-            android:text="@string/btn_done_text"
-            android:textColor="@color/white"
-            android:textSize="15sp" 
-            bind:field="*"
-            bind:on_Click="done"
-            />
+            android:layout_height="60dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/text_back"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dip"
+                android:background="@drawable/bg_red_btn"
+                android:text="@string/btn_done_text"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                bind:field="setNick"
+                bind:on_Click="done" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+</FrameLayout>

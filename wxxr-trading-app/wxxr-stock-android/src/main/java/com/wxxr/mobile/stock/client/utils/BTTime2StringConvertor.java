@@ -58,16 +58,16 @@ public class BTTime2StringConvertor implements IValueConvertor<String, String> {
 			sdf = new SimpleDateFormat(format);
 			srcSdf = new SimpleDateFormat(BTformat);
 		} catch (NullPointerException e) {
-			throw new ValidationException("Invalid time-type value :" + s, e);
+			throw new ValidationException("Invalid time-type value :" + s);
 		} catch (IllegalArgumentException e) {
-			throw new ValidationException("Invalid time-type value :" + s, e);
+			throw new ValidationException("Invalid time-type value :" + s);
 		}
 
 		try {
 			Date date = sdf.parse(s);
 			return srcSdf.format(date);
 		} catch (ParseException e) {
-			throw new ValidationException("Invalid parse time value :" + s, e);
+			throw new ValidationException("Invalid parse time value :" + s);
 		}
 	}
 

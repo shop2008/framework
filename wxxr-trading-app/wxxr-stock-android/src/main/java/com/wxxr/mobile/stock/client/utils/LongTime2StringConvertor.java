@@ -60,16 +60,16 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		try {
 			sdf = new SimpleDateFormat(format);
 		} catch (NullPointerException e) {
-			throw new ValidationException("Invalid time-type value :" + s, e);
+			throw new ValidationException("Invalid time-type value :" + s);
 		} catch (IllegalArgumentException e) {
-			throw new ValidationException("Invalid time-type value :" + s, e);
+			throw new ValidationException("Invalid time-type value :" + s);
 		}
 
 		try {
 			Date date = sdf.parse(s);
 			return date.getTime();
 		} catch (ParseException e) {
-			throw new ValidationException("Invalid parse time value :" + s, e);
+			throw new ValidationException("Invalid parse time value :" + s);
 		}
 	}
 
