@@ -71,8 +71,10 @@ public class DealDetailBean implements IBindableBean {
 	 */
 	public void setImgUrl(String[] imgUrl) {
 		List<String> old = this.imgUrl;
-		this.imgUrl = Arrays.asList(imgUrl);
-		this.emitter.firePropertyChange("imgUrl", old, this.imgUrl);
+		if(imgUrl!=null){
+			this.imgUrl = Arrays.asList(imgUrl);
+			this.emitter.firePropertyChange("imgUrl", old, this.imgUrl);
+		}
 	}
 
 	/**

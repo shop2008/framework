@@ -115,7 +115,14 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 			
 				@Override
 				public int compare(ArticleBean o1, ArticleBean o2) {
-					return o2.getPower() - o1.getPower();
+					int flag = 0;
+					flag = o2.getPower() - o1.getPower();
+					if(flag==0){ 
+						if(StringUtils.isNotBlank(o2.getCreateDate()) || StringUtils.isNotBlank(o1.getCreateDate())){
+							flag = o2.getCreateDate().compareTo(o1.getCreateDate());
+						}
+					}
+					return flag;
 				}
 			});
 		}
