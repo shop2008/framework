@@ -26,7 +26,6 @@
 #if(${fld.valueKey})
         this.${fld.name}Field.setValueKey(${fld.valueKey});
 #end
-        this.${fld.name}Field.setValue(this.${fld.name});
 #if(${fld.binding})
 #if(${fld.convertor})
         this.${fld.name}Field.setDomainModel(
@@ -38,6 +37,7 @@
 #end
 #end
         add(this.${fld.name}Field);        
+        this.${fld.name}Field.setValue(this.${fld.name});
 #end
     }
 #end
