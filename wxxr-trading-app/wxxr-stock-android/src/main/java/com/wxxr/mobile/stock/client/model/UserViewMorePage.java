@@ -41,10 +41,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeVStart,myHomeVLimit,true)}")
 	BindableListWrapper<GainBean> myJoinListBean;
 
-	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.data:null}", visibleWhen = "${curItemId == 0}")
+	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.getData(true):null}", visibleWhen = "${curItemId == 0}", upateAsync=true)
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.data:null}", visibleWhen = "${curItemId == 1}")
+	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.getData(true):null}", visibleWhen = "${curItemId == 1}", upateAsync=true)
 	List<GainBean> virtualRecordsList;
 
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
@@ -53,11 +53,11 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 1}")})
 	boolean virtualRecordBtn;
 
-	@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((myJoinListBean.data!=null)?(myJoinListBean.data.size()>0?false:true):true))}")
-	boolean noMoreVirtualRecordVisible;
+	/*@Field(valueKey = "visible", binding = "${(curItemId==1)&&(((myJoinListBean.data!=null)?(myJoinListBean.data.size()>0?false:true):true))}")
+	boolean noMoreVirtualRecordVisible;*/
 
-	@Field(valueKey = "visible", binding = "${(curItemId==0)&&(((myChallengeListBean.data!=null)?(myChallengeListBean.data.size()>0?false:true):true))}")
-	boolean noMoreActualRecordVisible;
+	/*@Field(valueKey = "visible", binding = "${(curItemId==0)&&(((myChallengeListBean.data!=null)?(myChallengeListBean.data.size()>0?false:true):true))}")
+	boolean noMoreActualRecordVisible;*/
 
 	@Bean
 	boolean isVirtual;
@@ -75,9 +75,6 @@ public abstract class UserViewMorePage extends PageBase implements
 	
 	@Bean
 	int myHomeAStart = 0;
-
-	@Bean(type = BindingType.Pojo, express = "${userId!=null?usrService.getUserInfoById(userId):usrService.myUserInfo}")
-	UserBean user;
 
 	@SuppressWarnings("unused")
 	@Menu(items = { "left"})
