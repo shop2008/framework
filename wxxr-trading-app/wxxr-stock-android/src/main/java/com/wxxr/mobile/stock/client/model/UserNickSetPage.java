@@ -56,7 +56,7 @@ public abstract class UserNickSetPage extends PageBase {
 	 */
 	@Command(
 			validations = {
-					@BeanValidation(bean="user",message="请输入正确的昵称")
+					@BeanValidation(bean="callBack",message="请输入正确的昵称")
 			},
 			navigations = { 
 					@Navigation(
