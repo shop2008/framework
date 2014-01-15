@@ -96,6 +96,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("PageChange", new PageChangeEventBinder());
 		mgr.registerFieldBinder("FocusChanged", new EditTextFocusChangedEventBinder());
 		
+		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
 	}
 
@@ -125,6 +126,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		registry.registerDecorator("StockRefreshClickedDecorator", StockRefreshClickedDecorator.class);
 		registry.registerDecorator("StockSuspensionRefreshClickedDecorator", StockSuspensionRefreshClickedDecorator.class);
 		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
+		
 		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
 		registry.registerDecorator("StockViewDecorator", StockViewDecorator.class);
 		registry.registerDecorator("ListViewDecorator",ListViewDecorator.class);

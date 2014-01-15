@@ -24,6 +24,7 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
+			
 			SimpleInputEvent event = new SimpleInputEvent("FocusChanged",
 					getField());
 			handleInputEvent(event);
