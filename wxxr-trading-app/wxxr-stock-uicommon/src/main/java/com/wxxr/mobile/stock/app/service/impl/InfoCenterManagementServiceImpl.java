@@ -277,6 +277,9 @@ public class InfoCenterManagementServiceImpl extends
 	    if (stockQuotationBean_cache.getEntity(market+code)==null){
 	        StockQuotationBean b=new StockQuotationBean();
             stockQuotationBean_cache.putEntity(mc,b);
+            try {
+            	Thread.sleep(500);
+            } catch (InterruptedException e) {}
             this.stockQuotationBean_cache.forceReload(params,true);
         }else{
         	this.stockQuotationBean_cache.doReloadIfNeccessay(params);
