@@ -159,6 +159,7 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 					e.printStackTrace();
 				} finally {
 					try {
+						
 						if (is != null) {
 							is.close();
 							is = null;
