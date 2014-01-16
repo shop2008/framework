@@ -8,8 +8,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
@@ -292,8 +294,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			}
 		}catch(StockAppBizException e){
 			throw e;
-		}
-		catch(CommandException e){
+		}catch(CommandException e){
 			throw new StockAppBizException(e.getMessage());
 		}catch (Exception e) {
 			throw new StockAppBizException("系统错误");
@@ -630,17 +631,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		UpdateNickNameCommand cmd=new UpdateNickNameCommand();
 		cmd.setNickName(nickName);
 		try{
-		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-			try {
-				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
-				if(vo.getResulttype()!=1){
-					throw new StockAppBizException(vo.getResultInfo());
-				}
-			} catch (Exception e) {
-				throw new StockAppBizException("系统错误");
+			Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
 			}
+		}catch(StockAppBizException e){
+			throw e;
 		}catch(CommandException e){
 			throw new StockAppBizException(e.getMessage());
+		} catch (Exception e) {
+			throw new StockAppBizException("网络不给力");
 		}
 	}
 
