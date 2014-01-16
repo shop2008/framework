@@ -52,7 +52,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             bind:field="setNick"
-            bind:on_Click="done" />
+            bind:on_Click="done@EditablePageBtnClickedDecorator" />
     </LinearLayout>
 
 </LinearLayout>
