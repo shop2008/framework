@@ -193,26 +193,27 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 
 	@Override
 	public synchronized IUserAuthCredential getAuthCredential(String host, String realm) {
+		if (usernamePasswordCredential4Login != null) {
+			return usernamePasswordCredential4Login;
+		}
 		IPreferenceManager mgr = getPrefManager();
-		if (!mgr.hasPreference(getModuleName())
-				|| mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
-			if (usernamePasswordCredential4Login != null) {
-				return usernamePasswordCredential4Login;
-			}
-//			
-//			
+		if (mgr.hasPreference(getModuleName())
+				&& mgr.getPreference(getModuleName()).get(KEY_USERNAME) == null) {
+			
+			Dictionary<String, String> d = mgr.getPreference(getModuleName());
+			String userName = null;
+	        String passwd = null;
+			if (d!=null) {
+			   userName = d.get(KEY_USERNAME);
+			   passwd = d.get(KEY_PASSWORD);
+	        }
+			return new UsernamePasswordCredential(userName, passwd);
 			//IDialog dialog = getService(IWorkbenchManager.class).getWorkbench().createDialog("userLoginPage",null );
 			//dialog.show();
 //			
 		}
-		Dictionary<String, String> d = mgr.getPreference(getModuleName());
-		String userName = null;
-        String passwd = null;
-		if (d!=null) {
-		   userName = d.get(KEY_USERNAME);
-		   passwd = d.get(KEY_PASSWORD);
-        }
-		return new UsernamePasswordCredential(userName, passwd);
+		return null;
+		
 	}
 	@Override
 	public void resetPassword(String userName) {
