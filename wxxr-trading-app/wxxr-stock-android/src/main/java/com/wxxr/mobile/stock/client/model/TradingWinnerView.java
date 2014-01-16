@@ -40,7 +40,7 @@ public abstract class TradingWinnerView extends ViewBase {
 	@Field(valueKey="options",binding="${rankBean.data}")
 	List<EarnRankItemBean> earnRankList;
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "true")})
 	String acctRefreshView;
 	

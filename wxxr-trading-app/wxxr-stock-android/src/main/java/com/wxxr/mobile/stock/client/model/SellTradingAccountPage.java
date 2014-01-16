@@ -130,7 +130,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	boolean redBtn;
 	
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	
