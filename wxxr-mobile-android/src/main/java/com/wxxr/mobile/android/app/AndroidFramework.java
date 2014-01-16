@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -252,6 +251,9 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 	}
 	
 	protected Runnable safeRunnable(final Runnable task){
+		if(isInDebugMode()){
+			return task;
+		}
 		return new Runnable() {
 			
 			@Override
