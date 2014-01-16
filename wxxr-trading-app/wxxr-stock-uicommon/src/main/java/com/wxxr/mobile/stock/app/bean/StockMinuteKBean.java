@@ -125,16 +125,16 @@ public class StockMinuteKBean implements IBindableBean {
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-    @Override   
-    public String toString() {
-        return "StockMinuteKBean ["+
-                "market=" + this.market +
-                " , list=" + this.list +
-                " , code=" + this.code +
-                " , date=" + this.date +
-                " , close=" + this.close +
-        "]";
-    }
+
+
+	@Override
+	public String toString() {
+		return "StockMinuteKBean [market=" + market + ", list=" + list
+				+ ", code=" + code + ", date=" + date + ", close=" + close
+				+ ", stop=" + stop + "]";
+	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -145,6 +145,7 @@ public class StockMinuteKBean implements IBindableBean {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((list == null) ? 0 : list.hashCode());
 		result = prime * result + ((market == null) ? 0 : market.hashCode());
+		result = prime * result + (stop ? 1231 : 1237);
 		return result;
 	}
 
@@ -180,15 +181,18 @@ public class StockMinuteKBean implements IBindableBean {
 				return false;
 		} else if (!market.equals(other.market))
 			return false;
+		if (stop != other.stop)
+			return false;
 		return true;
 	}
 
-	public boolean isStop() {
+	public boolean getStop() {
 		return stop;
 	}
 
 	public void setStop(boolean stop) {
+		boolean old = this.stop;
 		this.stop = stop;
+		this.emitter.firePropertyChange("stop", old, this.stop);
 	}	
-
 }

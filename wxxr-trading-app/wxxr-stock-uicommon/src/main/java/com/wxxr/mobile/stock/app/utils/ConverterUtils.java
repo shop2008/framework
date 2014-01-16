@@ -418,6 +418,7 @@ public class ConverterUtils {
         bean.setDate(b.getDate());
         bean.setMarket(b.getMarket());
         bean.setCode(b.getCode());
+        bean.setStop(b.getStop());
         List<StockMinuteLineBean> mvos=b.getList();
         bean.setList(mvos);
     }
