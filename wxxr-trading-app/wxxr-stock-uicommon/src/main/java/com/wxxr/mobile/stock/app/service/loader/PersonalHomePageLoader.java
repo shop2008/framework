@@ -7,6 +7,8 @@ import java.util.Map;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
@@ -56,10 +58,10 @@ public class PersonalHomePageLoader extends AbstractEntityLoader<String, Persona
         
         if(result != null){
             for (PersonalHomePageVO vo : result) {
-                PersonalHomePageBean bean=cache.getEntity("PersonalHomePageBean");
+                PersonalHomePageBean bean=cache.getEntity(KUtils.getService(IUserIdentityManager.class).getUserId());
                 if(bean == null) {
                     bean =ConverterUtils.fromVO(vo);
-                    cache.putEntity("PersonalHomePageBean", bean);
+                    cache.putEntity(KUtils.getService(IUserIdentityManager.class).getUserId(), bean);
                 }else{
                     ConverterUtils.updatefromVOtoBean(bean, vo);
                 }
