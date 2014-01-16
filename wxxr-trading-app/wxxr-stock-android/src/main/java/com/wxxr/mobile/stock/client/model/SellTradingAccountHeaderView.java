@@ -118,6 +118,7 @@ public abstract class SellTradingAccountHeaderView extends ViewBase implements I
 					HashMap<String, Object> data = new HashMap<String, Object>();
 					data.put(Constants.KEY_ASSET_TYPE, tradingAccount.getType());
 					data.put(Constants.KEY_ACCOUNT_ID_FLAG, tradingAccount.getId());
+					resutl.setPayload(data);
 					resutl.setResult("ShiPanBuyStockInfoPage");
 				}
 				return resutl;
