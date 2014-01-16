@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.BeanValidation;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -19,6 +20,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.CrossFieldValidation;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.UserAlterPswCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -61,7 +63,10 @@ public abstract class UserAlterPswPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName="done",navigations = { 
+	@Command(commandName="done",
+			validations={@BeanValidation(bean="callback", message="请确保输入的密码正确"),
+			@BeanValidation(bean="callback", groups={CrossFieldValidation.class}, message="新密码和确认密码必须一致")},
+			navigations = { 
 			@Navigation(
 					on = "StockAppBizException", 
 					message = "%m%n", 
