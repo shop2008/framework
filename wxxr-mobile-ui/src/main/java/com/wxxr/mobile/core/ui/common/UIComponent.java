@@ -130,6 +130,8 @@ public abstract class UIComponent implements IUIComponent {
 	}
 
 	public <T>  UIComponent setAttribute(AttributeKey<T> key, T val){
+		if(key == null)
+			throw new IllegalArgumentException("AttributeKey cannot be null!!");
 		if(this.attrs == null){
 			this.attrs = new HashMap<AttributeKey<?>, Object>();
 		}

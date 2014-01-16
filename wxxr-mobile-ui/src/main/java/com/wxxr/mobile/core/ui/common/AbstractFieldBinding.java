@@ -81,8 +81,12 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 	}
 	
 	protected synchronized void doUIUpdating() {
-		this.decorator.handleUIUpdating(updatingCtx, field, uiControl);
-		updateUIScheduled = false;
+		try{
+			this.decorator.handleUIUpdating(updatingCtx, field, uiControl);
+		}catch(Throwable e) {
+		}finally{
+			updateUIScheduled = false;
+		}
 	}
 	
 	private void doUpdateUI(final boolean recursive){
