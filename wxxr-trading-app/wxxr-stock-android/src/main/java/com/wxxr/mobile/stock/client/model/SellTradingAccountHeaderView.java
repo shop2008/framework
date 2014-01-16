@@ -1,13 +1,9 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.event.api.IBroadcastEvent;
-import com.wxxr.mobile.core.event.api.IEventListener;
-import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -18,8 +14,6 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
-import com.wxxr.mobile.core.ui.annotation.OnHide;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
@@ -28,14 +22,11 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
-import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
-import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -120,10 +111,13 @@ public abstract class SellTradingAccountHeaderView extends ViewBase implements I
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
 			CommandResult resutl = new CommandResult();
 			if (tradingAccount != null) {
-				resutl.setPayload(tradingAccount.getId());
 				if(tradingAccount.getVirtual()){
+					resutl.setPayload(tradingAccount.getId());
 					resutl.setResult("TBuyStockInfoPage");
 				}else{
+					HashMap<String, Object> data = new HashMap<String, Object>();
+					data.put(Constants.KEY_ASSET_TYPE, tradingAccount.getType());
+					data.put(Constants.KEY_ACCOUNT_ID_FLAG, tradingAccount.getId());
 					resutl.setResult("ShiPanBuyStockInfoPage");
 				}
 				return resutl;

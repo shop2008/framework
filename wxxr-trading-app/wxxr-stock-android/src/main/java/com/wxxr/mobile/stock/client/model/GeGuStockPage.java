@@ -95,7 +95,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	})
 	StockLong2StringAutoUnitConvertor convertorSecuamount;
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	

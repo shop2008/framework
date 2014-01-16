@@ -41,7 +41,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Field(valueKey="options",binding="${articlesBean.data}")
 	List<ArticleBean> helpArticles;
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	

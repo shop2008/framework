@@ -317,7 +317,7 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	}
 	private void updataRate3(){
 		if(userCreateTradAccInfo!=null){
-			costRate = userCreateTradAccInfo.getCostRate();
+			costRate = userCreateTradAccInfo.getVoucherCostRate();
 			if(changeMoney>0 && costRate>0){
 				zhfzf = String.format("%.2f", ((changeMoney*10000) * costRate))+"元";
 				djDeposit = String.format("%.0f", (changeMoney*10000.0))+"元";

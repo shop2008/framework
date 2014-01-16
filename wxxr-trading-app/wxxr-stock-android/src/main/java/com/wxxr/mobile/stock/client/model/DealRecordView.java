@@ -29,11 +29,13 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
@@ -49,6 +51,9 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	ITradingManagementService tradingService;
 	@Bean(type=BindingType.Pojo,express="${tradingService.getDealDetail(accId)}")
 	DealDetailBean dealDetail;
+	
+	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accId)}")
+	TradingAccountBean tradingAccount;
 	
 	@Bean(type=BindingType.Pojo,express="${tradingService.getAuditDetail(accId)}")
 	AuditDetailBean auditData;
@@ -195,11 +200,17 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 			CommandResult resutl = new CommandResult();
 			if(auditData!=null){
 				if(auditData.getVirtual()){
+					resutl.setPayload(accId);
 					resutl.setResult("TBuyStockInfoPage");
 				}else{
-					resutl.setResult("ShiPanStockInfoPage");
+					if(tradingAccount!=null){
+						HashMap<String, Object> data = new HashMap<String, Object>();
+						data.put(Constants.KEY_ASSET_TYPE, tradingAccount.getType());
+						data.put(Constants.KEY_ACCOUNT_ID_FLAG, accId);
+						resutl.setPayload(data);
+						resutl.setResult("ShiPanStockInfoPage");
+					}
 				}
-				resutl.setPayload(accId);
 			}
 			return resutl;
 		}

@@ -166,7 +166,7 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	String xdjs;
 	
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	

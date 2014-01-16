@@ -178,7 +178,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	})
 	String newprice;
 	
-	@Field(valueKey="text",binding="${'停盘'}",visibleWhen="${quotationBean.status == 2}")
+	@Field(valueKey="text",binding="${'停牌'}",visibleWhen="${quotationBean.status == 2}")
 	String newprice1;
 	
 	/**时间*/

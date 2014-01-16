@@ -7,6 +7,7 @@ public class AccidSelection implements ISelection {
 	private String accid = "";
 	private boolean virtual;
 	private int position = -1;
+	private String assetType = "";
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
@@ -22,6 +23,11 @@ public class AccidSelection implements ISelection {
 	public AccidSelection(String accid, int position){
 		this.accid = accid;
 		this.position = position;
+	}
+	public AccidSelection(String accid, int position, boolean selected){
+		this.accid = accid;
+		this.position = position;
+		this.isSelected = selected;
 	}
 	
 	public AccidSelection(String accid, boolean virtual,int position){
@@ -47,5 +53,13 @@ public class AccidSelection implements ISelection {
 	}
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public String getAssetType() {
+		return assetType;
+	}
+
+	public void setAssetType(String assetType) {
+		this.assetType = assetType;
 	}
 }
