@@ -6,6 +6,7 @@ package com.wxxr.mobile.android.app;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.api.ApplicationFactory;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 
 /**
  * @author neillin
@@ -13,22 +14,22 @@ import com.wxxr.mobile.core.api.ApplicationFactory;
  */
 public class AppUtils {
 	public static AndroidFramework<?, ?> getFramework() {
-		return (AndroidFramework<?,?>)ApplicationFactory.getInstance().getApplication();
+		return (AndroidFramework<?, ?>)KUtils.getApplication();
 	}
 	
 	public static <T> T getService(Class<T> clazz) {
-		return getFramework().getService(clazz);
+		return KUtils.getService(clazz);
 	}
 	
 	public static void runOnUIThread(Runnable task, long delay, TimeUnit unit) {
-		getFramework().runOnUIThread(task, delay, unit);
+		KUtils.runOnUIThread(task, delay, unit);
 	}
 	
 	public static void runOnUIThread(Runnable task) {
-		getFramework().runOnUIThread(task);
+		KUtils.runOnUIThread(task);
 	}
 	
 	public static void invokeLater(Runnable task,long delay, TimeUnit unit){
-		getFramework().invokeLater(task, delay, unit);
+		KUtils.invokeLater(task, delay, unit);
 	}
 }
