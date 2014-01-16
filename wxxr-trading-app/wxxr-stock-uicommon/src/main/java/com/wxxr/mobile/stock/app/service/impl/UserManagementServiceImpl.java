@@ -455,7 +455,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
-                if ( StringUtils.isBlank(entity.getUserId()) && entity.getVirtual()==virtual){
+                if ( StringUtils.isNotBlank(entity.getUserId()) &&entity.getUserId().equals(getService(IUserIdentityManager.class).getUserId())&& entity.getVirtual()==virtual){
                     return true;
                 }
                 return false;

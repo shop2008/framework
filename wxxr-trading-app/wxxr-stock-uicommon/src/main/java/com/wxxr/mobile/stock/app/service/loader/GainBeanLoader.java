@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
@@ -109,6 +111,8 @@ public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, Gain
                     bean =ConverterUtils.fromVO(vo);
                     if (cmd instanceof GetOtherUserGainBeanCommand){
                         bean.setUserId(((GetOtherUserGainBeanCommand) cmd).getUserId());
+                    }else{
+                    	bean.setUserId(KUtils.getService(IUserIdentityManager.class).getUserId());
                     }
                     cache.putEntity(key, bean);
                 }else{
