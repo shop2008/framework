@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -91,8 +92,8 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 		}
 		log.warn("Starting up application ...");
 		try {
-			this.executor = new ThreadPoolExecutor(5, maxThread, 20, TimeUnit.SECONDS, 
-					new SynchronousQueue<Runnable>(),
+			this.executor = new ThreadPoolExecutor(maxThread, maxThread, 20, TimeUnit.SECONDS, 
+					new LinkedBlockingDeque<Runnable>(100),
 					new ThreadFactory() {
 						private AtomicInteger sq = new AtomicInteger(1);
 						@Override
@@ -100,6 +101,7 @@ public abstract class AndroidFramework<C extends IAndroidAppContext, M extends I
 							return new Thread(r, "application thread-"+sq.getAndIncrement());
 						}
 					});
+			((ThreadPoolExecutor)this.executor).allowCoreThreadTimeOut(true);
 			super.start();
 			log.warn("Application started !");
 		} catch (Exception e) {
