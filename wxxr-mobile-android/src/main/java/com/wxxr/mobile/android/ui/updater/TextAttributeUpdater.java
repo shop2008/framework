@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui.updater;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.wxxr.mobile.android.ui.RUtils;
@@ -33,7 +34,12 @@ public class TextAttributeUpdater implements IAttributeUpdater<View> {
 				if(RUtils.isResourceIdURI(val)){
 					tv.setText(RUtils.getInstance().getResourceIdByURI(val));
 				}else{
+					int selection = val.length();
+					selection = tv.getSelectionStart();
 					tv.setText(val);
+					if(control instanceof EditText) {
+						((EditText)tv).setSelection(selection);
+					}
 				}
 			} catch (Exception e) {
 				log.error("Failed to set image for field :"+field.getName(), e);
