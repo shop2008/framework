@@ -200,6 +200,7 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 			mHasFocus = hasFocus;
 			if(!mHasFocus) {
 				if(monitor != null){
+					monitor.fireTextChangedEvent();
 					monitor.setActive(false);
 				}
 			} else {

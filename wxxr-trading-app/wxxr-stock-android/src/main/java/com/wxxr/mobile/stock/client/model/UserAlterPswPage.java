@@ -66,7 +66,7 @@ public abstract class UserAlterPswPage extends PageBase {
 	@Command(commandName="done",
 			validations={
 				@BeanValidation(bean="callback", message="请确保输入的密码正确"),
-				@BeanValidation(bean="callback", group=CrossFieldValidation.class, message="新密码和确认密码必须一致")
+				@BeanValidation(bean="callback", group=CrossFieldValidation.class, message="新密码和重复新密码必须一致")
 			},
 			navigations = { 
 			@Navigation(

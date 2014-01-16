@@ -39,7 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"
-        android:layout_marginLeft="4dip"
         android:background="@android:color/transparent"
         android:gravity="bottom|center_horizontal"
         android:text="数据同步失败,点击重试"
