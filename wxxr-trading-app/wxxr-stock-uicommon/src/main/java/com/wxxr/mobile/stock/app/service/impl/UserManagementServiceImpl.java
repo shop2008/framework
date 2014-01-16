@@ -440,7 +440,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("personalHomePageBean");
 		}
         this.personalHomePageBean_cache.forceReload(null,isAsync);
-	    String key=getService(IUserIdentityManager.class).getUserId();
+	    String key=getService(IUserIdentityManager.class).getUserId();//fix FECC-2686 
 	    if (personalHomePageBean_cache.getEntity(key)==null){
 	        PersonalHomePageBean b=new PersonalHomePageBean();
 	        personalHomePageBean_cache.putEntity(key,b);
