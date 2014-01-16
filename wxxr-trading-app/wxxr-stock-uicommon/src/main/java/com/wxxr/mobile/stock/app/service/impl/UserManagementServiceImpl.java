@@ -8,10 +8,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
@@ -442,7 +440,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			personalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("personalHomePageBean");
 		}
         this.personalHomePageBean_cache.forceReload(null,isAsync);
-	    String key="PersonalHomePageBean";
+	    String key=getService(IUserIdentityManager.class).getUserId();
 	    if (personalHomePageBean_cache.getEntity(key)==null){
 	        PersonalHomePageBean b=new PersonalHomePageBean();
 	        personalHomePageBean_cache.putEntity(key,b);
