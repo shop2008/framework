@@ -24,7 +24,7 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 		private Thread workingThread;
 		private long lastEditTime;
 		private long timeoutInMills = 2000L;	// 2 seconds by default
-		private String text;
+		private String text = "";
 		private boolean active;
 		
 		
@@ -181,7 +181,7 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 					actionId == EditorInfo.IME_ACTION_DONE ||
 					event.getAction() == KeyEvent.ACTION_DOWN &&
 					event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-				if (!event.isShiftPressed()) {
+				if (event == null || !event.isShiftPressed()) {
 					if(monitor != null){
 						monitor.fireTextChangedEvent();
 					}
@@ -203,7 +203,7 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 					monitor.setActive(false);
 				}
 			} else {
-				monitor.setActive(false);
+				monitor.setActive(true);
 			}
 		}
 	};
