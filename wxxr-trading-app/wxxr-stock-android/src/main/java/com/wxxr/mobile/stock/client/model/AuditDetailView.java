@@ -62,6 +62,11 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	})
 	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f元")
+	})
+	StockLong2StringConvertor stockLong2StringConvertorYuan1;
+	
 	
 	@Bean
 	Object accId;
@@ -99,18 +104,29 @@ public abstract class AuditDetailView extends ViewBase implements IModelUpdater,
 	/**冻结资金*/
 	@Field(valueKey="text",binding="${auditData!=null ? auditData.frozenAmount:null}",converter="stockLong2StringConvertorYuan")
 	String frozenAmount;
+	@Field(valueKey = "visible",visibleWhen="${auditData!=null && auditData.type!='VOUCHER'}")
+	boolean frozenAmountType = true;
 	
 	/**扣减数量*/
 	@Field(valueKey="text",binding="${auditData!=null ? auditData.payOut:null}",converter="stockLong2StringConvertorYuan")
 	String payOut;
+	@Field(valueKey = "visible",visibleWhen="${auditData!=null && auditData.type!='VOUCHER'}")
+	boolean payOutType = true;
 	
 	/**解冻数量*/
 	@Field(valueKey="text",binding="${(auditData!=null && auditData.frozenAmount!=null && auditData.payOut!=null)?(auditData.frozenAmount - Math.abs(auditData.payOut)):null}",converter="stockLong2StringConvertorYuan")
 	String unfreezeAmount;
+	@Field(valueKey = "visible",visibleWhen="${auditData!=null && auditData.type!='VOUCHER'}")
+	boolean unfreezeAmountType = true;
+	
+	
+	@Field(valueKey="text",binding="${auditData!=null ? auditData.frozenAmount:null}",converter="stockLong2StringConvertorYuan1")
+	String jifen;
+	@Field(valueKey = "visible",visibleWhen="${auditData!=null && auditData.type == 'VOUCHER'}")
+	boolean jifenType;
 	
 	@OnShow
 	void initData(){
-		
 	}
 	
 	@OnCreate

@@ -27,7 +27,7 @@ public abstract class MinuteLineViewKeys {
 	public static final AttributeKey<Integer> position = new AttributeKey<Integer>(Integer.class, "position");
 	public static final AttributeKey<Long> buyPrice = new AttributeKey<Long>(Long.class, "buyPrice");
 	public static final AttributeKey<Boolean> isPagination = new AttributeKey<Boolean>(Boolean.class, "isPagination");
-	public static final AttributeKey<Integer> stockStatus = new AttributeKey<Integer>(Integer.class, "stockStatus");
+	public static final AttributeKey<Boolean> stockStatus = new AttributeKey<Boolean>(Boolean.class, "stockStatus");
 	
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){

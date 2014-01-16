@@ -245,7 +245,8 @@
 	    		    android:layout_height="wrap_content"
 	    		    android:layout_marginLeft="30dp" 
 	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
+	    		    android:layout_marginTop="8dp"
+	    		    bind:field="frozenAmountType">
 	
 	    		    <TextView
 	    		        android:id="@+id/textView2"
@@ -269,7 +270,8 @@
 	    		    android:layout_height="wrap_content"
 	    		    android:layout_marginLeft="30dp" 
 	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
+	    		    android:layout_marginTop="8dp"
+	    		    bind:field="payOutType">
 	
 	    		    <TextView
 	    		        android:id="@+id/textView2"
@@ -293,7 +295,8 @@
 	    		    android:layout_height="wrap_content"
 	    		    android:layout_marginLeft="30dp" 
 	    		    android:layout_marginRight="26dp"
-	    		    android:layout_marginTop="8dp">
+	    		    android:layout_marginTop="8dp"
+	    		    bind:field="unfreezeAmountType">
 	
 	    		    <TextView
 	    		        android:id="@+id/textView2"
@@ -310,6 +313,31 @@
 	    		        android:layout_alignParentRight="true"
 	    		        android:text="--" 
 	    		        bind:field="unfreezeAmount"
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	    		</RelativeLayout>
+	    		<RelativeLayout
+	    		    android:layout_width="fill_parent"
+	    		    android:layout_height="wrap_content"
+	    		    android:layout_marginLeft="30dp" 
+	    		    android:layout_marginRight="26dp"
+	    		    android:layout_marginTop="8dp"
+	    		    bind:field="jifenType">
+	
+	    		    <TextView
+	    		        android:id="@+id/textView2"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentLeft="true"
+	    		        android:text="扣减实盘积分" 
+	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
+	
+	    		    <TextView
+	    		        android:id="@+id/textView3"
+	    		        android:layout_width="wrap_content"
+	    		        android:layout_height="wrap_content"
+	    		        android:layout_alignParentRight="true"
+	    		        android:text="--" 
+	    		        bind:field="jifen"
 	    		        style="@style/qsxqTextTitleStyle_item_tv"/>
 	    		</RelativeLayout>	        
 	    	</LinearLayout>    		            

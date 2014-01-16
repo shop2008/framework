@@ -30,7 +30,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	private float startX, startY, stopX, stopY;
 	private int size;
 	private boolean isZhiShu = false; //是否是指数，默认是false
-	private int stockStatus = 1; //默认是开盘
+	private boolean stockStatus = false; //默认是开盘
 	
 	public MinuteLineView(Context context) {
 		super(context);
@@ -52,8 +52,8 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	}
 	
 	/**股票盘状态*/
-	public void setStockStatus(int val){
-		if(val>0 && val==2){
+	public void setStockStatus(Boolean val){
+		if(val!=null && val){
 			this.stockStatus = val;
 		}
 	}
@@ -191,14 +191,16 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		setOnDrawRightTextFont(canvas);	
 		/** 画分时线 */
 		setOnDrawMinuteLine(canvas);
-		/** 画均线 */
-		setOnDrawAverageLine(canvas);
+		if(!stockStatus){
+			/** 画均线 */
+			setOnDrawAverageLine(canvas);
+			/** 画成交量柱状图 */
+			setOnDrawSecuVolume(canvas);
+		}
 		/** 设置分时线表格底边时间文字 */
 		setOnDrawBottomTextFont(canvas);
 		/** 画成交量柱状图的值 */
 		setOnDrawSecuVolumeChart(canvas);
-		/** 画成交量柱状图 */
-		setOnDrawSecuVolume(canvas);
 		canvas.restore();
 	}
 	
@@ -356,43 +358,45 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					// (最新价-昨收)*中间到上边框的像素/(昨收*变化量) ==像素变化量
 					startX = fStartX + (width*i)+1.0f;
 					stopX = fStartX + (width*(i+1))+1.0f;
-					float temp = (newprice - lowPrice);
-					if(temp>0){
-						temp = ((newprice - lowPrice)/scale);
+					if(!stockStatus){
+						startY = fStopY - ((newprice - lowPrice)/scale);
+						float newprice1 = stockMinute1.getPrice();
+						stopY = fStopY - ((newprice1 - lowPrice)/scale);
+						mPaint.setColor(Color.parseColor("#3d3e38"));
+						if(i==0){
+							canvas.drawLine(startX, startY + 2 , startX, fStopY+minuteBottomPadding-1, mPaint);
+						} 
+						canvas.drawLine(stopX, stopY + 2, stopX, fStopY+minuteBottomPadding-1, mPaint);
+						mPaint.setColor(getStockCloseColor());
+						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 					}else{
-						temp = lineHeight*2;
+						startY = fStopY - lineHeight*2;
+						stopY = fStopY - lineHeight*2;
+						mPaint.setColor(Color.parseColor("#3d3e38"));
+						if(i==0){
+							canvas.drawLine(startX, startY + 2 , startX, fStopY+minuteBottomPadding-1, mPaint);
+						} 
+						canvas.drawLine(stopX, stopY + 2, stopX, fStopY+minuteBottomPadding-1, mPaint);
+						mPaint.setColor(getStockCloseColor());
+						canvas.drawLine(startX, startY, stopX, stopY, mPaint);						
 					}
-					startY = fStopY - temp;
-					float newprice1 = stockMinute1.getPrice();
-					float temp1 = (newprice1 - lowPrice);
-					if(temp1>0){
-						temp1 = ((newprice1 - lowPrice)/scale);
-					}else{
-						temp1 = lineHeight*2;
-					}
-					stopY = fStopY - temp1;
-					mPaint.setColor(Color.parseColor("#3d3e38"));
-					if(i==0){
-						canvas.drawLine(startX, startY + 2 , startX, fStopY+minuteBottomPadding-1, mPaint);
-					} 
-					canvas.drawLine(stopX, stopY + 2, stopX, fStopY+minuteBottomPadding-1, mPaint);
-					mPaint.setColor(getStockCloseColor());
-					canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 				}
 			}
 		}		
 	}
 	
 	private void setonDrawStopMinuteLine(Canvas canvas){
-		mPaint.setAntiAlias(true);
-		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-		mPaint.setStrokeWidth(1);
-		mPaint.setColor(getStockCloseColor());
-		canvas.drawLine(fStartX+1.0f,fStopY - lineHeight*2,zWidth,fStopY - lineHeight*2,mPaint);
-		mPaint.setColor(Color.parseColor("#3d3e38"));
-		float width = (float) (zWidth / 241.0);
-		for(int i=0; i<240;i++){
-			canvas.drawLine(fStartX+(width*i)+1.0f, fStopY - lineHeight*2, fStartX+(width*i)+1.0f, fStopY+minuteBottomPadding-1, mPaint);
+		if(stockStatus){
+			mPaint.setAntiAlias(true);
+			canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
+			mPaint.setStrokeWidth(1);
+			mPaint.setColor(getStockCloseColor());
+			canvas.drawLine(fStartX+1.0f,fStopY - lineHeight*2,zWidth,fStopY - lineHeight*2,mPaint);
+			mPaint.setColor(Color.parseColor("#3d3e38"));
+			float width = (float) (zWidth / 241.0);
+			for(int i=0; i<240;i++){
+				canvas.drawLine(fStartX+(width*i)+1.0f, fStopY - lineHeight*2, fStartX+(width*i)+1.0f, fStopY+minuteBottomPadding-1, mPaint);
+			}
 		}
 	}
 	/**
@@ -435,7 +439,6 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 				}
 			}
 		}
-		
 		if(isZhiShu){
 			mPaint.setColor(getStockAverageLineColor());
 			float middlePrice = (highPrice + lowPrice)/2;
