@@ -10,6 +10,7 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
@@ -20,6 +21,8 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
+import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -139,6 +142,15 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
 	}, upateAsync=true)
 	List<StockMinuteKBean> fiveDayMinute;
+	DataField<List> fiveDayMinuteField;
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		infoCenterService.getStockQuotation(codeBean,marketBean);
+		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+		fiveDayMinuteField.getDomainModel().doEvaluate();
+		return null;
+	}
 	
 	@OnCreate
 	void registerSelectionListener() {

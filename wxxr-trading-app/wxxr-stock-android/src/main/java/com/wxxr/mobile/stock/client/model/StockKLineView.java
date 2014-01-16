@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -99,6 +100,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	//K 线
 	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.getData(true) : null}", upateAsync=true)
 	List<StockLineBean> dayLineList;
+	DataField<List> dayLineListField;
 	//Title数据
 	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
 	StockQuotationBean stockQuotationBean;
@@ -192,7 +194,9 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	}
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getDayStockline(this.codeBean, this.marketBean);
+		infoCenterService.getStockQuotation(codeBean,marketBean);
+		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+		dayLineListField.getDomainModel().doEvaluate();
 		return null;
 	}
 	@OnShow

@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
@@ -212,6 +213,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
 	}, upateAsync=true)
 	List<StockMinuteLineBean> stockMinuteData;
+	DataField<List> stockMinuteDataField;
 	
 	@OnCreate
 	void registerSelectionListener() {
@@ -228,7 +230,9 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getMinuteline(map, true);
+		infoCenterService.getStockQuotation(codeBean,marketBean);
+		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+		stockMinuteDataField.getDomainModel().doEvaluate();
 		return null;
 	}
 	

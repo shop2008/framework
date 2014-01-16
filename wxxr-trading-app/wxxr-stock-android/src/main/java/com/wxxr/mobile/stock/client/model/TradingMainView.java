@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -63,7 +64,8 @@ public abstract class TradingMainView extends ViewBase{
     BindableListWrapper<TradingAccInfoBean> AllTradingAccountList;
 	
 	@Field(valueKey="options",binding="${AllTradingAccountList!=null?AllTradingAccountList.getData(true):null}", upateAsync=true)
-	List<TradingAccInfoBean> alltrading;	   
+	List<TradingAccInfoBean> alltrading;
+	DataField<List> alltradingField;
 	
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
@@ -84,7 +86,7 @@ public abstract class TradingMainView extends ViewBase{
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		tradingService.getAllTradingAccountList();
+		alltradingField.getDomainModel().doEvaluate();
 		return null;
 	}
 	
