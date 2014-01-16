@@ -1074,23 +1074,19 @@ public abstract class ViewModelUtils {
 			BeanValidation[] validations = ann.validations();
 			if((validations != null)&&(validations.length > 0)){
 				for (BeanValidation validation : validations) {
-					Class<?>[] groups = validation.groups();
-					if((groups != null)&&(groups.length > 0)){
-						for (Class<?> class1 : groups) {
-							BeanValidationModel validModel = new BeanValidationModel();
-							validModel.setBeanName(validation.bean());
-							validModel.setMessage(validation.message());
-							model.addImport(class1.getCanonicalName());
-							validModel.setGroup(class1.getSimpleName());
-							cmdModel.addBeanValidations(validModel);
-						}
-					}else{
-						BeanValidationModel validModel = new BeanValidationModel();
-						validModel.setBeanName(validation.bean());
-						validModel.setMessage(validation.message());
-						cmdModel.addBeanValidations(validModel);
-
+					String grpName = null;
+					try {
+						Class<?> group = validation.group();
+						grpName = group.getCanonicalName();
+					}catch(MirroredTypeException ex){
+						grpName = ex.getTypeMirror().toString();
 					}
+					BeanValidationModel validModel = new BeanValidationModel();
+					validModel.setBeanName(validation.bean());
+					validModel.setMessage(validation.message());
+					grpName = model.addImport(grpName);
+					validModel.setGroup(grpName);
+					cmdModel.addBeanValidations(validModel);
 				}
 			}
 			Navigation[] navs = ann.navigations();
