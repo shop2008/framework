@@ -6,9 +6,12 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.restful.json.ParamVO;
@@ -94,9 +97,11 @@ public class StockMinuteKLoader extends AbstractEntityLoader<String, StockMinute
         p.setMarket(cmd.getMarket());
         p.setCode(cmd.getCode());
         StockMinuteKVO vo= getRestService(StockResource.class).getMinuteline(p);
+        StockQuotationBean qbean = KUtils.getService(IInfoCenterManagementService.class).getSyncStockQuotation(cmd.getCode(), cmd.getMarket());
         if (vo!=null ){
             StockMinuteKBean bean =ConverterUtils.fromVO(vo);
             bean.setMarket(cmd.getMarket());
+            bean.setStop(qbean!=null&&qbean.getStatus()!=null?qbean.getStatus()==2:false);
             bean.setCode(cmd.getCode());
             List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
             result.add(bean);

@@ -21,6 +21,7 @@ public class StockMinuteKBean implements IBindableBean {
 	private String code;
 	private String date;
 	private String close;
+	private boolean stop;
 
 	/**
 	 * @param listener
@@ -180,6 +181,14 @@ public class StockMinuteKBean implements IBindableBean {
 		} else if (!market.equals(other.market))
 			return false;
 		return true;
+	}
+
+	public boolean isStop() {
+		return stop;
+	}
+
+	public void setStop(boolean stop) {
+		this.stop = stop;
 	}	
 
 }
