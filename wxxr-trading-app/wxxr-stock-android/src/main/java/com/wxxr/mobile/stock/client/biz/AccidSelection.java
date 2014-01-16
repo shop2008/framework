@@ -8,6 +8,7 @@ public class AccidSelection implements ISelection {
 	private boolean virtual;
 	private int position = -1;
 	private String assetType = "";
+	private boolean isSelected = false;
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
