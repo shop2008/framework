@@ -31,7 +31,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
  * 模拟盘详情
  * 
  * @author duzhen
- * 
+ *  
  */
 @View(name = "CloseMoNiStockInfoPage", withToolbar = true, description="模拟盘详情")
 @AndroidBinding(type = AndroidBindingType.ACTIVITY, layoutId = "R.layout.close_moni_stock_info_layout")

@@ -31,7 +31,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
  * 模拟盘详情
- * 
+ *  
  * @author 
  * 
  */
