@@ -47,7 +47,7 @@ public abstract class TradingWinnerView extends ViewBase {
 	int start = 0;
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
+	String handleRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")){
 			this.start = 0;
 			this.service.getEarnRank(0,20);
@@ -60,12 +60,12 @@ public abstract class TradingWinnerView extends ViewBase {
 		return null;
 	}
 	
-	@Command
-	String handleBottomRefresh(InputEvent event){
-		start = start+1;
-		this.service.getEarnRank((start*20)+1,20);
-		return null;
-	}
+//	@Command
+//	String handleBottomRefresh(InputEvent event){
+//		start = start+1;
+//		this.service.getEarnRank((start*20)+1,20);
+//		return null;
+//	}
 	
 	@OnShow	
 	protected void updateEarnRankList() {

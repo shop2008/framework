@@ -11,9 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         bind:field="acctRefreshView"
-        bind:on_BottomRefresh="refreshBottomData"
-        bind:on_TopRefresh="refreshTopData"
-        >
+        bind:on_PullRefresh="refreshData" >
 
         <ListView
             android:id="@+id/listView1"

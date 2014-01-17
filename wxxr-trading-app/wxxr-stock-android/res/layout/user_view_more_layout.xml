@@ -108,8 +108,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 bind:field="virtualRefreshView"
-                bind:on_BottomRefresh="handleVirtualBottomRefresh"
-                bind:on_TopRefresh="handleVirtualTopRefresh" >
+                bind:on_PullRefresh="handleVirtualRefresh" >
 
                 <ListView
                     android:id="@+id/listView1"
@@ -129,8 +128,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 bind:field="actualRefreshView"
-                bind:on_BottomRefresh="handleActualBottomRefresh"
-                bind:on_TopRefresh="handleActualTopRefresh" >
+                bind:on_PullRefresh="handleActualRefresh" >
 
                 <ListView
                     android:id="@+id/listView2"

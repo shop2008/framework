@@ -240,7 +240,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         bind:field="acctRefreshView"
-        bind:on_TopRefresh="handleTopRefresh" >
+        bind:on_PullRefresh="handleRefresh">
 
         <ListView
             android:id="@+id/listView1"

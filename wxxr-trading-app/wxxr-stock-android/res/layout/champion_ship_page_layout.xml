@@ -93,8 +93,7 @@
             android:orientation="vertical"
             android:visibility="visible"
             bind:field="TRefreshView"
-            bind:on_BottomRefresh="reloadTRank"
-            bind:on_TopRefresh="reloadTRank" >
+            bind:on_PullRefresh="reloadTRank" >
 
             <ListView
                 android:id="@+id/listView1"
@@ -113,8 +112,7 @@
             android:orientation="vertical"
             android:visibility="invisible"
             bind:field="T1RefreshView"
-            bind:on_BottomRefresh="reloadT1Rank"
-            bind:on_TopRefresh="reloadT1Rank" >
+            bind:on_PullRefresh="reloadT1Rank" >
 
             <ListView
                 android:id="@+id/listView2"
@@ -132,8 +130,7 @@
             android:orientation="vertical"
             android:visibility="invisible"
             bind:field="WeekRefreshView"
-            bind:on_BottomRefresh="reloadWeekRank"
-            bind:on_TopRefresh="reloadWeekRank" >
+            bind:on_PullRefresh="reloadWeekRank" >
 
             <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                 android:id="@+id/listView3"
@@ -151,8 +148,7 @@
             android:orientation="vertical"
             android:visibility="invisible"
             bind:field="RegularRefreshView"
-            bind:on_BottomRefresh="reloadRegularTicketRank"
-            bind:on_TopRefresh="reloadRegularTicketRank" >
+            bind:on_PullRefresh="reloadRegularTicketRank" >
 
             <ListView
                 android:id="@+id/listView4"

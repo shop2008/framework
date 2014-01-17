@@ -79,9 +79,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 bind:field="noticeRefreshView"
-                bind:on_TopRefresh="handleNoticeTopRefresh" 
-                bind:on_BottomRefresh="handleNoticeBottomRefresh"
-                >
+                bind:on_PullRefresh="handleNoticeRefresh" >
 
                 <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                     android:layout_width="match_parent"

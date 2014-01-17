@@ -70,7 +70,7 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical"
 	    bind:field="acctRefreshView"
-	    bind:on_TopRefresh="handleTopRefresh"
+	    bind:on_PullRefresh="handleRefresh"
 	    android:layout_weight="1" >
 		<ListView
 		    android:id="@+id/listView1"

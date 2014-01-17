@@ -17,7 +17,7 @@
             android:layout_below="@id/date_layout"
             android:orientation="vertical"
             bind:field="acctRefreshView"
-            bind:on_TopRefresh="handleTopRefresh" >
+            bind:on_PullRefresh="handleRefresh" >
 
             <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                 style="@style/mListView"

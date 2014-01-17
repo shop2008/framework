@@ -230,12 +230,14 @@ public abstract class TBuyTradingPage extends PageBase implements
 	}
 
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("TBuyTradingPage : handleTopRefresh");
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("TBuyTradingPage : handleTopRefresh");
+			}
+			tradingService.getTradingAccountInfo(acctId);
+			// registerBean("tradingBean", tradingBean);
 		}
-		tradingService.getTradingAccountInfo(acctId);
-		// registerBean("tradingBean", tradingBean);
 		return null;
 	}
 

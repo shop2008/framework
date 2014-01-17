@@ -117,8 +117,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         bind:field="sucRefreshView"
-                        bind:on_BottomRefresh="handleSucBottomRefresh"
-                        bind:on_TopRefresh="handleSucTopRefresh" >
+                        bind:on_PullRefresh="handleSucRefresh" >
 
                         <ListView
                             android:id="@+id/listView1"
@@ -145,8 +144,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         bind:field="allRefreshView"
-                        bind:on_BottomRefresh="handleAllBottomRefresh"
-                        bind:on_TopRefresh="handleAllTopRefresh" >
+                        bind:on_PullRefresh="handleAllRefresh" >
 
                         <ListView
                             android:id="@+id/listView2"
