@@ -110,6 +110,7 @@ public abstract class UserAccountPage extends PageBase {
 				result.setResult("INPUTPSW");
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("type", "UserAccountPage");
+				result.setPayload(map);
 				return result;
 			}
 		}

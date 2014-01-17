@@ -137,19 +137,16 @@ public abstract class UserAuthPage extends PageBase {
 			commandName = "switchBankCard", 
 			description = "To SwitchBanCard UI", 
 			navigations = { 
-					@Navigation(
-							on = "SUCCESS", 
-							showPage = "userSwitchCardPage"
-							) 
+					@Navigation(on="InputPswDialog",showDialog="InputPswDialog")
 					}
 			)
 	CommandResult switchBankCard(InputEvent event) {
 		
 		CommandResult result = new CommandResult();
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("accountName", authBean.getAccountName());
+		map.put("type", "switchBankCard");
 		result.setPayload(map);
-		result.setResult("SUCCESS");
+		result.setResult("InputPswDialog");
 		return result;
 	}
 }

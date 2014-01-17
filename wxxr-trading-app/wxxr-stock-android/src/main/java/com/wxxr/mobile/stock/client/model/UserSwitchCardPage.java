@@ -1,9 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.Map;
 
 import android.os.SystemClock;
-import android.text.TextUtils;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -20,21 +18,24 @@ import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
-import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.model.UseSwitchCardCallBack;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name = "userSwitchCardPage",withToolbar=true, description="更换银行卡")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.switch_bank_card_layout")
-public abstract class UserSwitchCardPage extends PageBase implements
-		IModelUpdater {
+public abstract class UserSwitchCardPage extends PageBase {
 
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
-	@Field(valueKey = "text", binding = "${accountName}")
+	
+	@Bean(type=BindingType.Pojo,express="${usrService.userAuthInfo}")
+	AuthInfo authBean;
+	
+	@Field(valueKey = "text", binding = "${authBean.accountName}")
 	String accountName;
 
 	@Field(valueKey = "text", binding = "${callBack.bankName}")
@@ -95,18 +96,6 @@ public abstract class UserSwitchCardPage extends PageBase implements
 		return null;
 	}
 
-	@Override
-	public void updateModel(Object value) {
-
-		Map<String, String> map = (Map<String, String>) value;
-
-		String accountName = map.get("accountName");
-
-		if (!TextUtils.isEmpty(accountName)) {
-			registerBean("accountName", accountName);
-		}
-	}
-	
 	@OnUIDestroy
 	protected void clearData() {
 		callBack.setBankAddr("");
