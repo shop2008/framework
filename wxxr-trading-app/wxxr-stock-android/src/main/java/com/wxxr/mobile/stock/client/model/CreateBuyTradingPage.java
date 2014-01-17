@@ -37,7 +37,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	static Trace log = Trace.getLogger(CreateBuyTradingPage.class);
 	
 	@Menu(items={"left"})
-	private IMenu toolbar;
+	private IMenu toolbar; 
 	
 	@ViewGroup(viewIds={"readRecord","auditDetail","mnAuditDetail"},defaultViewId="readRecord")
 	private IViewGroup contents;
