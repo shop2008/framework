@@ -438,6 +438,9 @@ public class StockInputKeyboard extends FrameLayout implements OnClickListener, 
 		ll_sn_wheel_kb.setVisibility(View.VISIBLE);
 		wv_sn_middle.setCurrentItem(0);
 		setSnValue();
+		if(mOnStockKeyListener != null) {
+			mOnStockKeyListener.onStockKey(R.id.bt_sn_finish, toCount);
+		}
 		showSNWheel = true;
 	}
 	

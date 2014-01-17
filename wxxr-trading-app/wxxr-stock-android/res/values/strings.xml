@@ -14,7 +14,7 @@
     <string name="javax.validation.constraints.Past.message">must be in the past</string>
     <string name="javax.validation.constraints.Pattern.message">must match "{regexp}"</string>
     <!-- <string name="javax.validation.constraints.Size.message">size must be between {min} and {max}</string> -->
-    <string name="javax.validation.constraints.Size.message">字符长度为{min}~{max}</string>
+    <string name="javax.validation.constraints.Size.message">字符长度{min}~{max}位</string>
     <string name="org.hibernate.validator.constraints.Email.message">not a well-formed email address</string>
     <string name="org.hibernate.validator.constraints.Length.message">length must be between {min} and {max}</string>
     <string name="org.hibernate.validator.constraints.NotBlank.message">may not be empty</string>
