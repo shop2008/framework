@@ -230,9 +230,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	public void pushMessageSetting(boolean on) {
 		SubmitPushMesasgeCommand command=new SubmitPushMesasgeCommand();
 		command.setBinding(on);
+		getMyUserInfo().setMessagePushSettingOn(on);
 		Future<Boolean> future=context.getService(ICommandExecutor.class).submitCommand(command);
 		try {
 			future.get(30,TimeUnit.SECONDS);
+			getMyUserInfo().setMessagePushSettingOn(on);
 		} catch (Exception e) {
 			new StockAppBizException("系统错误");
 		}
@@ -348,6 +350,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				if(vo.getResulttype()!=1){
 					throw new StockAppBizException(vo.getResultInfo());
 				}
+				getMyUserInfo().setBindCard(true);
 			} catch (Exception e) {
 				new StockAppBizException("系统错误");
 			}
@@ -634,6 +637,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			if(vo.getResulttype()!=1){
 				throw new StockAppBizException(vo.getResultInfo());
 			}
+			getMyUserInfo().setNickName(nickName);
 		}catch(StockAppBizException e){//fix bug FECC-2697 
 			throw e;
 		}catch(CommandException e){
@@ -1033,6 +1037,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 							return ((IUserManagementService)holder.getDelegate()).getClientInfo();
 						}
 
+						@Override
+						public boolean verfiy(String userId, String password) {
+							return ((IUserManagementService)holder.getDelegate()).verfiy(userId, password);
+						}
+
 					});
 				}
 				throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1057,9 +1066,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			throw new RuntimeException("SHOULD NOT HAPPEN !");
 		}
 	}
-
-
-
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(ISessionManager.class);
@@ -1069,6 +1075,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	    addRequiredService(IPreferenceManager.class);
 	    addRequiredService(IUserIdentityManager.class);
 	    addRequiredService(IUserLoginManagementService.class);
+	}
+	@Override
+	public boolean verfiy(String userId, String password) {
+		if (getService(IUserIdentityManager.class).getUserId().equals(userId)) {
+			return getMyUserInfo()!=null&&StringUtils.isNotBlank(getMyUserInfo().getPassword())&&getMyUserInfo().getPassword().equals(password);
+		}
+		return false;
 	}
 	
 }

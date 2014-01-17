@@ -35,7 +35,7 @@ public interface IUserManagementService {
 	 */
 	UserBean getUserInfoById(String userId);
 
-
+	boolean verfiy(String userId,String password);
 	 
 
 	/**

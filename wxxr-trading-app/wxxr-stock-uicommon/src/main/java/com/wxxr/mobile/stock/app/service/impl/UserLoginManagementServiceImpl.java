@@ -50,7 +50,10 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 
     private static final String KEY_NICKNAME = "NickName";
     private static final String KEY_PHONENUMBER = "PhoneNumber";
-    private static final String KEY_USERPIC = "UserPic";
+    private static final String KEY_USERPIC = "UserPic";//用户图像
+    private static final String KEY_MSG_SETTTING = "msgSetting";//消息推送设置
+    private static final String KEY_HOME_BGIMG = "homeImg";//背景图片
+    private static final String KEY_BINDCARD = "bindCard";//是否绑定银行卡
     
 	private IPreferenceManager prefManager;
 	private UsernamePasswordCredential usernamePasswordCredential4Login;
@@ -72,7 +75,9 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
     					myUserInfo.setUsername(vo.getUserName());
     					myUserInfo.setPhoneNumber(vo.getMoblie());
     					myUserInfo.setUserPic(vo.getIcon());
-    					saveUserBean(myUserInfo);
+    					saveCookie(userId,pwd);
+    					restoreUserBean(myUserInfo);
+    					myUserInfo.setPassword(pwd);
     					getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGIN));
     					 //根据用户密码登录成功
     	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
@@ -99,6 +104,8 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 				}
 				
 			}
+
+			
 		});
 		if (future != null) {
 			try {
@@ -136,6 +143,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	@Override
 	public synchronized void logout(){
 	   String userId = myUserInfo.getUsername();
+	   saveUserBean(myUserInfo);
 	   myUserInfo=null;
        getPrefManager().putPreference(getModuleName(), new Hashtable<String, String>());
        HttpRpcService httpService = context.getService(HttpRpcService.class);
@@ -147,10 +155,10 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	}
 	
 	private void saveUserBean(UserBean b){
-	    Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+	    Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName()+"_"+b.getUsername());
         if(pref == null){
             pref= new Hashtable<String, String>();
-            getPrefManager().newPreference(getModuleName(), pref);
+            getPrefManager().newPreference(getModuleName()+"_"+b.getUsername(), pref);
         }else{
             pref = DictionaryUtils.clone(pref);
         }
@@ -166,10 +174,22 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
         if (b.getUserPic()!=null){
             pref.put(KEY_USERPIC, b.getUserPic());
         }
+        if (b.getHomeBack()!=null){
+            pref.put(KEY_HOME_BGIMG, b.getHomeBack());
+        }
+        if (b.getMessagePushSettingOn()) {
+        	   pref.put(KEY_MSG_SETTTING, "ON");
+		}
+        if (b.getPassword()!=null) {
+        	 pref.put(KEY_PASSWORD, b.getPassword());
+		}
+        if (b.getBindCard()) {
+        	pref.put(KEY_BINDCARD,"true");
+		}
         getPrefManager().putPreference(getModuleName(), pref);
 
 	}
-	private void restoreUserBean(){
+	private void loadCookie(){
 	    IPreferenceManager mgr = getPrefManager();
         Dictionary<String, String> d = mgr.getPreference(getModuleName());
         String pwd = d != null ? d.get(KEY_PASSWORD) : null;
@@ -181,7 +201,24 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 				log.warn("Failed to login by cookie",e);
 			}
         }
-          
+	}
+	private void restoreUserBean(UserBean user){
+	    IPreferenceManager mgr = getPrefManager();
+	    if (mgr.hasPreference(getModuleName()+"_"+user.getUsername())) {
+	    	  Dictionary<String, String> d = mgr.getPreference(getModuleName()+"_"+user.getUsername());
+	          if (d != null ){
+	        	  user.setUsername(d.get(KEY_USERNAME));
+	        	  user.setNickName(d.get(KEY_NICKNAME));
+	        	  user.setPassword(d.get(KEY_PASSWORD));
+	        	  user.setPhoneNumber(d.get(KEY_PHONENUMBER));
+	        	  user.setUserPic(d.get(KEY_USERPIC));
+	        	  user.setHomeBack(d.get(KEY_HOME_BGIMG));
+	        	  String msg_setting = d.get(KEY_MSG_SETTTING);
+	        	  user.setMessagePushSettingOn("ON".equals(msg_setting));
+	        	  String isBindCard = d.get(KEY_BINDCARD);
+	        	  user.setMessagePushSettingOn("true".equalsIgnoreCase(isBindCard));
+	          }
+		}
 	}
 	
 	protected IPreferenceManager getPrefManager() {
@@ -245,7 +282,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	protected void startService() {		
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
-		restoreUserBean();
+		loadCookie();
 	}
 
 	@Override
@@ -262,5 +299,21 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	@Override
 	public UserBean getMyUserInfo() {
 		return myUserInfo;
+	}
+	private void saveCookie(String userId, String pwd) {
+		  Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+	        if(pref == null){
+	            pref= new Hashtable<String, String>();
+	            getPrefManager().newPreference(getModuleName(), pref);
+	        }else{
+	            pref = DictionaryUtils.clone(pref);
+	        }
+	        if (userId!=null){
+	            pref.put(KEY_NICKNAME, userId);
+	        }
+	        if (pwd!=null){
+	            pref.put(KEY_USERNAME, pwd);
+	        }
+	        getPrefManager().putPreference(getModuleName(), pref);
 	}
 }
