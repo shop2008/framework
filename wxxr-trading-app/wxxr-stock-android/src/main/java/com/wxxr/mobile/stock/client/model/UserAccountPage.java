@@ -2,6 +2,9 @@ package com.wxxr.mobile.stock.client.model;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -14,6 +17,7 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -86,20 +90,27 @@ public abstract class UserAccountPage extends PageBase {
 					@Navigation(on="WITHDRAW", showPage="userWithDrawCashPage"),
 					@Navigation(
 							on="ALERTBIND", 
-							showDialog="messageBox", message="尚未绑定银行卡，是否现在绑定?",params={
+							message="尚未绑定银行卡，是否现在绑定?",params={
 						    @Parameter(name="title", value="提示"),
 						    @Parameter(name="onOK", value="leftOk"),
 						    @Parameter(name="onCanceled", value="否")
-						    })
+						    }, closeCurrentView=true),
+						   @Navigation(on="INPUTPSW", showDialog="InputPswDialog")
 					}
 			)
-	String drawCash(InputEvent event) {
+	CommandResult drawCash(InputEvent event) {
 		
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			
+			CommandResult result = new CommandResult();
 			if (authBean == null) {
-				return "ALERTBIND";
+				result.setResult("ALERTBIND");
+				return result;
 			} else {
-				return "WITHDRAW";
+				result.setResult("INPUTPSW");
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("type", "UserAccountPage");
+				return result;
 			}
 		}
 		return null;
