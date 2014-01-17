@@ -234,7 +234,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		Future<Boolean> future=context.getService(ICommandExecutor.class).submitCommand(command);
 		try {
 			future.get(30,TimeUnit.SECONDS);
-			getMyUserInfo().setMessagePushSettingOn(on);
+			getMyUserInfo().setMessagePushSettingOn(on);//fix bug FECC-2713
 		} catch (Exception e) {
 			new StockAppBizException("系统错误");
 		}
@@ -246,6 +246,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
 		try {
 			SimpleResultVo result=future.get(30,TimeUnit.SECONDS);
+			getMyUserInfo().setMessagePushSettingOn(result.getResult()==1);
 			return result.getResult()==1;
 		} catch (Exception e) {
 			new StockAppBizException("系统错误");
@@ -292,6 +293,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			if(vo.getResulttype()!=1){
 				throw new StockAppBizException(vo.getResultInfo());
 			}
+			getMyUserInfo().setPassword(newPwd);
 		}catch(StockAppBizException e){
 			throw e;
 		}catch(CommandException e){
