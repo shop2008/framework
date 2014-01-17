@@ -6,6 +6,7 @@ package com.wxxr.mobile.stock.app.common;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -162,7 +163,11 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	 * @return the reloadParameters
 	 */
 	public Map<String, Object> getReloadParameters() {
-		return reloadParameters;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("start", 0);
+		params.put("limit", 20);
+		return params;
 	}
 	/**
 	 * @param reloadParameters the reloadParameters to set
