@@ -26,16 +26,11 @@ public class PageSwiperView extends LinearLayout  {
 	private LinearLayout paginationLayout; //分页布局
 	private View[] paginationImgView; //分页图片
 	private Context mContext;
-//	private ImageSwiperViewGroup swiperViewGroup;
 	private ViewPager swiperPager;
 	private int mViewCount = 0;
 	private List<View> viewList = null;
 	private boolean showPagination = true;
 	private DataSetObserver observer = new DataSetObserver() {
-
-		/* (non-Javadoc)
-		 * @see android.database.DataSetObserver#onChanged()
-		 */
 		@Override
 		public void onChanged() {
 			if(log.isDebugEnabled()){
@@ -43,10 +38,6 @@ public class PageSwiperView extends LinearLayout  {
 			}
 			bindImageList();
 		}
-
-		/* (non-Javadoc)
-		 * @see android.database.DataSetObserver#onInvalidated()
-		 */
 		@Override
 		public void onInvalidated() {
 			if(log.isDebugEnabled()){
@@ -68,19 +59,8 @@ public class PageSwiperView extends LinearLayout  {
 		super(context, attrs);
 		this.mContext = context;
 		init();
-		initStyle(attrs);
 	}
 
-	/**
-	 * 初始化样式
-	 * */
-	private void initStyle(AttributeSet attrs){
-//		TypedArray arrs = mContext.obtainStyledAttributes(attrs, R.styleable.ImageSwiper);
-//		titleTextColor = arrs.getColor(R.styleable.ImageSwiper_swiperTitleTextColor, Color.parseColor("#FFFFFF"));
-//		titleBackgroundColor = arrs.getColor(R.styleable.ImageSwiper_swiperTitleBackgroundColor, Color.parseColor("#000000"));
-//		textSize = arrs.getFloat(R.styleable.ImageSwiper_swiperTitleFontSize, 12.0f);
-	}
-	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
