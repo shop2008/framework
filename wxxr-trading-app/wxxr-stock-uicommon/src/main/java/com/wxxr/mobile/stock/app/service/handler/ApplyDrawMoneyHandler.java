@@ -59,7 +59,7 @@ public class ApplyDrawMoneyHandler implements ICommandHandler {
 			if(amount<=0){
 				throw new CommandException("提取金额必须大于0");
 			}
-			if (amount%10000==0) {
+			if (amount%10000!=0) {
 				throw new CommandException("提取金额必须为100整数倍");
 			}
 		}
