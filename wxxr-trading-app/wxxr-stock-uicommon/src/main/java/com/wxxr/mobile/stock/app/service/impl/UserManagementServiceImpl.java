@@ -3,7 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +30,6 @@ import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
-import com.wxxr.mobile.stock.app.bean.ScoreBean;
-import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
-import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserAttributeBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -43,7 +39,6 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -642,8 +637,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		command.setId(read);
 		try{
 			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			future.get(30,TimeUnit.SECONDS);
 		}catch(Throwable e){
-			log.warn("updatToken error",e);
+			log.warn("readRemindMessage",e);
 		}
 	}
 
@@ -675,7 +671,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		try{
 			context.getService(ICommandExecutor.class).submitCommand(command);
 		}catch(Throwable e){
-			log.warn("updatToken error",e);
+			log.warn("readAllUnremindMessage error",e);
 		}
 	}
 	
@@ -700,7 +696,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
 			future.get(30,TimeUnit.SECONDS);
 		}catch(Throwable e){
-			log.warn("updatToken error",e);
+			log.warn("readPullMesage error",e);
 		}
 	}
 
