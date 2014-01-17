@@ -79,10 +79,10 @@ public abstract class UserIncomDetailPage extends PageBase {
 			int completeSize = 0;
 			if (gainPayDetailListBean != null)
 				completeSize = gainPayDetailListBean.getData().size();
-			start += completeSize;
+			//start = completeSize;
 
 			if (usrService != null) {
-				usrService.getGPDetails(start, limit);
+				usrService.getGPDetails(completeSize, limit);
 			}
 		}
 		return null;
