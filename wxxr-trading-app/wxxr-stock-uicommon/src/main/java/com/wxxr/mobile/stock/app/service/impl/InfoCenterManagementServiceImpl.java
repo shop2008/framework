@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -148,6 +148,12 @@ public class InfoCenterManagementServiceImpl extends
 	}
 
 	// ====================interface methods =====================
+	private Comparator<StockBaseInfo> c = new Comparator<StockBaseInfo>() {
+		@Override
+		public int compare(StockBaseInfo o1, StockBaseInfo o2) {
+			return o1.getCode().compareTo(o2.getCode());
+		}
+	};
 	@Override
 	public SearchStockListBean searchStock(final String keyword) {
 		List<StockBaseInfo> ret = getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
@@ -155,10 +161,10 @@ public class InfoCenterManagementServiceImpl extends
 				if (StringUtils.isBlank(keyword)) {
 					return false;
 				}
-				return (entity.getType()==1||entity.getType()==2)&&(entity.getAbbr().startsWith(keyword)||entity.getCode().startsWith(keyword));
+				return (entity.getType()==1||entity.getType()==2)&&(entity.getCode().startsWith(keyword)||entity.getAbbr().toUpperCase().contains(keyword.toUpperCase()));
 			}
 		});
-		
+		Collections.sort(ret, c);
 		stockListbean.setSearchResult(ret);
 		return this.stockListbean;
 	}
