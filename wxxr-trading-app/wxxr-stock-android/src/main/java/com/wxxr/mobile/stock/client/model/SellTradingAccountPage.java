@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -32,6 +33,8 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
+import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -87,6 +90,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	/** 交易盘编号*/
 	private long id;
 	
+	@Bean
+	boolean enabled;
+	
 	/**买入日期  */
 	@Field(valueKey="text",binding="${tradingAccount!=null?(tradingAccount.buyDay==0?'-1':tradingAccount.buyDay):'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;  
@@ -96,22 +102,22 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	String sellDay;  
 	
 	/**交易订单列表*/
-	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}")
+	@Field(valueKey="options",binding="${tradingAccount!=null?tradingAccount.tradingOrders:null}",enableWhen="${tradingAccount.over!='CLEARING'}")
 	List<StockTradingOrderBean> stockTradingOrder;
 	/**交易订单
 	 * 为空：按钮不可用
 	 * 非空：按钮可用
 	 * */
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
 	boolean isRedSellBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING'&& enabled_view)}")
 	boolean isRedCleanBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
 	boolean isBlueSellBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null&&tradingAccount.tradingOrders.size()>0)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
 	boolean isBlueCleanBtn;
 	
 	@Field(valueKey="enabled",enableWhen="${virtual}")
@@ -170,7 +176,13 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 			getAppToolbar().setTitle("挑战交易盘", null);
 		}
 		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
+		
+		if( tradingAccount != null && tradingAccount.getTradingOrders() != null && tradingAccount.getTradingOrders().size()>0){
+			enabled_view = true;
+		}
+		registerBean("enabled_view", enabled_view);
 	}
+	
 	
 	@Override
 	public void onEvent(IBroadcastEvent event) {
@@ -380,6 +392,14 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		}
 		return null;
 	}
+	
+	@Bean
+	boolean enabled_view;
+	
+	
+	
+	
+	
 	/**
 	 * 清算交易盘
 	 * @param acctID - 交易盘Id
@@ -392,14 +412,29 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	String handlerClearClick(InputEvent event) {
 		return "";
 	}
+	
+//	@Command(uiItems=@UIItem(id="leftcancel",label="取消",icon="resourceId:drawable/home"))
+//	String cancelHandler(InputEvent event){
+//		enabled_view = true;
+//	    registerBean("enabled_view", enabled_view);
+//	    return null;
+//	}	
 
 	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"))
 	String clearTradingAccount(InputEvent event){
+		enabled_view = false;
+	    registerBean("enabled_view", enabled_view);
 		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
 		if(v != null)
 			v.hide();
 		if(tradingService!=null && accid!=null){
-			tradingService.clearTradingAccount(accid);
+			try{
+				tradingService.clearTradingAccount(accid);
+			}catch(Exception e){
+				enabled_view = true;
+			    registerBean("enabled_view", enabled_view);
+			}
+			
 		}
 		return null;
 	}	
