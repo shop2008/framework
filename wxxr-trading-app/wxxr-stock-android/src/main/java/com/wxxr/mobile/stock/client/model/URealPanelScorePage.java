@@ -14,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
   import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -30,6 +31,8 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.getData(true):null}", upateAsync=true)
 	List<GainPayDetailBean> actualScores;
 	
+	
+	DataField<List> actualScoresField;
 	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
 	BindableListWrapper<GainPayDetailBean> voucherDetailsBean;
 	
@@ -86,10 +89,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		
-		if(tradingService != null) {
-			tradingService.getGainPayDetailDetails(0, limit);
-		}
+		actualScoresField.getDomainModel().doEvaluate();
 		return null;
 	}
 }
