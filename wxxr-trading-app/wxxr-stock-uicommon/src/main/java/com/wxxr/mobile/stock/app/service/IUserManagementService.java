@@ -63,23 +63,7 @@ public interface IUserManagementService {
  	 */
 	boolean getPushMessageSetting();
 	
-	/**
-	 * 设置是否阅读了注册规则，如果未阅读不准注册，阅读后才可以注册
-	 * @param isRead
-	 * 		true 已阅读了注册规则
-	 * 		false 未阅读注册规则
-	 */
-	void setRegRulesReaded(boolean isRead);
-	
-	
-
-
-	
-	ScoreInfoBean fetchUserScoreInfo(String userId);
-	
-	
 	void switchBankCard(String bankName, String bankAddr,String bankNum);
-	
 	/**
 	 * 提现认证
 	 * @param accountName 用户名
@@ -98,22 +82,6 @@ public interface IUserManagementService {
 	 */
 	AuthInfo getUserAuthInfo();
 	
-	
-	
-	
-	/**
-	 * 获取当前用户的实盘积分明细
-	 * @return 
-	 * 		如果有记录返回记录信息，否则返回空
-	 */
-	ScoreInfoBean getMyUserScoreInfo();
-	
-	/**
-	 * 获取当前用户余额明细
-	 * @return 
-	 * 		如果有记录返回记录信息，否则返回空
-	 */	
-	TradeDetailListBean getMyTradeDetailInfo();
 	/**
 	 * 获取他人主页
 	 * @param userId
