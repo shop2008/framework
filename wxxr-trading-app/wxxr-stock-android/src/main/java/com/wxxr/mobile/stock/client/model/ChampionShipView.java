@@ -124,12 +124,14 @@ public abstract class ChampionShipView extends ViewBase {
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadTRank(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleTMegaTopRefresh");
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("ChampionShipView : handleTMegaTopRefresh");
+			}
+			this.currentViewId = 1;
+			registerBean("currentViewId", this.currentViewId);
+			tradingMgr.reloadTMegagameRank(true);
 		}
-		this.currentViewId = 1;
-		registerBean("currentViewId", this.currentViewId);
-		tradingMgr.reloadTMegagameRank(true);
 		return null;
 	}
 
@@ -139,12 +141,14 @@ public abstract class ChampionShipView extends ViewBase {
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadT1Rank(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleTMega1TopRefresh");
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("ChampionShipView : handleTMega1TopRefresh");
+			}
+			this.currentViewId = 2;
+			registerBean("currentViewId", this.currentViewId);
+			tradingMgr.reloadT1MegagameRank(true);
 		}
-		this.currentViewId = 2;
-		registerBean("currentViewId", this.currentViewId);
-		tradingMgr.reloadT1MegagameRank(true);
 		return null;
 	}
 
@@ -154,12 +158,14 @@ public abstract class ChampionShipView extends ViewBase {
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadWeekRank(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleWeekTopRefresh");
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("ChampionShipView : handleWeekTopRefresh");
+			}
+			this.currentViewId = 3;
+			registerBean("currentViewId", this.currentViewId);
+			tradingMgr.reloadWeekRank(true);
 		}
-		this.currentViewId = 3;
-		registerBean("currentViewId", this.currentViewId);
-		tradingMgr.reloadWeekRank(true);
 		return null;
 	}
 
@@ -169,12 +175,14 @@ public abstract class ChampionShipView extends ViewBase {
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
 	String reloadRegularTicketRank(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("ChampionShipView : handleRegularTicketTopRefresh");
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("ChampionShipView : handleRegularTicketTopRefresh");
+			}
+			this.currentViewId = 4;
+			registerBean("currentViewId", this.currentViewId);
+			tradingMgr.reloadRegularTicketRank(true);
 		}
-		this.currentViewId = 4;
-		registerBean("currentViewId", this.currentViewId);
-		tradingMgr.reloadRegularTicketRank(true);
 		return null;
 	}
 

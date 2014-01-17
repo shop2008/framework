@@ -273,12 +273,14 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	}
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("sellTradingAccount : handleTMegaTopRefresh");
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("sellTradingAccount : getTradingAccountInfo");
+			}
+			if(accid!=null)
+			tradingService.getTradingAccountInfo(accid);
 		}
-		if(accid!=null)
-		tradingService.getTradingAccountInfo(accid);
 		return null;
 	}
 	

@@ -228,7 +228,7 @@ public abstract class InfoCenterView extends ViewBase {
 	String acctRefreshView;
 	
 	@Command
-	String handleTopRefresh(InputEvent event){
+	String handleRefresh(InputEvent event){
 		if(event.getEventType().equals("TopRefresh")){
 			this.infoCenterService.getStockQuotation("000001","SH");
 			this.infoCenterService.getStockQuotation("399001","SZ");
@@ -241,11 +241,11 @@ public abstract class InfoCenterView extends ViewBase {
 		return null;
 	}
 	
-	@Command
-	String handleBottomRefresh(InputEvent event){
-		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 10);
-		return null;
-	}
+//	@Command
+//	String handleBottomRefresh(InputEvent event){
+//		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 10);
+//		return null;
+//	}
 	
 	/**
 	 * 点击列表跳转个股界面

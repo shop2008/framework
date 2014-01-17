@@ -57,7 +57,7 @@ public abstract class URealPanelScorePage extends PageBase{
 	}
 	
 	@Command
-	String refreshTopData(InputEvent event) {
+	String refreshData(InputEvent event) {
 		
 		if(event.getEventType().equals("TopRefresh")) {
 			if(tradingService != null) {
@@ -75,17 +75,17 @@ public abstract class URealPanelScorePage extends PageBase{
 		return null;
 	}
 	
-	@Command
-	String refreshBottomData(InputEvent event) {
-		int completeSize = 0;
-		if(voucherDetailsBean != null)
-			completeSize = voucherDetailsBean.getData().size();
-		start = completeSize;
-		if(tradingService != null) {
-			tradingService.getGainPayDetailDetails(start, limit);
-		}
-		return null;
-	}
+//	@Command
+//	String refreshBottomData(InputEvent event) {
+//		int completeSize = 0;
+//		if(voucherDetailsBean != null)
+//			completeSize = voucherDetailsBean.getData().size();
+//		start = completeSize;
+//		if(tradingService != null) {
+//			tradingService.getGainPayDetailDetails(start, limit);
+//		}
+//		return null;
+//	}
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {

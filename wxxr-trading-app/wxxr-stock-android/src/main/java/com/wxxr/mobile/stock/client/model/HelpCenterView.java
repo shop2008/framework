@@ -46,8 +46,10 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	String acctRefreshView;
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		articleService.getHelpArticles(0, 10);
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			articleService.getHelpArticles(0, 10);
+		}
 		return null;
 	}	
 	

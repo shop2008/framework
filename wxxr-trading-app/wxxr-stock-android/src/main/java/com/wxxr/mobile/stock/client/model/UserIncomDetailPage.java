@@ -64,9 +64,9 @@ public abstract class UserIncomDetailPage extends PageBase {
 		return null;
 	}
 
-	/** 处理下拉刷新 */
+	/** 处理刷新 */
 	@Command
-	String handleTopRefresh(InputEvent event) {
+	String handleRefresh(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("UserIncomDetailPage : handleTopRefresh");
 		}
@@ -90,22 +90,22 @@ public abstract class UserIncomDetailPage extends PageBase {
 	}
 
 	/** 处理上拉刷新 */
-	@Command
-	String handleBottomRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("UserIncomDetailPage : handleBottomRefresh");
-		}
-
-		int completeSize = 0;
-		if (gainPayDetailListBean != null)
-			completeSize = gainPayDetailListBean.getData().size();
-		start += completeSize;
-
-		if (usrService != null) {
-			usrService.getGPDetails(start, limit);
-		}
-		return null;
-	}
+//	@Command
+//	String handleBottomRefresh(InputEvent event) {
+//		if (log.isDebugEnabled()) {
+//			log.debug("UserIncomDetailPage : handleBottomRefresh");
+//		}
+//
+//		int completeSize = 0;
+//		if (gainPayDetailListBean != null)
+//			completeSize = gainPayDetailListBean.getData().size();
+//		start += completeSize;
+//
+//		if (usrService != null) {
+//			usrService.getGPDetails(start, limit);
+//		}
+//		return null;
+//	}
 
 	@Command
 	String handlerReTryClicked(InputEvent event) {

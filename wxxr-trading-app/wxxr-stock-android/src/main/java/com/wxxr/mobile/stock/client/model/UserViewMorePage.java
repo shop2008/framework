@@ -232,7 +232,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	}
 
 	@Command
-	String handleActualTopRefresh(InputEvent event) {
+	String handleActualRefresh(InputEvent event) {
 			
 		if(event.getEventType().equals("TopRefresh")) {
 			if (usrService != null) {
@@ -253,34 +253,34 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	
 
-	@Command
-	String handleVirtualBottomRefresh(InputEvent event) {
-		
-		int completeSize = 0;
-		if(myJoinListBean != null)
-			completeSize = myJoinListBean.getData().size();
-		myHomeVStart += completeSize;
-		if(usrService != null) {
-			usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true);
-		}
-		return null;
-	}
+//	@Command
+//	String handleVirtualBottomRefresh(InputEvent event) {
+//		
+//		int completeSize = 0;
+//		if(myJoinListBean != null)
+//			completeSize = myJoinListBean.getData().size();
+//		myHomeVStart += completeSize;
+//		if(usrService != null) {
+//			usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true);
+//		}
+//		return null;
+//	}
 	
 	
-	@Command
-	String handleActualBottomRefresh(InputEvent event) {
-		int completeSize = 0;
-		if(myChallengeListBean != null)
-			completeSize = myChallengeListBean.getData().size();
-		myHomeAStart += completeSize;
-		if(usrService != null) {
-			usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
-		}
-		return null;
-	}
+//	@Command
+//	String handleActualBottomRefresh(InputEvent event) {
+//		int completeSize = 0;
+//		if(myChallengeListBean != null)
+//			completeSize = myChallengeListBean.getData().size();
+//		myHomeAStart += completeSize;
+//		if(usrService != null) {
+//			usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
+//		}
+//		return null;
+//	}
 
 	@Command
-	String handleVirtualTopRefresh(InputEvent event) {
+	String handleVirtualRefresh(InputEvent event) {
 			if (event.getEventType().equals("TopRefresh")) {
 				// 用户自己的挑战交易记录
 				if (usrService != null) {

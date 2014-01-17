@@ -206,7 +206,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	@Command
-	String handleSucTopRefresh(InputEvent event) {
+	String handleSucRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showSucRecords(event);
 		} else if(event.getEventType().equals("BottomRefresh")) {
@@ -222,7 +222,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	@Command
-	String handleAllTopRefresh(InputEvent event) {
+	String handleAllRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showAllRecords(event);
 		} else if(event.getEventType().equals("BottomRefresh")) {
@@ -237,30 +237,30 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	@Command
-	String handleSucBottomRefresh(InputEvent event) {
-		
-		int completeSize = 0;
-		if(successTradeAccountListBean != null)
-			completeSize = successTradeAccountListBean.getData().size();
-		sucStart += completeSize;
-		if(tradingService != null) {
-			tradingService.getGain(sucStart, sucLimit);
-		}
-		return null;
-	}
+//	@Command
+//	String handleSucBottomRefresh(InputEvent event) {
+//		
+//		int completeSize = 0;
+//		if(successTradeAccountListBean != null)
+//			completeSize = successTradeAccountListBean.getData().size();
+//		sucStart += completeSize;
+//		if(tradingService != null) {
+//			tradingService.getGain(sucStart, sucLimit);
+//		}
+//		return null;
+//	}
 	
-	@Command
-	String handleAllBottomRefresh(InputEvent event) {
-		int completeSize = 0;
-		if(allTradeAccountListBean != null)
-			completeSize = allTradeAccountListBean.getData().size();
-		allStart += completeSize;
-		if(tradingService != null) {
-			tradingService.getGain(allStart, allLimit);
-		}
-		return null;
-	}
+//	@Command
+//	String handleAllBottomRefresh(InputEvent event) {
+//		int completeSize = 0;
+//		if(allTradeAccountListBean != null)
+//			completeSize = allTradeAccountListBean.getData().size();
+//		allStart += completeSize;
+//		if(tradingService != null) {
+//			tradingService.getGain(allStart, allLimit);
+//		}
+//		return null;
+//	}
 	
 	@Command
 	String handleRetryClick(InputEvent event) {

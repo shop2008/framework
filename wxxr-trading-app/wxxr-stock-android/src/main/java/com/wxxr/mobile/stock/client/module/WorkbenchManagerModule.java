@@ -87,8 +87,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 
 	@Override
 	protected void initEventBinders(IEventBinderManager mgr) {
-		mgr.registerFieldBinder("TopRefresh", new RefreshEventBinder());
-		mgr.registerFieldBinder("BottomRefresh", new RefreshEventBinder());
+		mgr.registerFieldBinder("PullRefresh", new RefreshEventBinder());
 		mgr.registerFieldBinder(InputEvent.EVENT_TYPE_TEXT_CHANGED, new TextChangedEventBinder());
 		mgr.registerFieldBinder("SelCallBack", new IViewPagerSelEventBinder());
 		mgr.registerFieldBinder("SpinnerItemSelected", new SpinnerItemClickEventBinder());

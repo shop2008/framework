@@ -120,9 +120,8 @@ public abstract class UserNewsPage extends PageBase {
 	}
 
 	@Command
-	String handleNoticeTopRefresh(InputEvent event) {
+	String handleNoticeRefresh(InputEvent event) {
 		if (event.getEventType().equals("TopRefresh")) {
-
 			showInfoNotices(event);
 		} else if (event.getEventType().equals("BottomRefresh")) {
 			int completeLoadSize = 0;
@@ -135,17 +134,17 @@ public abstract class UserNewsPage extends PageBase {
 		return null;
 	}
 
-	@Command
-	String handleNoticeBottomRefresh(InputEvent event) {
-		int completeLoadSize = 0;
-		if (infoNoticeListBean != null)
-			completeLoadSize += infoNoticeListBean.getData().size();
-		start += completeLoadSize;
-		if (usrService != null) {
-			usrService.getPullMessageBean(start, limit);
-		}
-		return null;
-	}
+//	@Command
+//	String handleNoticeBottomRefresh(InputEvent event) {
+//		int completeLoadSize = 0;
+//		if (infoNoticeListBean != null)
+//			completeLoadSize += infoNoticeListBean.getData().size();
+//		start += completeLoadSize;
+//		if (usrService != null) {
+//			usrService.getPullMessageBean(start, limit);
+//		}
+//		return null;
+//	}
 
 	@Command(navigations = { @Navigation(on = "*", showPage = "webPage") })
 	CommandResult handleNoticesItemClick(InputEvent event) {

@@ -171,12 +171,14 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	String acctRefreshView;
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("SZzhiShuPage : handleTMegaTopRefresh");
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("SZzhiShuPage : getStockQuotation");
+			}
+			this.infoCenterService.getStockQuotation(this.stockCode, this.stockMarket);
+			updateSelection(new StockSelection(stockBean.getMarket(),stockBean.getCode(),this.stockName));
 		}
-		this.infoCenterService.getStockQuotation(this.stockCode, this.stockMarket);
-		updateSelection(new StockSelection(stockBean.getMarket(),stockBean.getCode(),this.stockName));
 		return null;
 	}	
 	@Command

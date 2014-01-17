@@ -100,12 +100,14 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	String acctRefreshView;
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("GeGuStockPage : handleTMegaTopRefresh");
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("GeGuStockPage : getStockQuotation");
+			}
+			this.infoCenterService.getStockQuotation(codeValue,marketCode);
+			updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), stockName));
 		}
-		this.infoCenterService.getStockQuotation(codeValue,marketCode);
-		updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), stockName));
 		return null;
 	}	
 	

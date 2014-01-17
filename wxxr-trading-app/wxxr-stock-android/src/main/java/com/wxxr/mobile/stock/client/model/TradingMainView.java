@@ -75,12 +75,14 @@ public abstract class TradingMainView extends ViewBase{
 	
 	
 	@Command
-	String handleTopRefresh(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("TradingMainView : handleTMegaTopRefresh");
+	String handleRefresh(InputEvent event) {
+		if("TopRefresh".equals(event.getEventType())) {
+			if (log.isDebugEnabled()) {
+				log.debug("TradingMainView : getHomeArticles");
+			}
+			this.articleService.getHomeArticles(0, 4);
+			this.tradingService.getAllTradingAccountList();
 		}
-		this.articleService.getHomeArticles(0, 4);
-		this.tradingService.getAllTradingAccountList();
 		return null;
 	}	
 	
