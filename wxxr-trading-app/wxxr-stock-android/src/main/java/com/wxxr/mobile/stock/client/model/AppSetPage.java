@@ -26,7 +26,7 @@ import com.wxxr.mobile.stock.client.service.IGenericContentService;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.setting_page_layout")
 public abstract class AppSetPage extends PageBase {
 
-	@Field(valueKey="checked", binding="${pushEnabledFlag}", visibleWhen="${user!=null?true:false}")
+	@Field(valueKey="checked", binding="${user!=null?user.messagePushSettingOn:false}", visibleWhen="${user!=null?true:false}")
 	boolean pushEnabled;
 	
 	@Field(valueKey="visible", binding="${user!=null?false:true}")
@@ -125,12 +125,14 @@ public abstract class AppSetPage extends PageBase {
 			if (user == null) {
 				return "*";
 			}
-			pushEnabledFlag = usrService.getPushMessageSetting();
-			usrService.pushMessageSetting(!pushEnabledFlag);
+			//pushEnabledFlag = usrService.getPushMessageSetting();
+			//usrService.pushMessageSetting(!pushEnabledFlag);
 			
 			
 			pushEnabledFlag = !pushEnabledFlag;
-			
+			if(user != null) {
+				user.setMessagePushSettingOn(pushEnabledFlag);
+			}
 			registerBean("pushEnabledFlag", pushEnabledFlag);
 		}
 		return null;
