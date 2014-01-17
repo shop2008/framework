@@ -81,7 +81,7 @@ public abstract class TradingMainView extends ViewBase{
 				log.debug("TradingMainView : getHomeArticles");
 			}
 			this.articleService.getHomeArticles(0, 4);
-			this.tradingService.getAllTradingAccountList();
+			this.tradingService.getSyncAllTradingAccountList();
 		}
 		return null;
 	}	

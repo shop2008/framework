@@ -96,16 +96,20 @@ public abstract class UserNewsPage extends PageBase {
 
 	@Command
 	String showInfoNotices(InputEvent event) {
+		getNotices(false);
+		return null;
+	}
+
+	void getNotices(boolean wait4Finish) {
 		curItemId = 1;
 		registerBean("curItemId", curItemId);
 
 		if (usrService != null) {
 			usrService.getPullMessageBean(0, infoNoticeListBean.getData()
-					.size());
+					.size(), wait4Finish);
 		}
-		return null;
 	}
-
+	
 	@Command
 	String showAccountTrades(InputEvent event) {
 		curItemId = 0;
@@ -122,13 +126,13 @@ public abstract class UserNewsPage extends PageBase {
 	@Command
 	String handleNoticeRefresh(InputEvent event) {
 		if (event.getEventType().equals("TopRefresh")) {
-			showInfoNotices(event);
+			getNotices(true);
 		} else if (event.getEventType().equals("BottomRefresh")) {
 			int completeLoadSize = 0;
 			if (infoNoticeListBean != null)
 				completeLoadSize += infoNoticeListBean.getData().size();
 			if (usrService != null) {
-				usrService.getPullMessageBean(completeLoadSize, limit);
+				usrService.getPullMessageBean(completeLoadSize, limit, true);
 			}
 		}
 		return null;

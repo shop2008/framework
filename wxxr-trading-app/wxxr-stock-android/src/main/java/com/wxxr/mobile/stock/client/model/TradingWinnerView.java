@@ -50,11 +50,11 @@ public abstract class TradingWinnerView extends ViewBase {
 	String handleRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")){
 			this.start = 0;
-			this.service.getEarnRank(0,20);
+			this.service.getEarnRank(0,20,true);
 		}else if(event.getEventType().equals("BottomRefresh")){
 			if(rankBean!=null && rankBean.getData()!=null){
 				this.start = rankBean.getData().size();
-				this.service.getEarnRank(start,20); 
+				this.service.getEarnRank(start,20,true); 
 			}
 		}
 		return null;

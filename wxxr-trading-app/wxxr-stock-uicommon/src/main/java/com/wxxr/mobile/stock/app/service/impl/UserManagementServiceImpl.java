@@ -398,7 +398,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         return personalHomePageBean_cache.getEntity(key);
 	}
 	BindableListWrapper<GainBean> myGainBeans;
-    public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
+	public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
+		return getMorePersonalRecords(start, limit, virtual, false);
+	}
+	
+    public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual, boolean wait4Finish) {
     	if (gainBean_cache==null) {
     		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
 		}
@@ -417,7 +421,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
       p.put("virtual", virtual);
       p.put("start", start);
       p.put("limit", limit);
-      gainBean_cache.forceReload(p,false);
+      if(wait4Finish) {
+    	  gainBean_cache.forceReload(p,wait4Finish);
+      } else {
+    	  gainBean_cache.forceReload(p,false);
+      }
       gainBean_cache.setCommandParameters(p);
       myGainBeans.setReloadParameters(p);
      return myGainBeans;
@@ -521,12 +529,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		remindMessagesCache.doReloadIfNeccessay();
 		return remindMessages;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPullMessageBean()
 	 */
 	@Override
 	public BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit) {
+		return getPullMessageBean(start, limit, false);
+	}
+	
+	public BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit, boolean wait4Finish) {
 		Map<String, Object> params=new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
@@ -544,8 +556,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				
 			});
 		}
-
-		pullMessagesCache.doReloadIfNeccessay(params);
+		if(wait4Finish) {
+			pullMessagesCache.forceReload(params, wait4Finish);
+		} else {
+			pullMessagesCache.doReloadIfNeccessay(params);
+		}
 		return pullMessages;
 	}
 
@@ -561,8 +576,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		}
 	};
 	
-    @Override
+	@Override
     public BindableListWrapper<GainPayDetailBean> getGPDetails(int start, int limit) {
+		return getGPDetails(start, limit, false);
+	}
+
+	public BindableListWrapper<GainPayDetailBean> getGPDetails(int start, int limit, boolean wait4Finish) {
     	if(gainPayDetail_cache==null){
             gainPayDetail_cache=new GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO>("gainPayDetailBean");
         }
@@ -574,7 +593,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         params.put("start", start);
         params.put("limit", limit);
         gainPayDetail_cache.setCommandParameters(params);
-        gainPayDetail_cache.doReloadIfNeccessay(params);
+        if(wait4Finish) {
+        	gainPayDetail_cache.forceReload(params, wait4Finish);
+        } else {
+        	gainPayDetail_cache.doReloadIfNeccessay(params);
+        }
         gainPayDetails.setReloadParameters(params);
         return gainPayDetails;
     }
@@ -839,6 +862,20 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						}
 
 						/**
+						 * @param start
+						 * @param limit
+						 * @param virtual
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMorePersonalRecords(int, int, boolean)
+						 */
+						public BindableListWrapper<GainBean> getMorePersonalRecords(
+								int start, int limit, boolean virtual, boolean wait4Finish) {
+							return ((IUserManagementService)holder.getDelegate()).getMorePersonalRecords(start,
+									limit, virtual, wait4Finish);
+						}
+						
+						/**
 						 * @param userId
 						 * @param start
 						 * @param limit
@@ -888,6 +925,19 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 							return ((IUserManagementService)holder.getDelegate()).getPullMessageBean(start, limit);
 						}
 
+						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPullMessageBean(int, int)
+						 */
+						public BindableListWrapper<PullMessageBean> getPullMessageBean(
+								int start, int limit, boolean wait4Finish) {
+							return ((IUserManagementService)holder.getDelegate()).getPullMessageBean(start, limit, wait4Finish);
+						}
+
+						
 						/**
 						 * @param nickName
 						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#updateNickName(java.lang.String)

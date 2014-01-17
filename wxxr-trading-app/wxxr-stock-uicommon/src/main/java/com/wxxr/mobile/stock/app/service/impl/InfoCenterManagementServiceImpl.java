@@ -285,7 +285,7 @@ public class InfoCenterManagementServiceImpl extends
             stockQuotationBean_cache.putEntity(mc,b);
             this.stockQuotationBean_cache.forceReload(params,true);
         }else{
-        	this.stockQuotationBean_cache.doReloadIfNeccessay(params);
+        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
         }
         return stockQuotationBean_cache.getEntity(mc);
     }

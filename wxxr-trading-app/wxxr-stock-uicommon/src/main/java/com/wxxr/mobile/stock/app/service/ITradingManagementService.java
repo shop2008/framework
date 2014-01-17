@@ -33,6 +33,8 @@ public interface ITradingManagementService {
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList();
     
     public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList();
+    
+    public BindableListWrapper<TradingAccInfoBean> getSyncAllTradingAccountList();
 	/**
 	 * 获取当前用户全部交易盘记录
 	 * 
@@ -54,6 +56,7 @@ public interface ITradingManagementService {
 	 */
 	TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException;
 	
+	TradingAccountBean getSyncTradingAccountInfo(String acctID) throws StockAppBizException;
 	//======================交易部分接口 =======================
 	
 	/**
@@ -157,6 +160,8 @@ public interface ITradingManagementService {
 	 */
 	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit);
 	
+	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit, boolean wait4Finish);
+	
 	public void reloadEarnRank(int start, int limit,boolean wait4Finish);
 	/**
 	 * 获取T日排行榜
@@ -218,6 +223,7 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	BindableListWrapper<GainBean> getTotalGain(int start,int limit);
+	BindableListWrapper<GainBean> getTotalGain(int start,int limit,boolean wait4Finish);
 	/**
 	 * 	 交易记录-成功操作
 	 * @param start
@@ -225,6 +231,7 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	BindableListWrapper<GainBean> getGain(int start,int limit);
+	BindableListWrapper<GainBean> getGain(int start,int limit,boolean wait4Finish);
 
 	/**
 	 * 提取现金
@@ -237,4 +244,6 @@ public interface ITradingManagementService {
 	 * 去积分明细 
 	 * */
 	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit);
+	
+	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish);
 }

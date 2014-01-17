@@ -291,7 +291,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 				log.debug("sellTradingAccount : getTradingAccountInfo");
 			}
 			if(accid!=null)
-			tradingService.getTradingAccountInfo(accid);
+			tradingService.getSyncTradingAccountInfo(accid);
 		}
 		return null;
 	}

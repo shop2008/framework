@@ -106,13 +106,16 @@ public abstract class UserTradeRecordPage extends PageBase {
 	 */
 	@Command
 	String showSucRecords(InputEvent event) {
-		curItemId = 1;
-		registerBean("curItemId", curItemId);
-		if (tradingService != null)
-			tradingService.getGain(0, successTradeAccountListBean.getData().size());
+		showSucRecords(false);
 		return null;
 	}
 	
+	void showSucRecords(boolean wait4Finish) {
+		curItemId = 1;
+		registerBean("curItemId", curItemId);
+		if (tradingService != null)
+			tradingService.getGain(0, successTradeAccountListBean.getData().size(), wait4Finish);
+	}
 	@OnShow
 	void initData() {
 		
@@ -128,13 +131,17 @@ public abstract class UserTradeRecordPage extends PageBase {
 	 */
 	@Command
 	String showAllRecords(InputEvent event) {
-		curItemId = 2;
-		registerBean("curItemId", curItemId);
-		if (tradingService != null)
-			tradingService.getTotalGain(0, allTradeAccountListBean.getData().size());
+		showAllRecords(false);
 		return null;
 	}
 
+	void showAllRecords(boolean wait4Finish) {
+		curItemId = 2;
+		registerBean("curItemId", curItemId);
+		if (tradingService != null)
+			tradingService.getTotalGain(0, allTradeAccountListBean.getData().size(), wait4Finish);
+	}
+	
 	@Command(commandName = "allRecordItemClicked", navigations = { @Navigation(on = "operationDetails", showPage = "OperationDetails") })
 	CommandResult allRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
@@ -208,14 +215,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Command
 	String handleSucRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
-			showSucRecords(event);
+			showSucRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
 			if(successTradeAccountListBean != null)
 				completeSize = successTradeAccountListBean.getData().size();
 			sucStart = completeSize;
 			if(tradingService != null) {
-				tradingService.getGain(sucStart, sucLimit);
+				tradingService.getGain(sucStart, sucLimit, true);
 			}
 		}
 		return null;
@@ -224,14 +231,14 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Command
 	String handleAllRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
-			showAllRecords(event);
+			showAllRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
 			if(allTradeAccountListBean != null)
 				completeSize = allTradeAccountListBean.getData().size();
 			allStart = completeSize;
 			if(tradingService != null) {
-				tradingService.getTotalGain(allStart, allLimit);
+				tradingService.getTotalGain(allStart, allLimit, true);
 			}
 		}
 		return null;

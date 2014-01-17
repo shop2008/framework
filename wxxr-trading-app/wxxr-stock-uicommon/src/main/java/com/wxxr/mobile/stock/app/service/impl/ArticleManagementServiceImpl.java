@@ -102,11 +102,13 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		return this.homeArticles;
 	}
 
-
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit) {
+		return getHelpArticles(start,limit,false);
+	}
 	/**
 	 * @return the helpArticles
 	 */
-	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit) {
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit, boolean wait4Finish) {
 		if(this.helpArticlesCache == null){
 			this.helpArticlesCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("helpArticles");
 		}
@@ -128,7 +130,11 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("limit", limit);
-		this.helpArticlesCache.doReloadIfNeccessay(map);
+		if(wait4Finish) {
+			this.helpArticlesCache.forceReload(map, wait4Finish);
+		} else {
+			this.helpArticlesCache.doReloadIfNeccessay(map);
+		}
 		return this.helpArticles;
 	}
 

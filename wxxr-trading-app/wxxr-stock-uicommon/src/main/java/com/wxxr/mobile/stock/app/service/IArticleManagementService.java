@@ -23,6 +23,8 @@ public interface IArticleManagementService {
 	 */
 	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit);
 	
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit, boolean wait4Finish);
+	
 	public BindableListWrapper<ArticleBean> getHomeArticles(int start,int limit);
 	
 	public BindableListWrapper<ArticleBean> getTradingRuleArticle();

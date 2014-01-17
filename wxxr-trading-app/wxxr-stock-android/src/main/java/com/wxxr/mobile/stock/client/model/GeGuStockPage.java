@@ -105,8 +105,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 			if (log.isDebugEnabled()) {
 				log.debug("GeGuStockPage : getStockQuotation");
 			}
-			this.infoCenterService.getStockQuotation(codeValue,marketCode);
 			updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), stockName));
+			this.infoCenterService.getSyncStockQuotation(codeValue,marketCode);
 		}
 		return null;
 	}	

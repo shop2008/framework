@@ -276,11 +276,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	// =================interface method =====================================
 	
-
-
 	@Override
-	//赚钱榜
 	public BindableListWrapper<EarnRankItemBean> getEarnRank(final int start, final int limit) {
+		return getEarnRank(start, limit, false);
+	}
+	
+	//赚钱榜
+	public BindableListWrapper<EarnRankItemBean> getEarnRank(final int start, final int limit, boolean wait4Finish) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
 		}
@@ -293,7 +295,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		this.earnRankCache.doReloadIfNeccessay(params);
+		if(wait4Finish) {
+			this.earnRankCache.forceReload(params, wait4Finish);
+		} else {
+			this.earnRankCache.doReloadIfNeccessay(params);			
+		}
 		return this.earnRank;
 	}
 
@@ -585,6 +591,10 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 */
 	@Override
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
+		return getTotalGain(start, limit, false);
+	}
+
+	public BindableListWrapper<GainBean> getTotalGain(int start, int limit, boolean wait4Finish) {
 		if(rightTotalGain==null){
 				this.rightTotalGain = getRightTotalGainCache().getEntities(null, new Comparator<GainBean>(){
 					@Override
@@ -594,17 +604,21 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 				});
 		}
-		rightTotalGainCacheDoReload(start, limit);
+		rightTotalGainCacheDoReload(start, limit, wait4Finish);
 		return this.rightTotalGain;
 
 	}
 
-	protected void rightTotalGainCacheDoReload(int start, int limit) {
+	protected void rightTotalGainCacheDoReload(int start, int limit, boolean wait4Finish) {
 		synchronized (getRightTotalGainCache()) {
 			Map<String,Object> commandParameters=new HashMap<String,Object>();
 			commandParameters.put("start", start);
 			commandParameters.put("limit", limit);
-			getRightTotalGainCache().doReloadIfNeccessay(commandParameters);
+			if(wait4Finish) {
+				getRightTotalGainCache().forceReload(commandParameters, wait4Finish);
+			} else {
+				getRightTotalGainCache().doReloadIfNeccessay(commandParameters);
+			}
 		}
 	}
 
@@ -613,6 +627,9 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 */
 	@Override
 	public BindableListWrapper<GainBean> getGain(int start, int limit) {
+		return getGain(start, limit, false);
+	}
+	public BindableListWrapper<GainBean> getGain(int start, int limit, boolean wait4Finish) {
 		if(rightGain==null){
 			this.rightGain =getRightTotalGainCache().getEntities(new IEntityFilter<GainBean>() {
 				
@@ -627,7 +644,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				}
 			});
 		}
-		rightTotalGainCacheDoReload(start, limit);
+		rightTotalGainCacheDoReload(start, limit, wait4Finish);
 		return this.rightGain;
 	}
 
@@ -646,7 +663,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         return allT;		
 	}
 	
-  
+	public BindableListWrapper<TradingAccInfoBean> getSyncAllTradingAccountList(){
+		tradingAccInfo_cache.forceReload(true);
+    	allT = tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
+        return allT;		
+	}
     //获取我的T日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
         tradingAccInfo_cache.forceReload(false);
@@ -841,7 +862,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
             }
 		}
     }
-  //未结算
+    //未结算
     @Override
     public TradingAccountBean getTradingAccountInfo(String acctID) throws StockAppBizException {
     	if (!StringUtils.isNumeric(acctID)) {
@@ -859,6 +880,24 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
     }
 
+  //未结算
+    @Override
+    public TradingAccountBean getSyncTradingAccountInfo(String acctID) throws StockAppBizException {
+    	if (!StringUtils.isNumeric(acctID)) {
+			throw new IllegalArgumentException("Invalid Argument:accId===>"+acctID);
+		}
+    	Long accId =  Long.valueOf(acctID);
+        if (tradingAccountBean_cache.getEntity(accId)==null){
+            TradingAccountBean b=new TradingAccountBean();
+            b.setId(accId);
+            tradingAccountBean_cache.putEntity(b.getId(),b);
+        }
+        Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("acctID", acctID);
+        this.tradingAccountBean_cache.forceReload(params,true);
+        return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
+    }
+    
     @Override
     public void cancelOrder(String accId,String orderID) {
     	TradingAccountBean bean = tradingAccountBean_cache.getEntity(Long.valueOf(accId));
@@ -949,7 +988,12 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			return 0;
 		}
 	};
+	
 	public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit){
+		return getGainPayDetailDetails(start, limit, false);
+	}
+	
+	public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish){
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
 		}
@@ -962,7 +1006,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		this.gainPayDetailBean_cache.doReloadIfNeccessay(params);
+		if(wait4Finish) {
+			this.gainPayDetailBean_cache.forceReload(params, wait4Finish);
+		} else {
+			this.gainPayDetailBean_cache.doReloadIfNeccessay(params);
+		}
 		return this.vgainPayDetails;
 	}
 	
@@ -1312,6 +1360,18 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						}
 
 						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGain(int, int)
+						 */
+						public BindableListWrapper<GainBean> getGain(int start,
+								int limit, boolean wait4Finish) {
+							return ((ITradingManagementService)holder.getDelegate()).getGain(start, limit, wait4Finish);
+						}
+						
+						/**
 						 * @param amount
 						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#applyDrawMoney(long)
 						 */
@@ -1342,8 +1402,64 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 									limit);
 						}
 
+						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGainPayDetailDetails(int, int)
+						 */
+						public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(
+								int start, int limit, boolean wait4Finish) {
+							return ((ITradingManagementService)holder.getDelegate()).getGainPayDetailDetails(start,
+									limit, wait4Finish);
+						}
+						
+						/**
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getAllTradingAccountList()
+						 */
 						public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList() {
 							return ((ITradingManagementService)holder.getDelegate()).getAllTradingAccountList();
+						}
+
+						/**
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getSyncAllTradingAccountList()
+						 */
+						public BindableListWrapper<TradingAccInfoBean> getSyncAllTradingAccountList() {
+							return ((ITradingManagementService)holder.getDelegate()).getSyncAllTradingAccountList();
+						}
+
+						/**
+						 * @param acctID
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getSyncTradingAccountInfo(String)
+						 */
+						public TradingAccountBean getSyncTradingAccountInfo(
+								String acctID) throws StockAppBizException {
+							return ((ITradingManagementService)holder.getDelegate()).getSyncTradingAccountInfo(acctID);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getEarnRank(int, int, wait4Finish)
+						 */
+						public BindableListWrapper<EarnRankItemBean> getEarnRank(
+								int start, int limit, boolean wait4Finish) {
+							return ((ITradingManagementService)holder.getDelegate()).getEarnRank(start, limit, wait4Finish);
+						}
+
+						/**
+						 * @param start
+						 * @param limit
+						 * @param wait4Finish
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getTotalGain(int, int, boolean)
+						 */
+						public BindableListWrapper<GainBean> getTotalGain(
+								int start, int limit, boolean wait4Finish) {
+							return ((ITradingManagementService)holder.getDelegate()).getTotalGain(start, limit, wait4Finish);
 						}
 						
 						

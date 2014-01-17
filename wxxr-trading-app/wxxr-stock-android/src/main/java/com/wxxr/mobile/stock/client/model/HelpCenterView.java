@@ -48,7 +48,7 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Command
 	String handleRefresh(InputEvent event) {
 		if("TopRefresh".equals(event.getEventType())) {
-			articleService.getHelpArticles(0, 10);
+			articleService.getHelpArticles(0, 10, true);
 		}
 		return null;
 	}	

@@ -104,6 +104,7 @@ public interface IUserManagementService {
 	 * @throws Exception
 	 */
 	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual);
+	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual,boolean wait4Finish);
 	/**
 	 * 获取他人主页更多条数地址
 	 * @param userId 用户ID
@@ -127,6 +128,7 @@ public interface IUserManagementService {
 	 */
 	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit);
+	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit,boolean wait4Finish);
 	void updateNickName(String nickName);
 	/**
 	 * 收支明细

@@ -61,7 +61,7 @@ public abstract class URealPanelScorePage extends PageBase{
 		
 		if(event.getEventType().equals("TopRefresh")) {
 			if(tradingService != null) {
-				tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size());
+				tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size(), true);
 			}
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
@@ -69,7 +69,7 @@ public abstract class URealPanelScorePage extends PageBase{
 				completeSize = voucherDetailsBean.getData().size();
 			start = completeSize;
 			if(tradingService != null) {
-				tradingService.getGainPayDetailDetails(start, limit);
+				tradingService.getGainPayDetailDetails(start, limit, true);
 			}
 		}
 		return null;

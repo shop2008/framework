@@ -176,8 +176,8 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 			if (log.isDebugEnabled()) {
 				log.debug("SZzhiShuPage : getStockQuotation");
 			}
-			this.infoCenterService.getStockQuotation(this.stockCode, this.stockMarket);
 			updateSelection(new StockSelection(stockBean.getMarket(),stockBean.getCode(),this.stockName));
+			this.infoCenterService.getSyncStockQuotation(this.stockCode, this.stockMarket);
 		}
 		return null;
 	}	

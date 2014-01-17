@@ -236,7 +236,7 @@ public abstract class UserViewMorePage extends PageBase implements
 			
 		if(event.getEventType().equals("TopRefresh")) {
 			if (usrService != null) {
-					usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false);
+					usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false, true);
 				}
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
@@ -245,7 +245,7 @@ public abstract class UserViewMorePage extends PageBase implements
 			myHomeAStart += completeSize;
 			
 			if(usrService != null) {
-				usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false);
+				usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false, true);
 			}
 		}
 		return null;
@@ -285,7 +285,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				// 用户自己的挑战交易记录
 				if (usrService != null) {
 					usrService.getMorePersonalRecords(0, myJoinListBean
-							.getData().size(), true);
+							.getData().size(), true, true);
 				}
 			} else if(event.getEventType().equals("BottomRefresh")) {
 				int completeSize = 0;
@@ -293,7 +293,7 @@ public abstract class UserViewMorePage extends PageBase implements
 					completeSize = myJoinListBean.getData().size();
 				myHomeVStart += completeSize;
 				if(usrService != null) {
-					usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true);
+					usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true, true);
 				}
 			}
 		return null;

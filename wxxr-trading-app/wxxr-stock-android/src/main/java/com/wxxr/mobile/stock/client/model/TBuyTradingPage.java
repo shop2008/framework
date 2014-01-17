@@ -235,7 +235,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 			if (log.isDebugEnabled()) {
 				log.debug("TBuyTradingPage : handleTopRefresh");
 			}
-			tradingService.getTradingAccountInfo(acctId);
+			tradingService.getSyncTradingAccountInfo(acctId);
 			// registerBean("tradingBean", tradingBean);
 		}
 		return null;
