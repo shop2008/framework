@@ -46,7 +46,7 @@ public abstract class TradingMainListHeaderView extends ViewBase{
 	@Bean(express="${articleService.getHomeArticles(0, 4)}")
 	BindableListWrapper<ArticleBean> myArticles;
 	
-	/**绑定文章*/
+	/**绑定文章*/ 
 	@Field(valueKey="options",binding="${myArticles.data}")
 	List<ArticleBean> articles; 
 
