@@ -426,15 +426,13 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					if(stockMinute!=null && stockMinute1!=null){
 						startX = fStartX + (width*i)+1.0f;
 						stopX = fStartX + (width*(i+1))+1.0f;
-						if(stockMinute.getAvprice()!=null){
+						if(stockMinute.getAvprice()!=null && stockMinute1.getAvprice()!=null){
 							float avprice = stockMinute.getAvprice();
 							startY = fStopY - ((avprice - lowPrice)/scale);
-						}
-						if(stockMinute1.getAvprice()!=null){
 							float avprice1 = stockMinute1.getAvprice();
 							stopY = fStopY - ((avprice1 - lowPrice)/scale);
+							canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 						}
-						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 					}
 				}
 			}
@@ -454,15 +452,13 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 					if(stockMinute!=null && stockMinute1!=null){
 						startX = fStartX + (width*i)+1.0f;
 						stopX = fStartX + (width*(i+1))+1.0f;
-						if(stockMinute.getAvgChangeRate()!=null){
+						if(stockMinute.getAvgChangeRate()!=null && stockMinute1.getAvgChangeRate()!=null){
 							float tempValue = (middlePrice * (stockMinute.getAvgChangeRate()/100000.0f)+middlePrice);
 							startY = fStopY-((tempValue - lowPrice)/scale);
-						}
-						if(stockMinute1.getAvgChangeRate()!=null){
 							float tempValue1 = (middlePrice * (stockMinute1.getAvgChangeRate()/100000.0f)+middlePrice);
 							stopY = fStopY-((tempValue1 - lowPrice)/scale);
+							canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 						}
-						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 					}
 				}
 			}

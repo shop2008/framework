@@ -192,8 +192,8 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 	
 	/**转让操作盘详情界面*/
 	@Command(navigations = { 
-			@Navigation(on = "TBuyStockInfoPage", showPage = "TBuyStockInfoPage"),
-			@Navigation(on="ShiPanStockInfoPage",showPage = "ShiPanBuyStockInfoPage")
+			@Navigation(on = "CloseMoNiStockInfoPage", showPage = "CloseMoNiStockInfoPage"),
+			@Navigation(on="CloseShiPanBuyStockInfoPage",showPage = "CloseShiPanBuyStockInfoPage")
 			})
 	CommandResult detailsAction(InputEvent event) {
 		if (InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())) {
@@ -201,14 +201,14 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 			if(auditData!=null){
 				if(auditData.getVirtual()){
 					resutl.setPayload(accId);
-					resutl.setResult("TBuyStockInfoPage");
+					resutl.setResult("CloseMoNiStockInfoPage");
 				}else{
 					if(tradingAccount!=null){
 						HashMap<String, Object> data = new HashMap<String, Object>();
 						data.put(Constants.KEY_ASSET_TYPE, tradingAccount.getType());
 						data.put(Constants.KEY_ACCOUNT_ID_FLAG, accId);
 						resutl.setPayload(data);
-						resutl.setResult("ShiPanStockInfoPage");
+						resutl.setResult("CloseShiPanBuyStockInfoPage");
 					}
 				}
 			}

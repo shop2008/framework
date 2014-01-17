@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -59,6 +60,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		SimpleDateFormat sdf;
 		try {
 			sdf = new SimpleDateFormat(format);
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
 		} catch (NullPointerException e) {
 			throw new ValidationException("Invalid time-type value :" + s);
 		} catch (IllegalArgumentException e) {
@@ -83,6 +85,7 @@ public class LongTime2StringConvertor implements IValueConvertor<Long, String> {
 		SimpleDateFormat sdf;
 		try {
 			sdf = new SimpleDateFormat(format);
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
 		} catch (NullPointerException e) {
 			return null;
 		} catch (IllegalArgumentException e) {
