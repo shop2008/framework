@@ -104,10 +104,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.UserManagementServiceImpl");
 
 	private UserBean otherUserInfo = new UserBean();
-	private ScoreInfoBean myScoreInfo = new ScoreInfoBean();
 	
 	
-	private TradeDetailListBean myTradeDetails = new TradeDetailListBean();
 	/**
 	 * 个人主页
 	 */
@@ -189,6 +187,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.registerService(IUserManagementService.class, this);
 	
 		updateToken();
+		getPushMessageSetting();
 	}
 
 
@@ -252,31 +251,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			new StockAppBizException("系统错误");
 		}
 		return false;
-	}
-
-	public void setRegRulesReaded(boolean isRead) {
-
-	}
-
-
-
-	public ScoreInfoBean fetchUserScoreInfo(String userId) {
-
-		ScoreInfoBean entity = new ScoreInfoBean();
-
-		entity.setBalance("200");
-
-		List<ScoreBean> scores = new ArrayList<ScoreBean>();
-		for (int i = 0; i < 9; i++) {
-			ScoreBean score = new ScoreBean();
-			score.setCatagory("推荐好友奖励");
-			score.setAmount(200f);
-			score.setDate("2011-10-12");
-			scores.add(score);
-		}
-
-		entity.setScores(scores);
-		return entity;
 	}
 
 	@Override
@@ -396,31 +370,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		return authinfo;
 	}
 
-	public String getUserAuthMobileNum(String userId) {
-
-		return null;
-	}
-
-
-
-	@Override
-	public ScoreInfoBean getMyUserScoreInfo() {
-		if (context.getApplication().isInDebugMode()) {
-			myScoreInfo = MockDataUtils.mockScoreInfo();
-			return myScoreInfo;
-		}
-		return null;
-	}
-
-	@Override
-	public TradeDetailListBean getMyTradeDetailInfo() {
-		if (context.getApplication().isInDebugMode()) {
-			myTradeDetails = MockDataUtils.mockTradeDetails();
-			return myTradeDetails;
-		}
-		//getRestService(TradingResourse.class).get
-		return null;
-	}
+	
 
 	@Override
 	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
@@ -452,12 +402,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         }
         return personalHomePageBean_cache.getEntity(key);
 	}
-	
+	BindableListWrapper<GainBean> myGainBeans;
     public BindableListWrapper<GainBean> getMorePersonalRecords(int start, int limit,final boolean virtual) {
     	if (gainBean_cache==null) {
     		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
 		}
-        BindableListWrapper<GainBean> gainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+    	myGainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
             @Override
             public boolean doFilter(GainBean entity) {
                 if ( StringUtils.isNotBlank(entity.getUserId()) &&entity.getUserId().equals(getService(IUserIdentityManager.class).getUserId())&& entity.getVirtual()==virtual){
@@ -474,7 +424,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
       p.put("limit", limit);
       gainBean_cache.forceReload(p,false);
       gainBean_cache.setCommandParameters(p);
-     return gainBeans;
+      myGainBeans.setReloadParameters(p);
+     return myGainBeans;
     }
     
     private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
@@ -513,6 +464,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
       p.put("userId", userId);
       otherGainBean_cache.forceReload(p,false);
       otherGainBean_cache.setCommandParameters(p);
+      gainBeans.setReloadParameters(p);
      return gainBeans;
     }
 	@Override
@@ -616,16 +568,19 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	
     @Override
     public BindableListWrapper<GainPayDetailBean> getGPDetails(int start, int limit) {
-        if(gainPayDetails==null){
-            if(gainPayDetails==null){
-                gainPayDetail_cache=new GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO>("gainPayDetailBean");
-            }
-            gainPayDetails = gainPayDetail_cache.getEntities(null, gainPayDetailComparator);
+    	if(gainPayDetail_cache==null){
+            gainPayDetail_cache=new GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO>("gainPayDetailBean");
         }
+    	if (gainPayDetails==null) {
+    		gainPayDetails = gainPayDetail_cache.getEntities(null, gainPayDetailComparator);
+		}
+        
         Map<String, Object> params=new HashMap<String, Object>();
         params.put("start", start);
         params.put("limit", limit);
+        gainPayDetail_cache.setCommandParameters(params);
         gainPayDetail_cache.doReloadIfNeccessay(params);
+        gainPayDetails.setReloadParameters(params);
         return gainPayDetails;
     }
 
@@ -825,24 +780,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						public boolean getPushMessageSetting() {
 							return ((IUserManagementService)holder.getDelegate()).getPushMessageSetting();
 						}
-
-						/**
-						 * @param isRead
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#setRegRulesReaded(boolean)
-						 */
-						public void setRegRulesReaded(boolean isRead) {
-							((IUserManagementService)holder.getDelegate()).setRegRulesReaded(isRead);
-						}
-
-						/**
-						 * @param userId
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#fetchUserScoreInfo(java.lang.String)
-						 */
-						public ScoreInfoBean fetchUserScoreInfo(String userId) {
-							return ((IUserManagementService)holder.getDelegate()).fetchUserScoreInfo(userId);
-						}
-
 						/**
 						 * @param bankName
 						 * @param bankAddr
@@ -874,23 +811,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						public AuthInfo getUserAuthInfo() {
 							return ((IUserManagementService)holder.getDelegate()).getUserAuthInfo();
 						}
-
-						/**
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyUserScoreInfo()
-						 */
-						public ScoreInfoBean getMyUserScoreInfo() {
-							return ((IUserManagementService)holder.getDelegate()).getMyUserScoreInfo();
-						}
-
-						/**
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMyTradeDetailInfo()
-						 */
-						public TradeDetailListBean getMyTradeDetailInfo() {
-							return ((IUserManagementService)holder.getDelegate()).getMyTradeDetailInfo();
-						}
-
 						/**
 						 * @param userId
 						 * @return
@@ -1061,8 +981,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		try {
 			UserManagementServiceImpl impl = (UserManagementServiceImpl)super.clone();
 			impl.otherUserInfo = new UserBean();
-			impl.myScoreInfo = new ScoreInfoBean();
-			impl.myTradeDetails = new TradeDetailListBean();
 			return impl;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException("SHOULD NOT HAPPEN !");
