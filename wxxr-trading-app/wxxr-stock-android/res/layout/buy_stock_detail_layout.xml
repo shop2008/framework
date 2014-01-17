@@ -103,15 +103,16 @@
                                 android:id="@+id/refresh_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/inpunt_right_btn" >
+                                android:background="@drawable/refresh_button_style"
+                                bind:field="*"
+                                bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" >
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:src="@drawable/refresh"
-                                    bind:field="refresh"
-                                    bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" />
+                                    bind:field="refresh"/>
 
                                 <ProgressBar
                                     style="?android:attr/progressBarStyleSmall"
