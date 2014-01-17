@@ -19,7 +19,8 @@
             android:singleLine="true"
             android:text="@string/refresh_ok_title"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            bind:field="status" />
 
         <TextView
             android:id="@+id/time"

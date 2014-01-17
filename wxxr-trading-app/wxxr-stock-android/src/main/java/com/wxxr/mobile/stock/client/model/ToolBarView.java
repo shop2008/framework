@@ -60,9 +60,11 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	
 	@Field(valueKey="text")
 	String title;
-	
 	DataField<String> titleField;
 
+	@Field(valueKey="text")
+	String status;
+	
 	@Field(valueKey="visible")
 	boolean pushMessage;
 	
