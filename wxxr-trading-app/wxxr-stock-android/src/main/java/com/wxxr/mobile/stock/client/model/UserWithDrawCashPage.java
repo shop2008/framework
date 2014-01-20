@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -150,7 +151,15 @@ public abstract class UserWithDrawCashPage extends PageBase{
 			SystemClock.sleep(500);
 			if (tradingService != null) {
 				
+				
 				if (!StringUtils.isBlank(callBack.getApplyAmount())) {
+					
+					if(userAssetBean!=null) {
+						long useableBalance = userAssetBean.getUsableBal();
+						if(useableBalance < Long.parseLong(callBack.getApplyAmount())*100) {
+							throw new StockAppBizException("余额不足!");
+						}
+					}
 					tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount())*100);
 				} else {
 					tradingService.applyDrawMoney(-1l);
