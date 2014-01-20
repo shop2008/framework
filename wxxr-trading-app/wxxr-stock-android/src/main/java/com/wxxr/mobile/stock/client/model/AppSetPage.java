@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
@@ -37,17 +38,10 @@ public abstract class AppSetPage extends PageBase {
 	
 	
 	@Bean(type=BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
-	
-	
-	@OnShow
-	void initData() {
-		pushEnabledFlag = usrService.getPushMessageSetting();
-		registerBean("pushEnabledFlag", pushEnabledFlag);
-	}
 	
 	@Menu(items = { "left" })
 	private IMenu toolbar;
