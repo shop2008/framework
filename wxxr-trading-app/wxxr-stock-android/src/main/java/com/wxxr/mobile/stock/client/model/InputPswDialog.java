@@ -36,19 +36,19 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 
 	@Command(navigations = {
 			@Navigation(on = "VerifyFail", showDialog = "RetryVerifyDialog", closeCurrentView = true),
-			@Navigation(on = "TODRAWCASH", showPage = "userWithDrawCashPage"),
-			@Navigation(on = "TOSWITCHCARD", showPage = "userSwitchCardPage") })
+			@Navigation(on = "DRAWCASH", showPage = "userWithDrawCashPage", closeCurrentView = true),
+			@Navigation(on = "SWITCHCARD", showPage = "userSwitchCardPage", closeCurrentView = true) })
 	String commitVerify(InputEvent event) {
 		String inputPasswrod = this.inputPswField.getValue();
 		boolean verifyResult = userService.verfiy(user.getPhoneNumber(),
 				inputPasswrod);
 		if (verifyResult) {
 			if (type.equals("switchBankCard")) {
-				hide();
-				return "TOSWITCHCARD";
+				//hide();
+				return "SWITCHCARD";
 			} else if (type.equals("UserAccountPage")) {
-				hide();
-				return "TODRAWCASH";
+				//hide();
+				return "DRAWCASH";
 			}
 		} else {
 			hide();
