@@ -7,10 +7,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
@@ -182,12 +180,14 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
         registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
 		context.registerService(IUserManagementService.class, this);
-	
-		updateToken();
-		getPushMessageSetting();
+		initData();
 	}
 
-
+	private void initData(){
+		updateToken();
+		getPushMessageSetting();
+		getUserAuthInfo();
+	}
 
 	public void stopService() {
 		context.unregisterService(IUserManagementService.class, this);
@@ -332,6 +332,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			throw new StockAppBizException("系统错误");
 		}
 	}
+	private AuthInfo authinfo = null;
 	public AuthInfo getUserAuthInfo() {
 		if(userAttributeCache==null){
 			userAttributeCache=new GenericReloadableEntityCache<String, UserAttributeBean, UserAttributeVO>("userAttributesBean");
@@ -346,7 +347,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				}
 			}, null);
 		}
-		AuthInfo authinfo=new AuthInfo();
+		if (authinfo==null) {
+			authinfo =new AuthInfo();
+		}
 		if(userAttrbutes.getData()==null ||userAttrbutes.getData().size()==0){
 			return authinfo;
 		}
@@ -378,7 +381,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
             otherpersonalHomePageBean_cache.putEntity(key,b);
         }
         Map<String, Object> p=new HashMap<String, Object>(); 
-        p.put("userId", userId);
+        p.put(key, userId);
         this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
         return otherpersonalHomePageBean_cache.getEntity(key);
 	}
