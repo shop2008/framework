@@ -297,7 +297,8 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	}
 	
 	//卖出
-	@Command(navigations={@Navigation(on="SellStockPage",showPage="SellStockPage")})
+	@Command(navigations={@Navigation(on="SellStockPage",showPage="SellStockPage"),
+			@Navigation(on = "GeGuStockPage", showPage = "GeGuStockPage") })
 	CommandResult sellStockItemClick(InputEvent event){
 		String stockCode = null; //股票代码
 		String stockName = null; //股票名称
@@ -309,6 +310,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		if(InputEvent.EVENT_TYPE_ITEM_CLICK.equals(event.getEventType())){
 			if (event.getProperty("position") instanceof Integer) {
 				int position = (Integer) event.getProperty("position");
+				CommandResult result = new CommandResult();
 				if(tradingAccount!=null){
 					List<StockTradingOrderBean> stockOrder = tradingAccount.getTradingOrders();
 					if(stockOrder!=null && stockOrder.size()>0){
@@ -344,14 +346,19 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						}
 					}
 					StockSelection selection = new StockSelection(stockMarketCode, stockCode, stockName, buyPrice);
-					selection.setType(1);
+					if (isSelf) {
+						selection.setType(1);
+						result.setResult("SellStockPage");
+					} else {
+						selection.setType(0);
+						result.setResult("GeGuStockPage");
+					}
 					updateSelection(selection);
 				}
-				CommandResult result = new CommandResult();
 				if(map!=null && map.size()>0){
 					result.setPayload(map);
 				}
-				result.setResult("SellStockPage");
+				
 				return result;
 			}
 		}

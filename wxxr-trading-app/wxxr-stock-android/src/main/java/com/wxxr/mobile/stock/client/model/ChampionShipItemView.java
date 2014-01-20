@@ -2,8 +2,10 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -15,6 +17,7 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.ObjectUtils;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.Constants;
@@ -71,15 +74,25 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showPage = "otherUserPage") })
+	@Command(navigations = { @Navigation(on = "otherUserPage", showPage = "otherUserPage"),
+			@Navigation(on = "userPage", showPage = "userPage")})
 	CommandResult handlerUserClicked(InputEvent event) {
 		CommandResult result = new CommandResult();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		map.put(Constants.KEY_USER_ID_FLAG, msgRank.getUserId());
+		boolean isSelf = false;
+		String userId = msgRank.getUserId();
+		String user = AppUtils.getService(IUserIdentityManager.class)
+				.getUserId();
+		isSelf = ObjectUtils.isEquals(userId, user);
+
+		map.put(Constants.KEY_USER_ID_FLAG, userId);
 		map.put(Constants.KEY_USER_NAME_FLAG, msgRank.getNickName());
 		result.setPayload(map);
-		result.setResult("");
+		if (isSelf) {
+			result.setResult("userPage");
+		} else {
+			result.setResult("otherUserPage");
+		}
 		return result;
 	}
 }

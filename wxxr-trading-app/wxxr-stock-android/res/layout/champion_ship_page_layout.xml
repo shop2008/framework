@@ -138,7 +138,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 bind:field="ChampionWeekShip"
-                bind:itemViewId="ChampionWeekShipSelectorItemView" >
+                bind:itemViewId="ChampionWeekShipSelectorItemView"
+                bind:on_PinItemClick="handleChampionWeekShipItemClick" >
             </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
