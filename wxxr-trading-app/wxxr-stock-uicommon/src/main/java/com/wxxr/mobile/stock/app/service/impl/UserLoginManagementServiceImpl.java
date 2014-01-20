@@ -180,6 +180,8 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
         }
         if (b.getMessagePushSettingOn()) {
         	   pref.put(KEY_MSG_SETTTING, "ON");
+		}else{
+			pref.put(KEY_MSG_SETTTING, "OFF");
 		}
         if (b.getPassword()!=null) {
         	 pref.put(KEY_PASSWORD, b.getPassword());
