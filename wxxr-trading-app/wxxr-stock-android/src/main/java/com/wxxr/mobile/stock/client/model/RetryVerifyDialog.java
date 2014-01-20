@@ -14,6 +14,7 @@ public abstract class RetryVerifyDialog extends ViewBase {
 
 	@Command(navigations={@Navigation(on="InputPswDialog", showDialog="InputPswDialog", closeCurrentView=true)})
 	String reVerify(InputEvent event) {
+		hide();
 		return "InputPswDialog";
 	}
 	

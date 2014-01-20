@@ -42,14 +42,16 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 		String inputPasswrod = this.inputPswField.getValue();
 		boolean verifyResult = userService.verfiy(user.getPhoneNumber(),
 				inputPasswrod);
-		System.out.println("verifyResult----"+verifyResult);
 		if (verifyResult) {
 			if (type.equals("switchBankCard")) {
+				hide();
 				return "TOSWITCHCARD";
 			} else if (type.equals("UserAccountPage")) {
+				hide();
 				return "TODRAWCASH";
 			}
 		} else {
+			hide();
 			return "VerifyFail";
 		}
 		return null;
