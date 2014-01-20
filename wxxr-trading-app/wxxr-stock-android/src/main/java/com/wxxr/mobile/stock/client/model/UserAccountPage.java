@@ -103,7 +103,9 @@ public abstract class UserAccountPage extends PageBase {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			
 			CommandResult result = new CommandResult();
-			if (authBean == null) {
+			
+			boolean isBandCard = user.getBindCard();
+			if (!isBandCard) {
 				result.setResult("ALERTBIND");
 				return result;
 			} else {
