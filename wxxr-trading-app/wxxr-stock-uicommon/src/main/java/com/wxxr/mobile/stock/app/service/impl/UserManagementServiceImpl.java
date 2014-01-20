@@ -429,11 +429,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
     }
     
     private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
-
 		@Override
 		public int compare(GainBean o1, GainBean o2) {
-			
-			
 			if (o2!=null&&o1!=null) {
 				return (int)(o2.getTradingAccountId()-o1.getTradingAccountId());
 			}

@@ -187,7 +187,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
         if (b.getBindCard()) {
         	pref.put(KEY_BINDCARD,"true");
 		}
-        getPrefManager().putPreference(getModuleName(), pref);
+        getPrefManager().putPreference(getModuleName()+"_"+b.getUsername(), pref);
 
 	}
 	private void loadCookie(){
