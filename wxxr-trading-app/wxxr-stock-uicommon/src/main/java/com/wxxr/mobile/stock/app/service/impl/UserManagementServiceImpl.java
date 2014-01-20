@@ -406,26 +406,23 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
     	if (gainBean_cache==null) {
     		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
 		}
-    	myGainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
-            @Override
-            public boolean doFilter(GainBean entity) {
-                if ( StringUtils.isNotBlank(entity.getUserId()) &&entity.getUserId().equals(getService(IUserIdentityManager.class).getUserId())&& entity.getVirtual()==virtual){
-                    return true;
+    	if (myGainBeans==null) {
+    		myGainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+                @Override
+                public boolean doFilter(GainBean entity) {
+                    if ( StringUtils.isNotBlank(entity.getUserId()) &&entity.getUserId().equals(getService(IUserIdentityManager.class).getUserId())&& entity.getVirtual()==virtual){
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-            
-        }, viewMoreComparator);
-     
+                
+            }, viewMoreComparator);
+		}
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
       p.put("start", start);
       p.put("limit", limit);
-      if(wait4Finish) {
-    	  gainBean_cache.forceReload(p,wait4Finish);
-      } else {
-    	  gainBean_cache.forceReload(p,false);
-      }
+      gainBean_cache.forceReload(p,wait4Finish);
       gainBean_cache.setCommandParameters(p);
       myGainBeans.setReloadParameters(p);
      return myGainBeans;
@@ -446,20 +443,22 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	};
 	
 
-	
+	BindableListWrapper<GainBean> otherGainBeans ;
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
     	if (otherGainBean_cache==null) {
     		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
 		}
-    	BindableListWrapper<GainBean> gainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
-            @Override
-            public boolean doFilter(GainBean entity) {
-                if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
-                    return true;
+    	if (otherGainBeans==null) {
+    		otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+                @Override
+                public boolean doFilter(GainBean entity) {
+                    if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        }, viewMoreComparator);
+            }, viewMoreComparator);
+		}
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
       p.put("start", start);
@@ -467,8 +466,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
       p.put("userId", userId);
       otherGainBean_cache.forceReload(p,false);
       otherGainBean_cache.setCommandParameters(p);
-      gainBeans.setReloadParameters(p);
-     return gainBeans;
+      otherGainBeans.setReloadParameters(p);
+     return otherGainBeans;
     }
 	@Override
 	public UserAssetBean getUserAssetBean() {
