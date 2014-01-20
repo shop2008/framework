@@ -44,10 +44,10 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 				inputPasswrod);
 		if (verifyResult) {
 			if (type.equals("switchBankCard")) {
-				//hide();
+				hide();
 				return "SWITCHCARD";
 			} else if (type.equals("UserAccountPage")) {
-				//hide();
+				hide();
 				return "DRAWCASH";
 			}
 		} else {
