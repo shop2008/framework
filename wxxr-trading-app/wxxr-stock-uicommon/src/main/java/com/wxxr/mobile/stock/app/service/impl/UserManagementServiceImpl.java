@@ -409,7 +409,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
     	if (gainBean_cache==null) {
     		gainBean_cache =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
 		}
-    	if (myGainBeans==null) {
+//    	if (myGainBeans==null) {
     		myGainBeans = gainBean_cache.getEntities(new IEntityFilter<GainBean>(){
                 @Override
                 public boolean doFilter(GainBean entity) {
@@ -420,7 +420,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
                 }
                 
             }, viewMoreComparator);
-		}
+//		}
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
       p.put("start", start);
@@ -428,7 +428,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
       gainBean_cache.forceReload(p,wait4Finish);
       gainBean_cache.setCommandParameters(p);
       myGainBeans.setReloadParameters(p);
-     return myGainBeans;
+      return myGainBeans;
     }
     
     private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
