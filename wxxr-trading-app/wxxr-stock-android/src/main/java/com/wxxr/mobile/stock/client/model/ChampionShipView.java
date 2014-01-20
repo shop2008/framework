@@ -117,16 +117,30 @@ public abstract class ChampionShipView extends ViewBase {
 	// protected void updataMegagameRank() {
 	// registerBean("currentViewId", currentViewId);
 	// }
-
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
+	String reloadTRank(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("ChampionShipView : reloadTRank");
+		}
+		this.currentViewId = 1;
+		registerBean("currentViewId", this.currentViewId);
+		tradingMgr.reloadTMegagameRank(true);
+		return null;
+	}
+	
 	@Command(navigations = { 
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
-	String reloadTRank(InputEvent event) {
+	String reloadRefreshTRank(InputEvent event) {
 		if("TopRefresh".equals(event.getEventType())) {
 			if (log.isDebugEnabled()) {
-				log.debug("ChampionShipView : handleTMegaTopRefresh");
+				log.debug("ChampionShipView : reloadRefreshTRank");
 			}
 			this.currentViewId = 1;
 			registerBean("currentViewId", this.currentViewId);
@@ -139,11 +153,25 @@ public abstract class ChampionShipView extends ViewBase {
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
-	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String reloadT1Rank(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("ChampionShipView : reloadT1Rank");
+		}
+		this.currentViewId = 2;
+		registerBean("currentViewId", this.currentViewId);
+		tradingMgr.reloadT1MegagameRank(true);
+		return null;
+	}
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
+	String reloadRefreshT1Rank(InputEvent event) {
 		if("TopRefresh".equals(event.getEventType())) {
 			if (log.isDebugEnabled()) {
-				log.debug("ChampionShipView : handleTMega1TopRefresh");
+				log.debug("ChampionShipView : reloadRefreshT1Rank");
 			}
 			this.currentViewId = 2;
 			registerBean("currentViewId", this.currentViewId);
@@ -151,16 +179,29 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		return null;
 	}
-
+	@Command(navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			})
+	@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
+	String reloadWeekRank(InputEvent event) {
+		if (log.isDebugEnabled()) {
+			log.debug("ChampionShipView : reloadWeekRank");
+		}
+		this.currentViewId = 3;
+		registerBean("currentViewId", this.currentViewId);
+		tradingMgr.reloadWeekRank(true);
+		return null;
+	}
 	@Command(navigations = { 
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			})
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 1, cancellable = true)
-	String reloadWeekRank(InputEvent event) {
-		if("TopRefresh".equals(event.getEventType())) {
+	String reloadRefreshWeekRank(InputEvent event) {
+		if ("TopRefresh".equals(event.getEventType())) {
 			if (log.isDebugEnabled()) {
-				log.debug("ChampionShipView : handleWeekTopRefresh");
+				log.debug("ChampionShipView : reloadRefreshWeekRank");
 			}
 			this.currentViewId = 3;
 			registerBean("currentViewId", this.currentViewId);
@@ -168,7 +209,6 @@ public abstract class ChampionShipView extends ViewBase {
 		}
 		return null;
 	}
-
 	@Command(navigations = { 
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
