@@ -1001,7 +1001,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			if(this.gainPayDetailBean_cache == null){
 				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>>("vgainPayDetails");
 			}
-			this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
+			
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);
@@ -1011,6 +1011,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		} else {
 			this.gainPayDetailBean_cache.doReloadIfNeccessay(params);
 		}
+		this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
 		return this.vgainPayDetails;
 	}
 	
