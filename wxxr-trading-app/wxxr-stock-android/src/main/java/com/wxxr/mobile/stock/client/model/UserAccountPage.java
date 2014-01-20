@@ -87,14 +87,14 @@ public abstract class UserAccountPage extends PageBase {
 	@Command(
 			commandName="drawCash",
 			navigations={
-					@Navigation(on="WITHDRAW", showPage="userWithDrawCashPage"),
 					@Navigation(
-							on="ALERTBIND", 
+							on="ALERTBIND",
+							showDialog="NoBindCardDialog"/*,
 							message="尚未绑定银行卡，是否现在绑定?",params={
 						    @Parameter(name="title", value="提示"),
 						    @Parameter(name="onOK", value="leftOk"),
 						    @Parameter(name="onCanceled", value="否")
-						    }, closeCurrentView=true),
+						    }, closeCurrentView=true*/),
 						   @Navigation(on="INPUTPSW", showDialog="InputPswDialog")
 					}
 			)
@@ -117,12 +117,12 @@ public abstract class UserAccountPage extends PageBase {
 		return null;
 	}
 	
-	@Command(
+	/*@Command(
 			uiItems=@UIItem(id="leftOk",label="确定",icon="resourceId:drawable/home"),
 			navigations={@Navigation(on="*",showPage="withDrawCashAuthPage")})
 	String toWithDrawCashPage(InputEvent event) {
 		return "*";
-	}
+	}*/
 	/**
 	 * 进入收支明细业务界面
 	 * @param event
