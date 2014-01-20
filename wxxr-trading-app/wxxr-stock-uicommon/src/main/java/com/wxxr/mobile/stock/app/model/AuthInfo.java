@@ -1,7 +1,12 @@
 package com.wxxr.mobile.stock.app.model;
 
-public class AuthInfo {
+import com.wxxr.mobile.core.bean.api.IBindableBean;
+import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
+import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
 
+public class AuthInfo implements IBindableBean{
+
+	private final BindableBeanSupport emitter = new BindableBeanSupport(this);
 	/**用户名*/
 	private String accountName;
 	
@@ -25,7 +30,11 @@ public class AuthInfo {
 	 * @param accountName the accountName to set
 	 */
 	public void setAccountName(String accountName) {
+		
+		
+		String old = this.accountName;
 		this.accountName = accountName;
+		this.emitter.firePropertyChange("accountName", old, this.accountName);
 	}
 
 	/**
@@ -39,7 +48,11 @@ public class AuthInfo {
 	 * @param bankName the bankName to set
 	 */
 	public void setBankName(String bankName) {
+	//	this.bankName = bankName;
+		
+		String old = this.bankName;
 		this.bankName = bankName;
+		this.emitter.firePropertyChange("bankName", old, this.bankName);
 	}
 
 	/**
@@ -53,7 +66,10 @@ public class AuthInfo {
 	 * @param bankAddr the bankAddr to set
 	 */
 	public void setBankAddr(String bankAddr) {
+		//this.bankAddr = bankAddr;
+		String old = this.bankAddr;
 		this.bankAddr = bankAddr;
+		this.emitter.firePropertyChange("bankAddr", old, this.bankAddr);
 	}
 
 	/**
@@ -67,8 +83,26 @@ public class AuthInfo {
 	 * @param bankNum the bankNum to set
 	 */
 	public void setBankNum(String bankNum) {
+		//this.bankNum = bankNum;
+		String old = this.bankNum;
 		this.bankNum = bankNum;
+		this.emitter.firePropertyChange("bankNum", old, this.bankNum);
 	}
+
+	/**
+	 * @param listener
+	 */
+	public void addPropertyChangeListener(IPropertyChangeListener listener) {
+		emitter.addPropertyChangeListener(listener);
+	}
+
+	/**
+	 * @param listener
+	 */
+	public void removePropertyChangeListener(IPropertyChangeListener listener) {
+		emitter.removePropertyChangeListener(listener);
+	}
+
 	
 	
 }
