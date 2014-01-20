@@ -179,7 +179,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
         registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
 		context.registerService(IUserManagementService.class, this);
-		initData();
+		
 	}
 
 	private void initData(){
@@ -999,6 +999,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		try {
 			UserManagementServiceImpl impl = (UserManagementServiceImpl)super.clone();
 			impl.otherUserInfo = new UserBean();
+			initData();
 			return impl;
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException("SHOULD NOT HAPPEN !");
