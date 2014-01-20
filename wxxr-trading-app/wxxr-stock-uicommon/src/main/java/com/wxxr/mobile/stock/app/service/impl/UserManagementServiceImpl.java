@@ -7,8 +7,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
@@ -293,17 +295,18 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		cmd.setBankNum(bankNum);
 		cmd.setBankAddr(bankAddr);
 		try{
-		Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-			try {
-				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
-				if(vo.getResulttype()!=1){
-					throw new StockAppBizException(vo.getResultInfo());
-				}
-			} catch (Exception e) {
-				throw new StockAppBizException("系统错误");
+			Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
 			}
+			
 		}catch(CommandException e){
 			throw new StockAppBizException(e.getMessage());
+		}catch (StockAppBizException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new StockAppBizException("系统错误");
 		}
 	}
 
@@ -316,26 +319,25 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		cmd.setBankAddr(bankAddr);
 		try{
 			Future<ResultBaseVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-			try {
-				ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
-				if(vo.getResulttype()!=1){
-					throw new StockAppBizException(vo.getResultInfo());
-				}
-				getMyUserInfo().setBindCard(true);
-			} catch (Exception e) {
-				new StockAppBizException("系统错误");
+			ResultBaseVO vo=future.get(30,TimeUnit.SECONDS);
+			if(vo.getResulttype()!=1){
+				throw new StockAppBizException(vo.getResultInfo());
 			}
+			getMyUserInfo().setBindCard(true);
 		}catch(CommandException e){
 			throw new StockAppBizException(e.getMessage());
+		}catch (StockAppBizException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new StockAppBizException("系统错误");
 		}
-		
 	}
-
 	public AuthInfo getUserAuthInfo() {
+		if(userAttributeCache==null){
+			userAttributeCache=new GenericReloadableEntityCache<String, UserAttributeBean, UserAttributeVO>("userAttributesBean");
+		}
+		userAttributeCache.forceReload(false);
 		if(userAttrbutes==null){
-			if(userAttributeCache==null){
-				userAttributeCache=new GenericReloadableEntityCache<String, UserAttributeBean, UserAttributeVO>("userAttributesBean");
-			}
 			userAttrbutes=userAttributeCache.getEntities(new IEntityFilter<UserAttributeBean>() {
 				@Override
 				public boolean doFilter(UserAttributeBean entity) {
@@ -344,12 +346,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				}
 			}, null);
 		}
-		userAttributeCache.forceReload(true);
-		if(userAttrbutes.getData()==null ||userAttrbutes.getData().size()==0){
-			return null;
-		}
-		
 		AuthInfo authinfo=new AuthInfo();
+		if(userAttrbutes.getData()==null ||userAttrbutes.getData().size()==0){
+			return authinfo;
+		}
+		getMyUserInfo().setBindCard(true);
 		for(UserAttributeBean bean:userAttrbutes.getData()){
 			if("BANK_POSITION".equals(bean.getName())){
 				authinfo.setBankAddr(bean.getValue());
@@ -360,7 +361,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			}else if("ACCT_BANK".equals(bean.getName())){
 				authinfo.setBankName(bean.getValue());
 			}
-			
 		}
 		return authinfo;
 	}
