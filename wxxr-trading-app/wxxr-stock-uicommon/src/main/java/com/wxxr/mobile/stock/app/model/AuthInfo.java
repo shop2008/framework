@@ -103,6 +103,57 @@ public class AuthInfo implements IBindableBean{
 		emitter.removePropertyChangeListener(listener);
 	}
 
+	@Override
+	public String toString() {
+		return "AuthInfo [accountName=" + accountName + ", bankName="
+				+ bankName + ", bankAddr=" + bankAddr + ", bankNum=" + bankNum
+				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accountName == null) ? 0 : accountName.hashCode());
+		result = prime * result
+				+ ((bankAddr == null) ? 0 : bankAddr.hashCode());
+		result = prime * result
+				+ ((bankName == null) ? 0 : bankName.hashCode());
+		result = prime * result + ((bankNum == null) ? 0 : bankNum.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuthInfo other = (AuthInfo) obj;
+		if (accountName == null) {
+			if (other.accountName != null)
+				return false;
+		} else if (!accountName.equals(other.accountName))
+			return false;
+		if (bankAddr == null) {
+			if (other.bankAddr != null)
+				return false;
+		} else if (!bankAddr.equals(other.bankAddr))
+			return false;
+		if (bankName == null) {
+			if (other.bankName != null)
+				return false;
+		} else if (!bankName.equals(other.bankName))
+			return false;
+		if (bankNum == null) {
+			if (other.bankNum != null)
+				return false;
+		} else if (!bankNum.equals(other.bankNum))
+			return false;
+		return true;
+	}
+
 	
 	
 }

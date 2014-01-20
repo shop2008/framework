@@ -123,8 +123,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	private GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO> pullMessagesCache;
 
 	
-	private BindableListWrapper<UserAttributeBean> userAttrbutes;
-	private IReloadableEntityCache<String, UserAttributeBean> userAttributeCache;
+	private IReloadableEntityCache<String, AuthInfo> userAuthInfoCache;
 	
 	private BindableListWrapper<GainPayDetailBean> gainPayDetails;
     private GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO> gainPayDetail_cache;
@@ -151,7 +150,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
-		registry.registerEntityLoader("userAttributesBean", new UserAttributeLoader());
+		registry.registerEntityLoader("userAuthorInfo", new UserAttributeLoader());
         registry.registerEntityLoader("gainPayDetailBean", new GainPayDetailLoader());
         registry.registerEntityLoader("unreadRemindingMsg", new UNReadRemindingMessageLoader());
         
@@ -196,7 +195,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		voucherBeanCache=null;
 		remindMessagesCache=null;
 		pullMessagesCache=null;
-		userAttributeCache=null;
+		userAuthInfoCache=null;
 		gainPayDetail_cache=null;
 		personalHomePageBean_cache=null;
 		otherpersonalHomePageBean_cache=null;
@@ -334,42 +333,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	}
 	private AuthInfo authinfo = null;
 	public AuthInfo getUserAuthInfo() {
-		if(userAttributeCache==null){
-			userAttributeCache=new GenericReloadableEntityCache<String, UserAttributeBean, UserAttributeVO>("userAttributesBean");
+		if(userAuthInfoCache==null){
+			userAuthInfoCache=new GenericReloadableEntityCache<String, AuthInfo, UserAttributeVO>("userAuthorInfo");
 		}
-		userAttributeCache.forceReload(false);
-		if(userAttrbutes==null){
-			userAttrbutes=userAttributeCache.getEntities(new IEntityFilter<UserAttributeBean>() {
-				@Override
-				public boolean doFilter(UserAttributeBean entity) {
-					return "BANK_POSITION".equals(entity.getName())||"BANK_NUM".equals(entity.getName())||
-							"ACCT_NAME".equals(entity.getName())||"ACCT_BANK".equals(entity.getName());
-				}
-			}, null);
-		}
-		if (authinfo==null) {
-			authinfo =new AuthInfo();
-		}
-		if(userAttrbutes.getData()==null ||userAttrbutes.getData().size()==0){
-			return authinfo;
-		}
-		getMyUserInfo().setBindCard(true);
-		for(UserAttributeBean bean:userAttrbutes.getData()){
-			if("BANK_POSITION".equals(bean.getName())){
-				authinfo.setBankAddr(bean.getValue());
-			}else if("BANK_NUM".equals(bean.getName())){
-				authinfo.setBankNum(bean.getValue());
-			}else if("ACCT_NAME".equals(bean.getName())){
-				authinfo.setAccountName(bean.getValue());
-			}else if("ACCT_BANK".equals(bean.getName())){
-				authinfo.setBankName(bean.getValue());
-			}
+		userAuthInfoCache.forceReload(false);
+		authinfo =userAuthInfoCache.getEntity(getService(IUserIdentityManager.class).getUserId());
+		if (!StringUtils.isBlank(authinfo.getAccountName())) {
+			getMyUserInfo().setBindCard(true);
 		}
 		return authinfo;
 	}
-
-	
-
 	@Override
 	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
 		if (otherpersonalHomePageBean_cache==null) {
@@ -735,7 +708,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		voucherBeanCache=null;
 		remindMessagesCache=null;
 		pullMessagesCache=null;
-		userAttributeCache=null;
+		userAuthInfoCache=null;
 		gainPayDetail_cache=null;
 		personalHomePageBean_cache=null;
 		otherpersonalHomePageBean_cache=null;
