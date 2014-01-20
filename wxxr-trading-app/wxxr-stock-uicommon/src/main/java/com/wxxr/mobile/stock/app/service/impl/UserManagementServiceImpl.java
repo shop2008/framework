@@ -354,7 +354,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
             otherpersonalHomePageBean_cache.putEntity(key,b);
         }
         Map<String, Object> p=new HashMap<String, Object>(); 
-        p.put(key, userId);
+        p.put("userId", userId);
         this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
         return otherpersonalHomePageBean_cache.getEntity(key);
 	}
