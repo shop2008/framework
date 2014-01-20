@@ -22,6 +22,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.LoginAction;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
@@ -207,11 +208,19 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	    if (mgr.hasPreference(getModuleName()+"_"+user.getUsername())) {
 	    	  Dictionary<String, String> d = mgr.getPreference(getModuleName()+"_"+user.getUsername());
 	          if (d != null ){
-	        	  user.setUsername(d.get(KEY_USERNAME));
-	        	  user.setNickName(d.get(KEY_NICKNAME));
+	        	  if (StringUtils.isBlank(user.getUsername())) {
+	        		  user.setUsername(d.get(KEY_USERNAME));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getNickName())) {
+	        		  user.setNickName(d.get(KEY_NICKNAME));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getPhoneNumber())) {
+	        		  user.setPhoneNumber(d.get(KEY_PHONENUMBER));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getUserPic())) {
+	        		  user.setUserPic(d.get(KEY_USERPIC));
+	        	  }
 	        	  user.setPassword(d.get(KEY_PASSWORD));
-	        	  user.setPhoneNumber(d.get(KEY_PHONENUMBER));
-	        	  user.setUserPic(d.get(KEY_USERPIC));
 	        	  user.setHomeBack(d.get(KEY_HOME_BGIMG));
 	        	  String msg_setting = d.get(KEY_MSG_SETTTING);
 	        	  user.setMessagePushSettingOn("ON".equals(msg_setting));
