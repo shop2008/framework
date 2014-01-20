@@ -3,9 +3,11 @@ package com.wxxr.stock.trading.ejb.api;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
-
+@JsonIgnoreProperties(ignoreUnknown=true)
 @XmlRootElement(name = "UserCreateTradAccInfoVO")
 public class UserCreateTradAccInfoVO implements Serializable{
 	private static final long serialVersionUID = 6046188597351046383L;
