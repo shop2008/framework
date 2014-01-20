@@ -125,7 +125,7 @@ public abstract class AppSetPage extends PageBase {
 			if (user == null) {
 				return "*";
 			}
-			//pushEnabledFlag = usrService.getPushMessageSetting();
+			pushEnabledFlag = user.getMessagePushSettingOn();
 			//usrService.pushMessageSetting(!pushEnabledFlag);
 			
 			
