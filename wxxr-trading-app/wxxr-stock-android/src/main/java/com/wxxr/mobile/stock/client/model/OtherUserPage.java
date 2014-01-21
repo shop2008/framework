@@ -26,7 +26,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -36,7 +36,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.getUserInfoById(userId)}")
 	UserBean user;

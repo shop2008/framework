@@ -23,7 +23,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
@@ -32,7 +32,7 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 public abstract class OtherViewMorePage extends PageBase implements IModelUpdater{
 
 	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeAStart,otherHomeALimit,false)):null}")
 	BindableListWrapper<GainBean> otherChallengeListBean;
 
