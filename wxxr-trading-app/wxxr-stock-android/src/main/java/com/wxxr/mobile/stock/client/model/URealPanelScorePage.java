@@ -1,6 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -10,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -27,14 +29,15 @@ public abstract class URealPanelScorePage extends PageBase{
 	
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
+	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
+	BindableListWrapper<GainPayDetailBean> voucherDetailsBean;
 	
 	@Field(valueKey="options", binding="${voucherDetailsBean!=null?voucherDetailsBean.getData(true):null}", upateAsync=true)
 	List<GainPayDetailBean> actualScores;
 	
 	
 	DataField<List> actualScoresField;
-	@Bean(type=BindingType.Pojo, express="${tradingService.getGainPayDetailDetails(start,limit)}")
-	BindableListWrapper<GainPayDetailBean> voucherDetailsBean;
+	
 	
 	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${voucherDetailsBean!=null&&voucherDetailsBean.data!=null&&voucherDetailsBean.data.size()>0?true:false}")})
@@ -54,6 +57,11 @@ public abstract class URealPanelScorePage extends PageBase{
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
+	}
+	
+	@OnShow
+	void initData() {
+		registerBean("voucherDetailsBean", voucherDetailsBean);
 	}
 	
 	@Command
