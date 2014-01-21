@@ -28,6 +28,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -44,9 +45,12 @@ public abstract class UserPage extends PageBase {
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
+	@Bean(type = BindingType.Pojo, express = "${loginMgr.myUserInfo}")
 	UserBean user;
 
+	@Bean(type=BindingType.Service)
+	IUserLoginManagementService loginMgr;
+	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
