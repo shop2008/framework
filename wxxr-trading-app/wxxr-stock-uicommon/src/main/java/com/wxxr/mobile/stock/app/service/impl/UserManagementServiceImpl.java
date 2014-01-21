@@ -396,15 +396,13 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public UserAssetBean getUserAssetBean() {
+		if(userAssetBeanCache==null){
+			userAssetBeanCache=new GenericReloadableEntityCache<String, UserAssetBean, UserAssetVO>("userAssetBean");
+		}
+		userAssetBean=userAssetBeanCache.getEntity(getService(IUserIdentityManager.class).getUserId());
 		if(userAssetBean==null){
-			if(userAssetBeanCache==null){
-				userAssetBeanCache=new GenericReloadableEntityCache<String, UserAssetBean, UserAssetVO>("userAssetBean");
-			}
-			userAssetBean=userAssetBeanCache.getEntity(UserAssetBean.class.getCanonicalName());
-			if(userAssetBean==null){
-				userAssetBean=new UserAssetBean();
-				userAssetBeanCache.putEntity(UserAssetBean.class.getCanonicalName(), userAssetBean);
-			}
+			userAssetBean=new UserAssetBean();
+			userAssetBeanCache.putEntity(getService(IUserIdentityManager.class).getUserId(), userAssetBean);
 		}
 		userAssetBeanCache.doReloadIfNeccessay();
 		return userAssetBean;
