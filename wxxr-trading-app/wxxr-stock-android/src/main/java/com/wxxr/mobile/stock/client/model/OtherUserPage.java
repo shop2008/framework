@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -27,6 +28,7 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
@@ -36,12 +38,15 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
 	@Bean(type = BindingType.Service)
-	IUserLoginManagementService usrService;
+	IUserLoginManagementService loginUsrService;
 
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+	
 	@Bean(type = BindingType.Pojo, express = "${usrService.getUserInfoById(userId)}")
 	UserBean user;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getOtherPersonalHomePage(userId,false)}")
+	@Bean(type = BindingType.Pojo, express = "${loginUsrService.getOtherPersonalHomePage(userId,false)}")
 	PersonalHomePageBean personalBean;
 
 	
@@ -83,22 +88,22 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter="shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding = "${usrService.getOtherPersonalHomePage(userId,true).getVirtualList()}",upateAsync=true)
+	@Field(valueKey = "options", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getVirtualList()}",upateAsync=true)
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding = "${usrService.getOtherPersonalHomePage(userId,true).getActualList()}",upateAsync=true)
+	@Field(valueKey = "options", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getActualList()}",upateAsync=true)
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${usrService.getOtherPersonalHomePage(userId,true).getActualList().size()>0?false:true}",upateAsync=true)
+	@Field(valueKey = "visible", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getActualList().size()>0?false:true}",upateAsync=true)
 	boolean cNoSharedVisiable;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${usrService.getOtherPersonalHomePage(userId,true).getVirtualList().size()>0?false:true}", upateAsync=true)
+	@Field(valueKey = "visible", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getVirtualList().size()>0?false:true}", upateAsync=true)
 	boolean jNoSharedVisiable;
 
 	@Menu(items={"left"})
@@ -309,8 +314,8 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		if(usrService!=null) {
-			usrService.getOtherPersonalHomePage(userId, false);
+		if(loginUsrService!=null) {
+			loginUsrService.getOtherPersonalHomePage(userId, false);
 		}
 		return null;
 	}

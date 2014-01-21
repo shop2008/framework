@@ -26,7 +26,6 @@ public class UserClientInfoLoader extends AbstractEntityLoader<String, ClientInf
 	private static final String COMMAND_NAME = "GetClientInfoCommand";
 
 	@NetworkConstraint
-	@SecurityConstraint(allowRoles={})
 	private static class GetClientInfoCommand implements ICommand<List<ClientInfoVO>>{
 
 		/* (non-Javadoc)
