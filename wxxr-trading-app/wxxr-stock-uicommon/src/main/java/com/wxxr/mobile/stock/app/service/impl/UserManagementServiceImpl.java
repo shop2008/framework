@@ -168,9 +168,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadRemindMessageHandler.COMMAND_NAME, new ReadRemindMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadAllUnreadMessageHandler.COMMAND_NAME, new ReadAllUnreadMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
-		
-		
-	   
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
@@ -331,9 +328,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			userAuthInfoCache=new GenericReloadableEntityCache<String, AuthInfo, UserAttributeVO>("userAuthorInfo");
 		}
 		userAuthInfoCache.forceReload(false);
-		authinfo =userAuthInfoCache.getEntity(getService(IUserIdentityManager.class).getUserId());
-		if (!StringUtils.isBlank(authinfo.getAccountName())) {
-			getMyUserInfo().setBindCard(true);
+		if (getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			authinfo =userAuthInfoCache.getEntity(getService(IUserIdentityManager.class).getUserId());
+			if (authinfo!=null&&!StringUtils.isBlank(authinfo.getAccountName())) {
+				getMyUserInfo().setBindCard(true);
+			}
 		}
 		return authinfo;
 	}
