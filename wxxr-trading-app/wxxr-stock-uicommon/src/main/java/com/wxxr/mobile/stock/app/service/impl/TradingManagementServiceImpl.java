@@ -1480,6 +1480,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	public Object clone() {
 		try {
 			TradingManagementServiceImpl impl = (TradingManagementServiceImpl)super.clone();
+			clearCache();
 			impl.doInit();
 			return impl;
 		}catch (CloneNotSupportedException e) {
