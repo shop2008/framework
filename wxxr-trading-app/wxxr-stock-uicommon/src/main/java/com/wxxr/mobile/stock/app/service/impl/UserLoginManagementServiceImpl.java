@@ -368,7 +368,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
     	if (otherGainBean_cache==null) {
     		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
 		}
-    	if (otherGainBeans==null) {
+    	//if (otherGainBeans==null) {
     		otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
                 @Override
                 public boolean doFilter(GainBean entity) {
@@ -378,7 +378,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
                     return false;
                 }
             }, viewMoreComparator);
-		}
+		//}
       Map<String, Object> p=new HashMap<String, Object>(); 
       p.put("virtual", virtual);
       p.put("start", start);
