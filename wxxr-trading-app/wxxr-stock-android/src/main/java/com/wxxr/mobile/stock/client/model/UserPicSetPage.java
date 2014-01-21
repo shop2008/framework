@@ -14,14 +14,14 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 
 @View(name="userPicSet", withToolbar=true, description="设置头像")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.user_pic_set_layout")
 public abstract class UserPicSetPage extends PageBase {
 	
 	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;

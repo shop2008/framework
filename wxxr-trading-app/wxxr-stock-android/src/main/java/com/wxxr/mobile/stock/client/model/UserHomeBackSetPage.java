@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 
 
 @View(name="userHomeSet", withToolbar=true, description="设置背景")
@@ -22,7 +22,7 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 public abstract class UserHomeBackSetPage extends PageBase {
 
 	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	IUserLoginManagementService usrService;
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;
