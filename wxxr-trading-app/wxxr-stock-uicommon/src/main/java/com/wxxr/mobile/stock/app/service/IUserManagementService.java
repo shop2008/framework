@@ -82,12 +82,7 @@ public interface IUserManagementService {
 	 */
 	AuthInfo getUserAuthInfo();
 	
-	/**
-	 * 获取他人主页
-	 * @param userId
-	 * @return
-	 */
-	PersonalHomePageBean getOtherPersonalHomePage(String userId, boolean isAsync);
+	
 	/**
 	 * 获取当前用户个人主页
 	 * @param userId
@@ -105,16 +100,7 @@ public interface IUserManagementService {
 	 */
 	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual);
 	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual,boolean wait4Finish);
-	/**
-	 * 获取他人主页更多条数地址
-	 * @param userId 用户ID
-	 * @param start
-	 * @param limit
-	 * @param virtual - true：虚拟盘，false；实盘
-	 * @return
-	 * @throws Exception
-	 */
-	BindableListWrapper<GainBean> getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
+
 	
 	/**
 	 * 获取自己的账户

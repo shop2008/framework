@@ -3,8 +3,12 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.Comparator;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -27,12 +31,19 @@ import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
+import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
+import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
@@ -60,7 +71,8 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	private UsernamePasswordCredential usernamePasswordCredential4Login;
 	// ==================beans =============================
 	private UserBean myUserInfo ;
-	
+	private GenericReloadableEntityCache<String,GainBean,List<GainBean>> otherGainBean_cache;
+    private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> otherpersonalHomePageBean_cache;
 	@Override
 	public  void login(final String userId, final String pwd) throws LoginFailedException {
 		Future<?> future = context.getExecutor().submit(new Runnable() {
@@ -290,16 +302,23 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	}
 
 	@Override
-	protected void startService() {		
+	protected void startService() {	
+		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
+		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
+		registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
+		registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
 		loadCookie();
+		
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(IUserLoginManagementService.class, this);
 		context.unregisterService(IUserAuthManager.class, this);
+		otherpersonalHomePageBean_cache=null;
+		otherGainBean_cache=null;
 	}
 	
 	@Override
@@ -327,4 +346,58 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	        }
 	        getPrefManager().putPreference(getModuleName(), pref);
 	}
+	
+	@Override
+	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
+		if (otherpersonalHomePageBean_cache==null) {
+			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("otherpersonalHomePageBean");
+		}
+	    String key=userId;
+        if (otherpersonalHomePageBean_cache.getEntity(key)==null){
+            PersonalHomePageBean b=new PersonalHomePageBean();
+            otherpersonalHomePageBean_cache.putEntity(key,b);
+        }
+        Map<String, Object> p=new HashMap<String, Object>(); 
+        p.put("userId", userId);
+        this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
+        return otherpersonalHomePageBean_cache.getEntity(key);
+	}
+
+	BindableListWrapper<GainBean> otherGainBeans ;
+    public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
+    	if (otherGainBean_cache==null) {
+    		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
+		}
+    	if (otherGainBeans==null) {
+    		otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+                @Override
+                public boolean doFilter(GainBean entity) {
+                    if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
+                        return true;
+                    }
+                    return false;
+                }
+            }, viewMoreComparator);
+		}
+      Map<String, Object> p=new HashMap<String, Object>(); 
+      p.put("virtual", virtual);
+      p.put("start", start);
+      p.put("limit", limit);
+      p.put("userId", userId);
+      otherGainBean_cache.forceReload(p,false);
+      otherGainBean_cache.setCommandParameters(p);
+      otherGainBeans.setReloadParameters(p);
+     return otherGainBeans;
+    }
+    private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
+		@Override
+		public int compare(GainBean o1, GainBean o2) {
+			if (o2!=null&&o1!=null) {
+				return (int)(o2.getTradingAccountId()-o1.getTradingAccountId());
+			}
+			return 0;
+			//return o2.getCloseTime().compareTo(o1.getCloseTime());
+		}
+	};
+	
 }

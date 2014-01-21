@@ -2,7 +2,10 @@ package com.wxxr.mobile.stock.app.service;
 
 import com.wxxr.mobile.stock.app.LoginFailedException;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
 public interface IUserLoginManagementService {
 
@@ -33,4 +36,21 @@ public interface IUserLoginManagementService {
 	void resetPassword(String userName);
 	
 	UserBean getMyUserInfo();
+	
+	/**
+	 * 获取他人主页
+	 * @param userId
+	 * @return
+	 */
+	PersonalHomePageBean getOtherPersonalHomePage(String userId, boolean isAsync);
+	/**
+	 * 获取他人主页更多条数地址
+	 * @param userId 用户ID
+	 * @param start
+	 * @param limit
+	 * @param virtual - true：虚拟盘，false；实盘
+	 * @return
+	 * @throws Exception
+	 */
+	BindableListWrapper<GainBean> getMoreOtherPersonal(String userId, int start, int limit, boolean virtual);
 }

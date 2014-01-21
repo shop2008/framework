@@ -31,7 +31,6 @@ import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
-import com.wxxr.mobile.stock.app.bean.UserAttributeBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -129,10 +128,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
     private GenericReloadableEntityCache<Long, GainPayDetailBean, GainPayDetailsVO> gainPayDetail_cache;
 	
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> personalHomePageBean_cache;
-    private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> otherpersonalHomePageBean_cache;
+
     private GenericReloadableEntityCache<String,GainBean,List<GainBean>> gainBean_cache;
 
-    private GenericReloadableEntityCache<String,GainBean,List<GainBean>> otherGainBean_cache;
+  
 	private BindableListWrapper<RemindMessageBean> unreadRemindMessages;
 	private GenericReloadableEntityCache<String, RemindMessageBean,RemindMessageBean> unreadRemindMessagesCache;
     
@@ -173,11 +172,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		
 	   
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
-	    otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
-        registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
-        registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
 		context.registerService(IUserManagementService.class, this);
 		
 	}
@@ -198,9 +194,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		userAuthInfoCache=null;
 		gainPayDetail_cache=null;
 		personalHomePageBean_cache=null;
-		otherpersonalHomePageBean_cache=null;
 		gainBean_cache=null;
-		otherGainBean_cache=null;
 		unreadRemindMessagesCache=null;
 	}
 
@@ -343,21 +337,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		}
 		return authinfo;
 	}
-	@Override
-	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
-		if (otherpersonalHomePageBean_cache==null) {
-			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("otherpersonalHomePageBean");
-		}
-	    String key=userId;
-        if (otherpersonalHomePageBean_cache.getEntity(key)==null){
-            PersonalHomePageBean b=new PersonalHomePageBean();
-            otherpersonalHomePageBean_cache.putEntity(key,b);
-        }
-        Map<String, Object> p=new HashMap<String, Object>(); 
-        p.put("userId", userId);
-        this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
-        return otherpersonalHomePageBean_cache.getEntity(key);
-	}
 	
 	
 	@Override
@@ -416,32 +395,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	};
 	
 
-	BindableListWrapper<GainBean> otherGainBeans ;
-    public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
-    	if (otherGainBean_cache==null) {
-    		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
-		}
-    	if (otherGainBeans==null) {
-    		otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
-                @Override
-                public boolean doFilter(GainBean entity) {
-                    if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
-                        return true;
-                    }
-                    return false;
-                }
-            }, viewMoreComparator);
-		}
-      Map<String, Object> p=new HashMap<String, Object>(); 
-      p.put("virtual", virtual);
-      p.put("start", start);
-      p.put("limit", limit);
-      p.put("userId", userId);
-      otherGainBean_cache.forceReload(p,false);
-      otherGainBean_cache.setCommandParameters(p);
-      otherGainBeans.setReloadParameters(p);
-     return otherGainBeans;
-    }
 	@Override
 	public UserAssetBean getUserAssetBean() {
 		if(userAssetBean==null){
@@ -711,9 +664,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		userAuthInfoCache=null;
 		gainPayDetail_cache=null;
 		personalHomePageBean_cache=null;
-		otherpersonalHomePageBean_cache=null;
 		gainBean_cache=null;
-		otherGainBean_cache=null;
 		unreadRemindMessagesCache=null;
 	}
 	
@@ -802,15 +753,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						public AuthInfo getUserAuthInfo() {
 							return ((IUserManagementService)holder.getDelegate()).getUserAuthInfo();
 						}
-						/**
-						 * @param userId
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getOtherPersonalHomePage(java.lang.String)
-						 */
-						public PersonalHomePageBean getOtherPersonalHomePage(
-								String userId, boolean isAsync) {
-							return ((IUserManagementService)holder.getDelegate()).getOtherPersonalHomePage(userId,isAsync);
-						}
+					
 
 						/**
 						 * @return
@@ -846,22 +789,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 							return ((IUserManagementService)holder.getDelegate()).getMorePersonalRecords(start,
 									limit, virtual, wait4Finish);
 						}
-						
-						/**
-						 * @param userId
-						 * @param start
-						 * @param limit
-						 * @param virtual
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getMoreOtherPersonal(java.lang.String, int, int, boolean)
-						 */
-						public BindableListWrapper<GainBean> getMoreOtherPersonal(
-								String userId, int start, int limit,
-								boolean virtual) {
-							return ((IUserManagementService)holder.getDelegate()).getMoreOtherPersonal(userId, start,
-									limit, virtual);
-						}
-
 						/**
 						 * @return
 						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getUserAssetBean()
