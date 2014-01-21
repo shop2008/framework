@@ -26,6 +26,9 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 
 	DataField<String> inputPswField;
 
+	@Field(valueKey = "text")
+	String commitVerify;
+	
 	String type;
 	@Bean(type = BindingType.Service)
 	IUserManagementService userService;
@@ -37,7 +40,7 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 			@Navigation(on = "VerifyFail", showDialog = "RetryVerifyDialog", closeCurrentView = true),
 			@Navigation(on = "DRAWCASH", showPage = "userWithDrawCashPage", closeCurrentView = true),
 			@Navigation(on = "SWITCHCARD", showPage = "userSwitchCardPage", closeCurrentView = true) })
-	String commitVerify(InputEvent event) {
+	String commitVerifyPasswd(InputEvent event) {
 		String inputPasswrod = this.inputPswField.getValue();
 		boolean verifyResult = userService.verfiy(user.getPhoneNumber(),
 				inputPasswrod);
