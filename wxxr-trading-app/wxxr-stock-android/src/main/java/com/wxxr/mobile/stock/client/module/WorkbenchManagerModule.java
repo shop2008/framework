@@ -23,6 +23,7 @@ import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
+import com.wxxr.mobile.stock.client.binding.EditableNavPageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
@@ -126,6 +127,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		registry.registerDecorator("BuyStockClickedDecorator", BuyStockClickedDecorator.class);
 		
 		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
+		registry.registerDecorator("EditableNavPageBtnClickedDecorator", EditableNavPageBtnClickedDecorator.class);
 		registry.registerDecorator("StockViewDecorator", StockViewDecorator.class);
 	}
 
