@@ -57,6 +57,8 @@
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserScorePage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TradingRuleWebPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.OtherViewMorePage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CloseShiPanBuyStockInfoPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CloseMoNiStockInfoPage" android:screenOrientation="portrait"/>
     	
     </application>
 
