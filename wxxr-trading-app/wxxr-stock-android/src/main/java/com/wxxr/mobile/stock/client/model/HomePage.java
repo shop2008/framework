@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
@@ -18,6 +19,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -71,6 +73,12 @@ public abstract class HomePage extends PageBase {
 	
 	boolean alertUpdateEnabled = true;
 	
+	
+	boolean vertionUpdateChecked;
+	@OnCreate
+	void initDataOnCreate() {
+		vertionUpdateChecked = false;
+	}
 	@OnShow
 	void initData() {
 
@@ -78,8 +86,28 @@ public abstract class HomePage extends PageBase {
 		if (log.isDebugEnabled()) {
 			log.debug("CurVertion:" + curVertion);
 		}
-		IUIComponent vertionItem = getChild("rpage3");
+		final IUIComponent vertionItem = getChild("rpage3");
 		vertionItem.setAttribute(AttributeKeys.title, "版本:" + curVertion);
+		
+		final Runnable[] tasks = new Runnable[1];
+
+		tasks[0] = new Runnable() {
+
+			
+			@Override
+			public void run() {
+				if(vertionUpdateChecked) {
+					return;
+				}
+				checkVertion(vertionItem);
+				AppUtils.runOnUIThread(tasks[0], 1, TimeUnit.SECONDS);
+			}
+		};
+		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
+		
+	}
+
+	private void checkVertion(IUIComponent vertionItem) {
 		if (vertionInfoBean == null) {
 			return;
 		}
@@ -92,14 +120,19 @@ public abstract class HomePage extends PageBase {
 
 		if (log.isDebugEnabled()) {
 			log.debug("RemoteVertion:" + remoteVertion);
+			log.debug("RemoteVertion:" + curVertion);
 		}
-		boolean isLastest = curVertion.equals(remoteVertion) ? true : false;
+
+		boolean isLastest = curVertion.compareTo(remoteVertion) < 0 ? true
+				: false;
+		vertionUpdateChecked = true;
 		if (isLastest) {
 			return;
 		} else {
 			vertionItem.setAttribute(AttributeKeys.icon,
 					"resourceId:drawable/v_update");
-			alertUpdateEnabled = AppUtils.getFramework().getService(IClientInfoService.class).alertUpdateEnabled();
+			alertUpdateEnabled = AppUtils.getFramework()
+					.getService(IClientInfoService.class).alertUpdateEnabled();
 			if (alertUpdateEnabled) {
 				updateSelection(new VertionUpdateSelection(
 						vertionInfoBean.getUrl()));
@@ -108,7 +141,7 @@ public abstract class HomePage extends PageBase {
 					@Override
 					public void run() {
 
-						SystemClock.sleep(10000);
+						//SystemClock.sleep(10000);
 						AppUtils.runOnUIThread(new Runnable() {
 
 							@Override
@@ -124,11 +157,9 @@ public abstract class HomePage extends PageBase {
 					}
 				});
 			}
-			
+
 		}
-
 	}
-
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -237,7 +268,7 @@ public abstract class HomePage extends PageBase {
 					return "";
 				}
 
-				boolean isLastest = curVertion.equals(remoteVertion) ? true
+				boolean isLastest = curVertion.compareTo(remoteVertion) >= 0 ? true
 						: false;
 				if (isLastest) {
 					return "";
