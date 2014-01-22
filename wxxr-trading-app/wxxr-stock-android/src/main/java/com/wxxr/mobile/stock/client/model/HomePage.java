@@ -123,7 +123,7 @@ public abstract class HomePage extends PageBase {
 			log.debug("RemoteVertion:" + curVertion);
 		}
 
-		boolean isLastest = curVertion.compareTo(remoteVertion) < 0 ? true
+		boolean isLastest = curVertion.compareTo(remoteVertion) >= 0 ? true
 				: false;
 		vertionUpdateChecked = true;
 		if (isLastest) {
