@@ -3,9 +3,11 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
@@ -24,6 +26,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -105,19 +108,22 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible",upateAsync=true, binding = "${usrService.getMyPersonalHomePage(true).getActualList().size()>0?false:true}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null&&personalBean.actualList!=null&&personalBean.actualList.size()>0?false:true}")
 	boolean cNoSharedVisiable;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", upateAsync=true,binding = "${usrService.getMyPersonalHomePage(true).getVirtualList().size()>0?false:true}")
+	@Field(valueKey = "visible", binding = "${personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true}")
 	boolean jNoSharedVisiable;
+	
+	DataField<Boolean> jNoSharedVisiableField;
 
 	@Field(valueKey = "backgroundImageURI", binding = "${user!=null?user.homeBack!=null?user.homeBack:'resourceId:drawable/back1':'resourceId:drawable/back1'}")
 	String userHomeBack = "resourceId:drawable/back1";
 
 
+	DataField<Boolean> cNoSharedVisiableField;
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
@@ -147,6 +153,38 @@ public abstract class UserPage extends PageBase {
 		loadingExpireTime = true;
 	}
 */
+	boolean jNoSharedFlag = false;
+	boolean cNoSharedFlag = false;
+	
+	@OnShow
+	void initData(){
+		jNoSharedFlag = false;
+		cNoSharedFlag = false;
+		final Runnable[] tasks = new Runnable[1];
+		
+		tasks[0] = new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				if(personalBean!=null && personalBean.getActualList()!=null&&personalBean.getActualList().size()>0) {
+					cNoSharedVisiableField.setValue(false);
+					cNoSharedFlag = true;
+				}
+				
+				if(personalBean!=null && personalBean.getVirtualList()!=null&&personalBean.getVirtualList().size()> 0) {
+					jNoSharedVisiableField.setValue(false);
+					jNoSharedFlag = true;
+				}
+				
+				if(jNoSharedFlag && cNoSharedFlag) {
+					return;
+				}
+				AppUtils.runOnUIThread(tasks[0], 100, TimeUnit.MILLISECONDS);
+			}
+		};
+		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
+	}
 	/**
 	 * 挑战交易盘-"查看更多"事件处理
 	 * 

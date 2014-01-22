@@ -100,28 +100,28 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
 	boolean cSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getActualList().size()>0?false:true}",upateAsync=true)
+	@Field(valueKey = "visible", binding = "${personalBean!=null&&personalBean.actualList!=null&&personalBean.actualList.size()>0?false:true}")
 	boolean cNoSharedVisiable;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.virtualList!=null?(personalBean.virtualList.size()>0?true:false):false):false}")
 	boolean jSharedVisiable;
 
-	@Field(valueKey = "visible", binding = "${loginUsrService.getOtherPersonalHomePage(userId,true).getVirtualList().size()>0?false:true}", upateAsync=true)
+	@Field(valueKey = "visible", binding = "${personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true}")
 	boolean jNoSharedVisiable;
 
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	
 
-	/*boolean jNoSharedFlag = false;
+	boolean jNoSharedFlag = false;
 	boolean cNoSharedFlag = false;
 	DataField<Boolean> jNoSharedVisiableField;
-	DataField<Boolean> cNoSharedVisiableField;*/
+	DataField<Boolean> cNoSharedVisiableField;
 	@OnShow
 	void initData() {
 		getAppToolbar().setTitle(userName+"的主页", null);
 		
-		/*jNoSharedFlag = false;
+		jNoSharedFlag = false;
 		cNoSharedFlag = false;
 		final Runnable[] tasks = new Runnable[1];
 		
@@ -146,7 +146,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				AppUtils.runOnUIThread(tasks[0], 100, TimeUnit.MILLISECONDS);
 			}
 		};
-		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);*/
+		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
 	}
 	
 	@Command(
