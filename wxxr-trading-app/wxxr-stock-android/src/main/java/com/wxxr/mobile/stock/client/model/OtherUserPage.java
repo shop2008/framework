@@ -113,15 +113,15 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	private IMenu toolbar;
 	
 
-	boolean jNoSharedFlag = false;
+	/*boolean jNoSharedFlag = false;
 	boolean cNoSharedFlag = false;
 	DataField<Boolean> jNoSharedVisiableField;
-	DataField<Boolean> cNoSharedVisiableField;
+	DataField<Boolean> cNoSharedVisiableField;*/
 	@OnShow
 	void initData() {
 		getAppToolbar().setTitle(userName+"的主页", null);
 		
-		jNoSharedFlag = false;
+		/*jNoSharedFlag = false;
 		cNoSharedFlag = false;
 		final Runnable[] tasks = new Runnable[1];
 		
@@ -130,12 +130,12 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 			@Override
 			public void run() {
 				
-				if(personalBean.getActualList().size()>0) {
+				if(personalBean!=null && personalBean.getActualList()!=null&&personalBean.getActualList().size()>0) {
 					cNoSharedVisiableField.setValue(false);
 					cNoSharedFlag = true;
 				}
 				
-				if(personalBean.getVirtualList().size()> 0) {
+				if(personalBean!=null&&personalBean.getVirtualList()!=null&&personalBean.getVirtualList().size()> 0) {
 					jNoSharedVisiableField.setValue(false);
 					jNoSharedFlag = true;
 				}
@@ -143,10 +143,10 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				if(jNoSharedFlag && cNoSharedFlag) {
 					return;
 				}
-				AppUtils.runOnUIThread(tasks[0], 1, TimeUnit.SECONDS);
+				AppUtils.runOnUIThread(tasks[0], 100, TimeUnit.MILLISECONDS);
 			}
 		};
-		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
+		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);*/
 	}
 	
 	@Command(
