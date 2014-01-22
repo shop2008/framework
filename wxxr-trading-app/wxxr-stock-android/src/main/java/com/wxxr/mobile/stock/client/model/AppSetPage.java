@@ -38,7 +38,7 @@ public abstract class AppSetPage extends PageBase {
 	
 	
 	@Bean(type=BindingType.Service)
-	IUserLoginManagementService usrService;
+	IUserManagementService usrService;
 	
 	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
 	UserBean user;
@@ -120,7 +120,7 @@ public abstract class AppSetPage extends PageBase {
 				return "*";
 			}
 			pushEnabledFlag = user.getMessagePushSettingOn();
-			//usrService.pushMessageSetting(!pushEnabledFlag);
+			usrService.pushMessageSetting(!pushEnabledFlag);
 			
 			
 			pushEnabledFlag = !pushEnabledFlag;
