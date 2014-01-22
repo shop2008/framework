@@ -3,9 +3,11 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -23,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -61,7 +64,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	/**
 	 * 用户昵称
 	 */
-	@Field(valueKey = "text", binding = "${user!=null?user.nickName:'--'}")
+	@Field(valueKey = "text", binding = "${userName}")
 	String userNickName;
 
 	/**
@@ -110,10 +113,40 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	private IMenu toolbar;
 	
 
-	
+	boolean jNoSharedFlag = false;
+	boolean cNoSharedFlag = false;
+	DataField<Boolean> jNoSharedVisiableField;
+	DataField<Boolean> cNoSharedVisiableField;
 	@OnShow
 	void initData() {
 		getAppToolbar().setTitle(userName+"的主页", null);
+		
+		jNoSharedFlag = false;
+		cNoSharedFlag = false;
+		final Runnable[] tasks = new Runnable[1];
+		
+		tasks[0] = new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				if(personalBean.getActualList().size()>0) {
+					cNoSharedVisiableField.setValue(false);
+					cNoSharedFlag = true;
+				}
+				
+				if(personalBean.getVirtualList().size()> 0) {
+					jNoSharedVisiableField.setValue(false);
+					jNoSharedFlag = true;
+				}
+				
+				if(jNoSharedFlag && cNoSharedFlag) {
+					return;
+				}
+				AppUtils.runOnUIThread(tasks[0], 1, TimeUnit.SECONDS);
+			}
+		};
+		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
 	}
 	
 	@Command(
@@ -167,6 +200,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				if (tempt != null && Constants.KEY_USER_NAME_FLAG.equals(key)) {
 					if (tempt instanceof String) {
 						userName = (String) tempt;
+						registerBean("userName", userName);
 					}
 				}
 			}
