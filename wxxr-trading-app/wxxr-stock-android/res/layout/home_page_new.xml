@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        bind:field="contents" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.wxxr.mobile.stock.client.widget.CenterRadioButton
+            android:id="@+id/radio_btn_0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home_bottom_radiobtn_bg"
+            android:button="@drawable/home_bottom_radiobtn_0"
+            bind:field="*"
+            android:checked="true"
+            bind:on_Click="homeMainClick" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <com.wxxr.mobile.stock.client.widget.CenterRadioButton
+            android:id="@+id/radio_btn_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home_bottom_radiobtn_bg"
+            android:button="@drawable/home_bottom_radiobtn_1"
+            bind:field="*"
+            bind:on_Click="tradingClick" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <com.wxxr.mobile.stock.client.widget.CenterRadioButton
+            android:id="@+id/radio_btn_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home_bottom_radiobtn_bg"
+            android:button="@drawable/home_bottom_radiobtn_2"
+            bind:field="*"
+            bind:on_Click="helpClick" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <com.wxxr.mobile.stock.client.widget.CenterRadioButton
+            android:id="@+id/radio_btn_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home_bottom_radiobtn_bg"
+            android:button="@drawable/home_bottom_radiobtn_3"
+            bind:field="*"
+            bind:on_Click="infoClick" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <com.wxxr.mobile.stock.client.widget.CenterRadioButton
+            android:id="@+id/radio_btn_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home_bottom_radiobtn_bg"
+            android:button="@drawable/home_bottom_radiobtn_4"
+            bind:field="*"
+            bind:on_Click="manageClick" />
+    </RadioGroup>
+
+</LinearLayout>

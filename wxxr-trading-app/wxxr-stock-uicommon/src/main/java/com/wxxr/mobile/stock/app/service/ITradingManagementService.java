@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import java.util.List;
+
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
@@ -19,6 +21,7 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
+import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 
 /**
  * 交易管理模块
@@ -246,4 +249,6 @@ public interface ITradingManagementService {
 	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit);
 	
 	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish);
+	/**************************V2****************************/
+	public List<BaseMenuItem> getHomeMenuList();
 }

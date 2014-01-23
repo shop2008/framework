@@ -40,7 +40,7 @@ import com.wxxr.mobile.stock.client.service.IClientInfoService;
 /**
  * @author neillin
  */
-@View(name = "home", withToolbar = true, description = "短线放大镜", provideSelection = true)
+@View(name = "home_old", withToolbar = true, description = "短线放大镜", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.home_page")
 public abstract class HomePage extends PageBase {
 	static Trace log;

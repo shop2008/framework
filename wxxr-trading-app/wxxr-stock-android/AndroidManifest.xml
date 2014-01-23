@@ -10,7 +10,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:launchMode="singleTask" android:name=".ui.HomePage" android:screenOrientation="portrait"/>
+        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:launchMode="singleTask" android:name=".ui.HomePageNew" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.WebPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.StockSearchViewPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TBuyTradingPage" android:screenOrientation="portrait"/>

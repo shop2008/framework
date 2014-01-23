@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            bind:field="refreshView"
+            bind:on_PullRefresh="handleRefresh" >
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:scrollbars="none"
+                bind:field="homeView"
+                bind:itemViewId="MainHomeItemView"
+                bind:on_ItemClick="homeMessageClick"
+                bind:updateAllId="resourceId:id/all"
+                bind:updateFaieldId="resourceId:id/failed"
+                bind:updatingViewId="resourceId:id/progress" />
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+    </FrameLayout>
+
+</LinearLayout>
+<!-- bind:headerViewId="MainHomeListHeaderView" bind:field="homeView@StockViewDecorator" <include layout="@layout/home_view_loading_progress_layout" />-->

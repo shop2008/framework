@@ -66,7 +66,7 @@ public abstract class AppManageView extends ViewBase {
 	String userPhoneNum;
 	
 	/**积分余额*/
-	@Field(valueKey="text", binding="${}",converter="scoreConvertor")
+	@Field(valueKey="text")//, binding="${}",converter="scoreConvertor")
 	String scroeBalance;
 	
 	/**帐户余额*/

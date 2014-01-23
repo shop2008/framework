@@ -52,6 +52,7 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.mock.MockDataUtils;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
@@ -69,6 +70,7 @@ import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
+import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
 import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.CancelOrderCommand;
@@ -1065,7 +1067,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				if(clazz == ITradingManagementService.class){
 					return clazz.cast(new ITradingManagementService(){
 						
-
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getHomeMenuList()
+						 */
+						public List<BaseMenuItem> getHomeMenuList() {
+							return ((ITradingManagementService)holder.getDelegate()).getHomeMenuList();
+						}
 						/**
 						 * @return
 						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getT0TradingAccountList()
@@ -1486,6 +1494,12 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}catch (CloneNotSupportedException e) {
 			throw new RuntimeException("SHOULD NOT HAPPEN !");
 		}
+	}
+	
+	
+	/*****************V2********************/
+	public List<BaseMenuItem> getHomeMenuList() {
+		return MockDataUtils.getHomeMenuList();
 	}
 }
 

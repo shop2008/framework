@@ -6,6 +6,8 @@ package com.wxxr.mobile.stock.app.mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.set.CompositeSet.SetMutator;
+
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
@@ -28,6 +30,11 @@ import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
@@ -891,5 +898,109 @@ public class MockDataUtils {
 		earnRank.setTitle("仍将震荡 关注改革受益板块的轮动");
 		rank.add(earnRank);
 		return rank;
+	}
+	/*************************V2*****************/
+	public static List<BaseMenuItem> getHomeMenuList() {
+		ArrayList<BaseMenuItem> menu = new ArrayList<BaseMenuItem>();
+		TradingAccountMenuItem trading;
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("11");
+		trading.setTitle("挑战交易盘 T+1");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("0");
+		trading.setAcctId("11111");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("0");
+		trading.setTitle("参赛模拟盘");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("1");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("13");
+		trading.setTitle("挑战交易盘 T+3");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("2");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("1d");
+		trading.setTitle("挑战交易盘 T+D");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("1");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		SignInMessageMenuItem sign;
+		sign = new SignInMessageMenuItem();
+		sign.setType("80");
+		sign.setTitle("每日签到");
+		sign.setDate("7月22日 15:30");
+		sign.setMessage("可获20实盘积分");
+		sign.setHasSignIn(false);
+		sign.setScore(0);
+		sign.setSignDays(5);
+		menu.add(sign);
+		
+		ChampionShipMessageMenuItem champion;
+		champion = new ChampionShipMessageMenuItem();
+		champion.setType("70");
+		champion.setTitle("参赛排行榜");
+		champion.setDate("7月22日 15:30");
+		champion.setNickName("NO.1失落的大叔");
+		champion.setStockName("中国石油");
+		champion.setIncomeRate(635L);
+		menu.add(champion);
+		
+		MessageMenuItem message;
+		message = new MessageMenuItem();
+		message.setType("60");
+		message.setTitle("系统消息");
+		message.setDate("7月22日 15:30");
+		message.setMessage("平安银行模拟盘开始系统清仓");
+		message.setNum(1);
+		menu.add(message);
+		
+		message = new MessageMenuItem();
+		message.setType("61");
+		message.setTitle("操盘咨询");
+		message.setDate("7月22日 15:30");
+		message.setMessage("通知：挑战交易盘将上调保证金");
+		message.setNum(1);
+		menu.add(message);
+		
+		message = new MessageMenuItem();
+		message.setType("62");
+		message.setTitle("未设置昵称");
+		message.setDate("7月22日 15:30");
+		message.setMessage("开始交易前先取一个响亮的昵称吧");
+		message.setNum(0);
+		menu.add(message);
+		
+		message = new MessageMenuItem();
+		message.setType("63");
+		message.setTitle("未认证手机号");
+		message.setDate("7月22日 15:30");
+		message.setMessage("未绑定并认证的手机号账户不可提现");
+		message.setNum(0);
+		menu.add(message);
+		return menu;
 	}
 }
