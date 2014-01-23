@@ -26,7 +26,8 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 	private String formatUnit = "";
 	private String nullString;
 	private Long nullLong;
-
+	
+	private String plusString = "";
 	@Override
 	public void destroy() {
 	}
@@ -58,6 +59,10 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 		if (map.containsKey("nullLong")) {
 			this.nullLong = (Long) map.get("nullLong");
 		}
+		
+		if(map.containsKey("plusString")) {
+			this.plusString = (String) map.get("plusString");
+		}
 	}
 
 	@Override
@@ -83,7 +88,13 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 			return nullString;
 		}
 		try {
-			return String.format(this.format, val / multiple) + formatUnit;
+			
+			if(val >=0 && plusString.compareTo("")>0) {
+				plusString = "+";
+			} else {
+				plusString = "";
+			}
+			return plusString+String.format(this.format, val / multiple) + formatUnit;
 		} catch (NullPointerException e) {
 			return null;
 		} catch (IllegalFormatException e) {
