@@ -70,7 +70,7 @@
     <string name="tv_assure_cost_label">风险保证金应冻结:</string>
     <string name="tv_jifen_cost_label">实盘积分应支付:</string>
     <string name="bt_commit_apply_text">提交申请</string>
-    <string name="tv_have_read_rule_text">我已阅读并同意《</string>
+    <string name="tv_have_read_rule_text">我已阅读并同意</string>
     <string name="tv_trade_rule_text">交易规则</string>
     <string name="tv_right_quotes">》</string>
     <string name="trade_unit">万</string>
@@ -163,7 +163,7 @@
     <string name="label_bank_name">银行</string>
     <string name="label_bank_addr">所在地</string>
     <string name="label_bank_num">卡号</string>
-    <string name="withdraw_cash_rules">提取现金重要须知</string>
+    <string name="withdraw_cash_rules">《提取现金重要须知》</string>
     <string name="avalible_cash_amount">可提取现金：</string>
     <string name="unit_yuan">元</string>
     <!-- 余额明细 -->
@@ -178,14 +178,15 @@
     <!-- 登录界面 -->
     <string name="tv_title_login">登录</string>
     <string name="tv_quick_register">快速注册</string>
-    <string name="tv_find_psw_back">找回密码</string>
-    <string name="btn_login_text">登录</string>
+    <string name="tv_find_psw_back">忘记密码?</string>
+    <string name="btn_login_text">登  录</string>
+    <string name="btn_register_text">注 册</string>
     <string name="tv_title_quick_reg">快速注册</string>
-    <string name="hint_mobile_number">手机号</string>
+    <string name="hint_mobile_number">手机号码</string>
     <string name="hint_psw">密码</string>
-    <string name="tv_quick_reg_des">注册好的账户密码将直接以短信的方式发送到您的手机上</string>
+    <string name="tv_quick_reg_des">请输入您注册的手机号</string>
     <string name="btn_quick_reg_text">点击发送密码到手机</string>
-    <string name="tv_register_rules">注册条款</string>
+    <string name="tv_register_rules">《注册条款》</string>
     <string name="tv_title_psw_find_back">找回密码</string>
 
     <!-- 个人主页 -->

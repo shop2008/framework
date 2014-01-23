@@ -190,4 +190,14 @@
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
     </style>
+    
+    <style name="ButtonLabelStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:shadowColor">#ffffff00</item>
+        <item name="android:shadowDx">20</item>
+        <item name="android:shadowDy">20</item>
+        <item name="android:shadowRadius">20</item>
+    </style>
 </resources>
