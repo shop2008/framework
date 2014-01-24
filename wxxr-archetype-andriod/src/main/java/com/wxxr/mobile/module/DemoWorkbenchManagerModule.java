@@ -33,7 +33,7 @@ public class DemoWorkbenchManagerModule extends AbstractWorkbenchManagerModule<I
 
 	@Override
 	protected void initEventBinders(IEventBinderManager arg0) {
-		arg0.registerFieldBinder(InputEvent.EVENT_TYPE_SWIPE_LEFT, new SlideEventBinder());
+		arg0.registerFieldBinder(InputEvent.EVENT_TYPE_LONGCLICK, new SlideEventBinder());
 //		arg0.registerFieldBinder(InputEvent.EVENT_TYPE_SWIPE_RIGHT, new SlideEventBinder());
 		
 	}

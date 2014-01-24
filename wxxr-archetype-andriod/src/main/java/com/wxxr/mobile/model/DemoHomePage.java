@@ -67,13 +67,11 @@ public abstract class DemoHomePage extends PageBase {
 						if(running){
 							timeBean = timeService.getTime();
 							registerBean("timeBean", timeBean);
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e1) {
-								errorMessage = e1.getMessage();
-							}
-						}else{
-							Thread.sleep(1000);
+						}
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e1) {
+							errorMessage = e1.getMessage();
 						}
 					} catch (Exception e) {
 						errorMessage = e.getMessage();
@@ -127,8 +125,8 @@ public abstract class DemoHomePage extends PageBase {
 	
 	
 	@Command
-	String swipeLeftHandler(InputEvent event){
-		log.warn("swipeLeftHandler");
+	String longPressHandler(InputEvent event){
+		log.warn("longPressHandler");
 		if("#BA2514".equals(colorBean)){
 			colorBean = "#00FF00";
 			registerBean("colorBean", colorBean);
