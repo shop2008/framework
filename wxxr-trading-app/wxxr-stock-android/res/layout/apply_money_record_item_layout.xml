@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:orientation="horizontal" 
+    android:background="#18191B"
+    >
+    
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:layout_weight="1"
+    	android:layout_marginLeft="5dp"
+    	android:orientation="vertical"
+    	android:gravity="center"
+	    >
+	    
+	    <TextView 
+	        android:id="@+id/apply_money_record_time"
+	        android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textSize="13sp"
+    		android:textColor="@color/white"
+    		android:text="2014年11月23日"
+    		bind:field="applyDate"
+	        />
+	    <TextView 
+	        android:layout_below="@id/apply_money_record_time"
+	        android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textColor="#484B4C"
+    		android:text="12:33:09"
+    		bind:field="applyTime"
+	        />
+	    
+	</RelativeLayout>
+	
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="1"
+	    android:orientation="vertical"
+	    android:gravity="center"
+	    >
+	    
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"
+	        android:text="10000"
+	        bind:field="applyAmount"
+	        android:textColor="@color/white"
+	        />
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="1"
+	    android:orientation="vertical"
+	    android:gravity="center"
+	    >
+	    
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"
+	        android:text="审核中"
+	        bind:field="applyStatus"
+	        android:textColor="@color/white"
+	        />
+	</LinearLayout>
+	
+</LinearLayout>

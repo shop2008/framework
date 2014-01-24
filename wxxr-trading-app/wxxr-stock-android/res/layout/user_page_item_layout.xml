@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/listview_selected_item1"
+    android:background="#18191B"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -16,22 +16,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"
+            android:layout_weight="1"
             android:gravity="center" >
 
-            <ImageView
-                android:id="@+id/imageview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/trading_stype"
-                bind:field="type" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" 
                 android:gravity="center"
                 >
 
@@ -52,11 +43,13 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/textview"
                     android:layout_below="@id/textview"
+                    
                     android:layout_marginTop="2dp"
                     android:text="600988"
+                    android:textColor="#989E9E"
                     android:textSize="10sp"
                     bind:field="stock_code" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <TextView
@@ -74,6 +67,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textColor="@color/red"
             bind:field="profit_loss_amount" />
 
         <TextView
@@ -84,6 +78,21 @@
             bind:field="trade_date" />
     </LinearLayout>
 
-    <include layout="@layout/hlines" />
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#0C0306"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2F2F31"
+            />
+    </LinearLayout>
 
 </LinearLayout>

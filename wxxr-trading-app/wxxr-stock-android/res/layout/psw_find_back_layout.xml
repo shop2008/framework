@@ -3,19 +3,19 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mid_gray"
+    android:background="@color/page_background_color"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
-        android:background="@drawable/bg_circle_white"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dip" >
+            android:layout_height="60dip"
+            android:background="@color/white" >
 
             <ImageView
                 android:id="@+id/iv_phone"
@@ -26,7 +26,7 @@
                 android:layout_marginBottom="5dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginTop="5dip"
-                android:src="@drawable/icon_psw" />
+                android:src="@drawable/login_phone" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -51,24 +51,51 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        android:layout_marginTop="10dip"
-        android:background="@drawable/text_back"
-        android:gravity="center"
-        android:orientation="vertical" >
+        android:layout_marginTop="5dip"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_weight="0.8"
+            android:background="@color/white" >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_toRightOf="@id/iv_phone"
+                android:background="@null"
+                android:hint="输入短信验证码"
+                android:inputType="number"
+                bind:field="msgVerifyCode"
+                bind:on_FocusChanged="fetchVerifyCode" />
+        </RelativeLayout>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:background="@drawable/bg_red_btn"
-            android:text="@string/btn_quick_reg_text"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            bind:field="*"
-            bind:on_Click="sendMsg@EditablePageBtnClickedDecorator" />
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/verify_code"
+            bind:field="verifyCodeBtn"
+            bind:onClick="acquireVerifyCode"
+            android:text="点击获取验证码" />
     </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        style="@style/LoginRegisterBtnStyle"
+        android:text="下一步"
+        bind:field="*"
+        bind:on_Click="next@EditablePageBtnClickedDecorator" />
 
 </LinearLayout>

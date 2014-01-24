@@ -3,20 +3,31 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mid_gray"
+    android:background="@color/page_background_color"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="5dip"
+        android:text="昵称"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_margin="5dp"
-        android:background="@drawable/et_stock_input"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal" >
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="40dp"
             android:background="@null"
             android:hint="@string/hint_please_input_new_nick"
             android:maxLength="6"
@@ -24,35 +35,28 @@
             android:singleLine="true"
             bind:field="newNickName"
             bind:on_FocusChanged="_updateValue" />
-    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="@string/nick_set_instruction"
-        android:textColor="@color/white" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dip"
+            android:background="@drawable/edit_text_clear"
+            bind:field="clearEditText"
+            bind:onClick="clearTextContent" />
+    </RelativeLayout>
 
-    <LinearLayout
+
+    <Button
+        style="@style/LoginRegisterBtnStyle"
+        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
-        android:layout_height="60dip"
+        android:layout_height="wrap_content"
+        android:text="提  交"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        android:layout_marginTop="10dip"
-        android:background="@drawable/text_back"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:background="@drawable/bg_red_btn"
-            android:text="@string/btn_done_text"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            bind:field="setNick"
-            bind:on_Click="done@EditablePageBtnClickedDecorator" />
-    </LinearLayout>
+        bind:field="setNick"
+        bind:on_Click="commit@EditablePageBtnClickedDecorator" />
 
 </LinearLayout>

@@ -122,13 +122,18 @@ public abstract class UserWithDrawCashPage extends PageBase{
 	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:''}", converter="s2sConvertor")
 	String accountName;
 	
-	@Menu(items = { "left" })
+	@Menu(items = { "left","right" })
 	private IMenu toolbar;
 	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
+	}
+	
+	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+	String toolbarClickedRight(InputEvent event) {
+		return "OK";
 	}
 
 	@Command(

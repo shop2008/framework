@@ -72,7 +72,10 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp" >
+                android:layout_height="80dp" 
+                bind:field="*"
+                bind:on_Click="enterAccountManagePage"
+                >
 
                 <ImageView
                     android:id="@+id/user_icon_manage"
@@ -93,7 +96,8 @@
                     android:text="浮尘思梦雪"
                     android:textColor="@color/font_red_color"
                     android:textSize="20sp"
-                    bind:field="userNickName" />
+                    bind:field="userNickName" 
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"

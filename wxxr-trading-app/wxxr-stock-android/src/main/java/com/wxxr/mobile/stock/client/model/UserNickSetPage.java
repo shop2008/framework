@@ -46,6 +46,11 @@ public abstract class UserNickSetPage extends PageBase {
 	@Field(valueKey = "enabled")//, enableWhen = "${newNickNameField.getValidationErrors()==null}")
 	boolean setNick = true;
 
+	/**清空文本输入框内容按钮*/
+	@Field(valueKey="text")
+	String clearEditText;
+	
+	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
@@ -66,7 +71,7 @@ public abstract class UserNickSetPage extends PageBase {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 					@Parameter(name = "title", value = "错误") }) })
 	@ExeGuard(title = "修改昵称", message = "正在处理，请稍候...", silentPeriod = 1)
-	String done(InputEvent event) {
+	String commit(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			if (usrService != null) {
@@ -78,6 +83,12 @@ public abstract class UserNickSetPage extends PageBase {
 		return null;
 	}
 
+	/**清空文本框输入内容*/
+	@Command
+	String clearTextContent(InputEvent event) {
+		return null;
+	}
+	
 	@OnUIDestroy
 	protected void clearData() {
 		callBack.setNickName("");

@@ -44,7 +44,8 @@ public abstract class UserLoginPage extends PageBase {
 	@Bean
 	UserLoginCallback callback = new UserLoginCallback();
 
-	
+	@Field(valueKey="text")
+	String registerBtn;
 	@Menu(items={"left"})
 	private IMenu toolbar;
 	

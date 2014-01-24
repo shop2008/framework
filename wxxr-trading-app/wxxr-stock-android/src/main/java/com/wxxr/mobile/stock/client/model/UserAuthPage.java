@@ -48,26 +48,26 @@ public abstract class UserAuthPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrMgr.userAuthInfo}")
 	AuthInfo authBean;
 	
+	/**手机未认证部分*/
+	@Field(valueKey="visible")
+	boolean mobileUnAuthBody;
+	
+	/**手机已认证部分*/
+	@Field(valueKey="visible")
+	boolean mobileAuthedBody;
+	
+	/**提现认证未认证部分*/
+	@Field(valueKey="visible", binding="${authBean!=null?false:true}")
+	boolean bankCardUnAuthBody;
+	
+	/**提现认证已认证部分*/
+	@Field(valueKey="visible",binding="${authBean!=null?true:false}")
+	boolean bankCardAuthedBody;
 	/**
 	 * 认证手机号
 	 */
 	@Field(valueKey="text", binding="${user!=null?user.phoneNumber:'--'}")
 	String authMobileNum;
-	
-	
-	/**
-	 * 银行卡认证，用于控制已认证布局的显示及隐藏
-	 */
-	@Field(valueKey="visible", binding="${authBean!=null?true:false}")
-	boolean authedBodyVisible;
-	
-	
-	/**
-	 * 银行卡认证，用于控制未认证布局的显示及隐藏
-	 */
-	@Field(valueKey="visible", binding="${authBean!=null?false:true}")
-	boolean notAuthBodyVisible;
-	
 	
 	@Convertor(
 			params={
@@ -108,25 +108,8 @@ public abstract class UserAuthPage extends PageBase {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
+
 	
-	/**
-	 * 提现认证
-	 * @param event
-	 * @return
-	 */
-	@Command(
-			commandName = "bankAuth", 
-			description = "To WithDrawCashAuth UI", 
-			navigations = { 
-					@Navigation(
-							on = "SUCCESS", 
-							showPage = "withDrawCashAuthPage"
-							) 
-					}
-			)
-	String bankAuth(InputEvent event) {
-		return "SUCCESS";
-	}
 	
 	/**
 	 * 更换银行卡
@@ -149,4 +132,24 @@ public abstract class UserAuthPage extends PageBase {
 		result.setResult("InputPswDialog");
 		return result;
 	}
+	
+	/**手机认证*/
+	@Command
+	String mobileNumAuth(InputEvent event) {
+		return null;
+	}
+	
+	
+	/**银行卡认证*/
+	@Command(navigations = { 
+			@Navigation(
+					on = "*", 
+					showPage = "withDrawCashAuthPage"
+					) 
+			})
+	String bankCardAuth(InputEvent event) {
+		return "*";
+	}
+	
+	
 }

@@ -1,270 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/qsxq"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:fadingEdge="none"
+    android:scrollbars="none" >
 
-
-    <ScrollView
-        android:id="@+id/scrollView1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="none"
-        android:scrollbars="none" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:background="#202123"
+            android:orientation="vertical"
+            android:paddingBottom="18dp" >
 
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <TextView
+                style="@style/qsxqTextTitleStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/qsxq_item_bj"
-                android:orientation="vertical"
-                android:paddingBottom="18dp" >
+                android:paddingTop="5dp"
+                android:text="@string/tv_mobile_auth" />
 
-                <TextView
-                    style="@style/qsxqTextTitleStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/tv_mobile_auth" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="0dp" >
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="26dp"
-                    android:layout_marginTop="0dp" >
+                    android:gravity="center_vertical"
+                    android:visibility="visible"
+                    bind:field="mobileUnAuthBody" >
 
                     <TextView
-                        style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="@string/tv_auth_state_label" />
+                        android:layout_centerVertical="true"
+                        android:text="未认证"
+                        android:textColor="#FEFEFE"
+                        android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/textView3"
-                        style="@style/qsxqTextTitleStyle_item_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentRight="true"
-                        android:text="@string/tv_mobile_authed_label" />
+                        android:background="@drawable/red_button_small"
+                        android:text="认证"
+                        android:textColor="@color/white"
+                        bind:field="*"
+                        bind:on_Click="mobileNumAuth" />
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="26dp"
-                    android:layout_marginTop="8dp" >
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    bind:field="mobileAuthedBody" >
 
                     <TextView
-                        style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="@string/tv_mobile_authed_number" />
+                        android:layout_centerVertical="true"
+                        android:text="已认证"
+                        android:textColor="#FEFEFE"
+                        android:textSize="15sp" />
 
                     <TextView
-                        style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:text="13500001009"
+                        android:textColor="#FEFEFE"
+                        android:textSize="15sp"
                         bind:field="authMobileNum" />
                 </RelativeLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="手机号用于登录和找回密码"
+                android:textColor="#FEFEFE"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:background="#202123"
+            android:orientation="vertical"
+            android:paddingBottom="18dp" >
+
+            <TextView
+                style="@style/qsxqTextTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="@string/tv_title_cash_auth" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" >
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="26dp"
-                    android:layout_marginTop="8dp" >
+                    android:gravity="center_vertical"
+                    android:visibility="visible"
+                    bind:field="bankCardUnAuthBody" >
 
                     <TextView
-                        style="@style/qsxqTextTitleStyle_item_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/tv_mobile_auth_des" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="未认证"
+                        android:textColor="#FEFEFE"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/red_button_small"
+                        android:text="认证"
+                        android:textColor="@color/white"
+                        bind:field="*"
+                        bind:on_Click="bankCardAuth" />
                 </RelativeLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="16dp"
-                android:background="@drawable/qsxq_item_bj"
-                android:orientation="vertical"
-                android:paddingBottom="18dp" >
-
-                <TextView
-                    style="@style/qsxqTextTitleStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/tv_title_cash_auth" />
-
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/ll_authed"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    bind:field="bankCardAuthedBody" >
 
                     <LinearLayout
-                        android:id="@+id/ll_not_auth"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="visible" 
-                        bind:field="notAuthBodyVisible"
-                        >
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
 
-                        <RelativeLayout
-                            android:layout_width="fill_parent"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginRight="26dp" >
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical" >
 
-                            <TextView
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:text="@string/tv_auth_state_label" />
+                                android:orientation="horizontal" >
 
-                            <TextView
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    style="@style/qsxqTextTitleStyle_item_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tv_account_name" />
+
+                                <TextView
+                                    android:id="@+id/tv_account_name"
+                                    style="@style/qsxqTextTitleStyle_item_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="xxx"
+                                    bind:field="accountName" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:text="@string/tv_not_auth"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="5dp"
+                                 >
+
+                                <TextView
+                                    style="@style/qsxqTextTitleStyle_item_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tv_account_bank" />
+
+                                <TextView
+                                    android:id="@+id/tv_account_name"
+                                    style="@style/qsxqTextTitleStyle_item_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="工商银行"
+                                    bind:field="bankName" />
+                            </LinearLayout>
+                        </LinearLayout>
+                        
+                        <LinearLayout 
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical|right"
+                            >
+                            <Button 
+                                android:layout_width="wrap_content"
+                           		android:layout_height="35dp"
+                           		android:text="更换银行卡"
+                           		android:textSize="15sp"
+                           		android:gravity="center"
+                           		android:textColor="@color/white"
+                           		android:background="@drawable/red_button_small"
+                           		bind:field="*"
+                           		bind:on_Click="switchBankCard"
                                 />
-                        </RelativeLayout>
+                            
+                        </LinearLayout>
+                    </LinearLayout>
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dip"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/bg_red_btn"
-                            android:text="@string/btn_now_auth_text"
-                            android:textColor="@color/white"
-                            android:textSize="15sp" 
-                            bind:field="*"
-                            bind:on_Click="bankAuth"
-                            />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" 
+                        android:layout_marginTop="5dp"
+                        >
 
                         <TextView
                             style="@style/qsxqTextTitleStyle_item_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dip"
-                            android:text="@string/tv_cash_no_auth_des" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_authed"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="26dp"
-                        android:orientation="vertical" 
-                        bind:field="authedBodyVisible"
-                        android:visibility="gone"
-                        >
-							
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/tv_account_name" />
-
-                            <TextView
-                                android:id="@+id/tv_account_name"
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                bind:field="accountName"
-                                />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/tv_account_bank" />
-
-                            <TextView
-                                android:id="@+id/tv_account_name"
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-								bind:field="bankName"                                
-                                />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/tv_account_number" />
-
-                            <TextView
-                                android:id="@+id/tv_account_name"
-                                style="@style/qsxqTextTitleStyle_item_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-								bind:field="bankNum"                                
-                                />
-                        </LinearLayout>
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dip"
-                            android:layout_gravity="left"
-                            android:background="@drawable/bg_red_btn"
-                            android:text="@string/btn_switch_bank_text"
-                            android:textColor="@color/white"
-                            android:textSize="15sp" 
-                            bind:field="*"
-                            bind:on_Click="switchBankCard"
-                            />
+                            android:text="@string/tv_account_number" />
 
                         <TextView
-                            android:id="@+id/textView2"
+                            android:id="@+id/tv_account_name"
                             style="@style/qsxqTextTitleStyle_item_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dip"
-                            android:text="@string/tv_cash_authed_des" />
+                            bind:field="bankNum" />
                     </LinearLayout>
-                </FrameLayout>
-            </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="经认证后可把实盘收益提现"
+                android:textColor="#FEFEFE"
+                android:textSize="15sp" />
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

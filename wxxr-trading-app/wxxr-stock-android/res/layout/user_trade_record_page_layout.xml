@@ -19,8 +19,7 @@
             <RadioGroup
                 android:id="@id/rg_game_rank"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/title_background"
+                android:layout_height="45dp"
                 android:gravity="center"
                 android:orientation="horizontal" >
 
@@ -28,82 +27,86 @@
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/tab_left_btn_background"
+                    android:background="@drawable/bg_check_button"
                     android:button="@null"
                     android:gravity="center"
-                    android:text="@string/tab_success_operation_text"
+                    android:text="参赛交易盘"
                     bind:field="sucRecordBtn"
                     bind:on_Click="showSucRecords" />
 
+                <include layout="@layout/divider_vertical_line"/>"
                 <RadioButton
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/tab_right_btn_background"
+                    android:background="@drawable/bg_check_button"
                     android:button="@null"
                     android:gravity="center"
-                    android:text="@string/tab_whole_operation_text"
+                    android:text="挑战交易盘"
                     bind:field="allRecordBtn"
                     bind:on_Click="showAllRecords" />
             </RadioGroup>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#2E2E30"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal" 
+                android:background="#222325"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_btn_horizontal"
                     android:gravity="center"
                     android:text="@string/label_stock"
                     android:textSize="15sp" />
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/abs_divider_hor_btn" />
+                <include 
+                    layout="@layout/divider_vertical_line"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_btn_horizontal"
                     android:gravity="center"
                     android:text="@string/label_amount"
                     android:textSize="15sp" />
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/abs_divider_hor_btn" />
-
+                <include 
+                    layout="@layout/divider_vertical_line"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_btn_horizontal"
                     android:gravity="center"
                     android:text="@string/label_profit_loss"
                     android:textSize="15sp" />
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/abs_divider_hor_btn" />
-
+                <include 
+                    layout="@layout/divider_vertical_line"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_btn_horizontal"
                     android:gravity="center"
                     android:text="@string/label_date"
                     android:textSize="15sp" />
             </LinearLayout>
 
+            <View 
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"
+                />
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
@@ -116,17 +119,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        bind:field="sucRefreshView"
-                        bind:on_PullRefresh="handleSucRefresh" >
+                        bind:field="virtualRefreshView"
+                        bind:on_PullRefresh="handleVirtualRefresh" >
 
                         <ListView
                             android:id="@+id/listView1"
                             style="@style/mListView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            bind:field="successRecordsList@StockViewDecorator"
+                            bind:field="virtualRecordsList@StockViewDecorator"
                             bind:itemViewId="tradeRecordItemView"
-                            bind:on_ItemClick="sucRecordItemClicked" 
+                            bind:on_ItemClick="virtualRecordItemClicked" 
                             bind:updatingViewId="resourceId:id/progress"
             				bind:updateFaieldId="resourceId:id/failed"
             				bind:updateAllId="resourceId:id/all"
@@ -143,17 +146,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        bind:field="allRefreshView"
-                        bind:on_PullRefresh="handleAllRefresh" >
+                        bind:field="actualRefreshView"
+                        bind:on_PullRefresh="handleActualRefresh" >
 
                         <ListView
                             android:id="@+id/listView2"
                             style="@style/mListView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            bind:field="allRecordsList@StockViewDecorator"
+                            bind:field="actualRecordsList@StockViewDecorator"
                             bind:itemViewId="tradeRecordItemView"
-                            bind:on_ItemClick="allRecordItemClicked" 
+                            bind:on_ItemClick="actualRecordItemClicked" 
                             bind:updatingViewId="resourceId:id/progress"
             				bind:updateFaieldId="resourceId:id/failed"
             				bind:updateAllId="resourceId:id/all"

@@ -1,119 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wxxr.mobile.stock.client.widget.PullToRefreshView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background_color"
-    android:orientation="vertical" >
-
-    <TableLayout
+    android:orientation="vertical" 
+    bind:field="refreshView"
+    bind:on_PullRefresh="handleRefresh"
+    >
+    
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/bg_user_account"
-        android:gravity="center" >
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/label_today_increase"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/label_today_decrease"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/label_score_balance"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:gravity="center" >
-
-            <TextView
-                android:id="@+id/tv_balance_text"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/tv_default_text"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                bind:field="todayIncrease" />
-
-            <TextView
-                android:id="@+id/tv_freeze_text"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/tv_default_text"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                bind:field="todayDecrease" />
-
-            <TextView
-                android:id="@+id/tv_usable_text"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/tv_default_text"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                bind:field="todayBalance" />
-        </TableRow>
-    </TableLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="15dp"
-        bind:field="*"
-        bind:on_Click="toScoreDetail"
-        android:background="@drawable/bg_user_account" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dip"
-            android:text="@string/label_score_details"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/arrow" />
-    </RelativeLayout>
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:cacheColorHint="#00000000"
+        bind:itemViewId="realScoreItemView"
+        bind:headerViewId="realScoreHeaderView"
+        bind:field="realScoreDetails"
+        />
+</com.wxxr.mobile.stock.client.widget.PullToRefreshView>

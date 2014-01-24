@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name="AppManageView", withToolbar=true, description="管理")
@@ -50,7 +51,7 @@ public abstract class AppManageView extends ViewBase {
 
 	
 	/**登录后布局的显示及隐藏*/
-	@Field(valueKey="visible", visibleWhen="${userInfo!=null?true:false}")
+	@Field(valueKey="visible", visibleWhen="${true}")
 	boolean loginedBody;
 	
 	/**用户头像*/
@@ -77,6 +78,14 @@ public abstract class AppManageView extends ViewBase {
 	@Field(valueKey="checked")
 	boolean pushMsgEnabled;
 	
+	
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+
+	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
+	UserBean user;
+	
+	
 	/**版本*/
 	@Field(valueKey="text")
 	String vertionField;
@@ -95,40 +104,52 @@ public abstract class AppManageView extends ViewBase {
 		return "*";
 	}
 	
+	/**跳转到我的帐号*/
+	@Command(navigations={@Navigation(on="*", showPage="AccountManagePage")})
+	String enterAccountManagePage(InputEvent event) {
+		//TODO 跳转到我的帐号
+		return "*";
+	}
+	
 	/**跳转到用户积分界面*/
-	@Command(navigations={@Navigation(on="*", showPage="userLoginPage")})
+	@Command(navigations={@Navigation(on="*", showPage="userScorePage")})
 	String enterUserScorePage(InputEvent event) {
 		//TODO 跳转到用户积分界面
 		return "*";
 	}
 	
 	/**跳转到用户帐户界面*/
-	@Command
+	@Command(navigations={@Navigation(on="*", showPage="userAccountPage")})
 	String enterUserAccountPage(InputEvent event) {
 		//TODO 跳转到用户帐户界面
 		return "*";
 	}
 	
 	/**提取现金*/
-	@Command
+	@Command(navigations={@Navigation(on="userWithDrawCashPage",showPage="userWithDrawCashPage"),@Navigation(on="NoBindCardDialog",showDialog="NoBindCardDialog")})
 	String applyMoney(InputEvent event) {
-		return null;
+		boolean isBandCard = user.getBindCard();
+		if(isBandCard) {
+			return "userWithDrawCashPage";
+		} else {
+			return "NoBindCardDialog";
+		}
 	}
 	
 	/**进入我的主页*/
-	@Command
+	@Command(navigations={@Navigation(on="*", showPage="userPage")})
 	String enterUserPage(InputEvent event) {
-		return null;
+		return "*";
 	}
 	
 	/**进入我的认证页面*/
-	@Command
+	@Command(navigations={@Navigation(on="*", showPage="userAuthPage")})
 	String enterUserAuthPage(InputEvent event) {
-		return null;
+		return "*";
 	}
 	
 	/**进入用户交易记录界面*/
-	@Command
+	@Command(navigations={@Navigation(on="*", showPage="userTradeRecordPage")})
 	String enterUserTradeRecordPage(InputEvent event) {
 		return null;
 	}
@@ -148,9 +169,9 @@ public abstract class AppManageView extends ViewBase {
 	}
 	
 	/**新手指引*/
-	@Command
+	@Command(navigations={@Navigation(on="*", showPage="guidePage")})
 	String playerInstruction(InputEvent event) {
-		return null;
+		return "*";
 	}
 	
 	/**联系我们*/

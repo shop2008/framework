@@ -28,8 +28,8 @@ public abstract class UPageItemView extends ViewBase implements IModelUpdater{
 	GainBean accountBean;
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
-	@Field(valueKey="enabled",binding="${accountBean!=null?accountBean.virtual==false?true:false:false}")
-	boolean type;
+	/*@Field(valueKey="enabled",binding="${accountBean!=null?accountBean.virtual==false?true:false:false}")
+	boolean type;*/
 	/**
 	 * 股票名称
 	 */

@@ -61,6 +61,7 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CloseMoNiStockInfoPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.ChampionShipPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreatePasswordPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.AccountManagePage" android:screenOrientation="portrait"/>
     	
     	
     	

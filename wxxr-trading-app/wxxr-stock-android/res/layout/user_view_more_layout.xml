@@ -115,7 +115,7 @@
                     style="@style/mListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    bind:field="virtualRecordsList"
+                    bind:field="virtualRecordsList@StockViewDecorator"
                     bind:itemViewId="tradeRecordMoreItemView"
                     bind:updatingViewId="resourceId:id/progress"
             		bind:updateFaieldId="resourceId:id/failed"

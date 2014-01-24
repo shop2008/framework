@@ -3,129 +3,106 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mid_gray"
+    android:background="@color/page_background_color"
     android:orientation="vertical" >
 
-   <RelativeLayout
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/title_bar_bj"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
-
-        <TextView
-            android:id="@id/tv_title_content"
-            style="@style/style_title_text"
-            android:text="@string/tv_title_cash_auth" />
-
-        <ImageButton
-            android:id="@id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/back_button"
-            bind:field="*"
-            bind:on_Click="back" />
-
-  
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="5dip"
-        android:background="@drawable/bg_circle_white"
         android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/et_account_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_marginLeft="10dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/hint_account_name"
-            android:singleLine="true"
-            android:textSize="15sp" 
-            bind:field="accountName"
-            bind:on_FocusChanged="_updateValue"
-            />
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white" >
 
-        <include 
-            layout="@layout/lines"
-            />
+            <EditText
+                android:id="@+id/et_account_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_account_name"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="accountName"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
 
-        <EditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_marginLeft="10dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/hint_account_bank"
-            android:singleLine="true"
-            android:textSize="15sp" 
-            bind:field="bankName"
-            bind:on_FocusChanged="_updateValue"
-            />
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" >
 
-        <include 
-            layout="@layout/lines"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_account_bank"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="bankName"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
 
-        <EditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_marginLeft="10dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/hint_account_bank_addr"
-            android:textSize="15sp" 
-            android:singleLine="true"
-            bind:field="bankAddr"
-            bind:on_FocusChanged="_updateValue"
-            />
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" >
 
-        <include 
-            layout="@layout/lines"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_account_bank_addr"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="bankAddr"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
 
-        <EditText
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_marginLeft="10dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/hint_account_number"
-            android:inputType="number"
-            android:textSize="15sp" 
-            bind:field="bankNum"
-            bind:on_FocusChanged="_updateValue"
-            />
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_account_number"
+                android:inputType="number"
+                android:textSize="15sp"
+                bind:field="bankNum"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_cash_auth"
         android:layout_width="match_parent"
-        android:layout_height="50dip"
-        android:layout_margin="5dip"
-        android:background="@drawable/text_back"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/btn_cash_auth"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="2dip"
-            android:background="@drawable/bg_red_btn"
-            android:gravity="center"
-            android:text="@string/btn_cash_auth_text"
-            android:textColor="@color/white"
-            android:textSize="15sp" 
-            bind:field="*"
-            bind:on_Click="cashAuth@EditablePageBtnClickedDecorator"
-            />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_btn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:text="认 证"
+        style="@style/ButtonLabelStyle"
+        bind:field="*"
+        bind:on_Click="cashAuth@EditablePageBtnClickedDecorator" />
 
 </LinearLayout>

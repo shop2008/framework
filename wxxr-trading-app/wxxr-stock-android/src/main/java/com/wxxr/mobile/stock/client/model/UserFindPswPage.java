@@ -18,7 +18,9 @@ import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.model.UserFindPswCallBack;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 
@@ -44,6 +46,14 @@ public abstract class UserFindPswPage extends PageBase {
 	@Bean
 	UserFindPswCallBack callBack = new UserFindPswCallBack();
 
+	
+	@Field(valueKey="text")
+	String msgVerifyCode;
+	
+	
+	@Field(valueKey="text")
+	String verifyCodeBtn;
+	DataField<String> msgVerifyCodeField;
 	/**
 	 * 发送密码到手机
 	 * 
@@ -67,4 +77,25 @@ public abstract class UserFindPswPage extends PageBase {
 		return null;
 	}
 
+	@Command
+	String fetchVerifyCode(InputEvent event) {
+
+		String changedText = (String)event.getProperty("changedText");
+		if(StringUtils.isNotBlank(changedText)) {
+			this.msgVerifyCodeField.setValue(changedText);
+		}
+		return null;
+	}
+	
+	/**获取验证码*/
+	@Command
+	String acquireVerifyCode(InputEvent event) {
+		return null;
+	}
+	
+	/**下一步*/
+	@Command
+	String next(InputEvent event) {
+		return null;
+	}
 }

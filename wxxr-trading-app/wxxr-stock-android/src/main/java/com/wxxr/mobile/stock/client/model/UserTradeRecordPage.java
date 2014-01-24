@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -14,7 +13,6 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -27,7 +25,7 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 
-@View(name = "userTradeRecordPage", withToolbar = true, description = "我的交易记录", provideSelection=true)
+@View(name = "userTradeRecordPage", withToolbar = true, description = "交易记录", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 
@@ -45,10 +43,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
 	@Field(valueKey = "options",upateAsync=true,binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==2}")
-	List<GainBean> allRecordsList;
+	List<GainBean> actualRecordsList;
 
 	@Field(valueKey = "options",upateAsync=true, binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==1}")
-	List<GainBean> successRecordsList;
+	List<GainBean> virtualRecordsList;
 
 	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${curItemId == 1}"),
@@ -86,11 +84,11 @@ public abstract class UserTradeRecordPage extends PageBase {
 	
 	@Field(valueKey = "text",visibleWhen = "${curItemId == 1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${successTradeAccountListBean!=null&&successTradeAccountListBean.data!=null&&successTradeAccountListBean.data.size()>0?true:false}")})
-	String sucRefreshView;
+	String virtualRefreshView;
 	
 	@Field(valueKey = "text",visibleWhen = "${curItemId == 2}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${allTradeAccountListBean!=null&&allTradeAccountListBean.data!=null&&allTradeAccountListBean.data.size()>0?true:false}")})
-	String allRefreshView;
+	String actualRefreshView;
 
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
@@ -105,6 +103,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	 * @return
 	 */
 	@Command
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showSucRecords(InputEvent event) {
 		showSucRecords(false);
 		return null;
@@ -130,6 +129,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	 * @return
 	 */
 	@Command
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showAllRecords(InputEvent event) {
 		showAllRecords(false);
 		return null;
@@ -142,8 +142,8 @@ public abstract class UserTradeRecordPage extends PageBase {
 			tradingService.getTotalGain(0, allTradeAccountListBean.getData().size(), wait4Finish);
 	}
 	
-	@Command(commandName = "allRecordItemClicked", navigations = { @Navigation(on = "operationDetails", showPage = "OperationDetails") })
-	CommandResult allRecordItemClicked(InputEvent event) {
+	@Command(commandName = "actualRecordItemClicked", navigations = { @Navigation(on = "operationDetails", showPage = "OperationDetails") })
+	CommandResult actualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
 			GainBean allBean = null;
@@ -175,10 +175,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	@Command(commandName = "sucRecordItemClicked", navigations = {
+	@Command(commandName = "virtualRecordsList", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails")
 			})
-	CommandResult sucRecordItemClicked(InputEvent event) {
+	CommandResult virtualRecordsList(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
 			GainBean sucBean = null;
@@ -213,7 +213,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	@Command
-	String handleSucRefresh(InputEvent event) {
+	String handleVirtualRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showSucRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
@@ -229,7 +229,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	@Command
-	String handleAllRefresh(InputEvent event) {
+	String handleActualRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showAllRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
@@ -244,30 +244,6 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-//	@Command
-//	String handleSucBottomRefresh(InputEvent event) {
-//		
-//		int completeSize = 0;
-//		if(successTradeAccountListBean != null)
-//			completeSize = successTradeAccountListBean.getData().size();
-//		sucStart += completeSize;
-//		if(tradingService != null) {
-//			tradingService.getGain(sucStart, sucLimit);
-//		}
-//		return null;
-//	}
-	
-//	@Command
-//	String handleAllBottomRefresh(InputEvent event) {
-//		int completeSize = 0;
-//		if(allTradeAccountListBean != null)
-//			completeSize = allTradeAccountListBean.getData().size();
-//		allStart += completeSize;
-//		if(tradingService != null) {
-//			tradingService.getGain(allStart, allLimit);
-//		}
-//		return null;
-//	}
 	
 	@Command
 	String handleRetryClick(InputEvent event) {

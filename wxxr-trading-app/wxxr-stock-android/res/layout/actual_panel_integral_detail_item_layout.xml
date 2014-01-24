@@ -4,7 +4,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/listview_selected_item1"
+    android:background="#18191B"
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
@@ -18,6 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="0.5"
             android:orientation="vertical" >
 
@@ -29,7 +31,8 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="20sp"
+                android:text="申请实盘赠送"
                 android:textStyle="bold"
                 bind:field="scoreCatagory" />
 
@@ -37,7 +40,9 @@
                 android:id="@+id/tv_income_date_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="#868C8C"
+                android:layout_marginTop="5dp"
+                android:text="2014-1-1"
                 bind:field="gainDate" />
         </LinearLayout>
 
@@ -50,8 +55,9 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:text="+500"
             android:textStyle="bold"
             bind:field="gainNum" />
     </LinearLayout>

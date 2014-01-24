@@ -11,23 +11,45 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserRegCallback;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
-@View(name = "userRegPage")
+@View(name = "userRegPage", withToolbar=true, description="快速注册")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.quick_register_layout")
 public abstract class UserRegPage extends PageBase {
 
 	static Trace log = Trace.register(UserRegPage.class);
 	@Field(valueKey = "text", binding="${callback.userName}")
 	String mobileNum;
+	
+	@Field(valueKey="text")
+	String newPassword;
+	
+	@Field(valueKey="text")
+	String reNewPassword;
+	
+	@Menu(items={"left"})
+	private IMenu toolbar;
+	
+	@Command(
+			uiItems={
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+			}
+	)
+	String toolbarClickedLeft(InputEvent event){
+		hide();
+		return null;
+	}
 	
 	@Field(
 			valueKey="text", 
@@ -51,20 +73,7 @@ public abstract class UserRegPage extends PageBase {
 	@Field(valueKey="checked", binding="${checked}")
 	boolean readChecked;
 	
-	/**
-	 * 处理后退
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back")
-	String back(InputEvent event) {
 
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-		}
-		return null;
-	}
-	
 	/**
 	 * 将密码发送到手机
 	 * @param event
@@ -75,7 +84,7 @@ public abstract class UserRegPage extends PageBase {
 			@Parameter(name = "title", value = "提示") }) })
 	@NetworkConstraint
 	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 200)
-	String sendMsg(InputEvent event) {
+	String commit(InputEvent event) {
 
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			//将密码发送到手机
