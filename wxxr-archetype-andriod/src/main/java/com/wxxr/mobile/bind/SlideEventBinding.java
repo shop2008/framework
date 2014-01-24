@@ -60,7 +60,7 @@ public class SlideEventBinding extends AbstractEventBinding {
 				@Override
 				public boolean onLongClick(View v) {
 					IUIComponent field = getField();
-					SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_SWIPE_LEFT,field);
+					SimpleInputEvent event = new SimpleInputEvent(InputEvent.EVENT_TYPE_LONGCLICK,field);
 					handleInputEvent(event);
 					return true;
 				}
