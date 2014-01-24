@@ -23,42 +23,49 @@
             android:paddingTop="10dp"
             android:text="T日排名"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             bind:field="tMegaBtn"
             bind:on_Click="reloadTRank" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/champion_btn_divider" />
 
         <RadioButton
             android:id="@+id/textView2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/listview_selected_item1"
+            android:background="@drawable/bg_champion_btn"
             android:button="@null"
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="T+1日排名"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             bind:field="t1MegaBtn"
             bind:on_Click="reloadT1Rank" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/champion_btn_divider" />
 
         <RadioButton
             android:id="@+id/textView3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/listview_selected_item1"
+            android:background="@drawable/bg_champion_btn"
             android:button="@null"
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="周赛排名"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             bind:field="weekBtn"
             bind:on_Click="reloadWeekRank" />
 
@@ -67,19 +74,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/listview_selected_item1"
+            android:background="@drawable/bg_champion_btn"
             android:button="@null"
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="实盘券"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
             android:visibility="gone"
             bind:field="regularTicketBtn"
             bind:on_Click="reloadRegularTicketRank" />
     </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/champion_head_divider" />
 
     <FrameLayout
         android:layout_width="match_parent"
