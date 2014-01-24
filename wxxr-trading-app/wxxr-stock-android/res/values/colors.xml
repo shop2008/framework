@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gray">#ACACAC</color>
+    <color name="gray">#979d9d</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FFE400</color>
     <color name="black">#000000</color>
-    <color name="red">#FE2300</color>
+    <color name="red">#ff2200</color>
     <color name="blue">#0966be</color>
-    <color name="green">#4A9143</color>
+    <color name="green">#00ff1c</color>
+    <color name="green_bg">#0a9a03</color>
     <color name="qsxq">#404040</color>
-    <color name="page_background_color">#18191B</color>
+    <color name="page_background_color">#17191a</color>
     <color name="slideMenu_l_r_background">#E5E5E5</color>
     <color name="light_gray">#6D6D6D</color>
     <color name="light_black">#ff202020</color>
@@ -27,7 +28,9 @@
     <color name="numkey_btn_text_color_white">#feffff</color>
     <color name="numkey_btn_text_color_black">#2b2b2b</color>
     <color name="tv_gray_color">#808080</color>
-    <color name="light_blue">#0179BD</color>
+    <color name="tab_selected_backgroundcolor">#17191a</color>
+    <color name="code_market_date">#999d9e</color>
+        <color name="light_blue">#0179BD</color>
     <color name="font_red_color">#EE1011</color>
     <color name="border_gray_color">#C7C7C7</color>
     <color name="positive_rea_color">#FD2300</color>

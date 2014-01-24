@@ -38,34 +38,34 @@ public abstract class HelpCenterItemTextView extends ViewBase implements IModelU
 	})
 	String backgroundColor;
 	
-	@Field(valueKey="backgroundImageURI",binding="${(article!=null && article.imageUrl!=null && index==0)?article.imageUrl:null}")
-	String imgUrl;
-	
-	@Field(valueKey="visible",visibleWhen="${index==0}")
-	boolean imgItem;  
-	
-	@Field(valueKey="visible",visibleWhen="${index==1}")
-	boolean textItem;
-	
-	@Bean
-	int index = 0;
+//	@Field(valueKey="backgroundImageURI",binding="${(article!=null && article.imageUrl!=null && index==0)?article.imageUrl:null}")
+//	String imgUrl;
+//	
+//	@Field(valueKey="visible",visibleWhen="${index==0}")
+//	boolean imgItem;  
+//	
+//	@Field(valueKey="visible",visibleWhen="${index==1}")
+//	boolean textItem;
+//	
+//	@Bean
+//	int index = 0;
 	
 	@OnShow
 	void setBackgroundColor(){
-		Integer position = (Integer) getProperty("_item_position");
-		if(position!=null){
-			if(position==0){
-				this.index = position;
-			}else{
-				this.index = 1;
-				if(position % 2 ==0){
-					registerBean("background", "resourceId:drawable/listview_selected_item2");
-				}else{
-					registerBean("background", "resourceId:drawable/listview_selected_item");
-				}
-			}
-			registerBean("index",this.index);
-		}
+//		Integer position = (Integer) getProperty("_item_position");
+//		if(position!=null){
+//			if(position==0){
+//				this.index = position;
+//			}else{
+//				this.index = 1;
+//				if(position % 2 ==0){
+//					registerBean("background", "resourceId:drawable/listview_selected_item2");
+//				}else{
+//					registerBean("background", "resourceId:drawable/listview_selected_item");
+//				}
+//			}
+//			registerBean("index",this.index);
+//		}
 	}
 	
 	

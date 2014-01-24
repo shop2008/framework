@@ -160,13 +160,13 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	/**涨跌幅*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.risefallrate!=null)?quotationBean.risefallrate:null}",converter="stockLong2StringConvertorSpecial1",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String risefallrate;
 	
 	/**涨跌额*/
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.change!=null)?quotationBean.change:null}",converter="stockLong2StringAutoUnitConvertor1",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	})
 	String change;
 	
@@ -175,7 +175,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 //			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_down':(quotationBean!=null && quotationBean.newprice == quotationBean.close && quotationBean.status == 1)?'resourceId:color/white':'resourceId:color/tv_gray_color')}")
 //	})
 	@Field(valueKey="text",binding="${(quotationBean!=null && quotationBean.newprice!=null)?quotationBean.newprice:null}",visibleWhen="${quotationBean.status == 1}",converter="stockLong2StringAutoUnitConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_up':((quotationBean!=null && quotationBean.newprice < quotationBean.close && quotationBean.status == 1)?'resourceId:color/stock_down':(quotationBean!=null && quotationBean.newprice == quotationBean.close && quotationBean.status == 1)?'resourceId:color/white':'resourceId:color/tv_gray_color')}")
+			@Attribute(name = "textColor", value = "${(quotationBean!=null && quotationBean.newprice > quotationBean.close && quotationBean.status == 1)?'resourceId:color/red':((quotationBean!=null && quotationBean.newprice < quotationBean.close && quotationBean.status == 1)?'resourceId:color/green':(quotationBean!=null && quotationBean.newprice == quotationBean.close && quotationBean.status == 1)?'resourceId:color/white':'resourceId:color/gray')}")
 	})
 	String newprice;
 	
@@ -208,8 +208,8 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name="stockType",value="${stockType}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
-			@Attribute(name = "stockUpColor",value="#BA2514"),
-			@Attribute(name = "stockDownColor",value="#3C7F00"),
+			@Attribute(name = "stockUpColor",value="resourceId:color/red"),
+			@Attribute(name = "stockDownColor",value="resourceId:color/green"),
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
 	}, upateAsync=true)

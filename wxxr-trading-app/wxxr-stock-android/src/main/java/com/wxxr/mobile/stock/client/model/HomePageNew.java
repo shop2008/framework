@@ -45,7 +45,7 @@ public abstract class HomePageNew extends PageBase {
 //
 	@Menu(items = { "left", "right" })
 	IMenu toolbar;
-	@ViewGroup(viewIds = { "MainHomeView", "tradingWinner", "helpCenter", "infoCenter", "AppManageView" })
+	@ViewGroup(viewIds = { "MainHomeView", "TradingPageView", "helpCenter", "infoCenter", "AppManageView" })
 	IViewGroup contents;
 //
 	String curVertion;
@@ -225,7 +225,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "tradingWinner") })
+	@Command(navigations = { @Navigation(on = "*", showView = "TradingPageView") })
 	String tradingClick(InputEvent event) {
 		return "";
 	}

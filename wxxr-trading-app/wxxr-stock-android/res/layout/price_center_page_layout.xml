@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="#1b1c1e" >
 
         <LinearLayout android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -22,64 +23,68 @@
                 android:text="上证指数"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:paddingTop="8dp"
-            	android:paddingBottom="8dp"/>
-            <View android:layout_width="fill_parent"
-			    android:layout_height="0.5dp"
-			    android:background="#303030"/>
+            	android:paddingBottom="4dp"/>
 			<LinearLayout 
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="8dp"
             	android:paddingBottom="8dp">
                 <LinearLayout 
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center">
-                    <TextView 
-                        android:layout_width="wrap_content"
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textSize="20sp"
-                        android:textColor="@color/white"
-                        bind:field="sh_newprice"/>
+                        android:gravity="center">
+	                    <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="18sp"
+	                        android:textColor="@color/white"
+	                        bind:field="sh_newprice"
+	                        android:layout_marginRight="4dp"/>
+		                <TextView 
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:background="@drawable/risefallrate_stype"
+		                    bind:field="shType"
+		                    />	                    
+                    </LinearLayout>
                     <LinearLayout android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <TextView 
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:text="--"
-	                        android:textSize="14sp"
+	                        android:textSize="12sp"
 	                        bind:field="sh_change"
 	                        android:textColor="@color/white"/>
                         <TextView 
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:text="--"
-	                        android:textSize="14sp"
+	                        android:textSize="12sp"
 	                        android:layout_marginLeft="4dp"
 	                        android:textColor="@color/white"
 	                        bind:field="sh_risefallrate"/>
                     </LinearLayout>
                 </LinearLayout>
-                <TextView 
-                    android:layout_width="21dp"
-                    android:layout_height="28dp"
-                    android:background="@drawable/risefallrate_stype"
-                    bind:field="shType"
-                    android:layout_marginLeft="8dp"
-                    />
             </LinearLayout>            
         </LinearLayout>
         
+		<View android:layout_width="0.5dp"
+            android:layout_height="fill_parent"
+            android:background="#000000"/>
         <View android:layout_width="0.5dp"
-			    android:layout_height="fill_parent"
-			    android:background="#303030"/>
-        
+            android:layout_height="fill_parent"
+            android:background="#2F2E30"/>    
+                
         <LinearLayout android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -92,40 +97,49 @@
                 android:text="深圳成指"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/white"
                 android:paddingTop="8dp"
-            	android:paddingBottom="8dp"/>
-           <View android:layout_width="fill_parent"
-			    android:layout_height="0.5dp"
-			    android:background="#303030"/>
+            	android:paddingBottom="4dp"/>
 			<LinearLayout 
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingTop="8dp"
             	android:paddingBottom="8dp">
                 <LinearLayout 
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
 	                android:layout_height="wrap_content"
 	                android:orientation="vertical"
 	                android:gravity="center"
 	                >
-                	<TextView 
-                        android:layout_width="wrap_content"
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textSize="20sp"
-                        android:textColor="@color/white"
-                        bind:field="sz_newprice"/>
+                        android:gravity="center">
+	                	<TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="18sp"
+	                        android:layout_marginRight="4dp"
+	                        android:textColor="@color/white"
+	                        bind:field="sz_newprice"/>
+		                <TextView 
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:background="@drawable/risefallrate_stype"
+		                    bind:field="szType"
+		                    />	                	
+	                	
+	                </LinearLayout>
                     <LinearLayout android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <TextView 
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:text="--"
-	                        android:textSize="14sp"
+	                        android:textSize="12sp"
 	                        bind:field="sz_change"
 	                        android:textColor="@color/white"/>
                         <TextView 
@@ -133,22 +147,93 @@
 	                        android:layout_height="wrap_content"
 	                        android:text="--"
 	                        bind:field="sz_risefallrate"
-	                        android:textSize="14sp"
+	                        android:textSize="12sp"
 	                        android:layout_marginLeft="4dp"
 	                        android:textColor="@color/white"/>
                     </LinearLayout>
             	</LinearLayout>
-                <TextView 
-                    android:layout_width="21dp"
-                    android:layout_height="28dp"
-                    android:background="@drawable/risefallrate_stype"
-                    bind:field="szType"
-                    android:layout_marginLeft="8dp"
-                    />
             </LinearLayout>            
             
         </LinearLayout>
+        <View android:layout_width="0.5dp"
+            android:layout_height="fill_parent"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="fill_parent"
+            android:background="#2F2E30"/>
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            bind:field="*"
+            bind:on_Click="handleZXClick"
+            android:orientation="vertical"
+            >
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="中小版指"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+            	android:paddingBottom="4dp"/>
+			<LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+            	android:paddingBottom="8dp">
+                <LinearLayout 
+                    android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:orientation="vertical"
+	                android:gravity="center"
+	                >
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+	                	<TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="18sp"
+	                        android:layout_marginRight="4dp"
+	                        android:textColor="@color/white"
+	                        bind:field="zx_newprice"/>
+		                <TextView 
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:background="@drawable/risefallrate_stype"
+		                    bind:field="zxType"
+		                    />	                	
+	                </LinearLayout>	
+                    <LinearLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        android:textSize="12sp"
+	                        bind:field="zx_change"
+	                        android:textColor="@color/white"/>
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="--"
+	                        bind:field="zx_risefallrate"
+	                        android:textSize="12sp"
+	                        android:layout_marginLeft="4dp"
+	                        android:textColor="@color/white"/>
+                    </LinearLayout>
+            	</LinearLayout>
+            </LinearLayout>			            
+        </LinearLayout>        
     </LinearLayout>
+    <View android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#2F2E30"/>    
     <LinearLayout 
         
         android:id="@id/ll_kind_sort"
@@ -156,39 +241,39 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="#222325"
         >
-        <Button 
+        <TextView 
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="股票名称"
-            android:textColor="#ffffff"
+            android:text="股票"
+            android:textColor="#989e9e"
+            android:gravity="center"
             android:textSize="15sp"
-            android:background="@drawable/title_background"
             />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/title_line"
-            android:paddingBottom="0.5dp"
-            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>  
         
         <LinearLayout 
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
+		    android:layout_height="32dp"
 		    android:layout_weight="1"
 		    android:gravity="center"
-		    android:background="@drawable/title_background"
 		    bind:field="*"
 		    bind:on_Click="orderByNewPrice"
 		    >
 		    <TextView 
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="最新价格"
+		        android:text="最新价"
 		        android:textSize="15sp"
-		        android:textColor="#ffffff" 
+		        android:textColor="#989e9e" 
 		        />
 		    <TextView 
 		        android:layout_width="wrap_content"
@@ -200,19 +285,18 @@
 		        android:visibility="gone"
 		        />
 		</LinearLayout>
-		<ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/title_line"
-            android:paddingBottom="0.5dp"
-            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>  
 		
 		<LinearLayout 
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
+		    android:layout_height="32dp"
 		    android:layout_weight="1"
 		    android:gravity="center"
-		    android:background="@drawable/title_background"
 		    bind:field="*"
 		    bind:on_Click="orderByRisefallrate">
 		    <TextView 
@@ -220,7 +304,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="涨跌幅"
 		        android:textSize="15sp"
-		        android:textColor="#ffffff" 
+		        android:textColor="#989e9e" 
 		        />
 		    <TextView 
 		        android:layout_width="wrap_content"
@@ -233,7 +317,9 @@
 		</LinearLayout>
 
     </LinearLayout>
-
+	<View android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#000000"/>
     <com.wxxr.mobile.stock.client.widget.PullToRefreshView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

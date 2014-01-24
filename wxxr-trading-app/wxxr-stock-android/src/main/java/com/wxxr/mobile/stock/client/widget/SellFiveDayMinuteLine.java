@@ -383,8 +383,8 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 						stopY = fStopY - ((newprice1 - lowPrice)/scale);
 						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 						mPaint.setColor(Color.parseColor("#3d3e38"));
-						canvas.drawLine(startX, startY + 1 , startX, fStopY-1, mPaint);
-						canvas.drawLine(stopX, stopY + 1, stopX, fStopY-1, mPaint);
+						canvas.drawLine(startX, startY + 2 , startX, fStopY-1, mPaint);
+						canvas.drawLine(stopX, stopY + 2, stopX, fStopY-1, mPaint);
 //						canvas.saveLayer(left, top, right, bottom, paint, saveFlags)
 						if(buyPrice == tempNewPrice && flag){
 							this.flag = false;
@@ -438,8 +438,8 @@ public class SellFiveDayMinuteLine extends BasicLineView implements IDataChanged
 						stopY = fStopY - ((newprice1 - lowPrice)/scale);
 						canvas.drawLine(startX, startY, stopX, stopY, mPaint);
 						mPaint.setColor(Color.parseColor("#3d3e38"));
-						canvas.drawLine(startX, startY + 1 , startX, fStopY-1, mPaint);
-						canvas.drawLine(stopX, stopY + 1, stopX, fStopY-1, mPaint);
+//						canvas.drawLine(startX, startY + 1 , startX, fStopY-1, mPaint);
+						canvas.drawLine(stopX, stopY + 2, stopX, fStopY-1, mPaint);
 					}
 				}
 			}

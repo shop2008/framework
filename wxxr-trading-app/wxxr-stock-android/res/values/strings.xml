@@ -72,7 +72,7 @@
     <string name="bt_commit_apply_text">提交申请</string>
     <string name="tv_have_read_rule_text">我已阅读并同意</string>
     <string name="tv_trade_rule_text">交易规则</string>
-    <string name="tv_right_quotes">》</string>
+    <string name="tv_right_quotes"></string>
     <string name="trade_unit">万</string>
     <string name="tv_subscribe_amount_10w">申购金额:10万</string>
     <string name="tv_stop_loss_percent_5">中止止损:  5%</string>

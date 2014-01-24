@@ -136,7 +136,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 			@Attribute(name = "position", value = "${position}") })
 	String indexGroup;
 
-	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
+	@ViewGroup(viewIds={"GeGuMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;	
 	
 	

@@ -49,6 +49,9 @@ public abstract class InfoCenterView extends ViewBase {
 	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('399001','SZ')}")
 	StockQuotationBean szBean;
 	
+	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('399005','SZ')}")
+	StockQuotationBean zxBean;
+	
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000f"),
@@ -98,11 +101,11 @@ public abstract class InfoCenterView extends ViewBase {
 	/**-----------深圳成指 深圳*/
 	
 	//箭头 
-		@Field(valueKey="text",enableWhen="${(szBean!=null && szBean.newprice > szBean.close)?true:false}",visibleWhen="${(szBean!=null && szBean.newprice != szBean.close)?true:false}")
+		@Field(valueKey="text",enableWhen="${(szBean!=null && szBean.newprice > szBean.close)?true:false}",visibleWhen="${(szBean!=null && szBean.newprice != szBean.close)?true:false}",upateAsync=true)
 		String szType;
 	
 	// 涨跌幅
-	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",upateAsync=true,attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sz_risefallrate;
@@ -112,20 +115,49 @@ public abstract class InfoCenterView extends ViewBase {
 	String sz_market;
 	
 	// 最新
-	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",upateAsync=true,attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor")
 	String sz_newprice;
 	
 	// 涨跌额
-	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",upateAsync=true,attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor1")
 	String sz_change;
 	
 	// 股票列表
-	@Field(valueKey = "options",binding="${stockTaxis.data}")
+	@Field(valueKey = "options",binding="${stockTaxis.data}",upateAsync=true)
 	List<StockTaxisBean> stockInfos;
+	
+	/**-----------深圳中小版指 深圳*/
+	
+	//箭头 
+		@Field(valueKey="text",enableWhen="${(zxBean!=null && zxBean.newprice > zxBean.close)?true:false}",visibleWhen="${(zxBean!=null && zxBean.newprice != zxBean.close)?true:false}",upateAsync=true)
+		String zxType;
+	
+	// 涨跌幅
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.risefallrate:null}",upateAsync=true,attributes={
+			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	},converter="stockLong2StringConvertorSpecial")
+	String zx_risefallrate;
+	
+	// 市场代码： SH，SZ各代表上海，深圳。
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.market:null}")
+	String zx_market;
+	
+	// 最新
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.newprice:null}",upateAsync=true,attributes={
+			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	},converter="stockLong2StringAutoUnitConvertor")
+	String zx_newprice;
+	
+	// 涨跌额
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.change:null}",upateAsync=true,attributes={
+			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
+	},converter="stockLong2StringAutoUnitConvertor1")
+	String zx_change;
+	
 
 	@Bean
 	String orderBy = "risefallrate";
@@ -186,6 +218,30 @@ public abstract class InfoCenterView extends ViewBase {
 		}
 		return null;
 	}
+	
+	/**
+	 * 事件处理 -单击中小版指 
+	 * 
+	 * */
+	@Command(navigations={@Navigation(on = "ZX_ZhiShuPage",showPage="ZhiShuPage")})
+	CommandResult handleZXClick(InputEvent event){
+		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+			CommandResult result = new CommandResult();
+			HashMap<String, Object> temp = new HashMap<String, Object>();
+			if(zxBean!=null){
+				if(zxBean.getCode()!=null && zxBean.getMarket()!=null){
+					temp.put("code", zxBean.getCode());
+					temp.put("market", zxBean.getMarket());
+					temp.put("name", "中小版指");
+					updateSelection(new StockSelection(zxBean.getMarket(),zxBean.getCode(),"中小版指"));
+					result.setPayload(temp);
+					result.setResult("ZX_ZhiShuPage");
+					return result;
+				}
+			}
+		}
+		return null;
+	}	
 	/**
 	 * 事件处理- 单击涨跌幅标题（股票列表排序-按涨跌幅）
 	 * 
@@ -223,7 +279,7 @@ public abstract class InfoCenterView extends ViewBase {
 		return null;
 	}
 	
-	@Field(attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "true")})
 	String acctRefreshView;
 	

@@ -4,33 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
-    bind:field="backgroundColor"
     android:background="@drawable/listview_selected_item1">
-    <RelativeLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        bind:field="imgItem">
-	     <ImageView 
-	         android:layout_width="fill_parent"
-	         android:layout_height="100dp"
-	         bind:field="imgUrl"/>
-		<TextView
-	         android:id="@+id/textView1"
-	         android:layout_width="fill_parent"
-	         android:layout_height="wrap_content"
-	         bind:field="title1"
-	         android:text="--"
-	         android:padding="6dp"
-	         android:layout_alignParentLeft="true"
-	         android:singleLine="true"
-	         android:textColor="@color/white"
-	         android:textSize="15sp" />     
-    </RelativeLayout>
    <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:padding="6dp"
         android:gravity="center"
-        bind:field="textItem"
         >
 		<LinearLayout 
 		    android:layout_width="fill_parent"
@@ -45,7 +24,7 @@
 	            android:text="--"
 	            android:layout_alignParentLeft="true"
 	            android:singleLine="true"
-	            android:textColor="@color/white"
+	            android:textColor="#979d9d"
 	            android:textSize="15sp" />
 	        <TextView
 	            android:id="@id/tv_help_content"
@@ -59,11 +38,6 @@
 	            android:ellipsize="end"
 	            android:textSize="12sp"/>	        		    
 		</LinearLayout>
-        <TextView
-            android:id="@+id/imageView1"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:background="@drawable/close_arrows" />
     </LinearLayout>
 	<include layout="@layout/hlines"/>
 </LinearLayout>

@@ -15,6 +15,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:id="@id/lv_help_center_detail"
+	        bind:headerViewId="HelpCenterHeaderView"
 	        bind:itemViewId="helpCenterItemTextView"
 		    bind:field="helpArticles"
 	        bind:on_ItemClick="goWebPageOnItemClick"

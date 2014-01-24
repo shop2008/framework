@@ -29,22 +29,6 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	@Bean
 	StockTaxisBean stockTaxis;
 	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.name:'--'}")
-	String stockName;//股票名称
-	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.code:'--'}")
-	String stockCode;//股票代码
-	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.newprice:null}",converter="stockLong2StringConvertor",attributes={
-			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
-	})
-	String stockPrice;//股票最新价
-	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.risefallrate:null}",converter="stockLong2StringConvertorSpecial",attributes={
-			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
-	})
-	String stockDeltaPercent;//股票涨跌幅
-	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
 			@Parameter(name="multiple", value="1000f"),
@@ -58,7 +42,23 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 			@Parameter(name="nullString",value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
-
+	
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.name:'--'}")
+	String stockName;//股票名称
+	
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.code:'--'}")
+	String stockCode;//股票代码
+	
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.newprice:null}",converter="stockLong2StringConvertor",attributes={
+			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String stockPrice;//股票最新价
+	
+	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.risefallrate:null}",converter="stockLong2StringConvertorSpecial",attributes={
+			@Attribute(name = "backgroundColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green_bg':'resourceId:color/gray')}")
+//			@Attribute(name = "textColor", value = "${(stockTaxis!=null && stockTaxis.risefallrate>0)?'resourceId:color/red':((stockTaxis!=null && stockTaxis.risefallrate<0)?'resourceId:color/green':'resourceId:color/white')}")
+	})
+	String stockDeltaPercent;//股票涨跌幅
 	
 	@Override
 	public void updateModel(Object data) {
