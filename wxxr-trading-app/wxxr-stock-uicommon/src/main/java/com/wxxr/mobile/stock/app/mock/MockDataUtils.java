@@ -916,8 +916,74 @@ public class MockDataUtils {
 		menu.add(trading);
 		
 		trading = new TradingAccountMenuItem();
+		trading.setType("11");
+		trading.setTitle("挑战交易盘 T+1");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("1");
+		trading.setAcctId("11111");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("11");
+		trading.setTitle("挑战交易盘 T+1");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("2");
+		trading.setAcctId("11111");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
 		trading.setType("0");
 		trading.setTitle("参赛模拟盘");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("0");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("0");
+		trading.setTitle("参赛模拟盘");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("1");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("0");
+		trading.setTitle("参赛模拟盘");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("2");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("13");
+		trading.setTitle("挑战交易盘 T+3");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("0");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("13");
+		trading.setTitle("挑战交易盘 T+3");
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
@@ -944,7 +1010,29 @@ public class MockDataUtils {
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
 		trading.setIncomeRate(723L);
+		trading.setStatus("0");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("1d");
+		trading.setTitle("挑战交易盘 T+D");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
 		trading.setStatus("1");
+		trading.setAcctId("11112");
+		menu.add(trading);
+		
+		trading = new TradingAccountMenuItem();
+		trading.setType("1d");
+		trading.setTitle("挑战交易盘 T+D");
+		trading.setDate("7月22日");
+		trading.setMaxHoldStockName("平安银行");
+		trading.setIncome(134521L);
+		trading.setIncomeRate(723L);
+		trading.setStatus("2");
 		trading.setAcctId("11112");
 		menu.add(trading);
 		
