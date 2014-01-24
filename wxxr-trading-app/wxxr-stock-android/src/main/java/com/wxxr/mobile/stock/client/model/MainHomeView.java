@@ -109,8 +109,12 @@ public abstract class MainHomeView extends ViewBase{
 			@Navigation(on="ChampionShipPage",showPage="championShip"),
 			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage"),
 			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
-			@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name = "add2BackStack", value = "false")})
-			})
+			@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name = "add2BackStack", value = "false")}),
+			@Navigation(on="60",showPage="userNewsPage"),
+			@Navigation(on="61",showPage="userNewsPage"),
+			@Navigation(on="62",showPage="userNickSet"),
+			@Navigation(on="63",showPage="userAuthPage"),
+	})
 	CommandResult homeMessageClick(InputEvent event){
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
@@ -159,7 +163,8 @@ public abstract class MainHomeView extends ViewBase{
 					} else if(menu instanceof SignInMessageMenuItem) {
 						resutl.setResult("ChampionShipPage");
 					} else if(menu instanceof MessageMenuItem) {
-						resutl.setResult("ChampionShipPage");
+						MessageMenuItem m = (MessageMenuItem)menu;
+						resutl.setResult(m.getType());
 					}
 					return resutl;
 				}
