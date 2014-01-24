@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- 标题栏高度 -->
+    <dimen name="title_bar_height">60dp</dimen>
+    <!-- 标题文本字体大小 -->
+    <dimen name="title_text_size">30sp</dimen>
+    
+    <dimen name="ad_banner_height">120dp</dimen>
+    <dimen name="ad_banner_title_height">30dp</dimen>
+    <dimen name="text.bottom">35dp</dimen>
+</resources>

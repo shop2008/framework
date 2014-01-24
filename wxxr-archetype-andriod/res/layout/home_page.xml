@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/ad_banner_height" 
+    >
+
+    <LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical">
+        
+        
+        <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="server current time:"
+	        android:textSize="@dimen/activity_horizontal_margin" />
+    
+		<TextView
+	        android:id="@+id/textView2"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="2014-01-22 21:00"
+	        android:textSize="@dimen/ad_banner_title_height" 
+	        bind:field="time"/>
+		<LinearLayout 
+	        android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"
+   			android:layout_gravity="center_horizontal"
+   			 >
+
+			<Button
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/start"
+			    bind:field="startBtn"
+			    bind:on_Click="startTime"
+ 				/>
+		    
+		    <Button
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center_horizontal"
+		        android:text="@string/stop"
+		        bind:field="stopBtn"
+		        bind:on_Click="stopTime"
+ 				/>
+		    
+		</LinearLayout>
+        
+    </LinearLayout>
+
+   <RelativeLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/hello_world"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="@dimen/text.bottom"
+            android:text="@string/greetings"
+            android:textSize="@dimen/text.bottom" 
+            bind:on_SwipeLeft="swipeLeftHandler"
+            bind:field="helloWorldColor"/>
+
+	</RelativeLayout>
+		
+
+</LinearLayout>
