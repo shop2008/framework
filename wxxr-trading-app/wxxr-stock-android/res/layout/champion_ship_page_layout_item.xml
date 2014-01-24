@@ -26,8 +26,7 @@
                 android:gravity="center"
                 android:text="--"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="17sp"
                 bind:field="rankSeq" />
 
             <TextView
@@ -37,8 +36,7 @@
                 android:gravity="left|center_vertical"
                 android:text="--"
                 android:textColor="#00c6ff"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="17sp"
                 bind:field="nickName" />
         </LinearLayout>
 
@@ -55,8 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="17sp"
                 bind:field="maxStockName" />
         </LinearLayout>
 
@@ -67,8 +64,7 @@
             android:gravity="center"
             android:text="--"
             android:textColor="#BA2514"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="17sp"
             bind:field="gainRate" />
     </LinearLayout>
 
