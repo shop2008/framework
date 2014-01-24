@@ -25,14 +25,13 @@
                 android:fadingEdge="none"
                 android:scrollbars="none"
                 bind:field="homeView"
+                bind:headerViewId="MainHomeListHeaderView"
                 bind:itemViewId="MainHomeItemView"
                 bind:on_ItemClick="homeMessageClick"
                 bind:updateAllId="resourceId:id/all"
                 bind:updateFaieldId="resourceId:id/failed"
                 bind:updatingViewId="resourceId:id/progress" />
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-
     </FrameLayout>
 
-</LinearLayout>
-<!-- bind:headerViewId="MainHomeListHeaderView" bind:field="homeView@StockViewDecorator" <include layout="@layout/home_view_loading_progress_layout" />-->
+</LinearLayout><!-- bind:headerViewId="MainHomeListHeaderView" bind:field="homeView@StockViewDecorator" <include layout="@layout/home_view_loading_progress_layout" /> -->

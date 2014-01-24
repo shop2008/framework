@@ -16,7 +16,8 @@
 		    android:layout_height="wrap_content"
 		    android:orientation="horizontal" 
 		    android:background="@drawable/title_background"
-		    android:gravity="center">
+		    android:gravity="center"
+		    android:visibility="gone">
 			<TextView
 			    android:id="@+id/textView1"
 			    android:layout_width="fill_parent"
@@ -64,6 +65,7 @@
 		    android:layout_height="wrap_content"
 		    android:orientation="horizontal"
 		    android:gravity="center" 
+		    android:visibility="gone"
 		    bind:field="*"
 		    bind:on_Click="createBuyClick"
 		    android:background="#1F2122"
