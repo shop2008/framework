@@ -8,5 +8,7 @@ package com.wxxr.mobile.service;
  *
  */
 public interface ITimeService {
-	String getTime() throws Exception;
+	TimeBean getTime();
+	void startTicking();
+	void stopTicking();
 }
