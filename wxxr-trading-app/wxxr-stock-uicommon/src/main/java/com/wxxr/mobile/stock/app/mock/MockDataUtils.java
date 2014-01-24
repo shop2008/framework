@@ -1043,7 +1043,7 @@ public class MockDataUtils {
 		sign.setDate("7月22日 15:30");
 		sign.setMessage("可获20实盘积分");
 		sign.setHasSignIn(true);
-		sign.setScore("获得50实盘积分");
+		sign.setScore(50);
 		sign.setSignDays(5);
 		menu.add(sign);
 		
