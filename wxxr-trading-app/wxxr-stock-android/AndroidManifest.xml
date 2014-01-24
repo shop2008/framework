@@ -64,12 +64,15 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.AccountManagePage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.ResetPasswrodPage" android:screenOrientation="portrait"/>
     	
-    	
-    	
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateCanSaiTadingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateTDTradingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateT1TradingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateT3TradingPageView" android:screenOrientation="portrait"/>
+    	
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TBuyT3TradingPageView" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TBuyTdTradingPageView" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SellT3TradingPageView" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SellTDTradingPageView" android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

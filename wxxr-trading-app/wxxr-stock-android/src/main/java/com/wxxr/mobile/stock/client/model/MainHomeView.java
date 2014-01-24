@@ -114,6 +114,10 @@ public abstract class MainHomeView extends ViewBase{
 			@Navigation(on="61",showPage="userNewsPage"),
 			@Navigation(on="62",showPage="userNickSet"),
 			@Navigation(on="63",showPage="userAuthPage"),
+			@Navigation(on="TBuyT3TradingPageView",showPage="TBuyT3TradingPageView"),
+			@Navigation(on="TBuyTdTradingPageView",showPage="TBuyTdTradingPageView"),
+			@Navigation(on="SellT3TradingPageView",showPage="SellT3TradingPageView"),
+			@Navigation(on="SellTDTradingPageView",showPage="SellTDTradingPageView"),
 	})
 	CommandResult homeMessageClick(InputEvent event){
 			CommandResult resutl = new CommandResult();
@@ -136,25 +140,25 @@ public abstract class MainHomeView extends ViewBase{
 						resutl.setPayload(map);
 						if("0".equals(m.getStatus())) {
 							if("13".equals(m.getType())) {
-								
+								resutl.setResult("TBuyT3TradingPageView");
 							} else if("1d".equals(m.getType())) {
-								
+								resutl.setResult("TBuyTdTradingPageView");
 							} else {
 								resutl.setResult("TBuyTradingPage");
 							}
 						} else if("1".equals(m.getStatus())) {
 							if("13".equals(m.getType())) {
-								
+								resutl.setResult("SellT3TradingPageView");
 							} else if("1d".equals(m.getType())) {
-								
+								resutl.setResult("SellTDTradingPageView");
 							} else {
 								resutl.setResult("sellTradingAccount");
 							}
 						} else if("2".equals(m.getStatus())) {
 							if("13".equals(m.getType())) {
-								
+								resutl.setResult("operationDetails");
 							} else if("1d".equals(m.getType())) {
-								
+								resutl.setResult("operationDetails");
 							} else {
 								resutl.setResult("operationDetails");
 							}
