@@ -954,8 +954,8 @@ public class MockDataUtils {
 		sign.setTitle("每日签到");
 		sign.setDate("7月22日 15:30");
 		sign.setMessage("可获20实盘积分");
-		sign.setHasSignIn(false);
-		sign.setScore(0);
+		sign.setHasSignIn(true);
+		sign.setScore("50");
 		sign.setSignDays(5);
 		menu.add(sign);
 		

@@ -10,7 +10,7 @@ package com.wxxr.mobile.stock.app.v2.bean;
 public class SignInMessageMenuItem extends BaseMenuItem {
 	private boolean hasSignIn;
 	private int signDays;
-	private int score;
+	private String score;
 	private String message;
 	public boolean isHasSignIn() {
 		return hasSignIn;
@@ -24,10 +24,10 @@ public class SignInMessageMenuItem extends BaseMenuItem {
 	public void setSignDays(int signDays) {
 		this.signDays = signDays;
 	}
-	public int getScore() {
+	public String getScore() {
 		return score;
 	}
-	public void setScore(int score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 	public String getMessage() {
