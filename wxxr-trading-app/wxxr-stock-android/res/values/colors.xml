@@ -36,4 +36,7 @@
     <color name="positive_rea_color">#FD2300</color>
     <color name="manage_back_color">#FEFEFE</color>
     <color name="user_green_color">#05D714</color>
+    
+    <color name="tab_checked_color">#18191B</color>
+    <color name="tab_default_color">#202123</color>
 </resources>
