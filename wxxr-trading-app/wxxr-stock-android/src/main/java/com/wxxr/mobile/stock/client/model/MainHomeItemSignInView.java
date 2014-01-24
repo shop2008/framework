@@ -38,7 +38,7 @@ public abstract class MainHomeItemSignInView extends ViewBase implements
 	@Field(valueKey = "text", visibleWhen = "${signInBean!=null?!signInBean.hasSignIn:false}")
 	String signDaysLayout;
 
-	@Field(valueKey = "text", binding = "${'获得'}${signInBean!=null?signInBean.income:'0'}${'实盘积分'}", visibleWhen = "${signInBean!=null?signInBean.hasSignIn:false}")
+	@Field(valueKey = "text", binding = "${signInBean!=null?signInBean.income:'获得0实盘积分'}", visibleWhen = "${signInBean!=null?signInBean.hasSignIn:false}")
 	String score;
 
 	@Override

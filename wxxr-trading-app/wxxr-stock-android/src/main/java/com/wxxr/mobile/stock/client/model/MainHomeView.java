@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -15,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -24,6 +26,11 @@ import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * @author dz
@@ -100,8 +107,9 @@ public abstract class MainHomeView extends ViewBase{
 	
 	@Command(navigations={
 			@Navigation(on="ChampionShipPage",showPage="championShip"),
+			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage"),
 			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
-			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")
+			@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name = "add2BackStack", value = "false")})
 			})
 	CommandResult homeMessageClick(InputEvent event){
 			CommandResult resutl = new CommandResult();
@@ -112,35 +120,47 @@ public abstract class MainHomeView extends ViewBase{
 					BaseMenuItem menu = menuList.get(position);
 					if(menu instanceof ChampionShipMessageMenuItem) {
 						resutl.setResult("ChampionShipPage");
+					} else if(menu instanceof TradingAccountMenuItem) {
+						TradingAccountMenuItem m = (TradingAccountMenuItem)menu;
+						
+						String acctId = m.getAcctId();
+						boolean isVirtual = m.getType()!=null&&m.getType().startsWith("0")?true:false;
+						HashMap<String, Object> map = new HashMap<String, Object>();
+						map.put(Constants.KEY_ACCOUNT_ID_FLAG, acctId);
+						map.put(Constants.KEY_SELF_FLAG, true);
+						map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
+						resutl.setPayload(map);
+						if("0".equals(m.getStatus())) {
+							if("13".equals(m.getType())) {
+								
+							} else if("1d".equals(m.getType())) {
+								
+							} else {
+								resutl.setResult("TBuyTradingPage");
+							}
+						} else if("1".equals(m.getStatus())) {
+							if("13".equals(m.getType())) {
+								
+							} else if("1d".equals(m.getType())) {
+								
+							} else {
+								resutl.setResult("sellTradingAccount");
+							}
+						} else if("2".equals(m.getStatus())) {
+							if("13".equals(m.getType())) {
+								
+							} else if("1d".equals(m.getType())) {
+								
+							} else {
+								resutl.setResult("operationDetails");
+							}
+						}
+						updateSelection(new AccidSelection(acctId, isVirtual));
+					} else if(menu instanceof SignInMessageMenuItem) {
+						resutl.setResult("ChampionShipPage");
+					} else if(menu instanceof MessageMenuItem) {
+						resutl.setResult("ChampionShipPage");
 					}
-					
-					
-					
-//					
-//					String acctId = String.valueOf(tempTradingA.getAcctID());
-//					boolean isVirtual = tempTradingA.getVirtual();
-//					boolean isSelf = true;
-//					Long accid = tempTradingA.getAcctID();
-//					String over = tempTradingA.getOver();
-//					int status = tempTradingA.getStatus();
-//					HashMap<String, Object> map = new HashMap<String, Object>();
-//					map.put(Constants.KEY_ACCOUNT_ID_FLAG, accid);
-//					map.put(Constants.KEY_VIRTUAL_FLAG, isVirtual);
-//					map.put(Constants.KEY_SELF_FLAG, isSelf);
-//					if(status==1){
-//						resutl.setPayload(map);
-//						resutl.setResult("TBuyTradingPage");
-//					}else if(status==0){
-//						if("CLOSED".equals(over)){
-//							resutl.setPayload(map);
-//							resutl.setResult("operationDetails");
-//						}
-//						else if("UNCLOSE".equals(over)){
-//							resutl.setResult("sellTradingAccount");
-//							resutl.setPayload(map);
-//						}
-//					}
-//					updateSelection(new AccidSelection(acctId, isVirtual));
 					return resutl;
 				}
 			}		
