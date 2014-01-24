@@ -6,6 +6,7 @@ package com.wxxr.mobile.module;
 
 import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
+import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
@@ -14,16 +15,17 @@ import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.bind.SlideEventBinder;
+import com.wxxr.mobile.bind.TypeFaceAttributeUpdater;
 
 /**
  * @author fudapeng
  *
  */
-public class DemoWorkbenchManagerModule extends AbstractWorkbenchManagerModule<IAndroidAppContext> {
+public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IAndroidAppContext> {
 
 	@Override
 	protected void initAttributeUpdaters(IFieldAttributeManager arg0) {
-		
+		arg0.registerAttributeUpdater("typeface", new TypeFaceAttributeUpdater());
 	}
 
 	@Override
@@ -34,7 +36,6 @@ public class DemoWorkbenchManagerModule extends AbstractWorkbenchManagerModule<I
 	@Override
 	protected void initEventBinders(IEventBinderManager arg0) {
 		arg0.registerFieldBinder(InputEvent.EVENT_TYPE_LONGCLICK, new SlideEventBinder());
-//		arg0.registerFieldBinder(InputEvent.EVENT_TYPE_SWIPE_RIGHT, new SlideEventBinder());
 		
 	}
 
@@ -48,7 +49,7 @@ public class DemoWorkbenchManagerModule extends AbstractWorkbenchManagerModule<I
 		try {
 			Class.forName("com.wxxr.mobile.view.DeclarativePModelProvider").getMethod("updatePModel", new Class[]{IWorkbenchRTContext.class}).invoke(null,arg0);
 		}catch(Throwable t){
-			Trace.getLogger(DemoWorkbenchManagerModule.class).fatal("Failed to load in presentation model !!!",t);
+			Trace.getLogger(WorkbenchManagerModule.class).fatal("Failed to load in presentation model !!!",t);
 		}
 	}
 

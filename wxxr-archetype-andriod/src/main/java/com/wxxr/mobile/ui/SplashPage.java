@@ -8,7 +8,7 @@ import com.wxxr.mobile.R;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DemoSplashPage extends MainActivity {
+public class SplashPage extends MainActivity {
 
 	private ProgressBar progressBar;
 	private TextView textView;

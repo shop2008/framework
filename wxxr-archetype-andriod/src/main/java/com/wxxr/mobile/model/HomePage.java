@@ -10,6 +10,7 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -26,7 +27,7 @@ import com.wxxr.mobile.service.TimeBean;
  */
 @View(name = "home", withToolbar = false, description = "开发示例", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.home_page")
-public abstract class DemoHomePage extends PageBase {
+public abstract class HomePage extends PageBase {
 	@Bean(type = BindingType.Service)
 	ITimeService timeService;
 	
@@ -64,6 +65,18 @@ public abstract class DemoHomePage extends PageBase {
 		return null;
 	}
 	
+	
+	@Command
+	String longPressHandler(InputEvent event){
+		if(bean.isTicking()){
+			this.timeService.stopTicking();
+		}else{
+			this.timeService.startTicking();
+		}
+		return null;
+	}
+	
+	//,attributes={@Attribute(name="typeface",value="${bean.ticking ? 'NORMAL' : 'ITALIC')")}
 	@Field(valueKey="textColor",binding="${bean.ticking ? '#00FF00' : '#BA2514' }")
 	String helloWorldColor;
 	

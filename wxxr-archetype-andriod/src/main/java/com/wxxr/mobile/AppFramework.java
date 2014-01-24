@@ -14,9 +14,9 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
  * @author fudapeng
  *
  */
-public class DemoAppFramework extends AndroidFramework<IAndroidAppContext, AbstractModule<IAndroidAppContext>> {
+public class AppFramework extends AndroidFramework<IAndroidAppContext, AbstractModule<IAndroidAppContext>> {
 
-	private final DemoApplication app;
+	private final MobileApplication app;
 	
 	IAndroidAppContext a;
 	private class ComHelperAppContextImpl extends AbstractContext implements IAndroidAppContext {
@@ -24,13 +24,13 @@ public class DemoAppFramework extends AndroidFramework<IAndroidAppContext, Abstr
 		@SuppressWarnings("rawtypes")
 		@Override
 		public IAndroidFramework getApplication() {
-			return DemoAppFramework.this;
+			return AppFramework.this;
 		}
 		
 	};
 	
 	private ComHelperAppContextImpl context;
-	public DemoAppFramework(DemoApplication demoApplication) {
+	public AppFramework(MobileApplication demoApplication) {
 		this.app = demoApplication;
 	}
 	
@@ -54,7 +54,7 @@ public class DemoAppFramework extends AndroidFramework<IAndroidAppContext, Abstr
 
 	@Override
 	protected void initModules() {
-		registerKernelModule(new com.wxxr.mobile.module.DemoWorkbenchManagerModule());
+		registerKernelModule(new com.wxxr.mobile.module.WorkbenchManagerModule());
 		registerKernelModule(new com.wxxr.mobile.service.TimeService());
 	}
 

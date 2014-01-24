@@ -17,17 +17,17 @@ import com.wxxr.mobile.core.log.spi.Log4jLoggerFactory;
  * @author neillin
  *
  */
-public class DemoApplication extends Application
+public class MobileApplication extends Application
 {
 	private Log4jConfigurator logConfig = new Log4jConfigurator();
-	private DemoAppFramework framework;
+	private AppFramework framework;
 	@Override
 	public void onCreate()
 	{
 		ILoggerFactory.DefaultFactory.setLoggerFactory(new Log4jLoggerFactory());
 		logConfig.configure();
 		super.onCreate();
-		this.framework = new DemoAppFramework(this);
+		this.framework = new AppFramework(this);
 		if(this.framework.isInDebugMode()){
 			logConfig.configureLogCatAppender("com.wxxr.mobile",Level.DEBUG);
 //			logConfig.configureLogCatAppender("com.wxxr.mobile.stock",Level.DEBUG);
@@ -51,7 +51,7 @@ public class DemoApplication extends Application
 		super.onTerminate();
 	}
 	
-	public DemoAppFramework getFramework() {
+	public AppFramework getFramework() {
 		return this.framework;
 	}
 	
