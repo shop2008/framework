@@ -101,6 +101,12 @@ public abstract class DealRecordView extends ViewBase implements IModelUpdater,I
 			})
 	String totalGain;
 	
+	/**盈亏总额（交易盘，除去费用）*/
+	@Field(valueKey="text",binding="${dealDetail!=null?dealDetail.userGain:null}",converter="stockLong2StringConvertorYuan", attributes={
+			@Attribute(name = "textColor", value = "${(dealDetail!=null && dealDetail.userGain>0)?'resourceId:color/red':((dealDetail!=null && dealDetail.userGain<0)?'resourceId:color/green':'resourceId:color/white')}")
+			})
+	String userGain;
+	
 	
 	@Bean
 	List<String> imgList;
