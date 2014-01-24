@@ -22,9 +22,6 @@ public class GuideSwiperView extends LinearLayout {
 	
 	private ViewPager mViewPager;
 	
-	private View[] dots;
-	/**所有点的集合*/
-	private LinearLayout dotsContainer;
 	
 	/**引导图片适配器*/
 	private ListAdapter mListAdapter;
@@ -53,7 +50,6 @@ public class GuideSwiperView extends LinearLayout {
 		mContext = context;
 		View view = View.inflate(context, R.layout.guide_swiper_view_layout, null);
 		mViewPager = (ViewPager) view.findViewById(R.id.guide_view_pager);
-		dotsContainer = (LinearLayout) view.findViewById(R.id.guide_dots_container);
 		addView(view);
 	}
 
@@ -69,36 +65,36 @@ public class GuideSwiperView extends LinearLayout {
 			return;
 		}
 		
-		if (dotsContainer.getChildCount() > 0) {
+		/*if (dotsContainer.getChildCount() > 0) {
 			dotsContainer.removeAllViews();
 		}
-		
+		*/
 		mViewCount = mListAdapter.getCount();
 		
 		if (mViewCount > 0) {
 			mViewList = new ArrayList<View>();
-			dots = new View[mViewCount];
+			//dots = new View[mViewCount];
 			for(int i=0;i<mViewCount;i++) {
 				View view = mListAdapter.getView(i, null, null);
 				
 				if (view != null) {
 					mViewList.add(view);
-					dots[i] = new View(mContext);
-					dots[i].setBackgroundResource(R.drawable.bg_guide_dot);
-					if (i==0) {
+					//dots[i] = new View(mContext);
+					//dots[i].setBackgroundResource(R.drawable.bg_guide_dot);
+					/*if (i==0) {
 						dots[i].setEnabled(true);
 					} else {
 						dots[i].setEnabled(false);
-					}
+					}*/
 					
-					if (dotsContainer != null) {
+					/*if (dotsContainer != null) {
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20,20);
 						if (i != 0) {
 							params.setMargins(10, 0, 0, 0);
 						}
 						dotsContainer.addView(dots[i],params);
 						invalidate();
-					}
+					}*/
 				}
 			}
 			
@@ -156,14 +152,20 @@ public class GuideSwiperView extends LinearLayout {
 	    	{
 	    		return ;
 	    	}
-	    	dots[mCurSelected].setEnabled(false);
-	    	dots[position].setEnabled(true);
+	    	/*dots[mCurSelected].setEnabled(false);
+	    	dots[position].setEnabled(true);*/
 	    	mCurSelected = position;
 	    	if (iSelCallBack != null) {
 				iSelCallBack.selected(position);
 			}
 		}
 
+	}
+	
+	public void setCurrentPage(int position) {
+		if(mViewPager != null) {
+			mViewPager.setCurrentItem(position);
+		}
 	}
 	
 	public void setIViewPageSelCallBack(IViewPagerSelCallBack iViewPagerSelCallBack) {
