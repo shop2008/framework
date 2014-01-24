@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/listview_selected_item1">
+    android:background="@drawable/listview_selected_item1"
+    android:padding="10dip" >
 
-    <RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:padding="6dip" >
-	    <TextView
-	        android:id="@+id/tv_result_stock_name"
-	        style="@style/style_title_text"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-	        android:layout_marginLeft="30dp"
-	        bind:field="stockName" />
-	
-	    <TextView
-	        android:id="@+id/tv_result_stock_code"
-	        style="@style/style_title_text"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBottom="@+id/tv_result_stock_name"
-	        android:layout_alignParentRight="true"
-	        android:textColor="@color/white"
-	        android:layout_toRightOf="@id/tv_result_stock_name"
-	        android:gravity="center"
-	        bind:field="stockCode" />
-	</RelativeLayout>
-	<include layout="@layout/hlines"/>
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_result_stock_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        bind:field="stockCode" />
+
+    <TextView
+        android:id="@+id/tv_result_stock_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/tv_result_stock_code"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        bind:field="stockName" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/search_add_btn" />
+
+</RelativeLayout>

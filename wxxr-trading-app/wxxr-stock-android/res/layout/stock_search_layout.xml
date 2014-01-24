@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/light_gray"
+        android:background="@color/champion_select"
         android:gravity="center_vertical"
         android:padding="4dip" >
 
@@ -26,8 +26,8 @@
             android:maxLength="6"
             android:padding="6dip"
             android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             bind:field="searchEdit"
             bind:on_TextChanged="searchTextChanged" />
 
@@ -41,12 +41,24 @@
             android:src="@drawable/search_2_btn" />
     </RelativeLayout>
 
+    <View
+        android:id="@+id/list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/edit_box"
+        android:background="@drawable/home_list_divider" />
+
     <ListView
         android:id="@+id/lv_stock_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/edit_box"
-        style="@style/mListView"
+        android:layout_below="@id/list_divider"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@drawable/home_list_divider"
+        android:fadingEdge="none"
+        android:headerDividersEnabled="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         bind:field="searchList"
         bind:itemViewId="StockSearchItemView"
         bind:on_ItemClick="handleItemClick" >
