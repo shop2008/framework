@@ -72,7 +72,7 @@
             android:layout_marginBottom="@dimen/text.bottom"
             android:text="@string/greetings"
             android:textSize="@dimen/text.bottom" 
-            bind:on_SwipeLeft="swipeLeftHandler"
+            bind:on_LongClick="longPressHandler"
             bind:field="helloWorldColor"/>
 
 	</RelativeLayout>
