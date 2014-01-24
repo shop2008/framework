@@ -23,7 +23,7 @@ import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.ObjectUtils;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
@@ -37,10 +37,10 @@ import com.wxxr.mobile.stock.client.utils.Constants;
  * @author neillin
  * 
  */
-@View(name = "championShip", description = "大赛排行榜", provideSelection = true)
-@AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.champion_ship_page_layout")
-public abstract class ChampionShipView extends ViewBase {
-	private static final Trace log = Trace.register(ChampionShipView.class);
+@View(name = "championShip", withToolbar=true, description = "大赛排行榜", provideSelection = true)
+@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.champion_ship_page_layout")
+public abstract class ChampionShipPage extends PageBase {
+	private static final Trace log = Trace.register(ChampionShipPage.class);
 
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingMgr;

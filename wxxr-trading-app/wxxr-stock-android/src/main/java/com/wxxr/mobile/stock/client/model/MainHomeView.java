@@ -14,13 +14,16 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
 
 /**
  * @author dz
@@ -95,19 +98,25 @@ public abstract class MainHomeView extends ViewBase{
 	int status=0;
 	
 	
-//	@Command(navigations={
-//			@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name = "add2BackStack", value = "false")}),
-//			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
-//			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")
-//			})
-//	CommandResult homeMessageClick(InputEvent event){
-//		if("PinItemClick".equals(event.getEventType())){
-//			CommandResult resutl = new CommandResult();
-//			if(event.getProperty("position") instanceof Integer){
-//				int position = (Integer) event.getProperty("position");
-//				List<TradingAccInfoBean> tradingList = homeMenuList.getData();
-//				if(tradingList!=null && tradingList.size()>0){
-//					TradingAccInfoBean tempTradingA = tradingList.get(position);
+	@Command(navigations={
+			@Navigation(on="ChampionShipPage",showPage="championShip"),
+			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
+			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage")
+			})
+	CommandResult homeMessageClick(InputEvent event){
+			CommandResult resutl = new CommandResult();
+			if(event.getProperty("position") instanceof Integer){
+				int position = (Integer) event.getProperty("position");
+				List<BaseMenuItem> menuList = tradingService.getHomeMenuList();
+				if(menuList!=null && menuList.size()>0){
+					BaseMenuItem menu = menuList.get(position);
+					if(menu instanceof ChampionShipMessageMenuItem) {
+						resutl.setResult("ChampionShipPage");
+					}
+					
+					
+					
+//					
 //					String acctId = String.valueOf(tempTradingA.getAcctID());
 //					boolean isVirtual = tempTradingA.getVirtual();
 //					boolean isSelf = true;
@@ -132,10 +141,9 @@ public abstract class MainHomeView extends ViewBase{
 //						}
 //					}
 //					updateSelection(new AccidSelection(acctId, isVirtual));
-//					return resutl;
-//				}
-//			}		
-//		}
-//		return null;
-//	}		
+					return resutl;
+				}
+			}		
+		return null;
+	}		
 }

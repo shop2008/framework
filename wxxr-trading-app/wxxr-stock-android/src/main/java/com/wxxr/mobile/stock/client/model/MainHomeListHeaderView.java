@@ -30,7 +30,7 @@ import com.wxxr.mobile.stock.app.service.IArticleManagementService;
  * @author neillin
  *
  */
-@View(name="TradingMainListHeaderView")
+@View(name="MainHomeListHeaderView")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.home_view_list_header")
 public abstract class MainHomeListHeaderView extends ViewBase{
 	private static final Trace log = Trace.register(MainHomeListHeaderView.class);

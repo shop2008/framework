@@ -40,10 +40,10 @@ public abstract class ChampionShipItemView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${msgRank!=null?msgRank.rankSeq:'--'}")
 	String rankSeq;
 	
-	@Field(valueKey = "text", binding = "${msgRank!=null?(msgRank.maxStockCode==null||msgRank.maxStockCode==''?'--':msgRank.maxStockCode):'--'}", attributes={
-			@Attribute(name = "textColor", value = "${msgRank.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")
-			})
-	String maxStockCode;
+//	@Field(valueKey = "text", binding = "${msgRank!=null?(msgRank.maxStockCode==null||msgRank.maxStockCode==''?'--':msgRank.maxStockCode):'--'}", attributes={
+//			@Attribute(name = "textColor", value = "${msgRank.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")
+//			})
+//	String maxStockCode;
 
 	@Field(valueKey = "text", binding = "${msgRank!=null?msgRank.nickName:'--'}", attributes={
 			@Attribute(name = "textColor", value = "${msgRank.over=='CLOSED'?'resourceId:color/gray':'resourceId:color/white'}")

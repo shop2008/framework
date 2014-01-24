@@ -9,9 +9,7 @@
     <RadioGroup
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dsphb_title_bj"
-        android:orientation="horizontal"
-        android:padding="6dp" >
+        android:orientation="horizontal" >
 
         <RadioButton
             android:id="@+id/textView1"
@@ -21,8 +19,8 @@
             android:background="@drawable/bg_champion_btn"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="T日排名"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -35,11 +33,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
+            android:background="@drawable/listview_selected_item1"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="T+1日排名"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -52,11 +50,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
+            android:background="@drawable/listview_selected_item1"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="周赛排名"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -69,11 +67,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
+            android:background="@drawable/listview_selected_item1"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="实盘券"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -97,10 +95,13 @@
 
             <ListView
                 android:id="@+id/listView1"
-                style="@style/mListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
                 android:overScrollMode="never"
+                android:scrollbars="none"
                 bind:field="ChampionShip"
                 bind:itemViewId="ChampionShipItemView"
                 bind:on_ItemClick="handleChampionShipItemClick" />
@@ -116,9 +117,13 @@
 
             <ListView
                 android:id="@+id/listView2"
-                style="@style/mListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 bind:field="ChampionT1Ship"
                 bind:itemViewId="ChampionShipItemView"
                 bind:on_ItemClick="handleChampionShipT1ItemClick" />
@@ -134,9 +139,13 @@
 
             <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
                 android:id="@+id/listView3"
-                style="@style/mListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 bind:field="ChampionWeekShip"
                 bind:itemViewId="ChampionWeekShipSelectorItemView"
                 bind:on_PinItemClick="handleChampionWeekShipItemClick" >
@@ -153,9 +162,13 @@
 
             <ListView
                 android:id="@+id/listView4"
-                style="@style/mListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 bind:field="ChampionRegularShip"
                 bind:itemViewId="ChampionRegularShipItemView"
                 bind:on_ItemClick="handleChampionRegularShipItemClick" />
