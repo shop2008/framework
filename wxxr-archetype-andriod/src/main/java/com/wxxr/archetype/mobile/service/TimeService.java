@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.service;
+package com.wxxr.archetype.mobile.service;
 
 import java.util.Date;
 import java.util.Timer;

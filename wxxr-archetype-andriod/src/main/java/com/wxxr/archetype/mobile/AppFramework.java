@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile;
+package com.wxxr.archetype.mobile;
 
 import android.app.Application;
 
@@ -54,8 +54,8 @@ public class AppFramework extends AndroidFramework<IAndroidAppContext, AbstractM
 
 	@Override
 	protected void initModules() {
-		registerKernelModule(new com.wxxr.mobile.module.WorkbenchManagerModule());
-		registerKernelModule(new com.wxxr.mobile.service.TimeService());
+		registerKernelModule(new com.wxxr.archetype.mobile.module.WorkbenchManagerModule());
+		registerKernelModule(new com.wxxr.archetype.mobile.service.TimeService());
 	}
 
 }

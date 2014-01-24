@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.service;
+package com.wxxr.archetype.mobile.service;
 
 /**
  * @author fudapeng

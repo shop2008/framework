@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.rest;
+package com.wxxr.archetype.mobile.rest;
 
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;

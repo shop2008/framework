@@ -1,4 +1,4 @@
-package com.wxxr.mobile.bind;
+package com.wxxr.archetype.mobile.bind;
 
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;

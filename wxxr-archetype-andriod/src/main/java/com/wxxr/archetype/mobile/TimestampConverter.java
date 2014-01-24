@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile;
+package com.wxxr.archetype.mobile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

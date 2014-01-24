@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wxxr.mobile"
+    package="com.wxxr.archetype.mobile"
     android:versionCode="1"
     android:versionName="1.0.0-SNAPSHOT" >
 
@@ -9,7 +9,7 @@
         android:targetSdkVersion="18" />
 
     <application
-        android:name="com.wxxr.mobile.DemoApplication"
+        android:name=".MobileApplication"
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
@@ -18,14 +18,14 @@
 >
         
         <activity
-            android:name="com.wxxr.mobile.ui.DemoSplashPage"
-            android:label="@string/title_activity_demo_splash_page" >
+            android:name=".ui.SplashPage"
+            android:label="@string/title_activity_splash_page" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:launchMode="singleTask" android:name=".ui.DemoHomePage" android:screenOrientation="portrait"/>
+        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:launchMode="singleTask" android:name=".ui.HomePage" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

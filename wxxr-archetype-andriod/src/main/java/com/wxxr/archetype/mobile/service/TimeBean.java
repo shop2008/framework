@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.service;
+package com.wxxr.archetype.mobile.service;
 
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;

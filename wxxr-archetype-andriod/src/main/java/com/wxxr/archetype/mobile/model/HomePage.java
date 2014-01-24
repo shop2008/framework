@@ -1,11 +1,13 @@
 /**
  * 
  */
-package com.wxxr.mobile.model;
+package com.wxxr.archetype.mobile.model;
 
 
 
-import com.wxxr.mobile.TimestampConverter;
+import com.wxxr.archetype.mobile.TimestampConverter;
+import com.wxxr.archetype.mobile.service.ITimeService;
+import com.wxxr.archetype.mobile.service.TimeBean;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -18,8 +20,6 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.service.ITimeService;
-import com.wxxr.mobile.service.TimeBean;
 
 /**
  * @author fudapeng

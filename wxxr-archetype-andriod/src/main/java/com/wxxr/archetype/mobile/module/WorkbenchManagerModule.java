@@ -1,12 +1,13 @@
 /**
  * 
  */
-package com.wxxr.mobile.module;
+package com.wxxr.archetype.mobile.module;
 
 
+import com.wxxr.archetype.mobile.bind.SlideEventBinder;
+import com.wxxr.archetype.mobile.bind.TypeFaceAttributeUpdater;
 import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
-import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinderManager;
@@ -14,8 +15,6 @@ import com.wxxr.mobile.core.ui.api.IFieldAttributeManager;
 import com.wxxr.mobile.core.ui.api.IFieldBinderManager;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.bind.SlideEventBinder;
-import com.wxxr.mobile.bind.TypeFaceAttributeUpdater;
 
 /**
  * @author fudapeng

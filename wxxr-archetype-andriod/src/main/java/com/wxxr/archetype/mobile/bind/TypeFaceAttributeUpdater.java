@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.bind;
+package com.wxxr.archetype.mobile.bind;
 
 import android.graphics.Color;
 import android.graphics.Typeface;

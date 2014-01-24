@@ -1,9 +1,9 @@
-package com.wxxr.mobile.ui;
+package com.wxxr.archetype.mobile.ui;
 
 
+import com.wxxr.archetype.mobile.R;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.MainActivity;
-import com.wxxr.mobile.R;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
