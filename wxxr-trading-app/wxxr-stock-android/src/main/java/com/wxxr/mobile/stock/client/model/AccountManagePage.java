@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.mobile.android.ui.AndroidBindingType;
+import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -10,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 
 @View(name="AccountManagePage",withToolbar=true, description="我的帐号")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.account_manage_layout")
 public abstract class AccountManagePage extends PageBase {
 
 	@Menu(items={"left"})

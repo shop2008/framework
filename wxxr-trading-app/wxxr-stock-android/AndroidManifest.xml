@@ -63,6 +63,7 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreatePasswordPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.AccountManagePage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.ResetPasswrodPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserSignPage" android:screenOrientation="portrait"/>
     	
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateCanSaiTadingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CreateTDTradingPageView" android:screenOrientation="portrait"/>

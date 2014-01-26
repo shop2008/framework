@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/listview_selected_item1"
     android:orientation="vertical"
-    android:paddingLeft="2dp" >
+    android:paddingLeft="2dp" 
+    bind:field="*"
+    bind:on_Click="enterUserSignPage"
+    >
 
     <FrameLayout
         android:id="@+id/icon_layout"
