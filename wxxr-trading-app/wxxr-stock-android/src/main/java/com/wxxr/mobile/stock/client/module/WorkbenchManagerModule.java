@@ -21,6 +21,7 @@ import com.wxxr.mobile.stock.client.binding.ArticleBodyAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
+import com.wxxr.mobile.stock.client.binding.CompoundButtonCheckChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditableNavPageBtnClickedDecorator;
@@ -100,6 +101,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		
 		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
+		mgr.registerFieldBinder("CheckChanged", new CompoundButtonCheckChangeEventBinder());
 	}
 
 	@Override

@@ -76,6 +76,7 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SellTDTradingPageView" android:screenOrientation="portrait"/>
   		<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SystemNewsPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.InfoNoticesPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.PushMessageSetPage" android:screenOrientation="portrait"/>
   		
     	</application>
 
