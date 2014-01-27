@@ -2,82 +2,108 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="vertical" 
-    android:background="@drawable/listview_selected_item1"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:background="#18191B"
         android:orientation="horizontal" >
 
-        <LinearLayout
+        
+        <LinearLayout 
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="vertical" >
-
-            <ImageView
-                android:id="@+id/iv_remind"
+            >
+            <ImageView 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                bind:field="readFlag"
                 android:background="@drawable/remind_focus"
-                bind:field="remindReaded"
                 />
         </LinearLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/ll_up2"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp" >
 
                 <TextView
-                    android:id="@+id/notice_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
+                    android:layout_alignParentLeft="true"
                     android:text="平安银行模拟盘"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold" 
-                    bind:field="title"
-                    />
+                    android:textSize="20sp"
+                    bind:field="title" />
 
                 <TextView
-                    android:id="@+id/notice_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-                    android:gravity="right"
-                    android:text="2013-11-10"
-                    android:textColor="@color/gray"
-                    android:textSize="10sp" 
-                    bind:field="date"
-                    />
-            </LinearLayout>
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:text="20:55"
+                    android:textColor="#868A8B"
+                    android:textSize="20sp"
+                    bind:field="time" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/notice_content"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_below="@id/ll_up2"
-                android:layout_marginLeft="2dp"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/white"
-                android:text="开始系统清仓，清仓时仓位80.88%"
-                android:textSize="12sp" 
-                bind:field="content"
-                />
-        </RelativeLayout>
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="推送内容信送内容 推送内容"
+                    android:textColor="#868A8B"
+                    android:textSize="20sp"
+                    bind:field="content" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#121013" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#0C0306" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#656162" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#2F2D30" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#2B2B2D" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,58 +13,42 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.PullMessageBean;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
-@View(name="InfoNoticessItemView")
-public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
+@View(name="systemNewsItemSelector")
+public abstract class SystemNewsItemViewSelector extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
+
+	@Override
+	public String getItemViewId(Object itemData) {
+		if(itemData instanceof String) {
+			return "SystemNewsTitleView";
+		} else {
+			return "SystemNewsItemView";
+		}
+	}
+	
+	@Override
+	public String[] getAllViewIds() {
+		return new String[]{"SystemNewsTitleView", "SystemNewsItemView"};
+	}
 
 	
 	@Override
-	public String getItemViewId(Object itemData) {
-		
-		if (itemData instanceof String) {
-			return "InfoNoticeTitleView";
-		} else if (itemData instanceof PullMessageBean) {
-			return "InfoNoticeItemView";
-		}
-		return null;
-	}
-
-	@Override
-	public String[] getAllViewIds() {
-		return new String[] {"InfoNoticeTitleView","InfoNoticeItemView"};
-	}
-
-	@Override
-	public IRefreshableListAdapter buildListAdapter(final IUIComponent field,
+	public IRefreshableListAdapter buildListAdapter(IUIComponent field,
 			IAndroidBindingContext bContext, String itemViewId) {
-		
-		return new AbstractPinnedHeaderListAdapter(bContext, createAdaptorFromValue(field),this) {
+		AbstractPinnedHeaderListAdapter adapter = new AbstractPinnedHeaderListAdapter(bContext,createAdaptorFromValue(field), this) {
 			
 			@Override
 			protected String getHeaderViewId() {
-				return "InfoNoticeTitleView";
-			}
-			
-			@Override
-			protected boolean isHeaderData(Object data) {
-				if (data instanceof String) {
-					return true;
-				} else if (data instanceof PullMessageBean) {
-					return false;
-				} 
-				return false;
+				return "SystemNewsTitleView";
 			}
 		};
+		return adapter;
 	}
-
-
+	
 	public static IListDataProvider createAdaptorFromValue(IUIComponent comp) {
 		final IUIComponent c = comp;
-
 		return new IListDataProvider() {
 			Object[] data = null;
 			@Override
@@ -96,19 +79,19 @@ public abstract class InfoNoticesItemView extends ViewBase implements ItemViewSe
 		};
 	}
 
-	public static Object[] getListData(final IUIComponent comp){
+	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			return result != null ? Utils.getSortedGroupData(result, "getCreateDate"): null;
+			return result != null ? Utils.getSortedGroupData(result, "getCreatedDate"): null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
-				List<Object> result = new ArrayList<Object>();
-				return result != null ? Utils.getSortedGroupData(result, "getCreateDate"): null;
+				List<Object> result = (List<Object>) val;
+				return Utils.getSortedGroupData(result, "getCreatedDate");
 			}else if((val != null)&&val.getClass().isArray()){
-				List<Object> result = Arrays.asList(val);
-				return result != null ? Utils.getSortedGroupData(result, "getCreateDate"): null;
+				List<Object>  result = Arrays.asList(val);
+				return Utils.getSortedGroupData(result, "getCreatedDate");
 			}
 		}
 		return null;

@@ -71,10 +71,6 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "text", binding = "${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}", enableWhen="${(user!=null&&user.nickName!=null)?false:true}")
 	String userNickName;
 
-	/*@Field(valueKey = "visible", binding = "${(personalBean!=null&&personalBean.virtualList!=null&&personalBean.virtualList.size()>0?false:true)&&(!ExpireTimeFlag)}")
-	boolean loading;
-
-	boolean loadingExpireTime = false;*/
 	/**
 	 * 累计实盘积分
 	 */

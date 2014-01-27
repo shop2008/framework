@@ -74,7 +74,10 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TBuyTdTradingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SellT3TradingPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SellTDTradingPageView" android:screenOrientation="portrait"/>
-    </application>
+  		<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SystemNewsPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.InfoNoticesPage" android:screenOrientation="portrait"/>
+  		
+    	</application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INTERNET"/>

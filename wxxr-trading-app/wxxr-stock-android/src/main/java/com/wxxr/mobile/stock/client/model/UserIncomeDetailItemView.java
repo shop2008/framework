@@ -13,7 +13,7 @@ import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name = "incomeDetailsItemView")
+@View(name = "UserIncomeDetailItemView")
 @AndroidBinding(type = AndroidBindingType.VIEW, layoutId = "R.layout.income_details_item_layout")
 public abstract class UserIncomeDetailItemView extends ViewBase implements
 		IModelUpdater {
