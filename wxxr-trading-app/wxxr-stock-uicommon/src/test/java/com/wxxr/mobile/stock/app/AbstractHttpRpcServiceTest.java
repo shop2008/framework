@@ -48,7 +48,6 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 
 			@Override
 			protected void initModules() {
-				// TODO Auto-generated method stub
 				
 			}
 
@@ -59,19 +58,16 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});

@@ -42,7 +42,7 @@ public class VoucherLoader extends AbstractEntityLoader<String, VoucherBean, Act
 		 */
 		@Override
 		public void validate() {
-			// TODO Auto-generated method stub
+			
 			
 		}
 
@@ -94,7 +94,7 @@ public class VoucherLoader extends AbstractEntityLoader<String, VoucherBean, Act
 	 */
 	@Override
 	protected String getCommandName() {
-		// TODO Auto-generated method stub
+		
 		return COMMAND_NAME;
 	}
 

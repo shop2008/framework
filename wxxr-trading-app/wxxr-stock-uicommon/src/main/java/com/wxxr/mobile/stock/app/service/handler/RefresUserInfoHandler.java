@@ -37,7 +37,7 @@ public class RefresUserInfoHandler implements ICommandHandler {
 
 		@Override
 		public void validate() {
-			// TODO Auto-generated method stub
+			
 			
 		}
 		

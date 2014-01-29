@@ -40,7 +40,7 @@ public class StockUserResourceTest extends TestCase{
 	}
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
+		
 		super.tearDown();
 		stockUserResource=null;
 	}
@@ -205,7 +205,7 @@ public class StockUserResourceTest extends TestCase{
 //	public ResultBaseVO token() throws RestBizException;
 
 //	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException;
-	//FIXME: the device id and the device type is null, so can not be succeed!
+
 	/*public void testUpdateToken(){
 		try {
 			TokenVO vo = new TokenVO();

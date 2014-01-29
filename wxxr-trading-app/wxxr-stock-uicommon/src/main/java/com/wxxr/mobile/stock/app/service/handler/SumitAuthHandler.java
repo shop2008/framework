@@ -26,7 +26,7 @@ public class SumitAuthHandler implements ICommandHandler{
 	 */
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

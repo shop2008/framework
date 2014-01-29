@@ -62,7 +62,7 @@ public class RemindMessageLoader extends AbstractEntityLoader<String, RemindMess
 		 */
 		@Override
 		public void validate() {
-			// TODO Auto-generated method stub
+			
 			
 		}
 		

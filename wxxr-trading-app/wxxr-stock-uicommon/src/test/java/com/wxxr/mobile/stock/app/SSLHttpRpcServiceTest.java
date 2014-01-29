@@ -57,7 +57,7 @@ public class SSLHttpRpcServiceTest extends TestCase {
 
 			@Override
 			protected void initModules() {
-				// TODO Auto-generated method stub
+				
 
 			}
 
@@ -74,13 +74,13 @@ public class SSLHttpRpcServiceTest extends TestCase {
 
 					@Override
 					public KeyStore getSiteKeyStore() {
-						// TODO Auto-generated method stub
+						
 						return null;
 					}
 
 					@Override
 					public HostnameVerifier getHostnameVerifier() {
-						// TODO Auto-generated method stub
+						
 						return null;
 					}
 				});
