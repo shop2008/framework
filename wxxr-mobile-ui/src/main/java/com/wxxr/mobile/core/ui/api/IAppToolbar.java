@@ -10,5 +10,5 @@ public interface IAppToolbar {
 	void hide();
 	boolean isActive();
 	void setTitle(String title,Map<String, String> parameters);
-
+	IBinding<IView> getBinding();
 }

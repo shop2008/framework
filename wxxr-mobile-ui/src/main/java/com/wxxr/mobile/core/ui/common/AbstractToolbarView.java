@@ -3,6 +3,7 @@ package com.wxxr.mobile.core.ui.common;
 import java.util.Stack;
 
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
+import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
@@ -42,8 +43,10 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 		}
 		return null;
 	}
-
-
+	@Override
+	public IBinding<IView> getBinding() {
+		return super.getBinding();
+	}
 
 	protected IUICommand getMenuItem(String name) {
 		IUICommand cmd = null;
