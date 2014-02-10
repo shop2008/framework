@@ -13,9 +13,12 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
@@ -44,6 +47,18 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
+ 
+	@Menu(items={"right"})
+	private IMenu toolbar;
+	
+ 
+	@Command(description="Invoke when a toolbar item was clicked",uiItems={
+				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
+			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
+	)
+	String toolbarClickedLeft(InputEvent event) {
+		return "";
+	}
 	
 	@Command
 	String handleRefresh(InputEvent event) {

@@ -10,18 +10,14 @@ import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
-import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
-import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 /**
  * @author dz
@@ -43,8 +39,8 @@ public abstract class HomePageNew extends PageBase {
 //	@Menu(items = { "home", "page1", "page2", "page3", "page6" })
 //	IMenu leftMenu;
 //
-	@Menu(items = { "left", "right" })
-	IMenu toolbar;
+//	@Menu(items = { "left", "right" })
+//	IMenu toolbar;
 	@ViewGroup(viewIds = { "MainHomeView", "TradingPageView", "helpCenter", "infoCenter", "AppManageView" })
 	IViewGroup contents;
 //
@@ -112,22 +108,22 @@ public abstract class HomePageNew extends PageBase {
 //
 //	}
 //
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style") })
-	String toolbarClickedLeft(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("Toolbar item :left was clicked !");
-		}
-		return null;
-	}
-
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style") }, navigations = { @Navigation(on = "*", showPage = "GeGuStockPage") })
-	String toolbarClickedSearch(InputEvent event) {
-		if (log.isDebugEnabled()) {
-			log.debug("Toolbar item :search was clicked !");
-		}
-		updateSelection(new StockSelection());
-		return "";
-	}
+//	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style") })
+//	String toolbarClickedLeft(InputEvent event) {
+//		if (log.isDebugEnabled()) {
+//			log.debug("Toolbar item :left was clicked !");
+//		}
+//		return null;
+//	}
+//
+//	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style") }, navigations = { @Navigation(on = "*", showPage = "GeGuStockPage") })
+//	String toolbarClickedSearch(InputEvent event) {
+//		if (log.isDebugEnabled()) {
+//			log.debug("Toolbar item :search was clicked !");
+//		}
+//		updateSelection(new StockSelection());
+//		return "";
+//	}
 //
 //	@Command(description = "Invoke when a menu item was clicked", commandName = "doNavigation", uiItems = {
 //			@UIItem(id = "home", label = "首页", icon = "resourceId:drawable/home"),
@@ -214,7 +210,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "MainHomeView") })
+	@Command(navigations = { @Navigation(on = "*", showView = "MainHomeView") })//, closeCurrentView=true, params = { @Parameter(name="add2BackStack", type=ValueType.STRING, value="false")}) })
 	String homeMainClick(InputEvent event) {
 		return "";
 	}

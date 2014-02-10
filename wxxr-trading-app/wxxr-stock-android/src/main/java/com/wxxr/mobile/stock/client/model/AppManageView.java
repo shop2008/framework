@@ -32,19 +32,18 @@ public abstract class AppManageView extends ViewBase {
 	@Bean(type=BindingType.Pojo, express="${loginMgr.myUserInfo}")
 	UserBean userInfo;
 	
-	
-	@Menu(items={"left"})
+	@Menu(items={"right"})
 	private IMenu toolbar;
 	
-	@Command(
-			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
-			}
+ 
+	@Command(description="Invoke when a toolbar item was clicked",uiItems={
+				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
+			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
 	)
-	String toolbarClickedLeft(InputEvent event){
-		hide();
-		return null;
+	String toolbarClickedLeft(InputEvent event) {
+		return "";
 	}
+	
 	/**未登录布局的显示及隐藏*/
 	@Field(valueKey="visible", visibleWhen="${userInfo==null?true:false}")
 	boolean unLoginBody;

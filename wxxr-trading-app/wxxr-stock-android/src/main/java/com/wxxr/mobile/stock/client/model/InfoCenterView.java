@@ -15,10 +15,13 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -171,6 +174,17 @@ public abstract class InfoCenterView extends ViewBase {
 	@Field(valueKey="text",enableWhen="${direction == 'asc'}",visibleWhen="${orderBy == 'risefallrate'}")
 	String isRisefallrate;
 
+	@Menu(items={"right"})
+	private IMenu toolbar;
+	
+ 
+	@Command(description="Invoke when a toolbar item was clicked",uiItems={
+				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
+			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
+	)
+	String toolbarClickedLeft(InputEvent event) {
+		return "";
+	}
 	
 	/**
 	 * 事件处理-单击深证指数 
