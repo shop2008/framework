@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<classpath>
+  <classpathentry excluding="" kind="src" path="src/java">
+  </classpathentry>
+  <classpathentry output="target/test-classes" kind="src" path="src/test">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/junit/jars/junit-3.8.2.jar" kind="var">
+  </classpathentry>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/commons-lang/jars/commons-lang-2.0.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/wxxr-core-framework/jars/wxxr-core-framework-1.0.2.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/jboss-j2ee.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/ejb3-persistence.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/hibernate-annotations.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/jboss-aop-jdk50.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/jboss-ejb3x.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/jboss-annotations-ejb3.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/hibernate/jars/hibernate-core-3.3.1.GA.jar" kind="var">
+  </classpathentry>
+  <classpathentry path="MAVEN_REPO/jboss-4.2.1/jars/jboss-aspect-library-jdk50.jar" kind="var">
+  </classpathentry>
+  <classpathentry kind="output" path="target/classes">
+  </classpathentry>
+</classpath>

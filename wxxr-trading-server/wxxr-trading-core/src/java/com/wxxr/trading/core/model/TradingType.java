@@ -1,0 +1,25 @@
+/**
+ * 
+ */
+package com.wxxr.trading.core.model;
+
+/**
+ * @author neillin
+ *
+ */
+public enum TradingType {
+	NEW_TRADE_ACCOUNT,
+	CLEAR_TRADE_ACCOUNT,
+	CLOSE_TRADE_ACCOUNT,
+	BUY_STOCK,
+	SELL_STOCK,
+	CREDIT_ASSET,
+	DEBIT_ASSET,
+	FREEZE_ASSET,
+	UNFROST_ASSET,
+	DEBIT_FROZEN_ASSET,
+	CANCEL_BUY_STOCK,
+	CANCEL_SELL_STOCK,
+	BUY_STOCK_DONE,
+	SELL_STOCK_DONE
+}
