@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.common.jmx.annotation.ServiceMBean;
 import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.persistence.DAOFactory;
 import com.wxxr.trading.core.api.IGenericAccountManager;
@@ -25,7 +24,6 @@ import com.wxxr.trading.core.model.IAssetFrozenItem;
  * @author neillin
  *
  */
-@ServiceMBean(localServices=IGenericAccountManager.class)
 public class AssetAccountManagerImpl implements
 		IGenericAccountManager {
 	public static final String ACCOUNT_ID_PREFIX = "LOCK";
