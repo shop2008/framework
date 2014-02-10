@@ -257,4 +257,26 @@ public abstract class AbstractBizObjectStorage<K extends Number,BB extends Inher
 	public <E extends BB> E get(K key) {
 		return load(key);
 	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.trading.core.storage.api.IBizObjectStorage#remove(java.lang.Number)
+	 */
+	@Override
+	public boolean remove(K key) {
+		IDataAccessObject<K,BD> baseLoader = getBaseDAO();
+		BD baseDO = baseLoader.findByPrimaryKey(key);
+		if(baseDO == null){
+			return false;
+		}
+		String type = baseLoader.getType(baseDO);
+		IExtStrategy<K,BB, ? extends BB, BD, ? extends INumberKeyObject<K>> strategy = getExtStrategy(type);
+		if(strategy != null){
+			IDataAccessObject<K,INumberKeyObject<K>> extLoader = getExtDAO(type);
+			INumberKeyObject<K> extData = extLoader.findByPrimaryKey(key);
+			extLoader.remove(extData);
+		}
+		baseLoader.remove(baseDO);
+		return true;
+	}
 }

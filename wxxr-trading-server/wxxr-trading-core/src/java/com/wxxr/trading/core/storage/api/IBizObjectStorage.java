@@ -17,6 +17,7 @@ public interface IBizObjectStorage<K extends Number,T extends InheritableBizObje
 	<E extends T> E get(K key);
 	<E extends T> E load(K key);
 	<E extends T> K saveOrUpdate(E bizObject);
+	boolean remove(K key);
 	<E extends T> E newObject(String type,Map<String, Object> params);
 	
 	List<T> doQuery(String queryName, Map<String, Object> criteria);
