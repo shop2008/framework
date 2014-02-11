@@ -58,6 +58,8 @@ public class StockQuotationBean implements IBindableBean {
 	private Long buyvolume3;
 	private Long buyprice5;
 	private Long buyvolume1;
+	
+	private Integer power;
 
 	/**
 	 * @param listener
@@ -779,7 +781,15 @@ public class StockQuotationBean implements IBindableBean {
 		this.emitter.firePropertyChange("buyvolume1", old, this.buyvolume1);
 	}
 
-    /* (non-Javadoc)
+    public Integer getPower() {
+		return power;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
+	}
+
+	/* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override   

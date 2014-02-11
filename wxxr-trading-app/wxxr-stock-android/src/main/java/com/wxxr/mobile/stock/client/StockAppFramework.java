@@ -40,6 +40,7 @@ import com.wxxr.mobile.stock.app.service.impl.DBServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.EntityLoaderRegistryImpl;
 import com.wxxr.mobile.stock.app.service.impl.InfoCenterManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.NetworkCheckServiceImpl;
+import com.wxxr.mobile.stock.app.service.impl.OptionStockManagementServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.StockInfoSyncServiceImpl;
 import com.wxxr.mobile.stock.app.service.impl.SyncConnector;
 import com.wxxr.mobile.stock.app.service.impl.TadingCalendarServiceImpl;
@@ -150,6 +151,8 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 	    registerKernelModule(new ClientInfoService());
 	    
 	    registerKernelModule(new UpdateVertionService());
+	    
+	    registerKernelModule(new OptionStockManagementServiceImpl());
 
 	}
 
