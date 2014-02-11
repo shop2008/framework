@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,9 +9,6 @@ import java.util.Map;
 
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
-import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
-import com.wxxr.mobile.core.microkernel.api.IServiceDelegateHolder;
-import com.wxxr.mobile.core.microkernel.api.IStatefulService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
@@ -25,8 +23,7 @@ import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
 import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
 
-public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppContext> implements
-		IStatefulService, IOptionStockManagementService {
+public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppContext> implements IOptionStockManagementService {
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.OptionStockManagementServiceImpl");
 	Map<String,OptionStock> cache;
 	
@@ -35,9 +32,6 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 	public void add(String stockCode, String mc) {
 		if (StringUtils.isBlank(stockCode)||StringUtils.isBlank(mc)) {
 			return;
-		}
-		if (!getService(IUserIdentityManager.class).isUserAuthenticated()) {
-			throw new StockAppBizException("请登录后再添加自选股！");
 		}
 		if (cache==null) {
 			cache = new HashMap<String, OptionStock>();
@@ -49,7 +43,6 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		s.setCreateDate(new Date());
 		s.setMc(mc);
 		s.setStockCode(stockCode);
-		s.setUserId(getService(IUserIdentityManager.class).getUserId());
 		s.setPower(cache.size()+1);
 		long id = getService(IDBService.class).getDaoSession().getOptionStockDao().insertOrReplace(s);
 		s.setId(id);
@@ -68,11 +61,7 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 
 	@Override
 	public void delete(String stockCode, String mc) {
-		if (!getService(IUserIdentityManager.class).isUserAuthenticated()) {
-			throw new StockAppBizException("用户未登录");
-		}
-		String userId  = getService(IUserIdentityManager.class).getUserId();
-		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().queryRaw(" where USER_ID=? and STOCK_CODE=? and MC=?", userId,stockCode,mc);
+		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().queryRaw(" where STOCK_CODE=? and MC=?", stockCode,mc);
 		if (log.isDebugEnabled()) {
 			log.debug("stocks:"+stocks);
 		}
@@ -80,7 +69,10 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 			getService(IDBService.class).getDaoSession().getOptionStockDao().delete(stocks.get(0));
 		}
 		cache.remove(stockCode+"."+mc);
-		stockQuotationBean_cache.removeEntity(mc+stockCode);
+		if (stockQuotationBean_cache!=null) {
+			stockQuotationBean_cache.removeEntity(mc+stockCode);
+		}
+
 	}
 
 	
@@ -144,6 +136,7 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 			}else{
 				v1= o1.getPower()==null?0l:Long.valueOf(o1.getPower());
 				v2= o2.getPower()==null?0l:Long.valueOf(o2.getPower());
+				return v2.compareTo(v1);
 			}
 			if(v1 == null){
 				v1 = 0L;
@@ -197,13 +190,23 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
         }
        
     }
+    private Comparator<OptionStock> c = new Comparator<OptionStock>() {
+		@Override
+		public int compare(OptionStock o1, OptionStock o2) {
+			if (o1.getPower()!=null&&o2.getPower()!=null) {
+				return o1.getPower().compareTo(o2.getPower());
+			}
+			return 0;
+		}
+	};
 	private void loadMyStocks(){
 		if (!getService(IUserIdentityManager.class).isUserAuthenticated()) {
 			return;
 		}
-		String userId  = getService(IUserIdentityManager.class).getUserId();
-		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().queryRaw(" where USER_ID=? ORDER BY POWER", userId);
+		
+		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().loadAll();
 		if (stocks!=null&&stocks.size()>0) {
+			Collections.sort(stocks,c);
 			if (cache==null) {
 				cache = new HashMap<String, OptionStock>();
 			}
@@ -212,47 +215,7 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 			}
 		}
 	}
-	@Override
-	public void destroy(Object arg0) {
-		cache.clear();
-		cache = null;
-	}
 
-	@Override
-	public IServiceDecoratorBuilder getDecoratorBuilder() {
-		return new IServiceDecoratorBuilder() {
-			@Override
-			public <T> T createServiceDecorator(Class<T> clazz,
-					final IServiceDelegateHolder<T> holder) {
-				if (clazz==IOptionStockManagementService.class) {
-					return clazz.cast(new IOptionStockManagementService() {
-						@Override
-						public void delete(String stockCode, String mc) {
-							((IOptionStockManagementService)holder.getDelegate()).delete(stockCode, mc);
-						}
-						
-						@Override
-						public void add(String stockCode, String mc) {
-							((IOptionStockManagementService)holder.getDelegate()).add(stockCode, mc);
-						}
-
-						@Override
-						public BindableListWrapper<StockQuotationBean> getMyOptionStocks(
-								String taxis, String orderby) {
-							return ((IOptionStockManagementService)holder.getDelegate()).getMyOptionStocks( taxis,  orderby);
-						}
-
-						@Override
-						public void updateOrder(Map<String, Integer> orders) {
-							((IOptionStockManagementService)holder.getDelegate()).updateOrder(orders);
-						}
-					});
-				}else{
-					throw new IllegalArgumentException("Invalid service class :"+clazz);
-				}
-			}
-		};
-	}
 
 	@Override
 	protected void initServiceDependency() {
@@ -267,26 +230,21 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 	    stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List<StockQuotationVO>>("myOptionStock",30);
 	    registry.registerEntityLoader("myOptionStock", new StockQuotationLoader());
+	    doInit();
 	   
 	}
 
 	@Override
 	protected void stopService() {
 		context.unregisterService(IOptionStockManagementService.class, this);
+		cache.clear();
+		cache = null;
 		if (stockQuotationBean_cache!=null) {
 				stockQuotationBean_cache.clear();
 				stockQuotationBean_cache = null;
 		}
 	}
-	public Object clone() {
-		try {
-			OptionStockManagementServiceImpl impl = (OptionStockManagementServiceImpl)super.clone();
-			impl.doInit();
-			return impl;
-		}catch (CloneNotSupportedException e) {
-			throw new RuntimeException("SHOULD NOT HAPPEN !");
-		}
-	}
+
 	protected void doInit() {
 		if (cache!=null) {
 			cache.clear();
@@ -295,6 +253,10 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 			stockQuotationBean_cache.clear();
 		}
 		loadMyStocks();
+	}
+	@Override
+	public boolean isAdded(String stockCode, String mc) {
+		return cache!=null&&cache.containsKey(stockCode+"."+mc);
 	}
 
 	

@@ -25,6 +25,8 @@ public  class StockBaseInfo implements Externalizable{
 	private Long eps;//
 	private Date eps_report_date;//报告时间
 	private String corpCode;// 上市公司代码 
+	
+	private boolean added;
 	public String getName() {
 		return name;
 	}
@@ -156,6 +158,10 @@ public  class StockBaseInfo implements Externalizable{
 		}
         this.type = in.readInt();
 	}
-
-
+	public boolean getAdded() {
+		return added;
+	}
+	public void setAdded(boolean added) {
+		this.added = added;
+	}
 }

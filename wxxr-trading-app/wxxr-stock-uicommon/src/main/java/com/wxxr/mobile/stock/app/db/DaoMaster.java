@@ -9,6 +9,7 @@ import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.dao.AbstractDaoMaster;
 import com.wxxr.mobile.dao.identityscope.IdentityScopeType;
 import com.wxxr.mobile.stock.app.db.dao.DaoSession;
+import com.wxxr.mobile.stock.app.db.dao.OptionStockDao;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
 import com.wxxr.mobile.stock.app.db.dao.RemindMessageInfoDao;
 
@@ -23,6 +24,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         PullMessageInfoDao.createTable(db, ifNotExists);
         RemindMessageInfoDao.createTable(db, ifNotExists);
+        OptionStockDao.createTable(db, ifNotExists);
     }
     
     /** Drops underlying database table using DAOs. */
@@ -61,6 +63,7 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(PullMessageInfoDao.class);
         registerDaoClass(RemindMessageInfoDao.class);
+        registerDaoClass(OptionStockDao.class);
     }
     
     public DaoSession newSession() {

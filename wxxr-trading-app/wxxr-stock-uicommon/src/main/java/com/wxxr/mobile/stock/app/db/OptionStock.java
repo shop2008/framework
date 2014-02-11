@@ -16,8 +16,6 @@ public class OptionStock {
 	private String stockCode;
 	@Column(nullable=false)
 	private String mc;
-	@Column(nullable=false)
-	private String userId;
 	@Column
 	private  Date createDate;
 	@Column
@@ -40,12 +38,6 @@ public class OptionStock {
 	public void setMc(String mc) {
 		this.mc = mc;
 	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -58,8 +50,10 @@ public class OptionStock {
 	public void setPower(Integer power) {
 		this.power = power;
 	}
-	
-	
-	
+	@Override
+	public String toString() {
+		return "OptionStock [id=" + id + ", stockCode=" + stockCode + ", mc="
+				+ mc + ", createDate=" + createDate + ", power=" + power + "]";
+	}
 }
 

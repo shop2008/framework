@@ -26,6 +26,7 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.loader.DayStockLineLoader;
 import com.wxxr.mobile.stock.app.service.loader.FiveDayStockMinuteKLoader;
@@ -120,7 +121,7 @@ public class InfoCenterManagementServiceImpl extends
 	protected void initServiceDependency() {
 		addRequiredService(IRestProxyService.class);
         addRequiredService(IEntityLoaderRegistry.class);
-
+        addRequiredService(IOptionStockManagementService.class);
 	}
 
 	@Override
@@ -164,6 +165,11 @@ public class InfoCenterManagementServiceImpl extends
 				return (entity.getType()==1||entity.getType()==2)&&(entity.getCode().startsWith(keyword)||entity.getAbbr().toUpperCase().contains(keyword.toUpperCase()));
 			}
 		});
+		if (ret!=null&&ret.size()>0) {//设置是否已加为自选股
+			for (StockBaseInfo stockBaseInfo : ret) {
+				stockBaseInfo.setAdded(getService(IOptionStockManagementService.class).isAdded(stockBaseInfo.getCode(), stockBaseInfo.getMc()));
+			}
+		}
 		Collections.sort(ret, c);
 		stockListbean.setSearchResult(ret);
 		return this.stockListbean;

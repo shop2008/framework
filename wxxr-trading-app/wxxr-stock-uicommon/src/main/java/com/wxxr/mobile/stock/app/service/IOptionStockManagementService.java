@@ -10,4 +10,5 @@ public interface IOptionStockManagementService {
 	void delete(String stockCode,String mc);	
 	BindableListWrapper<StockQuotationBean> getMyOptionStocks(String taxis, String orderby);
 	void updateOrder(Map<String,Integer> orders);
+	boolean isAdded(String stockCode,String mc);
 }
