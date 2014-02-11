@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.LineListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.StockBaseInfoWrapper;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
@@ -149,15 +151,15 @@ public class InfoCenterManagementServiceImpl extends
 	}
 
 	// ====================interface methods =====================
-	private Comparator<StockBaseInfo> c = new Comparator<StockBaseInfo>() {
+	private Comparator<StockBaseInfoWrapper> c = new Comparator<StockBaseInfoWrapper>() {
 		@Override
-		public int compare(StockBaseInfo o1, StockBaseInfo o2) {
+		public int compare(StockBaseInfoWrapper o1, StockBaseInfoWrapper o2) {
 			return o1.getCode().compareTo(o2.getCode());
 		}
 	};
 	@Override
 	public SearchStockListBean searchStock(final String keyword) {
-		List<StockBaseInfo> ret = getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
+		List<StockBaseInfo> list = getService(IStockInfoSyncService.class).getStockInfos(new IEntityFilter<StockBaseInfo>() {
 			public boolean doFilter(StockBaseInfo entity) {
 				if (StringUtils.isBlank(keyword)) {
 					return false;
@@ -165,9 +167,13 @@ public class InfoCenterManagementServiceImpl extends
 				return (entity.getType()==1||entity.getType()==2)&&(entity.getCode().startsWith(keyword)||entity.getAbbr().toUpperCase().contains(keyword.toUpperCase()));
 			}
 		});
-		if (ret!=null&&ret.size()>0) {//设置是否已加为自选股
-			for (StockBaseInfo stockBaseInfo : ret) {
-				stockBaseInfo.setAdded(getService(IOptionStockManagementService.class).isAdded(stockBaseInfo.getCode(), stockBaseInfo.getMc()));
+		List<StockBaseInfoWrapper> ret =  null;
+		if (list!=null&&list.size()>0) {//设置是否已加为自选股
+			if (ret==null) {
+				ret = new ArrayList<StockBaseInfoWrapper>();
+			}
+			for (StockBaseInfo stockBaseInfo : list) {
+				ret.add(new StockBaseInfoWrapper(stockBaseInfo, getService(IOptionStockManagementService.class).isAdded(stockBaseInfo.getCode(), stockBaseInfo.getMc())));
 			}
 		}
 		Collections.sort(ret, c);
