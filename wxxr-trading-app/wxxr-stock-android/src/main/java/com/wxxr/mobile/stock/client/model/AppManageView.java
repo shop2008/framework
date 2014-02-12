@@ -148,9 +148,9 @@ public abstract class AppManageView extends ViewBase {
 	}
 	
 	/**进入用户交易记录界面*/
-	@Command(navigations={@Navigation(on="*", showPage="userTradeRecordPage")})
+	@Command(navigations={@Navigation(on="*", showPage="UserTradeRecordPage")})
 	String enterUserTradeRecordPage(InputEvent event) {
-		return null;
+		return "*";
 	}
 	
 	/**当切换时会回调此方法*/

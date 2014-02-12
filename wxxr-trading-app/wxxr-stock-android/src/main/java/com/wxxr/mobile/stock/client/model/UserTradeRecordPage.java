@@ -25,7 +25,7 @@ import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 
-@View(name = "userTradeRecordPage", withToolbar = true, description = "交易记录", provideSelection=true)
+@View(name = "UserTradeRecordPage", withToolbar = true, description = "交易记录", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_trade_record_page_layout")
 public abstract class UserTradeRecordPage extends PageBase {
 

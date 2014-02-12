@@ -17,7 +17,7 @@ import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 
-@View(name="InfoNoticeItemView")
+@View(name="InfoNoticesItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.notice_info_item_layout")
 public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdater {
 
@@ -28,10 +28,10 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 	IUserManagementService usrService;
 	
 	@Field(valueKey="visible", binding="${message.read==false}")
-	boolean remindReaded;
+	boolean readFlag;
 	
 	@Field(valueKey="text", binding="${message.createDate}", converter="stime2StrConvertor")
-	String date;
+	String time;
 	
 	@Field(valueKey="text", binding="${message.title}")
 	String title;

@@ -16,7 +16,7 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 
 @View(name="InfoNoticesPage",withToolbar=true,description="咨询公告")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.system_news_layout")
+@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.info_notices_layout")
 public abstract class InfoNoticesPage extends PageBase {
 
 	@Menu(items = {"left"})
