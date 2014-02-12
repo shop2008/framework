@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.R.integer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -34,7 +35,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	private final ItemViewSelector viewSelector;
 	private final IAndroidBindingContext context;
 	private ListViewPool viewPool;
-	
+	private int unItemPosition = 0;
 	private int titlePos = 0;
 	
 	public AbstractPinnedHeaderListAdapter(IAndroidBindingContext ctx,IListDataProvider provider, ItemViewSelector selector){
@@ -170,6 +171,15 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 		return positions;
 	}
 	
+	
+	public void setUnItemPosition(int position) {
+		this.unItemPosition = position;
+	}
+	
+	public int getUnItemPosition() {
+		return this.unItemPosition;
+	}
+	
 	protected int getPosition4PreviousSection(int position){
 		for(int i=position-1;i>=0; i--){
 			Object data = this.dataProvider.getItem(i);
@@ -195,6 +205,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 		return PINNED_HEADER_VISIBLE;
 	}
 
+	
 	@Override
 	public void configurePinnedHeader(View header, int position, int alpha) {
 		getViewPool();

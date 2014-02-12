@@ -1,6 +1,5 @@
 package com.wxxr.mobile.stock.client.binding;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +20,7 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 
 	private PinnedHeaderListView control;
 
+	private int unItemPosition;
 	public GroupByItemClickEventBinding(View view, String cmdName, String field) {
 		this.control = (PinnedHeaderListView) view;
 		super.setUIControl(this.control);
@@ -51,13 +51,14 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 		int titleCountBeforeCurPos = 0;
 
 		int realPosition = 0;
+		int unItemPosition = 0;
 		if (list instanceof PinnedHeaderListView) {
 			l = ((PinnedHeaderListView) list);
 			ListAdapter adapter = l.getAdapter();
 			if (adapter instanceof AbstractPinnedHeaderListAdapter) {
 				AbstractPinnedHeaderListAdapter groupAdapter = (AbstractPinnedHeaderListAdapter) l
 						.getAdapter();
-
+				unItemPosition = groupAdapter.getUnItemPosition();
 				// Object itemData = groupAdapter.getItem(position);
 				List<Integer> titlePos = groupAdapter.getTitleSection();
 				if (!titlePos.contains(position)) {
@@ -74,8 +75,14 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 					}
 				}
 
+				
 				realPosition = position - titleCountBeforeCurPos;
 
+				if(unItemPosition > 0) {
+					if(realPosition > unItemPosition) {
+						realPosition -= 1;
+					}
+				}
 			} else if (adapter instanceof HeaderViewListAdapter) {
 				HeaderViewListAdapter headerAdapter = (HeaderViewListAdapter) adapter;
 
@@ -84,7 +91,7 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 				int headerCount = headerAdapter.getHeadersCount();
 				if (wrappedAdapter instanceof AbstractPinnedHeaderListAdapter) {
 					AbstractPinnedHeaderListAdapter abstractAdapter = (AbstractPinnedHeaderListAdapter) wrappedAdapter;
-
+					unItemPosition = abstractAdapter.getUnItemPosition();
 					List<Integer> titlePos = abstractAdapter.getTitleSection();
 					List<Integer> newTitlePos = null;
 					if (titlePos != null && titlePos.size() > 0) {
@@ -110,7 +117,11 @@ public class GroupByItemClickEventBinding extends AbstractEventBinding
 					}
 				}
 				realPosition = position - titleCountBeforeCurPos - headerCount;
-
+				if(unItemPosition > 0) {
+					if(realPosition > unItemPosition) {
+						realPosition -= 1;
+					}
+				}
 			}
 			event.addProperty("position", realPosition);
 			handleInputEvent(event);
