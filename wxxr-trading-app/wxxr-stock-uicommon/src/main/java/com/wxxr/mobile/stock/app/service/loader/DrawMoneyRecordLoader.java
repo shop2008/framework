@@ -56,7 +56,6 @@ public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoney
             IReloadableEntityCache<Long, DrawMoneyRecordBean> cache) {
     	GetDrawMoneyRecordCommand command = (GetDrawMoneyRecordCommand) cmd;
         boolean updated = false;
-
         if(result != null){
             for (DrawMoneyRecordVo vo : result) {
             	DrawMoneyRecordBean bean=cache.getEntity(vo.getId());
@@ -81,12 +80,7 @@ public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoney
     protected List<DrawMoneyRecordVo> executeCommand(
             ICommand<List<DrawMoneyRecordVo>> command) throws Exception {
     	GetDrawMoneyRecordCommand cmd = (GetDrawMoneyRecordCommand) command;
-    	DrawMoneyRecordVos vo=null;
-        try {
-            vo = RestUtils.getRestService(ITradingProtectedResource.class).drawMoneyRecords(cmd.getStart(), cmd.getLimit());
-        } catch (Throwable e) {
-            throw new Exception(e.getMessage());
-        }
+    	DrawMoneyRecordVos vo = RestUtils.getRestService(ITradingProtectedResource.class).drawMoneyRecords(cmd.getStart(), cmd.getLimit());
         if (vo!=null){
             return vo.getDrawMoneyRecordVos();
         }
