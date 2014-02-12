@@ -25,7 +25,7 @@ public abstract class SystemNewsPage extends PageBase {
 	String refreshView;
 	
 	@Field(valueKey="options")
-	List<PullMessageBean> newsInfos;
+	List<PullMessageBean> systemNewsInfos;
 	
 	
 	@Menu(items = {"left","right"})

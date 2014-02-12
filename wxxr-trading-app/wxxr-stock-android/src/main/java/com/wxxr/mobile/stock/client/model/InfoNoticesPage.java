@@ -27,7 +27,7 @@ public abstract class InfoNoticesPage extends PageBase {
 	String refreshView;
 	
 	@Field(valueKey="options")
-	List<PullMessageBean> newsInfos;
+	List<PullMessageBean> infoNoticesInfos;
 	
 	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {

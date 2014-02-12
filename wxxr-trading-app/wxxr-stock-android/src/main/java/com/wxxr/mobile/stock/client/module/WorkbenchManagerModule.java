@@ -54,6 +54,7 @@ import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
 import com.wxxr.mobile.stock.client.widget.GMinuteLineView;
 import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
+import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
@@ -88,6 +89,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, imageViewPager.class, new ImageViewPagerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GMinuteLineView.class, new GeGuMinuteLineViewFieldBinder());
+		
 	}
 
 	@Override
@@ -110,6 +112,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		MinuteLineViewKeys.registerKeys(mgr);
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
+		ImageRefreshViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
