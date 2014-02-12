@@ -5,6 +5,7 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
+import com.wxxr.stock.trading.ejb.api.AppHomePageListVO;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
@@ -15,6 +16,7 @@ import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
+import com.wxxr.stock.trading.ejb.api.UserSignVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
 @Path("/rest/trading")
@@ -117,4 +119,17 @@ public interface ITradingResource{
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
 	public GainVOs getMoreOtherPersonal(@QueryParam("userId") String userId,@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual)throws Exception;
+	@GET
+	@Path("/getAppHomePage")
+	@Produces({ "application/json;charset=utf-8"})
+	@Consumes
+	public AppHomePageListVO getAppHomePage(@QueryParam("login") boolean login,@QueryParam("remindId") String remindId,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	@GET
+	@Path("/sign")
+	@Produces({ "application/json;charset=utf-8" })
+	public UserSignVO userSign() throws Exception;
+	@GET
+	@Path("/getSignMessage")
+	@Produces({ "application/json;charset=utf-8" })
+	public UserSignVO getUserSignMessage() throws Exception;
 }

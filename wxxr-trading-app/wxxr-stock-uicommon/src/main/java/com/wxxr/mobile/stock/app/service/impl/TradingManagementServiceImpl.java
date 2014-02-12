@@ -33,6 +33,7 @@ import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
@@ -58,6 +59,7 @@ import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
+import com.wxxr.mobile.stock.app.service.loader.DrawMoneyRecordLoader;
 import com.wxxr.mobile.stock.app.service.loader.EarnRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.GainPayDetailsEntityLoader;
 import com.wxxr.mobile.stock.app.service.loader.RegularTicketRankItemLoader;
@@ -85,6 +87,7 @@ import com.wxxr.mobile.stock.trade.command.SellStockCommand;
 import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
@@ -209,7 +212,8 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     private GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>> gainPayDetailBean_cache;
 
     protected BindableListWrapper<GainPayDetailBean> vgainPayDetails;
-
+    //提现
+    private GenericReloadableEntityCache<Long,DrawMoneyRecordBean,List<DrawMoneyRecordVo>> drawMoneyRecordBean_cache;
 
 	// =================module life cycle methods=============================
 	@Override
@@ -229,7 +233,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         registry.registerEntityLoader("auditDetailBean", new AuditDetailLoader());
         registry.registerEntityLoader("voucherDetailsBean", new VoucherDetailsLoader());
         registry.registerEntityLoader("vgainPayDetails", new GainPayDetailsEntityLoader());
-
+        registry.registerEntityLoader("drawMoneyRecordBean", new DrawMoneyRecordLoader());
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
@@ -1470,9 +1474,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 								int start, int limit, boolean wait4Finish) {
 							return ((ITradingManagementService)holder.getDelegate()).getTotalGain(start, limit, wait4Finish);
 						}
-						
-						
-						
+						@Override
+						public BindableListWrapper<DrawMoneyRecordBean> getDrawMoneyRecordList(
+								int start, int limit, boolean wait4Finish) {
+							return ((ITradingManagementService)holder.getDelegate()).getDrawMoneyRecordList(start, limit, wait4Finish);
+						}
 					});
 				}else{
 					throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1500,6 +1506,34 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	/*****************V2********************/
 	public List<BaseMenuItem> getHomeMenuList() {
 		return MockDataUtils.getHomeMenuList();
+	}
+	private BindableListWrapper<DrawMoneyRecordBean> drawMoneyRecords;
+	
+	private Comparator<DrawMoneyRecordBean> dcomparator=  new Comparator<DrawMoneyRecordBean>() {
+
+		@Override
+		public int compare(DrawMoneyRecordBean o1, DrawMoneyRecordBean o2) {
+			if (StringUtils.isBlank(o1.getDrawDate())&&StringUtils.isBlank(o2.getDrawDate())) {
+				return o1.getDrawDate().compareTo(o2.getDrawDate());
+			}
+			return 0;
+		}
+	};
+	@Override
+	public BindableListWrapper<DrawMoneyRecordBean> getDrawMoneyRecordList(int start,
+			int limit, boolean wait4Finish) {
+		if (drawMoneyRecordBean_cache==null) {
+			drawMoneyRecordBean_cache = new GenericReloadableEntityCache<Long, DrawMoneyRecordBean, List<DrawMoneyRecordVo>>("drawMoneyRecordBean");
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+        params.put("start", start);
+        params.put("limit", limit);
+		drawMoneyRecordBean_cache.forceReload(params,wait4Finish);
+		if (drawMoneyRecords==null) {
+			drawMoneyRecords = drawMoneyRecordBean_cache.getEntities(null, dcomparator);
+		}
+		drawMoneyRecords.setReloadParameters(params);
+		return drawMoneyRecords;
 	}
 }
 

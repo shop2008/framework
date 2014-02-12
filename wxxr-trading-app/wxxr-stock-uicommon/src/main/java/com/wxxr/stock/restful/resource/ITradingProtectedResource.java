@@ -6,6 +6,7 @@ import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
+import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
@@ -118,6 +119,10 @@ public interface ITradingProtectedResource{
 	@Path("/getVouDetails")
 	@Produces({  "application/json;charset=utf-8" })
 	@Consumes
-	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Throwable;
-
+	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Exception;
+	@GET
+	@Path("/drawMoneyRecords")
+	@Produces({ "application/json;charset=utf-8" })
+	@Consumes
+	public DrawMoneyRecordVos drawMoneyRecords(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 }

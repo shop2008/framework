@@ -18,7 +18,15 @@ public interface IUserLoginManagementService {
 	 */
 	void register(String phoneNumber) throws StockAppBizException;
 
-	 
+	/**
+	 * 
+	 * 注册用户-用户名密码方式注册
+	 * @param userName 用户名
+	 * @param pass 密码
+	 * @param pass2 重新输入密码
+	 * @throws StockAppBizException - 如果不符合规范或者用户已注册，将抛出异常
+	 */
+	void register(String userName,String pass,String pass2) throws StockAppBizException;
 	/**
 	 * 用户登陆
 	 * @param userId

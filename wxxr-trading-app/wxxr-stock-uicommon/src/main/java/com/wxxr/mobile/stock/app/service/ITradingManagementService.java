@@ -8,6 +8,7 @@ import java.util.List;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
@@ -250,5 +251,17 @@ public interface ITradingManagementService {
 	
 	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish);
 	/**************************V2****************************/
+	/**
+	 * 获取首页列表
+	 * @return
+	 */
 	public List<BaseMenuItem> getHomeMenuList();
+	/***
+	 * 提现记录
+	 * @param start
+	 * @param limit
+	 * @param wait4Finish
+	 * @return
+	 */
+	public BindableListWrapper<DrawMoneyRecordBean> getDrawMoneyRecordList(int start,int limit,boolean wait4Finish);
 }

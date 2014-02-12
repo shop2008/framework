@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
+import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -37,6 +38,7 @@ import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
+import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
@@ -633,4 +635,21 @@ public class ConverterUtils {
        bean.setVirtual(vo.isVirtual());
    }
 
+    public static DrawMoneyRecordBean fromVO(DrawMoneyRecordVo vo){
+        if (vo == null) {
+            return null;
+        }
+        DrawMoneyRecordBean b=new DrawMoneyRecordBean();
+        updatefromVO(b,vo);
+        return b;
+    } 
+    public static void updatefromVO(DrawMoneyRecordBean bean,DrawMoneyRecordVo vo) {
+        if (vo == null) {
+            return;
+        }
+        bean.setId(vo.getId());
+        bean.setDrawDate(vo.getDrawDate());
+        bean.setDrawState(vo.getDrawState());
+        bean.setDrawAmount(vo.getDrawAmount());
+    }
 }

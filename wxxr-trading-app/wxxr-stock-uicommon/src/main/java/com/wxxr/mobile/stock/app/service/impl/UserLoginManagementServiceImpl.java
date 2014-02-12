@@ -40,6 +40,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.app.service.handler.Register2Handher.UserRegister2Command;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
 import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
@@ -399,5 +400,32 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 			//return o2.getCloseTime().compareTo(o1.getCloseTime());
 		}
 	};
+	@Override
+	public void register(String userName, String pass, String pass2)
+			throws StockAppBizException {
+		if (StringUtils.isBlank(userName)||StringUtils.isBlank(pass)) {
+			throw new StockAppBizException("用户名或密码不能为空");
+		}
+		if (!pass.equals(pass2)) {
+			throw new StockAppBizException("两次输入密码不一致");
+		}
+		UserRegister2Command cmd=new UserRegister2Command();
+		cmd.setUserName(userName);
+		cmd.setPassword(pass);
+		try{
+			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+				try {
+					SimpleResultVo vo=future.get(30,TimeUnit.SECONDS);
+					if(vo.getResult()!=0){
+						throw new StockAppBizException(vo.getMessage());
+					}
+				} catch (Exception e) {
+					throw new StockAppBizException(e.getMessage());
+				}
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
+			}
+		
+	}
 	
 }
