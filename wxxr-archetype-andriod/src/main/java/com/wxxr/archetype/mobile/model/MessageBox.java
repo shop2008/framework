@@ -106,7 +106,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof UICommand){
+				removeChild("left_button");
 				this.left = (UICommand)val;
+				if(containsChild(this.left)){
+					remove(left);
+				}
+				add(left);
 				this.left.setAttribute(AttributeKeys.visible, true);
 				this.isController = true;
 			}else if(val instanceof String){
@@ -118,7 +123,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof UICommand){
+				removeChild("mid_button");
 				this.middle = (UICommand)val;
+				if(containsChild(this.middle)){
+					remove(middle);
+				}
+				add(middle);
 				this.middle.setAttribute(AttributeKeys.visible, true);
 				this.isController = true;
 			}else if(val instanceof String){
@@ -128,7 +138,12 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
 			if(val instanceof UICommand){
+				removeChild("right_button");
 				this.right = (UICommand)val;
+				if(containsChild(this.right)){
+					remove(right);
+				}
+				add(right);
 				this.right.setAttribute(AttributeKeys.visible, true);
 				this.isController = true;
 			}else if(val instanceof String){

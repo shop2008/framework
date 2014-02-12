@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:gravity="center"
+    android:background="@color/page_background_color">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="系统提示框" 
+        android:gravity="center"
+        android:padding="8dp"
+        android:textColor="#e1e1e1"
+        android:textSize="16sp"
+        bind:field="title"
+        android:background="@color/page_background_color"/>
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        bind:field="hlines">
+	    <include layout="@layout/hlines"/>
+    </LinearLayout>
+    <TextView
+	    android:id="@+id/textView2"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="系统异常" 
+	    android:textColor="#e1e1e1"
+	    bind:field="message"
+	    android:gravity="center"
+		android:textSize="14sp"
+		android:padding="8dp"/>
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:visibility="gone"
+        >
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="30dp"
+            android:layout_height="30dp" 
+            android:visibility="gone"
+            bind:field="progressBarVisible"
+            />
+    </LinearLayout>
+
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        bind:field="controller"
+        >
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确定" 
+            android:layout_weight="1"
+            android:textColor="#e1e1e1"
+        	android:textSize="14sp"
+            android:background="@drawable/red_button_style"
+            bind:field="left_button"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="取消" 
+            android:textColor="#e1e1e1"
+            android:textSize="14sp"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            bind:field="mid_button"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/red_button_style"/>
+        
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="取消" 
+            android:textColor="#e1e1e1"
+        	android:textSize="14sp"
+        	android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            bind:field="right_button"
+            android:background="@drawable/red_button_style"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="20dp"/>
+        
+   </LinearLayout>     
+</LinearLayout>
