@@ -3,10 +3,13 @@
  */
 package com.wxxr.archetype.mobile.service;
 
-import java.util.Date;
-import java.util.Timer;
-
+import com.wxxr.archetype.mobile.command.StartTimeCommand;
+import com.wxxr.archetype.mobile.handler.StartTimeCommandHandler;
 import com.wxxr.mobile.android.app.IAndroidAppContext;
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.ExecAsyncException;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 
@@ -61,6 +64,7 @@ public class TimeService extends AbstractModule<IAndroidAppContext> implements I
 		this.ticker = new Ticker();
 		this.ticker.start();
 		context.registerService(ITimeService.class, this);
+		context.getService(ICommandExecutor.class).registerCommandHandler(StartTimeCommand.Name, new StartTimeCommandHandler());
 	}
 
 
@@ -80,12 +84,38 @@ public class TimeService extends AbstractModule<IAndroidAppContext> implements I
 
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(ICommandExecutor.class);
 	}
 
-
+//	private class AsyncCallbackImpl implements IAsyncCallback<TimeBean>{
+//		private ICancellable cancel;
+//		@Override
+//		public void cancelled() {
+//			if(cancel != null)
+//			cancel.cancel();
+//		}
+//		@Override
+//		public void failed(Throwable e) {
+//			
+//		}
+//		@Override
+//		public void setCancellable(ICancellable cancel) {
+//			this.cancel = cancel;
+//		}
+//		@Override
+//		public void success(TimeBean bean) {
+//		}
+//		public ICancellable getCancellable() {
+//			return cancel;
+//		}
+//	}
 	@Override
 	public void startTicking() {
-		this.bean.setTicking(true);
+		AsyncFuture<TimeBean> control = new AsyncFuture();
+		IAsyncCallback<TimeBean> asyncCallback= control.getInternalCallback();
+		context.getService(ICommandExecutor.class).submitCommand(new StartTimeCommand(bean),asyncCallback);
+		ExecAsyncException asyncException = new ExecAsyncException(control,"提示","请稍候....");
+		throw asyncException;
 	}
 
 

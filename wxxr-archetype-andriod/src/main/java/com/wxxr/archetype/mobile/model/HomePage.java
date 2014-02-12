@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -59,6 +60,7 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 	
+//	@ExeGuard(title = "提示", message = "正在获取时间...", silentPeriod = 0, cancellable = true)
 	@Command
 	String startTime(InputEvent event){
 		this.timeService.startTicking();
@@ -76,8 +78,8 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 	
-	//,attributes={@Attribute(name="typeface",value="${bean.ticking ? 'NORMAL' : 'ITALIC')")}
-	@Field(valueKey="textColor",binding="${bean.ticking ? '#00FF00' : '#BA2514' }")
+	//
+	@Field(valueKey="textColor",binding="${bean.ticking ? '#00FF00' : '#BA2514' }",attributes={@Attribute(name="typeface",value="${bean.ticking ? 'NORMAL' : 'ITALIC'}")})
 	String helloWorldColor;
 	
 		

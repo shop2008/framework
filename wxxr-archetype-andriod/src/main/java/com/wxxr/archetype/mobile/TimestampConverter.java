@@ -70,6 +70,9 @@ public class TimestampConverter implements IValueConvertor<Long, String> {
 	 */
 	@Override
 	public String toTargetTypeValue(Long time) {
+		if(time == null){
+			return "0000-00-00 00:00";
+		}
 		return new SimpleDateFormat(this.format).format(new Date(time));
 	}
 
