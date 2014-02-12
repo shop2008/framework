@@ -32,6 +32,7 @@ import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.bean.UserSignBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
@@ -53,6 +54,8 @@ import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
+import com.wxxr.mobile.stock.app.service.handler.SignUpHandler;
+import com.wxxr.mobile.stock.app.service.handler.SignUpHandler.SignUpCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeHandler.SubmitPushMesasgeCommand;
 import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler;
@@ -67,7 +70,6 @@ import com.wxxr.mobile.stock.app.service.handler.UpdateTokenHandler;
 import com.wxxr.mobile.stock.app.service.handler.UpdateTokenHandler.UpdateTokenCommand;
 import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
 import com.wxxr.mobile.stock.app.service.loader.GainPayDetailLoader;
-import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PersonalHomePageLoader;
 import com.wxxr.mobile.stock.app.service.loader.PullMessageLoader;
 import com.wxxr.mobile.stock.app.service.loader.RemindMessageLoader;
@@ -76,6 +78,7 @@ import com.wxxr.mobile.stock.app.service.loader.UserAssetLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserAttributeLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserClientInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserInfoLoader;
+import com.wxxr.mobile.stock.app.service.loader.UserSignBeanLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
@@ -88,6 +91,7 @@ import com.wxxr.stock.restful.json.ClientInfoVO;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
+import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 /**
  * @author neillin
@@ -137,6 +141,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
     
 
 	private UserBean myUserInfo;
+	
+	private UserSignBean userSignBean;
+	private IReloadableEntityCache<String,UserSignBean> UserSignBeanCache;
 
 	//==============  module life cycle =================
 
@@ -147,6 +154,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		registry.registerEntityLoader("userAssetBean", new UserAssetLoader());
 		registry.registerEntityLoader("clientInfo", new UserClientInfoLoader());
 		registry.registerEntityLoader("voucherBean", new VoucherLoader());
+		registry.registerEntityLoader("userSignBean", new UserSignBeanLoader());
 		registry.registerEntityLoader("remindMessageBean", new RemindMessageLoader());
 		registry.registerEntityLoader("pullMessageBean", new PullMessageLoader());
 		registry.registerEntityLoader("userAuthorInfo", new UserAttributeLoader());
@@ -168,6 +176,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadRemindMessageHandler.COMMAND_NAME, new ReadRemindMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadAllUnreadMessageHandler.COMMAND_NAME, new ReadAllUnreadMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
+		context.getService(ICommandExecutor.class).registerCommandHandler(SignUpHandler.COMMAND_NAME, new SignUpHandler());
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
@@ -906,6 +915,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 							return ((IUserManagementService)holder.getDelegate()).verfiy(userId, password);
 						}
 
+						@Override
+						public UserSignBean getUserSignBean() {
+							return ((IUserManagementService)holder.getDelegate()).getUserSignBean();
+						}
+
+						@Override
+						public UserSignBean sign() {
+							return ((IUserManagementService)holder.getDelegate()).sign();
+						}
+
 					});
 				}
 				throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -945,6 +964,64 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			return getMyUserInfo()!=null&&StringUtils.isNotBlank(getMyUserInfo().getPassword())&&getMyUserInfo().getPassword().equals(password);
 		}
 		return false;
+	}
+
+	@Override
+	public UserSignBean getUserSignBean() {
+		if (getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			if(UserSignBeanCache==null){
+				UserSignBeanCache=new GenericReloadableEntityCache<String, UserSignBean, UserSignVO>("userSignBean");
+			}
+			userSignBean=UserSignBeanCache.getEntity(UserSignBean.class.getCanonicalName());
+			if(userSignBean==null){
+				userSignBean=new UserSignBean();
+				UserSignBeanCache.putEntity(UserSignBean.class.getCanonicalName(), userSignBean);
+			}
+			UserSignBeanCache.doReloadIfNeccessay();
+			return userSignBean;
+		}else{
+			throw new StockAppBizException("用户未登录");
+		}
+	}
+
+	@Override
+	public UserSignBean sign() {
+		if (getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			SignUpCommand cmd = new SignUpCommand();
+			try{
+				Future<UserSignVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+				UserSignVO vo=future.get(30,TimeUnit.SECONDS);
+				if (vo!=null) {
+					if(UserSignBeanCache==null){
+						UserSignBeanCache=new GenericReloadableEntityCache<String, UserSignBean, UserSignVO>("userSignBean");
+					}
+					userSignBean=UserSignBeanCache.getEntity(UserSignBean.class.getCanonicalName());
+					if(userSignBean==null){
+						userSignBean=new UserSignBean();
+						UserSignBeanCache.putEntity(UserSignBean.class.getCanonicalName(), userSignBean);
+					}
+					if (vo.getSuccess()==-1) {
+						throw new StockAppBizException(vo.getFailReason());
+					}else if (vo.getSuccess()==0) {
+						throw new StockAppBizException("今日已签到，请勿重复操作");
+					}else{
+						userSignBean.setRewardVol(vo.getRewardVol());
+						userSignBean.setOngoingDays(vo.getOngoingDays());
+						userSignBean.setSign(vo.isSign());
+						userSignBean.setSignDate(vo.getSignDate());
+					}
+				}
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
+			}catch (StockAppBizException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new StockAppBizException("系统错误");
+			}
+			return userSignBean;
+		}else{
+			throw new StockAppBizException("用户未登录");
+		}
 	}
 	
 }

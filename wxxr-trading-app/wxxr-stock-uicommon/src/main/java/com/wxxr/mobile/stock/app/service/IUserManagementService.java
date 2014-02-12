@@ -10,10 +10,9 @@ import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
-import com.wxxr.mobile.stock.app.bean.ScoreInfoBean;
-import com.wxxr.mobile.stock.app.bean.TradeDetailListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.bean.UserSignBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
@@ -134,4 +133,7 @@ public interface IUserManagementService {
 	void readPullMesage(long id);
 	
 	ClientInfoBean getClientInfo();
+	
+	UserSignBean getUserSignBean();
+	UserSignBean sign();
 }
