@@ -3,14 +3,20 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
+import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
@@ -43,6 +49,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		addRequiredService(IURLLocatorManagementService.class);
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
+		addRequiredService(IPreferenceManager.class);
 	}
 
 	
@@ -60,15 +67,59 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		loader = new MyArticleLoader();
 		loader.setArticleType(17);
 		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("withdrawlNoticeArticles", loader);
+		loadConfig();
 		context.registerService(IArticleManagementService.class, this);
 	}
 
 	
 	@Override
 	protected void stopService() {
+		storeConfig();
 		context.unregisterService(IArticleManagementService.class, this);
 	}
-
+	private IPreferenceManager prefManager;
+	protected IPreferenceManager getPrefManager() {
+		if (this.prefManager == null) {
+			this.prefManager = context.getService(IPreferenceManager.class);
+		}
+		return this.prefManager;
+	}
+	private final static String AD_CONTROL_FLAG = "adsetting_off";
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	private void loadConfig(){
+	    IPreferenceManager mgr = getPrefManager();
+        Dictionary<String, String> d = mgr.getPreference(getModuleName());
+        String off = d != null ? d.get(AD_CONTROL_FLAG) : null;
+        if (adStatusBean==null) {
+         	adStatusBean = new AdStatusBean();
+ 		}
+        if (StringUtils.isNotBlank(off)) {
+        	if (off.equals("true_"+sdf.format(new Date()))) {
+        		adStatusBean.setOff(true);
+			}
+		}
+        if (log.isDebugEnabled()) {
+			log.debug("Ad status is close:"+adStatusBean.getOff());
+		}
+	}
+	private void storeConfig(){
+		 Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+	        if(pref == null){
+	            pref= new Hashtable<String, String>();
+	            getPrefManager().newPreference(getModuleName(), pref);
+	        }else{
+	            pref = DictionaryUtils.clone(pref);
+	        }
+	        if (adStatusBean!=null){
+	            pref.put(AD_CONTROL_FLAG, adStatusBean.getOff()+"_"+sdf.format(new Date()));
+	        }
+	        getPrefManager().putPreference(getModuleName(), pref);
+		
+	}
+	@Override
+	public String getModuleName() {
+		return "ArticleManager";
+	}
 	//=================interface method =====================================
 	
 	
