@@ -11,6 +11,8 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
@@ -210,7 +212,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "MainHomeView") })//, closeCurrentView=true, params = { @Parameter(name="add2BackStack", type=ValueType.STRING, value="false")}) })
+	@Command(navigations = { @Navigation(on = "*", showView = "MainHomeView",params={@Parameter(name="add2BackStack",type=ValueType.BOOLEAN,value="false")}) })//, closeCurrentView=true, params = { @Parameter(name="add2BackStack", type=ValueType.STRING, value="false")}) })
 	String homeMainClick(InputEvent event) {
 		return "";
 	}
@@ -221,7 +223,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "TradingPageView") })
+	@Command(navigations = { @Navigation(on = "*", showView = "TradingPageView",params={@Parameter(name="add2BackStack",type=ValueType.BOOLEAN,value="false")}) })
 	String tradingClick(InputEvent event) {
 		return "";
 	}
@@ -232,7 +234,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "helpCenter") })
+	@Command(navigations = { @Navigation(on = "*", showView = "helpCenter",params={@Parameter(name="add2BackStack",type=ValueType.BOOLEAN,value="false")}) })
 	String helpClick(InputEvent event) {
 		return "";
 	}
@@ -243,7 +245,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "infoCenter") })
+	@Command(navigations = { @Navigation(on = "*", showView = "infoCenter",params={@Parameter(name="add2BackStack",type=ValueType.BOOLEAN,value="false")}) })
 	String infoClick(InputEvent event) {
 		return "";
 	}
@@ -254,7 +256,7 @@ public abstract class HomePageNew extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(navigations = { @Navigation(on = "*", showView = "AppManageView") })
+	@Command(navigations = { @Navigation(on = "*", showView = "AppManageView",params={@Parameter(name="add2BackStack",type=ValueType.BOOLEAN,value="false")}) })
 	String manageClick(InputEvent event) {
 		return "";
 	}
