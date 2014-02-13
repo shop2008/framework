@@ -108,6 +108,10 @@ public class ConverterUtils {
         b.setBuysum(vo.getBuysum());
         b.setStatus(vo.getStatus());
         b.setChange(vo.getChange());
+        StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getCode(), vo.getMarket());
+    	if (stock!=null) {
+    		 b.setStockName(stock.getName());
+		}
     }
     public static StockQuotationBean fromVO(StockQuotationVO vo){
         if (vo == null) {

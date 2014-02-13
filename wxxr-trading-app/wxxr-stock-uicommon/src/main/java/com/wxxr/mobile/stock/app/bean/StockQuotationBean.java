@@ -61,6 +61,7 @@ public class StockQuotationBean implements IBindableBean {
 	
 	private Integer power;
 
+	private String stockName;
 	/**
 	 * @param listener
 	 */
@@ -789,58 +790,43 @@ public class StockQuotationBean implements IBindableBean {
 		this.power = power;
 	}
 
-	/* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override   
-    public String toString() {
-        return "StockQuotationBean ["+
-                "risefallrate=" + this.risefallrate +
-                " , change=" + this.change +
-                " , szjs=" + this.szjs +
-                " , buysum=" + this.buysum +
-                " , secuvolume=" + this.secuvolume +
-                " , capital=" + this.capital +
-                " , close=" + this.close +
-                " , profitrate=" + this.profitrate +
-                " , open=" + this.open +
-                " , sellsum=" + this.sellsum +
-                " , datetime=" + this.datetime +
-                " , sellvolume2=" + this.sellvolume2 +
-                " , sellvolume3=" + this.sellvolume3 +
-                " , buyprice2=" + this.buyprice2 +
-                " , sellvolume1=" + this.sellvolume1 +
-                " , buyprice1=" + this.buyprice1 +
-                " , marketvalue=" + this.marketvalue +
-                " , status=" + this.status +
-                " , code=" + this.code +
-                " , averageprice=" + this.averageprice +
-                " , sellvolume4=" + this.sellvolume4 +
-                " , sellvolume5=" + this.sellvolume5 +
-                " , handrate=" + this.handrate +
-                " , ppjs=" + this.ppjs +
-                " , market=" + this.market +
-                " , sellprice5=" + this.sellprice5 +
-                " , xdjs=" + this.xdjs +
-                " , sellprice3=" + this.sellprice3 +
-                " , buyvolume4=" + this.buyvolume4 +
-                " , newprice=" + this.newprice +
-                " , sellprice4=" + this.sellprice4 +
-                " , buyvolume5=" + this.buyvolume5 +
-                " , lb=" + this.lb +
-                " , secuamount=" + this.secuamount +
-                " , high=" + this.high +
-                " , sellprice1=" + this.sellprice1 +
-                " , low=" + this.low +
-                " , buyprice3=" + this.buyprice3 +
-                " , buyvolume2=" + this.buyvolume2 +
-                " , sellprice2=" + this.sellprice2 +
-                " , buyprice4=" + this.buyprice4 +
-                " , buyvolume3=" + this.buyvolume3 +
-                " , buyprice5=" + this.buyprice5 +
-                " , buyvolume1=" + this.buyvolume1 +
-        "]";
-    }
+	public String getStockName() {
+		return stockName;
+	}
+
+	public void setStockName(String stockName) {
+		String old = this.stockName;
+		this.stockName = stockName;
+		this.emitter.firePropertyChange("stockName", old, this.stockName);
+	}
+
+	
+
+	@Override
+	public String toString() {
+		return "StockQuotationBean [risefallrate=" + risefallrate + ", change="
+				+ change + ", szjs=" + szjs + ", buysum=" + buysum
+				+ ", secuvolume=" + secuvolume + ", capital=" + capital
+				+ ", close=" + close + ", profitrate=" + profitrate + ", open="
+				+ open + ", sellsum=" + sellsum + ", datetime=" + datetime
+				+ ", sellvolume2=" + sellvolume2 + ", sellvolume3="
+				+ sellvolume3 + ", buyprice2=" + buyprice2 + ", sellvolume1="
+				+ sellvolume1 + ", buyprice1=" + buyprice1 + ", marketvalue="
+				+ marketvalue + ", status=" + status + ", code=" + code
+				+ ", averageprice=" + averageprice + ", sellvolume4="
+				+ sellvolume4 + ", sellvolume5=" + sellvolume5 + ", handrate="
+				+ handrate + ", ppjs=" + ppjs + ", market=" + market
+				+ ", sellprice5=" + sellprice5 + ", xdjs=" + xdjs
+				+ ", sellprice3=" + sellprice3 + ", buyvolume4=" + buyvolume4
+				+ ", newprice=" + newprice + ", sellprice4=" + sellprice4
+				+ ", buyvolume5=" + buyvolume5 + ", lb=" + lb + ", secuamount="
+				+ secuamount + ", high=" + high + ", sellprice1=" + sellprice1
+				+ ", low=" + low + ", buyprice3=" + buyprice3 + ", buyvolume2="
+				+ buyvolume2 + ", sellprice2=" + sellprice2 + ", buyprice4="
+				+ buyprice4 + ", buyvolume3=" + buyvolume3 + ", buyprice5="
+				+ buyprice5 + ", buyvolume1=" + buyvolume1 + ", power=" + power
+				+ ", stockName=" + stockName + "]";
+	}
 
 	@Override
 	public int hashCode() {
@@ -886,6 +872,7 @@ public class StockQuotationBean implements IBindableBean {
 		result = prime * result
 				+ ((newprice == null) ? 0 : newprice.hashCode());
 		result = prime * result + ((open == null) ? 0 : open.hashCode());
+		result = prime * result + ((power == null) ? 0 : power.hashCode());
 		result = prime * result + ((ppjs == null) ? 0 : ppjs.hashCode());
 		result = prime * result
 				+ ((profitrate == null) ? 0 : profitrate.hashCode());
@@ -917,6 +904,8 @@ public class StockQuotationBean implements IBindableBean {
 		result = prime * result
 				+ ((sellvolume5 == null) ? 0 : sellvolume5.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result
+				+ ((stockName == null) ? 0 : stockName.hashCode());
 		result = prime * result + ((szjs == null) ? 0 : szjs.hashCode());
 		result = prime * result + ((xdjs == null) ? 0 : xdjs.hashCode());
 		return result;
@@ -1054,6 +1043,11 @@ public class StockQuotationBean implements IBindableBean {
 				return false;
 		} else if (!open.equals(other.open))
 			return false;
+		if (power == null) {
+			if (other.power != null)
+				return false;
+		} else if (!power.equals(other.power))
+			return false;
 		if (ppjs == null) {
 			if (other.ppjs != null)
 				return false;
@@ -1139,6 +1133,11 @@ public class StockQuotationBean implements IBindableBean {
 				return false;
 		} else if (!status.equals(other.status))
 			return false;
+		if (stockName == null) {
+			if (other.stockName != null)
+				return false;
+		} else if (!stockName.equals(other.stockName))
+			return false;
 		if (szjs == null) {
 			if (other.szjs != null)
 				return false;
@@ -1150,6 +1149,7 @@ public class StockQuotationBean implements IBindableBean {
 		} else if (!xdjs.equals(other.xdjs))
 			return false;
 		return true;
-	}	
+	}
+
 
 }
