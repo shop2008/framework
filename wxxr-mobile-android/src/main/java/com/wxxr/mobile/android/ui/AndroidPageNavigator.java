@@ -375,7 +375,7 @@ public class AndroidPageNavigator implements IAndroidPageNavigator {
 			}else if(bDesc.getBindingType() == AndroidBindingType.FRAGMENT){
 				if(activity.getActivity() instanceof BindableFragmentActivity){
 					if(show){
-						activity.showFragment(vgControl,view.getName(),bDesc,true);
+						activity.showFragment(vgControl,view.getName(),bDesc,add2BackStack);
 					}else{
 						activity.hideFragment(view.getName());
 					}

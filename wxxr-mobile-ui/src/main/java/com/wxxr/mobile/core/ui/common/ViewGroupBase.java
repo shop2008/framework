@@ -109,6 +109,7 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 	public void activateView(String name,boolean backable) {
 		IView view = getView(name);
 		if(view != null){
+			view.setProperty("add2BackStack", backable);
 			if(isViewOnShow(name)&&view.isActive()){
 				return;
 			}
