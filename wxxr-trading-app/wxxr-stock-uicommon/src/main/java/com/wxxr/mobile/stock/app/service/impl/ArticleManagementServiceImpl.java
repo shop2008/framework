@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
+import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
@@ -168,6 +169,13 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		map.put("limit", 1);
 		this.withdrawlNoticeCache.doReloadIfNeccessay(map);
 		return this.withdrawlNoticeArticles;
+	}
+
+
+	@Override
+	public AdStatusBean getAdStatusBean() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

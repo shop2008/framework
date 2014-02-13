@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 
@@ -30,4 +31,6 @@ public interface IArticleManagementService {
 	public BindableListWrapper<ArticleBean> getTradingRuleArticle();
 	
 	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle();
+	
+	public AdStatusBean getAdStatusBean();
 }
