@@ -50,6 +50,9 @@ public class TransactionInfo implements ILongKeyObject {
 	@Column(name="STATUS")
 	private TxStatus status;
 
+	@Column(name="TYPE",length=20,nullable=false)
+	private String type;
+	
 //	@OneToMany(cascade=CascadeType.ALL,mappedBy="operationId")
 //	private List<TradingRecordInfo> records;
 	/**
@@ -108,15 +111,7 @@ public class TransactionInfo implements ILongKeyObject {
 		this.transactionCode = transactionCode;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "TransactionInfo [id=" + id + ", tradingId=" + tradingId
-				+ ", description=" + description + ", transactionCode="
-				+ transactionCode + "]";
-	}
+
 
 	/**
 	 * @return the createdTime
@@ -158,6 +153,32 @@ public class TransactionInfo implements ILongKeyObject {
 	 */
 	public void setStatus(TxStatus status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "TransactionInfo [id=" + id + ", tradingId=" + tradingId
+				+ ", description=" + description + ", transactionCode="
+				+ transactionCode + ", createdTime=" + createdTime
+				+ ", completedTime=" + completedTime + ", status=" + status
+				+ ", type=" + type + "]";
 	}
 
 	

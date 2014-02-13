@@ -11,13 +11,15 @@ import com.wxxr.trading.core.model.ITradingCode;
  */
 public class TradingCodeObject implements ITradingCode {
 
+	private Integer id;
+	private String code;
+	private String description;
 	/* (non-Javadoc)
 	 * @see com.wxxr.trading.core.model.ITradingCode#getCodeId()
 	 */
 	@Override
 	public Integer getCodeId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	/* (non-Javadoc)
@@ -25,8 +27,7 @@ public class TradingCodeObject implements ITradingCode {
 	 */
 	@Override
 	public String getCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return code;
 	}
 
 	/* (non-Javadoc)
@@ -34,8 +35,37 @@ public class TradingCodeObject implements ITradingCode {
 	 */
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return description;
 	}
 
+	@Override
+	public String getType() {
+		return code;
+	}
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		this.id=id;
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
 }

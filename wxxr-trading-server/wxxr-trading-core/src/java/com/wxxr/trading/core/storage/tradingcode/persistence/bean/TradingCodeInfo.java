@@ -3,13 +3,34 @@
  */
 package com.wxxr.trading.core.storage.tradingcode.persistence.bean;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.wxxr.persistence.annotation.Persistence;
+import com.wxxr.smbiz.bizobject.INumberKeyObject;
+import com.wxxr.trading.core.storage.trading.persistence.ITradingInfoDAO;
+
 /**
  * @author neillin
  *
  */
-public class TradingCodeInfo {
+@Entity
+@Table(name="TRADING_CODE_INFO")
+@Persistence(daoClass = ITradingInfoDAO.class)
+@SequenceGenerator(name = "SEQ_TRADING_CODE_ID", sequenceName = "SEQ_TRADING_CODE_ID",initialValue=100)
+public class TradingCodeInfo  implements INumberKeyObject<Integer>{
+	
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(generator = "SEQ_TRADING_CODE_ID")
 	private Integer id;
+	@Column(name="CODE",length=50)
 	private String code;
+	@Column(name="DESCRIPTION",length=255)
 	private String description;
 	/**
 	 * @return the id
