@@ -36,7 +36,7 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	private IReloadableEntityCache<String, ArticleBean> tradingRuleCache;
 	private IReloadableEntityCache<String, ArticleBean> withdrawlNoticeCache;
 	private BindableListWrapper<ArticleBean> homeArticles,helpArticles,tradingRuleArticles,withdrawlNoticeArticles;
-
+	private AdStatusBean adStatusBean;
 	//=================module life cycle methods=============================
 	@Override
 	protected void initServiceDependency() {
@@ -174,8 +174,10 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	@Override
 	public AdStatusBean getAdStatusBean() {
-		// TODO Auto-generated method stub
-		return null;
+		if (adStatusBean==null) {
+			adStatusBean = new AdStatusBean();
+		}
+		return adStatusBean;
 	}
 
 
