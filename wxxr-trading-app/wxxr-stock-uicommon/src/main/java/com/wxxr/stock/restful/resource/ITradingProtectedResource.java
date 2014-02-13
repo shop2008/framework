@@ -125,4 +125,10 @@ public interface ITradingProtectedResource{
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes
 	public DrawMoneyRecordVos drawMoneyRecords(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	
+	@GET
+	@Path("/newlTraAcc")
+	@Produces({ "application/json" })
+	@Consumes
+	public StockResultVO newCreateTradingAccount(@QueryParam("captitalAmount")Long captitalAmount,@QueryParam("capitalRate") float capitalRate,@QueryParam("virtual") boolean virtual,@QueryParam("depositRate")float depositRate,@QueryParam("assetType")String assetType,@QueryParam("tradingType")String tradingType) throws Exception;
 }

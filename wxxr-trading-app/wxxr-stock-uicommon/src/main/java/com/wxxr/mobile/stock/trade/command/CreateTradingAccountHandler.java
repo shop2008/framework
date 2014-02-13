@@ -6,6 +6,7 @@ import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
@@ -20,12 +21,15 @@ public class CreateTradingAccountHandler implements ICommandHandler{
     public <T> T execute(ICommand<T> command) throws Exception {
         if (command instanceof CreateTradingAccountCommand){
             CreateTradingAccountCommand g=(CreateTradingAccountCommand) command;
-            
-            StockResultVO vo = getRestService(ITradingProtectedResource.class)
-                    .mulCreateTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),
-                            g.isVirtual(), g.getDepositRate(),g.getAssetType());
-          
-                return (T) vo;
+            StockResultVO vo = null;
+            if (StringUtils.isBlank(g.getTrdingType())) {
+            	vo = getRestService(ITradingProtectedResource.class)
+                        .mulCreateTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),
+                                g.isVirtual(), g.getDepositRate(),g.getAssetType());
+			}else{
+				vo = getRestService(ITradingProtectedResource.class).newCreateTradingAccount(g.getCaptitalAmount(), g.getCapitalRate(),  g.isVirtual(),g.getDepositRate(),g.getAssetType(), g.getTrdingType());
+			}
+            return (T) vo;
         }
         return null;
     }

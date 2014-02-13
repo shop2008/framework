@@ -11,7 +11,7 @@ public class TradingAccountMenuItem extends BaseMenuItem {
 	private String acctId;//交易盘Id
 	private String maxHoldStockName;//最大持股名称
 	private Long income;//收益 
-	private Long incomeRate;//收益率
+	private Float incomeRate;//收益率
 	private String status;//可买0，可卖1，已结算2
 	public String getAcctId() {
 		return acctId;
@@ -31,10 +31,10 @@ public class TradingAccountMenuItem extends BaseMenuItem {
 	public void setIncome(Long income) {
 		this.income = income;
 	}
-	public Long getIncomeRate() {
+	public Float getIncomeRate() {
 		return incomeRate;
 	}
-	public void setIncomeRate(Long incomeRate) {
+	public void setIncomeRate(Float incomeRate) {
 		this.incomeRate = incomeRate;
 	}
 	public String getStatus() {

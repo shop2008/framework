@@ -3,8 +3,6 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
-import java.util.List;
-
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
 import com.wxxr.mobile.stock.app.bean.DealDetailBean;
@@ -12,6 +10,7 @@ import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.app.bean.HomePageMenu;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
@@ -22,7 +21,7 @@ import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
-import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
+import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 /**
  * 交易管理模块
@@ -255,7 +254,7 @@ public interface ITradingManagementService {
 	 * 获取首页列表
 	 * @return
 	 */
-	public List<BaseMenuItem> getHomeMenuList();
+	public HomePageMenu getHomeMenuList();
 	/***
 	 * 提现记录
 	 * @param start
@@ -264,4 +263,14 @@ public interface ITradingManagementService {
 	 * @return
 	 */
 	public BindableListWrapper<DrawMoneyRecordBean> getDrawMoneyRecordList(int start,int limit,boolean wait4Finish);
+	/**
+	 * 新的创建交易盘接口
+	 * @param captitalAmount  -申请额度
+	 * @param capitalRate  -中止止损
+	 * @param virtual  -是否为虚拟盘
+	 * @param depositRate -保证金比率
+	 * @param assetType -资产类型
+	 * @param tradingType - 交易盘类型:ASTCOKT1,ASTOCKT3,ASTCOKTN;
+	 */
+	public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual,float depositRate,String assetType,String tradingType);
 }

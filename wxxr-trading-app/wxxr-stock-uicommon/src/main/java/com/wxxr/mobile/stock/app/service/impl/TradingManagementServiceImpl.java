@@ -3,8 +3,10 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
 import com.wxxr.mobile.core.microkernel.api.IServiceDelegateHolder;
 import com.wxxr.mobile.core.microkernel.api.IStatefulService;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.session.api.ISessionManager;
@@ -37,6 +40,7 @@ import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.app.bean.HomePageMenu;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
@@ -53,7 +57,8 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.mock.MockDataUtils;
+import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
@@ -73,6 +78,10 @@ import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
+import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
 import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
 import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.CancelOrderCommand;
@@ -86,15 +95,24 @@ import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
 import com.wxxr.mobile.stock.trade.command.SellStockCommand;
 import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
+import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.trading.ejb.api.AppHomePageListVO;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
+import com.wxxr.stock.trading.ejb.api.MegagameRankNUpdateTimeVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
+import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.UserSignVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 
 /**
@@ -106,7 +124,8 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 public class TradingManagementServiceImpl extends AbstractModule<IStockAppContext> implements ITradingManagementService, IStatefulService {
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
-	private Timer timer = new Timer();
+	private Timer timer = new Timer("Cache Clear Thread");
+	private Timer homePageRefresher = new Timer("HomePage Refresh Thread");
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
 		@Override
@@ -254,6 +273,16 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				clearCache();
 			}
 		}, date, 24*60*60*1000);
+        homePageRefresher.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					refreshHomePage();
+				} catch (Throwable e) {
+					log.warn("Error when refresh home page",e);
+				}
+			}
+		}, 100, 10*1000);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -359,11 +388,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		return this.weekRank;
 
 	}
-
-	
-	
-	
-	
 	@Override
 	public DealDetailBean getDealDetail(final String acctID) {
 	    if (dealDetailBean_cache.getEntity(acctID)==null){
@@ -386,9 +410,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         this.auditDetailBean_cache.forceReload(params,false);
         return auditDetailBean_cache.getEntity(acctId);
 	}
-	
-
-
 	@Override
 	public void clearTradingAccount(final String acctID) {
 		try {
@@ -1075,7 +1096,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						 * @return
 						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getHomeMenuList()
 						 */
-						public List<BaseMenuItem> getHomeMenuList() {
+						public HomePageMenu getHomeMenuList() {
 							return ((ITradingManagementService)holder.getDelegate()).getHomeMenuList();
 						}
 						/**
@@ -1479,6 +1500,14 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 								int start, int limit, boolean wait4Finish) {
 							return ((ITradingManagementService)holder.getDelegate()).getDrawMoneyRecordList(start, limit, wait4Finish);
 						}
+						@Override
+						public void createTradingAccount(Long captitalAmount,
+								float capitalRate, boolean virtual,
+								float depositRate, String assetType,
+								String tradingType) {
+							 ((ITradingManagementService)holder.getDelegate()).createTradingAccount(captitalAmount, capitalRate, virtual, depositRate, assetType, tradingType);
+							
+						}
 					});
 				}else{
 					throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1504,8 +1533,199 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	
 	
 	/*****************V2********************/
-	public List<BaseMenuItem> getHomeMenuList() {
-		return MockDataUtils.getHomeMenuList();
+
+	private HomePageMenu menu;
+	public HomePageMenu getHomeMenuList() {
+		 return menu;
+		//return MockDataUtils.getHomeMenuList();
+	}
+	private void refreshHomePage(){
+		List<BaseMenuItem> homePageItems = new ArrayList<BaseMenuItem>();
+		boolean login = getService(IUserIdentityManager.class).isUserAuthenticated();
+		List<TradingAccountMenuItem> items1 = null;
+		if (login) {
+			items1 = getTradingAccountMenuItem();
+		}
+		if (items1!=null&&items1.size()>0) {
+			homePageItems.addAll(items1);
+		}
+		List<BaseMenuItem> items2 = getNonTradingAccountMenuItem();
+		if (items2!=null&&items2.size()>0) {
+			homePageItems.addAll(items2);
+		}
+		if (menu==null) {
+			menu = new HomePageMenu();
+		}
+		menu.setMenuItems(homePageItems);
+	}
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
+	private List<BaseMenuItem> getNonTradingAccountMenuItem() {
+		List<BaseMenuItem> menu = new ArrayList<BaseMenuItem>();
+		boolean login = getService(IUserIdentityManager.class).isUserAuthenticated();
+		try {
+			String remindId ="0";
+			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).getAppHomePage(login, remindId, 0, 4);
+			//签到信息
+			UserSignVO signVo = vo.getSignMessage();
+			SignInMessageMenuItem sign =null;
+			if (signVo!=null) {
+				sign = new SignInMessageMenuItem();
+				sign.setHasSignIn(signVo.isSign());
+				sign.setType("80");
+				sign.setTitle("每日签到");
+				sign.setDate(signVo.getSignDate());
+				if (signVo.isSign()) {
+					sign.setMessage("今日已签到");
+				}else{
+					sign.setMessage(String.format("可获%d实盘积分", signVo.getRewardVol()));
+				}
+				sign.setScore((int)signVo.getRewardVol());
+				sign.setSignDays(5);
+			}
+			//参数排行榜
+			MegagameRankNUpdateTimeVO m = vo.getRankVo();			
+			ChampionShipMessageMenuItem champion = null;
+			if (m!=null) {
+				champion = new ChampionShipMessageMenuItem();
+				champion.setType("70");
+				champion.setTitle("参赛排行榜");
+				champion.setDate(sdf.format(new Date(m.getUpdateTime())));
+				List<MegagameRankVO> rankl = m.getRankList();
+				if (rankl!=null&&rankl.size()>0) {
+					MegagameRankVO first = rankl.get(0);
+					champion.setNickName(String.format("NO.1%s", first.getNickName()));
+					String stockName = null;
+					StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(first.getMaxStockCode(), first.getMaxStockMarket());
+			        if (stock!=null) {
+			           stockName = stock.getName();
+			        }	
+					champion.setStockName(stockName);
+					champion.setIncomeRate(Long.valueOf(first.getGainRates()));
+				}
+			}
+			//操盘咨询
+			List<PullMessageVO> pMsg = vo.getPullMessageList();
+			
+			//系统消息
+			List<MessageVO> sMsg = vo.getRemindMessage();
+			MessageMenuItem msg_item_2;
+			msg_item_2 = new MessageMenuItem();
+			msg_item_2.setType("60");
+			msg_item_2.setTitle("系统消息");
+			msg_item_2.setDate("7月22日 15:30");
+			msg_item_2.setMessage("平安银行模拟盘开始系统清仓");
+			msg_item_2.setNum(1);
+			
+			//assemble menu
+			if (sign!=null&&!sign.isHasSignIn()) {//未签到
+				menu.add(sign);
+			}
+			MessageMenuItem msg_item = generateMsgMenuItem1(pMsg);
+			if (msg_item!=null) {//操盘咨询
+				menu.add(msg_item);
+			}
+			if (champion!=null) {//参赛交易盘
+				menu.add(champion);
+			}
+			msg_item = generateMsgMenuItem2(sMsg);
+			if (msg_item!=null) {//系统消息
+				menu.add(msg_item);
+			}
+			if (sign!=null&&sign.isHasSignIn()) {//已签到
+				menu.add(sign);
+			}
+			
+		} catch (Exception e) {
+			log.warn("Error when get menu info", e);
+		}
+		return menu;
+	}
+	private MessageMenuItem generateMsgMenuItem1(List<PullMessageVO> pMsg){//生成操盘咨询菜单项
+		MessageMenuItem msg_item = new MessageMenuItem();
+		msg_item.setType("61");
+		msg_item.setTitle("操盘咨询");
+		msg_item.setDate("7月22日 15:30");
+		msg_item.setMessage("平安银行模拟盘开始系统清仓");
+		msg_item.setNum(1);
+		return msg_item; 
+	}
+	private MessageMenuItem generateMsgMenuItem2(List<MessageVO> msg){//生成系统消息菜单项
+		MessageMenuItem msg_item = new MessageMenuItem();
+		msg_item.setType("60");
+		msg_item.setTitle("系统消息");
+		msg_item.setDate("7月22日 15:30");
+		msg_item.setMessage("平安银行模拟盘开始系统清仓");
+		msg_item.setNum(1);
+		return msg_item;
+	}
+	private Comparator<TradingAccountMenuItem> c = new Comparator<TradingAccountMenuItem>() {
+
+		@Override
+		public int compare(TradingAccountMenuItem o1, TradingAccountMenuItem o2) {
+			int ret = o1.getType().substring(0, 1).compareTo(o2.getType().substring(0, 1));
+			if (ret==0) {
+				ret = o1.getDate().compareTo(o2.getDate());
+			}
+			return ret;
+		}
+	};
+			
+	private List<TradingAccountMenuItem> getTradingAccountMenuItem() {
+		List<TradingAccountMenuItem> tradingItemList = null;
+		try {
+			TradingAccInfoVOs vos = RestUtils.getRestService(ITradingProtectedResource.class).getTradingAccountList();
+			if (vos!=null) {
+				List<TradingAccInfoVO> volist =  vos.getTradingAccInfos();
+				SimpleDateFormat df = new SimpleDateFormat("MM月DD日");
+				if (volist!=null&&volist.size()>0) {
+					tradingItemList = new ArrayList<TradingAccountMenuItem>();
+					for (TradingAccInfoVO vo : volist) {
+						TradingAccountMenuItem trading = new TradingAccountMenuItem();
+						trading.setAcctId(vo.getAcctID()+"");
+						trading.setDate(df.format(new Date(vo.getCreateDate())));
+						String stockName = vo.getMaxStockName();
+						if (StringUtils.isBlank(stockName)) {
+				           StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
+				           if (stock!=null) {
+				               stockName = stock.getName();
+				           }
+						}
+						trading.setMaxHoldStockName(stockName);
+						trading.setIncome(vo.getTotalGain());
+						trading.setIncomeRate(vo.getTotalGain()*100.0f/vo.getSum());
+						trading.setStatus(getStockStatus(vo));
+						if (vo.isVirtual()) {
+							trading.setType("0");
+							trading.setTitle("参赛模拟盘");
+						}else if ("ASTCOKT1".equals(vo.getAcctType())) {
+							trading.setType("11");
+							trading.setTitle("挑战交易盘 T+1");
+						}else if("ASTCOKT3".equals(vo.getAcctType())){
+							trading.setType("13");
+							trading.setTitle("挑战交易盘 T+3");
+						}else if("ASTCOKTN".equals(vo.getAcctType())){
+							trading.setType("1d");
+							trading.setTitle("挑战交易盘 T+D");
+						}
+						tradingItemList.add(trading);
+					}
+					Collections.sort(tradingItemList, c);
+				}
+			}
+		} catch (Exception e) {
+			log.warn("Error when get home page trading list", e);
+		}
+		return tradingItemList;
+	}
+	private String getStockStatus(TradingAccInfoVO vo){
+		if ("CLOSED".equals(vo.getOver())) {
+			return "2";//已结算
+		}else if (vo.getStatus()==0) {
+			return "1";//可卖
+		}else if(vo.getStatus()==1){
+			return "0";//可买
+		}
+		return "";
 	}
 	private BindableListWrapper<DrawMoneyRecordBean> drawMoneyRecords;
 	
@@ -1534,6 +1754,47 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		drawMoneyRecords.setReloadParameters(params);
 		return drawMoneyRecords;
+	}
+
+	@Override
+	public void createTradingAccount(Long captitalAmount, float capitalRate,
+			boolean virtual, float depositRate, String assetType,
+			String tradingType) {
+		try {
+			CreateTradingAccountCommand cmd = new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType);
+			cmd.setTrdingType(tradingType);
+			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(cmd);
+			Object result = f.get();
+			if (result != null && result instanceof StockResultVO) {
+	            StockResultVO vo=(StockResultVO) result;
+	           
+	                if (vo.getSuccOrNot() == 0) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Failed to create trading account, caused by "
+	                                + vo.getCause());
+	                    }
+	                    throw new StockAppBizException(vo.getCause());
+	                }
+	                if (vo.getSuccOrNot() == 1) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("Create trading account successfully.");
+	                    }
+	                   refreshHomePage();
+	                }
+	           }			
+		}catch (ExecutionException e) {
+			Throwable t = e.getCause();
+            if( t instanceof CommandConstraintViolatedException){
+                throw (CommandConstraintViolatedException)t;
+            }else if(t instanceof StockAppBizException){
+            	throw (StockAppBizException)t;
+            }else{
+                throw new StockAppBizException("创建交易盘失败");
+            }
+		} catch (InterruptedException e){
+			throw new StockAppBizException("创建交易盘失败");
+		}
+		
 	}
 }
 

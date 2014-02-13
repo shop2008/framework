@@ -33,6 +33,22 @@ public class UserCreateTradAccInfoBean implements IBindableBean {
 	private String userId;
 	private float depositRate;
 	private float capitalRate;
+	
+	
+	//private float depositRate;//保证金比例
+	//private float costRate;//综合费用比例,手续费
+	private float costRateV;//模拟综合费用比例,手续费
+	private float costRateT;//t综合费用比例,手续费
+	private float costRateT3;//t3综合费用比例,手续费
+	private float costRateTN;//t+n综合费用比例,手续费
+	//private float capitalRate;//止损比例
+	//private Long maxAmount;//可申请最大金额
+	//private String rateString;//止损+保证金
+	private String rateStringT;//t止损+保证金
+	private String rateStringT3;//t3止损+保证金
+	private String rateStringTN;//t+n止损+保证金
+	private String rateStringV;//模拟止损+保证金
+	//private float voucherCostRate;//实盘券综合费用比例,手续费
 
 	/**
 	 * @param listener
@@ -325,7 +341,71 @@ public class UserCreateTradAccInfoBean implements IBindableBean {
 		this.emitter.firePropertyChange("capitalRate", old, this.capitalRate);
 	}
 
-    /* (non-Javadoc)
+    public float getCostRateV() {
+		return costRateV;
+	}
+
+	public void setCostRateV(float costRateV) {
+		this.costRateV = costRateV;
+	}
+
+	public float getCostRateT() {
+		return costRateT;
+	}
+
+	public void setCostRateT(float costRateT) {
+		this.costRateT = costRateT;
+	}
+
+	public float getCostRateT3() {
+		return costRateT3;
+	}
+
+	public void setCostRateT3(float costRateT3) {
+		this.costRateT3 = costRateT3;
+	}
+
+	public float getCostRateTN() {
+		return costRateTN;
+	}
+
+	public void setCostRateTN(float costRateTN) {
+		this.costRateTN = costRateTN;
+	}
+
+	public String getRateStringT() {
+		return rateStringT;
+	}
+
+	public void setRateStringT(String rateStringT) {
+		this.rateStringT = rateStringT;
+	}
+
+	public String getRateStringT3() {
+		return rateStringT3;
+	}
+
+	public void setRateStringT3(String rateStringT3) {
+		this.rateStringT3 = rateStringT3;
+	}
+
+	public String getRateStringTN() {
+		return rateStringTN;
+	}
+
+	public void setRateStringTN(String rateStringTN) {
+		this.rateStringTN = rateStringTN;
+	}
+
+	public String getRateStringV() {
+		return rateStringV;
+	}
+
+	public void setRateStringV(String rateStringV) {
+		this.rateStringV = rateStringV;
+	}
+
+	/* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override   

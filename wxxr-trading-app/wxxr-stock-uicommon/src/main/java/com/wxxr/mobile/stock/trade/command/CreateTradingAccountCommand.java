@@ -18,7 +18,7 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
     private boolean virtual;
     private float depositRate;
     private String assetType;
-    
+    private String trdingType;
     
 
     public CreateTradingAccountCommand(Long captitalAmount, float capitalRate, boolean virtual, float depositRate,String assetType) {
@@ -90,5 +90,13 @@ public class CreateTradingAccountCommand  implements ICommand<StockResultVO>{
     public void setAssetType(String assetType) {
         this.assetType = assetType;
     }
+
+	public String getTrdingType() {
+		return trdingType;
+	}
+
+	public void setTrdingType(String trdingType) {
+		this.trdingType = trdingType;
+	}
 
 }

@@ -26,13 +26,15 @@ public class TradingAccInfoVO implements Serializable{
 	@XmlElement(name = "totalGain")
 	private Long totalGain;//总盈亏
 	@XmlElement(name = "status")
-	private int status;//1:表示今天,0:表示前一天
+	private int status;//1:表示可买,0:表示可卖
 	@XmlElement(name = "over")
 	private String over; //CLOSED表示已经完结,"UNCLOSE"表示未完结
 	@XmlElement(name = "createDate")
 	private long createDate;// 交易盘创建时间
 	
-	
+	@XmlElement(name = "acctType")
+	private String acctType;// 交易盘类型:ASTCOKT1,	ASTOCKT3,ASTCOKTN;
+
 	
 	public String getMaxStockName() {
 		return maxStockName;
@@ -131,14 +133,21 @@ public class TradingAccInfoVO implements Serializable{
 	public void setAcctID(Long acctID) {
 		this.acctID = acctID;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public String getAcctType() {
+		return acctType;
+	}
+	public void setAcctType(String acctType) {
+		this.acctType = acctType;
+	}
 	@Override
 	public String toString() {
-		return "TradingAccInfoVO [maxStockName=" + maxStockName + ", maxStockCode=" + maxStockCode + ", maxStockMarket=" + maxStockMarket + ", virtual="
-				+ virtual + ", sum=" + sum + ", totalGain=" + totalGain + ", status=" + status + ", over=" + over + ", createDate=" + createDate + ", acctID="
-				+ acctID + "]";
+		return "TradingAccInfoVO [acctID=" + acctID + ", maxStockName="
+				+ maxStockName + ", maxStockCode=" + maxStockCode
+				+ ", maxStockMarket=" + maxStockMarket + ", virtual=" + virtual
+				+ ", sum=" + sum + ", totalGain=" + totalGain + ", status="
+				+ status + ", over=" + over + ", createDate=" + createDate
+				+ ", acctType=" + acctType + "]";
 	}
+	
 	
 }

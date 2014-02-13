@@ -910,7 +910,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("0");
 		trading.setAcctId("25995");
 		menu.add(trading);
@@ -921,7 +921,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("1");
 		trading.setAcctId("25995");
 		menu.add(trading);
@@ -932,7 +932,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("2");
 		trading.setAcctId("25582");
 		menu.add(trading);
@@ -943,7 +943,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("0");
 		trading.setAcctId("25935");
 		menu.add(trading);
@@ -953,8 +953,8 @@ public class MockDataUtils {
 		trading.setTitle("参赛模拟盘");
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
-		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncome(134521l);
+		trading.setIncomeRate(723f);
 		trading.setStatus("1");
 		trading.setAcctId("25935");
 		menu.add(trading);
@@ -965,7 +965,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("2");
 		trading.setAcctId("25569");
 		menu.add(trading);
@@ -976,7 +976,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("0");
 		trading.setAcctId("11112");
 		menu.add(trading);
@@ -987,7 +987,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("1");
 		trading.setAcctId("11112");
 		menu.add(trading);
@@ -998,7 +998,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("2");
 		trading.setAcctId("11112");
 		menu.add(trading);
@@ -1009,7 +1009,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("0");
 		trading.setAcctId("11112");
 		menu.add(trading);
@@ -1020,7 +1020,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("1");
 		trading.setAcctId("11112");
 		menu.add(trading);
@@ -1031,7 +1031,7 @@ public class MockDataUtils {
 		trading.setDate("7月22日");
 		trading.setMaxHoldStockName("平安银行");
 		trading.setIncome(134521L);
-		trading.setIncomeRate(723L);
+		trading.setIncomeRate(723f);
 		trading.setStatus("2");
 		trading.setAcctId("11112");
 		menu.add(trading);
