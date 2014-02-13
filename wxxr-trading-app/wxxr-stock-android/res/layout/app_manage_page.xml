@@ -55,7 +55,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dip"
-                android:background="@drawable/arrow" />
+                android:background="@drawable/small_right_arrow" />
         </RelativeLayout>
 
         <LinearLayout
@@ -213,7 +213,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -241,7 +241,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -269,7 +269,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -297,7 +297,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -362,7 +362,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -390,7 +390,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -418,7 +418,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
@@ -447,7 +447,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dip"
-                    android:background="@drawable/arrow" />
+                    android:background="@drawable/small_right_arrow" />
             </RelativeLayout>
 
             <include layout="@layout/lines" />
