@@ -122,14 +122,16 @@ public interface ITradingResource{
 	@GET
 	@Path("/getAppHomePage")
 	@Produces({ "application/json;charset=utf-8"})
-	@Consumes
+	@Consumes({ "application/json;charset=utf-8"})
 	public AppHomePageListVO getAppHomePage(@QueryParam("login") boolean login,@QueryParam("remindId") String remindId,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
 	@Path("/sign")
 	@Produces({ "application/json;charset=utf-8" })
+	@Consumes
 	public UserSignVO userSign() throws Exception;
 	@GET
 	@Path("/getSignMessage")
 	@Produces({ "application/json;charset=utf-8" })
+	@Consumes
 	public UserSignVO getUserSignMessage() throws Exception;
 }

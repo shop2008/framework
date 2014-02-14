@@ -2,22 +2,27 @@ package com.wxxr.stock.trading.ejb.api;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
+
+
 
 @XmlRootElement(name = "DrawMoneyRecordVo")
 public class DrawMoneyRecordVo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+	@XmlElement(name = "drawDate")
 	private String drawDate;
+	@XmlElement(name = "drawAmount")
 	private Long drawAmount;
+	@XmlElement(name = "drawState")
 	private String drawState;
+	@XmlElement(name = "id")
 	private Long id;
 	/**
 	 * @return the drawDate
 	 */
-	@XmlElement
+	
 	public String getDrawDate() {
 		return drawDate;
 	}
@@ -30,7 +35,7 @@ public class DrawMoneyRecordVo implements Serializable{
 	/**
 	 * @return the drawAmount
 	 */
-	@XmlElement
+
 	public Long getDrawAmount() {
 		return drawAmount;
 	}
@@ -43,7 +48,7 @@ public class DrawMoneyRecordVo implements Serializable{
 	/**
 	 * @return the drawState
 	 */
-	@XmlElement
+	
 	public String getDrawState() {
 		return drawState;
 	}
@@ -57,7 +62,7 @@ public class DrawMoneyRecordVo implements Serializable{
 	/**
 	 * @return the id
 	 */
-	@XmlElement
+	
 	public Long getId() {
 		return id;
 	}

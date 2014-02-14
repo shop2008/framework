@@ -5,10 +5,8 @@ package com.wxxr.stock.trading.ejb.api;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author wangxuyang
@@ -16,9 +14,9 @@ import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
  */
 @XmlRootElement(name = "DrawMoneyRecordVos")
 public class DrawMoneyRecordVos {
-	
+	@XmlElement(name="drawMoneyRecordVos")
 	private List<DrawMoneyRecordVo> drawMoneyRecordVos;
-	@XmlElement
+
 	public List<DrawMoneyRecordVo> getDrawMoneyRecordVos() {
 		return drawMoneyRecordVos;
 	}
