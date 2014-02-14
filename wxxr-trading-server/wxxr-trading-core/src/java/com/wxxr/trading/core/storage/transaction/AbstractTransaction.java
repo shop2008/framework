@@ -14,7 +14,7 @@ import com.wxxr.trading.core.storage.account.TxStatus;
  */
 public abstract class AbstractTransaction implements ITradingTransaction {
 
-	private String type, description,operationCode;
+	private String type, description,transactionCode;
 	private Long tradingId, id;
 	private Date createdTime, completedTime;
 	private TxStatus status;
@@ -33,8 +33,8 @@ public abstract class AbstractTransaction implements ITradingTransaction {
 	/**
 	 * @return the operationCode
 	 */
-	public String getOperationCode() {
-		return operationCode;
+	public String getTransactionCode() {
+		return transactionCode;
 	}
 	/**
 	 * @return the tradingId
@@ -63,8 +63,8 @@ public abstract class AbstractTransaction implements ITradingTransaction {
 	/**
 	 * @param operationCode the operationCode to set
 	 */
-	public void setOperationCode(String operationCode) {
-		this.operationCode = operationCode;
+	public void setTransactionCode(String transactionCode) {
+		this.transactionCode = transactionCode;
 	}
 	/**
 	 * @param tradingId the tradingId to set

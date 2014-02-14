@@ -115,7 +115,7 @@ public class TransactionStorageImpl extends AbstractBizObjectStorage<Long,Abstra
 		transactionInfo.setCompletedTime(bizObject.getCompletedTime());
 		transactionInfo.setCreatedTime(bizObject.getCreatedTime());
 		transactionInfo.setDescription(bizObject.getDescription());
-		transactionInfo.setTransactionCode(bizObject.getOperationCode());
+		transactionInfo.setTransactionCode(bizObject.getTransactionCode());
 		transactionInfo.setStatus(bizObject.getStatus());
 		transactionInfo.setTradingId(bizObject.getTradingId());
 		transactionInfo.setType(bizObject.getType());

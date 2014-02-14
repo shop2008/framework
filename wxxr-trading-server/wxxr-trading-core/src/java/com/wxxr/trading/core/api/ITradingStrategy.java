@@ -12,5 +12,5 @@ import com.wxxr.trading.core.model.ITrading;
  */
 public interface ITradingStrategy<T extends ITrading> {
 	ITradingProcess<T> getSubmitProcess();
-	ITradingProcess<T> getBackendProcess();
+	IBackendTradingProcess<T> getBackendProcess();
 }

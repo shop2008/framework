@@ -15,7 +15,7 @@ import com.wxxr.trading.core.storage.api.InheritableBizObject;
  */
 public interface ITradingTransaction extends InheritableBizObject<Long>{
 	Long getTradingId();
-	String getOperationCode();
+	String getTransactionCode();
 	String getDescription();
 	Date getCreatedTime();
 	Date getCompletedTime();
