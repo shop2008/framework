@@ -1733,7 +1733,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 		@Override
 		public int compare(DrawMoneyRecordBean o1, DrawMoneyRecordBean o2) {
-			if (StringUtils.isBlank(o1.getDrawDate())&&StringUtils.isBlank(o2.getDrawDate())) {
+			if (StringUtils.isNotBlank(o1.getDrawDate())&&StringUtils.isNotBlank(o2.getDrawDate())) {
 				return o1.getDrawDate().compareTo(o2.getDrawDate());
 			}
 			return 0;
