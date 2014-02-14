@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wxxr.mobile.stock.client.widget.PullToRefreshView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" 
+    bind:field="refreshView"
+    bind:on_PullRefresh="handleRefresh"
+    >
+    
+    <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:cacheColorHint="#00000000"
+        bind:itemViewId="InfoNoticesItemSelector"
+        bind:field="infoNoticesInfos"
+        bind:on_PinItemClick="handleItemClick"
+        />
+</com.wxxr.mobile.stock.client.widget.PullToRefreshView>
