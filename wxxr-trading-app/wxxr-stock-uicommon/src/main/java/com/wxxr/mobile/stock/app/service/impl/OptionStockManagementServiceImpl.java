@@ -177,15 +177,20 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("code", code);
         params.put("market", market);
-	    if (stockQuotationBean_cache.getEntity(mc)==null){
-	        StockQuotationBean b=new StockQuotationBean();
+        StockQuotationBean b =null;
+	    if ((b=stockQuotationBean_cache.getEntity(mc))==null){
+	        b=new StockQuotationBean();
 	        OptionStock stock = null;
 	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
 	        	b.setPower(stock.getPower());
 			}
             stockQuotationBean_cache.putEntity(mc,b);
             this.stockQuotationBean_cache.forceReload(params,true);
-        }else{
+        }else{        	
+        	OptionStock stock = null;
+ 	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
+ 	        	b.setPower(stock.getPower());
+ 			}
         	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
         }
        
