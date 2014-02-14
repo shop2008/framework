@@ -8,6 +8,10 @@ import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
+import com.wxxr.javax.ws.rs.Consumes;
+import com.wxxr.javax.ws.rs.POST;
+import com.wxxr.javax.ws.rs.Path;
+import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -27,12 +31,13 @@ import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
+import com.wxxr.stock.restful.json.RegQueryVO;
 import com.wxxr.stock.restful.json.SimpleVO;
 
 
 public class StockUserResourceTest extends TestCase{
 	StockUserResource stockUserResource;
-	
+	UserResource userResource;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -43,6 +48,7 @@ public class StockUserResourceTest extends TestCase{
 		
 		super.tearDown();
 		stockUserResource=null;
+		userResource= null;
 	}
 
 	protected void init() {
@@ -104,6 +110,7 @@ public class StockUserResourceTest extends TestCase{
 		builder = new MockRestClient();
 		builder.init(context);
 		stockUserResource=builder.getRestService(StockUserResource.class,"http://192.168.123.44:8480/mobilestock2");
+		userResource=builder.getRestService(UserResource.class,"http://192.168.123.44:8480/mobilestock2");
 	}
 
 	MockRestClient builder= null;
@@ -267,5 +274,19 @@ public class StockUserResourceTest extends TestCase{
 //	public List<UserAttributeVO> getUserAttributes() throws Exception;
 	public void testGetUserAttributes()throws Exception{
 		UserAttributeVOs info = stockUserResource.getUserAttributes();
+		System.out.println(info);
+	}
+	
+	/*@POST
+	@Path("/registerWithPass")
+	@Produces({ "application/json;charset=utf-8" })
+	@Consumes({ "application/json" })
+	public SimpleResultVo registerWithPassword(RegQueryVO regInfo) throws RestBizException;*/
+	public void testRegisterWithPassword() throws Exception {
+		RegQueryVO vo = new RegQueryVO();
+		vo.setUsername("13800138000");
+		vo.setUsername("564231");
+		SimpleResultVo info = userResource.registerWithPassword(vo);
+		System.out.println(info);
 	}
 }

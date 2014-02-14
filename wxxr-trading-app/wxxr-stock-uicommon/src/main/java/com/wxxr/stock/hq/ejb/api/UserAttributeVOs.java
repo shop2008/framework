@@ -33,6 +33,11 @@ public class UserAttributeVOs {
 	public void setUserAttributes(List<UserAttributeVO> userAttributes) {
 		this.userAttributes = userAttributes;
 	}
+
+	@Override
+	public String toString() {
+		return "UserAttributeVOs [userAttributes=" + userAttributes + "]";
+	}
 	
 	
 }

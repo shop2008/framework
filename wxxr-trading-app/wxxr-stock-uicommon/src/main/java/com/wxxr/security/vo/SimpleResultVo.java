@@ -42,6 +42,11 @@ public class SimpleResultVo {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	@Override
+	public String toString() {
+		return "SimpleResultVo [result=" + result + ", message=" + message
+				+ "]";
+	}
 	
 	
 }

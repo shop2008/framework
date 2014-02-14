@@ -65,22 +65,23 @@ public class DealDetailLoader extends AbstractEntityLoader<String, DealDetailBea
     @Override
     public boolean handleCommandResult(ICommand<?> cmd,List<DealDetailInfoVO> result,
             IReloadableEntityCache<String, DealDetailBean> cache) {
-        GetDealDetailVOsCommand command = (GetDealDetailVOsCommand) cmd;
         boolean updated = false;
-       
-        if(result != null){
-            for (DealDetailInfoVO vo : result) {
-                String key= String.valueOf(vo.getId());
-                DealDetailBean bean=cache.getEntity(key);
-                if(bean == null) {
-                    bean =ConverterUtils.fromVO(vo);
-                    cache.putEntity(key, bean);
-                }else{
-                    ConverterUtils.updatefromVOtoBean(bean, vo);
-                }
-                updated = true;
-            }
+        if (cmd instanceof GetDealDetailVOsCommand) {
+    	   if(result != null){
+               for (DealDetailInfoVO vo : result) {
+                   String key= String.valueOf(vo.getId());
+                   DealDetailBean bean=cache.getEntity(key);
+                   if(bean == null) {
+                       bean =ConverterUtils.fromVO(vo);
+                       cache.putEntity(key, bean);
+                   }else{
+                       ConverterUtils.updatefromVOtoBean(bean, vo);
+                   }
+                   updated = true;
+               }
+    	   }	
         }
+        
         return updated;
     }
 

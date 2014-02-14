@@ -120,17 +120,18 @@ public class ClientResourceTest extends TestCase {
       MockRestClient builder = new MockRestClient();
       builder.init(context);
       resource = builder.getRestService(ClientResource.class,
-            "http://192.168.123.44:8480/mobilestock2");
+            "http://service1.stock.test.corp.wxxr.com.cn:38080");
+      ///rest/client/ClientInfo
    }
 
   
    
    
    public void testGetClientInfo2() throws Exception {
-       this.appName = "trading";
+       /*this.appName = "trading";
        this.appVer = "1.0.0-SNAPSHOT";
        ClientInfoVO vo = resource.getClientInfo();
-       System.out.println(vo);
+       System.out.println(vo);*/
       
     }
  

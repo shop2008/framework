@@ -84,6 +84,8 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, AuthInfo, 
 					authinfo.setAccountName(vo.getAttrValue());
 				}else if("ACCT_BANK".equals(vo.getAttrName())){
 					authinfo.setBankName(vo.getAttrValue());
+				}else if("CONFIRMED".equals(vo.getAttrName())){
+					authinfo.setConfirmed(Boolean.valueOf(vo.getAttrValue()));
 				}
 				updated = true;
 			}

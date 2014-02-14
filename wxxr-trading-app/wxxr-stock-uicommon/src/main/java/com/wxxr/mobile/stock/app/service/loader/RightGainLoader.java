@@ -37,6 +37,7 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 		/* (non-Javadoc)
 		 * @see com.wxxr.mobile.core.command.api.ICommand#getResultType()
 		 */
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public Class getResultType() {
 			Class clazz=List.class;

@@ -43,7 +43,8 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
             return COMMAND_NAME;
         }
 
-        @Override
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
         public Class<List<StockLineBean>> getResultType() {
             Class clazz = List.class;
             return clazz;

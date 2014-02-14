@@ -83,7 +83,6 @@ import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
-import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
@@ -189,6 +188,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		getPushMessageSetting();
 		getUserAuthInfo();
 	}
+	
 
 	public void stopService() {
 		context.unregisterService(IUserManagementService.class, this);
@@ -576,7 +576,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	protected void updateToken() {
 		UpdateTokenCommand command=new UpdateTokenCommand();
 		try{
-			Future<TokenVO> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			context.getService(ICommandExecutor.class).submitCommand(command);
 		}catch(Throwable e){
 			log.warn("updatToken error",e);
 		}

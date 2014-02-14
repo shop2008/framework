@@ -8,11 +8,6 @@ import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
-import com.wxxr.javax.ws.rs.Consumes;
-import com.wxxr.javax.ws.rs.GET;
-import com.wxxr.javax.ws.rs.Path;
-import com.wxxr.javax.ws.rs.Produces;
-import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -21,6 +16,7 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
+import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
@@ -247,7 +243,19 @@ public class TradingProtectedResourceTest extends TestCase {
 
 //	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Throwable;
 	public void testGetVoucherDetails() throws Throwable {
-		VoucherDetailsVO a = tradingProtectedResource.getVoucherDetails(1, 10);
+		VoucherDetailsVO a = tradingProtectedResource.getVoucherDetails(0, 10);
 		System.out.println(a);
 	}
+	
+	//public DrawMoneyRecordVos drawMoneyRecords(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
+	public void testDrawMoneyRecords() throws Exception {
+		DrawMoneyRecordVos a = tradingProtectedResource.drawMoneyRecords(0, 10);
+		System.out.println(a.getDrawMoneyRecordVos());
+	}
+	/*@GET
+	@Path("/newlTraAcc")
+	@Produces({ "application/json" })
+	@Consumes
+	public StockResultVO newCreateTradingAccount(@QueryParam("captitalAmount")Long captitalAmount,@QueryParam("capitalRate") float capitalRate,@QueryParam("virtual") boolean virtual,@QueryParam("depositRate")float depositRate,@QueryParam("assetType")String assetType,@QueryParam("tradingType")String tradingType) throws Exception;*/
+	
 }

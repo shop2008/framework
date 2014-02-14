@@ -18,7 +18,8 @@ public class AuthInfo implements IBindableBean{
 	
 	/**银行卡号*/
 	private String bankNum;
-
+	/**是否已认证过*/
+	private boolean confirmed;
 	/**
 	 * @return the accountName
 	 */
@@ -89,6 +90,16 @@ public class AuthInfo implements IBindableBean{
 		this.emitter.firePropertyChange("bankNum", old, this.bankNum);
 	}
 
+	public boolean getConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		boolean old = this.confirmed;
+		this.confirmed = confirmed;
+		this.emitter.firePropertyChange("confirmed", old, this.confirmed);
+	}
+
 	/**
 	 * @param listener
 	 */
@@ -103,11 +114,12 @@ public class AuthInfo implements IBindableBean{
 		emitter.removePropertyChangeListener(listener);
 	}
 
+
 	@Override
 	public String toString() {
 		return "AuthInfo [accountName=" + accountName + ", bankName="
 				+ bankName + ", bankAddr=" + bankAddr + ", bankNum=" + bankNum
-				+ "]";
+				+ ", confirmed=" + confirmed + "]";
 	}
 
 	@Override
@@ -121,6 +133,7 @@ public class AuthInfo implements IBindableBean{
 		result = prime * result
 				+ ((bankName == null) ? 0 : bankName.hashCode());
 		result = prime * result + ((bankNum == null) ? 0 : bankNum.hashCode());
+		result = prime * result + (confirmed ? 1231 : 1237);
 		return result;
 	}
 
@@ -151,9 +164,12 @@ public class AuthInfo implements IBindableBean{
 				return false;
 		} else if (!bankNum.equals(other.bankNum))
 			return false;
+		if (confirmed != other.confirmed)
+			return false;
 		return true;
 	}
 
+	
 	
 	
 }

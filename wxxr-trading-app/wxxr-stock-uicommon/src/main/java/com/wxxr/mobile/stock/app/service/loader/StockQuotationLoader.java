@@ -45,9 +45,11 @@ public class StockQuotationLoader extends AbstractEntityLoader<String, StockQuot
             return Name;
         }
 
-        @Override
+        @SuppressWarnings("unchecked")
+		@Override
         public Class<List<StockQuotationVO>>  getResultType() {
-            Class clazz=List.class;
+            @SuppressWarnings("rawtypes")
+			Class clazz=List.class;
             return clazz;
         }
 
