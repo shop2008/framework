@@ -11,8 +11,8 @@ public class AppHomePageListVO implements Serializable{
 	
 	
 	private static final long serialVersionUID = 1L;
-	@XmlElement(name="megagameRank")
-	private MegagameRankNUpdateTimeVO megagameRank;//rankVo
+	@XmlElement(name="rankVo")
+	private MegagameRankNUpdateTimeVO rankVo;//rankVo
 	@XmlElement(name="signMessage")
 	private UserSignVO signMessage;
 	@XmlElement(name="remindMessage")
@@ -23,14 +23,14 @@ public class AppHomePageListVO implements Serializable{
 	/**
 	 * @return the list
 	 */
-	public MegagameRankNUpdateTimeVO getMegagameRank() {
-		return megagameRank;
+	public MegagameRankNUpdateTimeVO getRankVo() {
+		return rankVo;
 	}
 	/**
 	 * @param list the list to set
 	 */
-	public void setRankList(MegagameRankNUpdateTimeVO megagameRank) {
-		this.megagameRank = megagameRank;
+	public void setRankVo(MegagameRankNUpdateTimeVO rankVo) {
+		this.rankVo = rankVo;
 	}
 	/**
 	 * @return the signMessage
@@ -73,7 +73,7 @@ public class AppHomePageListVO implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "AppHomePageListVO [rankVo=" + megagameRank + ", signMessage=" + signMessage + ", remindMessage=" + remindMessage + ", pullMessageList=" + pullMessageList + "]";
+		return "AppHomePageListVO [rankVo=" + rankVo + ", signMessage=" + signMessage + ", remindMessage=" + remindMessage + ", pullMessageList=" + pullMessageList + "]";
 	}
 	
 }
