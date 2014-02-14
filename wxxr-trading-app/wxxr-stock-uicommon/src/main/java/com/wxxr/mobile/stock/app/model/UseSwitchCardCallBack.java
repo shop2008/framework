@@ -7,6 +7,8 @@ public class UseSwitchCardCallBack {
 	
 	private String bankNum;
 
+	private String accountName;
+	
 	public String getBankName() {
 		return bankName;
 	}
@@ -30,5 +32,12 @@ public class UseSwitchCardCallBack {
 	public void setBankNum(String bankNum) {
 		this.bankNum = bankNum;
 	}
-	
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
 }
