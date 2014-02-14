@@ -136,7 +136,7 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 			}else{
 				v1= o1.getPower()==null?0l:Long.valueOf(o1.getPower());
 				v2= o2.getPower()==null?0l:Long.valueOf(o2.getPower());
-				return v2.compareTo(v1);
+				return v1.compareTo(v2);
 			}
 			if(v1 == null){
 				v1 = 0L;
