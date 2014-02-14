@@ -2,18 +2,21 @@ package com.wxxr.stock.trading.ejb.api;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
+
+
 
 @XmlRootElement(name = "MegagameRankNUpdateTimeVO")
 public class MegagameRankNUpdateTimeVO {
-	
+	@XmlElement(name="updateTime")
 	private Long updateTime;
+	@XmlElement(name="rankList")
 	private List<MegagameRankVO> rankList;
 	/**
 	 * @return the updateTime
 	 */
-	@XmlElement
+	
 	public Long getUpdateTime() {
 		return updateTime;
 	}
@@ -26,7 +29,7 @@ public class MegagameRankNUpdateTimeVO {
 	/**
 	 * @return the rankList
 	 */
-	@XmlElement
+	
 	public List<MegagameRankVO> getRankList() {
 		return rankList;
 	}

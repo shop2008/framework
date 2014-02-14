@@ -2,25 +2,32 @@ package com.wxxr.stock.trading.ejb.api;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
+
+
 
 
 @XmlRootElement(name = "UserSignVO")
 public class UserSignVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	
+	@XmlElement(name = "sign")
 	private Boolean sign;
+	@XmlElement(name = "ongoingDays")
 	private long ongoingDays;
+	@XmlElement(name = "rewardVol")
 	private long rewardVol;
+	@XmlElement(name = "signDate")
 	private String signDate;
+	@XmlElement(name = "success")
 	private Integer success;//失败为-1，重复签到为：0，成功为：1；
+	@XmlElement(name = "failReason")
 	private String failReason;
 	/**
 	 * @return the isSign
 	 */
-	@XmlElement
+	
 	public Boolean isSign() {
 		return sign;
 	}
@@ -33,7 +40,7 @@ public class UserSignVO implements Serializable{
 	/**
 	 * @return the ongoingDays
 	 */
-	@XmlElement
+	
 	public long getOngoingDays() {
 		return ongoingDays;
 	}
@@ -46,7 +53,7 @@ public class UserSignVO implements Serializable{
 	/**
 	 * @return the acquireVol
 	 */
-	@XmlElement
+
 	public long getRewardVol() {
 		return rewardVol;
 	}
@@ -59,7 +66,7 @@ public class UserSignVO implements Serializable{
 	/**
 	 * @return the signDate
 	 */
-	@XmlElement
+	
 	public String getSignDate() {
 		return signDate;
 	}
@@ -73,7 +80,7 @@ public class UserSignVO implements Serializable{
 	/**
 	 * @return the success
 	 */
-	@XmlElement
+
 	public Integer getSuccess() {
 		return success;
 	}
@@ -86,7 +93,7 @@ public class UserSignVO implements Serializable{
 	/**
 	 * @return the failReason
 	 */
-	@XmlElement
+	
 	public String getFailReason() {
 		return failReason;
 	}

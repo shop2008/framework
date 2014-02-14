@@ -3,26 +3,26 @@ package com.wxxr.stock.trading.ejb.api;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.wxxr.javax.xml.bind.annotation.XmlElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
-
 @XmlRootElement(name = "AppHomePageListVO")
 public class AppHomePageListVO implements Serializable{
 	
 	
 	private static final long serialVersionUID = 1L;
-	
-	private MegagameRankNUpdateTimeVO rankVo;
+	@XmlElement(name="rankVo")
+	private MegagameRankNUpdateTimeVO rankVo;//rankVo
+	@XmlElement(name="signMessage")
 	private UserSignVO signMessage;
+	@XmlElement(name="remindMessage")
 	private List<MessageVO> remindMessage;
+	@XmlElement(name="pullMessageList")
 	private List<PullMessageVO> pullMessageList;
 	
 	/**
 	 * @return the list
 	 */
-	@XmlElement
 	public MegagameRankNUpdateTimeVO getRankVo() {
 		return rankVo;
 	}
@@ -35,7 +35,6 @@ public class AppHomePageListVO implements Serializable{
 	/**
 	 * @return the signMessage
 	 */
-	@XmlElement
 	public UserSignVO getSignMessage() {
 		return signMessage;
 	}
@@ -48,7 +47,6 @@ public class AppHomePageListVO implements Serializable{
 	/**
 	 * @return the findById
 	 */
-	@XmlElement
 	public List<MessageVO> getRemindMessage() {
 		return remindMessage;
 	}
@@ -61,7 +59,6 @@ public class AppHomePageListVO implements Serializable{
 	/**
 	 * @return the pullMessageList
 	 */
-	@XmlElement
 	public List<PullMessageVO> getPullMessageList() {
 		return pullMessageList;
 	}
