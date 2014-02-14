@@ -12,6 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.event.api.IBroadcastEvent;
+import com.wxxr.mobile.core.event.api.IEventListener;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
@@ -19,6 +22,7 @@ import com.wxxr.mobile.core.microkernel.api.IServiceDelegateHolder;
 import com.wxxr.mobile.core.microkernel.api.IStatefulService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.security.api.LoginAction;
 import com.wxxr.mobile.core.session.api.ISessionManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
@@ -39,6 +43,7 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -179,6 +184,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
         registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
+        getService(IEventRouter.class).registerEventListener(UserLoginEvent.class, listener);
 		context.registerService(IUserManagementService.class, this);
 		
 	}
@@ -188,11 +194,23 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		getPushMessageSetting();
 		getUserAuthInfo();
 	}
-	
+	private IEventListener listener = new IEventListener() {
+		@Override
+		public void onEvent(IBroadcastEvent event) {
+			if (event instanceof UserLoginEvent) {
+				UserLoginEvent _event = (UserLoginEvent)event;
+				if (_event.getAction().equals(LoginAction.LOGIN)) {
+					getPushMessageSetting();
+					getUserAuthInfo();
+				}
+			}
+			
+		}
+	};
 
 	public void stopService() {
 		context.unregisterService(IUserManagementService.class, this);
-
+		getService(IEventRouter.class).unregisterEventListener(UserLoginEvent.class, listener);
 		userAssetBeanCache=null;
 		voucherBeanCache=null;
 		remindMessagesCache=null;
