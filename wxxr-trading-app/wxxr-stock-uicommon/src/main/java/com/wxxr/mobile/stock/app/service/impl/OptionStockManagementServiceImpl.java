@@ -185,13 +185,13 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 	        	b.setPower(stock.getPower());
 			}
             stockQuotationBean_cache.putEntity(mc,b);
-            this.stockQuotationBean_cache.forceReload(params,true);
+            this.stockQuotationBean_cache.forceReload(params,false);
         }else{        	
         	OptionStock stock = null;
  	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
  	        	b.setPower(stock.getPower());
  			}
-        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
+        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,false);
         }
        
     }
