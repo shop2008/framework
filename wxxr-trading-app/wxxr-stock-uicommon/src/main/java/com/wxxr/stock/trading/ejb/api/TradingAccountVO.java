@@ -94,6 +94,8 @@ public class TradingAccountVO implements Serializable{
 	 */
 	@XmlElement(name = "status")
 	private int status;
+	@XmlElement(name = "elapseTime")
+	private int elapseTime;//交易盘持续了几天,返回1:已经是t+1天了，2：t+2天了
 	/**
 	 * @return the id
 	 */
@@ -308,22 +310,26 @@ public class TradingAccountVO implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	
+	public int getElapseTime() {
+		return elapseTime;
+	}
+	public void setElapseTime(int elapseTime) {
+		this.elapseTime = elapseTime;
+	}
 	@Override
 	public String toString() {
-		return "TradingAccountVO [applyFee=" + applyFee + ", avalibleFee="
-				+ avalibleFee + ", buyDay=" + buyDay + ", frozenVol="
-				+ frozenVol + ", gainRate=" + gainRate + ", id=" + id
-				+ ", lossLimit=" + lossLimit + ", maxStockCode=" + maxStockCode
-				+ ", maxStockMarket=" + maxStockMarket + ", over=" + over
-				+ ", sellDay=" + sellDay + ", status=" + status
-				+ ", totalGain=" + totalGain + ", tradingOrders="
-				+ tradingOrders + ", usedFee=" + usedFee + ", virtual="
-				+ virtual +", type="+type+ "]";
+		return "TradingAccountVO [id=" + id + ", buyDay=" + buyDay
+				+ ", sellDay=" + sellDay + ", applyFee=" + applyFee
+				+ ", avalibleFee=" + avalibleFee + ", gainRate=" + gainRate
+				+ ", totalGain=" + totalGain + ", usedFee=" + usedFee
+				+ ", lossLimit=" + lossLimit + ", frozenVol=" + frozenVol
+				+ ", maxStockCode=" + maxStockCode + ", maxStockMarket="
+				+ maxStockMarket + ", type=" + type + ", tradingOrders="
+				+ tradingOrders + ", over=" + over + ", virtual=" + virtual
+				+ ", status=" + status + ", elapseTime=" + elapseTime + "]";
 	}
-	
+
 
 
 	
