@@ -14,8 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.client.biz.PersonalHomeBean;
-import com.wxxr.mobile.stock.client.service.IMockDataService;
+
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 @View(name = "otherUserPage", withToolbar=true, description="---的个人主页",provideSelection=true)
@@ -29,12 +28,12 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	}
 	
 	
-	@Bean(type=BindingType.Service)
+	/*@Bean(type=BindingType.Service)
 	IMockDataService service;
 	
 	
 	@Field(valueKey="options", binding="${service!=null?service.data:null}")
-	List<PersonalHomeBean> successTradeRecords;
+	List<PersonalHomeBean> successTradeRecords;*/
 
 
 	private String userId;

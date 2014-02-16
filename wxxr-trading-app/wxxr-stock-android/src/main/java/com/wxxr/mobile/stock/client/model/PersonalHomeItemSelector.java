@@ -15,7 +15,6 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 import com.wxxr.mobile.stock.client.biz.NoShareRecordBean;
-import com.wxxr.mobile.stock.client.biz.PersonalHomeBean;
 import com.wxxr.mobile.stock.client.biz.ShareCountBean;
 import com.wxxr.mobile.stock.client.biz.ViewMoreBean;
 import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
@@ -29,7 +28,7 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 	private AbstractPinnedHeaderListAdapter adapter;
 	@Override
 	public String getItemViewId(Object itemData) {
-		if(itemData instanceof PersonalHomeBean) {
+		if(itemData instanceof GainBean) {
 			return "TradeRecordItemView";
 		} else if(itemData instanceof NoShareRecordBean ) {
 			return "NoShareRecordView";

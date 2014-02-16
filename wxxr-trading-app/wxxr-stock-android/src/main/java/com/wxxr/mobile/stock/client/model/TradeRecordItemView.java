@@ -6,7 +6,7 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.client.biz.PersonalHomeBean;
+import com.wxxr.mobile.stock.app.bean.GainBean;
 
 @View(name="TradeRecordItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.trade_record_item_layout")
@@ -48,8 +48,8 @@ public abstract class TradeRecordItemView extends ViewBase implements
 	
 	@Override
 	public void updateModel(Object value) {
-		if(value instanceof PersonalHomeBean) {
-			PersonalHomeBean bean = (PersonalHomeBean) value;
+		if(value instanceof GainBean) {
+			GainBean bean = (GainBean) value;
 			registerBean("bean", bean);
 		}
 	}
