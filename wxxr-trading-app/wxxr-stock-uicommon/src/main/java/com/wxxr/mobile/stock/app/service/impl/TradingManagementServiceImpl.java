@@ -47,6 +47,7 @@ import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
@@ -72,6 +73,7 @@ import com.wxxr.mobile.stock.app.service.loader.RightGainLoader;
 import com.wxxr.mobile.stock.app.service.loader.T1RankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TRankItemLoader;
 import com.wxxr.mobile.stock.app.service.loader.TradingAccountInfoLoader;
+import com.wxxr.mobile.stock.app.service.loader.TradingConfigInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.TradingRecordLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
@@ -111,6 +113,7 @@ import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
+import com.wxxr.stock.trading.ejb.api.TradingConfigVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.UserSignVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
@@ -212,6 +215,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 * 创建交易盘的参数配置
 	 */
 	protected UserCreateTradAccInfoBean createTDConfig;
+	
 	/**
 	 * 交易订单记录
 	 */
@@ -223,6 +227,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     private GenericReloadableEntityCache<Long,TradingAccountBean,List<TradingAccountBean>> tradingAccountBean_cache;
     protected UserCreateTradAccInfoBean userCreateTradAccInfo;
     private IReloadableEntityCache<String, UserCreateTradAccInfoBean> userCreateTradAccInfo_Cache;
+    private IReloadableEntityCache<String, TradingConfigBean> tradingConfig_Cache;
     
     private GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> dealDetailBean_cache;
     private GenericReloadableEntityCache<String,AuditDetailBean,List<AuditDetailBean>> auditDetailBean_cache;
@@ -253,6 +258,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         registry.registerEntityLoader("voucherDetailsBean", new VoucherDetailsLoader());
         registry.registerEntityLoader("vgainPayDetails", new GainPayDetailsEntityLoader());
         registry.registerEntityLoader("drawMoneyRecordBean", new DrawMoneyRecordLoader());
+        registry.registerEntityLoader("tradingConfigBean", new TradingConfigInfoLoader());
 
         context.getService(ICommandExecutor.class).registerCommandHandler(CreateTradingAccountCommand.Name, new CreateTradingAccountHandler());
         context.getService(ICommandExecutor.class).registerCommandHandler(BuyStockCommand.Name, new BuyStockHandler());
@@ -1508,6 +1514,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 							 ((ITradingManagementService)holder.getDelegate()).createTradingAccount(captitalAmount, capitalRate, virtual, depositRate, assetType, tradingType);
 							
 						}
+						@Override
+						public TradingConfigBean getTradingConfig(
+								String tradingType, boolean isVirtual) {
+							return ((ITradingManagementService)holder.getDelegate()).getTradingConfig(tradingType, isVirtual);
+						}
 					});
 				}else{
 					throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1795,6 +1806,21 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			throw new StockAppBizException("创建交易盘失败");
 		}
 		
+	}
+	
+	@Override
+	public TradingConfigBean getTradingConfig(String tradingType,
+			boolean isVirtual) {
+		if (tradingConfig_Cache==null) {
+			tradingConfig_Cache = new GenericReloadableEntityCache<String, TradingConfigBean, TradingConfigVO>("tradingConfigBean");
+		}
+		TradingConfigBean bean = tradingConfig_Cache.getEntity(tradingType);
+		if (bean==null) {
+			bean = new TradingConfigBean();
+			tradingConfig_Cache.putEntity(tradingType, bean);
+		}
+		tradingConfig_Cache.forceReload(false);
+		return bean;
 	}
 }
 

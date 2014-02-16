@@ -24,6 +24,7 @@ import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
@@ -48,6 +49,7 @@ import com.wxxr.stock.trading.ejb.api.StockTradingOrderVO;
 import com.wxxr.stock.trading.ejb.api.TradeRecordVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
+import com.wxxr.stock.trading.ejb.api.TradingConfigVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
@@ -187,7 +189,34 @@ public class ConverterUtils {
 
         dataResolution(bean);
     }
-
+    public static TradingConfigBean fromVO(TradingConfigVO vo){
+    	 if (vo == null) {
+             return null;
+         }
+    	 TradingConfigBean bean = new TradingConfigBean();
+    	 setfromVO(bean, vo);
+    	 return bean;
+    }
+    public static void setfromVO(TradingConfigBean bean, TradingConfigVO vo) {
+        if (vo == null || bean == null) {
+            return;
+        }
+        bean.setApplyAmount(vo.getApplyAmount());
+        bean.setClearDate(vo.getClearDate());
+        bean.setCompanyGainRate(vo.getCompanyGainRate());
+        bean.setCreateEndDate(vo.getCreateStartDate());
+        bean.setCreateStartDate(vo.getCreateStartDate());
+        bean.setDiscountFee(vo.getDiscountFee());
+        bean.setExtendConfig(vo.getExtendConfig());
+        bean.setMaxBuyAmount(vo.getMaxBuyAmount());
+        bean.setOriginalFee(vo.getOriginalFee());
+        bean.setRateList(vo.getRateList());
+        bean.setVirtualApplyAmount(vo.getVirtualApplyAmount());
+        bean.setVirtualRateList(vo.getVirtualRateList());
+        bean.setVoIdentity(vo.getVoIdentity());
+        bean.setVoucherApplyAmount(vo.getVoucherApplyAmount());
+        bean.setVoucherRateList(vo.getVoucherRateList());
+    }
     public static void dataResolution(UserCreateTradAccInfoBean bean) {
         String rateString = bean.getRateString();
         if (rateString == null) {

@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.bean.UserSignBean;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 /**
@@ -73,7 +73,7 @@ public class UserSignBeanLoader extends AbstractEntityLoader<String, UserSignBea
 	}
 	protected List<UserSignVO> executeCommand(
 			ICommand<List<UserSignVO>> command) throws Exception {
-		UserSignVO vo=getRestService(ITradingResource.class).getUserSignMessage();
+		UserSignVO vo=getRestService(ITradingProtectedResource.class).getUserSignMessage();
 		List<UserSignVO> list=new ArrayList<UserSignVO>();
 		list.add(vo);
 		return list;

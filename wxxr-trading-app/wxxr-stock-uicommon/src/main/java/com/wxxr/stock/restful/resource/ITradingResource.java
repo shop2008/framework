@@ -15,8 +15,8 @@ import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
+import com.wxxr.stock.trading.ejb.api.TradingConfigListVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
-import com.wxxr.stock.trading.ejb.api.UserSignVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
 @Path("/rest/trading")
@@ -125,13 +125,13 @@ public interface ITradingResource{
 	@Consumes({ "application/json;charset=utf-8"})
 	public AppHomePageListVO getAppHomePage(@QueryParam("login") boolean login,@QueryParam("remindId") String remindId,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	@GET
-	@Path("/sign")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes
-	public UserSignVO userSign() throws Exception;
+	@Path("/getStrategyConfig")
+	@Produces({ "application/json" })
+	public TradingConfigListVO getStrategyConfig() throws Exception;
 	@GET
-	@Path("/getSignMessage")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes
-	public UserSignVO getUserSignMessage() throws Exception;
+	@Path("/guideGainAmount")
+	@Produces({ "application/json" })
+	@Consumes({"text/plain"})
+	public String getGuideGainAmount()throws Exception;
+	
 }

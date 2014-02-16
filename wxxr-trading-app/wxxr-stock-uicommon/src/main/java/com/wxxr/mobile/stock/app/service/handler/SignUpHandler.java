@@ -4,7 +4,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
 import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 public class SignUpHandler implements ICommandHandler {
@@ -22,7 +22,7 @@ public class SignUpHandler implements ICommandHandler {
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		SignUpCommand cmd=(SignUpCommand) command;
-		UserSignVO vo=context.getKernelContext().getService(IRestProxyService.class).getRestService(ITradingResource.class).userSign();
+		UserSignVO vo=context.getKernelContext().getService(IRestProxyService.class).getRestService(ITradingProtectedResource.class).userSign();
 		return (T) vo;
 	}
 

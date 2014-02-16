@@ -16,12 +16,12 @@ import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountListBean;
+import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
-import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 /**
  * 交易管理模块
@@ -273,4 +273,11 @@ public interface ITradingManagementService {
 	 * @param tradingType - 交易盘类型:ASTCOKT1,ASTOCKT3,ASTCOKTN;
 	 */
 	public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual,float depositRate,String assetType,String tradingType);
+	/**
+	 * 获取交易盘创建参数
+	 * @param tradingType - 交易盘类型:T_PLUS_ONE表示T+1,T_PLUS_THREE表示T+3,T_PLUS_N表示T+D or T+N
+	 * @param isVirtual - true 表示模拟盘
+	 * @return
+	 */
+	public TradingConfigBean getTradingConfig(String tradingType,boolean isVirtual);
 }

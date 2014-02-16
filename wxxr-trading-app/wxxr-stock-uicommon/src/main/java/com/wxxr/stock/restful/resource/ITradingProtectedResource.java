@@ -9,12 +9,14 @@ import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.GuideResultVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 @Path("/secure/trading")
 public interface ITradingProtectedResource{
@@ -131,4 +133,23 @@ public interface ITradingProtectedResource{
 	@Produces({ "application/json" })
 	@Consumes
 	public StockResultVO newCreateTradingAccount(@QueryParam("captitalAmount")Long captitalAmount,@QueryParam("capitalRate") float capitalRate,@QueryParam("virtual") boolean virtual,@QueryParam("depositRate")float depositRate,@QueryParam("assetType")String assetType,@QueryParam("tradingType")String tradingType) throws Exception;
+	@GET
+	@Path("/sign")
+	@Produces({ "application/json;charset=utf-8" })
+	@Consumes
+	public UserSignVO userSign() throws Exception;
+	@GET
+	@Path("/getSignMessage")
+	@Produces({ "application/json;charset=utf-8" })
+	@Consumes
+	public UserSignVO getUserSignMessage() throws Exception;
+	@GET
+	@Path("/guideGain")
+	@Produces({ "application/json" })
+	public StockResultVO guideGain() throws Throwable;
+	
+	@GET
+	@Path("/guideGainAllow")
+	@Produces({ "application/json" })
+	public GuideResultVO checkGuideGainAllow()throws Throwable;
 }
