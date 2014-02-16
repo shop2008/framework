@@ -239,9 +239,9 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 
 	@Override
 	public UserBean getMyUserInfo() {
-		if(myUserInfo==null){
+		/*if(myUserInfo==null){*/
 			myUserInfo = getService(IUserLoginManagementService.class).getMyUserInfo();
-		}
+		//}
 		return myUserInfo;
 	}
 
