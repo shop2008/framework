@@ -22,7 +22,7 @@ public class PersonalHomePageBean implements IBindableBean {
 	private double totalProfit;
 	private long virtualCount;
 	private long actualCount;
-
+	private List<GainBean> allist;
 	/**
 	 * @param listener
 	 */
@@ -93,6 +93,19 @@ public class PersonalHomePageBean implements IBindableBean {
 		this.emitter.firePropertyChange("actualList", old, this.actualList);
 	}
 
+	public List<GainBean> getAllist() {
+		return allist;
+	}
+
+	public void setAllist(List<GainBean> allist) {
+		List<GainBean> old = this.allist;
+		this.allist = allist;
+		if(this.allist != null){
+            this.allist = new ListDecorator<GainBean>("allist", this.emitter,this.allist);
+        }
+		this.emitter.firePropertyChange("allist", old, this.allist);
+	}
+
 	/**
 	 * @return the totalProfit
 	 */
@@ -141,20 +154,16 @@ public class PersonalHomePageBean implements IBindableBean {
 		this.emitter.firePropertyChange("actualCount", old, this.actualCount);
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override   
-    public String toString() {
-        return "PersonalHomePageBean ["+
-                "virtualList=" + this.virtualList +
-                " , voucherVol=" + this.voucherVol +
-                " , actualList=" + this.actualList +
-                " , totalProfit=" + this.totalProfit +
-                " , virtualCount=" + this.virtualCount +
-                " , actualCount=" + this.actualCount +
-        "]";
-    }
+ 
+
+	@Override
+	public String toString() {
+		return "PersonalHomePageBean [virtualList=" + virtualList
+				+ ", voucherVol=" + voucherVol + ", actualList=" + actualList
+				+ ", totalProfit=" + totalProfit + ", virtualCount="
+				+ virtualCount + ", actualCount=" + actualCount + ", allist="
+				+ allist + "]";
+	}
 
 	@Override
 	public int hashCode() {
@@ -163,6 +172,7 @@ public class PersonalHomePageBean implements IBindableBean {
 		result = prime * result + (int) (actualCount ^ (actualCount >>> 32));
 		result = prime * result
 				+ ((actualList == null) ? 0 : actualList.hashCode());
+		result = prime * result + ((allist == null) ? 0 : allist.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(totalProfit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -188,6 +198,11 @@ public class PersonalHomePageBean implements IBindableBean {
 				return false;
 		} else if (!actualList.equals(other.actualList))
 			return false;
+		if (allist == null) {
+			if (other.allist != null)
+				return false;
+		} else if (!allist.equals(other.allist))
+			return false;
 		if (Double.doubleToLongBits(totalProfit) != Double
 				.doubleToLongBits(other.totalProfit))
 			return false;
@@ -204,6 +219,8 @@ public class PersonalHomePageBean implements IBindableBean {
 		} else if (!voucherVol.equals(other.voucherVol))
 			return false;
 		return true;
-	}	
+	}
+
+
 
 }

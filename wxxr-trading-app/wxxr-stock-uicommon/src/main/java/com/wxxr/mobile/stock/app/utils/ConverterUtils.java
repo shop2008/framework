@@ -552,12 +552,14 @@ public class ConverterUtils {
         b.setTotalProfit(vo.getTotalProfit());
         b.setVoucherVol(vo.getVoucherVol());
         List<GainVO> volist = vo.getActualList();
+        List<GainBean> all_list = new ArrayList<GainBean>(); 
         if (volist!=null&&volist.size()>0) {
             List<GainBean> bean_list = new ArrayList<GainBean>(); 
             for (GainVO acVO : volist) {
                 bean_list.add(ConverterUtils.fromVO(acVO));
             }
             b.setActualList(bean_list);
+            all_list.addAll(bean_list);
         }
         volist = vo.getVirtualList();
         if (volist!=null&&volist.size()>0) {
@@ -566,7 +568,11 @@ public class ConverterUtils {
                 bean_list.add(ConverterUtils.fromVO(acVO));
             }
             b.setVirtualList(bean_list);
+            all_list.addAll(bean_list);
         }
+        if (all_list.size()>0) {
+			b.setAllist(all_list);
+		}
     }
     public static GainPayDetailBean fromVO(GainPayDetailsVO vo) {
         if (vo == null){
