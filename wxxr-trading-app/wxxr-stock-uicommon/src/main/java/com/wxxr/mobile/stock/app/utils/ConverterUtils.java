@@ -216,7 +216,23 @@ public class ConverterUtils {
         bean.setVoIdentity(vo.getVoIdentity());
         bean.setVoucherApplyAmount(vo.getVoucherApplyAmount());
         bean.setVoucherRateList(vo.getVoucherRateList());
+        
+        bean.setVirtualOptions(generateOptions(vo.getVirtualApplyAmount()));
+        bean.setVoucherOptions(generateOptions(vo.getVoucherApplyAmount()));
+        bean.setAccualOptions(generateOptions(vo.getApplyAmount()));
     }
+	private static List<Long> generateOptions(String maxAmountS) {
+		List<Long> list = new ArrayList<Long>();
+		if (StringUtils.isNumeric(maxAmountS)) {
+			Long maxAmount =  Long.valueOf(maxAmountS);
+			if (maxAmount!=null) {
+				for (long i = 1; i <= maxAmount/10000; i++) {
+					list.add(i) ;
+				}
+			}
+		}
+		return list;
+	}
     public static void dataResolution(UserCreateTradAccInfoBean bean) {
         String rateString = bean.getRateString();
         if (rateString == null) {

@@ -33,6 +33,9 @@ public class TradingConfigBean implements IBindableBean{
 	private List<LossRateNDepositRate> voucherRateList;//积分盘止损率和保证金
 	private String voucherApplyAmount;//积分盘申购金额
 	private String virtualApplyAmount;//虚拟盘申购额度
+	private List<Long> accualOptions;
+	private List<Long> virtualOptions;
+	private List<Long> voucherOptions;
 	private List<TradingExtendConfig> extendConfig;//预留扩展属性
 	/**
 	 * @param listener
@@ -197,6 +200,46 @@ public class TradingConfigBean implements IBindableBean{
 		this.emitter.firePropertyChange("virtualApplyAmount", old, virtualApplyAmount);
 	}
 
+	public List<Long> getAccualOptions() {
+		return accualOptions;
+	}
+
+	public void setAccualOptions(List<Long> accualOptions) {
+		List<Long> old = this.accualOptions;
+		this.accualOptions = accualOptions;
+		if(this.accualOptions != null){
+            this.accualOptions = new ListDecorator<Long>("accualOptions", this.emitter,this.accualOptions);
+        }
+		this.emitter.firePropertyChange("accualOptions", old, this.accualOptions);
+		
+	}
+
+	public List<Long> getVirtualOptions() {
+		return virtualOptions;
+	}
+
+	public void setVirtualOptions(List<Long> virtualOptions) {
+		List<Long> old = this.virtualOptions;
+		this.virtualOptions = virtualOptions;
+		if(this.virtualOptions != null){
+            this.virtualOptions = new ListDecorator<Long>("virtualOptions", this.emitter,this.virtualOptions);
+        }
+		this.emitter.firePropertyChange("virtualOptions", old, this.virtualOptions);
+	}
+
+	public List<Long> getVoucherOptions() {
+		return voucherOptions;
+	}
+
+	public void setVoucherOptions(List<Long> voucherOptions) {
+		List<Long> old = this.voucherOptions;
+		this.voucherOptions = voucherOptions;
+		if(this.voucherOptions != null){
+            this.voucherOptions = new ListDecorator<Long>("voucherOptions", this.emitter,this.voucherOptions);
+        }
+		this.emitter.firePropertyChange("voucherOptions", old, this.voucherOptions);
+	}
+
 	public List<TradingExtendConfig> getExtendConfig() {
 		return extendConfig;
 	}
@@ -230,6 +273,8 @@ public class TradingConfigBean implements IBindableBean{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
+				+ ((accualOptions == null) ? 0 : accualOptions.hashCode());
+		result = prime * result
 				+ ((applyAmount == null) ? 0 : applyAmount.hashCode());
 		result = prime * result
 				+ ((clearDate == null) ? 0 : clearDate.hashCode());
@@ -254,6 +299,8 @@ public class TradingConfigBean implements IBindableBean{
 				+ ((virtualApplyAmount == null) ? 0 : virtualApplyAmount
 						.hashCode());
 		result = prime * result
+				+ ((virtualOptions == null) ? 0 : virtualOptions.hashCode());
+		result = prime * result
 				+ ((virtualRateList == null) ? 0 : virtualRateList.hashCode());
 		result = prime * result
 				+ ((voIdentity == null) ? 0 : voIdentity.hashCode());
@@ -261,6 +308,8 @@ public class TradingConfigBean implements IBindableBean{
 				* result
 				+ ((voucherApplyAmount == null) ? 0 : voucherApplyAmount
 						.hashCode());
+		result = prime * result
+				+ ((voucherOptions == null) ? 0 : voucherOptions.hashCode());
 		result = prime * result
 				+ ((voucherRateList == null) ? 0 : voucherRateList.hashCode());
 		return result;
@@ -273,6 +322,11 @@ public class TradingConfigBean implements IBindableBean{
 		if (getClass() != obj.getClass())
 			return false;
 		TradingConfigBean other = (TradingConfigBean) obj;
+		if (accualOptions == null) {
+			if (other.accualOptions != null)
+				return false;
+		} else if (!accualOptions.equals(other.accualOptions))
+			return false;
 		if (applyAmount == null) {
 			if (other.applyAmount != null)
 				return false;
@@ -328,6 +382,11 @@ public class TradingConfigBean implements IBindableBean{
 				return false;
 		} else if (!virtualApplyAmount.equals(other.virtualApplyAmount))
 			return false;
+		if (virtualOptions == null) {
+			if (other.virtualOptions != null)
+				return false;
+		} else if (!virtualOptions.equals(other.virtualOptions))
+			return false;
 		if (virtualRateList == null) {
 			if (other.virtualRateList != null)
 				return false;
@@ -343,6 +402,11 @@ public class TradingConfigBean implements IBindableBean{
 				return false;
 		} else if (!voucherApplyAmount.equals(other.voucherApplyAmount))
 			return false;
+		if (voucherOptions == null) {
+			if (other.voucherOptions != null)
+				return false;
+		} else if (!voucherOptions.equals(other.voucherOptions))
+			return false;
 		if (voucherRateList == null) {
 			if (other.voucherRateList != null)
 				return false;
@@ -350,6 +414,7 @@ public class TradingConfigBean implements IBindableBean{
 			return false;
 		return true;
 	}
+
 	
 	
 
