@@ -47,8 +47,8 @@ public abstract class UserNickSetPage extends PageBase {
 	boolean setNick = true;
 
 	/**清空文本输入框内容按钮*/
-	@Field(valueKey="text")
-	String clearEditText;
+/*	@Field(valueKey="text")
+	String clearEditText;*/
 	
 	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
@@ -86,8 +86,12 @@ public abstract class UserNickSetPage extends PageBase {
 	/**清空文本框输入内容*/
 	@Command
 	String clearTextContent(InputEvent event) {
+		//callBack.setNickName(nickName)
+		newNickNameField.setValue("");
+		this.callBack.setNickName("");
 		return null;
 	}
+	
 	
 	@OnUIDestroy
 	protected void clearData() {

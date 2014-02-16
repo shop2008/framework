@@ -82,7 +82,7 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 			@Navigation(on="ApplyMoneyAuthConfirmDialog", showDialog="ApplyMoneyAuthConfirmDialog")
 			
 	})
-	//@ExeGuard(title = "提现认证", message = "正在处理，请稍候...", silentPeriod = 200)
+	@ExeGuard(title = "提现认证", message = "正在处理，请稍候...", silentPeriod = 200)
 	CommandResult cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 			

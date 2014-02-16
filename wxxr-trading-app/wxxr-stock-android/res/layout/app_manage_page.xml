@@ -97,6 +97,7 @@
                     android:textColor="@color/font_red_color"
                     android:textSize="20sp"
                     bind:field="userNickName" 
+                    bind:on_Click="toSetNickNamePage"
                     />
 
                 <TextView
@@ -332,7 +333,7 @@
                     android:background="@drawable/bg_cb_news_push"
                     android:button="@null"
                     bind:field="pushMsgEnabled"
-                    bind:on_CheckedChange="pushMsgStatusChanged" />
+                    bind:on_BoxChanged="pushMsgStatusChanged" />
             </RelativeLayout>
         </LinearLayout>
 

@@ -18,7 +18,7 @@
         android:scrollbars="none"
         android:fadingEdge="none"
         android:cacheColorHint="#00000000"
-        bind:itemViewId="InfoNoticesItemSelector"
+        bind:itemViewId="InfoNoticeItemViewSelector"
         bind:field="infoNoticesInfos"
         bind:on_PinItemClick="handleItemClick"
         />

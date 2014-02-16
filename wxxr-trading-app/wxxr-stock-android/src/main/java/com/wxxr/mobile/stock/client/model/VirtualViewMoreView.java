@@ -50,7 +50,7 @@ public abstract class VirtualViewMoreView extends ViewBase implements IModelUpda
 			result.setPayload(map);
 			result.setResult("-");
 		}
-		return null;
+		return result;
 	}
 	
 	@Override

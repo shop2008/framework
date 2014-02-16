@@ -43,7 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dip"
             android:background="@drawable/edit_text_clear"
-            bind:field="clearEditText"
+            bind:field="*"
             bind:onClick="clearTextContent" />
     </RelativeLayout>
 

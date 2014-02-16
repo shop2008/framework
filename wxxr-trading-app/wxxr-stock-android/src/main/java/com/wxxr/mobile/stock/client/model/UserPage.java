@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -10,14 +12,17 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
@@ -344,12 +349,50 @@ public abstract class UserPage extends PageBase {
 		return null;
 	}*/
 	
-	@Command
-	String handleTradeRecordItemClick(InputEvent event) {
+	@Command(commandName = "handleTradeRecordItemClick", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+	CommandResult handleTradeRecordItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
+		List<GainBean> allList = null;
+		allList = personalHomePageBean.getAllist();
+		GainBean actualBean = null;
+		if(allList != null && allList.size()>0) {
+			actualBean = allList.get(position);
+		}
+		CommandResult result = null;
 		
-		System.out.println("+++position+++"+position);
+		if (actualBean != null) {
+			
+			Long accId = actualBean.getTradingAccountId();
+			String tradeStatus = actualBean.getOver();
+			Boolean isVirtual = actualBean.getVirtual();
+			result = new CommandResult();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("accid", accId);
+			map.put("isVirtual", isVirtual);
+			map.put("isSelf", true);
+			result.setPayload(map);
+			if ("CLOSED".equals(tradeStatus)) {
+				result.setResult("operationDetails");
+			} else if ("UNCLOSE".equals(tradeStatus)) {
+				int status = actualBean.getStatus();
+				if (status == 0) {
+					// 进入卖出界面
+					result.setResult("SellOut");
+				} else if (status == 1) {
+					// 进入买入界面
+					result.setResult("BuyIn");
+				}
+			}
+			updateSelection(new AccidSelection(String.valueOf(accId),
+					isVirtual));
+			
+			return result;
+		}
+		
 		return null;
 	}
 }

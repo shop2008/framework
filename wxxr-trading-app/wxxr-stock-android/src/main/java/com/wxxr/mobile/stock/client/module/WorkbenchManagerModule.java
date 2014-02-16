@@ -110,7 +110,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		
 		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
-		mgr.registerFieldBinder("CheckChanged", new CompoundButtonCheckChangeEventBinder());
+		mgr.registerFieldBinder("BoxChanged", new CompoundButtonCheckChangeEventBinder());
 	}
 
 	@Override

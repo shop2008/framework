@@ -42,10 +42,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(sucStart,sucLimit):null}")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
-	@Field(valueKey = "options",upateAsync=true,binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==2}")
+	@Field(valueKey = "options",upateAsync=true,binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData(true):null}")
 	List<GainBean> actualRecordsList;
 
-	@Field(valueKey = "options",upateAsync=true, binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData(true):null}", visibleWhen = "${curItemId==1}")
+	@Field(valueKey = "options",upateAsync=true, binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData(true):null}")
 	List<GainBean> virtualRecordsList;
 
 	@Field(valueKey = "checked", attributes = {

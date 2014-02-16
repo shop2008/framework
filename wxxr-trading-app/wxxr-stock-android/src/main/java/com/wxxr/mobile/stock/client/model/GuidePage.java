@@ -12,17 +12,31 @@ import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 
 @View(name="guidePage", withToolbar=true, description="新手指引")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.guide_page_layout")
 public abstract class GuidePage extends PageBase {
 
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+	
+	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
+	UserBean user;
+	
+	
 	@Field(valueKey="options", binding="${imageUris}", attributes={@Attribute(name="position", value="${nextPosition}")})
 	List<String> guideImages;
 	
@@ -35,6 +49,7 @@ public abstract class GuidePage extends PageBase {
 	
 	@Field(valueKey="text", binding="${currentPosition+1}")
 	String currentPage;
+	
 	
 	
 	@Bean
@@ -88,11 +103,29 @@ public abstract class GuidePage extends PageBase {
 		return null;
 	}
 	
-	@Command
+	@Command(navigations={
+			@Navigation(on = "+",showDialog="UnLoginDialogView"),
+			@Navigation(on = "-",showDialog="GainedAwardDialogView"), 
+			@Navigation(on="StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type =
+
+					ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误") })
+			})
 	String centerBtnClick(InputEvent event) {
 		
-		if(AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated()) {
-			
+		if(!AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			return "+";
+		}
+		
+		boolean guideGainned = true;
+		if(user != null) {
+			guideGainned = user.getAllowGuideGain();
+			if (!guideGainned) {
+				return "-";
+			} else {
+				usrService.getGuideGain();
+			}
 		}
 		hide();
 		return null;

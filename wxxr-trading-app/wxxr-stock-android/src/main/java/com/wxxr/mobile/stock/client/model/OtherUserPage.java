@@ -1,5 +1,6 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,14 +8,22 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 
+import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 @View(name = "otherUserPage", withToolbar=true, description="---的个人主页",provideSelection=true)
@@ -28,25 +37,76 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 	}
 	
 	
-	/*@Bean(type=BindingType.Service)
-	IMockDataService service;
+	@Bean(type=BindingType.Service)
+	IUserLoginManagementService service;
 	
+	@Bean(type=BindingType.Pojo, express="${service.getUserInfoById(userId)}")
+	UserBean userBean;
 	
-	@Field(valueKey="options", binding="${service!=null?service.data:null}")
-	List<PersonalHomeBean> successTradeRecords;*/
-
-
+	@Bean(type=BindingType.Pojo, express="${service!=null?service.getOtherPersonalHomePage(userId,false):null}")
+	PersonalHomePageBean personalHomePageBean;
+	
+	@Field(valueKey="options", binding="${personalHomePageBean!=null?personalHomePageBean.allist:null}", 
+			attributes={
+			@Attribute(name="joinShareCount", value="${personalHomePageBean!=null?personalHomePageBean.virtualCount:0}"), 
+			@Attribute(name="challengeShareCount", value="${personalHomePageBean!=null?personalHomePageBean.actualCount:0}"),
+			@Attribute(name="userHomeBackUri", value="${userBean!=null?userBean.homeBack:'resourceId:drawable/back1'}"),
+			@Attribute(name="userIconUri", value="${userBean!=null?userBean.userPic:'resourceId:drawable/head4'}"),
+			@Attribute(name="totalScoreProfit", value="${personalHomePageBean!=null?personalHomePageBean.voucherVol:0}"),
+			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.00}")
+	})
+	List<GainBean> successTradeRecords;
+	
 	private String userId;
 
 
 	private String userName;
 	
 	
-	@Command
-	String handleTradeRecordItemClick(InputEvent event) {
+	@Command(commandName = "handleTradeRecordItemClick", navigations = {
+			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
+			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+	CommandResult handleTradeRecordItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
-		System.out.println("+++position+++"+position);
+		List<GainBean> allList = null;
+		allList = personalHomePageBean.getAllist();
+		GainBean actualBean = null;
+		if(allList != null && allList.size()>0) {
+			actualBean = allList.get(position);
+		}
+		CommandResult result = null;
+		
+		if (actualBean != null) {
+			
+			Long accId = actualBean.getTradingAccountId();
+			String tradeStatus = actualBean.getOver();
+			Boolean isVirtual = actualBean.getVirtual();
+			result = new CommandResult();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("accid", accId);
+			map.put("isVirtual", isVirtual);
+			map.put("isSelf", true);
+			result.setPayload(map);
+			if ("CLOSED".equals(tradeStatus)) {
+				result.setResult("operationDetails");
+			} else if ("UNCLOSE".equals(tradeStatus)) {
+				int status = actualBean.getStatus();
+				if (status == 0) {
+					// 进入卖出界面
+					result.setResult("SellOut");
+				} else if (status == 1) {
+					// 进入买入界面
+					result.setResult("BuyIn");
+				}
+			}
+			updateSelection(new AccidSelection(String.valueOf(accId),
+					isVirtual));
+			
+			return result;
+		}
+		
 		return null;
 	}
 	

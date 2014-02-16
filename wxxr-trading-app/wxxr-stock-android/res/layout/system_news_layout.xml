@@ -18,7 +18,7 @@
         android:scrollbars="none"
         android:fadingEdge="none"
         android:cacheColorHint="#00000000"
-        bind:itemViewId="SystemNewsItemSelector"
+        bind:itemViewId="SystemNewsItemViewSelector"
         bind:field="systemNewsInfos"
         bind:on_PinItemClick="handleItemClick"
         />

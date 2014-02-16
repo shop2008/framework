@@ -153,7 +153,7 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	
 	@Override
 	public void onEvent(IBroadcastEvent event) {
-		if(!AppUtils.getService(IUserManagementService.class).getPushMessageSetting())
+		if(!(AppUtils.getService(IUserManagementService.class).getMyUserInfo()!=null?AppUtils.getService(IUserManagementService.class).getMyUserInfo().getMessagePushSettingOn():false))
 			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();

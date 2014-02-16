@@ -12,6 +12,7 @@ import com.wxxr.mobile.core.ui.api.IListDataProvider;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 import com.wxxr.mobile.stock.client.biz.NoShareRecordBean;
@@ -114,12 +115,23 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 			
 			Long joinShareCount = 0l;
 			Long challengeShareCount = 0l;
+			String userId = null;
+			
+			String userName = null;
 			if(comp.hasAttribute(ImageRefreshViewKeys.joinShareCount)) {
 				joinShareCount = comp.getAttribute(ImageRefreshViewKeys.joinShareCount);
 			}
 			
 			if(comp.hasAttribute(ImageRefreshViewKeys.challengeShareCount)) {
 				challengeShareCount = comp.getAttribute(ImageRefreshViewKeys.challengeShareCount);
+			}
+			
+			if(comp.hasAttribute(ImageRefreshViewKeys.userId)) {
+				userId = comp.getAttribute(ImageRefreshViewKeys.userId);
+			}
+			
+			if(comp.hasAttribute(ImageRefreshViewKeys.userName)) {
+				userName = comp.getAttribute(ImageRefreshViewKeys.userName);
 			}
 			@SuppressWarnings("unchecked")
 			List<Object> data = comp.getAttribute(AttributeKeys.options);
@@ -164,6 +176,13 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 					result.addAll(virtualList);
 					ViewMoreBean viewMoreBean = new ViewMoreBean();
 					viewMoreBean.setVirtual(true);
+					if(!StringUtils.isBlank(userId)) {
+						viewMoreBean.setUserId(userId);
+					}
+					
+					if(!StringUtils.isBlank(userName)) {
+						viewMoreBean.setUserName(userName);
+					}
 					result.add(viewMoreBean);
 					//adapter.setUnItemCount(1);
 					if(adapter != null)
@@ -181,6 +200,13 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 					result.addAll(actualList);
 					ViewMoreBean viewMoreBean = new ViewMoreBean();
 					viewMoreBean.setVirtual(false);
+					if(!StringUtils.isBlank(userId)) {
+						viewMoreBean.setUserId(userId);
+					}
+					
+					if(!StringUtils.isBlank(userName)) {
+						viewMoreBean.setUserName(userName);
+					}
 					result.add(viewMoreBean);
 				}
 			}

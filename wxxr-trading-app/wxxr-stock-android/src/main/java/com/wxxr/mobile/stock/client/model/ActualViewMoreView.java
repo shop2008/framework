@@ -50,7 +50,7 @@ public abstract class ActualViewMoreView extends ViewBase implements IModelUpdat
 			result.setPayload(map);
 			result.setResult("-");
 		}
-		return null;
+		return result;
 	}
 	
 	@Override

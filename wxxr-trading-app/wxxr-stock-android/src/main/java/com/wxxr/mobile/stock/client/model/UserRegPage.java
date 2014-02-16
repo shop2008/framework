@@ -69,7 +69,9 @@ public abstract class UserRegPage extends PageBase {
 
 	@Command(commandName = "commit", navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-			@Parameter(name = "title", value = "提示") }) })
+			@Parameter(name = "title", value = "提示") }),
+			@Navigation(on="OK", showPage="userNickSet")
+	})
 	@NetworkConstraint
 	@ExeGuard(title = "注册", message = "正在注册，请稍候...", silentPeriod = 200)
 	String commit(InputEvent event) {
@@ -82,7 +84,10 @@ public abstract class UserRegPage extends PageBase {
 						this.callback.getPassword(),
 						this.callback.getRetypePassword());
 			}
+			
+			
 			hide();
+			return "OK";
 		}
 		return null;
 	}

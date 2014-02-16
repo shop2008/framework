@@ -130,8 +130,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 	public void onEvent(IBroadcastEvent event) {
 		if (tradingService != null)
 			tradingService.getTradingAccountInfo(acctId);
-		if (!AppUtils.getService(IUserManagementService.class)
-				.getPushMessageSetting())
+		if (!(AppUtils.getService(IUserManagementService.class).getMyUserInfo()!=null?AppUtils.getService(IUserManagementService.class).getMyUserInfo().getMessagePushSettingOn():false))
 			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();

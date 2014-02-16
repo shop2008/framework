@@ -188,7 +188,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	public void onEvent(IBroadcastEvent event) {
 		if(tradingService != null)
 			tradingService.getTradingAccountInfo(accid);
-		if(!AppUtils.getService(IUserManagementService.class).getPushMessageSetting())
+		if(!(AppUtils.getService(IUserManagementService.class).getMyUserInfo()!=null?AppUtils.getService(IUserManagementService.class).getMyUserInfo().getMessagePushSettingOn():false))
 			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();

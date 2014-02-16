@@ -42,10 +42,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeVStart,myHomeVLimit,true)}")
 	BindableListWrapper<GainBean> myJoinListBean;
 
-	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.getData(true):null}", visibleWhen = "${curItemId == 0}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.getData(true):null}", upateAsync=true)
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.getData(true):null}", visibleWhen = "${curItemId == 1}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.getData(true):null}", upateAsync=true)
 	List<GainBean> virtualRecordsList;
 
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
