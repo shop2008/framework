@@ -1,14 +1,14 @@
 package com.wxxr.stock.restful.json;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
+
+
 
 @XmlRootElement(name = "RegQueryVO")
 public class RegQueryVO {
 	String username;
 	String password;
 	
-	@XmlElement
 	public String getUsername() {
 		return username;
 	}
@@ -16,7 +16,6 @@ public class RegQueryVO {
 		this.username = username;
 	}
 
-	@XmlElement
 	public String getPassword() {
 		return password;
 	}
