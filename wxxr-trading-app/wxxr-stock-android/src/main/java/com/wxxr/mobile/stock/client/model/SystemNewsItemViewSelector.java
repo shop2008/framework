@@ -16,7 +16,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
-@View(name="SystemNewsItemSelector")
+@View(name="SystemNewsItemViewSelector")
 public abstract class SystemNewsItemViewSelector extends ViewBase implements ItemViewSelector, IListAdapterBuilder {
 
 	@Override

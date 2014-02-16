@@ -27,9 +27,9 @@ private static Trace log = Trace.getLogger(TextChangedEventBinding.class);
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
 				boolean isChecked) {
-			SimpleInputEvent event = new SimpleInputEvent("CheckChanged",
+			SimpleInputEvent event = new SimpleInputEvent("BoxChanged",
 					getField());
-			event.addProperty("isChecked", ""+isChecked);
+			event.addProperty("isChecked", isChecked);
 			if(log.isDebugEnabled()) {
 				log.debug("push message enabled "+isChecked);
 			}

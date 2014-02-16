@@ -86,7 +86,7 @@ public abstract class AppManageView extends ViewBase {
 	String userPic;
 	
 	/**用户昵称*/
-	@Field(valueKey="text", binding="${userInfo!=null&&userInfo.nickName!=null?userInfo.nickName:'设置昵称'}")
+	@Field(valueKey="text", binding="${userInfo!=null&&userInfo.nickName!=null?userInfo.nickName:'设置昵称'}", enableWhen="${userInfo!=null&&userInfo.nickName!=null?false:true}")
 	String userNickName;
 	
 	/**用户手机号码*/
@@ -192,8 +192,21 @@ public abstract class AppManageView extends ViewBase {
 	/**当切换时会回调此方法*/
 	@Command
 	String pushMsgStatusChanged(InputEvent event) {
-		boolean isChecked = (Boolean) event.getProperty("isChecked");
-		System.out.println("---isChecked---"+isChecked);
+		
+		Object obj = event.getProperty("isChecked");
+		Boolean isChecked = null;
+		if (obj instanceof Boolean) {
+			isChecked = (Boolean) obj;
+		}
+		
+		if (isChecked != null) {
+			usrService.pushMessageSetting(isChecked.booleanValue());
+			
+			if(user != null) {
+				user.setMessagePushSettingOn(isChecked);
+				registerBean("user", user);
+			}
+		}
 		return null;
 	}
 	
@@ -241,6 +254,11 @@ public abstract class AppManageView extends ViewBase {
 			return "+";
 		}
 		
+	}
+	
+	@Command(navigations={@Navigation(on="*", showPage="userNickSet")})
+	String toSetNickNamePage(InputEvent event) {
+		return "";
 	}
 	
 }
