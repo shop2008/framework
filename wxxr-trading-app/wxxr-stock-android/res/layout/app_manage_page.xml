@@ -163,22 +163,28 @@
                     bind:field="*"
                     bind:on_Click="enterUserAccountPage" >
 
-                    <TextView
+                    <com.wxxr.mobile.stock.client.widget.MarqueeText
                         android:id="@+id/user_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="帐户余额"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:textColor="@color/black"
                         android:textSize="25sp" />
 
-                    <TextView
+                    <com.wxxr.mobile.stock.client.widget.MarqueeText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/user_balance"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:text="2000.00"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:textColor="@color/positive_rea_color"
                         android:textSize="20sp"
                         bind:field="userBalance" />
