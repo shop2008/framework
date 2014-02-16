@@ -1098,6 +1098,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				if (vo!=null) {
 					if (vo.getSuccOrNot()==0) {
 						throw new StockAppBizException(vo.getCause());
+					}else{
+						getMyUserInfo().setAllowGuideGain(false);
 					}
 				}
 			}catch(CommandException e){
