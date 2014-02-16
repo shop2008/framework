@@ -33,7 +33,7 @@ public class TradingAccountBean implements IBindableBean {
 	private long frozenVol;
 	private String maxStockMarket;
 	private long gainRate;
-
+	private int elapseTime;
 	/**
 	 * @param listener
 	 */
@@ -71,6 +71,17 @@ public class TradingAccountBean implements IBindableBean {
 	 */
 	public String getMaxStockCode() {
 		return maxStockCode;
+	}
+
+	public int getElapseTime() {
+		return elapseTime;
+	}
+
+	public void setElapseTime(int elapseTime) {
+		int old = this.elapseTime;
+		this.elapseTime = elapseTime;
+		this.emitter.firePropertyChange("elapseTime", old, this.elapseTime);
+		
 	}
 
 	/**
@@ -325,31 +336,18 @@ public class TradingAccountBean implements IBindableBean {
 		this.emitter.firePropertyChange("gainRate", old, this.gainRate);
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override   
-    public String toString() {
-        return "TradingAccountBean ["+
-                "virtual=" + this.virtual +
-                " , maxStockCode=" + this.maxStockCode +
-                " , status=" + this.status +
-                " , lossLimit=" + this.lossLimit +
-                " , avalibleFee=" + this.avalibleFee +
-                " , buyDay=" + this.buyDay +
-                " , type=" + this.type +
-                " , tradingOrders=" + this.tradingOrders +
-                " , usedFee=" + this.usedFee +
-                " , id=" + this.id +
-                " , sellDay=" + this.sellDay +
-                " , over=" + this.over +
-                " , totalGain=" + this.totalGain +
-                " , applyFee=" + this.applyFee +
-                " , frozenVol=" + this.frozenVol +
-                " , maxStockMarket=" + this.maxStockMarket +
-                " , gainRate=" + this.gainRate +
-        "]";
-    }
+	@Override
+	public String toString() {
+		return "TradingAccountBean [virtual=" + virtual + ", maxStockCode="
+				+ maxStockCode + ", status=" + status + ", lossLimit="
+				+ lossLimit + ", avalibleFee=" + avalibleFee + ", buyDay="
+				+ buyDay + ", type=" + type + ", tradingOrders="
+				+ tradingOrders + ", usedFee=" + usedFee + ", id=" + id
+				+ ", sellDay=" + sellDay + ", over=" + over + ", totalGain="
+				+ totalGain + ", applyFee=" + applyFee + ", frozenVol="
+				+ frozenVol + ", maxStockMarket=" + maxStockMarket
+				+ ", gainRate=" + gainRate + ", elapseTime=" + elapseTime + "]";
+	}
 
 	@Override
 	public int hashCode() {
@@ -358,6 +356,7 @@ public class TradingAccountBean implements IBindableBean {
 		result = prime * result + (int) (applyFee ^ (applyFee >>> 32));
 		result = prime * result + (int) (avalibleFee ^ (avalibleFee >>> 32));
 		result = prime * result + (int) (buyDay ^ (buyDay >>> 32));
+		result = prime * result + elapseTime;
 		result = prime * result + (int) (frozenVol ^ (frozenVol >>> 32));
 		result = prime * result + (int) (gainRate ^ (gainRate >>> 32));
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -390,6 +389,8 @@ public class TradingAccountBean implements IBindableBean {
 		if (avalibleFee != other.avalibleFee)
 			return false;
 		if (buyDay != other.buyDay)
+			return false;
+		if (elapseTime != other.elapseTime)
 			return false;
 		if (frozenVol != other.frozenVol)
 			return false;
@@ -436,6 +437,10 @@ public class TradingAccountBean implements IBindableBean {
 		if (virtual != other.virtual)
 			return false;
 		return true;
-	}	
+	}
+
+	
+
+   
 
 }

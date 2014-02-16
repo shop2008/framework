@@ -138,6 +138,7 @@ public class ConverterUtils {
         b.setType(vo.getType());
         b.setUsedFee(vo.getUsedFee());
         b.setVirtual(vo.isVirtual());
+        b.setElapseTime(vo.getElapseTime());
         List<StockTradingOrderVO> orderVos = vo.getTradingOrders();
         if (orderVos != null) {
             List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
@@ -169,6 +170,12 @@ public class ConverterUtils {
         bean.setRateString(vo.getRateString());
         bean.setUserId(vo.getUserId());
         bean.setVoucherCostRate(vo.getVoucherCostRate());
+        // new field 
+        bean.setCostRateT(vo.getCostRateT());
+        bean.setCostRateT3(vo.getCostRateT3());
+        bean.setCostRateTN(vo.getCostRateTN());
+        bean.setCostRateV(vo.getCostRateV());
+        bean.setRateStringT(vo.getRateStringT());
         if (bean.getMaxAmount() != null && bean.getMaxAmount() > 0) {
             List<String> x = new ArrayList<String>();
             long max = bean.getMaxAmount() / 10000 / 100;
