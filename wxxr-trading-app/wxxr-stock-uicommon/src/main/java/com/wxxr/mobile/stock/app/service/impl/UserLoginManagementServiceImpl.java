@@ -40,7 +40,9 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.app.service.handler.Register2Handher;
 import com.wxxr.mobile.stock.app.service.handler.Register2Handher.UserRegister2Command;
+import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
 import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
@@ -307,6 +309,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
 		registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
+		context.getService(ICommandExecutor.class).registerCommandHandler(Register2Handher.COMMAND_NAME, new RegisterHandher());
 		registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
