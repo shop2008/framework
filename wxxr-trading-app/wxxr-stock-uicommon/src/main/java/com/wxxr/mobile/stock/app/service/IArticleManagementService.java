@@ -33,4 +33,6 @@ public interface IArticleManagementService {
 	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle();
 	
 	public AdStatusBean getAdStatusBean();
+	
+
 }

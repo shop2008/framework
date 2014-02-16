@@ -6,11 +6,9 @@ package com.wxxr.mobile.stock.app.service;
 import java.util.Map;
 
 import com.wxxr.mobile.stock.app.bean.LineListBean;
-import com.wxxr.mobile.stock.app.bean.QuotationListBean;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
-import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;

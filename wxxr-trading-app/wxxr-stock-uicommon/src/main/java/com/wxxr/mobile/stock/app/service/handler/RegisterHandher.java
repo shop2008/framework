@@ -57,9 +57,9 @@ public class RegisterHandher implements ICommandHandler {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
-		
 		SimpleResultVo result=context.getKernelContext().getService(IRestProxyService.class).getRestService(UserResource.class).register(((UserRegisterCommand)command).getUserName());
 		return (T) result;
 	}

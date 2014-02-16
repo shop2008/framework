@@ -27,12 +27,11 @@ public class GetPushMessageSettingHandler implements ICommandHandler{
 		context=null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
-	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T execute(ICommand<T> command) throws Exception {
 		GetPushMessageSettingCommand cmd=(GetPushMessageSettingCommand) command;
+		cmd.validate();
 		SimpleResultVo vo=context.getKernelContext().getService(IRestProxyService.class).
 				getRestService(StockUserResource.class).isBindApp();
 		return (T) vo;

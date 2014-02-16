@@ -5,6 +5,7 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.javax.ws.rs.QueryParam;
+import com.wxxr.stock.restful.json.SimpleVO;
 import com.wxxr.stock.trading.ejb.api.AppHomePageListVO;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
@@ -131,7 +132,6 @@ public interface ITradingResource{
 	@GET
 	@Path("/guideGainAmount")
 	@Produces({ "application/json" })
-	@Consumes({"text/plain"})
-	public String getGuideGainAmount()throws Exception;
+	public SimpleVO getGuideGainAmount()throws Exception;
 	
 }

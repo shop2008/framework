@@ -43,10 +43,13 @@ import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.app.service.handler.GetGuideGainHandler;
+import com.wxxr.mobile.stock.app.service.handler.GetGuideGainHandler.GetGuideGainCommand;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler;
 import com.wxxr.mobile.stock.app.service.handler.GetPushMessageSettingHandler.GetPushMessageSettingCommand;
 import com.wxxr.mobile.stock.app.service.handler.ReadAllUnreadMessageHandler;
@@ -92,8 +95,13 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.json.ClientInfoVO;
+import com.wxxr.stock.restful.json.SimpleVO;
+import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingResource;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
+import com.wxxr.stock.trading.ejb.api.GuideResultVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
+import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
@@ -181,8 +189,10 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadAllUnreadMessageHandler.COMMAND_NAME, new ReadAllUnreadMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(ReadPullMessageHandler.COMMAND_NAME, new ReadPullMessageHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(SignUpHandler.COMMAND_NAME, new SignUpHandler());
-	    gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
-        registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
+	    context.getService(ICommandExecutor.class).registerCommandHandler(GetGuideGainHandler.COMMAND_NAME, new GetGuideGainHandler());
+		gainBean_cache  =new GenericReloadableEntityCache<String,GainBean,List<GainBean>> ("gainBean");
+        loadGuideGainRule();
+		registry.registerEntityLoader("personalHomePageBean", new PersonalHomePageLoader());
         registry.registerEntityLoader("gainBean", new GainBeanLoader());
         getService(IEventRouter.class).registerEventListener(UserLoginEvent.class, listener);
 		context.registerService(IUserManagementService.class, this);
@@ -193,6 +203,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		updateToken();
 		getPushMessageSetting();
 		getUserAuthInfo();
+		getGuideGainAllow();
+		loadGuideGainRule();
 	}
 	private IEventListener listener = new IEventListener() {
 		@Override
@@ -202,6 +214,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 				if (_event.getAction().equals(LoginAction.LOGIN)) {
 					getPushMessageSetting();
 					getUserAuthInfo();
+					getGuideGainAllow();
 				}
 			}
 			
@@ -253,14 +266,27 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		}
 	}
 
-	@Override
-	public boolean getPushMessageSetting() {
+	private boolean getPushMessageSetting() {
 		GetPushMessageSettingCommand cmd=new GetPushMessageSettingCommand();
 		Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
 		try {
 			SimpleResultVo result=future.get(30,TimeUnit.SECONDS);
 			getMyUserInfo().setMessagePushSettingOn(result.getResult()==1);
 			return result.getResult()==1;
+		} catch (Exception e) {
+			new StockAppBizException("系统错误");
+		}
+		return false;
+	}
+	private boolean getGuideGainAllow() {
+		try {
+			GuideResultVO vo = RestUtils.getRestService(ITradingProtectedResource.class).checkGuideGainAllow();
+			if (vo!=null) {
+				if (getService(IUserIdentityManager.class).isUserAuthenticated()) {
+					getMyUserInfo().setAllowGuideGain(vo.getSuccOrNot()==1);
+				}
+			}
+			return vo.getSuccOrNot()==1;
 		} catch (Exception e) {
 			new StockAppBizException("系统错误");
 		}
@@ -738,14 +764,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						public void pushMessageSetting(boolean on) {
 							((IUserManagementService)holder.getDelegate()).pushMessageSetting(on);
 						}
-
-						/**
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.IUserManagementService#getPushMessageSetting()
-						 */
-						public boolean getPushMessageSetting() {
-							return ((IUserManagementService)holder.getDelegate()).getPushMessageSetting();
-						}
 						/**
 						 * @param bankName
 						 * @param bankAddr
@@ -943,6 +961,17 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 							return ((IUserManagementService)holder.getDelegate()).sign();
 						}
 
+						@Override
+						public String getGuideGainRule() {
+							return ((IUserManagementService)holder.getDelegate()).getGuideGainRule();
+						}
+
+						@Override
+						public void getGuideGain() {
+							((IUserManagementService)holder.getDelegate()).getGuideGain();
+							
+						}
+
 					});
 				}
 				throw new IllegalArgumentException("Invalid service class :"+clazz);
@@ -1040,6 +1069,49 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		}else{
 			throw new StockAppBizException("用户未登录");
 		}
+	}
+	String guideGainRule="1000";
+	@Override
+	public String getGuideGainRule() {
+		return guideGainRule;
+	}
+
+	private void loadGuideGainRule(){
+		try {
+		SimpleVO vo =	RestUtils.getRestService(ITradingResource.class).getGuideGainAmount();
+		if (vo!=null) {
+			if (StringUtils.isNotBlank(vo.getData())) {
+				guideGainRule = vo.getData();
+			}
+		}
+		} catch (Exception e) {
+			log.warn("Error when invoke loadGuideGainRule",e);
+		}
+	}
+	@Override
+	public void getGuideGain() {
+		if (getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			GetGuideGainCommand cmd = new GetGuideGainCommand();
+			try{
+				Future<StockResultVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
+				StockResultVO vo=future.get(30,TimeUnit.SECONDS);
+				if (vo!=null) {
+					if (vo.getSuccOrNot()==0) {
+						throw new StockAppBizException(vo.getCause());
+					}
+				}
+			}catch(CommandException e){
+				throw new StockAppBizException(e.getMessage());
+			}catch (StockAppBizException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new StockAppBizException("系统错误");
+			}
+			
+		}else{
+			throw new StockAppBizException("用户未登录");
+		}
+		
 	}
 	
 }

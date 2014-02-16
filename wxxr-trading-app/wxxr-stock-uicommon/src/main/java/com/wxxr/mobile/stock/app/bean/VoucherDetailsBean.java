@@ -49,7 +49,7 @@ public class VoucherDetailsBean implements IBindableBean {
     }
 
     public void setList(List<GainPayDetailBean> list) {
-        List old = this.list;
+        List<GainPayDetailBean> old = this.list;
         this.list = list;
         this.emitter.firePropertyChange("list", old, this.list);    
     }

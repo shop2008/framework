@@ -30,6 +30,8 @@ public class UserBean implements IBindableBean {
 	private String nickName;
 	private boolean login;
 	private String totoalScore;
+	
+	private boolean allowGuideGain;
 
 	/**
 	 * @param listener
@@ -61,6 +63,16 @@ public class UserBean implements IBindableBean {
 		boolean old = this.messagePushSettingOn;
 		this.messagePushSettingOn = messagePushSettingOn;
 		this.emitter.firePropertyChange("messagePushSettingOn", old, this.messagePushSettingOn);
+	}
+
+	public boolean getAllowGuideGain() {
+		return allowGuideGain;
+	}
+
+	public void setAllowGuideGain(boolean allowGuideGain) {
+		boolean old = this.allowGuideGain;
+		this.allowGuideGain = allowGuideGain;
+		this.emitter.firePropertyChange("allowGuideGain", old, this.allowGuideGain);
 	}
 
 	/**

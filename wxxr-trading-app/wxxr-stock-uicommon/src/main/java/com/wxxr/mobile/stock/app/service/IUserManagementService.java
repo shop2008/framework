@@ -53,14 +53,6 @@ public interface IUserManagementService {
 	 * 		false 推送消息关闭
 	 */
 	void pushMessageSetting(boolean on);
-
-	/**
-	 * 获取推送消息是否开启
-	 * @return 
-	 *       true  推送消息 
-	 *       false  不推送消息
- 	 */
-	boolean getPushMessageSetting();
 	
 	void switchBankCard(String bankName, String bankAddr,String bankNum);
 	/**
@@ -136,4 +128,7 @@ public interface IUserManagementService {
 	
 	UserSignBean getUserSignBean();
 	UserSignBean sign();
+	
+	String getGuideGainRule();
+	void getGuideGain();
 }

@@ -8,11 +8,7 @@ import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandHandler;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.stock.app.service.handler.SumitAuthHandler.SubmitAuthCommand;
-import com.wxxr.security.vo.UserAuthenticaVO;
-import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
-import com.wxxr.stock.restful.resource.StockUserResource;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 /**
@@ -73,9 +69,7 @@ public class ApplyDrawMoneyHandler implements ICommandHandler {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
-	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T execute(ICommand<T> cmd) throws Exception {
 		ApplyDrawMoneyCommand command=(ApplyDrawMoneyCommand)cmd;

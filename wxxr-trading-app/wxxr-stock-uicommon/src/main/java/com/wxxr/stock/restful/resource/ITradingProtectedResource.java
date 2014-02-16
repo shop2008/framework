@@ -146,10 +146,12 @@ public interface ITradingProtectedResource{
 	@GET
 	@Path("/guideGain")
 	@Produces({ "application/json" })
-	public StockResultVO guideGain() throws Throwable;
+	@Consumes
+	public StockResultVO guideGain() throws Exception;
 	
 	@GET
 	@Path("/guideGainAllow")
 	@Produces({ "application/json" })
-	public GuideResultVO checkGuideGainAllow()throws Throwable;
+	@Consumes
+	public GuideResultVO checkGuideGainAllow()throws Exception;
 }
