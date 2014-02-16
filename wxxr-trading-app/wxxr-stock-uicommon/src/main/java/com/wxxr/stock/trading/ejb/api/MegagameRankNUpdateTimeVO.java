@@ -39,6 +39,11 @@ public class MegagameRankNUpdateTimeVO {
 	public void setRankList(List<MegagameRankVO> rankList) {
 		this.rankList = rankList;
 	}
+	@Override
+	public String toString() {
+		return "MegagameRankNUpdateTimeVO [updateTime=" + updateTime
+				+ ", rankList=" + rankList + "]";
+	}
 	
 	
 	

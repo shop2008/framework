@@ -12,6 +12,7 @@ import com.wxxr.stock.trading.ejb.api.GainVOs;
 import com.wxxr.stock.trading.ejb.api.GuideResultVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
+import com.wxxr.stock.trading.ejb.api.SecurityAppHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
@@ -154,4 +155,8 @@ public interface ITradingProtectedResource{
 	@Produces({ "application/json" })
 	@Consumes
 	public GuideResultVO checkGuideGainAllow()throws Exception;
+	@GET
+	@Path("/securityAppHome")
+	@Produces({  "application/json;charset=utf-8" })
+	public SecurityAppHomePageVO securityAppHome() throws Exception;
 }

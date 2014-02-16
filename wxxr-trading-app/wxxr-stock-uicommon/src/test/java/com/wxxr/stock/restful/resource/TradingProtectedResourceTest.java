@@ -19,12 +19,15 @@ import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
+import com.wxxr.stock.trading.ejb.api.GuideResultVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
+import com.wxxr.stock.trading.ejb.api.SecurityAppHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
+import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 public class TradingProtectedResourceTest extends TestCase {
 	ITradingProtectedResource tradingProtectedResource;
@@ -252,10 +255,24 @@ public class TradingProtectedResourceTest extends TestCase {
 		DrawMoneyRecordVos a = tradingProtectedResource.drawMoneyRecords(0, 10);
 		System.out.println(a.getDrawMoneyRecordVos());
 	}
-	/*@GET
-	@Path("/newlTraAcc")
-	@Produces({ "application/json" })
-	@Consumes
-	public StockResultVO newCreateTradingAccount(@QueryParam("captitalAmount")Long captitalAmount,@QueryParam("capitalRate") float capitalRate,@QueryParam("virtual") boolean virtual,@QueryParam("depositRate")float depositRate,@QueryParam("assetType")String assetType,@QueryParam("tradingType")String tradingType) throws Exception;*/
-	
+	public void testGetSignMessage() throws Exception {
+		UserSignVO a = tradingProtectedResource.getUserSignMessage();
+		System.out.println(a);
+	}
+	public void testSign() throws Exception {
+		UserSignVO a = tradingProtectedResource.getUserSignMessage();
+		System.out.println(a);
+	}
+	public void testCheckGuideGainAllow() throws Exception {
+		GuideResultVO a = tradingProtectedResource.checkGuideGainAllow();
+		System.out.println(a);
+	}
+	public void testGuideGain() throws Exception {
+		StockResultVO a = tradingProtectedResource.guideGain();
+		System.out.println(a);
+	}
+	public void testSecurityAppHomePage() throws Exception {
+		SecurityAppHomePageVO a = tradingProtectedResource.securityAppHome();
+		System.out.println(a);
+	}
 }

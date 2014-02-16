@@ -121,11 +121,6 @@ public interface ITradingResource{
 	@Consumes
 	public GainVOs getMoreOtherPersonal(@QueryParam("userId") String userId,@QueryParam("start") int start,@QueryParam("limit") int limit,@QueryParam("virtual") boolean virtual)throws Exception;
 	@GET
-	@Path("/getAppHomePage")
-	@Produces({ "application/json;charset=utf-8"})
-	@Consumes({ "application/json;charset=utf-8"})
-	public AppHomePageListVO getAppHomePage(@QueryParam("login") boolean login,@QueryParam("remindId") String remindId,@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
-	@GET
 	@Path("/getStrategyConfig")
 	@Produces({ "application/json" })
 	public TradingConfigListVO getStrategyConfig() throws Exception;
@@ -133,5 +128,10 @@ public interface ITradingResource{
 	@Path("/guideGainAmount")
 	@Produces({ "application/json" })
 	public SimpleVO getGuideGainAmount()throws Exception;
+	
+	@GET
+	@Path("/unSecurityAppHome")
+	@Produces({  "application/json;charset=utf-8" })
+	public AppHomePageListVO unSecurityAppHome(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
 	
 }

@@ -42,7 +42,9 @@ import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.bean.HomePageMenu;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RegularTicketBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
@@ -59,6 +61,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.service.IMessageManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
@@ -79,6 +82,7 @@ import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
+import com.wxxr.mobile.stock.app.utils.Utils;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
@@ -110,9 +114,9 @@ import com.wxxr.stock.trading.ejb.api.MegagameRankNUpdateTimeVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVO;
+import com.wxxr.stock.trading.ejb.api.SecurityAppHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
-import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.TradingConfigVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.UserSignVO;
@@ -1548,54 +1552,17 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	private HomePageMenu menu;
 	public HomePageMenu getHomeMenuList() {
 		 return menu;
-		//return MockDataUtils.getHomeMenuList();
 	}
 	private void refreshHomePage(){
 		List<BaseMenuItem> homePageItems = new ArrayList<BaseMenuItem>();
 		boolean login = getService(IUserIdentityManager.class).isUserAuthenticated();
 		List<TradingAccountMenuItem> items1 = null;
-		if (login) {
-			items1 = getTradingAccountMenuItem();
-		}
-		if (items1!=null&&items1.size()>0) {
-			homePageItems.addAll(items1);
-		}
-		List<BaseMenuItem> items2 = getNonTradingAccountMenuItem();
-		if (items2!=null&&items2.size()>0) {
-			homePageItems.addAll(items2);
-		}
-		if (menu==null) {
-			menu = new HomePageMenu();
-		}
-		menu.setMenuItems(homePageItems);
-	}
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
-	private List<BaseMenuItem> getNonTradingAccountMenuItem() {
-		List<BaseMenuItem> menu = new ArrayList<BaseMenuItem>();
-		boolean login = getService(IUserIdentityManager.class).isUserAuthenticated();
+		SignInMessageMenuItem sign =null;
+		ChampionShipMessageMenuItem champion = null;
 		try {
-			String remindId ="0";
-			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).getAppHomePage(login, remindId, 0, 4);
-			//签到信息
-			UserSignVO signVo = vo.getSignMessage();
-			SignInMessageMenuItem sign =null;
-			if (signVo!=null) {
-				sign = new SignInMessageMenuItem();
-				sign.setHasSignIn(signVo.isSign());
-				sign.setType("80");
-				sign.setTitle("每日签到");
-				sign.setDate(signVo.getSignDate());
-				if (signVo.isSign()) {
-					sign.setMessage("今日已签到");
-				}else{
-					sign.setMessage(String.format("可获%d实盘积分", signVo.getRewardVol()));
-				}
-				sign.setScore((int)signVo.getRewardVol());
-				sign.setSignDays(5);
-			}
+			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).unSecurityAppHome(0, 4);
 			//参数排行榜
 			MegagameRankNUpdateTimeVO m = vo.getRankVo();			
-			ChampionShipMessageMenuItem champion = null;
 			if (m!=null) {
 				champion = new ChampionShipMessageMenuItem();
 				champion.setType("70");
@@ -1604,7 +1571,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				List<MegagameRankVO> rankl = m.getRankList();
 				if (rankl!=null&&rankl.size()>0) {
 					MegagameRankVO first = rankl.get(0);
-					champion.setNickName(String.format("NO.1%s", first.getNickName()));
+					champion.setNickName(String.format("NO.1 %s", first.getNickName()));
 					String stockName = null;
 					StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(first.getMaxStockCode(), first.getMaxStockMarket());
 			        if (stock!=null) {
@@ -1614,59 +1581,126 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 					champion.setIncomeRate(Long.valueOf(first.getGainRates()));
 				}
 			}
+			
 			//操盘咨询
 			List<PullMessageVO> pMsg = vo.getPullMessageList();
-			
-			//系统消息
-			List<MessageVO> sMsg = vo.getRemindMessage();
-			MessageMenuItem msg_item_2;
-			msg_item_2 = new MessageMenuItem();
-			msg_item_2.setType("60");
-			msg_item_2.setTitle("系统消息");
-			msg_item_2.setDate("7月22日 15:30");
-			msg_item_2.setMessage("平安银行模拟盘开始系统清仓");
-			msg_item_2.setNum(1);
-			
-			//assemble menu
-			if (sign!=null&&!sign.isHasSignIn()) {//未签到
-				menu.add(sign);
-			}
-			MessageMenuItem msg_item = generateMsgMenuItem1(pMsg);
-			if (msg_item!=null) {//操盘咨询
-				menu.add(msg_item);
-			}
-			if (champion!=null) {//参赛交易盘
-				menu.add(champion);
-			}
-			msg_item = generateMsgMenuItem2(sMsg);
-			if (msg_item!=null) {//系统消息
-				menu.add(msg_item);
-			}
-			if (sign!=null&&sign.isHasSignIn()) {//已签到
-				menu.add(sign);
+			savePullMessages(pMsg);
+			if (login) {
+				SecurityAppHomePageVO svo = RestUtils.getRestService(ITradingProtectedResource.class).securityAppHome();
+				//签到信息
+				UserSignVO signVo = svo.getSignMessage();
+				
+				if (signVo!=null) {
+					sign = new SignInMessageMenuItem();
+					sign.setHasSignIn(signVo.isSign());
+					sign.setType("80");
+					sign.setTitle("每日签到");
+					sign.setDate(signVo.getSignDate());
+					if (signVo.isSign()) {
+						sign.setMessage("今日已签到");
+					}else{
+						sign.setMessage(String.format("可获%d实盘积分", signVo.getRewardVol()));
+					}
+					sign.setScore((int)signVo.getRewardVol());
+					sign.setSignDays(5);
+				}
+				//系统消息
+				List<MessageVO> sMsg = svo.getRemindMessage();
+				saveRemindMessages(sMsg);
+				items1 = getTradingAccountMenuItem(svo.getTradingAcctList());
 			}
 			
 		} catch (Exception e) {
 			log.warn("Error when get menu info", e);
 		}
-		return menu;
+		
+		
+		if (items1!=null&&items1.size()>0) {
+			homePageItems.addAll(items1);
+		}
+		//assemble menu
+		if (sign!=null&&!sign.isHasSignIn()) {//未签到
+			homePageItems.add(sign);
+		}
+		MessageMenuItem msg_item = generateMsgMenuItem1();
+		if (msg_item!=null) {//操盘咨询
+			homePageItems.add(msg_item);
+		}
+		if (champion!=null) {//参赛交易盘
+			homePageItems.add(champion);
+		}
+		msg_item = generateMsgMenuItem2();
+		if (msg_item!=null) {//系统消息
+			homePageItems.add(msg_item);
+		}
+		if (sign!=null&&sign.isHasSignIn()) {//已签到
+			homePageItems.add(sign);
+		}
+		
+		if (menu==null) {
+			menu = new HomePageMenu();
+		}
+		menu.setMenuItems(homePageItems);
 	}
-	private MessageMenuItem generateMsgMenuItem1(List<PullMessageVO> pMsg){//生成操盘咨询菜单项
+	private void savePullMessages(List<PullMessageVO> pMsgs) {
+		if (pMsgs!=null&&pMsgs.size()>0) {
+			for (PullMessageVO vo : pMsgs) {
+				PullMessageBean bean=new PullMessageBean();
+				bean.setPullId(vo.getId());
+				bean.setArticleUrl(Utils.getAbsoluteURL(vo.getArticleUrl()));
+				bean.setMessage(vo.getMessage());
+				bean.setPhone(vo.getPhone());
+				bean.setRead(false);
+				bean.setTitle(vo.getTitle());
+				bean.setCreateDate(vo.getCreateDate());
+				getService(IMessageManagementService.class).savePullMsg(bean);
+			}
+		}
+		
+	}
+
+	private void saveRemindMessages(List<MessageVO> sMsgs) {
+		if (sMsgs!=null&&sMsgs.size()>0) {
+			for (MessageVO vo : sMsgs) {
+				RemindMessageBean bean=new RemindMessageBean();
+				bean.setId(vo.getId());
+				bean.setAcctId(vo.getId());
+				bean.setAttrs(vo.getAttributes());
+				bean.setContent(vo.getContent());
+				bean.setCreatedDate(vo.getCreatedDate());
+				bean.setTitle(vo.getAttributes().get("title"));
+				bean.setType(bean.getType());
+				getService(IMessageManagementService.class).saveRemindMsg(bean);
+			}
+		}
+		
+	}
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
+	
+	private MessageMenuItem generateMsgMenuItem1(){//生成操盘咨询菜单项
+		List<PullMessageBean> list = getService(IMessageManagementService.class).getUnReadPullMessage();
 		MessageMenuItem msg_item = new MessageMenuItem();
 		msg_item.setType("61");
 		msg_item.setTitle("操盘咨询");
-		msg_item.setDate("7月22日 15:30");
-		msg_item.setMessage("平安银行模拟盘开始系统清仓");
-		msg_item.setNum(1);
+		if (list!=null&&list.size()>0) {
+			PullMessageBean msg = list.get(0);
+			msg_item.setDate(msg.getCreateDate());
+			msg_item.setMessage(msg.getMessage());
+		}
+		msg_item.setNum(list==null?0:list.size());
 		return msg_item; 
 	}
-	private MessageMenuItem generateMsgMenuItem2(List<MessageVO> msg){//生成系统消息菜单项
+	private MessageMenuItem generateMsgMenuItem2(){//生成系统消息菜单项
+		List<RemindMessageBean> list = getService(IMessageManagementService.class).getUnReadRemindMessage();
 		MessageMenuItem msg_item = new MessageMenuItem();
 		msg_item.setType("60");
 		msg_item.setTitle("系统消息");
-		msg_item.setDate("7月22日 15:30");
-		msg_item.setMessage("平安银行模拟盘开始系统清仓");
-		msg_item.setNum(1);
+		if (list!=null&&list.size()>0) {
+			RemindMessageBean msg = list.get(0);
+			msg_item.setDate(msg.getCreatedDate());
+			msg_item.setMessage(msg.getTitle());
+		}
+		msg_item.setNum(list==null?0:list.size());
 		return msg_item;
 	}
 	private Comparator<TradingAccountMenuItem> c = new Comparator<TradingAccountMenuItem>() {
@@ -1681,50 +1715,42 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 	};
 			
-	private List<TradingAccountMenuItem> getTradingAccountMenuItem() {
+	private List<TradingAccountMenuItem> getTradingAccountMenuItem(List<TradingAccInfoVO> volist) {
 		List<TradingAccountMenuItem> tradingItemList = null;
-		try {
-			TradingAccInfoVOs vos = RestUtils.getRestService(ITradingProtectedResource.class).getTradingAccountList();
-			if (vos!=null) {
-				List<TradingAccInfoVO> volist =  vos.getTradingAccInfos();
-				SimpleDateFormat df = new SimpleDateFormat("MM月DD日");
-				if (volist!=null&&volist.size()>0) {
-					tradingItemList = new ArrayList<TradingAccountMenuItem>();
-					for (TradingAccInfoVO vo : volist) {
-						TradingAccountMenuItem trading = new TradingAccountMenuItem();
-						trading.setAcctId(vo.getAcctID()+"");
-						trading.setDate(df.format(new Date(vo.getCreateDate())));
-						String stockName = vo.getMaxStockName();
-						if (StringUtils.isBlank(stockName)) {
-				           StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
-				           if (stock!=null) {
-				               stockName = stock.getName();
-				           }
-						}
-						trading.setMaxHoldStockName(stockName);
-						trading.setIncome(vo.getTotalGain());
-						trading.setIncomeRate(vo.getTotalGain()*100.0f/vo.getSum());
-						trading.setStatus(getStockStatus(vo));
-						if (vo.isVirtual()) {
-							trading.setType("0");
-							trading.setTitle("参赛模拟盘");
-						}else if ("ASTCOKT1".equals(vo.getAcctType())) {
-							trading.setType("11");
-							trading.setTitle("挑战交易盘 T+1");
-						}else if("ASTCOKT3".equals(vo.getAcctType())){
-							trading.setType("13");
-							trading.setTitle("挑战交易盘 T+3");
-						}else if("ASTCOKTN".equals(vo.getAcctType())){
-							trading.setType("1d");
-							trading.setTitle("挑战交易盘 T+D");
-						}
-						tradingItemList.add(trading);
-					}
-					Collections.sort(tradingItemList, c);
+		SimpleDateFormat df = new SimpleDateFormat("MM月DD日");
+		if (volist!=null&&volist.size()>0) {
+			tradingItemList = new ArrayList<TradingAccountMenuItem>();
+			for (TradingAccInfoVO vo : volist) {
+				TradingAccountMenuItem trading = new TradingAccountMenuItem();
+				trading.setAcctId(vo.getAcctID()+"");
+				trading.setDate(df.format(new Date(vo.getCreateDate())));
+				String stockName = vo.getMaxStockName();
+				if (StringUtils.isBlank(stockName)) {
+		           StockBaseInfo stock = KUtils.getService(IStockInfoSyncService.class).getStockBaseInfoByCode(vo.getMaxStockCode(), vo.getMaxStockMarket());
+		           if (stock!=null) {
+		               stockName = stock.getName();
+		           }
 				}
+				trading.setMaxHoldStockName(stockName);
+				trading.setIncome(vo.getTotalGain());
+				trading.setIncomeRate(vo.getTotalGain()*100.0f/vo.getSum());
+				trading.setStatus(getStockStatus(vo));
+				if (vo.isVirtual()) {
+					trading.setType("0");
+					trading.setTitle("参赛模拟盘");
+				}else if ("ASTCOKT1".equals(vo.getAcctType())) {
+					trading.setType("11");
+					trading.setTitle("挑战交易盘 T+1");
+				}else if("ASTCOKT3".equals(vo.getAcctType())){
+					trading.setType("13");
+					trading.setTitle("挑战交易盘 T+3");
+				}else if("ASTCOKTN".equals(vo.getAcctType())){
+					trading.setType("1d");
+					trading.setTitle("挑战交易盘 T+D");
+				}
+				tradingItemList.add(trading);
 			}
-		} catch (Exception e) {
-			log.warn("Error when get home page trading list", e);
+			Collections.sort(tradingItemList, c);
 		}
 		return tradingItemList;
 	}

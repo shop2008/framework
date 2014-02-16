@@ -53,6 +53,7 @@ public interface IUserManagementService {
 	 * 		false 推送消息关闭
 	 */
 	void pushMessageSetting(boolean on);
+
 	
 	void switchBankCard(String bankName, String bankAddr,String bankNum);
 	/**

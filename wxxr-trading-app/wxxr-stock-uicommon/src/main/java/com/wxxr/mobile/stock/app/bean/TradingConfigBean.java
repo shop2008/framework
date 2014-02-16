@@ -29,6 +29,7 @@ public class TradingConfigBean implements IBindableBean{
 	private String discountFee;//优惠价
 	private String companyGainRate;//公司分成比率
 	private List<LossRateNDepositRate> rateList;//止损和保证金额度
+	
 	private List<LossRateNDepositRate> virtualRateList;//虚拟盘止损率和保证金
 	private List<LossRateNDepositRate> voucherRateList;//积分盘止损率和保证金
 	private String voucherApplyAmount;//积分盘申购金额

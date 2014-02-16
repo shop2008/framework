@@ -8,10 +8,6 @@ import javax.net.ssl.HostnameVerifier;
 
 import junit.framework.TestCase;
 
-import com.wxxr.javax.ws.rs.Consumes;
-import com.wxxr.javax.ws.rs.POST;
-import com.wxxr.javax.ws.rs.Path;
-import com.wxxr.javax.ws.rs.Produces;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -28,11 +24,9 @@ import com.wxxr.security.vo.UserBaseInfoVO;
 import com.wxxr.security.vo.UserParamVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
-import com.wxxr.stock.crm.customizing.ejb.api.TokenVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 import com.wxxr.stock.restful.json.RegQueryVO;
-import com.wxxr.stock.restful.json.SimpleVO;
 
 
 public class StockUserResourceTest extends TestCase{
