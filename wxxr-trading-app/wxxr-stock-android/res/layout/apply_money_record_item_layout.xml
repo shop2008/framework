@@ -2,74 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
-    android:orientation="horizontal" 
-    android:background="#18191B"
-    >
-    
-	<RelativeLayout 
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:layout_weight="1"
-    	android:layout_marginLeft="5dp"
-    	android:orientation="vertical"
-    	android:gravity="center"
-	    >
-	    
-	    <TextView 
-	        android:id="@+id/apply_money_record_time"
-	        android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:textSize="13sp"
-    		android:textColor="@color/white"
-    		android:text="2014年11月23日"
-    		bind:field="applyDate"
-	        />
-	    <TextView 
-	        android:layout_below="@id/apply_money_record_time"
-	        android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:textColor="#484B4C"
-    		android:text="12:33:09"
-    		bind:field="applyTime"
-	        />
-	    
-	</RelativeLayout>
-	
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="1"
-	    android:orientation="vertical"
-	    android:gravity="center"
-	    >
-	    
-	    <TextView 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:text="10000"
-	        bind:field="applyAmount"
-	        android:textColor="@color/white"
-	        />
-	</LinearLayout>
-	
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="1"
-	    android:orientation="vertical"
-	    android:gravity="center"
-	    >
-	    
-	    <TextView 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:text="审核中"
-	        bind:field="applyStatus"
-	        android:textColor="@color/white"
-	        />
-	</LinearLayout>
-	
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#18191B"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/apply_money_record_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2014年11月23日"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                bind:field="applyDate" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/apply_money_record_time"
+                android:text="12:33:09"
+                android:textColor="#484B4C"
+                bind:field="applyTime" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10000"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                bind:field="applyAmount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="审核中"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                bind:field="applyStatus" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:background="#0b0306" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dip"
+            android:background="#2b2a2c" />
+    </LinearLayout>
+
 </LinearLayout>

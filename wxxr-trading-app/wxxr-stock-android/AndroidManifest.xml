@@ -3,7 +3,7 @@
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="18"/>
 
-    <application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/app_name" android:name=".StockApplication" android:theme="@android:style/Theme.NoTitleBar">
+    <application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/app_name" android:name=".StockApplication" android:theme="@android:style/Theme.NoTitleBar" >
         <activity android:label="@string/app_name" android:name=".ui.SplashPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAccountPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAuthPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserLoginPage" android:screenOrientation="portrait"/>
-        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserFindPswPage" android:screenOrientation="portrait"/>
+        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserFindPswPage" android:screenOrientation="portrait" android:launchMode="singleTask"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserRegPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAlterPswPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserManagePage" android:screenOrientation="portrait"/>
@@ -77,6 +77,7 @@
   		<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.SystemNewsPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.InfoNoticesPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.PushMessageSetPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.ApplyMoneyRecordPage" android:screenOrientation="portrait"/>
   		
     	</application>
 

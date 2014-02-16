@@ -77,7 +77,7 @@
             android:fadingEdge="none"
             android:scrollbars="none"
             bind:field="applyMoneyRecords"
-            bind:itemViewId="applyMoneyRecordsItemView" />
+            bind:itemViewId="ApplyMoneyRecordItemView" />
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
 </LinearLayout>

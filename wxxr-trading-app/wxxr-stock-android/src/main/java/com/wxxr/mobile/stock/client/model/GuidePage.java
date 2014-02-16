@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
@@ -88,6 +90,10 @@ public abstract class GuidePage extends PageBase {
 	
 	@Command
 	String centerBtnClick(InputEvent event) {
+		
+		if(AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			
+		}
 		hide();
 		return null;
 	}

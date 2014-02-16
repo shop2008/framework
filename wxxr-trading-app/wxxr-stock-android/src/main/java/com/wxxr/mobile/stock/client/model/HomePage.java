@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
+import android.widget.ListView;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -88,7 +89,6 @@ public abstract class HomePage extends PageBase {
 		}
 		final IUIComponent vertionItem = getChild("rpage3");
 		vertionItem.setAttribute(AttributeKeys.title, "版本:" + curVertion);
-		
 		final Runnable[] tasks = new Runnable[1];
 
 		tasks[0] = new Runnable() {

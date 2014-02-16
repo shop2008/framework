@@ -20,8 +20,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="-10dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/sign_bg"
                 android:orientation="horizontal" >
 
@@ -64,25 +64,104 @@
                             bind:field="signed" />
                     </FrameLayout>
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:layout_marginTop="5dp" >
 
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            bind:field="dotSignOrUnSign" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            bind:field="unsignBody" >
 
-                        <TextView
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/icon_unsigned" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="今日签到可领取"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                     />
+                                
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                    bind:field="unSignAwardAmount" />
+                                
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="积分"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                     />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#A69F9B"
-                            android:layout_marginTop="5dp"
-                            android:textSize="11sp"
-                            android:text="今日签到已领取10积分"
-                            bind:field="signAwardAmount" />
-                    </LinearLayout>
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            bind:field="signedBody" >
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/icon_signed" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="今日签到已领取"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                     />
+                                
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                    bind:field="signAwardAmount" />
+                                
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="积分"
+                                    android:textColor="#A69F9B"
+                                    android:textSize="11sp"
+                                     />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -111,9 +190,9 @@
                             android:layout_margin="2dp"
                             android:text="0"
                             android:textColor="@color/red"
-                           	bind:field="signnedDays"
-                            android:textSize="23sp" />
-                        
+                            android:textSize="23sp"
+                            bind:field="signnedDays" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -214,7 +293,7 @@
                     android:textColor="#FDFDFE"
                     android:textSize="15sp" />
             </LinearLayout>
-      </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

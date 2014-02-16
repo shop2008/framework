@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+import java.util.Map;
 
 import android.os.SystemClock;
 
@@ -39,144 +41,128 @@ import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 
 /**
  * 提现金界面
+ * 
  * @author renwenjie
  */
-@View(name="userWithDrawCashPage", withToolbar=true, description="提现金")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.withdraw_cath_page_layout")
-public abstract class UserWithDrawCashPage extends PageBase{
+@View(name = "userWithDrawCashPage", withToolbar = true, description = "提现金")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.withdraw_cath_page_layout")
+public abstract class UserWithDrawCashPage extends PageBase {
 
-	
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
-	
 	@Bean(type = BindingType.Service)
 	IArticleManagementService articleService;
-	
+
 	@Bean(type = BindingType.Pojo, express = "${articleService.withdrawalNoticeArticle}")
 	BindableListWrapper<ArticleBean> articleBean;
-	
-	@Bean(type=BindingType.Pojo,express="${usrService.myUserInfo}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
 	UserBean user;
-	
-	@Bean(type=BindingType.Pojo, express="${usrService.userAssetBean}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.userAssetBean}")
 	UserAssetBean userAssetBean;
-	
-	@Bean(type=BindingType.Pojo, express="${usrService.userAuthInfo}")
+
+	@Bean(type = BindingType.Pojo, express = "${usrService.userAuthInfo}")
 	AuthInfo authInfoBean;
-	
-	@Field(valueKey="text", binding="${userAssetBean!=null?userAssetBean.usableBal:''}",converter="stockL2StrConvertor")
+
+	@Field(valueKey = "text", binding = "${userAssetBean!=null?userAssetBean.usableBal:''}", converter = "stockL2StrConvertor")
 	String avaliCashAmount;
-	
-	
-	@Bean(type=BindingType.Service)
+
+	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
-	
-	@Field(
-			valueKey="text", 
-			attributes={@Attribute(name="enabled", value="${checked}")}
-			)
+
+	@Field(valueKey = "text", attributes = { @Attribute(name = "enabled", value = "${checked}") })
 	String commitBtn;
-	
-	
-	@Convertor(
-			params={
-				@Parameter(name="replace",value="x")
-				}
-			)
+
+	@Convertor(params = { @Parameter(name = "replace", value = "x") })
 	String2StringConvertor s2sConvertor;
-	
-	@Convertor(
-			params={
-					@Parameter(name="format", value="%.2f"),
-					@Parameter(name="formatUnit", value="元"),
-					@Parameter(name="multiple", value="100.0f"),
-					@Parameter(name="nullString",value="0.00元")
-			})
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.2f"),
+			@Parameter(name = "formatUnit", value = "元"),
+			@Parameter(name = "multiple", value = "100.0f"),
+			@Parameter(name = "nullString", value = "0.00元") })
 	StockLong2StringConvertor stockL2StrConvertor;
-	
-	@Convertor(params={@Parameter(name="format", value="%.0f")})
+
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f") })
 	String2StringConvertor s2sConvertorBanNum;
-	
-	@Field(valueKey="text", binding="${callBack.applyAmount}")
+
+	@Field(valueKey = "text", binding = "${callBack.applyAmount}")
 	String availCashAmountET;
-	
-	@Field(valueKey="checked", binding="${checked}")
+
+	@Field(valueKey = "checked", binding = "${checked}")
 	boolean readChecked;
-	
+
 	@Bean
 	boolean checked = true;
-	
+
 	@Bean
 	UserApplyCashCallBack callBack = new UserApplyCashCallBack();
-	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankNum:''}", converter="s2sConvertorBanNum")
+
+	@Field(valueKey = "text", binding = "${authInfoBean!=null?authInfoBean.bankNum:null}")
 	String bankNum;
-	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankAddr:'--'}")
+
+	@Field(valueKey = "text", binding = "${authInfoBean!=null?authInfoBean.bankAddr:'--'}")
 	String bankAddr;
-	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.bankName:'--'}")
+
+	@Field(valueKey = "text", binding = "${authInfoBean!=null?authInfoBean.bankName:'--'}")
 	String bankName;
-	
-	@Field(valueKey="text", binding="${authInfoBean!=null?authInfoBean.accountName:''}", converter="s2sConvertor")
+
+	@Field(valueKey = "text", binding = "${authInfoBean!=null?authInfoBean.accountName:''}", converter = "s2sConvertor")
 	String accountName;
-	
-	@Menu(items = { "left","right" })
+
+	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
-	
+
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
 	}
-	
-	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+
+	@Command(uiItems = { @UIItem(id = "right", label = "提现记录", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "UserSignPage") })
 	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
 
-	@Command(
-			navigations = { 
-					@Navigation(
-							on = "StockAppBizException", 
-							message = "%m%n", 
-							params = {
-									@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-									@Parameter(name = "title", value = "错误")
-									}
-							) 
-					}
-			)
-	@ExeGuard(title = "提取现金", message = "正在处理，请稍候...", silentPeriod = 200)
-	String commit(InputEvent event) {
-		
+	@Command(navigations = {
+			@Navigation(on = "InputPswDialog", showDialog = "InputPswDialog"),
+			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
+					@Parameter(name = "autoClosed", type =
+
+					ValueType.INETGER, value = "2"),
+					@Parameter(name = "title", value = "错误") }) })
+	CommandResult commit(InputEvent event) {
+
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-		
-			SystemClock.sleep(500);
+
 			if (tradingService != null) {
-				
-				
+
 				if (!StringUtils.isBlank(callBack.getApplyAmount())) {
-					
-					if(userAssetBean!=null) {
+
+					if (userAssetBean != null) {
 						long useableBalance = userAssetBean.getUsableBal();
-						if(useableBalance < Long.parseLong(callBack.getApplyAmount())*100) {
+						if (useableBalance < Long.parseLong(callBack
+								.getApplyAmount()) * 100) {
 							throw new StockAppBizException("余额不足!");
 						}
 					}
-					tradingService.applyDrawMoney(Long.parseLong(callBack.getApplyAmount())*100);
+					
 				} else {
-					tradingService.applyDrawMoney(-1l);
+					throw new StockAppBizException("请输入正确的金额");
 				}
-			}
-			hide();
+			} 
+			CommandResult result = new CommandResult();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("type", "WithDrawCash");
+			map.put("moneyAmount", callBack.getApplyAmount());
+			result.setPayload(map);
+			result.setResult("InputPswDialog");
+			return result;
 		}
 		return null;
 	}
-	
 
-	
 	@Command
 	String setReadChecked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
@@ -186,29 +172,26 @@ public abstract class UserWithDrawCashPage extends PageBase{
 		}
 		return null;
 	}
-	
-	/*@OnShow
-	protected void initData() {
-		this.readChecked = true;
-		this.readCheckedField.setValue(true);
-	}*/
-	
-	@Command(
-			commandName="withDrawCashRules",
-			navigations={@Navigation(on="OK", showPage="webPage")}
-			)
-	
-	CommandResult withDrawCashRules(InputEvent event) { 
+
+	/*
+	 * @OnShow protected void initData() { this.readChecked = true;
+	 * this.readCheckedField.setValue(true); }
+	 */
+
+	@Command(commandName = "withDrawCashRules", navigations = { @Navigation(on = "OK", showPage = "webPage") })
+	CommandResult withDrawCashRules(InputEvent event) {
 		CommandResult result = new CommandResult();
-		if(articleBean != null)
-			result.setPayload((articleBean.getData()!=null)&&(articleBean.getData().size()>0)?articleBean.getData().get(0).getArticleUrl():null);
+		if (articleBean != null)
+			result.setPayload((articleBean.getData() != null)
+					&& (articleBean.getData().size() > 0) ? articleBean
+					.getData().get(0).getArticleUrl() : null);
 		result.setResult("OK");
-		
+
 		return result;
 	}
-	
+
 	@OnUIDestroy
-	protected  void clearData() {
+	protected void clearData() {
 		callBack.setApplyAmount("");
 	}
 }

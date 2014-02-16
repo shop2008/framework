@@ -6,6 +6,11 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.List;
 
+
+
+import android.os.SystemClock;
+
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -22,9 +27,13 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.bean.AdStatusBean;
+import com.wxxr.mobile.stock.app.bean.HomePageMenu;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
@@ -55,11 +64,19 @@ public abstract class MainHomeView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getHomeMenuList()}")//,enableWhen="${idManager.userAuthenticated}")
-    List<BaseMenuItem> homeMenuList;
+	@Bean(type=BindingType.Pojo, express="${tradingService.getHomeMenuList()}")
+	HomePageMenu homeMenuBean;
 	
-	@Field(valueKey="options",binding="${homeMenuList!=null?homeMenuList:null}")//, upateAsync=true)
+	
+	@Bean(type=BindingType.Pojo, express="${articleService.getAdStatusBean()}")
+	AdStatusBean adStatusBean;
+	
+	
+	@Field(valueKey="options",binding="${homeMenuList!=null?homeMenuList:null}")
 	List<BaseMenuItem> homeView;
+	
+	@Bean
+	boolean headerVisible = true;
 	DataField<List> homeViewField;
 	
 	
@@ -70,15 +87,22 @@ public abstract class MainHomeView extends ViewBase{
 	@Menu(items = { "left", "right" })
 	IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style",visibleWhen="${adStatusBean.off==true}")})
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
+		if(adStatusBean != null) {
+			adStatusBean.setOff(false);
+			
+			//registerBean("adStatusBean", adStatusBean);
+		}
+		SystemClock.sleep(500);
+		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
 		return null;
 	}
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style") }, navigations = { @Navigation(on = "*", showPage = "GeGuStockPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style",visibleWhen="${false}") })
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
@@ -105,22 +129,6 @@ public abstract class MainHomeView extends ViewBase{
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**交易盘类型  0-模拟盘；1-实盘*/
 	int type=0;
 	/**状态 0-未结算 ； 1-已结算*/
@@ -132,8 +140,8 @@ public abstract class MainHomeView extends ViewBase{
 			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage"),
 			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
 			@Navigation(on="operationDetails",showPage="OperationDetails",params={@Parameter(name = "add2BackStack", value = "false")}),
-			@Navigation(on="60",showPage="userNewsPage"),
-			@Navigation(on="61",showPage="userNewsPage"),
+			@Navigation(on="60",showPage="SystemNewsPage"),
+			@Navigation(on="61",showPage="InfoNoticesPage"),
 			@Navigation(on="62",showPage="userNickSet"),
 			@Navigation(on="63",showPage="userAuthPage"),
 			@Navigation(on="TBuyT3TradingPageView",showPage="TBuyT3TradingPageView"),
@@ -145,7 +153,9 @@ public abstract class MainHomeView extends ViewBase{
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
-				List<BaseMenuItem> menuList = tradingService.getHomeMenuList();
+				List<BaseMenuItem> menuList = null;
+				if(homeMenuBean != null)
+					menuList = homeMenuBean.getMenuItems();
 				if(menuList!=null && menuList.size()>0){
 					BaseMenuItem menu = menuList.get(position);
 					if(menu instanceof ChampionShipMessageMenuItem) {
@@ -196,5 +206,12 @@ public abstract class MainHomeView extends ViewBase{
 				}
 			}		
 		return null;
-	}		
+	}	
+	
+	/*@Command
+	String closeBanner(InputEvent event) {
+		headerVisible = false;
+		registerBean("headerVisible", headerVisible);
+		return null;
+	}*/
 }

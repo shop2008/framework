@@ -1,39 +1,23 @@
 package com.wxxr.mobile.stock.client.model;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import android.os.SystemClock;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.microkernel.api.KUtils;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.Menu;
-import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnHide;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
-import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.api.CommandResult;
-import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
-import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 /**
@@ -45,7 +29,33 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.user_page_layout")
 public abstract class UserPage extends PageBase {
 
-	@Bean(type = BindingType.Service)
+	
+	/*@Bean(type=BindingType.Service)
+	IMockDataService service;*/
+	@Bean(type=BindingType.Service)
+	IUserManagementService service;
+	
+	@Bean(type=BindingType.Pojo, express="${service.getMyUserInfo()}")
+	UserBean userBean;
+	
+	@Bean(type=BindingType.Pojo, express="${service!=null?service.getMyPersonalHomePage(false):null}")
+	PersonalHomePageBean personalHomePageBean;
+	
+	@Field(valueKey="options", binding="${personalHomePageBean!=null?personalHomePageBean.allist:null}", 
+			attributes={
+			@Attribute(name="joinShareCount", value="${personalHomePageBean!=null?personalHomePageBean.virtualCount:0}"), 
+			@Attribute(name="challengeShareCount", value="${personalHomePageBean!=null?personalHomePageBean.actualCount:0}"),
+			@Attribute(name="userHomeBackUri", value="${userBean!=null?userBean.homeBack:'resourceId:drawable/back1'}"),
+			@Attribute(name="userIconUri", value="${userBean!=null?userBean.userPic:'resourceId:drawable/head4'}"),
+			@Attribute(name="totalScoreProfit", value="${personalHomePageBean!=null?personalHomePageBean.voucherVol:0}"),
+			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.0}")
+	})
+	List<GainBean> successTradeRecords;
+	
+	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
+			@Parameter(name = "nullString", value = "0") })
+	StockLong2StringConvertor shareNumConvertor;
+	/*@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
 	@Bean(type = BindingType.Pojo, express = "${loginMgr.myUserInfo}")
@@ -59,39 +69,39 @@ public abstract class UserPage extends PageBase {
 
 	@Bean(type = BindingType.Pojo, express = "${usrService.getMyPersonalHomePage(false)}")
 	PersonalHomePageBean personalBean;
-	/**
+	*//**
 	 * 用户形象照
-	 */
+	 *//*
 	@Field(valueKey = "imageURI", binding = "${(user!=null&&user.userPic!=null)?user.userPic:'resourceId:drawable/head4'}")
 	String userIcon;
 
-	/**
+	*//**
 	 * 用户昵称
-	 */
+	 *//*
 	@Field(valueKey = "text", binding = "${(user!=null&&user.nickName!=null)?user.nickName:'设置昵称'}", enableWhen="${(user!=null&&user.nickName!=null)?false:true}")
 	String userNickName;
 
-	/**
+	*//**
 	 * 累计实盘积分
-	 */
+	 *//*
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.voucherVol:null}", converter = "scoreConvertor")
 	String totalScore;
 
-	/**
+	*//**
 	 * 累计总收益
-	 */
+	 *//*
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.totalProfit:null}", converter = "profitConvertor")
 	String totalProfit;
 
-	/**
+	*//**
 	 * 挑战交易盘分享多少笔
-	 */
+	 *//*
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.actualCount:null}", converter = "shareNumConvertor")
 	String challengeSharedNum;
 
-	/**
+	*//**
 	 * 参赛交易盘分享多少笔
-	 */
+	 *//*
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter = "shareNumConvertor")
 	String joinSharedNum;
 
@@ -144,11 +154,11 @@ public abstract class UserPage extends PageBase {
 			@Parameter(name = "nullString", value = "0") })
 	StockLong2StringConvertor shareNumConvertor;
 
-	/*@OnHide
+	@OnHide
 	void onHidePage() {
 		loadingExpireTime = true;
 	}
-*/
+
 	boolean jNoSharedFlag = false;
 	boolean cNoSharedFlag = false;
 	
@@ -181,12 +191,12 @@ public abstract class UserPage extends PageBase {
 		};
 		AppUtils.runOnUIThread(tasks[0], 0, TimeUnit.SECONDS);
 	}
-	/**
+	*//**
 	 * 挑战交易盘-"查看更多"事件处理
 	 * 
 	 * @param event
 	 * @return
-	 */
+	 *//*
 	@Command(commandName = "challengeViewMore", description = "To Challenge View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
 	CommandResult challengeViewMore(InputEvent event) {
 
@@ -199,13 +209,13 @@ public abstract class UserPage extends PageBase {
 		return result;
 	}
 
-	/**
+	*//**
 	 * 
 	 * 参赛交易盘-"查看更多"事件处理
 	 * 
 	 * @param event
 	 * @return
-	 */
+	 *//*
 	@Command(commandName = "joinViewMore", description = "To Join View More", navigations = { @Navigation(on = "OK", showPage = "userViewMorePage") })
 	CommandResult joinViewMore(InputEvent event) {
 		CommandResult result = new CommandResult();
@@ -234,7 +244,7 @@ public abstract class UserPage extends PageBase {
 			}
 			CommandResult result = null;
 			if (virtualBean != null) {
-				/** 交易盘ID */
+				*//** 交易盘ID *//*
 				Long accId = virtualBean.getTradingAccountId();
 				String tradeStatus = virtualBean.getOver();
 				Boolean isVirtual = virtualBean.getVirtual();
@@ -284,7 +294,7 @@ public abstract class UserPage extends PageBase {
 			}
 			CommandResult result = null;
 			if (actualBean != null) {
-				/** 交易盘ID */
+				*//** 交易盘ID *//*
 				Long accId = actualBean.getTradingAccountId();
 				String tradeStatus = actualBean.getOver();
 				Boolean isVirtual = actualBean.getVirtual();
@@ -314,12 +324,12 @@ public abstract class UserPage extends PageBase {
 		return null;
 	}
 
-	/**
+	*//**
 	 * 设置昵称
 	 * 
 	 * @param event
 	 * @return
-	 */
+	 *//*
 	@Command(commandName = "setNickName", description = "To Personal_setting UI", navigations = { @Navigation(on = "SUCCESS", showPage = "userNickSet") })
 	String setNickName(InputEvent event) {
 
@@ -331,6 +341,15 @@ public abstract class UserPage extends PageBase {
 		if(usrService!=null) {
 			usrService.getMyPersonalHomePage(false);
 		}
+		return null;
+	}*/
+	
+	@Command
+	String handleTradeRecordItemClick(InputEvent event) {
+		
+		int position = (Integer) event.getProperty("position");
+		
+		System.out.println("+++position+++"+position);
 		return null;
 	}
 }

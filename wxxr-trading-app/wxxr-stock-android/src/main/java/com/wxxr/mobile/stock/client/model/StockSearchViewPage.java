@@ -93,8 +93,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Command
 	String handleItemClick(InputEvent event) {
 		if (event.getProperty("position") instanceof Integer) {
-			List<StockBaseInfo> stocks = (searchListBean != null ? searchListBean
-					.getSearchResult() : null);
+			List<StockBaseInfo> stocks = null;
 			int position = (Integer) event.getProperty("position");
 			if (stocks != null && stocks.size() > 0) {
 				StockBaseInfo bean = stocks.get(position);

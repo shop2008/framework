@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.binding;
 
 import java.util.Map;
 
+import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.core.ui.api.IBindingContext;
 import com.wxxr.mobile.core.ui.api.IFieldBinder;
 import com.wxxr.mobile.core.ui.api.IFieldBinding;
@@ -16,7 +17,7 @@ public class ImageRefreshListViewFieldBinder implements IFieldBinder {
 	public IFieldBinding createBinding(IBindingContext context,
 			String fieldName, Map<String, String> attrs) {
 		// TODO Auto-generated method stub
-		return null;
+		return new ImageRefreshListViewFieldBinding((IAndroidBindingContext)context, fieldName, attrs);
 	}
 
 	@Override

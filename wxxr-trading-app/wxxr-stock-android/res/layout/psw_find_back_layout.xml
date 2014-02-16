@@ -45,57 +45,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
-        android:text="@string/tv_quick_reg_des"
+        android:text="重置好的密码将直接以短信的方式发送到你的手机上"
         android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="5dip"
-        android:orientation="horizontal" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dip"
-            android:layout_weight="0.8"
-            android:background="@color/white" >
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_toRightOf="@id/iv_phone"
-                android:background="@null"
-                android:hint="输入短信验证码"
-                android:inputType="number"
-                bind:field="msgVerifyCode"
-                bind:on_FocusChanged="fetchVerifyCode" />
-        </RelativeLayout>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:layout_weight="1"
-            android:background="@drawable/verify_code"
-            bind:field="verifyCodeBtn"
-            bind:onClick="acquireVerifyCode"
-            android:text="点击获取验证码" />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="20dp"
-        style="@style/LoginRegisterBtnStyle"
-        android:text="下一步"
-        bind:field="*"
-        bind:on_Click="next@EditablePageBtnClickedDecorator" />
+   	<Button 
+   	    android:layout_width="match_parent"
+   	    android:layout_height="60dp"
+   	    style="@style/WhiteBtnStyle"
+   	    android:layout_marginLeft="5dp"
+   	    android:layout_marginRight="5dp"
+   	    android:layout_marginTop="3dp"
+   	    android:text="点击发送密码到手机"
+   	    bind:field="findPasswordBtn"
+   	    bind:on_Click="sendPasswordToMobile"
+   	    />
 
 </LinearLayout>

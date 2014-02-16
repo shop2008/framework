@@ -27,7 +27,6 @@ import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 //import com.wxxr.mobile.stock.client.bean.AuthInfoBean;
-import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
 
 /**
@@ -49,24 +48,24 @@ public abstract class UserAuthPage extends PageBase {
 	AuthInfo authBean;
 	
 	/**手机未认证部分*/
-	@Field(valueKey="visible")
+	@Field(valueKey="visible", binding="${false}")
 	boolean mobileUnAuthBody;
 	
 	/**手机已认证部分*/
-	@Field(valueKey="visible")
+	@Field(valueKey="visible", binding="${true}")
 	boolean mobileAuthedBody;
 	
 	/**提现认证未认证部分*/
-	@Field(valueKey="visible", binding="${authBean!=null?false:true}")
+	@Field(valueKey="visible", binding="${authBean!=null&&authBean.bankNum!=null&&authBean.bankNum.length()>0?false:true}")
 	boolean bankCardUnAuthBody;
 	
 	/**提现认证已认证部分*/
-	@Field(valueKey="visible",binding="${authBean!=null?true:false}")
+	@Field(valueKey="visible",binding="${authBean!=null&&authBean.bankNum!=null&&authBean.bankNum.length()>0?true:false}")
 	boolean bankCardAuthedBody;
 	/**
 	 * 认证手机号
 	 */
-	@Field(valueKey="text", binding="${user!=null?user.phoneNumber:'--'}")
+	@Field(valueKey="text", binding="${user!=null&&user.phoneNumber!=null?user.phoneNumber:'--'}")
 	String authMobileNum;
 	
 	@Convertor(
@@ -105,7 +104,7 @@ public abstract class UserAuthPage extends PageBase {
 	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 

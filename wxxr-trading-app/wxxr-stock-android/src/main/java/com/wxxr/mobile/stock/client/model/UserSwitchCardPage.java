@@ -47,6 +47,16 @@ public abstract class UserSwitchCardPage extends PageBase {
 	@Field(valueKey = "text", binding = "${callBack.bankNum}")
 	String bankNum;
 
+	@Field(valueKey="text" , binding="${callBack.accountName}")
+	String alteredAccountName;
+	
+	@Field(valueKey="visible", binding="${authBean.confirmed == true}")
+	boolean confirmedBody;
+	
+	@Field(valueKey="visible", binding="${authBean.confirmed == false}")
+	boolean unConfirmedBody;
+	
+	
 	@Bean
 	UseSwitchCardCallBack callBack = new UseSwitchCardCallBack();
 

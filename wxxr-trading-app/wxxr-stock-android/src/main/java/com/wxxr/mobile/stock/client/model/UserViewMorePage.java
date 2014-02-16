@@ -9,6 +9,7 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -103,6 +104,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	 * @return
 	 */
 	@Command
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showActualRecords(InputEvent event) {
 		curItemId = 0;
 		registerBean("curItemId", 0);
@@ -122,6 +124,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	 * @return
 	 */
 	@Command
+	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showVirtualRecords(InputEvent event) {
 		
 		curItemId = 1;

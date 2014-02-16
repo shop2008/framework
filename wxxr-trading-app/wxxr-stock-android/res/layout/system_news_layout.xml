@@ -9,7 +9,7 @@
     bind:on_PullRefresh="handleRefresh"
     >
     
-    <ListView
+    <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
@@ -18,8 +18,8 @@
         android:scrollbars="none"
         android:fadingEdge="none"
         android:cacheColorHint="#00000000"
-        bind:itemViewId="infoNoticesItemSelector"
-        bind:field="newsInfos"
+        bind:itemViewId="SystemNewsItemSelector"
+        bind:field="systemNewsInfos"
         bind:on_PinItemClick="handleItemClick"
         />
 </com.wxxr.mobile.stock.client.widget.PullToRefreshView>

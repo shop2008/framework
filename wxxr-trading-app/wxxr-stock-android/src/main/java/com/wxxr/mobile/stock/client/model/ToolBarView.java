@@ -12,19 +12,23 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.event.api.IBroadcastEvent;
 import com.wxxr.mobile.core.event.api.IEventListener;
 import com.wxxr.mobile.core.event.api.IEventRouter;
+import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IUICommand;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
+import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.ui.StockAppToolbar;
 import com.wxxr.mobile.stock.client.utils.Utils;
@@ -41,6 +45,12 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	@Field(valueKey="imageURI")
 	String leftIcon;
 	
+	
+	@Bean(type=BindingType.Service)
+	IArticleManagementService articleService;
+	
+	@Bean(type=BindingType.Pojo, express="${articleService.getAdStatusBean()}")
+	AdStatusBean adStatusBean;
 	DataField<String> leftIconField;
 	
 	@Field(valueKey="imageURI")
@@ -94,12 +104,14 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	@Override
 	public IUIComponent getChild(String name) {
 		if("leftIcon".equals(name)){
+			//System.out.println("adStatus----ToolBarView--1----");
 			IMenu menu = getToolbarMenu();
 			if(menu != null){
 				IUICommand cmd  = menu.getCommand("left");
 				if(cmd != null){
+				//	System.out.println("adStatus----ToolBarView--2----"+cmd.getAttribute(AttributeKeys.visible));
 					this.leftIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
-					this.leftIconField.setAttribute(AttributeKeys.visible,true);
+					this.leftIconField.setAttribute(AttributeKeys.visible,cmd.getAttribute(AttributeKeys.visible)==null?true:cmd.getAttribute(AttributeKeys.visible));
 				}else{
 					this.leftIconField.setAttribute(AttributeKeys.visible,false);
 					this.leftIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
@@ -173,6 +185,6 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	@OnHide
 	void unRegisterEventListener() {
 		pushMessageField.setValue(false);
-		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
+		//AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
 	}
 }

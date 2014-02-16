@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.client.module;
 
 import android.support.v4.view.ViewPager;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.wxxr.mobile.android.ui.module.AbstractWorkbenchManagerModule;
@@ -30,8 +31,11 @@ import com.wxxr.mobile.stock.client.binding.GeGuMinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
+import com.wxxr.mobile.stock.client.binding.ImageRefreshListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.ListViewAttributeUpdater;
+import com.wxxr.mobile.stock.client.binding.ListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.PageSwiperViewFieldBinder;
@@ -54,8 +58,10 @@ import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
 import com.wxxr.mobile.stock.client.widget.GMinuteLineView;
 import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
+import com.wxxr.mobile.stock.client.widget.ImageRefreshListView;
 import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
+import com.wxxr.mobile.stock.client.widget.ListViewKeys;
 import com.wxxr.mobile.stock.client.widget.MinuteLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
@@ -89,7 +95,8 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, ViewPagerIndexGroup.class, new ViewPagerIndexGroupFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, imageViewPager.class, new ImageViewPagerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GMinuteLineView.class, new GeGuMinuteLineViewFieldBinder());
-		
+		//mgr.registerFieldBinder(UIComponent.class, ListView.class, new ListViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, ImageRefreshListView.class, new ImageRefreshListViewFieldBinder());
 	}
 
 	@Override
@@ -113,10 +120,12 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
 		ImageRefreshViewKeys.registerKeys(mgr);
+		//ListViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
 		mgr.registerAttributeUpdater("validationErrors", new EditTextAttributeUpdater());
+		//mgr.registerAttributeUpdater("headerVisible", new ListViewAttributeUpdater());
 	}
 
 	@Override

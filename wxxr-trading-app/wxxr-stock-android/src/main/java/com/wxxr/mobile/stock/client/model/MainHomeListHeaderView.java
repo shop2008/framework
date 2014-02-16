@@ -5,11 +5,13 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
 
+import android.os.SystemClock;
+
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
-import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -20,8 +22,10 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
@@ -30,18 +34,26 @@ import com.wxxr.mobile.stock.app.service.IArticleManagementService;
  * @author neillin
  *
  */
-@View(name="MainHomeListHeaderView")
+@View(name="MainHomeListHeaderView", provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.home_view_list_header")
 public abstract class MainHomeListHeaderView extends ViewBase{
-	private static final Trace log = Trace.register(MainHomeListHeaderView.class);
+	//private static final Trace log = Trace.register(MainHomeListHeaderView.class);
 	
+	@Field(valueKey="visible", binding="${adStatusBean.off==false}")
+	boolean headerContainer;
 	
+	/*@Bean
+	boolean isShow = true;*/
 	/**获取文章*/
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
 	
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
+	
+	
+	@Bean(type=BindingType.Pojo, express="${articleService.getAdStatusBean()}")
+	AdStatusBean adStatusBean;
 	
 	@Bean(express="${articleService.getHomeArticles(0, 4)}")
 	BindableListWrapper<ArticleBean> myArticles;
@@ -53,7 +65,7 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 	/**
 	 * 创建买入页跳转
 	 * 
-	 * */
+	 */
 	@Command(navigations={
 		@Navigation(on="createBuy",showPage="creataBuyTradePage"),
 		@Navigation(on = "*", message = "请先登录", params = {
@@ -78,4 +90,15 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 			v.hide();
 		return "";
 	}	
+	
+	@Command
+	String closeBanner(InputEvent event) {
+	
+		
+		if(adStatusBean != null)
+			adStatusBean.setOff(true);
+		SystemClock.sleep(500);
+		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
+		return null;
+	}
 }

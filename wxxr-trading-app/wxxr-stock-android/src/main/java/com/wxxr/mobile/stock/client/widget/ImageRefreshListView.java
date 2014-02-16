@@ -285,12 +285,12 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 		return super.onTouchEvent(event);
 	}
 	
-	public void setTotalScoreProfit(String totalScore) {
-		totalScoreProfit.setText(totalScore);
+	public void setTotalScoreProfit(Long totalScore) {
+		totalScoreProfit.setText(String.valueOf(totalScore));
 	}
 	
-	public void setTotalMoneyProfit(String totalMoney) {
-		totalMoneyProfit.setText(totalMoney);
+	public void setTotalMoneyProfit(Double totalMoney) {
+		totalMoneyProfit.setText(String.valueOf(totalMoney));
 	}
 	
 	public void setUserHomeBack(String imageUri) {
