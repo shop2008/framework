@@ -224,9 +224,9 @@ public class ConverterUtils {
 	private static List<Long> generateOptions(String maxAmountS) {
 		List<Long> list = new ArrayList<Long>();
 		if (StringUtils.isNumeric(maxAmountS)) {
-			Long maxAmount =  Long.valueOf(maxAmountS);
+			Long maxAmount =  Long.valueOf(maxAmountS)/10000/100;
 			if (maxAmount!=null) {
-				for (long i = 1; i <= maxAmount/10000; i++) {
+				for (long i = 1; i <= maxAmount; i++) {
 					list.add(i) ;
 				}
 			}
