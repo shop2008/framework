@@ -37,5 +37,9 @@ public class SimpleVO implements Serializable {
 	public void setData(String data) {
 		this.data = data;
 	}
+	@Override
+	public String toString() {
+		return "SimpleVO [data=" + data + "]";
+	}
     
 }
