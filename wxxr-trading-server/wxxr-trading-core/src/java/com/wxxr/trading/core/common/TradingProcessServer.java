@@ -3,18 +3,20 @@
  */
 package com.wxxr.trading.core.common;
 
+import java.util.Date;
+
 import com.wxxr.common.jmx.annotation.ServiceMBean;
 import com.wxxr.stock.common.service.AbstractModule;
 import com.wxxr.stock.common.service.api.IMobileStockAppContext;
 import com.wxxr.stock.common.service.api.ISchedulerContext;
 import com.wxxr.stock.common.service.api.ITaskExecutor;
+import com.wxxr.stock.common.service.api.ITaskScheduler;
 import com.wxxr.trading.core.api.ITradingCodeManager;
-import com.wxxr.trading.core.api.ITradingContext;
 import com.wxxr.trading.core.api.ITradingManagment;
 import com.wxxr.trading.core.api.ITradingStrategy;
 import com.wxxr.trading.core.api.ITradingTransactionContext;
 import com.wxxr.trading.core.model.ITrading;
-import com.wxxr.trading.core.model.ITradingCode;
+import com.wxxr.trading.core.storage.account.TxStatus;
 import com.wxxr.trading.core.storage.transaction.AbstractTransaction;
 import com.wxxr.trading.core.storage.transaction.ITransactionStorage;
 
@@ -104,6 +106,8 @@ public class TradingProcessServer extends AbstractModule{
 		public void setTrading(ITrading trading) {
 			this.trading = trading;
 		}
-		
+		public void notifyTransactionSuccess(Long transactionId){
+			context.getService(ITaskScheduler.class).scheduleTask("T_TRANSACTION_EVENT", transactionId+"", new Date());
+		}
 	}
 }

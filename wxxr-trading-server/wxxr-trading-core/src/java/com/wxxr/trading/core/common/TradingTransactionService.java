@@ -16,6 +16,7 @@ import com.wxxr.trading.core.api.ITradingTransactionHandler;
 import com.wxxr.trading.core.api.ITradingTransactionService;
 import com.wxxr.trading.core.exception.TradingException;
 import com.wxxr.trading.core.model.ITradingTransaction;
+import com.wxxr.trading.core.storage.account.TxStatus;
 import com.wxxr.trading.core.storage.transaction.AbstractTransaction;
 import com.wxxr.trading.core.storage.transaction.ITransactionStorage;
 
@@ -34,10 +35,12 @@ public class TradingTransactionService  extends AbstractModule implements ITradi
 	@Override
 	public void processTransaction(ITradingTransactionContext transactionContext,
 			ITradingTransaction tradingTransaction) throws TradingException {
-		Long id=context.getService(ITransactionStorage.class).saveOrUpdate((AbstractTransaction)tradingTransaction);
+		Long transactionId=context.getService(ITransactionStorage.class).saveOrUpdate((AbstractTransaction)tradingTransaction);
 		ITradingTransactionHandler<ITradingTransaction> handler=handlers.get(tradingTransaction.getTransactionCode());
 		handler.execute(transactionContext, tradingTransaction);
-		notifyTransactionSuccess(id);
+		AbstractTransaction transaction=context.getService(ITransactionStorage.class).get(transactionId);
+		transaction.setStatus(TxStatus.DONE);
+		transactionContext.notifyTransactionSuccess(transactionId);
 	}
 
 	/* (non-Javadoc)
@@ -76,8 +79,6 @@ public class TradingTransactionService  extends AbstractModule implements ITradi
 	protected void unregisterService(IMobileStockAppContext ctx) {
 		ctx.unregisterService(ITradingTransactionService.class, this);
 	}
-	protected void notifyTransactionSuccess(Long transactionId){
-		context.getService(ITaskScheduler.class).scheduleTask("T_TRANSACTION_SUCCESS", transactionId+"", new Date());
-	}
+	
 
 }

@@ -11,4 +11,6 @@ import com.wxxr.trading.core.model.ITrading;
  */
 public interface ITradingTransactionContext {
 	ITrading getTrading();
+	void notifyTransactionSuccess(Long transactionId);
+
 }

@@ -17,7 +17,12 @@
 			<groupId>wxxr-core-framework</groupId>
 			<artifactId>wxxr-core-framework</artifactId>
 			<version>${pom.currentVersion}</version>
-		</dependency>   	
+		</dependency>
+		<dependency>
+	      <groupId>wxxr</groupId>
+	      <artifactId>wxxr-stock-core</artifactId>
+	      <version>${pom.currentVersion}</version>
+	    </dependency>
     		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
