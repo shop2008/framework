@@ -89,7 +89,7 @@ public interface StockUserResource {
 	@POST
 	@Path("/updateNickName")
 	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
+	@Consumes({ "application/json;charset=utf-8" })
 	public ResultBaseVO updateNickName(UserParamVO vo);
 
 	@GET
