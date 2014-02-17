@@ -292,7 +292,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 					log.warn("Error when refresh home page",e);
 				}
 			}
-		}, 100, 10*1000);
+		}, 10, 10*1000);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
