@@ -216,10 +216,16 @@ public class ConverterUtils {
         bean.setVoIdentity(vo.getVoIdentity());
         bean.setVoucherApplyAmount(vo.getVoucherApplyAmount());
         bean.setVoucherRateList(vo.getVoucherRateList());
-        
-        bean.setVirtualOptions(generateOptions(vo.getVirtualApplyAmount()));
-        bean.setVoucherOptions(generateOptions(vo.getVoucherApplyAmount()));
-        bean.setAccualOptions(generateOptions(vo.getApplyAmount()));
+        if (vo.getVoIdentity().equals("T_PLUS_ONE")) {
+        	 bean.setVirtualOptions(generateOptions(vo.getVirtualApplyAmount()));
+             bean.setVoucherOptions(generateOptions(vo.getVoucherApplyAmount()));
+             bean.setAccualOptions(generateOptions(vo.getApplyAmount()));
+		}else{
+			 bean.setVirtualOptions(generateOptions2(vo.getVirtualApplyAmount()));
+		     bean.setVoucherOptions(generateOptions2(vo.getVoucherApplyAmount()));
+		     bean.setAccualOptions(generateOptions2(vo.getApplyAmount()));
+		}
+       
     }
 	private static List<Long> generateOptions(String maxAmountS) {
 		List<Long> list = new ArrayList<Long>();
@@ -228,6 +234,18 @@ public class ConverterUtils {
 			if (maxAmount!=null) {
 				for (long i = 1; i <= maxAmount; i++) {
 					list.add(i) ;
+				}
+			}
+		}
+		return list;
+	}
+	private static List<Long> generateOptions2(String maxAmountS) {
+		List<Long> list = new ArrayList<Long>();
+		if (StringUtils.isNotBlank(maxAmountS)) {
+			String[] ms = maxAmountS.split(",");
+			if (ms!=null&&ms.length>0) {
+				for (String s : ms) {
+					list.add(Long.valueOf(s)/10000/100);
 				}
 			}
 		}
