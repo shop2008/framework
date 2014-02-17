@@ -77,7 +77,8 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean
 	int myHomeAStart = 0;
 
-	int curItemId = 0;
+	
+	int curItemId = 1;
 	@SuppressWarnings("unused")
 	@Menu(items = { "left"})
 	private IMenu toolbar;

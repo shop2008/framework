@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mid_gray"
+    android:background="@color/page_background_color"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -62,7 +62,7 @@
             android:id="@+id/rl_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/bg_up"
+            android:background="@color/white"
             android:clickable="true"
             bind:field="*"
             bind:on_Click="officalSiteClicked" >
@@ -97,7 +97,7 @@
             android:id="@+id/rl_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/bg_middle"
+            android:background="@color/white"
             android:clickable="true"
             bind:field="*"
             bind:on_Click="serviceTel" >
@@ -132,7 +132,7 @@
             android:id="@+id/rl_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/bg_bottom"
+            android:background="@color/white"
             android:clickable="true"
             bind:field="*"
             bind:on_Click="serviceEmail" >

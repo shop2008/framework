@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="ApplyMoneyAuthConfirmDialog")
@@ -73,12 +74,16 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") })})
 	String done(InputEvent event) {
+		
+		hide();
 		userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
-		return null;
+		throw new StockAppBizException("认证成功");
+		//return null;
 	}
 	
 	@Command
 	String cancel(InputEvent event) {
+		hide();
 		return null;
 	}
 }

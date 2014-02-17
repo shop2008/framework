@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" 
     android:orientation="vertical"
+    android:background="#1B1C1E"
     >
 
     <RelativeLayout
@@ -39,11 +40,12 @@
 
         <TextView
             android:id="@+id/user_nick_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/user_icon_back"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/user_icon_back"
+            android:gravity="left"
             android:textColor="@color/white"
             android:textSize="25sp" />
     </RelativeLayout>
@@ -71,9 +73,9 @@
 
             <TextView
                 android:id="@+id/total_score_profit"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:gravity="center"
                 android:textColor="#FF2101"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -94,9 +96,10 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0.00"
+                android:gravity="center"
                 android:id="@+id/total_money_profit"
                 android:textColor="#FF2101"
                 android:textSize="20sp" />

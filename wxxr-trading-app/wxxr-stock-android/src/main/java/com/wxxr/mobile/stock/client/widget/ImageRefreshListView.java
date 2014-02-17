@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.widget;
 
 import java.util.ArrayList;
 
+import com.wxxr.mobile.android.ui.RUtils;
 import com.wxxr.mobile.stock.client.R;
 
 
@@ -297,11 +298,11 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	}
 	
 	public void setUserHomeBack(String imageUri) {
-		userHomeBack.setImageURI(Uri.parse(imageUri));
+		userHomeBack.setImageResource(RUtils.getInstance().getResourceIdByURI(imageUri));
 	}
 	
 	public void setUserIconBack(String imageUri) {
-		userIcon.setImageURI(Uri.parse(imageUri));
+		userIcon.setImageResource(RUtils.getInstance().getResourceIdByURI(imageUri));
 	}
 	
 	public void setUserNickName(String nickName) {

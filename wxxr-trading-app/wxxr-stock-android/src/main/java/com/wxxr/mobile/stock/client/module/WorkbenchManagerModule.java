@@ -31,6 +31,7 @@ import com.wxxr.mobile.stock.client.binding.GeGuMinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
+import com.wxxr.mobile.stock.client.binding.ImageRefreshListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
@@ -56,6 +57,7 @@ import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
 import com.wxxr.mobile.stock.client.widget.GMinuteLineView;
 import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
+import com.wxxr.mobile.stock.client.widget.ImageRefreshListView;
 import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineView;
@@ -93,6 +95,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, imageViewPager.class, new ImageViewPagerViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, GMinuteLineView.class, new GeGuMinuteLineViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, NewDragSortListView.class, new NewDragSortListViewFieldBinder());		
+		mgr.registerFieldBinder(UIComponent.class, ImageRefreshListView.class, new ImageRefreshListViewFieldBinder());
 	}
 
 	@Override
