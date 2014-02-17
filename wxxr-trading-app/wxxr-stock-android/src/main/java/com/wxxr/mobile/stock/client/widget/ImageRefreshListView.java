@@ -290,7 +290,7 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 	}
 	
 	public void setTotalMoneyProfit(Double totalMoney) {
-		totalMoneyProfit.setText(String.valueOf(totalMoney));
+		totalMoneyProfit.setText(String.format("%.2f", totalMoney / 100.0));
 	}
 	
 	public void setUserHomeBack(String imageUri) {

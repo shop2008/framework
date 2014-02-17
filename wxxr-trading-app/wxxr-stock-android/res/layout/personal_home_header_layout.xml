@@ -74,7 +74,7 @@
                 android:id="@+id/total_score_profit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="150000"
+                android:text="0"
                 android:textColor="#FF2101"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -97,7 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="14511.88"
+                android:text="0.00"
                 android:id="@+id/total_money_profit"
                 android:textColor="#FF2101"
                 android:textSize="20sp" />

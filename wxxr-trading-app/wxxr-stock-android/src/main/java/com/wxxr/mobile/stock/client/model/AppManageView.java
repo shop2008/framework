@@ -114,7 +114,11 @@ public abstract class AppManageView extends ViewBase {
 	
 	
 	/**版本*/
-	@Field(valueKey="text")
+	@Field(valueKey="text", binding="${nowVertion}")
+	
+	@Bean
+	String nowVertion = AppUtils.getFramework().getApplicationVersion();
+	
 	String vertionField;
 	
 	@Convertor(
