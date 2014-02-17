@@ -1720,7 +1720,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			
 	private List<TradingAccountMenuItem> getTradingAccountMenuItem(List<TradingAccInfoVO> volist) {
 		List<TradingAccountMenuItem> tradingItemList = null;
-		SimpleDateFormat df = new SimpleDateFormat("MM月DD日");
+		SimpleDateFormat df = new SimpleDateFormat("MM月dd日");
 		if (volist!=null&&volist.size()>0) {
 			tradingItemList = new ArrayList<TradingAccountMenuItem>();
 			for (TradingAccInfoVO vo : volist) {
