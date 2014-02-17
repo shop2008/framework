@@ -82,16 +82,16 @@ public abstract class InfoNoticeItemViewSelector extends ViewBase implements Ite
 	public static Object[] getListData(IUIComponent comp){
 		if(comp.hasAttribute(AttributeKeys.options)){
 			List<Object> result = comp.getAttribute(AttributeKeys.options);
-			return result != null ? Utils.getSortedGroupData(result, "getCreatedDate"): null;
+			return result != null ? Utils.getSortedGroupData(result, "getCreateDate"): null;
 		}
 		if (comp instanceof IDataField) {
 			Object val = ((IDataField<?>) comp).getValue();
 			if (val instanceof List){
 				List<Object> result = (List<Object>) val;
-				return Utils.getSortedGroupData(result, "getCreatedDate");
+				return Utils.getSortedGroupData(result, "getCreateDate");
 			}else if((val != null)&&val.getClass().isArray()){
 				List<Object>  result = Arrays.asList(val);
-				return Utils.getSortedGroupData(result, "getCreatedDate");
+				return Utils.getSortedGroupData(result, "getCreateDate");
 			}
 		}
 		return null;

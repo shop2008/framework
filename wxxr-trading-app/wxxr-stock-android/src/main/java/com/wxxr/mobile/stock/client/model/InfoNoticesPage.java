@@ -39,7 +39,7 @@ public abstract class InfoNoticesPage extends PageBase {
 	protected IMenu toolbar;
 	
 	@Field(valueKey = "text",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
-			@Attribute(name = "enablePullUpRefresh", value= "${false}")})
+			@Attribute(name = "enablePullUpRefresh", value= "${infoNoticeListBean!=null&&infoNoticeListBean.data!=null&&infoNoticeListBean.data.size()>0?true:false}")})
 	String refreshView;
 	
 	@Field(valueKey="options",binding="${infoNoticeListBean!=null?infoNoticeListBean.data:null}")
@@ -56,6 +56,7 @@ public abstract class InfoNoticesPage extends PageBase {
 	CommandResult handleItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
+		System.out.println("-InfoNoticesPage--position--"+position);
 		PullMessageBean message = null;
 		if (infoNoticeListBean != null) {
 			List<PullMessageBean> infoNoticesList = infoNoticeListBean

@@ -88,12 +88,6 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 			return nullString;
 		}
 		try {
-			
-			if(val >=0 && plusString.compareTo("")>0) {
-				plusString = "+";
-			} else {
-				plusString = "";
-			}
 			return plusString+String.format(this.format, val / multiple) + formatUnit;
 		} catch (NullPointerException e) {
 			return null;

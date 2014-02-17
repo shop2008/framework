@@ -8,6 +8,7 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -58,8 +59,19 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
 					@Parameter(name = "autoClosed", type =
 					ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误") }) })
+			
+					@Parameter(name = "title", value = "错误") }),
+			@Navigation(on="WaitVerify", showDialog="WaitVerifyDialogView")
+			})
+	@ExeGuard(cancellable=true,silentPeriod=200,title="提示",message="正在处理，请稍候...")
 	CommandResult commitVerifyPasswd(InputEvent event) {
+		
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String inputPasswrod = this.inputPswField.getValue();
 		boolean verifyResult = userService.verfiy(user.getPhoneNumber(),
 				inputPasswrod);
@@ -78,8 +90,10 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 				if (authBean != null) {
 					boolean confirmed = authBean.getConfirmed();
 					if (confirmed) {
+						hide();
 						tradingService.applyDrawMoney(Long.parseLong(moneyAmount)*100);
-						throw new StockAppBizException("已提交，请等待审核");
+						result.setResult("WaitVerify");
+						return result;
 					} else {
 						hide();
 						Map<String, String> map = new HashMap<String, String>();

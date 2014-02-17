@@ -56,7 +56,7 @@
             android:background="@drawable/bg_cb_news_push"
             android:button="@null"
             bind:field="pushMsgEnabled"
-            bind:on_CheckChanged="pushMsgStatusChanged" />
+            bind:on_BoxChanged="pushMsgStatusChanged" />
     </RelativeLayout>
 
 </LinearLayout>

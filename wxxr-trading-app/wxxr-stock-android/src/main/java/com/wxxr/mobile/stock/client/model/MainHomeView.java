@@ -36,6 +36,7 @@ import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.HomePageMenu;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
@@ -56,6 +57,9 @@ public abstract class MainHomeView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
 	
+	
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
 	/**获取文章*/
 	@Bean(type=BindingType.Service)
 	IArticleManagementService articleService;
@@ -72,7 +76,7 @@ public abstract class MainHomeView extends ViewBase{
 	AdStatusBean adStatusBean;
 	
 	
-	@Field(valueKey="options",binding="${homeMenuList!=null?homeMenuList:null}")
+	@Field(valueKey="options",binding="${homeMenuBean!=null?homeMenuBean.menuItems:null}")
 	List<BaseMenuItem> homeView;
 	
 	@Bean
@@ -194,6 +198,9 @@ public abstract class MainHomeView extends ViewBase{
 							} else {
 								resutl.setResult("operationDetails");
 							}
+						} else if ("60".equals(m.getStatus()) || "61".equals(m.getStatus())) {
+							//系统消息
+							usrService.readAllUnremindMessage();
 						}
 						updateSelection(new AccidSelection(acctId, isVirtual));
 					} else if(menu instanceof SignInMessageMenuItem) {

@@ -1,5 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +75,57 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		int position = (Integer) event.getProperty("position");
 		List<GainBean> allList = null;
 		allList = personalHomePageBean.getAllist();
+		
+		List<GainBean> virtualList = null;
+		List<GainBean> actualList = null;
+		
 		GainBean actualBean = null;
 		if(allList != null && allList.size()>0) {
-			actualBean = allList.get(position);
+			virtualList = new ArrayList<GainBean>();
+			actualList = new ArrayList<GainBean>();
+			
+			for(GainBean vo: allList) {
+				if(vo.getVirtual()) {
+					virtualList.add(vo);
+				} else {
+					actualList.add(vo);
+				}
+			}
 		}
-		CommandResult result = null;
+		Comparator<GainBean> comparator = new Comparator<GainBean>() {
+
+			@Override
+			public int compare(final GainBean lhs, final GainBean rhs) {
+				
+				Long lh = null;
+				Long rh = null;
+				if(lhs != null) {
+					lh = lhs.getTradingAccountId();
+				}
+				
+				if(rhs != null) {
+					rh = rhs.getTradingAccountId();
+				}
+				
+				if(lh !=null && rh !=null) {
+					return rh > lh? 1:-1;
+				}
+				return 0;
+			}
+		};
+		List<GainBean> sortList = new ArrayList<GainBean>();
+		if(virtualList!=null && virtualList.size()>0) {
+			Collections.sort(virtualList, comparator);
+			sortList.addAll(virtualList);
+		}
 		
+		if(actualList!=null && actualList.size()>0) {
+			Collections.sort(actualList, comparator);
+			sortList.addAll(actualList);
+		}
+		
+		actualBean = sortList.get(position);
+		CommandResult result = null;	
 		if (actualBean != null) {
 			
 			Long accId = actualBean.getTradingAccountId();

@@ -120,47 +120,44 @@ public abstract class UserWithDrawCashPage extends PageBase {
 		return null;
 	}
 
-	@Command(uiItems = { @UIItem(id = "right", label = "提现记录", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "UserSignPage") })
+	@Command(uiItems = { @UIItem(id = "right", label = "提现记录", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "ApplyMoneyRecordPage") })
 	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
 
 	@Command(navigations = {
-			@Navigation(on = "InputPswDialog", showDialog = "InputPswDialog"),
+			@Navigation(on = "+", showDialog = "InputPswDialog"),
 			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type =
-
-					ValueType.INETGER, value = "2"),
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 					@Parameter(name = "title", value = "错误") }) })
+	@ExeGuard(cancellable=true,silentPeriod=200,title="提示",message="正在处理,请稍候...")
 	CommandResult commit(InputEvent event) {
 
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
 
-			if (tradingService != null) {
+		if (tradingService != null) {
+			
+			
+			if (!StringUtils.isBlank(callBack.getApplyAmount())) {
 
-				if (!StringUtils.isBlank(callBack.getApplyAmount())) {
-
-					if (userAssetBean != null) {
-						long useableBalance = userAssetBean.getUsableBal();
-						if (useableBalance < Long.parseLong(callBack
-								.getApplyAmount()) * 100) {
-							throw new StockAppBizException("余额不足!");
-						}
+				if (userAssetBean != null) {
+					long useableBalance = userAssetBean.getUsableBal();
+					if (useableBalance < Long.parseLong(callBack
+							.getApplyAmount()) * 100) {
+						throw new StockAppBizException("余额不足!");
 					}
-					
-				} else {
-					throw new StockAppBizException("请输入正确的金额");
 				}
-			} 
-			CommandResult result = new CommandResult();
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("type", "WithDrawCash");
-			map.put("moneyAmount", callBack.getApplyAmount());
-			result.setPayload(map);
-			result.setResult("InputPswDialog");
-			return result;
+
+			} else {
+				throw new StockAppBizException("请输入正确的金额");
+			}
 		}
-		return null;
+		CommandResult result = new CommandResult();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("type", "WithDrawCash");
+		map.put("moneyAmount", callBack.getApplyAmount());
+		result.setPayload(map);
+		result.setResult("+");
+		return result;
 	}
 
 	@Command

@@ -14,7 +14,7 @@
         android:fadingEdge="none"
         android:scrollbars="none"
         bind:field="successTradeRecords"
-        bind:itemViewId="OtherPersonalHomeItemSelector"
+        bind:itemViewId="PersonalHomeItemSelector"
         bind:on_PinItemClick="handleTradeRecordItemClick" />
 
 </RelativeLayout>
