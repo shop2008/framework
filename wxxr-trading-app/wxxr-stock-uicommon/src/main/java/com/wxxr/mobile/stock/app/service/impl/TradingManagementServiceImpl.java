@@ -1551,6 +1551,9 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private HomePageMenu menu;
 	public HomePageMenu getHomeMenuList() {
+		if (menu==null) {
+			menu = new HomePageMenu();
+		}
 		 return menu;
 	}
 	private void refreshHomePage(){
