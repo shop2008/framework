@@ -1598,7 +1598,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 					sign.setHasSignIn(signVo.isSign());
 					sign.setType("80");
 					sign.setTitle("每日签到");
-					sign.setDate(signVo.getSignDate());
+					sign.setDate(sdf.format(new Date(Long.valueOf(signVo.getSignDate()))));
 					if (signVo.isSign()) {
 						sign.setMessage("今日已签到");
 					}else{
@@ -1687,7 +1687,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		msg_item.setTitle("操盘咨询");
 		if (list!=null&&list.size()>0) {
 			PullMessageBean msg = list.get(0);
-			msg_item.setDate(msg.getCreateDate());
+			msg_item.setDate(sdf.format(new Date(Long.valueOf(msg.getCreateDate()))));
 			msg_item.setMessage(msg.getMessage());
 		}
 		msg_item.setNum(list==null?0:list.size());
@@ -1700,7 +1700,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		msg_item.setTitle("系统消息");
 		if (list!=null&&list.size()>0) {
 			RemindMessageBean msg = list.get(0);
-			msg_item.setDate(msg.getCreatedDate());
+			msg_item.setDate(sdf.format(new Date(Long.valueOf(msg.getCreatedDate()))));
 			msg_item.setMessage(msg.getTitle());
 		}
 		msg_item.setNum(list==null?0:list.size());
