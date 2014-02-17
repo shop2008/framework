@@ -37,6 +37,7 @@ public class TradingConfigBean implements IBindableBean{
 	private List<Long> accualOptions;
 	private List<Long> virtualOptions;
 	private List<Long> voucherOptions;
+	private String delayFee;//递延费
 	private List<TradingExtendConfig> extendConfig;//预留扩展属性
 	/**
 	 * @param listener
@@ -254,6 +255,18 @@ public class TradingConfigBean implements IBindableBean{
 		this.emitter.firePropertyChange("extendConfig", old, this.extendConfig);
 	}
 
+	public String getDelayFee() {
+		return delayFee;
+	}
+
+	public void setDelayFee(String delayFee) {
+		String old = this.delayFee;
+		this.delayFee = delayFee;
+		this.emitter.firePropertyChange("delayFee", old, delayFee);
+	}
+
+	
+
 	@Override
 	public String toString() {
 		return "TradingConfigBean [voIdentity=" + voIdentity + ", applyAmount="
@@ -266,7 +279,10 @@ public class TradingConfigBean implements IBindableBean{
 				+ virtualRateList + ", voucherRateList=" + voucherRateList
 				+ ", voucherApplyAmount=" + voucherApplyAmount
 				+ ", virtualApplyAmount=" + virtualApplyAmount
-				+ ", extendConfig=" + extendConfig + "]";
+				+ ", accualOptions=" + accualOptions + ", virtualOptions="
+				+ virtualOptions + ", voucherOptions=" + voucherOptions
+				+ ", delayFee=" + delayFee + ", extendConfig=" + extendConfig
+				+ "]";
 	}
 
 	@Override
@@ -285,6 +301,8 @@ public class TradingConfigBean implements IBindableBean{
 				+ ((createEndDate == null) ? 0 : createEndDate.hashCode());
 		result = prime * result
 				+ ((createStartDate == null) ? 0 : createStartDate.hashCode());
+		result = prime * result
+				+ ((delayFee == null) ? 0 : delayFee.hashCode());
 		result = prime * result
 				+ ((discountFee == null) ? 0 : discountFee.hashCode());
 		result = prime * result
@@ -352,6 +370,11 @@ public class TradingConfigBean implements IBindableBean{
 			if (other.createStartDate != null)
 				return false;
 		} else if (!createStartDate.equals(other.createStartDate))
+			return false;
+		if (delayFee == null) {
+			if (other.delayFee != null)
+				return false;
+		} else if (!delayFee.equals(other.delayFee))
 			return false;
 		if (discountFee == null) {
 			if (other.discountFee != null)

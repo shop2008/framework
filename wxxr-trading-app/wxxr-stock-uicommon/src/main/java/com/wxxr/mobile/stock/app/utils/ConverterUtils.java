@@ -217,6 +217,7 @@ public class ConverterUtils {
         bean.setVoIdentity(vo.getVoIdentity());
         bean.setVoucherApplyAmount(vo.getVoucherApplyAmount());
         bean.setVoucherRateList(vo.getVoucherRateList());
+        bean.setDelayFee(vo.getDelayFee());
         if (vo.getVoIdentity().equals("T_PLUS_ONE")) {
         	 bean.setVirtualOptions(generateOptions(vo.getVirtualApplyAmount()));
              bean.setVoucherOptions(generateOptions(vo.getVoucherApplyAmount()));

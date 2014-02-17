@@ -23,6 +23,7 @@ public class TradingConfigVO implements Serializable{
 	private List<LossRateNDepositRate> voucherRateList;//积分盘止损率和保证金
 	private String voucherApplyAmount;//积分盘申购金额
 	private String virtualApplyAmount;//虚拟盘申购额度
+	private String delayFee;//递延费
 	private List<TradingExtendConfig> extendConfig;//预留扩展属性
 	
 	
@@ -206,16 +207,27 @@ public class TradingConfigVO implements Serializable{
 	public void setExtendConfig(List<TradingExtendConfig> extendConfig) {
 		this.extendConfig = extendConfig;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	
+	public String getDelayFee() {
+		return delayFee;
+	}
+	public void setDelayFee(String delayFee) {
+		this.delayFee = delayFee;
+	}
 	@Override
 	public String toString() {
-		return "TradingConfigVO [voIdentity=" + voIdentity + ", applyAmount=" + applyAmount + ", createStartDate=" + createStartDate + ", createEndDate="
-				+ createEndDate + ", clearDate=" + clearDate + ", maxBuyAmount=" + maxBuyAmount + ", originalFee=" + originalFee + ", discountFee="
-				+ discountFee + ", companyGainRate=" + companyGainRate + ", rateList=" + rateList + ", virtualRateList=" + virtualRateList
-				+ ", voucherRateList=" + voucherRateList + ", voucherApplyAmount=" + voucherApplyAmount + ", virtualApplyAmount=" + virtualApplyAmount
-				+ ", extendConfig=" + extendConfig + "]";
+		return "TradingConfigVO [voIdentity=" + voIdentity + ", applyAmount="
+				+ applyAmount + ", createStartDate=" + createStartDate
+				+ ", createEndDate=" + createEndDate + ", clearDate="
+				+ clearDate + ", maxBuyAmount=" + maxBuyAmount
+				+ ", originalFee=" + originalFee + ", discountFee="
+				+ discountFee + ", companyGainRate=" + companyGainRate
+				+ ", rateList=" + rateList + ", virtualRateList="
+				+ virtualRateList + ", voucherRateList=" + voucherRateList
+				+ ", voucherApplyAmount=" + voucherApplyAmount
+				+ ", virtualApplyAmount=" + virtualApplyAmount + ", delayFee="
+				+ delayFee + ", extendConfig=" + extendConfig + "]";
 	}
+	
 	
 }
