@@ -139,6 +139,10 @@ public abstract class UserWithDrawCashPage extends PageBase {
 			
 			if (!StringUtils.isBlank(callBack.getApplyAmount())) {
 
+				if(Long.parseLong(callBack.getApplyAmount()) % 100 != 0) {
+					throw new StockAppBizException("输入金额必须为100的整数倍");
+				}
+				
 				if (userAssetBean != null) {
 					long useableBalance = userAssetBean.getUsableBal();
 					if (useableBalance < Long.parseLong(callBack

@@ -94,7 +94,7 @@ public abstract class AppManageView extends ViewBase {
 	String userPhoneNum;
 	
 	/**积分余额*/
-	@Field(valueKey="text",binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}")
+	@Field(valueKey="text",binding="${(voucherBean!=null&&voucherBean.balance>0)?voucherBean.balance:null}", converter="scoreConvertor")
 	String scroeBalance;
 	
 	/**帐户余额*/
@@ -134,7 +134,7 @@ public abstract class AppManageView extends ViewBase {
 					@Parameter(name="format", value="%10.2f"),
 					@Parameter(name="formatUnit", value="元"),
 					@Parameter(name="multiple", value="100.0f"),
-					@Parameter(name="nullString", value="0")
+					@Parameter(name="nullString", value="0.00")
 			})
 	StockLong2StringConvertor profitConvertor;
 	/**跳转到登录界面*/

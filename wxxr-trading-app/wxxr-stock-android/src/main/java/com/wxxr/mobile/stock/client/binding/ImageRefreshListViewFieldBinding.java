@@ -37,6 +37,12 @@ public class ImageRefreshListViewFieldBinding extends AdapterViewFieldBinding {
 			view.setTotalScoreProfit(totalScoreVal);
 		}
 		
+		String nickName = comp.getAttribute(ImageRefreshViewKeys.userName);
+		
+		if(nickName !=null) {
+			view.setUserNickName(nickName);
+		}
+		
 		super.updateUI(arg0);
 	}
 	

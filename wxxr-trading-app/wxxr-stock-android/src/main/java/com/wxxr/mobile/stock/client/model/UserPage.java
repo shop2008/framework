@@ -56,9 +56,11 @@ public abstract class UserPage extends PageBase {
 			@Attribute(name="userHomeBackUri", value="${userBean!=null?userBean.homeBack:'resourceId:drawable/back1'}"),
 			@Attribute(name="userIconUri", value="${userBean!=null?userBean.userPic:'resourceId:drawable/head4'}"),
 			@Attribute(name="totalScoreProfit", value="${personalHomePageBean!=null?personalHomePageBean.voucherVol:0}"),
-			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.0}")
+			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.0}"),
+			@Attribute(name="userName", value="${userBean!=null?userBean.nickName:'--'}")
 	})
 	List<GainBean> successTradeRecords;
+	
 	
 	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
 			@Parameter(name = "nullString", value = "0") })

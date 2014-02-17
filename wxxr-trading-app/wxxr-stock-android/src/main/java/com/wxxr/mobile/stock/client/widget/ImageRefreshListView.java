@@ -71,6 +71,7 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 		}
 
 	};
+	private TextView userNickName;
 
 	private void setCircleViewStay() {
 		// TODO Auto-generated method stub
@@ -193,6 +194,8 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 		userHomeBack = (ImageView) headView.findViewById(R.id.user_home_back);
 		
 		userIcon = (ImageView) headView.findViewById(R.id.user_icon_back);
+		
+		userNickName = (TextView) headView.findViewById(R.id.user_nick_name);
 		headView.getViewTreeObserver().addOnPreDrawListener(
 				new OnPreDrawListener() {
 					@Override
@@ -300,6 +303,11 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 	public void setUserIconBack(String imageUri) {
 		userIcon.setImageURI(Uri.parse(imageUri));
 	}
+	
+	public void setUserNickName(String nickName) {
+		userNickName.setText(nickName);
+	}
+	
 	//public void updateUserBack(Image)
 	private void startCircleAnimation() {
 		CircleAnimation.startRotateAnimation(circle);
