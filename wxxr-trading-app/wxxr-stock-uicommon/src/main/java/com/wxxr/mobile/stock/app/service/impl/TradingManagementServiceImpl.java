@@ -1741,13 +1741,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				if (vo.isVirtual()) {
 					trading.setType("0");
 					trading.setTitle("参赛模拟盘");
-				}else if ("ASTCOKT1".equals(vo.getAcctType())) {
+				}else if ("ASTOCKT1".equals(vo.getAcctType())) {
 					trading.setType("11");
 					trading.setTitle("挑战交易盘 T+1");
-				}else if("ASTCOKT3".equals(vo.getAcctType())){
+				}else if("ASTOCKT3".equals(vo.getAcctType())){
 					trading.setType("13");
 					trading.setTitle("挑战交易盘 T+3");
-				}else if("ASTCOKTN".equals(vo.getAcctType())){
+				}else if("ASTOCKTN".equals(vo.getAcctType())){
 					trading.setType("1d");
 					trading.setTitle("挑战交易盘 T+D");
 				}
