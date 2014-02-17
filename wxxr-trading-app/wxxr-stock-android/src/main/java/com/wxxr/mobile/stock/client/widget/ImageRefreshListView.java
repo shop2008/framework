@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;;
-public class ImageRefreshListView extends PinnedHeaderListView implements OnScrollListener{
+public class ImageRefreshListView extends PinnedHeaderListView {
 	private View headView;
 	private int headViewHeight;
 	int currentScrollState;
@@ -208,7 +208,7 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 						return true;
 					}
 				});
-		setOnScrollListener(this);
+		//setOnScrollListener(this);
 		currentScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 		currentState = LoadState.LOADSTATE_IDLE;
 		firstVisibleItem = 0;
@@ -229,15 +229,15 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 		thread.start();
 	}
 
-	@Override
+	/*@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
 		// System.out.println(headView.getHeight());
 		this.firstVisibleItem = firstVisibleItem;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
 
@@ -254,7 +254,7 @@ public class ImageRefreshListView extends PinnedHeaderListView implements OnScro
 
 		}
 
-	}
+	}*/
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {

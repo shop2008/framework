@@ -209,6 +209,17 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 					}
 					result.add(viewMoreBean);
 				}
+			} else if (data == null) {
+				shareCountBean = new ShareCountBean();
+				shareCountBean.setVirtual(true);
+				shareCountBean.setShareCount(joinShareCount.intValue());
+				result.add(shareCountBean);
+				result.add(new NoShareRecordBean());
+				shareCountBean = new ShareCountBean();
+				shareCountBean.setVirtual(false);
+				shareCountBean.setShareCount(challengeShareCount.intValue());
+				result.add(shareCountBean);
+				result.add(new NoShareRecordBean());
 			}
 			return result != null?result.toArray():null;
 		}

@@ -22,6 +22,8 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -49,7 +51,7 @@ import com.wxxr.mobile.stock.client.utils.Constants;
  * @author dz
  *
  */
-@View(name="MainHomeView", description="短线放大镜",provideSelection=true)
+@View(name="MainHomeView", withToolbar=false,provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.main_home_view_layout")
 public abstract class MainHomeView extends ViewBase{
 	private static final Trace log = Trace.register(MainHomeView.class);
@@ -57,7 +59,13 @@ public abstract class MainHomeView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
 	
+	@Field(valueKey="visible", binding="${adStatusBean.off==true}")
+	boolean leftIcon;
 	
+	@OnCreate
+	void initData() {
+		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().hide();
+	}
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 	/**获取文章*/
@@ -88,10 +96,10 @@ public abstract class MainHomeView extends ViewBase{
 			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String refreshView;
 	
-	@Menu(items = { "left", "right" })
-	IMenu toolbar;
+	/*@Menu(items = { "left", "right" })
+	IMenu toolbar;*/
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style",visibleWhen="${adStatusBean.off==true}")})
+	/*@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style",visibleWhen="${adStatusBean.off==true}")})
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
@@ -104,15 +112,15 @@ public abstract class MainHomeView extends ViewBase{
 		SystemClock.sleep(500);
 		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
 		return null;
-	}
+	}*/
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style",visibleWhen="${false}") })
+	/*@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style",visibleWhen="${false}") })
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
 		return "";
-	}
+	}*/
 	
 	@Command
 	String handleRefresh(InputEvent event) {
@@ -214,6 +222,24 @@ public abstract class MainHomeView extends ViewBase{
 			}		
 		return null;
 	}	
+	
+	@Command
+	String handleLeftClick(InputEvent event) {
+		
+		if(adStatusBean != null) {
+			adStatusBean.setOff(false);
+		}
+		return null;
+	}
+	
+	@Command(navigations={@Navigation(on="*", showPage="stockSearchPage")})
+	String handleRightClick(InputEvent event) {
+		
+		
+	return "";
+	}
+	
+	
 	
 	/*@Command
 	String closeBanner(InputEvent event) {

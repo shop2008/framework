@@ -13,8 +13,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_circle_white"
         bind:field="*"
+        android:background="@color/white"
         bind:on_Click="setPic" >
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/arrow"
+            android:background="@drawable/small_right_arrow"
             />
     </RelativeLayout>
 
@@ -53,7 +53,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_circle_white"
+        android:background="@color/white"
         >
 
         <TextView
@@ -103,7 +103,7 @@
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="right|center_vertical"
-	                android:background="@drawable/arrow" />
+	                android:background="@drawable/small_right_arrow" />
 	        </LinearLayout>
 
         </RelativeLayout>

@@ -15,10 +15,13 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -61,6 +64,20 @@ public abstract class UserPage extends PageBase {
 	})
 	List<GainBean> successTradeRecords;
 	
+	
+	@Menu(items = { "left", "right" })
+	private IMenu toolbar;
+	
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
+		return null;
+	}
+
+	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting_small") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+	String toolbarClickedRight(InputEvent event) {
+		return "OK";
+	}
 	
 	@Convertor(params = { @Parameter(name = "format", value = "%.0f"),
 			@Parameter(name = "nullString", value = "0") })

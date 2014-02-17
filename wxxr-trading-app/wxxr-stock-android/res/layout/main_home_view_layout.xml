@@ -6,6 +6,67 @@
     android:background="@color/page_background_color"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:background="#2F2E30" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="44dp"
+            android:background="#1F2122" >
+
+            <ImageButton
+                android:id="@id/ib_toggle_left_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:background="@null"
+                android:src="@drawable/list_button_style"
+                android:visibility="gone"
+                bind:field="leftIcon"
+                bind:on_Click="handleLeftClick" />
+
+            <TextView
+                android:id="@id/tv_title_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/stock_app_title"
+                android:textColor="#ffffff"
+                android:textSize="17.0sp"
+                android:textStyle="bold"
+                />
+
+        
+
+            <ImageButton
+                android:id="@id/ib_toggle_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/ib_toggle_right_menu"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/find_button_style"
+                bind:field="*"
+                bind:on_Click="handleRightClick" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:background="#000000" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -18,10 +79,10 @@
             bind:on_PullRefresh="handleRefresh" >
 
             <ListView
+                style="@style/mListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@android:color/transparent"
-                style="@style/mListView"
                 android:fadingEdge="none"
                 android:scrollbars="none"
                 bind:field="homeView"
@@ -34,4 +95,4 @@
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
     </FrameLayout>
 
-</LinearLayout><!-- bind:headerViewId="MainHomeListHeaderView" bind:field="homeView@StockViewDecorator" <include layout="@layout/home_view_loading_progress_layout" /> -->
+</LinearLayout> <!-- bind:headerViewId="MainHomeListHeaderView" bind:field="homeView@StockViewDecorator" <include layout="@layout/home_view_loading_progress_layout" /> -->
