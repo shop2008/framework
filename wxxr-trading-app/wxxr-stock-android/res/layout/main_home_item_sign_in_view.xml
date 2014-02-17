@@ -1,137 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/listview_selected_item1"
-    android:orientation="vertical"
-    android:paddingLeft="2dp" 
     bind:field="*"
     bind:on_Click="enterUserSignPage"
     >
-
-    <FrameLayout
-        android:id="@+id/icon_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@drawable/rz"
-            bind:field="icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:background="@drawable/unread_number_bg"
-            android:includeFontPadding="false"
-            bind:field="hasSignIn" />
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="4dp"
-        android:layout_toRightOf="@id/icon_layout"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:singleLine="true"
-                android:text="--"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                bind:field="title" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="right"
-                android:singleLine="true"
-                android:text="--"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                bind:field="date" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:singleLine="true"
-                android:text="--"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                bind:field="message" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                bind:field="signDaysLayout" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="已连续签到"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="--"
-                    android:textColor="#ff0000"
-                    android:textSize="15sp"
-                    bind:field="signDays" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="日"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="--"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                bind:field="score" />
-        </LinearLayout>
-    </LinearLayout>
-
-</RelativeLayout>
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingLeft="2dp" >
+	    <FrameLayout
+	        android:id="@+id/icon_layout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true" >
+	
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="8dp"
+	            android:src="@drawable/rz"
+	            bind:field="icon" />
+	
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="top|right"
+	            android:background="@drawable/unread_number_bg"
+	            android:includeFontPadding="false"
+	            bind:field="hasSignIn" />
+	    </FrameLayout>
+	
+	    <LinearLayout
+	        android:id="@+id/title_layout"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_centerVertical="true"
+	        android:layout_marginRight="4dp"
+	        android:layout_toRightOf="@id/icon_layout"
+	        android:gravity="center"
+	        android:orientation="vertical" >
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center" >
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="left"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="16sp"
+	                bind:field="title" />
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="2"
+	                android:gravity="right"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="14sp"
+	                bind:field="date" />
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="6dp"
+	            android:gravity="center" >
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="left"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="15sp"
+	                bind:field="message" />
+	
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="center"
+	                bind:field="signDaysLayout" >
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:singleLine="true"
+	                    android:text="已连续签到"
+	                    android:textColor="@color/white"
+	                    android:textSize="15sp" />
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:singleLine="true"
+	                    android:text="--"
+	                    android:textColor="#ff0000"
+	                    android:textSize="15sp"
+	                    bind:field="signDays" />
+	
+	                <TextView
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:singleLine="true"
+	                    android:text="日"
+	                    android:textColor="@color/white"
+	                    android:textSize="15sp" />
+	            </LinearLayout>
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="center"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="15sp"
+	                bind:field="score" />
+	        </LinearLayout>
+	    </LinearLayout>
+	</RelativeLayout>
+	<include layout="@layout/hlines"/>
+</LinearLayout>

@@ -615,4 +615,11 @@ public class Utils {
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		listView.setLayoutParams(params);
 	}
+	
+	public static String getValue(String val){
+		if(val==null)
+			return null;
+		String data = String.format("%.0f%%", Float.parseFloat(val)*100f);
+		return data;
+	}
 }

@@ -41,12 +41,34 @@
         android:clickable="true"
         android:enabled="true"
         android:hint="申请金额"
-        android:textColor="@color/white"
+        bind:field="money"
+        bind:itemViewId="challengeTradeMoneyItem"
+        bind:on_TextChanged="moneyTextChanged"
+        android:textColor="@color/black"
         android:background="#ffffff"
         android:drawableRight="@drawable/inpunt_arrows"
         android:drawablePadding="0dp"
         android:layout_marginBottom="8dp"/>
-
+	
+	<com.wxxr.mobile.stock.client.widget.TextSpinnerView
+        android:id="@+id/spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="14sp"
+        android:paddingLeft="8dp"
+        android:clickable="true"
+        android:enabled="true"
+        android:hint="申请金额"
+        bind:field="voucherMoney"
+        bind:itemViewId="challengeTradeMoneyItem"
+        bind:on_TextChanged="VoucherMoneyTextChanged"
+        android:textColor="@color/black"
+        android:background="#ffffff"
+        android:visibility="gone"
+        android:drawableRight="@drawable/inpunt_arrows"
+        android:drawablePadding="0dp"
+        android:layout_marginBottom="8dp"/>
+	
 	<RadioGroup
 	    android:id="@+id/radioGroup1"
 	    android:layout_width="fill_parent"
@@ -58,7 +80,6 @@
 	        android:id="@+id/radio1"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="10%保证金\n-8%止损" 
 	        android:checked="true"
 	        android:layout_weight="1"
 	        android:paddingLeft="12dp"
@@ -69,6 +90,8 @@
 	        android:drawableLeft="@drawable/radion_button"
 	        android:button="@null"
 	        android:drawablePadding="8dp"
+	        bind:field="rateList"
+	        bind:on_Click="RateClick"
 	        android:textColor="@color/radion_button_color"
 	        android:layout_marginRight="4dp"/>
 
@@ -76,7 +99,8 @@
 	        android:id="@+id/radio2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="积分创建\n-5%止损" 
+	        bind:field="voucherRate"
+	        bind:on_Click="VoucherRateClick"
 	        android:layout_weight="1"
 	        android:layout_marginLeft="4dp"
 	        android:paddingLeft="12dp"
@@ -119,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:text="0.00元"
                 android:textSize="14sp"
+                bind:field="originalFeeValue"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -153,6 +178,7 @@
                 android:layout_height="wrap_content"
                 android:text="0元"
                 android:textSize="14sp"
+                bind:field="dj_money"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -175,7 +201,9 @@
         android:text="创建" 
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:background="@drawable/red_button"
+        android:background="@drawable/red_button_style"
+        bind:field="submitBtnStatus1"
+        bind:on_Click="handleCreateTrading@BuyStockClickedDecorator" 
         />    
     
 	<LinearLayout
@@ -193,7 +221,9 @@
             android:layout_height="28dp"
             android:background="@drawable/bg_cb_read_rule_or_not"
             android:button="@null"
-            android:checked="true"
+            android:checked="true" 
+            bind:field="isChecked1"
+            bind:on_Click="isCheckBoxChecked1"
             />
 
         <TextView
@@ -214,7 +244,7 @@
             android:textColor="@color/red"
             android:textSize="14sp"
             bind:field="*"
-            bind:on_Click="showTradingRulePage" />
+		    bind:on_Click="showTradingRulePage"/>
 
         <TextView
             android:layout_width="wrap_content"

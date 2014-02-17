@@ -28,6 +28,7 @@ public abstract class MinuteLineViewKeys {
 	public static final AttributeKey<Long> buyPrice = new AttributeKey<Long>(Long.class, "buyPrice");
 	public static final AttributeKey<Boolean> isPagination = new AttributeKey<Boolean>(Boolean.class, "isPagination");
 	public static final AttributeKey<Boolean> stockStatus = new AttributeKey<Boolean>(Boolean.class, "stockStatus");
+	public static final AttributeKey<String> nullValue = new AttributeKey<String>(String.class, "nullValue");
 	
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){
@@ -46,5 +47,6 @@ public abstract class MinuteLineViewKeys {
 		attrMgr.registerAttribute(buyPrice);
 		attrMgr.registerAttribute(isPagination);
 		attrMgr.registerAttribute(stockStatus);
+		attrMgr.registerAttribute(nullValue);
 	}
 }

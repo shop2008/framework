@@ -110,4 +110,7 @@
     <item name="home_refresh_view" type="id" />
     <item name="iv_title_other" type="id" />
     <item name="ib_title_other" type="id" /> 
+    <item type="id" name="drag_handle" />
+    <item type="id" name="click_remove" />
+    <item type="id" name="top_drag_handle" />
 </resources>

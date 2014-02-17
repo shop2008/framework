@@ -7,6 +7,7 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
@@ -15,8 +16,10 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
-import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
+import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * @author wangxuyang
@@ -26,8 +29,14 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 @AndroidBinding(type=AndroidBindingType.VIEW,layoutId="R.layout.price_center_page_layout_item")
 public abstract class InfoCenterItemView extends ViewBase implements IModelUpdater{
 	
+	@Bean(type = BindingType.Service)
+	IStockInfoSyncService stockInfoSyncService;
+		
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(stockTaxis.code, stockTaxis.market)}")
+	StockBaseInfo stockInfoBean;
+	
 	@Bean
-	StockTaxisBean stockTaxis;
+	StockQuotationBean stockTaxis;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
@@ -43,7 +52,7 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
-	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.name:'--'}")
+	@Field(valueKey="text",binding="${stockInfoBean!=null?stockInfoBean.name:'--'}")
 	String stockName;//股票名称
 	
 	@Field(valueKey="text",binding="${stockTaxis!=null?stockTaxis.code:'--'}")
@@ -62,7 +71,7 @@ public abstract class InfoCenterItemView extends ViewBase implements IModelUpdat
 	
 	@Override
 	public void updateModel(Object data) {
-		if (data instanceof StockTaxisBean) {
+		if (data instanceof StockQuotationBean) {
 			registerBean("stockTaxis", data);
 		}		
 	}

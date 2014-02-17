@@ -23,9 +23,9 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.StockBaseInfoWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
-import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 /**
  * 股票搜索页面
@@ -57,7 +57,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	SearchStockListBean searchListBean;
 
 	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
-	List<StockBaseInfo> searchList;
+	List<StockBaseInfoWrapper> searchList;
 
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
@@ -93,10 +93,11 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Command
 	String handleItemClick(InputEvent event) {
 		if (event.getProperty("position") instanceof Integer) {
-			List<StockBaseInfo> stocks = null;
+			List<StockBaseInfoWrapper> stocks = (searchListBean != null ? searchListBean
+					.getSearchResult() : null);
 			int position = (Integer) event.getProperty("position");
 			if (stocks != null && stocks.size() > 0) {
-				StockBaseInfo bean = stocks.get(position);
+				StockBaseInfoWrapper bean = stocks.get(position);
 				String code = bean.getCode();
 				String name = bean.getName();
 				String market = bean.getMc();

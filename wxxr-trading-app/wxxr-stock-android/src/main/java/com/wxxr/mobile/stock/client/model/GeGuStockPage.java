@@ -8,8 +8,6 @@ import java.util.concurrent.TimeUnit;
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -25,10 +23,9 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUICreate;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
-import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
-import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.ISelection;
@@ -40,25 +37,78 @@ import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name="GeGuStockPage",withToolbar=true,description="个股界面",provideSelection=true)
+@View(name="GeGuStockPage",description="个股界面",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.gegu_page_layout")
 public abstract class GeGuStockPage extends PageBase implements IModelUpdater, ISelectionChangedListener {
 	
 	static Trace log = Trace.getLogger(GeGuStockPage.class);
-	@Menu(items = { "left" }) 
+	@Menu(items = { "left","right" }) 
 	private IMenu toolbar;
 
 	private boolean hasShow = false;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
-	String toolbarClickedLeft(InputEvent event) {
+	@Bean(type = BindingType.Service)
+	IOptionStockManagementService optionStockService;
+	
+//    <ImageButton
+//    android:layout_width="wrap_content"
+//    android:layout_height="wrap_content"
+//    android:layout_alignParentRight="true"
+//    android:layout_centerVertical="true"
+//    android:src="@drawable/add_stock_button_style"
+//    android:background="@null"
+//    bind:field="addStockField"
+//    bind:on_Click="addStockClick" 
+//    android:layout_marginLeft="6dp"/>
+	
+	//返回
+	@Command()
+	String handleClick(InputEvent event) {
 		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
 		return null;
 	}
+	
+	@Bean
+	boolean isAddStock;
+	
+	@Field(valueKey="visible", visibleWhen="${!isAddStock}")
+	boolean addStockField;
+	
+	@Field(valueKey="visible", visibleWhen="${isAddStock}")
+	boolean delStockField;
+	
+	@Command(commandName="addStockClick",
+		navigations={
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})
+	})
+	String addStockClick(InputEvent event) {
+		if(optionStockService!=null){
+			optionStockService.add(this.codeValue, this.marketCode);
+			this.isAddStock = true;
+			registerBean("isAddStock", this.isAddStock);
+		}
+		return "";
+	}
+	
+	@Command(commandName="delStockClick",
+			navigations={
+				@Navigation(on = "StockAppBizException", message = "%m", params = {
+						@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})
+		})
+		String delStockClick(InputEvent event) {
+			if(optionStockService!=null){
+				optionStockService.delete(this.codeValue, this.marketCode);
+				this.isAddStock = false;
+				registerBean("isAddStock", this.isAddStock);
+			}
+			return "";
+		}
 	
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
@@ -222,8 +272,12 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@Field(valueKey="visible",visibleWhen="${quotationBean!=null && quotationBean.status==1}")
 	boolean goingStockTrading;
 	
+	
 	@OnShow
 	protected void initData(){
+		boolean temp = optionStockService.isAdded(codeValue, marketCode);
+		this.isAddStock = temp;
+		registerBean("isAddStock", this.isAddStock);
 	}
 	
 	@Command
@@ -239,7 +293,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		log.debug("GeGuStockPage handlerPageChanged position: " + position + "size: "+size);
 		return null;
 	}
-	
+	/**
 	//挑战交易盘买入
 	@Command(navigations={
 			@Navigation(on = "tiaozhan",showPage="QuickBuyStockPage")
@@ -276,6 +330,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		}
 		return null;
 	}
+	*/
 	
 	private HashMap<String, Object> payData(){
 		HashMap<String, Object> tempMap = new HashMap<String, Object>();

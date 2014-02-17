@@ -13,7 +13,6 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
-import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -25,9 +24,9 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
-import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
@@ -42,9 +41,12 @@ public abstract class InfoCenterView extends ViewBase {
 	
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
+	
+	@Bean(type = BindingType.Service)
+	IOptionStockManagementService optionStockService;
 
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStocktaxis(orderBy,direction,0,20)}")
-	BindableListWrapper<StockTaxisBean> stockTaxis;
+	@Bean(type = BindingType.Pojo, express = "${optionStockService.getMyOptionStocks(null,null)}")
+	BindableListWrapper<StockQuotationBean> stockTaxis;
 	
 	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation('000001','SH')}")
 	StockQuotationBean shBean;
@@ -130,8 +132,11 @@ public abstract class InfoCenterView extends ViewBase {
 	String sz_change;
 	
 	// 股票列表
-	@Field(valueKey = "options",binding="${stockTaxis.data}",upateAsync=true)
-	List<StockTaxisBean> stockInfos;
+	@Field(valueKey = "options",binding="${stockTaxis.data}",upateAsync=true,visibleWhen="${stockTaxis.data!=null && stockTaxis.data.size()>0}")
+	List<StockQuotationBean> stockInfos;
+	
+	@Field(valueKey = "visible",visibleWhen="${stockTaxis.data==null || stockTaxis.data.size()==0}")
+	boolean addStockField;
 	
 	/**-----------深圳中小版指 深圳*/
 	
@@ -174,16 +179,28 @@ public abstract class InfoCenterView extends ViewBase {
 	@Field(valueKey="text",enableWhen="${direction == 'asc'}",visibleWhen="${orderBy == 'risefallrate'}")
 	String isRisefallrate;
 
-	@Menu(items={"right"})
+	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
- 
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { 
+			@UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/edit_infocenter_button_style") 
+			},navigations={@Navigation(on = "*", showPage="InfoCenterEditPageView")})
+	String toolbarClickedLeft(InputEvent event) {
+		return "";
+	}
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
 				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
 			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
 	)
-	String toolbarClickedLeft(InputEvent event) {
+	String toolbarClickedRight(InputEvent event) {
 		return "";
+	}
+	
+	@Command(navigations={
+			@Navigation(on = "*", showPage = "GeGuStockPage")
+	})
+	String addStockClick(InputEvent event){
+		return "*";
 	}
 	
 	/**
@@ -261,7 +278,6 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=500)
 	String orderByRisefallrate(InputEvent event){
 		if("risefallrate".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
@@ -271,7 +287,7 @@ public abstract class InfoCenterView extends ViewBase {
 		}
 		registerBean("orderBy", this.orderBy);
 		registerBean("direction", this.direction);
-		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		this.optionStockService.getMyOptionStocks(this.orderBy, this.direction);
 		return null;
 	}
 	/**
@@ -279,7 +295,6 @@ public abstract class InfoCenterView extends ViewBase {
 	 * 
 	 * */
 	@Command
-	@ExeGuard(title="加载数据",message="正在从服务器端查询，下载数据，请稍候...",silentPeriod=500)
 	String orderByNewPrice(InputEvent event){
 		if("newprice".equals(this.orderBy)){
 			this.direction = "desc".equals(this.direction) ? "asc" : "desc";
@@ -289,12 +304,12 @@ public abstract class InfoCenterView extends ViewBase {
 		}
 		registerBean("orderBy", this.orderBy);
 		registerBean("direction", this.direction);
-		this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
+		this.optionStockService.getMyOptionStocks(this.orderBy, this.direction);
 		return null;
 	}
 	
 	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
-			@Attribute(name = "enablePullUpRefresh", value= "true")})
+			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String acctRefreshView;
 	
 	@Command
@@ -302,11 +317,7 @@ public abstract class InfoCenterView extends ViewBase {
 		if(event.getEventType().equals("TopRefresh")){
 			this.infoCenterService.getStockQuotation("000001","SH");
 			this.infoCenterService.getStockQuotation("399001","SZ");
-			this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, 0, 20);
-		}else if(event.getEventType().equals("BottomRefresh")){
-			if(stockTaxis!=null && this.stockTaxis.getData()!=null){
-				this.infoCenterService.reloadStocktaxis(this.orderBy, this.direction, this.stockTaxis.getData().size(), 20);
-			} 
+			this.optionStockService.getMyOptionStocks(this.orderBy, this.direction);
 		}
 		return null;
 	}
@@ -329,18 +340,16 @@ public abstract class InfoCenterView extends ViewBase {
 			int position = (Integer) event.getProperty("position");
 			CommandResult result = new CommandResult();
 			if(stockTaxis!=null){
-				List<StockTaxisBean> taxis = stockTaxis.getData();
+				List<StockQuotationBean> taxis = stockTaxis.getData();
 				if(taxis!=null && taxis.size()>0){
-					StockTaxisBean stockTaxis = taxis.get(position);
+					StockQuotationBean stockTaxis = taxis.get(position);
 					String code = stockTaxis.getCode();
-					String name = stockTaxis.getName();
 					String market = stockTaxis.getMarket();
 					if(code!=null && market!=null){
 						map.put("code", code);
-						map.put("name", name);
 						map.put("market", market);
 						result.setPayload(map);
-						updateSelection(new StockSelection(market,code,name));
+						updateSelection(new StockSelection(market,code,""));
 						result.setResult("GeGuStockPage");
 						return result;
 					}

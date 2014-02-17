@@ -77,13 +77,13 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	
 	@Convertor(params={
 			@Parameter(name="format",value="M月d日买入"),
-			@Parameter(name="nullString",value="--")
+			@Parameter(name="nullString",value="-月-日买入")
 	})
 	LongTime2StringConvertor longTime2StringConvertorBuy;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="M月d日卖出"),
-			@Parameter(name="nullString",value="--")
+			@Parameter(name="nullString",value="-月-日卖出")
 	})
 	LongTime2StringConvertor longTime2StringConvertorSell;	
 

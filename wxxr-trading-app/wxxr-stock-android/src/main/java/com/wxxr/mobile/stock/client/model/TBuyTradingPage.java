@@ -108,7 +108,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 			@Attribute(name = "enablePullUpRefresh", value = "false") })
 	String acctRefreshView;
 
-	@Field(valueKey = "text", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/date_bj':'resourceId:drawable/red_data_bj'}") })
+	@Field(valueKey = "text", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/c_t_day':'resourceId:drawable/t_t_day'}") })
 	String titleBg;
 
 	@Menu(items = { "left", "right" })
@@ -130,8 +130,9 @@ public abstract class TBuyTradingPage extends PageBase implements
 	public void onEvent(IBroadcastEvent event) {
 		if (tradingService != null)
 			tradingService.getTradingAccountInfo(acctId);
-		if (!(AppUtils.getService(IUserManagementService.class).getMyUserInfo()!=null?AppUtils.getService(IUserManagementService.class).getMyUserInfo().getMessagePushSettingOn():false))
-			return;
+//		if (!AppUtils.getService(IUserManagementService.class)
+//				.getPushMessageSetting())
+//			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 

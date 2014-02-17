@@ -65,6 +65,11 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	
 	public void setAdapter(ListAdapter adapter){
 		this.adapter = adapter;
+		this.setText(null);
+	}
+	
+	public void cleanText(String val){
+		this.setText(null);
 	}
 	
 	private void createPopUpWindows(){
@@ -83,7 +88,7 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	private void showPopUpWindowsList(){
 		createPopUpWindows();
 		if(adapter!=null && adapter.getCount()>0 && popupWindow!=null && !popupWindow.isShowing()){
-			popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_activity_top_title));
+//			popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_activity_top_title));
 			popupWindow.showAsDropDown(this, 0, 0);
 			
 		}

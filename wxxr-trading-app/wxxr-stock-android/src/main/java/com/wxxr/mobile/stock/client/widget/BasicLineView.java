@@ -143,6 +143,18 @@ public class BasicLineView extends View {
 			this.shadowColor = BasicLineView.SHADOW_COLOR;
 		}
 	}
+	
+	protected void setMarginLeft(Float left){
+		if(left!=null){
+			this.marginLeft = left;
+		}
+	}
+	protected void setMarginRight(Float right){
+		if(right!=null){
+			this.marginRight = right;
+		}
+	}
+	
 	private void init(){
 		mPaint = new Paint();
 	}

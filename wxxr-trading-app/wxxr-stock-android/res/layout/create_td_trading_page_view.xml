@@ -50,14 +50,16 @@
 		        android:clickable="true"
 		        android:enabled="true"
 		        android:hint="申请金额"
-		        android:textColor="@color/white"
+		        bind:field="money"
+		        bind:itemViewId="challengeTradeMoneyItem"
+		        bind:on_TextChanged="moneyTextChanged" 
+		        android:textColor="@color/black"
 		        android:background="#ffffff"
 		        android:drawableRight="@drawable/inpunt_arrows"
 		        android:drawablePadding="0dp"
-		        android:layout_marginBottom="8dp"/>    
+		        android:layout_marginBottom="8dp"/>   
 		
 			<com.wxxr.mobile.stock.client.widget.TextSpinnerView
-		        android:id="@+id/spinner1"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" 
 		        android:textSize="14sp"
@@ -65,7 +67,10 @@
 		        android:clickable="true"
 		        android:enabled="true"
 		        android:hint="保证金比例"
-		        android:textColor="@color/white"
+		        bind:field="depositCash"
+		        bind:itemViewId="DepositCashItem"
+		        bind:on_TextChanged="depositCashTextChanged" 
+		        android:textColor="@color/black"
 		        android:background="#ffffff"
 		        android:drawableRight="@drawable/inpunt_arrows"
 		        android:drawablePadding="0dp"
@@ -99,6 +104,7 @@
 		                android:layout_height="wrap_content"
 		                android:text="0.00元"
 		                android:textSize="14sp"
+		                bind:field="lossRate"
 		                android:layout_alignParentRight="true"
 		                android:textColor="@color/black" />
 		        </RelativeLayout>
@@ -122,6 +128,7 @@
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:text="0.00元"
+		                bind:field="originalFeeValue"
 		                android:textSize="14sp"
 		                android:layout_alignParentRight="true"
 		                android:textColor="@color/black" />
@@ -146,6 +153,7 @@
 		                android:layout_height="wrap_content"
 		                android:layout_alignParentRight="true"
 		                android:text="0.00元"
+		                bind:field="dj_money"
 		                android:textColor="@color/black"
 		                android:textSize="14sp" />
 		        </RelativeLayout>
@@ -167,7 +175,9 @@
 		        android:text="创建" 
 		        android:textColor="@color/white"
 		        android:textSize="14sp"
-		        android:background="@drawable/red_button"
+		        android:background="@drawable/red_button_style"
+		        bind:field="submitBtnStatus1"
+        		bind:on_Click="handleCreateTrading@BuyStockClickedDecorator" 
 		        />
 			<LinearLayout
 		        android:layout_width="match_parent"
@@ -185,6 +195,8 @@
 		            android:background="@drawable/bg_cb_read_rule_or_not"
 		            android:button="@null"
 		            android:checked="true"
+		            bind:field="isChecked1"
+            		bind:on_Click="isCheckBoxChecked1"
 		            />
 		
 		        <TextView
@@ -204,6 +216,8 @@
 		            android:textSize="14sp"
 		            android:enabled="true"
 		            android:clickable="true"
+		            bind:field="*"
+		            bind:on_Click="showTradingRulePage"
 		            />
 		
 		        <TextView

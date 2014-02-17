@@ -28,7 +28,7 @@
 	    		    android:layout_width="wrap_content"
 	    		    android:layout_height="32dp"
 	    		    android:text="盈亏结算" 
-	    		    style="@style/qsxqTextTitleStyle"/>
+	    		    style="@style/qsxqTextTitleStyle_02"/>
 	    		<RelativeLayout
 	    		    android:layout_width="fill_parent"
 	    		    android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
 	    		    android:layout_width="wrap_content"
 	    		    android:layout_height="32dp"
 	    		    android:text="收益分配" 
-	    		    style="@style/qsxqTextTitleStyle"/>
+	    		    style="@style/qsxqTextTitleStyle_02"/>
 				<RelativeLayout
 	    		    android:layout_width="fill_parent"
 	    		    android:layout_height="wrap_content"
@@ -208,7 +208,7 @@
 	    		    android:layout_width="wrap_content"
 	    		    android:layout_height="32dp"
 	    		    android:text="风险保证金清算" 
-					style="@style/qsxqTextTitleStyle"/>
+					style="@style/qsxqTextTitleStyle_02"/>
 				<RelativeLayout
 	    		    android:layout_width="fill_parent"
 	    		    android:layout_height="wrap_content"

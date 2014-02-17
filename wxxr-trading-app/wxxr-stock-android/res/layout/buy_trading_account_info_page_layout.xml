@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/date_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_alignParentTop="true"
         android:background="@drawable/date_bj"
         android:gravity="center"

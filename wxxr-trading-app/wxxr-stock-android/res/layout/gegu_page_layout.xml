@@ -5,6 +5,60 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:orientation="vertical" 
     android:background="@color/page_background_color">
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View android:layout_width="fill_parent"
+	        android:layout_height="0.5dp"
+	        android:background="#2F2E30"/>
+	 	<RelativeLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="44dp"
+		    android:background="#1F2122">
+		    <ImageButton
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_centerVertical="true"
+		        android:src="@drawable/back_button_style"
+		        android:background="@null"
+		        bind:field="*"
+		        bind:on_Click="handleClick" 
+		        android:layout_marginLeft="6dp"/>		    
+		    <TextView
+		        android:id="@id/tv_title_content"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_centerInParent="true"
+		        android:text="个股界面"
+		        android:textColor="#ffffff"
+		        android:textSize="17.0sp"
+		        android:textStyle="bold"/>
+		    <ImageButton
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:layout_centerVertical="true"
+		        android:src="@drawable/add_stock_button_style"
+		        android:background="@null"
+		        bind:field="addStockField"
+		        bind:on_Click="addStockClick" 
+		        android:layout_marginLeft="6dp"/>
+		    <ImageButton
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:layout_centerVertical="true"
+		        android:src="@drawable/del_stock_button_style"
+		        android:background="@null"
+		        bind:field="delStockField"
+		        android:visibility="invisible"
+		        bind:on_Click="delStockClick" 
+		        android:layout_marginLeft="6dp"/>		    
+		</RelativeLayout>           
+    </LinearLayout>
 <com.wxxr.mobile.stock.client.widget.PullToRefreshView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -388,37 +442,4 @@
         </LinearLayout>
     </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
 </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <Button
-            android:id="@+id/Button01"
-            style="@style/buy_bule_button_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:text="参赛交易盘买入" 
-            bind:field="*"
-            bind:on_Click="canSaiTradingBuyClick"
-            android:layout_marginRight="4dp"/>
-
-        <Button
-            android:id="@+id/button1"
-            style="@style/buy_red_button_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="4dp"
-            android:text="挑战交易盘买入" 
-            bind:field="*"
-            bind:on_Click="tiaoZhanTradingBuyClick"
-            />
-    </LinearLayout>
-
 </LinearLayout>

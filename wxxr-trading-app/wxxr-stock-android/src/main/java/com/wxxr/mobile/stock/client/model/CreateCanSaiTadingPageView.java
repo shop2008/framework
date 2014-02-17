@@ -1,22 +1,33 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.List;
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
+import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
+import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockString2StringConvertor1;
+import com.wxxr.stock.trading.ejb.api.LossRateNDepositRate;
 
 @View(name="CreateCanSaiTadingPageView",withToolbar=true,description="创建参赛盘")
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.create_cansai_trading_layout")
@@ -25,8 +36,8 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 	@Bean(type=BindingType.Service)
 	ITradingManagementService userCreateService;
 	
-	@Bean(type=BindingType.Pojo,express="${userCreateService.getUserCreateTradAccInfo()}")
-	UserCreateTradAccInfoBean userCreateTradAccInfo;
+	@Bean(type=BindingType.Pojo,express="${userCreateService.getTradingConfig('T_PLUS_ONE',true)}")
+	TradingConfigBean userCreateTradAccInfo;
 	
 	@Menu(items={"left"})
 	private IMenu toolbar;
@@ -40,11 +51,29 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 		return null;
 	}
 	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="multiple", value="100f"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockString2StringConvertor1 stockLong2StringConvertorSpecial;
+	
+	
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f"),
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString",value="--")
+	})
+	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
+	
 	@Bean
 	int checkedbox1 = 0;
 	
+	@Field(valueKey="text",binding="${userCreateTradAccInfo!=null?userCreateTradAccInfo.virtualApplyAmount:'--'}",converter="stockLong2StringAutoUnitConvertor")
+	String virtualApplyAmount;
+	
 	/**止损比例 - 参赛交易盘*/
-	@Field(valueKey="text",binding="${userCreateTradAccInfo.rateString3!=null?userCreateTradAccInfo.rateString3:'--'}")
+	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",binding="${(userCreateTradAccInfo!=null && userCreateTradAccInfo.getVirtualRateList()!=null && userCreateTradAccInfo.getVirtualRateList().size()>0)?userCreateTradAccInfo.getVirtualRateList().get(0).lossRate:'--'}")
 	String capitalRate;
 	
 	@Field(valueKey="checked",binding="${checkedbox1==0?true:false}")
@@ -52,8 +81,8 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 	
 	//同意守则-参赛交易盘
 	@Field(valueKey="text",attributes={
-			@Attribute(name = "textColor", value = "${(checkedbox1==0 && userCreateTradAccInfo.getRateData3()>0 && userCreateTradAccInfo.getDeposit3()>0)?'resourceId:color/white':'resourceId:color/gray'}"),
-			@Attribute(name = "enabled", value = "${checkedbox1==0 && userCreateTradAccInfo.getRateData3()>0 && userCreateTradAccInfo.getDeposit3()>0}")
+			@Attribute(name = "textColor", value = "${(checkedbox1==0 && userCreateTradAccInfo.virtualApplyAmount>0)?'resourceId:color/white':'resourceId:color/gray'}"),
+			@Attribute(name = "enabled", value = "${checkedbox1==0 && userCreateTradAccInfo.virtualApplyAmount>0}")
 			})
 	String submitBtnStatus1;
 	
@@ -82,11 +111,24 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 		
 	}
 	
-	
-	@Command
+	@Command(commandName="handleCreateTrading",navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+			}
+	)
+	@NetworkConstraint
+	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
 	String handleCreateTrading(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			
+			if(userCreateService!=null){
+				if(userCreateTradAccInfo!=null){
+					List<LossRateNDepositRate> temp = userCreateTradAccInfo.getVirtualRateList();
+					if(temp!=null){
+						userCreateService.createTradingAccount(Long.parseLong(userCreateTradAccInfo.getVirtualApplyAmount()), Float.parseFloat(temp.get(0).getLossRate()), true, Float.parseFloat(temp.get(0).getDepositCash()), "CASH", "ASTOCKT1");
+						getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+					}
+				}
+			}
 		}
 		return null;
 	}

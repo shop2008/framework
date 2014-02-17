@@ -100,7 +100,7 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='000001'&&stockMarket=='SH')}")
 	boolean showSHLayout = true;
 	
-	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='399001'&&stockMarket=='SZ')}")
+	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='399001'&&stockMarket=='SZ') || (stockCode!=null&&stockCode=='399005'&&stockMarket=='SZ')}")
 	boolean showSZLayout = false;
 	
 	/**昨收*/

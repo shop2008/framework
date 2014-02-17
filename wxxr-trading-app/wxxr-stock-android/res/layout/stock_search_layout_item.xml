@@ -28,12 +28,29 @@
         android:textSize="20sp"
         bind:field="stockName" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
+    <FrameLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/search_add_btn"
-        android:focusable="false" />
+        >
+	    <ImageButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/search_add_btn"
+	        android:focusable="false" 
+	        bind:field="unadd"
+	        bind:on_Click="addStock"/>
+
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="已添加" 
+	        android:textSize="15sp"
+	        bind:field="added"
+	        android:textColor="#46566d"
+	        android:visibility="invisible"/>
+        
+    </FrameLayout>
 
 </RelativeLayout>

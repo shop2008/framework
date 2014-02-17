@@ -26,7 +26,6 @@
         android:background="@drawable/inpunt_bj"
         android:drawableRight="@drawable/inpunt_arrows"
         android:drawablePadding="0dp"
-        
         bind:on_TextChanged="moneyTextChanged"/>
 
     <RadioGroup
