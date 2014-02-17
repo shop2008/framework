@@ -1820,6 +1820,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	                        log.debug("Create trading account successfully.");
 	                    }
 	                   refreshHomePage();
+	                   throw new StockAppBizException("创建交易盘成功");
 	                }
 	           }			
 		}catch (ExecutionException e) {
