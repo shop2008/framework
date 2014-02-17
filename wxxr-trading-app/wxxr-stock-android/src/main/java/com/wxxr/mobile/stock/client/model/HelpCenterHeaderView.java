@@ -50,6 +50,11 @@ public abstract class HelpCenterHeaderView extends ViewBase {
 		return "";
 	}
 	
+	@Command(navigations={@Navigation(on="*", showPage="constructUsPage")})
+	String toConstructUs(InputEvent event) {
+		return "";
+	}
+	
 	@OnHide
 	void initData() {
 		UnGainScoreBodyField.getDomainModel().doEvaluate();
