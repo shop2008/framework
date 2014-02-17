@@ -59,7 +59,7 @@
         <Button
             android:id="@+id/button1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:text="确定" 
             android:layout_weight="1"
             android:textColor="#e1e1e1"
@@ -73,7 +73,7 @@
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:text="取消" 
             android:textColor="#e1e1e1"
             android:textSize="14sp"
@@ -86,7 +86,7 @@
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:text="取消" 
             android:textColor="#e1e1e1"
         	android:textSize="14sp"
