@@ -19,6 +19,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
@@ -91,7 +92,14 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 					boolean confirmed = authBean.getConfirmed();
 					if (confirmed) {
 						hide();
-						tradingService.applyDrawMoney(Long.parseLong(moneyAmount)*100);
+						
+						//Long.parseLong(moneyAmount)*100
+						
+						long applyMoney = 0l;
+						if(StringUtils.isNotBlank(moneyAmount)) {
+							applyMoney = Long.parseLong(moneyAmount);
+						}
+						tradingService.applyDrawMoney(applyMoney);
 						result.setResult("WaitVerify");
 						return result;
 					} else {

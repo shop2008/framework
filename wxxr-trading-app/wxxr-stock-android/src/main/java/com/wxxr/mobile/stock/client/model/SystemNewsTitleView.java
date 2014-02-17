@@ -11,7 +11,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.system_news_title_layout")
 public abstract class SystemNewsTitleView extends ViewBase implements IModelUpdater {
 
-	@Field(valueKey="text", binding="${title!=null?title:null}")
+	@Field(valueKey="text", binding="${title!=null?title:null}", visibleWhen="${title!=null}")
 	String title;
 	
 	@Override
