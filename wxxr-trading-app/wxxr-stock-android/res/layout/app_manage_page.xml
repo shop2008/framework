@@ -446,7 +446,7 @@
                     android:text="版本2.0.0"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    bind:field="vertionField" />
+                    bind:field="vertion" />
 
                 <ImageView
                     android:layout_width="wrap_content"
