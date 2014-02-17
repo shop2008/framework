@@ -39,6 +39,7 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 	String commitVerify;
 
 	String type;
+	
 	String moneyAmount;
 	@Bean(type = BindingType.Service)
 	IUserManagementService userService;
@@ -91,15 +92,15 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 				if (authBean != null) {
 					boolean confirmed = authBean.getConfirmed();
 					if (confirmed) {
+						
+						
 						hide();
-						
-						//Long.parseLong(moneyAmount)*100
-						
 						long applyMoney = 0l;
 						if(StringUtils.isNotBlank(moneyAmount)) {
 							applyMoney = Long.parseLong(moneyAmount);
 						}
-						tradingService.applyDrawMoney(applyMoney);
+						tradingService.applyDrawMoney(applyMoney*100);
+						
 						result.setResult("WaitVerify");
 						return result;
 					} else {
@@ -146,7 +147,7 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 					}
 				}
 				
-				if(tempt != null && "moneyAmount".equals("key")) {
+				if(tempt != null && "moneyAmount".equals(key)) {
 					if (tempt instanceof String) {
 						moneyAmount = (String) tempt;
 					}
