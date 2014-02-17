@@ -11,5 +11,5 @@ import com.wxxr.trading.core.model.ITrading;
  *
  */
 public interface ITradingProcess<T extends ITrading> {
-	void process(ITradingContext context, T trading) throws TradingException;
+	void process(ITradingContext context, ITrading trading) throws TradingException;
 }

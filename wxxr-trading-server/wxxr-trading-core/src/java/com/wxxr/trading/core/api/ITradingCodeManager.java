@@ -11,10 +11,10 @@ import com.wxxr.trading.core.model.ITradingCode;
  *
  */
 public interface ITradingCodeManager {
-	void registerStrategy(String tradingCode,ITradingStrategy<? extends ITrading> strategy);
-	void unregisterStrategy(String tradingCode,ITradingStrategy<? extends ITrading> strategy);
+	void registerStrategy(String tradingCode,ITradingStrategy<ITrading> strategy);
+	void unregisterStrategy(String tradingCode,ITradingStrategy<ITrading> strategy);
 	ITradingCode getTradingCode(String tradingCode);
 	ITradingCode getTradingCode(Integer tradingCodeId);
-	<T extends ITrading> ITradingStrategy<T> getStrategy(String tradingCode);
-	
+	ITradingStrategy<ITrading> getStrategy(String tradingCode);
+	ITradingCode buildITradingCode(ITrading trading);
 }

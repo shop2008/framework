@@ -6,8 +6,9 @@ package com.wxxr.trading.core.storage.transaction;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.common.jmx.annotation.ServiceMBean;
 import com.wxxr.persistence.DAOFactory;
-import com.wxxr.trading.core.model.TradingStatus;
+import com.wxxr.stock.common.service.api.IMobileStockAppContext;
 import com.wxxr.trading.core.storage.account.TxStatus;
 import com.wxxr.trading.core.storage.api.IDataAccessObject;
 import com.wxxr.trading.core.storage.common.AbstractBizObjectStorage;
@@ -18,6 +19,7 @@ import com.wxxr.trading.core.storage.transaction.persistence.bean.TransactionInf
  * @author wangyan
  *
  */
+@ServiceMBean
 public class TransactionStorageImpl extends AbstractBizObjectStorage<Long,AbstractTransaction,TransactionInfo> implements ITransactionStorage {
 
 	private ITransactionInfoDAO transactionInfoDAO;
@@ -102,7 +104,7 @@ public class TransactionStorageImpl extends AbstractBizObjectStorage<Long,Abstra
 		bizObject.setCreatedTime(baseDO.getCreatedTime());
 		bizObject.setDescription(baseDO.getDescription());
 		bizObject.setId(baseDO.getId());
-		bizObject.setOperationCode(baseDO.getTransactionCode());
+		bizObject.setTransactionCode(baseDO.getTransactionCode());
 		bizObject.setStatus(baseDO.getStatus());
 		bizObject.setTradingId(baseDO.getTradingId());
 		bizObject.setType(baseDO.getType());
@@ -135,6 +137,22 @@ public class TransactionStorageImpl extends AbstractBizObjectStorage<Long,Abstra
 			transactionInfoDAO=DAOFactory.getDAObject(ITransactionInfoDAO.class);
 		}
 		return transactionInfoDAO;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
+	 */
+	@Override
+	protected void registerService(IMobileStockAppContext ctx) {
+		ctx.registerService(ITransactionStorage.class, this);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
+	 */
+	@Override
+	protected void unregisterService(IMobileStockAppContext ctx) {
+		ctx.unregisterService(ITransactionStorage.class, this);
 	}
 
 	

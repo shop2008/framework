@@ -12,8 +12,8 @@ import com.wxxr.trading.core.model.ITradingTransaction;
  * @author wangyan
  *
  */
-public interface IBackendTradingProcess<T extends ITrading> extends ITradingProcess {
+public interface IBackendTradingProcess<T extends ITrading> {
+	void start(ITradingTransactionContext context);
 	void cancelTrading(T trading) throws TradingException;
-	void handleTransactionSucceed(T trading,ITradingTransaction transaction);
-	void handleTransactionFailed(T trading,ITradingTransaction transaction);
+	void handleTransaction(ITradingTransactionContext context,ITradingTransaction transaction);
 }

@@ -3,6 +3,7 @@
  */
 package com.wxxr.trading.core.api;
 
+import com.wxxr.trading.core.model.ITrading;
 import com.wxxr.trading.core.model.ITradingCode;
 
 
@@ -11,5 +12,6 @@ import com.wxxr.trading.core.model.ITradingCode;
  *
  */
 public interface ITradingCodeBuilder {
-	ITradingCode build();
+	ITradingCode build(ITrading trading);
+	String getSupportType();
 }

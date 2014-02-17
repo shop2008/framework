@@ -11,6 +11,6 @@ import com.wxxr.trading.core.model.ITradingTransaction;
  * @author wangyan
  *
  */
-public interface ITradingOperationHandler<T extends ITradingTransaction> {
-	void execute(ITradingOperationContext operationContext,T operation) throws TradingException;
+public interface ITradingTransactionHandler<T extends ITradingTransaction> {
+	void execute(ITradingTransactionContext transactionContext,T transaction) throws TradingException;
 }

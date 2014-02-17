@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.hygensoft.common.util.Trace;
 import com.wxxr.smbiz.bizobject.INumberKeyObject;
+import com.wxxr.stock.common.service.AbstractModule;
 import com.wxxr.trading.core.storage.api.IBizObjectConverter;
 import com.wxxr.trading.core.storage.api.IBizObjectStorage;
 import com.wxxr.trading.core.storage.api.IDataAccessObject;
@@ -23,7 +24,7 @@ import com.wxxr.trading.core.storage.api.InvalidDataTypeException;
  * @author neillin
  *
  */
-public abstract class AbstractBizObjectStorage<K extends Number,BB extends InheritableBizObject<K>,BD extends INumberKeyObject<K>> implements IBizObjectStorage<K,BB,BD>{
+public abstract class AbstractBizObjectStorage<K extends Number,BB extends InheritableBizObject<K>,BD extends INumberKeyObject<K>> extends AbstractModule implements IBizObjectStorage<K,BB,BD>{
 	private static final Trace log = Trace.register(AbstractBizObjectStorage.class);
 	
 	private Map<String, IExtStrategy<K,BB, ? extends BB, BD,? extends INumberKeyObject<K>>> extStrategies = new HashMap<String, IExtStrategy<K,BB,? extends BB, BD,? extends INumberKeyObject<K>>>();

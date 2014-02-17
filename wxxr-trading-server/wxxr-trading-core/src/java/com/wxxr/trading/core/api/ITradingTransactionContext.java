@@ -9,7 +9,6 @@ import com.wxxr.trading.core.model.ITrading;
  * @author wangyan
  *
  */
-public interface ITradingOperationContext {
-	ITradingContext getTradingContext();
+public interface ITradingTransactionContext {
 	ITrading getTrading();
 }
