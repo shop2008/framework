@@ -21,7 +21,7 @@ public abstract class MainHomeItemMessageView extends ViewBase implements
 	@Field(valueKey = "imageURI", binding = "${'resourceId:drawable/home_message'}${(messageBean!=null&&messageBean.type!=null)?messageBean.type:''}")
 	String icon;
 
-	@Field(valueKey = "text", binding = "${(messageBean!=null&&messageBean.num!=null)?messageBean.num:''}", visibleWhen = "${messageBean!=null&&messageBean.num!=null&&messageBean.num>0}")
+	@Field(valueKey = "text", binding = "${(messageBean!=null&&messageBean.num!=null && messageBean.num<100)?messageBean.num:'99'}", visibleWhen = "${messageBean!=null&&messageBean.num!=null&&messageBean.num>0}")
 	String number;
 
 	@Field(valueKey = "text", binding = "${messageBean!=null?messageBean.title:'--'}")
