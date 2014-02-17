@@ -270,7 +270,7 @@ public interface ITradingManagementService {
 	 * @param virtual  -是否为虚拟盘
 	 * @param depositRate -保证金比率
 	 * @param assetType -资产类型
-	 * @param tradingType - 交易盘类型:ASTCOKT1,ASTOCKT3,ASTCOKTN;
+	 * @param tradingType - 交易盘类型:ASTOCKT1,ASTOCKT3,ASTOCKTN;
 	 */
 	public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual,float depositRate,String assetType,String tradingType);
 	/**
