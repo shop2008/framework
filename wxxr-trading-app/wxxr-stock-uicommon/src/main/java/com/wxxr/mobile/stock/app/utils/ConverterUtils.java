@@ -141,6 +141,7 @@ public class ConverterUtils {
         b.setUsedFee(vo.getUsedFee());
         b.setVirtual(vo.isVirtual());
         b.setElapseTime(vo.getElapseTime());
+        b.setDurationDay(vo.getDurationDay());
         List<StockTradingOrderVO> orderVos = vo.getTradingOrders();
         if (orderVos != null) {
             List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();

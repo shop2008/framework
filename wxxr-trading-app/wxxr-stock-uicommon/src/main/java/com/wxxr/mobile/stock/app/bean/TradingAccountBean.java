@@ -34,6 +34,8 @@ public class TradingAccountBean implements IBindableBean {
 	private String maxStockMarket;
 	private long gainRate;
 	private int elapseTime;
+	
+	private int durationDay;//盘存续的天数
 	/**
 	 * @param listener
 	 */
@@ -336,6 +338,17 @@ public class TradingAccountBean implements IBindableBean {
 		this.emitter.firePropertyChange("gainRate", old, this.gainRate);
 	}
 
+	public int getDurationDay() {
+		return durationDay;
+	}
+
+	public void setDurationDay(int durationDay) {
+		int old = this.durationDay;
+		this.durationDay = durationDay;
+		this.emitter.firePropertyChange("durationDay", old, this.durationDay);
+		
+	}
+
 	@Override
 	public String toString() {
 		return "TradingAccountBean [virtual=" + virtual + ", maxStockCode="
@@ -346,7 +359,8 @@ public class TradingAccountBean implements IBindableBean {
 				+ ", sellDay=" + sellDay + ", over=" + over + ", totalGain="
 				+ totalGain + ", applyFee=" + applyFee + ", frozenVol="
 				+ frozenVol + ", maxStockMarket=" + maxStockMarket
-				+ ", gainRate=" + gainRate + ", elapseTime=" + elapseTime + "]";
+				+ ", gainRate=" + gainRate + ", elapseTime=" + elapseTime
+				+ ", durationDay=" + durationDay + "]";
 	}
 
 	@Override
@@ -356,6 +370,7 @@ public class TradingAccountBean implements IBindableBean {
 		result = prime * result + (int) (applyFee ^ (applyFee >>> 32));
 		result = prime * result + (int) (avalibleFee ^ (avalibleFee >>> 32));
 		result = prime * result + (int) (buyDay ^ (buyDay >>> 32));
+		result = prime * result + durationDay;
 		result = prime * result + elapseTime;
 		result = prime * result + (int) (frozenVol ^ (frozenVol >>> 32));
 		result = prime * result + (int) (gainRate ^ (gainRate >>> 32));
@@ -379,6 +394,8 @@ public class TradingAccountBean implements IBindableBean {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
@@ -389,6 +406,8 @@ public class TradingAccountBean implements IBindableBean {
 		if (avalibleFee != other.avalibleFee)
 			return false;
 		if (buyDay != other.buyDay)
+			return false;
+		if (durationDay != other.durationDay)
 			return false;
 		if (elapseTime != other.elapseTime)
 			return false;
@@ -438,6 +457,7 @@ public class TradingAccountBean implements IBindableBean {
 			return false;
 		return true;
 	}
+
 
 	
 
