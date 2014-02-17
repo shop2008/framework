@@ -42,7 +42,7 @@ public class SumitAuthHandler implements ICommandHandler{
 		vo.setBankNum(command.getBankNum());
 		vo.setBankPosition(command.getBankAddr());
 		ResultBaseVO resultBaseVO=context.getKernelContext().getService(IRestProxyService.class).
-			getRestService(StockUserResource.class).userAttributeIdentify(vo);
+			getRestService(StockUserResource.class).updateAttributeIdentify(vo);
 		return (T) resultBaseVO;
 	}
 
