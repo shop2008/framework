@@ -27,7 +27,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:background="@drawable/bj_stock_chart" >
+                     >
 
                     <ViewPager
                         android:id="@+id/content_frame"
@@ -185,7 +185,7 @@
                 <Button
                     android:id="@+id/buy_btn"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/blue_button_style"

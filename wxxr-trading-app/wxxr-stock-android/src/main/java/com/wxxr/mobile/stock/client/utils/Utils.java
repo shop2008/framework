@@ -622,4 +622,9 @@ public class Utils {
 		String data = String.format("%.0f%%", Float.parseFloat(val)*100f);
 		return data;
 	}
+	
+	public static String getDayString(int val){
+		if(val==0) val = 1;
+		return "T+"+val+"日";
+	}
 }

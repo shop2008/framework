@@ -125,7 +125,7 @@ public abstract class StockQuotationView extends ViewBase implements ISelectionC
 	String risefallRate;
 	
 	@Field(valueKey = "imageURI", visibleWhen= "${stockQuotationBean!=null}", attributes={
-			@Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows':'resourceId:drawable/down_arrows'}")
+			@Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows_01':'resourceId:drawable/down_arrows_01'}")
 			})
 	String newpriceIcon;
 	

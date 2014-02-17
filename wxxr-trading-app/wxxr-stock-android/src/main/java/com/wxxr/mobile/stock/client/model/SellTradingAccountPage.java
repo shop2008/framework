@@ -108,16 +108,16 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * 为空：按钮不可用
 	 * 非空：按钮可用
 	 * */
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING')}")
 	boolean isRedSellBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING'&& enabled_view)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING')}")
 	boolean isRedCleanBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING')}")
 	boolean isBlueSellBtn;
 	
-	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING' && enabled_view)}")
+	@Field(valueKey="enabled",enableWhen="${(tradingAccount.tradingOrders!=null && tradingAccount.tradingOrders.size()>0 && tradingAccount.over!='CLEARING')}")
 	boolean isBlueCleanBtn;
 	
 	@Field(valueKey="enabled",enableWhen="${virtual}")
@@ -173,7 +173,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		if(this.virtual){
 			getAppToolbar().setTitle("参赛交易盘", null);
 		}else{
-			getAppToolbar().setTitle("挑战交易盘", null);
+			getAppToolbar().setTitle("挑战交易盘T+1", null);
 		}
 		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
 		
@@ -384,6 +384,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 						map.put(Constants.KEY_NAME_FLAG, name);
 						map.put(Constants.KEY_CODE_FLAG, code);
 						map.put(Constants.KEY_MARKET_FLAG, market);
+						map.put(Constants.KEY_VIRTUAL_FLAG, virtual);
 						map.put("amount", amount);
 						updateSelection(new StockSelection(market, code, name, buyPrice));
 					}
@@ -420,13 +421,6 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 		return "";
 	}
 	
-//	@Command(uiItems=@UIItem(id="leftcancel",label="取消",icon="resourceId:drawable/home"))
-//	String cancelHandler(InputEvent event){
-//		enabled_view = true;
-//	    registerBean("enabled_view", enabled_view);
-//	    return null;
-//	}	
-
 	@Command(uiItems=@UIItem(id="leftok",label="确定",icon="resourceId:drawable/home"))
 	String clearTradingAccount(InputEvent event){
 		enabled_view = false;

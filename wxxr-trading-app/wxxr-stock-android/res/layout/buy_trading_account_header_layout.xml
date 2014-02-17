@@ -8,7 +8,10 @@
 	<!-- 交易盘信息 开始 -->
 	<LinearLayout 
 	    android:layout_width="fill_parent"
-	    android:layout_height="80dp">
+	    android:layout_height="80dp"
+	    bind:field="*"
+	    bind:on_Click="handleStockClick"
+	    >
 	    <LinearLayout 
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
@@ -109,6 +112,7 @@
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="--"
+                    bind:field="totalGain"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     />	        

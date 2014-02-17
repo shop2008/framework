@@ -31,7 +31,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/stock_chart_bj"
                         android:orientation="vertical" >
 
                         <android.support.v4.view.ViewPager
@@ -189,7 +188,9 @@
                 <Button
                      android:id="@+id/button1"
                      android:layout_width="fill_parent"
-                     android:layout_height="wrap_content"
+                     android:layout_height="40dp"
+                     android:layout_marginLeft="8dp"
+                     android:layout_marginRight="8dp"
                      android:layout_marginTop="8dp"
                      android:background="@drawable/blue_button_style"
                      android:padding="0dp"

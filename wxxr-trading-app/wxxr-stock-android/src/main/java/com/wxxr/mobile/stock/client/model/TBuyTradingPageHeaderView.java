@@ -47,40 +47,44 @@ public abstract class TBuyTradingPageHeaderView extends ViewBase implements IMod
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f%%"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString", value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f元"),
-			@Parameter(name="multiple", value="100.00")
+			@Parameter(name="multiple", value="100.00"),
+			@Parameter(name="nullString", value="--")
 	})
 	StockLong2StringConvertor stockLong2StringConvertorYuan;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.2f"),
-			@Parameter(name="multiple",value="100")
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString", value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="%.0f"),
-			@Parameter(name="multiple",value="100")
+			@Parameter(name="multiple",value="100"),
+			@Parameter(name="nullString", value="--")
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertorInt;
 	
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:''}", converter = "stockLong2StringAutoUnitConvertorInt")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.applyFee:null}", converter = "stockLong2StringAutoUnitConvertorInt")
 	String applyFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:''}", converter = "stockLong2StringAutoUnitConvertor")
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.avalibleFee:null}", converter = "stockLong2StringAutoUnitConvertor")
 	String avalibleFee;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:''}", converter = "stockLong2StringConvertorSpecial", attributes={
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.gainRate:null}", converter = "stockLong2StringConvertorSpecial", attributes={
 			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.gainRate>0?'resourceId:color/stock_text_up':(tradingBean.gainRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 			})
 	String gainRate;
 
-	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:''}", converter = "stockLong2StringConvertorYuan", attributes={
+	@Field(valueKey = "text", binding = "${tradingBean!=null?tradingBean.totalGain:null}", converter = "stockLong2StringConvertorYuan", attributes={
 			@Attribute(name = "textColor", value = "${tradingBean==null?'resourceId:color/gray':tradingBean.totalGain>0?'resourceId:color/stock_text_up':(tradingBean.totalGain<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
 			})
 	String totalGain;

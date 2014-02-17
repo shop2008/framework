@@ -10,87 +10,71 @@
         android:id="@+id/stock_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/title_background"
+        android:background="#222325"
         android:gravity="center" >
-
-        <TextView
+        <TextView 
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:paddingBottom="6dip"
-            android:paddingTop="6dip"
-            android:shadowColor="#55000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1"
+            android:enabled="false"
             android:text="时间"
-            android:textColor="#cccccc"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/title_line" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:textColor="#989e9e"
             android:gravity="center"
-            android:paddingBottom="6dip"
-            android:paddingTop="6dip"
-            android:shadowColor="#55000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1"
+            android:textSize="15sp"
+            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
             android:text="名称代码"
-            android:textColor="#cccccc"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/title_line" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:textColor="#989e9e"
             android:gravity="center"
-            android:paddingBottom="6dip"
-            android:paddingTop="6dip"
-            android:shadowColor="#55000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1"
+            android:textSize="15sp"
+            />
+
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
             android:text="方向"
-            android:textColor="#cccccc"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/title_line" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:textColor="#989e9e"
             android:gravity="center"
-            android:paddingBottom="6dip"
-            android:paddingTop="6dip"
-            android:shadowColor="#55000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1"
+            android:textSize="15sp"
+            />
+
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
             android:text="价量"
-            android:textColor="#cccccc"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="#989e9e"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
     </LinearLayout>
 
     <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView

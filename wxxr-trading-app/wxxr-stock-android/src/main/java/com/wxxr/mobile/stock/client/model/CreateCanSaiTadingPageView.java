@@ -54,7 +54,7 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 	@Convertor(params={
 			@Parameter(name="format",value="%.0f%%"),
 			@Parameter(name="multiple", value="100f"),
-			@Parameter(name="nullString",value="--")
+			@Parameter(name="nullString",value="0.00")
 	})
 	StockString2StringConvertor1 stockLong2StringConvertorSpecial;
 	
@@ -73,7 +73,7 @@ public abstract class CreateCanSaiTadingPageView extends PageBase implements IMo
 	String virtualApplyAmount;
 	
 	/**止损比例 - 参赛交易盘*/
-	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",binding="${(userCreateTradAccInfo!=null && userCreateTradAccInfo.getVirtualRateList()!=null && userCreateTradAccInfo.getVirtualRateList().size()>0)?userCreateTradAccInfo.getVirtualRateList().get(0).lossRate:'--'}")
+	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",binding="${(userCreateTradAccInfo!=null && userCreateTradAccInfo.getVirtualRateList()!=null && userCreateTradAccInfo.getVirtualRateList().size()>0)?userCreateTradAccInfo.getVirtualRateList().get(0).lossRate:null}")
 	String capitalRate;
 	
 	@Field(valueKey="checked",binding="${checkedbox1==0?true:false}")

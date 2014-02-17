@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp" 
         android:gravity="center_vertical"
+        bind:field="sellDay"
         android:background="@drawable/tab_02">
 
         <TextView
@@ -53,12 +54,45 @@
             android:layout_weight="1"/>
         
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date_layout"
+        android:layout_margin="2dp"
+        android:background="@drawable/bu_message_radius"
+        android:gravity="center"
+        bind:field="messageLayout" >
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            bind:field="message" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/search_2_btn"
+            bind:field="closeBtn"
+            bind:on_Click="handleCloseBtnClick" />
+   </LinearLayout>   
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
+        bind:field="stockTradingOrder"
+        bind:itemViewId="SellTradingItemView"
         bind:headerViewId="SellTradingAccountHeaderView"
+        bind:on_ItemClick="sellStockItemClick"
         style="@style/mListView"
         android:layout_weight="1">
     </ListView>
@@ -75,18 +109,22 @@
 		    android:textSize="14sp"
 		    android:layout_weight="1"
 		    android:text="卖出" 
+		    bind:field="isRedSellBtn"
+            bind:on_Click="sellTradingAction"
 		    android:layout_marginRight="4dp"
-		    android:background="@drawable/red_button"/>
+		    android:background="@drawable/red_button_style"/>
 
 		<Button
 		    android:layout_width="fill_parent"
 		    android:layout_height="40dp"
 		    android:textColor="@color/white"
 		    android:textSize="14sp"
-		    android:text="卖出" 
+		    android:text="清仓" 
+		    bind:field="isRedCleanBtn"
+            bind:on_Click="handlerClearClick"
 		    android:layout_marginLeft="4dp"
 		    android:layout_weight="1"
-		    android:background="@drawable/red_button"/>
+		    android:background="@drawable/red_button_style"/>
 	    
 	</LinearLayout>
 </LinearLayout>

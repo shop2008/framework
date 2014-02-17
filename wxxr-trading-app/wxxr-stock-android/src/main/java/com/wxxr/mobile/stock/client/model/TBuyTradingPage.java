@@ -100,7 +100,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 	@Field(valueKey = "visible", visibleWhen = "${tradingBean != null ? (tradingBean.tradingOrders != null?(tradingBean.tradingOrders.size() > 0 ? false : true):false) : false}")
 	boolean noOrders;
 
-	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}") })
+	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/blue_button_style':'resourceId:drawable/red_button_style'}") })
 	String buyBtn;
 
 	@Field(attributes = {
@@ -195,7 +195,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 		if (isVirtual) {
 			getPageToolbar().setTitle("参赛交易盘", null);
 		} else {
-			getPageToolbar().setTitle("挑战交易盘", null);
+			getPageToolbar().setTitle("挑战交易盘T+1", null);
 		}
 	}
 
