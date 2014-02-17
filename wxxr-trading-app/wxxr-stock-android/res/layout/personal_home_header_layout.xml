@@ -44,7 +44,6 @@
             android:layout_alignBottom="@id/user_icon_back"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/user_icon_back"
-            android:text="海绵宝宝"
             android:textColor="@color/white"
             android:textSize="25sp" />
     </RelativeLayout>

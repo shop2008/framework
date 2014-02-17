@@ -32,7 +32,7 @@
                 android:textColor="#FEFEFE" />
 
             <TextView
-                android:layout_width="20dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_default_text"
                 android:textColor="#FF2101"

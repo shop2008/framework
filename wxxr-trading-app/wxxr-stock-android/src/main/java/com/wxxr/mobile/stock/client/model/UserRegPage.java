@@ -84,8 +84,7 @@ public abstract class UserRegPage extends PageBase {
 						this.callback.getPassword(),
 						this.callback.getRetypePassword());
 			}
-			
-			
+			usrService.login(this.callback.getUserName(), this.callback.getPassword());
 			hide();
 			return "OK";
 		}

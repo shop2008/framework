@@ -14,7 +14,7 @@ public abstract class UnLoginDialogView extends ViewBase {
 
 	@Command(navigations={@Navigation(on="*", showPage="userLoginPage")})
 	String done(InputEvent event) {
-		
+		hide();
 		return "";
 	}
 	

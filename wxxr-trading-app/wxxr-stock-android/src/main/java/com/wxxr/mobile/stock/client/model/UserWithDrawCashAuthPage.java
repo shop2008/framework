@@ -23,6 +23,8 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.model.UserDrawCachAuthCallBack;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
@@ -85,6 +87,22 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	@ExeGuard(title = "提现认证", message = "正在处理，请稍候...", silentPeriod = 200)
 	CommandResult cashAuth(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
+			
+			if(StringUtils.isBlank(callBack.getAccountName())) {
+				throw new StockAppBizException("帐户名不能为空");
+			}
+			
+			if(StringUtils.isBlank(callBack.getBankName())) {
+				throw new StockAppBizException("开户行不能为空");
+			}
+			
+			if(StringUtils.isBlank(callBack.getBankAddr())) {
+				throw new StockAppBizException("开户行所在地不能为空");
+			}
+			
+			if(StringUtils.isBlank(callBack.getBankNum())) {
+				throw new StockAppBizException("银行卡号不能为空");
+			}
 			
 			CommandResult result = new CommandResult();
 			Map<String, Object> map = new HashMap<String, Object>();
