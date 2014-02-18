@@ -30,8 +30,8 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.system_news_layout")
 public abstract class SystemNewsPage extends PageBase {
 
-	@Field(valueKey = "text",attributes= {@Attribute(name = "enablePullDownRefresh", value= "${falses}"),
-			@Attribute(name = "enablePullUpRefresh", value= "${false}")})
+	@Field(valueKey = "text",attributes= {@Attribute(name = "enablePullDownRefresh", value= "false"),
+			@Attribute(name = "enablePullUpRefresh", value= "false")})
 	String refreshView;
 	
 	
