@@ -78,7 +78,7 @@ public abstract class TBuyTdTradingPageView extends PageBase implements IModelUp
 	@Field(valueKey = "visible", visibleWhen = "${tradingBean != null ? (tradingBean.tradingOrders != null?(tradingBean.tradingOrders.size() > 0 ? false : true):false) : false}")
 	boolean noOrders;
 
-	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}") })
+	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}")
 	String buyBtn;
 
 	@Field(attributes = {

@@ -28,6 +28,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.utils.StockFloat2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockString2StringConvertor1;
 import com.wxxr.mobile.stock.client.utils.Utils;
 import com.wxxr.stock.trading.ejb.api.LossRateNDepositRate;
 
@@ -60,6 +61,13 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 			@Parameter(name="multiple", value="100.00")
 	})
 	StockFloat2StringConvertor stockLong2StringConvertorYuan;
+
+	@Convertor(params={
+			@Parameter(name="format",value="%.0f%%"),
+			@Parameter(name="multiple", value="100f"),
+			@Parameter(name="nullString",value="0.00")
+	})
+	StockString2StringConvertor1 stockLong2StringConvertorSpecial;
 	
 	//申请金额
 	@Field(valueKey="options",binding="${userCreateTradAccInfo!=null&&radionId==1?userCreateTradAccInfo.accualOptions:userCreateTradAccInfo.voucherOptions}",attributes={
@@ -80,30 +88,79 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	String lossRate;
 	@Bean
 	String depositCash;
-	@Field(valueKey="text",binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).depositCash):'--'}" +
-			"${'保证金\\n'}" +
-			"${'-'}" +
-			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).lossRate):'--'}" +
-			"${'止损'}",
-			attributes={
-			@Attribute(name = "checked", value = "${radionId==1?true:false}")
-	})
-	String rateList;
+	
+	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",attributes={
+			@Attribute(name = "enabled", value = "${radionId==1}")
+	},binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?userCreateTradAccInfo.rateList.get(0).lossRate:null}")
+	String rate_01;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==1}")
+	boolean rate_txt_01;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==1}")
+	boolean loss_txt_01;
+	
+	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",attributes={
+			@Attribute(name = "enabled", value = "${radionId==1}")
+	},binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?userCreateTradAccInfo.rateList.get(0).depositCash:null}")
+	String deposit_01;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==1}")
+	boolean deposit_txt_01;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==1}")
+	boolean deposit_radio_01;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==2}")
+	boolean deposit_layout_01;
+	
+	/**积分*/
+	
+	@Field(valueKey="text",converter="stockLong2StringConvertorSpecial",attributes={
+			@Attribute(name = "enabled", value = "${radionId==2}")
+	},binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.voucherRateList!=null&&userCreateTradAccInfo.voucherRateList.size()>0)?userCreateTradAccInfo.voucherRateList.get(0).lossRate:null}")
+	String voucherRate_02; 
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==2}")
+	boolean voucherRate_txt_02;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==2}")
+	boolean voucher_txt_02;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==2}")
+	boolean loss_txt_02;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==2}")
+	boolean voucher_radio_02;
+	
+	@Field(valueKey="enabled",enableWhen="${radionId==1}")
+	boolean voucher_layout_02;
+	
+	
+//	@Field(valueKey="text",binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).depositCash):'--'}" +
+//			"${'保证金\\n'}" +
+//			"${'-'}" +
+//			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).lossRate):'--'}" +
+//			"${'止损'}",
+//			attributes={
+//			@Attribute(name = "checked", value = "${radionId==1?true:false}")
+//	})
+//	String rateList;
 	
 	@Bean
 	Utils utils = Utils.getInstance();
 	
 	/**积分创建-止损*/
-	@Bean
-	String vLossRate;
-	@Field(valueKey="text",binding="${'积分创建\\n'}" +
-			"${'-'}" +
-			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.voucherRateList!=null&&userCreateTradAccInfo.voucherRateList.size()>0)?utils.getValue(userCreateTradAccInfo.voucherRateList.get(0).lossRate):'--'}" +
-			"${'止损'}",
-			attributes={
-			@Attribute(name = "checked", value = "${radionId==2?true:false}")
-	})
-	String voucherRate;
+//	@Bean
+//	String vLossRate;
+//	@Field(valueKey="text",binding="${'积分创建\\n'}" +
+//			"${'-'}" +
+//			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.voucherRateList!=null&&userCreateTradAccInfo.voucherRateList.size()>0)?utils.getValue(userCreateTradAccInfo.voucherRateList.get(0).lossRate):'--'}" +
+//			"${'止损'}",
+//			attributes={
+//			@Attribute(name = "checked", value = "${radionId==2?true:false}")
+//	})
+//	String voucherRate;
 	
 	@Field(valueKey="text", binding="${originalFee!=null?originalFee:'--'}",converter="stockLong2StringConvertorYuan")
 	String originalFeeValue;

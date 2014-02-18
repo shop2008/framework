@@ -40,7 +40,7 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.SpUtil;
 import com.wxxr.mobile.stock.client.utils.Utils;
 
-@View(name="TBuyT3TradingPageView",withToolbar=true, description="挑战交易盘T+3")
+@View(name="TBuyT3TradingPageView",withToolbar=true, description="挑战交易盘T+3",provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY,layoutId="R.layout.buy_t3_trading_page_view")
 public abstract class TBuyT3TradingPageView extends PageBase implements IModelUpdater, IEventListener {
 	private static final Trace log = Trace.register(TBuyT3TradingPageView.class);
@@ -78,7 +78,7 @@ public abstract class TBuyT3TradingPageView extends PageBase implements IModelUp
 	@Field(valueKey = "visible", visibleWhen = "${tradingBean != null ? (tradingBean.tradingOrders != null?(tradingBean.tradingOrders.size() > 0 ? false : true):false) : false}")
 	boolean noOrders;
 
-	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/buy_button_bule_btn':'resourceId:drawable/buy_button_red_btn'}") })
+	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}")
 	String buyBtn;
 
 	@Field(attributes = {

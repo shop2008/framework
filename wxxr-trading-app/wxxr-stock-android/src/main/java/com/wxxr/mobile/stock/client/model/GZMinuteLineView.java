@@ -204,7 +204,7 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	
 	@Field(valueKey="options",binding="${infoCenterService.getMinuteline(map, true)!=null?infoCenterService.getMinuteline(map, false).list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
-			@Attribute(name = "stockStatus", value = "${minute!=null?minute.stop:null}"),
+			@Attribute(name = "stockStatus", value = "${quotationBean!=null&&quotationBean.status == 2}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name="stockType",value="${stockType}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),

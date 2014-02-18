@@ -39,4 +39,6 @@
     
     <color name="tab_checked_color">#18191B</color>
     <color name="tab_default_color">#202123</color>
+    
+    <color name="text_spinner_select_color">#f3f3f3</color>
 </resources>

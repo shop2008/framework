@@ -57,6 +57,7 @@
         android:layout_margin="2dp"
         android:background="@drawable/bu_message_radius"
         android:gravity="center"
+        android:visibility="gone"
         bind:field="messageLayout" >
 
         <TextView
@@ -80,19 +81,7 @@
             bind:field="closeBtn"
             bind:on_Click="handleCloseBtnClick" />
     </LinearLayout>  
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/buy_btn"
-        android:layout_below="@id/message_layout"
-        android:layout_marginTop="40dip"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_weight="1"
-        android:text="尚未买入股票"
-        android:textColor="@color/light_gray"
-        android:textSize="26sp"
-        bind:field="noOrders" />          
+        
     <com.wxxr.mobile.stock.client.widget.PullToRefreshView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -112,7 +101,16 @@
             bind:itemViewId="TBuyTradingItemView"
             bind:on_ItemClick="handleItemClick" />
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="尚未买入股票"
+        android:textColor="@color/light_gray"
+        android:textSize="26sp"
+        android:layout_weight="1"
+        bind:field="noOrders" />      
     <RelativeLayout
         android:id="@+id/buy_btn"
         android:layout_width="fill_parent"

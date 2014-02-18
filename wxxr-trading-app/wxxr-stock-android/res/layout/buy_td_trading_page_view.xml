@@ -24,7 +24,16 @@
             bind:itemViewId="TBuyTradingItemView"
             bind:on_ItemClick="handleItemClick" />
     </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_weight="1"
+        android:text="尚未买入股票"
+        android:textColor="@color/light_gray"
+        android:textSize="26sp"
+        bind:field="noOrders" />    
     <RelativeLayout
         android:id="@+id/buy_btn"
         android:layout_width="fill_parent"

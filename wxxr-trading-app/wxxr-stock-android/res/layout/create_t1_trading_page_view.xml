@@ -46,7 +46,7 @@
         bind:on_TextChanged="moneyTextChanged"
         android:textColor="@color/black"
         android:background="#ffffff"
-        android:drawableRight="@drawable/inpunt_arrows"
+        android:drawableRight="@drawable/input_arrows_new"
         android:drawablePadding="0dp"
         android:layout_marginBottom="8dp"/>
 	
@@ -69,50 +69,143 @@
         android:drawablePadding="0dp"
         android:layout_marginBottom="8dp"/>
 	
-	<RadioGroup
-	    android:id="@+id/radioGroup1"
+	<LinearLayout 
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" 
-	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
 	    android:paddingBottom="8dp">
-
-	    <RadioButton
-	        android:id="@+id/radio1"
-	        android:layout_width="wrap_content"
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:checked="true"
 	        android:layout_weight="1"
 	        android:paddingLeft="12dp"
 	        android:paddingTop="8dp"
 	        android:paddingRight="8dp"
 	        android:paddingBottom="8dp"
-	        android:background="@drawable/radion_button_style"
-	        android:drawableLeft="@drawable/radion_button"
-	        android:button="@null"
-	        android:drawablePadding="8dp"
-	        bind:field="rateList"
+	        android:layout_marginRight="4dp"
+	        android:gravity="center_vertical"
+	        bind:field="deposit_layout_01"
 	        bind:on_Click="RateClick"
-	        android:textColor="@color/radion_button_color"
-	        android:layout_marginRight="4dp"/>
+	        android:background="@drawable/radion_button_style">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:background="@drawable/radion_button"
+	            bind:field="deposit_radio_01"/>
+	        <LinearLayout 
+	            android:layout_width="fill_parent"
+	            android:layout_weight="1"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:paddingLeft="6dp"
+	            android:layout_gravity="center_vertical">
+				<LinearLayout android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical">
+				    <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="--"
+		                bind:field="deposit_01"
+		                android:textColor="@color/radion_button_color"/>
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="保证金" 
+		                bind:field="deposit_txt_01"
+		                android:textColor="@color/radion_button_color"/>
+				</LinearLayout>
 
-	    <RadioButton
-	        android:id="@+id/radio2"
-	        android:layout_width="wrap_content"
+	            <LinearLayout android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical">
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="-" 
+		                bind:field="loss_txt_01"
+		                android:textColor="@color/radion_button_color"/>
+				    <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="--"
+		                bind:field="rate_01"
+		                android:textColor="@color/radion_button_color"/>
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="止损" 
+		                bind:field="rate_txt_01"
+		                android:textColor="@color/radion_button_color"/>
+				</LinearLayout>
+	            
+	        </LinearLayout>
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        bind:field="voucherRate"
-	        bind:on_Click="VoucherRateClick"
+	        android:gravity="center_vertical"
 	        android:layout_weight="1"
+	        bind:field="voucher_layout_02"
+	        bind:on_Click="VoucherRateClick"
 	        android:layout_marginLeft="4dp"
 	        android:paddingLeft="12dp"
 	        android:paddingTop="8dp"
 	        android:paddingRight="8dp"
 	        android:paddingBottom="8dp"
-	        android:drawablePadding="8dp"
-	        android:button="@null"
-	        android:textColor="@color/radion_button_color"
-	        android:background="@drawable/radion_button_style"
-	        android:drawableLeft="@drawable/radion_button"/>
-	</RadioGroup>
+	        android:background="@drawable/radion_button_style">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:background="@drawable/radion_button"
+	            bind:field="voucher_radio_02"/>
+	        <LinearLayout 
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:paddingLeft="6dp"
+	            android:layout_gravity="center_vertical"
+	            android:orientation="vertical">
+	            <TextView
+	                android:id="@+id/textView2"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="积分创建" 
+	                bind:field="voucher_txt_02"
+	                android:textColor="@color/radion_button_color"/>
+	            <LinearLayout android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center_vertical">
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="-" 
+		                bind:field="loss_txt_02"
+		                android:textColor="@color/radion_button_color"/>
+				    <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="--"
+		                bind:field="voucherRate_02"
+		                android:textColor="@color/radion_button_color"/>
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="止损" 
+		                bind:field="voucherRate_txt_02"
+		                android:textColor="@color/radion_button_color"/>
+				</LinearLayout>
+	        </LinearLayout>
+	    </LinearLayout>
+	</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

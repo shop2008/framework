@@ -55,7 +55,7 @@
 		        bind:on_TextChanged="moneyTextChanged" 
 		        android:textColor="@color/black"
 		        android:background="#ffffff"
-		        android:drawableRight="@drawable/inpunt_arrows"
+		        android:drawableRight="@drawable/input_arrows_new"
 		        android:drawablePadding="0dp"
 		        android:layout_marginBottom="8dp"/>    
 			<com.wxxr.mobile.stock.client.widget.TextSpinnerView
@@ -71,7 +71,7 @@
 		        bind:on_TextChanged="depositCashTextChanged" 
 		        android:textColor="@color/black"
 		        android:background="#ffffff"
-		        android:drawableRight="@drawable/inpunt_arrows"
+		        android:drawableRight="@drawable/input_arrows_new"
 		        android:drawablePadding="0dp"
 		        android:layout_marginBottom="8dp"/>
 			
