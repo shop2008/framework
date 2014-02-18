@@ -44,6 +44,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.event.HomePageRefreshRequestEvent;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
@@ -212,6 +213,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			if (event instanceof UserLoginEvent) {
 				UserLoginEvent _event = (UserLoginEvent)event;
 				if (_event.getAction().equals(LoginAction.LOGIN)) {
+					getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 					getPushMessageSetting();
 					getUserAuthInfo();
 					getGuideGainAllow();
@@ -636,6 +638,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		try{
 			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
 			future.get(30,TimeUnit.SECONDS);
+			getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 		}catch(Throwable e){
 			log.warn("readRemindMessage",e);
 		}
@@ -668,6 +671,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		ReadAllUnreadMessageCommand command=new ReadAllUnreadMessageCommand();
 		try{
 			context.getService(ICommandExecutor.class).submitCommand(command);
+			getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 		}catch(Throwable e){
 			log.warn("readAllUnremindMessage error",e);
 		}
@@ -701,6 +705,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 			if (bean!=null) {
 				bean.setRead(true);
 			}
+			getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 		}catch(Throwable e){
 			log.warn("readPullMesage error",e);
 		}

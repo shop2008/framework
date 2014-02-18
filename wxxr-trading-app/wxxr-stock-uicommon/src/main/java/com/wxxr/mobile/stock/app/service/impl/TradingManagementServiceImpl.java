@@ -22,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.CommandException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.event.api.IBroadcastEvent;
+import com.wxxr.mobile.core.event.api.IEventListener;
+import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
@@ -61,6 +64,7 @@ import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.common.RestUtils;
+import com.wxxr.mobile.stock.app.event.HomePageRefreshRequestEvent;
 import com.wxxr.mobile.stock.app.service.IMessageManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -132,7 +136,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private Timer timer = new Timer("Cache Clear Thread");
-	private Timer homePageRefresher = new Timer("HomePage Refresh Thread");
+	
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
 		@Override
@@ -242,7 +246,19 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     protected BindableListWrapper<GainPayDetailBean> vgainPayDetails;
     //提现
     private GenericReloadableEntityCache<Long,DrawMoneyRecordBean,List<DrawMoneyRecordVo>> drawMoneyRecordBean_cache;
-
+    //首页刷新监听器
+    private IEventListener listener = new IEventListener() {
+		public void onEvent(IBroadcastEvent event) {
+			if(event instanceof HomePageRefreshRequestEvent){
+				try {
+					refreshHomePage();
+				} catch (Throwable e) {
+					log.warn("Error when refresh home page",e);
+				}
+			}
+			
+		}
+	};
 	// =================module life cycle methods=============================
 	@Override
 	public void startService() {
@@ -283,16 +299,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				clearCache();
 			}
 		}, date, 24*60*60*1000);
-        homePageRefresher.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				try {
-					refreshHomePage();
-				} catch (Throwable e) {
-					log.warn("Error when refresh home page",e);
-				}
-			}
-		}, 10, 10*1000);
+        getService(IEventRouter.class).registerEventListener(HomePageRefreshRequestEvent.class, listener);
 		context.registerService(ITradingManagementService.class, this);
 	}
 
@@ -321,6 +328,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	@Override
 	public void stopService() {
+		getService(IEventRouter.class).unregisterEventListener(HomePageRefreshRequestEvent.class, listener);
 		context.unregisterService(ITradingManagementService.class, this);
 	}
 
@@ -1560,6 +1568,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private HomePageMenu menu;
 	public HomePageMenu getHomeMenuList() {
+		getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 		if (menu==null) {
 			menu = new HomePageMenu();
 		}
@@ -1829,7 +1838,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("Create trading account successfully.");
 	                    }
-	                   refreshHomePage();
+	                   getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
 	                   throw new StockAppBizException("创建交易盘成功");
 	                }
 	           }			
