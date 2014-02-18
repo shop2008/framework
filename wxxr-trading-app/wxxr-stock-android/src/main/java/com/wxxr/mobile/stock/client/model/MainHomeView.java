@@ -155,6 +155,7 @@ public abstract class MainHomeView extends ViewBase{
 				int position = (Integer) event.getProperty("position");
 				List<BaseMenuItem> menuList = null;
 				if(homeMenuBean != null)
+					
 					menuList = homeMenuBean.getMenuItems();
 				if(menuList!=null && menuList.size()>0){
 					BaseMenuItem menu = menuList.get(position);
