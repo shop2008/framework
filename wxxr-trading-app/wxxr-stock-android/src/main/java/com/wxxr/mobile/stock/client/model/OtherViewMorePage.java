@@ -86,7 +86,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@OnShow
 	void initData() {
 		if(nickName != null) {
-			getAppToolbar().setTitle(nickName+"的成功操作", null);
+			getAppToolbar().setTitle(nickName+"的交易", null);
 		}
 	}
 	

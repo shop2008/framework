@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
@@ -36,6 +37,9 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 
+	
+	@Bean(type=BindingType.Pojo, express="${usrService.getMyUserInfo()}")
+	UserBean userInfo;
 	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeAStart,myHomeALimit,false)}")
 	BindableListWrapper<GainBean> myChallengeListBean;
 
@@ -98,6 +102,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	String actualRefreshView;
 	
 	
+	@OnShow
+	void initData() {
+		getAppToolbar().setTitle(userInfo.getNickName()+"的交易", null);
+	}
 	/**
 	 * 挑战交易盘交易记录
 	 * 
