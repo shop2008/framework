@@ -312,6 +312,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> ("dealDetailBean");
         auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List<AuditDetailBean>> ("auditDetailBean");
         voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List<VoucherDetailsBean>>("voucherDetailsBean");
+        try {
+			refreshHomePage();
+		} catch (Exception e) {
+			log.warn("Warning:Failed to refresh home menu", e);
+		}
 	}
 
 	@Override
@@ -1053,6 +1058,9 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	}
 	
 	void clearCache(){
+		if (this.menu!=null) {
+			this.menu = null;
+		}
 		if (tradingAccInfo_cache!=null) {
 			tradingAccInfo_cache.clear();
 		}
@@ -1085,6 +1093,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		addRequiredService(IRestProxyService.class);
 		addRequiredService(IEntityLoaderRegistry.class);
 	    addRequiredService(IUserIdentityManager.class);
+	    addRequiredService(IMessageManagementService.class);
 	}
 
 	@Override
