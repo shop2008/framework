@@ -16,7 +16,7 @@ public class ReadPullMessageHandler implements ICommandHandler {
 	public static final String COMMAND_NAME = "ReadPullMessageCommand";
 	private ICommandExecutionContext context;
 	
-	public static class ReadPullMessageCommand implements ICommand<Void>{
+	public static class ReadPullMessageCommand implements ICommand<Long>{
 
 		private long id;
 		@Override
@@ -25,8 +25,8 @@ public class ReadPullMessageHandler implements ICommandHandler {
 		}
 
 		@Override
-		public Class<Void> getResultType() {
-			return Void.class;
+		public Class<Long> getResultType() {
+			return Long.class;
 		}
 
 		@Override
@@ -66,7 +66,7 @@ public class ReadPullMessageHandler implements ICommandHandler {
 		PullMessageInfo entity=list.get(0);
 		entity.setRead(true);
 		dao.update(entity);
-		return null;
+		return (T)entity.getPullId();
 	}
 
 	@Override

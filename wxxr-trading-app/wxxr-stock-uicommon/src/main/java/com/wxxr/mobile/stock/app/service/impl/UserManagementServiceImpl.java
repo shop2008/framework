@@ -691,8 +691,16 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 		ReadPullMessageCommand command=new ReadPullMessageCommand();
 		command.setId(id);
 		try{
-			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
-			future.get(30,TimeUnit.SECONDS);
+			Future<Long> future=context.getService(ICommandExecutor.class).submitCommand(command);
+			Long pull_id = future.get(30,TimeUnit.SECONDS);
+			if(pullMessagesCache==null){
+				pullMessagesCache=new GenericReloadableEntityCache<String, PullMessageBean, PullMessageVO>("pullMessageBean");
+			}
+			String key=pull_id+getService(IUserIdentityManager.class).getUserId();
+			PullMessageBean bean = pullMessagesCache.getEntity(key);
+			if (bean!=null) {
+				bean.setRead(true);
+			}
 		}catch(Throwable e){
 			log.warn("readPullMesage error",e);
 		}
