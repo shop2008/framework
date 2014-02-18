@@ -136,7 +136,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private Timer timer = new Timer("Cache Clear Thread");
-	
+	private Timer homePageRefresher = new Timer("HomePage Refresh Thread");
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
 		@Override
@@ -300,7 +300,17 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			}
 		}, date, 24*60*60*1000);
         getService(IEventRouter.class).registerEventListener(HomePageRefreshRequestEvent.class, listener);
-		context.registerService(ITradingManagementService.class, this);
+        homePageRefresher.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					refreshHomePage();
+				} catch (Throwable e) {
+					log.warn("Error when refresh home page",e);
+				}
+			}
+		}, 100, 15*1000);
+        context.registerService(ITradingManagementService.class, this);
 	}
 
 	/**
