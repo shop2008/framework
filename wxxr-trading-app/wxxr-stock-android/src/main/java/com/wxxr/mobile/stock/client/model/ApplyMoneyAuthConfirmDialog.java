@@ -2,6 +2,7 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.Map;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -13,6 +14,7 @@ import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.StockAppBizException;
@@ -72,11 +74,12 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 	
 	@Command(navigations={ @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-			@Parameter(name = "title", value = "错误") })})
+			@Parameter(name = "title", value = "提示") })})
 	String done(InputEvent event) {
 		
 		hide();
 		userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
+		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().hide();
 		throw new StockAppBizException("认证成功");
 		//return null;
 	}
