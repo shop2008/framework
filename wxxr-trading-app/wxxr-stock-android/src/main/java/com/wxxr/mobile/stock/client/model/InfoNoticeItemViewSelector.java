@@ -43,6 +43,17 @@ public abstract class InfoNoticeItemViewSelector extends ViewBase implements Ite
 			protected String getHeaderViewId() {
 				return "SystemNewsTitleView";
 			}
+			
+			@Override
+			protected boolean isHeaderData(Object data) {
+				
+				if (data != null) {
+					if (data instanceof String) {
+						return true;
+					}
+				}
+				return false;
+			}
 		};
 		return adapter;
 	}
