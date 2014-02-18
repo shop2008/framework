@@ -35,7 +35,7 @@ public abstract class VirtualViewMoreView extends ViewBase implements IModelUpda
 			result = new CommandResult();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("isVirtual", false);
+			map.put("isVirtual", true);
 			result.setPayload(map);
 			result.setResult("OK");
 			result.setResult("+");
@@ -44,7 +44,7 @@ public abstract class VirtualViewMoreView extends ViewBase implements IModelUpda
 			result = new CommandResult();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("isVirtual", false);
+			map.put("isVirtual", true);
 			map.put("userId", this.userId);
 			map.put(Constants.KEY_USER_NAME_FLAG, userName);
 			result.setPayload(map);
