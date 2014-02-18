@@ -58,8 +58,10 @@ public class PageSwiperView extends LinearLayout {
 			if (log.isDebugEnabled()) {
 				log.debug("Received datset changed event, going to reload all pages");
 			}
+			/*handler.removeMessages(START_SWIPE_MSG);
+			curPageIndex = 0;*/
+			//stopPageSwipe();
 			handler.removeMessages(START_SWIPE_MSG);
-			curPageIndex = 0;
 			bindImageList();
 		}
 
@@ -70,7 +72,7 @@ public class PageSwiperView extends LinearLayout {
 			}
 
 			handler.removeMessages(START_SWIPE_MSG);
-			curPageIndex = 0;
+			//curPageIndex = 0;
 			bindImageList();
 		}
 
@@ -178,6 +180,7 @@ public class PageSwiperView extends LinearLayout {
 			}
 			swiperPager.setAdapter(new ViewPagerAdapter(viewList));
 			swiperPager.setCurrentItem(0);
+			curPageIndex = 0;
 			swiperPager.setOnPageChangeListener(new ViewOnPageChangeListener());
 			startPageSwipe();
 		}
