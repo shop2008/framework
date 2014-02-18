@@ -24,8 +24,8 @@ import com.wxxr.mobile.stock.client.R;
 public class PageSwiperView extends LinearLayout {
 	private static final Trace log = Trace.register(PageSwiperView.class);
 
-	private LinearLayout paginationLayout; // 分页布局
-	private View[] paginationImgView; // 分页图片
+	//private LinearLayout paginationLayout; // 分页布局
+	//private View[] paginationImgView; // 分页图片
 	private Context mContext;
 	private ViewPager swiperPager;
 	private int mViewCount = 0;
@@ -105,8 +105,7 @@ public class PageSwiperView extends LinearLayout {
 		View view = LayoutInflater.from(mContext).inflate(
 				R.layout.page_swiper_view_layout, null);
 		if (view != null) {
-			paginationLayout = (LinearLayout) view
-					.findViewById(R.id.swiper_pagination_layout);
+			
 			swiperPager = (ViewPager) view.findViewById(R.id.swiper_view_pager);
 			swiperPager.requestDisallowInterceptTouchEvent(true);
 		}
@@ -133,11 +132,11 @@ public class PageSwiperView extends LinearLayout {
 
 	public void setShowPagination(boolean val) {
 		this.showPagination = val;
-		if (showPagination) {
+		/*if (showPagination) {
 			paginationLayout.setVisibility(View.VISIBLE);
 		} else {
 			paginationLayout.setVisibility(View.GONE);
-		}
+		}*/
 	}
 
 	@Override
@@ -149,33 +148,34 @@ public class PageSwiperView extends LinearLayout {
 	private void bindImageList() {
 		if (getAdapter() == null)
 			return;
-		if (paginationLayout.getChildCount() > 0) {
+		
+		/*if (paginationLayout.getChildCount() > 0 && paginationLayout.getVisibility()==View.VISIBLE) {
 			paginationLayout.removeAllViews();
-		}
+		}*/
 		mViewCount = getAdapter().getCount();
 		if (mViewCount > 0) {
 			viewList = new ArrayList<View>();
-			paginationImgView = new View[mViewCount];
+			//paginationImgView = new View[mViewCount];
 			for (int i = 0; i < mViewCount; i++) {
 				View image = getAdapter().getView(i, null, null);
 				if (image != null) {
 					viewList.add(image);
-					paginationImgView[i] = new View(mContext);
-					paginationImgView[i].setPadding(8, 8, 8, 8);
-					paginationImgView[i].setBackgroundResource(0);
-					paginationImgView[i].setEnabled(true);
-					paginationImgView[i]
-							.setBackgroundResource(R.drawable.guide_round);
-					paginationImgView[i].setTag(i);
-					if (i == 0) {
+					//paginationImgView[i] = new View(mContext);
+					//paginationImgView[i].setPadding(8, 8, 8, 8);
+					//paginationImgView[i].setBackgroundResource(0);
+					//paginationImgView[i].setEnabled(true);
+					//paginationImgView[i]
+							//.setBackgroundResource(R.drawable.guide_round);
+					//paginationImgView[i].setTag(i);
+					/*if (i == 0) {
 						paginationImgView[0].setEnabled(false);
-					}
-					if (paginationLayout != null) {
+					}*/
+					/*if (paginationLayout != null ) {
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 								14, 14);
 						params.setMargins(8, 0, 0, 0);
 						paginationLayout.addView(paginationImgView[i], params);
-					}
+					}*/
 				}
 			}
 			swiperPager.setAdapter(new ViewPagerAdapter(viewList));
@@ -246,8 +246,8 @@ public class PageSwiperView extends LinearLayout {
 					|| this.mCurSel == position) {
 				return;
 			}
-			paginationImgView[this.mCurSel].setEnabled(true);
-			paginationImgView[position].setEnabled(false);
+			//paginationImgView[this.mCurSel].setEnabled(true);
+			//paginationImgView[position].setEnabled(false);
 			this.mCurSel = position;
 			curPageIndex = position;
 			stopPageSwipe();
