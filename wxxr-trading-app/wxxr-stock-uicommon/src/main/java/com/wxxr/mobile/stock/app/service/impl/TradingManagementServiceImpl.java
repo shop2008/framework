@@ -1598,7 +1598,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 					sign.setHasSignIn(signVo.isSign());
 					sign.setType("80");
 					sign.setTitle("每日签到");
-					sign.setDate(sdf.format(new Date(Long.valueOf(signVo.getSignDate()))));
+					sign.setDate(StringUtils.isBlank(signVo.getSignDate())?sdf1.format(new Date())+" 00:00":sdf.format(new Date(Long.valueOf(signVo.getSignDate()))));
 					if (signVo.isSign()) {
 						sign.setMessage("今日已签到");
 					}else{
@@ -1679,6 +1679,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		
 	}
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
+	private SimpleDateFormat sdf1 = new SimpleDateFormat("MM月dd日");
 	
 	private MessageMenuItem generateMsgMenuItem1(){//生成操盘咨询菜单项
 		List<PullMessageBean> list = getService(IMessageManagementService.class).getUnReadPullMessage();
