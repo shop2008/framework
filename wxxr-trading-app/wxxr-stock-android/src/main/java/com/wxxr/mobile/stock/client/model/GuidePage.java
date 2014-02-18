@@ -106,6 +106,7 @@ public abstract class GuidePage extends PageBase {
 	@Command(navigations={
 			@Navigation(on = "+",showDialog="UnLoginDialogView"),
 			@Navigation(on = "-",showDialog="GainedAwardDialogView"), 
+			@Navigation(on = "OK",showDialog="GainAwardSucDialogView"),
 			@Navigation(on="StockAppBizException", message = "%m%n", params = {
 					@Parameter(name = "autoClosed", type =
 
@@ -127,8 +128,9 @@ public abstract class GuidePage extends PageBase {
 				usrService.getGuideGain();
 			}
 		}
+		
 		hide();
-		return null;
+		return "OK";
 	}
 	
 	@OnUIDestroy
