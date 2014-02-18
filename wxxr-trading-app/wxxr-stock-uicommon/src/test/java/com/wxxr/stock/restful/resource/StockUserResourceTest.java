@@ -231,13 +231,15 @@ public class StockUserResourceTest extends TestCase{
 //	public ResultBaseVO updateNickName(UserParamVO vo);
 	public void testUpdateNickName(){
 		UserParamVO vo = new UserParamVO();
-		vo.setNickName("666666");
+		vo.setNickName("晚点的动车");
 		ResultBaseVO info = stockUserResource.updateNickName(vo);
+		System.out.println(info);
 	}
 
 //	public UserVO getUser() throws Exception;
 	public void testGetUser()throws Exception{
 		UserVO info = stockUserResource.getUser();
+		System.out.println(info);
 	}
 	
 //	public ActivityUserVo getActivityUser() throws Exception;
