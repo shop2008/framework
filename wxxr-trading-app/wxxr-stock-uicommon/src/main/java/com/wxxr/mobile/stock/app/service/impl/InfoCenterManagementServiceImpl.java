@@ -175,8 +175,8 @@ public class InfoCenterManagementServiceImpl extends
 			for (StockBaseInfo stockBaseInfo : list) {
 				ret.add(new StockBaseInfoWrapper(stockBaseInfo, getService(IOptionStockManagementService.class).isAdded(stockBaseInfo.getCode(), stockBaseInfo.getMc())));
 			}
+			Collections.sort(ret, c);
 		}
-		Collections.sort(ret, c);
 		stockListbean.setSearchResult(ret);
 		return this.stockListbean;
 	}
