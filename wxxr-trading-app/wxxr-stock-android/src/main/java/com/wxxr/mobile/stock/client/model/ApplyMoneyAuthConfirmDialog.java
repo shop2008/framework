@@ -80,7 +80,7 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 		
 		hide();
 		userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
-		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().hide();
+		
 		//throw new StockAppBizException("认证成功");
 		return "OK";
 		//return null;
