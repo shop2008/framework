@@ -1059,7 +1059,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	
 	void clearCache(){
 		if (this.menu!=null) {
-			this.menu = null;
+			menu.setMenuItems(null);
 		}
 		if (tradingAccInfo_cache!=null) {
 			tradingAccInfo_cache.clear();
@@ -1614,7 +1614,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						sign.setMessage(String.format("可获%d实盘积分", signVo.getRewardVol()));
 					}
 					sign.setScore((int)signVo.getRewardVol());
-					sign.setSignDays(5);
+					sign.setSignDays((int)signVo.getOngoingDays());
 				}
 				//系统消息
 				List<MessageVO> sMsg = svo.getRemindMessage();
