@@ -7,5 +7,14 @@
         android:layout_height="fill_parent"
         android:id="@+id/swiper_view_pager">
     </android.support.v4.view.ViewPager>
-    
+    <LinearLayout
+        android:id="@+id/swiper_pagination_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="35dp"
+        android:gravity="center_vertical|right"
+        android:orientation="horizontal" 
+        android:layout_alignParentBottom="true"
+        android:paddingRight="8dp">
+    </LinearLayout>
 </RelativeLayout>

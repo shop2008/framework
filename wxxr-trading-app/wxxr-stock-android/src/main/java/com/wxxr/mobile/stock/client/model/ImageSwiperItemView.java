@@ -23,8 +23,6 @@ public abstract class ImageSwiperItemView extends ViewBase implements IModelUpda
 	@Field(valueKey="backgroundImageURI",binding="${article!=null?article.imageUrl:'--'}")
 	String swiperImage;
 	
-	@Field(valueKey="text",binding="${article!=null?article.title:'--'}")
-	String swiperTitle;
 	  
 	String articleUrl;
 	

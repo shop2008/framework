@@ -60,7 +60,7 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 	BindableListWrapper<ArticleBean> myArticles;
 	
 	/**绑定文章*/ 
-	@Field(valueKey="options",binding="${myArticles.data}", attributes={@Attribute(name="titleBarVisible", value="false")})
+	@Field(valueKey="options",binding="${myArticles.data}")
 	List<ArticleBean> articles; 
 
 	/**
