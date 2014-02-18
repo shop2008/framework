@@ -147,7 +147,7 @@ public abstract class MainHomeView extends ViewBase{
 			@Navigation(on="TBuyT3TradingPageView",showPage="TBuyT3TradingPageView"),
 			@Navigation(on="TBuyTdTradingPageView",showPage="TBuyTdTradingPageView"),
 			@Navigation(on="SellT3TradingPageView",showPage="SellT3TradingPageView"),
-			@Navigation(on="SellTDTradingPageView",showPage="SellTDTradingPageView"),
+			@Navigation(on="SellTDTradingPageView",showPage="SellTDTradingPageView")
 	})
 	CommandResult homeMessageClick(InputEvent event){
 			CommandResult resutl = new CommandResult();
