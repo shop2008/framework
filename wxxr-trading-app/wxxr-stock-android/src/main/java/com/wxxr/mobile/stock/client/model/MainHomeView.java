@@ -87,7 +87,7 @@ public abstract class MainHomeView extends ViewBase{
 	@Menu(items = { "left", "right" })
 	IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style",visibleWhen="${adStatusBean.off==true}")})
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/btn_ad_home_selector",visibleWhen="${adStatusBean.off==true}")})
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
