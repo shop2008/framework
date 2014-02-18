@@ -131,7 +131,6 @@ public abstract class MainHomeView extends ViewBase{
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
 	int type=0;
-	/**状态 0-未结算 ； 1-已结算*/
 	int status=0;
 	
 	
