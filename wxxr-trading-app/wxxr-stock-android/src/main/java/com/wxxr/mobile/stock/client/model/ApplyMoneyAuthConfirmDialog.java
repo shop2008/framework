@@ -74,13 +74,15 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 	
 	@Command(navigations={ @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
-			@Parameter(name = "title", value = "提示") })})
+			@Parameter(name = "title", value = "错误") }),
+			@Navigation(on="OK", showDialog="CardAuthSuccessDialogView")})
 	String done(InputEvent event) {
 		
 		hide();
 		userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
 		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().hide();
-		throw new StockAppBizException("认证成功");
+		//throw new StockAppBizException("认证成功");
+		return "OK";
 		//return null;
 	}
 	
