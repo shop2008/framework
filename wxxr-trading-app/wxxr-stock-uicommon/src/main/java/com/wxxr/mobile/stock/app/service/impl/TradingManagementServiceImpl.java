@@ -1591,7 +1591,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		SignInMessageMenuItem sign =null;
 		ChampionShipMessageMenuItem champion = null;
 		try {
-			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).unSecurityAppHome(0, 4);
+			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).unSecurityAppHome(0, 0);
 			//参数排行榜
 			MegagameRankNUpdateTimeVO m = vo.getRankVo();			
 			if (m!=null) {
