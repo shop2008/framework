@@ -94,10 +94,12 @@ public abstract class MainHomeView extends ViewBase{
 		}
 		if(adStatusBean != null) {
 			adStatusBean.setOff(false);
-			
-			//registerBean("adStatusBean", adStatusBean);
 		}
-		SystemClock.sleep(500);
+		try {
+			Thread.sleep(400);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
 		return null;
 	}
