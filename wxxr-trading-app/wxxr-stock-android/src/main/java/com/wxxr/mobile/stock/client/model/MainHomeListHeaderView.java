@@ -15,6 +15,7 @@ import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -59,7 +60,7 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 	BindableListWrapper<ArticleBean> myArticles;
 	
 	/**绑定文章*/ 
-	@Field(valueKey="options",binding="${myArticles.data}")
+	@Field(valueKey="options",binding="${myArticles.data}", attributes={@Attribute(name="titleBarVisible", value="false")})
 	List<ArticleBean> articles; 
 
 	/**

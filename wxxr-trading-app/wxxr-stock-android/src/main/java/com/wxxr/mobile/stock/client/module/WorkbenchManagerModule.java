@@ -64,6 +64,7 @@ import com.wxxr.mobile.stock.client.widget.MinuteLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 import com.wxxr.mobile.stock.client.widget.NewDragSortListView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
+import com.wxxr.mobile.stock.client.widget.PageSwiperViewKeys;
 import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.RefreshableLayout;
@@ -121,6 +122,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		ArticleBodyViewKeys.registerKeys(mgr);
 		BuyStockViewKeys.registerKeys(mgr);
 		ImageRefreshViewKeys.registerKeys(mgr);
+		PageSwiperViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
