@@ -97,11 +97,11 @@ public class StockMinuteKLoader extends AbstractEntityLoader<String, StockMinute
         p.setMarket(cmd.getMarket());
         p.setCode(cmd.getCode());
         StockMinuteKVO vo= getRestService(StockResource.class).getMinuteline(p);
-        StockQuotationBean qbean = KUtils.getService(IInfoCenterManagementService.class).getSyncStockQuotation(cmd.getCode(), cmd.getMarket());
+       // StockQuotationBean qbean = KUtils.getService(IInfoCenterManagementService.class).getSyncStockQuotation(cmd.getCode(), cmd.getMarket());
         if (vo!=null ){
             StockMinuteKBean bean =ConverterUtils.fromVO(vo);
             bean.setMarket(cmd.getMarket());
-            bean.setStop(qbean!=null&&qbean.getStatus()!=null?qbean.getStatus()==2:false);
+            //bean.setStop(qbean!=null&&qbean.getStatus()!=null?qbean.getStatus()==2:false);
             bean.setCode(cmd.getCode());
             List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
             result.add(bean);
