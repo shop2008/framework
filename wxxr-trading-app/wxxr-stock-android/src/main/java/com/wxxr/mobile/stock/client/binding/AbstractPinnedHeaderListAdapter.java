@@ -91,6 +91,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		//refresh();
 		return getViewPool().getView(null, convertView, getItem(position), position);
 	}
 
