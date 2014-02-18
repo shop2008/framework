@@ -1113,7 +1113,6 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext> 
 						throw new StockAppBizException(vo.getCause());
 					}else{
 						getMyUserInfo().setAllowGuideGain(false);
-						throw new StockAppBizException(String.format("恭喜您获得%s实盘积分", vo.getCause()));
 					}
 				}
 			}catch(CommandException e){
