@@ -56,7 +56,6 @@ public abstract class InfoNoticesPage extends PageBase {
 	CommandResult handleItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
-		System.out.println("-InfoNoticesPage--position--"+position);
 		PullMessageBean message = null;
 		if (infoNoticeListBean != null) {
 			List<PullMessageBean> infoNoticesList = infoNoticeListBean

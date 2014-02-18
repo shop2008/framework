@@ -1,11 +1,14 @@
 package com.wxxr.mobile.stock.client.model;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
@@ -37,8 +40,12 @@ public abstract class PushMessageSetPage extends PageBase {
 		return null;
 	}
 	
-	@Command
+	@Command(navigations={@Navigation(on="+", showDialog="UnLoginDialogView")})
 	String pushMsgStatusChanged(InputEvent event) {
+		
+		if(!AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated()) {
+			return "+";
+		}
 		
 		Object obj = event.getProperty("isChecked");
 		Boolean isChecked = null;
