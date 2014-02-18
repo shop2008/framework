@@ -21,9 +21,11 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
@@ -72,7 +74,7 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Field(valueKey = "text", attributes = { @Attribute(name = "enabled", value = "${checked}") })
+	@Field(valueKey = "text", attributes = { @Attribute(name = "enabled", value = "${checked}"), @Attribute(name="textColor", value="${checked?'resourceId:color/white':'resourceId:color/gray'}") })
 	String commitBtn;
 
 	@Convertor(params = { @Parameter(name = "replace", value = "x") })
@@ -117,6 +119,7 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
+		
 		return null;
 	}
 

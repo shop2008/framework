@@ -62,7 +62,7 @@ public abstract class UserSignPage extends PageBase {
 	@Menu(items = {"left"})
 	IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style")})
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/back_button_style")})
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -77,6 +77,13 @@ public abstract class UserSignPage extends PageBase {
 	String clickToSign(InputEvent event) {
 		if(userService != null) {
 			userSignBean = userService.sign();
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			userSignBean = userService.getUserSignBean();
 			registerBean("userSignBean", userSignBean);
 		}
 		return null;

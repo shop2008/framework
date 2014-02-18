@@ -50,7 +50,7 @@ public abstract class UserRegPage extends PageBase {
 		return null;
 	}
 
-	@Field(valueKey = "text", enableWhen = "${checked}")
+	@Field(valueKey = "text", enableWhen = "${checked}", attributes={@Attribute(name="textColor", value="${checked?'resourceId:color/white':'resourceId:color/gray'}")})
 	String registerBtn;
 
 	@Bean(type = BindingType.Service)
