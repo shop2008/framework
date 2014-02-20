@@ -17,7 +17,8 @@ import com.wxxr.mobile.core.log.api.Trace;
  * @author fudapeng
  *
  */
-public class StartTimeCommandHandler implements ICommandHandler {
+
+public class StartTimeCommandHandler implements ICommandHandler<TimeBean,StartTimeCommand> {
 
 	@Override
 	public void destroy() {
@@ -26,10 +27,10 @@ public class StartTimeCommandHandler implements ICommandHandler {
 	Thread currentThread = null;
 	
 	boolean isCancellable = false;
-	@Override
-	public <TimeBean> void execute(ICommand<TimeBean> command, IAsyncCallback<TimeBean> callback) {
+	
+	public  void execute(StartTimeCommand command, IAsyncCallback<TimeBean> callback) {
 		StartTimeCommand cmd = (StartTimeCommand)command;
-		TimeBean bean = (TimeBean) cmd.getBean();
+		TimeBean bean = cmd.getBean();
 		try {
 			ICancellable cancellable = new ICancellable(){
 				@Override

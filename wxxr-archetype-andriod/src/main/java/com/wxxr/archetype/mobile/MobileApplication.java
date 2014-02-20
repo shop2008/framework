@@ -30,7 +30,6 @@ public class MobileApplication extends Application
 		this.framework = new AppFramework(this);
 		if(this.framework.isInDebugMode()){
 			logConfig.configureLogCatAppender("com.wxxr.mobile",Level.DEBUG);
-//			logConfig.configureLogCatAppender("com.wxxr.mobile.stock",Level.DEBUG);
 		}else{
 			logConfig.configureFileAppender("/",Level.WARN);
 			logConfig.configureLogCatAppender("/", Level.WARN);

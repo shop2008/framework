@@ -19,6 +19,8 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.IBinding;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 
@@ -78,6 +80,7 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 	
+   	
 	//
 	@Field(valueKey="textColor",binding="${bean.ticking ? '#00FF00' : '#BA2514' }",attributes={@Attribute(name="typeface",value="${bean.ticking ? 'NORMAL' : 'ITALIC'}")})
 	String helloWorldColor;
