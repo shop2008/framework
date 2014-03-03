@@ -13,6 +13,7 @@ import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.IAttributeUpdater;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.common.AttributeKeys;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author xijiadeng
@@ -28,7 +29,10 @@ public class TextColorAttributeUpdater implements IAttributeUpdater<View> {
 		}
 		TextView tv = (TextView)control;
 		if(value instanceof String){
-			String val = (String)value;
+			 String val = (String)value;
+			 if(StringUtils.isBlank(val)){
+				 return;
+			 }
 			if((val != null)&&(attrType == AttributeKeys.textColor)){
 				if(RUtils.isResourceIdURI(val)){
 					tv.setTextColor(AppUtils.getFramework().getAndroidApplication().getResources().getColor(RUtils.getInstance().getResourceIdByURI(val)));

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import com.wxxr.mobile.core.rpc.api.IRequestTimeoutControl;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
 
 /**
@@ -18,4 +19,6 @@ public interface IHttpClientContext {
 	HttpResponse invoke(HttpRequestBase request) throws Exception;
 	
 	ExecutorService getExecutor();
+	
+	IRequestTimeoutControl getTimeoutControl();
 }

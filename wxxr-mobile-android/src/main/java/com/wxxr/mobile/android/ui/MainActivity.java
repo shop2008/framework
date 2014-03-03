@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import android.app.Activity;
 
 import com.wxxr.mobile.android.app.AppUtils;
-import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.async.api.IProgressMonitor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 

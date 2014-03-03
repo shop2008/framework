@@ -22,20 +22,36 @@ public class MethodHashing
       methodDesc.append(")").append(getTypeString(method.getReturnType()));
       return createHash(methodDesc.toString());
    }
+   
+   public static long methodHash0(Method method)
+   {
+      Class<?>[] parameterTypes = method.getParameterTypes();
+      StringBuilder methodDesc = new StringBuilder(method.getName()).append("(");
+      for (int j = 0; j < parameterTypes.length; j++)
+      {
+         methodDesc.append(getTypeString(parameterTypes[j]));
+      }
+      methodDesc.append(")");
+      return createHash(methodDesc.toString());
+   }
+
 
    public static long createHash(String methodDesc)
-           throws Exception
    {
-      long hash = 0;
-      ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
-      MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-      DigestOutputStream dataoutputstream = new DigestOutputStream(bytearrayoutputstream, messagedigest);
-      dataoutputstream.write(methodDesc.getBytes("UTF-8"));
-      dataoutputstream.flush();
-      byte abyte0[] = messagedigest.digest();
-      for (int j = 0; j < Math.min(8, abyte0.length); j++)
-         hash += (long) (abyte0[j] & 0xff) << j * 8;
-      return hash;
+      try {
+		long hash = 0;
+		  ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+		  MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+		  DigestOutputStream dataoutputstream = new DigestOutputStream(bytearrayoutputstream, messagedigest);
+		  dataoutputstream.write(methodDesc.getBytes("UTF-8"));
+		  dataoutputstream.flush();
+		  byte abyte0[] = messagedigest.digest();
+		  for (int j = 0; j < Math.min(8, abyte0.length); j++)
+		     hash += (long) (abyte0[j] & 0xff) << j * 8;
+		  return hash;
+	} catch (Exception e) {
+		throw new RuntimeException("Failed calculate method hash of :["+methodDesc+"]");
+	}
 
    }
 

@@ -357,6 +357,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		if(this.toolbarViewBingding != null){
 			this.toolbarViewBingding.deactivate();
 		}
+		if(getBindingPage() instanceof ViewBase){
+			((ViewBase)getBindingPage()).onUIHide();
+		}
 	}
 
 
@@ -381,6 +384,9 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 			this.androidViewBinding.doUpdate();
 		}
 		super.onResume();
+		if(getBindingPage() instanceof ViewBase){
+			((ViewBase)getBindingPage()).onUIShow();
+		}
 	}
 
 
@@ -399,7 +405,11 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 			@Override
 			public void dismiss() {
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}catch(Throwable t){
+					log.warn("Caught Throwable when close dialog :"+view.getName(), t);
+				}
 			}
 
 			@Override
@@ -420,8 +430,18 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	 */
 	@Override
 	public void onBackPressed() {
+		if(isFinishing()){
+			return;
+		}
+		IPage page = getBindingPage();
+		if(page instanceof ViewBase){
+			if(((ViewBase)page).onBackPressed()){
+				finish();
+				return;
+			}
+		}
 		super.onBackPressed();
-		if((!isFinishing())&&this.fragments.isEmpty()){
+		if((this.fragments == null)||this.fragments.isEmpty()){
 			finish();
 		}
 	}

@@ -24,6 +24,7 @@ import com.wxxr.mobile.android.ui.updater.BackgroupImageURIAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.CheckBoxAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.EnabledAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.ImageURIAttributeUpdater;
+import com.wxxr.mobile.android.ui.updater.SelectedIndexAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.TextColorAttributeUpdater;
 import com.wxxr.mobile.android.ui.updater.VisibleAttributeUpdater;
@@ -140,14 +141,15 @@ public abstract class AbstractWorkbenchManagerModule<T extends IAndroidAppContex
 		mgr.registerAttributeUpdater("textColor", new TextColorAttributeUpdater());
 		mgr.registerAttributeUpdater("webUrl", new WebUrlAttributeUpdater());
 		mgr.registerAttributeUpdater("checked", new CheckBoxAttributeUpdater());
+		mgr.registerAttributeUpdater("selectedIdx", new SelectedIndexAttributeUpdater());
+		mgr.registerAttributeUpdater("icon", new ImageURIAttributeUpdater());
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.AbstractModule#notifyKernelStarted()
 	 */
 	@Override
-	protected void notifyKernelStarted() {
-		super.notifyKernelStarted();
+	protected void onKernelStarted() {
 		manager.notifyUIInitEvent();
 	}
 

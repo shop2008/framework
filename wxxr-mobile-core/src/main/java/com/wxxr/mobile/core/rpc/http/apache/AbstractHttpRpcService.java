@@ -6,11 +6,14 @@ package com.wxxr.mobile.core.rpc.http.apache;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.HostnameVerifier;
@@ -45,13 +48,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.api.IRequestTimeoutControl;
+import com.wxxr.mobile.core.rpc.api.Request;
+import com.wxxr.mobile.core.rpc.api.RequestCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
@@ -65,6 +69,132 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 public class AbstractHttpRpcService implements HttpRpcService {
 
 	private static final Trace log = Trace.register(AbstractHttpRpcService.class);
+	private static class RequestWrapper {
+		private HttpRequest request;
+		private RequestCallback<HttpResponse, Request<HttpResponse>> callback;
+		long timestamp;
+	}
+	
+	private class InternelTimeoutControl implements IRequestTimeoutControl,Runnable {
+		private Thread thread;
+		private volatile boolean keepAlive;
+		
+		private ArrayList<RequestWrapper> reqs = new ArrayList<AbstractHttpRpcService.RequestWrapper>();
+		
+		@Override
+		public synchronized boolean unregisterRequest(HttpRequest request) {
+			RequestWrapper match = findMatch(request);
+			if(match != null){
+				return reqs.remove(match);
+			}
+			return false;
+		}
+
+		/**
+		 * @param request
+		 * @return
+		 */
+		public RequestWrapper findMatch(HttpRequest request) {
+			RequestWrapper match = null;
+			for (RequestWrapper req : reqs) {
+				if(req.request == request){
+					match = req;
+					break;
+				}
+			}
+			return match;
+		}
+		
+		@Override
+		public synchronized void registerRequest(HttpRequest request,
+				RequestCallback<HttpResponse, Request<HttpResponse>> callback) throws Exception {
+			RequestWrapper match = findMatch(request);
+			if(match == null){
+				match = new RequestWrapper();
+				match.callback = callback;
+				match.request = request;
+				match.timestamp = System.currentTimeMillis();
+				reqs.add(match);
+				if(callback != null){
+					callback.onPrepare(request);
+				}
+			}
+			
+		}
+		
+		private synchronized void checkTimeout() {
+			long timeout = requestTimeoutInSeconds*1000L;
+			
+			for (Iterator<RequestWrapper> itr = reqs.iterator();itr.hasNext();) {
+				RequestWrapper req = itr.next();
+				if((System.currentTimeMillis() - req.timestamp) >= timeout){
+					itr.remove();
+					handleTimeoutRequest(req);
+				}
+			}
+		}
+
+		/**
+		 * @param req
+		 */
+		private void handleTimeoutRequest(RequestWrapper req) {
+			log.warn("Http RPC request timeout, request url :"+req.request.getURI());
+			try {
+				if(req.callback != null){
+					req.callback.onError(req.request, new TimeoutException());
+				}
+				req.request.cancel();
+			}catch(Throwable t){
+				log.warn("Failed to abort timeout request :["+req.request+"]", t);
+			}
+		}
+
+		@Override
+		public void run() {
+			this.thread = Thread.currentThread();
+			this.keepAlive = true;
+			while(this.keepAlive) {
+				checkTimeout();
+				try {
+					Thread.sleep(500L);
+				} catch (InterruptedException e) {
+				}
+			}		
+		}
+		
+		public void start() {
+			new Thread(this, "HttpRequest timeout control Thread").start();
+		}
+		
+		public void stop() {
+			this.keepAlive = false;
+			if(this.thread != null){
+				this.thread.interrupt();
+				try {
+					this.thread.join(2000L);
+				} catch (InterruptedException e) {
+				}
+				this.thread = null;
+			}
+		}
+
+		@Override
+		public void notifySuccess(HttpRequest request, HttpResponse response) {
+			RequestWrapper req = findMatch(request);
+			if((req != null)&&(req.callback != null)){
+				req.callback.onResponseReceived(request, response);
+			}
+		}
+
+		@Override
+		public void notifyFailed(HttpRequest request, Throwable error) {
+			RequestWrapper req = findMatch(request);
+			if((req != null)&&(req.callback != null)){
+				req.callback.onError(request, error);
+			}
+		}
+	
+	}
 
 	private HttpClient httpClient;
 	private IKernelContext appContext;
@@ -75,10 +205,15 @@ public class AbstractHttpRpcService implements HttpRpcService {
 	protected long connectionTTL = -1;
 	private ExecutorService executor;
 	private boolean enablegzip = true;
-	private HttpContext localContext = new BasicHttpContext();
+//	private HttpContext localContext = new BasicHttpContext();
 	private  BasicCookieStore  cookies=new BasicCookieStore();
+	private int requestTimeoutInSeconds = 30;
+	
+	private InternelTimeoutControl internalControl;
+	
 	private IHttpClientContext context = new IHttpClientContext() {
 
+		private IRequestTimeoutControl control;
 		@Override
 		public HttpResponse invoke(HttpRequestBase request) throws Exception 
 		{
@@ -87,7 +222,7 @@ public class AbstractHttpRpcService implements HttpRpcService {
 				log.debug("Sending HttpRequest :{"+printRequest(request)+"\n}");
 			}
 			try {
-				resp = httpClient.execute(request,localContext);
+				resp = httpClient.execute(request);
 				return new HttpResponseImpl(resp);
 			}finally {
 				if(log.isDebugEnabled()){
@@ -101,6 +236,19 @@ public class AbstractHttpRpcService implements HttpRpcService {
 		@Override
 		public ExecutorService getExecutor() {
 			return executor;
+		}
+
+		@Override
+		public IRequestTimeoutControl getTimeoutControl() {
+			if(this.control == null){
+				this.control = appContext.getService(IRequestTimeoutControl.class);
+				if(this.control == null){
+					internalControl = new InternelTimeoutControl();
+					internalControl.start();
+					this.control = internalControl;
+				}
+			}
+			return this.control;
 		}
 	};
 
@@ -199,8 +347,8 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			{
 				BasicHttpParams params = new BasicHttpParams();
 				ConnManagerParams.setMaxTotalConnections(params, connectionPoolSize);
-				ConnManagerParams.setTimeout(params, connectionTTL);
-				if (maxPooledPerRoute == 0) maxPooledPerRoute = connectionPoolSize/2;
+				ConnManagerParams.setTimeout(params, connectionTTL < 0 ? requestTimeoutInSeconds : connectionTTL);
+				if (maxPooledPerRoute == 0) maxPooledPerRoute = connectionPoolSize;
 				ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRoute() {
 			        
 			        public int getMaxForRoute(HttpRoute route) {
@@ -209,16 +357,20 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			        
 			    });
 				ThreadSafeClientConnManager tcm = new ThreadSafeClientConnManager(params,registry){
+					
+					private AtomicInteger requestCounter = new AtomicInteger(0);
+					private AtomicInteger releaseCounter = new AtomicInteger(0);
 					@Override
 					public void releaseConnection(ManagedClientConnection conn,
 							long validDuration, TimeUnit timeUnit) {
 						try {
+							this.releaseCounter.incrementAndGet();
 							super.releaseConnection(conn, validDuration, timeUnit);
 							if(log.isDebugEnabled()){
-								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.getConnectionsInPool());
+								log.debug("Release connection for :"+conn+", duration :"+validDuration+":"+timeUnit+", connection in using :"+this.getConnectionsInPool()+", request # :"+this.requestCounter.get()+", release #: "+this.releaseCounter.get());
 							}
 						}catch(RuntimeException e){
-							log.error("caught runtime exception when release connection, connection in using :"+this.getConnectionsInPool()+", error message :"+e.getMessage());
+							log.error("caught runtime exception when release connection, connection in using :"+this.getConnectionsInPool()+", error message :",e);
 						}
 					}
 
@@ -235,8 +387,9 @@ public class AbstractHttpRpcService implements HttpRpcService {
 							public ManagedClientConnection getConnection(long timeout, TimeUnit tunit)
 									throws InterruptedException, ConnectionPoolTimeoutException {
 								ManagedClientConnection conn = req.getConnection(timeout, tunit);
+								requestCounter.incrementAndGet();
 								if(log.isDebugEnabled()){
-									log.debug("Acquired connection :"+conn+" , connection in using :"+getConnectionsInPool());
+									log.debug("Acquired connection :"+conn+" , connection in using :"+getConnectionsInPool()+", request # :"+requestCounter.get()+", release #: "+releaseCounter.get());
 								}
 								return conn;
 							}
@@ -383,6 +536,11 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			this.httpClient.getConnectionManager().shutdown();
 			this.httpClient = null;
 		}
+		if(this.internalControl != null){
+			this.internalControl.stop();
+			this.internalControl = null;
+		}
+
 	}
 
 	/**
@@ -412,6 +570,20 @@ public class AbstractHttpRpcService implements HttpRpcService {
             log.debug(" cookies " +cookies.getCookies().toString());
         }
 	    cookies.clear();
+	}
+
+	/**
+	 * @return the requestTimeoutInSeconds
+	 */
+	public int getRequestTimeoutInSeconds() {
+		return requestTimeoutInSeconds;
+	}
+
+	/**
+	 * @param requestTimeoutInSeconds the requestTimeoutInSeconds to set
+	 */
+	public void setRequestTimeoutInSeconds(int requestTimeoutInSeconds) {
+		this.requestTimeoutInSeconds = requestTimeoutInSeconds;
 	}
 
 }

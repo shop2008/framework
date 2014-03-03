@@ -3,20 +3,25 @@
  */
 package com.wxxr.mobile.core.command.api;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.async.api.IAsyncCallable;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 
 /**
  * @author neillin
  *
  */
 public interface ICommandExecutor {
-	<T> Future<T> submitCommand(ICommand<T> command);
-	<T> void submitCommand(ICommand<T> command,IAsyncCallback callback);
-	ICommandExecutor registerCommandHandler(String cmdName,ICommandHandler handler);
-	ICommandExecutor unregisterCommandHandler(String cmdName,ICommandHandler handler);
+	void invokeLater(Runnable task, long delay, TimeUnit unit);
+	void submit(Runnable task,IAsyncCallback<Object> callback);
+	<T> void submit(Callable<T> call,IAsyncCallback<T> callback);
+	<T> void submit(IAsyncCallable<T> call,IAsyncCallback<T> callback);
+	<T> void submitCommand(ICommand<T> command,IAsyncCallback<T> callback);
+	<T, C extends ICommand<T>> ICommandExecutor registerCommandHandler(String cmdName,ICommandHandler<T,C> handler);
+	<T, C extends ICommand<T>> ICommandExecutor unregisterCommandHandler(String cmdName,ICommandHandler<T,C> handler);
 	ICommandExecutor registerCommandValidator(ICommandValidator validator);
 	ICommandExecutor unregisterCommandValidator(ICommandValidator validator);
 	void validationConstraints(ConstraintLiteral... constraints);

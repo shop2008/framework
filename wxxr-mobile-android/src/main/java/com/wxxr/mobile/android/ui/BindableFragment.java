@@ -199,6 +199,10 @@ public abstract class BindableFragment extends Fragment {
 		}
 
 		super.onPause();
+		if(bindingView instanceof ViewBase){
+			((ViewBase)bindingView).onUIHide();
+		}		
+
 	}
 
 	/* (non-Javadoc)
@@ -212,11 +216,11 @@ public abstract class BindableFragment extends Fragment {
 		if(this.androidViewBinding != null){
 			this.androidViewBinding.doUpdate();
 		}
-		IAppToolbar toolbar = ((IBindableActivity)getActivity()).getToolbar();
-		if(toolbar != null){
-			toolbar.getBinding().doUpdate();
-		}
 		super.onResume();
+		if(bindingView instanceof ViewBase){
+			((ViewBase)bindingView).onUIShow();
+		}		
+
 	}
 
 	/* (non-Javadoc)

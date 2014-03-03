@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wxxr.mobile.core.api;
+package com.wxxr.mobile.core.async.api;
 
 /**
  * The <code>IProgressMonitor</code> interface is implemented

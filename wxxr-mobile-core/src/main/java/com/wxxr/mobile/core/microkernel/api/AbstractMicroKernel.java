@@ -18,17 +18,16 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.async.api.ICancellable;
+import com.wxxr.mobile.core.async.api.IProgressMonitor;
 import com.wxxr.mobile.core.common.EventRouterImpl;
 import com.wxxr.mobile.core.event.api.ApplicationShutdownEvent;
 import com.wxxr.mobile.core.event.api.ApplicationStartedEvent;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.util.ICancellable;
 import com.wxxr.mobile.core.util.StringUtils;
 
 
@@ -44,7 +43,7 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 	protected IProgressMonitor[] startMonitorHolder = new IProgressMonitor[1];
 	protected IProgressMonitor[] stopMonitorHolder = new IProgressMonitor[1];
 	
-	protected class AbstractContext implements IKernelContext {
+	protected abstract class AbstractContext implements IKernelContext {
 
 		@Override
 		public Object getAttribute(String key) {
@@ -122,10 +121,10 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 			addServiceAvailableCallback(interfaceClazz, callback);
 		}
 
-		@Override
-		public ExecutorService getExecutor() {
-			return getExecutorService();
-		}
+//		@Override
+//		public ExecutorService getExecutor() {
+//			return getExecutorService();
+//		}
 		
 		@SuppressWarnings("rawtypes")
 		@Override
@@ -136,33 +135,37 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		@Override
 		public ICancellable invokeLater(final Runnable task, long delay, TimeUnit unit) {
 			if(delay == 0L){
-				throw new IllegalArgumentException("Delay time must be large than 0");
-			}
-			final TimerTask t = new TimerTask() {
-				
-				@Override
-				public void run() {
-					try {
-						getExecutor().execute(task);
-					}catch(Throwable t){
-						log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
+				invokeLater(task);
+				return null;
+			}else{
+				final TimerTask t = new TimerTask() {
+					
+					@Override
+					public void run() {
+						try {
+							invokeLater(task);
+						}catch(Throwable t){
+							log.warn("Caught throwable when execute scheduled task, task discarded :"+task, t);
+						}
 					}
-				}
-			};
-			getTimer().schedule(t, TimeUnit.MILLISECONDS.convert(delay, unit));
-			return new ICancellable() {
-				private boolean cancelled = false;
-				@Override
-				public boolean isCancelled() {
-					return cancelled;
-				}
-				
-				@Override
-				public void cancel() {
-					cancelled = t.cancel();
-				}
-			};
+				};
+				getTimer().schedule(t, TimeUnit.MILLISECONDS.convert(delay, unit));
+				return new ICancellable() {
+					private boolean cancelled = false;
+					@Override
+					public boolean isCancelled() {
+						return cancelled;
+					}
+					
+					@Override
+					public void cancel() {
+						cancelled = t.cancel();
+					}
+				};
+			}
 		}
+		
+		public abstract void invokeLater(final Runnable task);
 	};
 	
 	private class PluginChain implements IServicePluginChain {
@@ -293,7 +296,11 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 				startModule(((M)mod));
 				cnt++;
 			}
-			
+			for (IKernelModule<C> mod : mods) {
+				if(mod instanceof AbstractModule){
+					((AbstractModule<?>)mod).startServiceWithoutOptional();
+				}
+			}		
 			setStatus(MStatus.STARTED);
 			fireKernelStarted();
 			if((monitor = getStartMonitor()) != null){
@@ -752,7 +759,6 @@ public abstract class AbstractMicroKernel<C extends IKernelContext, M extends IK
 		}
 	}
 	
-	protected abstract ExecutorService getExecutorService();
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.microkernel.api.IMicroKernel#getAllRegisteredModules()

@@ -97,7 +97,7 @@ public class GenericDialogFragment extends DialogFragment {
 		            	   if(handback != null){
 		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
 		            	   }
-		            	   leftButton.invokeCommand(null, evt);
+		            	   leftButton.handleInputEvent(evt);
 		               }
 		         });
 		    }
@@ -110,7 +110,7 @@ public class GenericDialogFragment extends DialogFragment {
 		            	   if(handback != null){
 		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
 		            	   }
-		            	   leftButton.invokeCommand(null, evt);
+		            	   leftButton.handleInputEvent(evt);
 		               }
 		         });
 		    }
@@ -123,12 +123,13 @@ public class GenericDialogFragment extends DialogFragment {
 		            	   if(handback != null){
 		            		   evt.addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, handback);
 		            	   }
-		            	   leftButton.invokeCommand(null, evt);
+		            	   leftButton.handleInputEvent(evt);
 		               }
 		         });
 		    }
 		    dialog = builder.create();
 	    }
+	    dialog.setCancelable(false);
 		if(view instanceof ViewBase){
 			((ViewBase)view).onUICreate();
 		}

@@ -21,6 +21,7 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 	
 	protected T context;
 	private Set<Class<?>> requiredServices;
+	private Set<Class<?>> optionalServices;
 	private Set<Class<?>> pendingServices;
 	private AtomicBoolean started = new AtomicBoolean(false);
 	private AtomicBoolean initted = new AtomicBoolean(false);
@@ -70,7 +71,7 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 		@Override
 		public boolean accepts(Class<?> clazz) {
 			synchronized(AbstractModule.this){
-				return requiredServices != null && requiredServices.contains(clazz);
+				return (requiredServices != null && requiredServices.contains(clazz))||((optionalServices != null)&&(optionalServices.contains(clazz)));
 			}
 		}
 	};
@@ -136,6 +137,17 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 				}
 			}
 		}
+		if(this.optionalServices != null){
+			for (Class<?> clazz : this.optionalServices) {
+				Object h = this.context.getService(clazz);
+				if(h == null){
+					if(this.pendingServices == null){
+						this.pendingServices = new HashSet<Class<?>>();
+					}
+					this.pendingServices.add(clazz);
+				}
+			}
+		}
 	}
 	
 	protected synchronized void clearPendingServices() {
@@ -147,6 +159,10 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 		if(this.requiredServices != null){
 			this.requiredServices.clear();
 			this.requiredServices = null;
+		}
+		if(this.optionalServices != null){
+			this.optionalServices.clear();
+			this.optionalServices = null;
 		}
 	}
 
@@ -211,6 +227,20 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 		this.requiredServices.add(serviceInterface);
 	}
 	
+	protected synchronized void addOptionalService(Class<?> serviceInterface){
+		if(serviceInterface == null){
+			throw new IllegalArgumentException("Invalid service interface : NULL");
+		}
+		if(initted.get()){
+			throw new IllegalStateException("module has been started, it's illegal to add new service dependency !");
+		}
+		if(this.optionalServices == null){
+			this.optionalServices = new HashSet<Class<?>>();
+		}
+		this.optionalServices.add(serviceInterface);
+	}
+
+	
 	protected synchronized boolean removeRequiredService(Class<?> serviceInterface){
 		if(initted.get()){
 			throw new IllegalStateException("module has been started, it's illegal to remove service dependency !");
@@ -245,10 +275,32 @@ public abstract class AbstractModule<T extends IKernelContext> implements IKerne
 		return this.moduleStatus;
 	}
 	
-	protected void notifyKernelStarted() {
+	protected void startServiceWithoutOptional() {
+		if((this.optionalServices == null)||(this.optionalServices.size() == 0)){
+			return;
+		}
+		if(this.started.get()){
+			return;
+		}
+		for (Class<?> clazz : this.optionalServices) {
+			this.pendingServices.remove(clazz);
+		}
+		if(this.pendingServices.isEmpty()){
+			doStartService();
+		}
+	}
+	
+	protected final void notifyKernelStarted() {
 		if(started.get() == false){
 			log.warn(String.format("Service was not started in module : %s due to missing required services : %s ", this,StringUtils.join(this.pendingServices.iterator(), ',')));
+			return;		// no started module will not received kernel started event
+		}else{
+			onKernelStarted();
 		}
+	}
+	
+	protected void onKernelStarted() {
+		
 	}
 
 	/* (non-Javadoc)

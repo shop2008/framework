@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import com.wxxr.mobile.core.async.api.AsyncFuture;
 import com.wxxr.mobile.core.event.api.IBroadcastEvent;
 import com.wxxr.mobile.core.event.api.IEventListener;
 import com.wxxr.mobile.core.event.api.IEventObject;
@@ -269,7 +270,7 @@ public class EventRouterImpl implements IEventRouter,IKernelComponent {
 				return null;
 			}
 		}else{
-			return this.context.getExecutor().submit(call);
+			return new AsyncFuture<Object>(call);
 		}
 	}
 

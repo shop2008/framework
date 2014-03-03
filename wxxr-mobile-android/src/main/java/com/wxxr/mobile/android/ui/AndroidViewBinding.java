@@ -227,7 +227,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 				for (int i = 0; i < cnt; i++) {
 					String name = StringUtils.trimToNull(attrSet.getAttributeName(i));
 					String value = StringUtils.trimToNull(attrSet.getAttributeValue(IAndroidBinding.BINDING_NAMESPACE, name));
-					if(value != null){
+//					if(value != null){
 						if(name.startsWith("on_")&&(name.length() > 4)){
 							String event = name.substring(3);
 							events.put(event, value);
@@ -238,7 +238,7 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						}else{
 							params.put(name, value);
 						}
-					}
+//					}
 				}
 				if(!"*".equals(val)){
 					FieldBindingCreator binding = new FieldBindingCreator(view, val, params,fieldDecor);
@@ -248,11 +248,14 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 				if(events.size() > 0){
 					for (String evtType : events.keySet()) {
 						String cmdName = events.get(evtType);
-						idx = cmdName.indexOf('@');
+						idx = cmdName != null ? cmdName.indexOf('@') : -1;
 						String eventDecor = null;
 						if(idx > 0){
 							eventDecor = cmdName.substring(idx+1);
 							cmdName = cmdName.substring(0,idx);
+						}else if(idx == 0){
+							eventDecor = cmdName.substring(idx+1);
+							cmdName = null;
 						}
 						IEventBinder eBinder = eventBinderMgr.getFieldBinder(evtType);
 						if(eBinder != null){

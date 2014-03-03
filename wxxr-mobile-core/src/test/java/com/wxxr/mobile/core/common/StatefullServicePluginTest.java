@@ -1,7 +1,9 @@
 package com.wxxr.mobile.core.common;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import junit.framework.TestCase;
 
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -9,8 +11,6 @@ import com.wxxr.mobile.core.microkernel.api.MockApplication;
 import com.wxxr.mobile.core.security.api.LoginAction;
 import com.wxxr.mobile.core.test.TestCounter;
 import com.wxxr.mobile.core.test.TestCounterModule;
-
-import junit.framework.TestCase;
 
 public class StatefullServicePluginTest extends TestCase {
 
@@ -26,10 +26,6 @@ public class StatefullServicePluginTest extends TestCase {
 				
 			}
 			
-			@Override
-			protected ExecutorService getExecutorService() {
-				return Executors.newCachedThreadPool();
-			}
 		};
 	}
 

@@ -12,7 +12,7 @@ package com.wxxr.mobile.core.microkernel.api;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.util.ICancellable;
+import com.wxxr.mobile.core.async.api.ICancellable;
 
 
 public interface IKernelContext {
@@ -33,7 +33,7 @@ public interface IKernelContext {
 	Object removeAttribute(String key);
 	Object getAttribute(String key);
 
-	ExecutorService getExecutor();
+//	ExecutorService getExecutor();
 
 	ICancellable invokeLater(Runnable task, long delay, TimeUnit unit);
 

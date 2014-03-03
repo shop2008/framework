@@ -127,5 +127,17 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 	public void setEnablegzip(boolean enablegzip) {
 		service.setEnablegzip(enablegzip);
 	}
+	/**
+	 * @return the requestTimeoutInSeconds
+	 */
+	public int getRequestTimeoutInSeconds() {
+		return service.getRequestTimeoutInSeconds();
+	}
 
+	/**
+	 * @param requestTimeoutInSeconds the requestTimeoutInSeconds to set
+	 */
+	public void setRequestTimeoutInSeconds(int requestTimeoutInSeconds) {
+		service.setRequestTimeoutInSeconds(requestTimeoutInSeconds);
+	}
 }

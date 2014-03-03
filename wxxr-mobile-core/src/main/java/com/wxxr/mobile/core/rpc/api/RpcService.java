@@ -9,6 +9,6 @@ import java.util.Map;
  * @author neillin
  *
  */
-public interface RpcService<T extends Request> {
+public interface RpcService<T extends Request<? extends Response>> {
 	T createRequest(String endpointUrl,Map<String, Object> params);
 }

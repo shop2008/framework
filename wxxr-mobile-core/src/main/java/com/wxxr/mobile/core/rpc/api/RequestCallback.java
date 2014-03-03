@@ -43,4 +43,6 @@ public interface RequestCallback<S extends Response, T extends Request<S>> {
    * @param exception the error that was encountered
    */
   void onError(T request, Throwable exception);
+  
+  void onPrepare(T request) throws Exception ;
 }

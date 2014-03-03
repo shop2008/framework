@@ -7,7 +7,7 @@ package com.wxxr.mobile.core.microkernel.api;
 
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.util.ICancellable;
+import com.wxxr.mobile.core.async.api.ICancellable;
 
 public interface IMicroKernel<C extends IKernelContext, T extends IKernelModule<C>> {
 

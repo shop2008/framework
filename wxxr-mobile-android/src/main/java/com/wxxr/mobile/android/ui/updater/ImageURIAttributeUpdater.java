@@ -27,7 +27,7 @@ public class ImageURIAttributeUpdater implements IAttributeUpdater<View> {
 		}
 		final ImageView imgV = (ImageView)control;
 		final String val = (String)value;
-		if((val != null)&&(attrType == AttributeKeys.imageURI)){
+		if(val != null){
 			try {
 				ImageUtils.updateImage(val, imgV);
 			} catch (Exception e) {

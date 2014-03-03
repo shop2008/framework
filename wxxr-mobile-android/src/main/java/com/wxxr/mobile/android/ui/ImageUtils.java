@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.Callable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.async.api.IAsyncCallable;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.util.LRUMap;
 
@@ -36,9 +41,24 @@ public abstract class ImageUtils {
 			if(img != null){
 				imgV.setBackgroundDrawable(img);
 			}else{
-				KUtils.executeTask(new Runnable() {
-					public void run() {
-						final Drawable img = fetchDrawable(val);
+				KUtils.getService(ICommandExecutor.class).submit(new IAsyncCallable<Drawable>() {
+
+					/* (non-Javadoc)
+					 * @see java.util.concurrent.Callable#call()
+					 */
+					@Override
+					public void call(IAsyncCallback<Drawable> cb) {
+						try {
+							cb.success(fetchDrawable(val));
+						}catch(Throwable t){
+							cb.failed(t);
+						}
+					}
+					
+				}, new IAsyncCallback<Drawable>() {
+					
+					@Override
+					public void success(final Drawable img) {
 						if(img != null){
 							AppUtils.runOnUIThread(new Runnable() {
 								@Override
@@ -48,6 +68,18 @@ public abstract class ImageUtils {
 							});
 						}
 					}
+					
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+					}
+					
+					@Override
+					public void failed(Throwable cause) {
+					}
+					
+					@Override
+					public void cancelled() {
+					}
 				});
 			}
 		}
@@ -56,14 +88,29 @@ public abstract class ImageUtils {
 	public static void updateImage(final String val, final ImageView imgV) {
 		if(RUtils.isResourceIdURI(val)){
 			imgV.setImageResource(RUtils.getInstance().getResourceIdByURI(val));
-		}else{
+		}else {
 			Drawable img = drawableMap.get(val);
 			if(img != null){
 				imgV.setImageDrawable(img);
 			}else{
-				KUtils.executeTask(new Runnable() {
-					public void run() {
-						final Drawable img = fetchDrawable(val);
+				KUtils.getService(ICommandExecutor.class).submit(new IAsyncCallable<Drawable>() {
+	
+					/* (non-Javadoc)
+					 * @see java.util.concurrent.Callable#call()
+					 */
+					@Override
+					public void call(IAsyncCallback<Drawable> cb) {
+						try {
+							cb.success(fetchDrawable(val));
+						}catch(Throwable t){
+							cb.failed(t);
+						}
+					}
+					
+				}, new IAsyncCallback<Drawable>() {
+					
+					@Override
+					public void success(final Drawable img) {
 						if(img != null){
 							AppUtils.runOnUIThread(new Runnable() {
 								@Override
@@ -72,6 +119,18 @@ public abstract class ImageUtils {
 								}
 							});
 						}
+					}
+					
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+					}
+					
+					@Override
+					public void failed(Throwable cause) {
+					}
+					
+					@Override
+					public void cancelled() {
 					}
 				});
 			}
@@ -89,6 +148,9 @@ public abstract class ImageUtils {
 		Options op = new Options();
 		op.inSampleSize = 1;
 		op.inJustDecodeBounds = false;
+		op.inPurgeable = true;
+		op.inInputShareable = true;
+		op.inPreferredConfig = Bitmap.Config.RGB_565;
 		Bitmap bitmap;
 		InputStream input=null;
 		try {
@@ -112,5 +174,4 @@ public abstract class ImageUtils {
 		}
 
 	}
-
 }

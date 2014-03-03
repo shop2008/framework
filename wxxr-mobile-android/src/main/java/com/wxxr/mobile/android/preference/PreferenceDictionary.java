@@ -181,4 +181,20 @@ public class PreferenceDictionary extends Dictionary<String, String> {
 			changedRecords.remove(pid);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer('{');
+		int cnt = 0;
+		for(Enumeration<String> enu = keys() ; enu.hasMoreElements();){
+			String key = enu.nextElement();
+			String value = get(key);
+			if(cnt > 0){
+				buf.append(',');
+			}
+			buf.append(key).append(':').append(value);
+			cnt++;
+		}
+		return buf.append('}').toString();
+	}
 }

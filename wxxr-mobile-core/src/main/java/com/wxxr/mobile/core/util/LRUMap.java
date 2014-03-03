@@ -47,7 +47,7 @@ public class LRUMap<K,V> {
     private long expireTime;
     private int capacity;
     private ConcurrentLinkedQueue<LRUMapEvictionListener<K,V>> listeners;
-	private ExecutorService poolExecutor;
+//	private ExecutorService poolExecutor;
 	private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Map<K,Long> expirations;
 
@@ -126,11 +126,11 @@ public class LRUMap<K,V> {
 //        keys = new ConcurrentLinkedQueue<K>();
         this.capacity = size;
         listeners = new ConcurrentLinkedQueue<LRUMapEvictionListener<K,V>>();  
-        if(executor == null){
-        	poolExecutor = KUtils.getApplication().getExecutor();
-        }else{
-        	poolExecutor = executor;
-        }
+//        if(executor == null){
+////        	poolExecutor = KUtils.getApplication().getExecutor();
+//        }else{
+//        	poolExecutor = executor;
+//        }
         if(expired > 0){
             this.expireTime = expired*1000L;
             startExpireProcessor();
@@ -391,7 +391,7 @@ public class LRUMap<K,V> {
         if(listeners.isEmpty()){
             return;
         }
-        poolExecutor.execute(new Runnable() {		
+        KUtils.invokeLater(new Runnable() {		
 			public void run() {
 				doNotifyListeners(rmKey,rmVal);
 			}

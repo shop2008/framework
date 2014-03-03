@@ -16,7 +16,7 @@ import com.wxxr.mobile.core.microkernel.api.IMicroKernel;
  */
 public interface IApplication<C extends IKernelContext, M extends IKernelModule<C>> extends IMicroKernel<C, M> {
 	
-	ExecutorService getExecutor();
+//	ExecutorService getExecutor();
 	
 	void runOnUIThread(Runnable task, long delay, TimeUnit unit);
 	

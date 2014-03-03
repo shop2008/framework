@@ -2,6 +2,7 @@ package com.wxxr.mobile.core.common;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
@@ -26,10 +27,6 @@ public class UserBasedSessionManagerModuleTest extends TestCase {
 				
 			}
 			
-			@Override
-			protected ExecutorService getExecutorService() {
-				return Executors.newCachedThreadPool();
-			}
 		};
 	}
 

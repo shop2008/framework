@@ -1,7 +1,6 @@
 package com.wxxr.mobile.core.microkernel.api;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import junit.framework.TestCase;
 
 import com.wxxr.mobile.core.test.TestModule;
 import com.wxxr.mobile.core.test.TestService1;
@@ -9,8 +8,6 @@ import com.wxxr.mobile.core.test.TestService2;
 import com.wxxr.mobile.core.test.TestService3;
 import com.wxxr.mobile.core.test.TestService3Module;
 import com.wxxr.mobile.core.test.TestServicePlugin;
-
-import junit.framework.TestCase;
 
 public class AbstractMicroKernelTest extends TestCase {
 	
@@ -25,10 +22,6 @@ public class AbstractMicroKernelTest extends TestCase {
 				registerKernelModule(new TestModule<IKernelContext>());
 			}
 			
-			@Override
-			protected ExecutorService getExecutorService() {
-				return Executors.newCachedThreadPool();
-			}
 		};
 	}
 

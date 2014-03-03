@@ -35,13 +35,17 @@ public abstract class KUtils {
 		getApplication().invokeLater(task, delay, unit);
 	}
 	
-	public static Future<?> executeTask(Runnable task){
-		return getApplication().getExecutor().submit(task);
+	public static void invokeLater(Runnable task){
+		getApplication().invokeLater(task,0L,null);
 	}
-	
-	public static <V> Future<V> executeTask(Callable<V> task){
-		return getApplication().getExecutor().submit(task);
-	}
+
+//	public static Future<?> executeTask(Runnable task){
+//		return getApplication().getExecutor().submit(task);
+//	}
+//	
+//	public static <V> Future<V> executeTask(Callable<V> task){
+//		return getApplication().getExecutor().submit(task);
+//	}
 	
 	
 	public static boolean isCurrentUIThread() {
