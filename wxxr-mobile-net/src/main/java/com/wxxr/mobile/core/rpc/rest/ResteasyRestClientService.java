@@ -11,6 +11,7 @@ import com.wxxr.javax.ws.rs.client.ClientBuilder;
 import com.wxxr.javax.ws.rs.core.Configuration;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.api.IServerUrlLocator;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.rpc.rest.provider.ByteArrayProvider;
@@ -34,12 +35,12 @@ import com.wxxr.mobile.preference.api.IPreferenceManager;
 public class ResteasyRestClientService extends ClientBuilder implements IRestProxyService
 {
    private static final Trace log = Trace.register(ResteasyRestClientService.class);
-   
+   private Map<String, Map<Class<?>, Object>> proxyCache = new HashMap<String, Map<Class<?>,Object>>();
    protected ResteasyProviderFactory providerFactory;
    protected Map<String, Object> properties = new HashMap<String, Object>();
    protected ClientHttpEngine httpEngine;
    protected IKernelContext application;
-   protected String defautTarget;
+   protected String defautTarget, systemRestUrl;
    /**
     * Changing the providerFactory will wipe clean any registered components or properties.
     *
@@ -93,7 +94,7 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
       {
          config.property(entry.getKey(), entry.getValue());
       }
-      return new ResteasyClient(httpEngine, this.application.getExecutor(), config);
+      return new ResteasyClient(this.application, httpEngine, config);
    }
 
  
@@ -202,6 +203,17 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 		return this;
 	}
 	
+	protected Map<Class<?>, Object> getProxyCache(String target, boolean create){
+		synchronized(this.proxyCache){
+			Map<Class<?>, Object> map = this.proxyCache.get(target);
+			if(create&&(map == null)){
+				map = new HashMap<Class<?>, Object>();
+				this.proxyCache.put(target, map);
+			}
+			return map;
+		}
+	}
+	
 	protected void startup(IKernelContext ctx) {
 		this.application = ctx;
 		ResteasyProviderFactory factory = getProviderFactory();
@@ -233,30 +245,46 @@ public class ResteasyRestClientService extends ClientBuilder implements IRestPro
 
 
 	@Override
-	public <T> T getRestService(Class<T> clazz, String target) {
-		return build().target(target).proxy(clazz);
+	public <T> T getRestService(Class<T> clazz,Class<?> ifaceRest, String target) {
+		Map<Class<?>, Object> map = getProxyCache(target, true);
+		synchronized(map){
+			T obj = clazz.cast(map.get(clazz));
+			if(obj == null){
+				obj =  build().target(target).proxy(clazz,ifaceRest);
+				map.put(clazz, obj);
+			}
+			return obj;
+		}
 	}
 
 
 	protected String getDefaultServerUrl(){
-	   if (StringUtils.isBlank(this.defautTarget)) {
-	      IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
-	        if(prefManager == null){
-	            return null;
-	        }
-	        Dictionary<String, String> d = prefManager.getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME);
-	        this.defautTarget = d != null ? d.get(IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL) : null;
-	   }
-	   return this.defautTarget;
+		if(StringUtils.isNotBlank(this.defautTarget)) {
+			return this.defautTarget;
+		}
+		IServerUrlLocator locator = application.getService(IServerUrlLocator.class);
+		if(locator != null){
+			return locator.getServerURL();
+		}
+		if(this.systemRestUrl != null){
+			return this.systemRestUrl;
+		}
+		IPreferenceManager prefManager = application.getService(IPreferenceManager.class);
+		if(prefManager == null){
+			return null;
+		}
+		Dictionary<String, String> d = prefManager.getPreference(IPreferenceManager.SYSTEM_PREFERENCE_NAME);
+		this.systemRestUrl = d != null ? d.get(IPreferenceManager.SYSTEM_PREFERENCE_KEY_DEFAULT_SERVER_URL) : null;
+		return this.systemRestUrl;
 	}
 
 	@Override
-	public <T> T getRestService(Class<T> clazz) {
+	public <T> T getRestService(Class<T> clazz,Class<?> ifRest) {
 		String url = getDefaultServerUrl();
 		if(url == null){
 			throw new IllegalArgumentException("There is not default server url setup, you should specified server target url !!!");
 		}
-		return getRestService(clazz, url);
+		return getRestService(clazz, ifRest, url);
 	}
 
 

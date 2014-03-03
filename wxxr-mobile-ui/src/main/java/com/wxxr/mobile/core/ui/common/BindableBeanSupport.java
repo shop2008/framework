@@ -98,4 +98,9 @@ public class BindableBeanSupport implements IBindableBean {
 		}
 	}
 
+	@Override
+	public synchronized boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.listeners != null && this.listeners.contains(listener);
+	}
+
 }

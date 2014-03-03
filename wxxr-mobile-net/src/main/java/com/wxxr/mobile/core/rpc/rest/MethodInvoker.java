@@ -1,6 +1,8 @@
 package com.wxxr.mobile.core.rpc.rest;
 
-public interface MethodInvoker
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+
+public interface MethodInvoker<T>
 {
-	Object invoke(Object[] args);
+	void invoke(Object[] args, IAsyncCallback<T> callback);
 }

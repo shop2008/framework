@@ -28,17 +28,14 @@ public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,O
 	 * @see com.wxxr.mobile.core.ui.api.IValueEvaluator#doEvaluate()
 	 */
 	@Override
-	public Object doEvaluate() {
+	public void doEvaluate() {
 		if(log.isDebugEnabled()){
 			log.debug("Going to evaluate expr :["+express+"] for attribute :"+key+"/["+component+"]");
 		}
 		try {
-			Object val = super.doEvaluate();
-			AttributeKeys.updateAttribute(key, component, val);
-			return val;
+			super.doEvaluate();
 		}catch(Throwable t){
 			log.warn("Failed to update attribute :["+key+" of component :"+component.getName(), t);
-			return null;
 		}
 	}
 
@@ -54,6 +51,17 @@ public class ELAttributeValueEvaluator extends AbstractELValueEvaluator<Object,O
 			}
 		}
 		return super.valueEffectedBy(event);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IValueEvaluator#updateValue(java.lang.Object)
+	 */
+	@Override
+	public void updateLocalValue(Object val) {
+		if(log.isInfoEnabled()){
+			log.info("Going to update local value to attribute key :"+key+" of component :"+component.getName()+", value :["+val+"]");
+		}
+		AttributeKeys.updateAttribute(key, component, val);
 	}
 
 }

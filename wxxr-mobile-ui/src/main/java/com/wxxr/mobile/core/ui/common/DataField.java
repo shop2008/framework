@@ -52,12 +52,12 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 			setAttribute(valueKey, localValue);
 			if(domainModel != null){
 				// call domain model binding to update domain model
-				KUtils.executeTask(new Runnable() {					
-					@Override
-					public void run() {
+//				KUtils.invokeLater(new Runnable() {					
+//					@Override
+//					public void run() {
 						doUpdateModel();
-					}
-				});
+//					}
+//				});
 			}
 		}
 
@@ -65,7 +65,7 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 		 * @param value
 		 */
 		protected void doUpdateModel() {
-			ValidationError[] errs = domainModel.updateValue(localValue);
+			ValidationError[] errs = domainModel.updateDomainValue(localValue);
 			if((errs != null)&&(errs.length > 0)){
 				setAttribute(AttributeKeys.validationErrors, errs);
 			}
@@ -216,14 +216,27 @@ public class DataField<T> extends UIComponent implements IDataField<T> {
 	 * @see com.wxxr.mobile.core.ui.common.UIComponent#invokeCommand(java.lang.String, com.wxxr.mobile.core.ui.api.InputEvent)
 	 */
 	@Override
-	public void invokeCommand(String cmdName, InputEvent event) {
+	public void handleInputEvent(InputEvent event) {
+		String cmdName = event.getTargetCommand();
 		if(UPDATE_VALUE_COMMAND_NAME.equals(cmdName)){
-			IFieldBinding binding = getFieldBinding(this);
-			if(binding != null){
-				binding.updateModel();
-			}
+			updateModel();
 		}
-		super.invokeCommand(cmdName, event);
+		super.handleInputEvent(event);
+	}
+
+
+	/**
+	 * 
+	 */
+	@Override
+	public void updateModel() {
+		if(isReadOnly()){
+			return;
+		}
+		IFieldBinding binding = getFieldBinding(this);
+		if(binding != null){
+			binding.updateModel();
+		}
 	}
 
 

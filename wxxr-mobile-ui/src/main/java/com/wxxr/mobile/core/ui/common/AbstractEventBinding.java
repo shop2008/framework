@@ -109,10 +109,11 @@ public abstract class AbstractEventBinding implements IEventBinding {
 			@Override
 			public void handleEvent(InputEventHandlingContext context, InputEvent event) {
 				IUIComponent field = getField();
+				event.setTargetCommand(commandName);
 				if(field != null){
-					field.invokeCommand(commandName, event);
+					field.handleInputEvent(event);
 				}else{
-					pModel.invokeCommand(commandName, event);
+					pModel.handleInputEvent(event);
 				}				
 			}
 		};

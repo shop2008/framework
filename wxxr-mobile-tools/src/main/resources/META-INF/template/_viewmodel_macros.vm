@@ -89,7 +89,7 @@
 #foreach($binding in $bindings) 
         this.${binding.field.name}Updater = new ELBeanValueEvaluator<${binding.field.simpleBoxedType}>(getEvaluatorContext(), "${binding.expression}", #if(${binding.enabledWhen}) "${binding.enabledWhen}" #else null #end ,${binding.field.simpleBoxedType}.class) {
             @Override
-            protected void updateRegisteredBean(${binding.field.simpleBoxedType} val) {
+            public void updateLocalValue(${binding.field.simpleBoxedType} val) {
                     ${binding.field.name} = val;
                     registerBean("${binding.field.name}", val);
             }
@@ -97,14 +97,11 @@
         #if(${binding.enabledWhen})
         this.${binding.field.name}Updater.setDefaultValue(this.${binding.field.name});
         #end
-        addBeanUpdater(this.${binding.field.name}Updater);
+        #if(${binding.field.EfftectingFieldsString})
+        this.${binding.field.name}Updater.addProgressFieldNames(${binding.field.EfftectingFieldsString});
+        #end
+        addBeanUpdater("${binding.field.name}",this.${binding.field.name}Updater);
 #end
-    }
-#end
-
-#macro(updateBindingBeans $model $bindings)
-    private void updateBindingBeans() {
-       super.updateBeans();
     }
 #end
 
@@ -112,9 +109,6 @@
 #macro(onShow $model $methods)
     @Override
     protected void onShow(IBinding<IView> binding) {
-#if(${model.beanBindings})
-    updateBindingBeans();
-#end
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
         ${meth.name}(binding); 
@@ -142,7 +136,7 @@
     @Override
     protected void onMenuShow(String menuId) {
 #if(${model.beanBindings})
-    updateBindingBeans();
+    updateBeans();
 #end
 #foreach($meth in $methods) 
 #if(${meth.parameterTypes})
@@ -238,9 +232,15 @@
     handler = new ${model.addImport(${cmd.className})}();
 #else
     handler = new AbstractUICommandHandler() {    
-#if(${cmd.beanValidations}) 
+#if(${cmd.validationRequired}) 
         @Override
         public void validateUserInput() throws ValidationException {
+#if(${cmd.fieldUpdatings}) 
+#foreach($fUpdating in ${cmd.fieldUpdatings})
+            updateFields(getUIContext(), getView(), "${fUpdating.message}", ${fUpdating.fieldsString});
+#end
+#end
+#if(${cmd.beanValidations}) 
 #foreach($valid in ${cmd.beanValidations})
 #if(${valid.group})
             validateBean(getUIContext(), ${valid.beanName}, "${valid.message}", ${valid.group}.class);
@@ -248,13 +248,38 @@
             validateBean(getUIContext(), ${valid.beanName}, "${valid.message}");
 #end
 #end
+#end
         }
     
-#end      
+#end
+#if(${cmd.stepInvocation})       
         @Override
-        public Object execute(InputEvent event) {
+        public Object execute(ExecutionStep step,InputEvent event,Object result) {
+             return ${cmd.methodName}(step,event,result);
+        }
+        
+#else
+#if(${cmd.navigateMethod})
+    
+        @Override
+        public Object doProcess(InputEvent event) {
              return ${cmd.methodName}(event);
         }
+        
+
+        @Override
+        public Object doNavigation(InputEvent event, Object result) {
+            return ${cmd.navigateMethod}(event, result);
+        }
+#else
+        @Override
+        protected Object execute(InputEvent event) {
+             return ${cmd.methodName}(event);
+        }       
+
+#end
+        
+#end
     };
 #end
 #if(${cmd.navigations})

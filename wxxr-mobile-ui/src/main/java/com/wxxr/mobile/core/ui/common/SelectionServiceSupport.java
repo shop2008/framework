@@ -161,7 +161,7 @@ public class SelectionServiceSupport implements ISelectionService, ISelectionCha
 		this.currentSelection = selection;
 		final ISelectionChangedListener[] list = getAllListeners(providerId);
 		if((list != null)&&(list.length > 0)){
-			KUtils.executeTask(new Runnable() {
+			KUtils.invokeLater(new Runnable() {
 				
 				@Override
 				public void run() {

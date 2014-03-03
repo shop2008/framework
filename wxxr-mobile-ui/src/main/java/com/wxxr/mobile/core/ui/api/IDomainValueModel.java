@@ -8,7 +8,6 @@ package com.wxxr.mobile.core.ui.api;
  *
  */
 public interface IDomainValueModel<T> extends IValueEvaluator<T> {	
-	T getValue();
-	ValidationError[] updateValue(Object value);	
+	ValidationError[] updateDomainValue(Object value);	
 	boolean isUpdatable();
 }

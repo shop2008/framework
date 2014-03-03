@@ -129,12 +129,12 @@ public abstract class MTreeSyncConnector<T extends IKernelContext> extends Abstr
 
 	@Override
 	protected void startService() {
-		if (log.isDebugEnabled()) {
-			log.debug("serverUrl:" + getServerUrl());
-		}
-		if (getServerUrl() == null) {
-			throw new IllegalStateException("There is not sshx sync server url setup, you should specified server target url[SSHX_SYNC_SERVER_URI] !!!");
-		}
+//		if (log.isDebugEnabled()) {
+//			log.debug("serverUrl:" + getServerUrl());
+//		}
+//		if (getServerUrl() == null) {
+//			throw new IllegalStateException("There is not sshx sync server url setup, you should specified server target url[SSHX_SYNC_SERVER_URI] !!!");
+//		}
 		context.registerService(IMTreeDataSyncServerConnector.class, this);
 
 	}
@@ -154,7 +154,7 @@ public abstract class MTreeSyncConnector<T extends IKernelContext> extends Abstr
 		if (url == null) {
 			throw new IllegalArgumentException("There is not  sync server url setup, you should specified server target url[SSHX_SYNC_SERVER_URI] !!!");
 		}
-		return context.getService(IRestProxyService.class).getRestService(clazz, url);
+		return context.getService(IRestProxyService.class).getRestService(clazz, null,url);
 	}
 	
 }

@@ -1,35 +1,37 @@
 package com.wxxr.mobile.core.rpc.rest;
 
+import java.lang.reflect.Method;
+
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.client.WebTarget;
-import com.wxxr.javax.ws.rs.container.DynamicFeature;
-import com.wxxr.javax.ws.rs.container.ResourceInfo;
 import com.wxxr.javax.ws.rs.core.Configuration;
 import com.wxxr.javax.ws.rs.core.MediaType;
 import com.wxxr.javax.ws.rs.core.Response;
-
-import java.lang.reflect.Method;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision$
  */
 @SuppressWarnings("unchecked")
-public class ClientInvoker implements MethodInvoker
+public class ClientInvoker<T> implements MethodInvoker<T>
 {
    protected String httpMethod;
    protected Method method;
-   protected Class declaring;
+   protected Class<?> declaring;
    protected MediaType accepts;
    protected Object[] processors;
    protected WebTarget webTarget;
    protected boolean followRedirects;
-   protected EntityExtractor extractor;
+   protected EntityExtractor<T> extractor;
    protected DefaultEntityExtractorFactory entityExtractorFactory;
    protected Configuration invokerConfig;
+   protected ICommandExecutor executor;
 
 
-   public ClientInvoker(ResteasyWebTarget parent, Class declaring, Method method, ProxyConfig config)
+   public ClientInvoker(ResteasyWebTarget parent, Class<?> declaring, Method method, ProxyConfig config)
    {
       // webTarget must be a clone so that it has a cloned ClientConfiguration so we can apply DynamicFeature
       if (method.isAnnotationPresent(Path.class))
@@ -43,20 +45,21 @@ public class ClientInvoker implements MethodInvoker
       this.declaring = declaring;
       this.method = method;
       invokerConfig = this.webTarget.getConfiguration();
-      ResourceInfo info = new ResourceInfo()
-      {
-         @Override
-         public Method getResourceMethod()
-         {
-            return ClientInvoker.this.method;
-         }
-
-         @Override
-         public Class<?> getResourceClass()
-         {
-            return ClientInvoker.this.declaring;
-         }
-      };
+      this.executor = parent.getResteasyClient().getExecutor();
+//      ResourceInfo info = new ResourceInfo()
+//      {
+//         @Override
+//         public Method getResourceMethod()
+//         {
+//            return ClientInvoker.this.method;
+//         }
+//
+//         @Override
+//         public Class<?> getResourceClass()
+//         {
+//            return ClientInvoker.this.declaring;
+//         }
+//      };
 //      for (DynamicFeature feature : invokerConfig.getDynamicFeatures())
 //      {
 //         feature.configure(info, new FeatureContextDelegate(invokerConfig));
@@ -79,17 +82,68 @@ public class ClientInvoker implements MethodInvoker
       return method;
    }
 
-   public Class getDeclaring()
+   public Class<?> getDeclaring()
    {
       return declaring;
    }
 
-   public Object invoke(Object[] args)
+   public void invoke(Object[] args, final IAsyncCallback<T> callback)
    {
-      ClientInvocation request = createRequest(args);
-      Response response = request.invoke();
-      ClientContext context = new ClientContext(request, response, entityExtractorFactory);
-      return extractor.extractEntity(context, null);
+	   final ClientInvocation request = createRequest(args);
+	   request.invoke(new IAsyncCallback<Response>() {
+
+		   @Override
+		   public void success(Response result) {
+			   ClientContext context = new ClientContext(request, result, entityExtractorFactory);
+			   final T obj = extractor.extractEntity(context);
+			   if((executor != null)&&(!(callback instanceof InstantCallback))){
+				   executor.submit(new Runnable() {
+					
+					@Override
+					public void run() {
+						   callback.success(obj);
+					}
+				}, null);
+			   }else{
+				   callback.success(obj);
+			   }
+		   }
+
+		   @Override
+		   public void failed(final Throwable cause) {
+			   if((executor != null)&&(!(callback instanceof InstantCallback))){
+				   executor.submit(new Runnable() {
+					
+					@Override
+					public void run() {
+						   callback.failed(cause);
+					}
+				}, null);
+			   }else{
+				   callback.failed(cause);
+			   }
+		   }
+
+		   @Override
+		   public void setCancellable(ICancellable cancellable) {
+			   callback.setCancellable(cancellable);
+		   }
+
+		   @Override
+		   public void cancelled() {
+			   if((executor != null)&&(!(callback instanceof InstantCallback))){
+				   executor.submit(new Runnable() {
+					
+					@Override
+					public void run() {
+						   callback.cancelled();
+					}
+				}, null);
+			   }else{
+				   callback.cancelled();
+			   }
+		   }
+	   });
    }
 
    protected ClientInvocation createRequest(Object[] args)

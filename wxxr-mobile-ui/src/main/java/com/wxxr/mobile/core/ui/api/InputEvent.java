@@ -9,6 +9,7 @@ package com.wxxr.mobile.core.ui.api;
  */
 public interface InputEvent {
 	String PROPERTY_CALLBACK = "_Callback";	// value of this property must be type of IAsyncCallback
+	String PROPERTY_ATTACH_CALLBACK = "_AttachCallback";	// value of this property must be type of List with member type of IAsyncCallback
 	String PROPERTY_SOURCE_VIEW = "_SrcView";	// IView model that trigger this event
 	
 	String EVENT_TYPE_CLICK = "Click";
@@ -24,9 +25,13 @@ public interface InputEvent {
 	
 	String getEventType();
 	IUIComponent getEventSource();
+	String getTargetCommand();
+	void setTargetCommand(String cmdName);
+	
 	InputEvent addProperty(String key, Object value);
 	InputEvent removeProperty(String key);
 	String[] getPropertyKeys();
 	Object getProperty(String key);
 	boolean hasProperty(String key);
+	
 }

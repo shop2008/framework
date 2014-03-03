@@ -1,20 +1,16 @@
 package com.wxxr.mobile.core.rpc.rest;
 
 
+import java.net.URI;
+import java.util.Locale;
+
 import com.wxxr.javax.ws.rs.HttpMethod;
-import com.wxxr.javax.ws.rs.client.AsyncInvoker;
 import com.wxxr.javax.ws.rs.client.Entity;
 import com.wxxr.javax.ws.rs.client.Invocation;
 import com.wxxr.javax.ws.rs.core.CacheControl;
-import com.wxxr.javax.ws.rs.core.Configuration;
 import com.wxxr.javax.ws.rs.core.Cookie;
-import com.wxxr.javax.ws.rs.core.GenericType;
 import com.wxxr.javax.ws.rs.core.MediaType;
 import com.wxxr.javax.ws.rs.core.MultivaluedMap;
-import com.wxxr.javax.ws.rs.core.Response;
-
-import java.net.URI;
-import java.util.Locale;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -146,162 +142,6 @@ public class ClientInvocationBuilder implements Invocation.Builder
    public Invocation buildPut(Entity<?> entity)
    {
       return build(HttpMethod.PUT, entity);
-   }
-
-   @Override
-   public AsyncInvoker async()
-   {
-      return new AsynchronousInvoke(invocation);
-   }
-
-   @Override
-   public Response get()
-   {
-      return buildGet().invoke();
-   }
-
-   @Override
-   public <T> T get(Class<T> responseType)
-   {
-      return buildGet().invoke(responseType);
-   }
-
-   @Override
-   public <T> T get(GenericType<T> responseType)
-   {
-      return buildGet().invoke(responseType);
-   }
-
-   @Override
-   public Response put(Entity<?> entity)
-   {
-      return buildPut(entity).invoke();
-   }
-
-   @Override
-   public <T> T put(Entity<?> entity, Class<T> responseType)
-   {
-      return buildPut(entity).invoke(responseType);
-   }
-
-   @Override
-   public <T> T put(Entity<?> entity, GenericType<T> responseType)
-   {
-      return buildPut(entity).invoke(responseType);
-   }
-
-   @Override
-   public Response post(Entity<?> entity)
-   {
-      return buildPost(entity).invoke();
-   }
-
-   @Override
-   public <T> T post(Entity<?> entity, Class<T> responseType)
-   {
-      return buildPost(entity).invoke(responseType);
-   }
-
-   @Override
-   public <T> T post(Entity<?> entity, GenericType<T> responseType)
-   {
-      return buildPost(entity).invoke(responseType);
-   }
-
-   @Override
-   public Response delete()
-   {
-      return buildDelete().invoke();
-   }
-
-   @Override
-   public <T> T delete(Class<T> responseType)
-   {
-      return buildDelete().invoke(responseType);
-   }
-
-   @Override
-   public <T> T delete(GenericType<T> responseType)
-   {
-      return buildDelete().invoke(responseType);
-   }
-
-   @Override
-   public Response head()
-   {
-      return build(HttpMethod.HEAD).invoke();
-   }
-
-   @Override
-   public Response options()
-   {
-      return build(HttpMethod.OPTIONS).invoke();
-   }
-
-   @Override
-   public <T> T options(Class<T> responseType)
-   {
-      return build(HttpMethod.OPTIONS).invoke(responseType);
-  }
-
-   @Override
-   public <T> T options(GenericType<T> responseType)
-   {
-      return build(HttpMethod.OPTIONS).invoke(responseType);
-   }
-
-   @Override
-   public Response trace()
-   {
-      return build("TRACE").invoke();
-   }
-
-   @Override
-   public <T> T trace(Class<T> responseType)
-   {
-      return build("TRACE").invoke(responseType);
-   }
-
-   @Override
-   public <T> T trace(GenericType<T> responseType)
-   {
-      return build("TRACE").invoke(responseType);
-   }
-
-   @Override
-   public Response method(String name)
-   {
-      return build(name).invoke();
-   }
-
-   @Override
-   public <T> T method(String name, Class<T> responseType)
-   {
-      return build(name).invoke(responseType);
-   }
-
-   @Override
-   public <T> T method(String name, GenericType<T> responseType)
-   {
-      return build(name).invoke(responseType);
-   }
-
-   @Override
-   public Response method(String name, Entity<?> entity)
-   {
-      return build(name, entity).invoke();
-   }
-
-   @Override
-   public <T> T method(String name, Entity<?> entity, Class<T> responseType)
-   {
-      return build(name, entity).invoke(responseType);
-   }
-
-   @Override
-   public <T> T method(String name, Entity<?> entity, GenericType<T> responseType)
-   {
-      return build(name, entity).invoke(responseType);
    }
 
    @Override

@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.util.Context;
 import com.wxxr.mobile.core.tools.annotation.Generator;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -35,7 +37,6 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-@SuppressWarnings("restriction")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class MainAnnotationProcessor extends AbstractProcessor {
 	private static final Logger log = LoggerFactory.getLogger(MainAnnotationProcessor.class);
@@ -47,6 +48,7 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 	private VelocityTemplateRenderer renderer;
 	private Trees trees;
 	private LinkedList<ICodeGenerator> processors = new LinkedList<ICodeGenerator>();
+	private ProcessingEnvironment processingEnv;
 	/* (non-Javadoc)
 	 * @see javax.annotation.processing.AbstractProcessor#process(java.util.Set, javax.annotation.processing.RoundEnvironment)
 	 */
@@ -96,6 +98,7 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		log.info("Initializing Main Annotation processor ...");
+		this.processingEnv = processingEnv;
 		this.trees = Trees.instance(processingEnv);
 		ServiceLoader<IProcessorConfigure> loader = ServiceLoader.load(IProcessorConfigure.class,getClass().getClassLoader());
 		for (IProcessorConfigure config : loader) {	
@@ -200,6 +203,10 @@ public class MainAnnotationProcessor extends AbstractProcessor {
 		@Override
 		public Trees getTrees() {
 			return trees;
+		}
+		@Override
+		public Context getJavacContext() {
+			return ((JavacProcessingEnvironment)processingEnv).getContext();
 		}
 		
 		

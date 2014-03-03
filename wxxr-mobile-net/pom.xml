@@ -6,7 +6,6 @@
         <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
         <version>1.0.0</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-mobile-net</artifactId>
 	<version>${framework.version}</version>
@@ -26,6 +25,10 @@
 			<groupId>com.wxxr.mobile.core</groupId>
 			<artifactId>wxxr-mobile-xml</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.wxxr.mobile.core</groupId>
+            <artifactId>wxxr-mobile-command</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.wxxr.mobile.core</groupId>
 			<artifactId>wxxr-mobile-android</artifactId>

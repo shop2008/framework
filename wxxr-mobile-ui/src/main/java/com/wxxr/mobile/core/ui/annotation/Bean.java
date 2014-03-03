@@ -22,6 +22,7 @@ public @interface Bean {
 	String express() default "";
 	boolean nullable() default false;
 	String enableWhen() default "";
+	String[] effectingFields() default {};
 	
 	public enum BindingType {
 		Service,

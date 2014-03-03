@@ -3,34 +3,95 @@ package com.wxxr.mobile.core.ui.common;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.api.AbstractProgressMonitor;
 import com.wxxr.mobile.core.api.ApplicationFactory;
-import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.async.api.AbstractProgressMonitor;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IDialog;
 import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.util.ICancellable;
 
 public abstract class InvocationMonitor extends AbstractProgressMonitor {
 
-	private static final Trace log = Trace.register(InvocationMonitor.class);
+//	private static final Trace log = Trace.register(InvocationMonitor.class);
 	
-	private ICancellable task,progess;
+	private class ShowProgress implements Runnable,ICancellable {
+
+		private boolean cancelled;
+		private IDialog dialog;
+		
+		
+		@Override
+		public synchronized void cancel() {
+			cancelled = true;
+			if(this.dialog != null){
+				this.dialog.dismiss();
+				this.dialog = null;
+			}
+		}
+
+		@Override
+		public boolean isCancelled() {
+			return this.cancelled;
+		}
+
+		@Override
+		public synchronized void run() {
+			if(cancelled){
+				return;
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			if(params != null){
+				map.putAll(params);
+			}
+			if(title != null){
+				map.put(IDialog.DIALOG_ATTRIBUTE_TITLE, title);
+			}
+			if(message != null){
+				map.put(IDialog.DIALOG_ATTRIBUTE_MESSAGE, message);
+			}
+			if(icon == null){
+				map.put(IDialog.DIALOG_ATTRIBUTE_ICON, icon);
+			}
+			cancelCommand = new UICommand("cancel");
+			cancelCommand.setAttribute(AttributeKeys.label, "取 消");
+			cancelCommand.setHandler(new AbstractUICommandHandler() {
+												
+					@Override
+					public Object execute(InputEvent event) {
+						if(cancellable != null){
+							cancellable.cancel();
+						}
+						return null;
+					}
+			});
+			cancelCommand.init(context);
+			map.put(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON, cancelCommand);
+			dialog = context.getWorkbenchManager().getWorkbench().createDialog(IWorkbench.PROGRESSMONITOR_DIALOG_ID, map);
+			if(dialog != null){
+				dialog.show();
+			}
+		}
+		
+	}
+	
+	private ICancellable task,cancellable;
+	private ShowProgress progress;
 	private int silentPeriod = 1;
-	private boolean cancellable = false;
 	private String title,message,icon;
 	private Map<String, Object> params;
-	private Future<?> future;
+//	private Future<?> future;
 	private IWorkbenchRTContext context;
+	private UICommand cancelCommand;
 		
 	public InvocationMonitor(IWorkbenchRTContext ctx){
 		this.context = ctx;
 	}
+	
 	
 	
 	/* (non-Javadoc)
@@ -40,14 +101,14 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 	public final void beginTask(int arg0) {
 
 		if(this.silentPeriod == 0){
-			progess = showProgressBar();
+			progress = showProgressBar();
 		}else if(this.silentPeriod < 0){
 			return;
 		}else{
 			this.task = ApplicationFactory.getInstance().getApplication().invokeLater(new Runnable() {
 				
 				public void run() {
-					progess = showProgressBar();
+					progress = showProgressBar();
 					task = null;
 				}
 			}, silentPeriod, (silentPeriod > 100) ? TimeUnit.MILLISECONDS : TimeUnit.SECONDS);
@@ -63,9 +124,9 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 			task.cancel();
 			task = null;
 		}
-		if(this.progess != null){
-			this.progess.cancel();
-			this.progess = null;
+		if(this.progress != null){
+			this.progress.cancel();
+			this.progress = null;
 		}
 		KUtils.runOnUIThread(new Runnable() {
 				
@@ -87,9 +148,9 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 			task.cancel();
 			task = null;
 		}
-		if(this.progess != null){
-			this.progess.cancel();
-			this.progess = null;
+		if(this.progress != null){
+			this.progress.cancel();
+			this.progress = null;
 		}
 		KUtils.runOnUIThread(new Runnable() {
 				
@@ -105,14 +166,14 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 	 */
 	@Override
 	public void taskFailed(final Throwable e,String message) {
-		log.warn("Caught exception when executing task", e);
+//		log.warn("Caught exception when executing task", e);
 		if(task != null){
 			task.cancel();
 			task = null;
 		}
-		if(this.progess != null){
-			this.progess.cancel();
-			this.progess = null;
+		if(this.progress != null){
+			this.progress.cancel();
+			this.progress = null;
 		}
 		KUtils.runOnUIThread(new Runnable() {
 				
@@ -133,68 +194,10 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 	protected abstract void handleFailed(Throwable cause);
 	
 	
-	protected ICancellable showProgressBar() {
-			final IDialog[] p = new IDialog[1];
-			
-			KUtils.runOnUIThread(new Runnable() {
-				@Override
-				public void run() {
-					Map<String, Object> map = new HashMap<String, Object>();
-					if(params != null){
-						map.putAll(params);
-					}
-					if(title != null){
-						map.put(IDialog.DIALOG_ATTRIBUTE_TITLE, title);
-					}
-					if(message != null){
-						map.put(IDialog.DIALOG_ATTRIBUTE_MESSAGE, message);
-					}
-					if(icon == null){
-						map.put(IDialog.DIALOG_ATTRIBUTE_ICON, icon);
-					}
-					if(isCancellable()){
-						UICommand command = new UICommand("cancel");
-						command.setAttribute(AttributeKeys.label, "取 消");
-						command.setHandler(new AbstractUICommandHandler() {
-														
-							@Override
-							public Object execute(InputEvent event) {
-								if(future != null){
-									future.cancel(true);
-								}
-								taskCanceled(true);
-								return null;
-							}
-						});
-						command.init(context);
-						map.put(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON, command);
-					}
-					p[0] = context.getWorkbenchManager().getWorkbench().createDialog(IWorkbench.PROGRESSMONITOR_DIALOG_ID, map);
-					if(p[0] != null){
-						p[0].show();
-					}
-				}
-			});
-			return new ICancellable() {
-				boolean cancelled = false;
-				@Override
-				public boolean isCancelled() {
-					return cancelled;
-				}
-				
-				@Override
-				public void cancel() {
-					if(p[0] != null){
-						KUtils.runOnUIThread(new Runnable() {
-							@Override
-							public void run() {
-								p[0].dismiss();
-							}
-						});
-					}
-					cancelled = true;
-				}
-			};
+	protected ShowProgress showProgressBar() {
+		    ShowProgress p = new ShowProgress();
+			KUtils.runOnUIThread(p);
+			return p;
 		}
 
 	
@@ -202,8 +205,8 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 		return null;
 	}
 	
-	public Future<?> executeOnMonitor(final Callable<Object> task){
-		this.future = ApplicationFactory.getInstance().getApplication().getExecutor().submit(new Runnable() {
+	public void executeOnMonitor(final Callable<Object> task){
+		KUtils.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -216,7 +219,6 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 				}
 			}
 		});
-		return this.future;
 	}
 
 
@@ -227,13 +229,6 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 		return silentPeriod;
 	}
 
-
-	/**
-	 * @return the cancellable
-	 */
-	public boolean isCancellable() {
-		return cancellable;
-	}
 
 
 	/**
@@ -276,12 +271,6 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 	}
 
 
-	/**
-	 * @param cancellable the cancellable to set
-	 */
-	public void setCancellable(boolean cancellable) {
-		this.cancellable = cancellable;
-	}
 
 
 	/**
@@ -313,5 +302,28 @@ public abstract class InvocationMonitor extends AbstractProgressMonitor {
 	 */
 	public void setParams(Map<String, Object> params) {
 		this.params = params;
+	}
+
+
+
+	/**
+	 * @return the cancellable
+	 */
+	public ICancellable getCancellable() {
+		return cancellable;
+	}
+
+
+
+	/**
+	 * @param cancellable the cancellable to set
+	 */
+	public void setCancellable(ICancellable cancellable) {
+		this.cancellable = cancellable;
+		if((cancelCommand != null)&&(cancellable != null)&&(!cancellable.isCancelled())){
+			cancelCommand.setAttribute(AttributeKeys.enabled, true);
+		}else if((cancelCommand != null)&&((cancellable == null)||cancellable.isCancelled())){
+			cancelCommand.setAttribute(AttributeKeys.enabled, false);
+		}
 	}
 }

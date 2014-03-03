@@ -22,13 +22,10 @@ public interface IUIComponent extends IAdaptable,Cloneable {
 	 
 	IUIContainer<?> getParent();
 	boolean isSubsidiaryOf(IUIComponent component);
-	
-//	void init(IWorkbenchRTContext ctx);		// this two life cycle management methods were designed to be called by workbench only 
-//	void destroy();
-	
+		
 	boolean isInitialized();
 	
 	void setValueChangedCallback(IBindingValueChangedCallback cb);
 	
-	void invokeCommand(String cmdName, InputEvent event);
+	void handleInputEvent(InputEvent event);
 }

@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -10,10 +11,13 @@ import java.util.Set;
 import com.wxxr.javax.validation.ConstraintViolation;
 import com.wxxr.javax.validation.Validator;
 import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
+import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.INavigationDescriptor;
 import com.wxxr.mobile.core.ui.api.IProgressGuard;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
+import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 import com.wxxr.mobile.core.ui.api.ValidationException;
 
@@ -74,6 +78,32 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 		}
 	}
 	
+	protected void updateFields(IWorkbenchRTContext ctx, IView view, String message, String... fields) throws ValidationException {
+		ArrayList<ValidationError> errors = new ArrayList<ValidationError>();
+		for (String fname : fields) {
+			IDataField<?> field = view.getChild(fname, IDataField.class);
+			if(field != null){
+				field.updateModel();
+				ValidationError[] vErrs  = field.getValidationErrors();
+				if(vErrs != null){
+					for (ValidationError err : vErrs) {
+						errors.add(err);
+					}
+				}
+			}
+		}
+		if(errors.size() > 0){
+			if(message == null){
+				message = "resourceId:message/field_validation_errors";
+			}
+			ValidationException ex = new ValidationException(message);
+			ex.setDetals(errors.toArray(new ValidationError[0]));
+			throw ex;
+		}
+	}
+	
+	
+	
 	public AbstractUICommandHandler removeConstraint(ConstraintLiteral constraint){
 		if(this.constraints != null){
 			this.constraints.remove(constraint);
@@ -121,6 +151,34 @@ public abstract class AbstractUICommandHandler implements IUICommandHandler {
 	 */
 	public void setProgressGuard(IProgressGuard progressGuard) {
 		this.progressGuard = progressGuard;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IUICommandHandler#doProcess(com.wxxr.mobile.core.ui.api.InputEvent)
+	 */
+	@Override
+	public Object doProcess(InputEvent event) {
+		return execute(ExecutionStep.PROCESS,event,null);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IUICommandHandler#doNavigation(com.wxxr.mobile.core.ui.api.InputEvent, java.lang.Object)
+	 */
+	@Override
+	public Object doNavigation(InputEvent event, Object result) {
+		return execute(ExecutionStep.NAVIGATION, event, result);
+	}
+	
+	protected Object execute(ExecutionStep step, InputEvent event, Object result) {
+		if(step == ExecutionStep.PROCESS){
+			return execute(event);
+		}else{
+			return result;
+		}
+	}
+	
+	protected Object execute(InputEvent event) {
+		return null;
 	}
 
 }

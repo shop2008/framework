@@ -3,9 +3,11 @@ package com.wxxr.mobile.core.ui.common;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.AttributeKey;
-import com.wxxr.mobile.core.ui.api.IAsyncTaskControl;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.ValidationError;
@@ -43,6 +45,8 @@ public abstract class AttributeKeys {
 	
 	public static final AttributeKey<Boolean> selected = new AttributeKey<Boolean>(Boolean.class,"selected");
 
+	public static final AttributeKey<Integer> selectedIdx = new AttributeKey<Integer>(Integer.class,"selectedIdx");
+
 	public static final AttributeKey<String> textColor = new AttributeKey<String>(String.class,"textColor");
 	
 	public static final AttributeKey<Boolean> takeSpaceWhenInvisible = new AttributeKey<Boolean>(Boolean.class,"takeSpaceWhenInvisible");
@@ -54,7 +58,7 @@ public abstract class AttributeKeys {
 	public static final AttributeKey<Throwable> valueUpdatedFailed = new AttributeKey<Throwable>(Throwable.class, "valueUpdatedFailed");
 
 	@SuppressWarnings("rawtypes")
-	public static final AttributeKey<Future> valueUpdating = new AttributeKey<Future>(Future.class, "valueUpdating");
+	public static final AttributeKey<AsyncFuture> valueUpdating = new AttributeKey<AsyncFuture>(AsyncFuture.class, "valueUpdating");
 
 	@SuppressWarnings("rawtypes")
 	public static final AttributeKey<List> options = new AttributeKey<List>(List.class,"options");

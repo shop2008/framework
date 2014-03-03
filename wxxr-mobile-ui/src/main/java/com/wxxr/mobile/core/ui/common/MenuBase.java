@@ -130,19 +130,22 @@ public class MenuBase extends UIComponent implements IMenu {
 
 	protected void handleItemClick(IUICommand command,InputEvent event) {
 		 event.addProperty("ItemClicked", command);
-		 command.invokeCommand(null, event);
+		 event.setTargetCommand(null);
+		 command.handleInputEvent(event);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.common.UIComponent#invokeCommand(java.lang.String, com.wxxr.mobile.core.ui.api.InputEvent)
+	 * @see com.wxxr.mobile.core.ui.common.UIComponent#handleInputEvent(com.wxxr.mobile.core.ui.api.InputEvent)
 	 */
 	@Override
-	public void invokeCommand(String cmdName, InputEvent event) {
+	public void handleInputEvent(InputEvent event) {
+		String cmdName = event.getTargetCommand();
 		if("handleItemClick".equals(cmdName)){
 			int position = (Integer)event.getProperty("position");
 			handleItemClick((IUICommand)this.provider.getItem(position),event);
+			event.setTargetCommand(cmdName);
 		}
-		super.invokeCommand(cmdName, event);
+		super.handleInputEvent(event);
 	}
 	
 

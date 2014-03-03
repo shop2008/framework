@@ -19,6 +19,7 @@
 
 package org.hibernate.validator.cfg.defs;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 
 import org.hibernate.validator.cfg.ConstraintDef;
@@ -33,7 +34,7 @@ import com.wxxr.javax.validation.Payload;
  *
  * @author Hardy Ferentschik
  */
-public class GenericConstraintDef extends ConstraintDef {
+public class GenericConstraintDef extends ConstraintDef<Annotation> {
 
 	public GenericConstraintDef(Class<?> beanType, String property, ElementType elementType, ConstraintMapping mapping) {
 		super( beanType, null, property, elementType, mapping );
@@ -44,11 +45,13 @@ public class GenericConstraintDef extends ConstraintDef {
 		return this;
 	}
 
+	@Override
 	public GenericConstraintDef groups(Class<?>... groups) {
 		super.groups( groups );
 		return this;
 	}
 
+	@Override
 	public GenericConstraintDef payload(Class<? extends Payload>... payload) {
 		super.payload( payload );
 		return this;
@@ -59,7 +62,7 @@ public class GenericConstraintDef extends ConstraintDef {
 		return this;
 	}
 
-	public GenericConstraintDef constraintType(Class<?> constraintType) {
+	public GenericConstraintDef constraintType(Class<Annotation> constraintType) {
 		this.constraintType = constraintType;
 		return this;
 	}

@@ -12,5 +12,6 @@ import com.wxxr.javax.el.ELContext;
 public interface IEvaluatorContext {
 	IWorkbenchRTContext getUIContext();
 	ELContext getELContext();
+	IView getView();
 	Object getBean(String name);
 }

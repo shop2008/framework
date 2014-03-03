@@ -16,7 +16,6 @@ import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.util.ObjectUtils;
 import com.wxxr.mobile.core.util.StringUtils;
 
@@ -80,7 +79,12 @@ public abstract class UIComponent implements IUIComponent {
 	 */
 	public <T> T getAttribute(AttributeKey<T> key) {
 		Object val = this.attrs != null ? attrs.get(key) : null;
-		return val != null ? key.getValueType().cast(val) : null;
+		try {
+			return val != null ? key.getValueType().cast(val) : null;
+		}catch(ClassCastException e){
+			log.error("Caught ClassCastException at field :"+getName(), e);
+			throw e;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -166,14 +170,14 @@ public abstract class UIComponent implements IUIComponent {
 		if(this.callback != null){
 			this.callback.valueChanged(this, keys);
 		}
-		fireDataChangedEvent(new ComponentValueChangedEventImpl(this, keys));
+//		fireDataChangedEvent(new ComponentValueChangedEventImpl(this, keys));
 	}
 	
-	protected void fireDataChangedEvent(ValueChangedEvent evt){
-		if(this.getParent() != null){
-			((UIComponent)this.getParent()).fireDataChangedEvent(evt);
-		}
-	}
+//	protected void fireDataChangedEvent(ValueChangedEvent evt){
+//		if(this.getParent() != null){
+//			((UIComponent)this.getParent()).fireDataChangedEvent(evt);
+//		}
+//	}
 
 	
 	protected IWorkbenchRTContext getUIContext() {
@@ -204,11 +208,11 @@ public abstract class UIComponent implements IUIComponent {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#invokeCommand(java.lang.String, java.lang.Object[])
+	 * @see com.wxxr.mobile.core.ui.api.IUIComponent#handleInputEvent(InputEvent event)
 	 */
-	public void invokeCommand(String cmdName, InputEvent event) {
+	public void handleInputEvent(InputEvent event) {
 		if(getParent() != null){
-			getParent().invokeCommand(cmdName, event);
+			getParent().handleInputEvent(event);
 		}
 	}
 

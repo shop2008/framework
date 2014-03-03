@@ -17,6 +17,7 @@ public class SimpleInputEvent implements InputEvent {
 	private final String eventType;
 	private final IUIComponent source;
 	private Map<String, Object> properties;
+	private String targetCommand;
 	
 	public SimpleInputEvent(String type, IUIComponent src){
 		this.eventType = type;
@@ -63,5 +64,20 @@ public class SimpleInputEvent implements InputEvent {
 	public boolean hasProperty(String key) {
 		return (this.properties != null) ? this.properties.containsKey(key) : false;
 	}
+
+	/**
+	 * @return the targetCommand
+	 */
+	public String getTargetCommand() {
+		return targetCommand;
+	}
+
+	/**
+	 * @param targetCommand the targetCommand to set
+	 */
+	public void setTargetCommand(String targetCommand) {
+		this.targetCommand = targetCommand;
+	}
+
 
 }

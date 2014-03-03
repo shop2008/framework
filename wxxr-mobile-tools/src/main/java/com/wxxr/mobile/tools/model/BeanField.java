@@ -13,6 +13,7 @@ public class BeanField extends FieldModel {
 	private BindingType beanType;
 	private String valueExpression;
 	private boolean nullable;
+	private String[] efftectingFields;
 	
 	/**
 	 * @return the valueExpression
@@ -59,8 +60,34 @@ public class BeanField extends FieldModel {
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
 	}
+
+	/**
+	 * @return the efftectingFields
+	 */
+	public String[] getEfftectingFields() {
+		return efftectingFields;
+	}
+
+	/**
+	 * @param efftectingFields the efftectingFields to set
+	 */
+	public void setEfftectingFields(String[] efftectingFields) {
+		this.efftectingFields = efftectingFields;
+	}
 	
-	
+	public String getEfftectingFieldsString() {
+		if((this.efftectingFields != null)&&(this.efftectingFields.length > 0)){
+			StringBuffer buf = new StringBuffer();
+			for (int i=0 ; i < this.efftectingFields.length ; i++) {
+				if(i > 0){
+					buf.append(',');
+				}
+				buf.append('"').append(this.efftectingFields[i]).append('"');
+			}
+			return buf.toString();
+		}
+		return null;
+	}
 	
 
 }

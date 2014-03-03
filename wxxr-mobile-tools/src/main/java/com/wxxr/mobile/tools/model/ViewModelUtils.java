@@ -24,6 +24,13 @@ import org.xml.sax.ext.DeclHandler;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCSkip;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.TreeScanner;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraintLiteral;
@@ -39,6 +46,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
@@ -498,8 +506,25 @@ public abstract class ViewModelUtils {
 		attrs.put("model", model);
 		attrs.put("bindings", beanBindings);
 		String javaStatement = context.getTemplateRenderer().renderMacro("initBeanUpdaters", attrs, null);
+		log.info("Method statement :["+parseMethod(context, javaStatement)+"]");
 		m.setJavaStatement(javaStatement);
 		return m;
+	}
+	
+	public static JCMethodDecl parseMethod(ICodeGenerationContext context,String statement) {
+		JCCompilationUnit unit = ParserFactory.instance(context.getJavacContext()).newParser(new StringBuffer("public class Temp {").append(statement).append("}"), true, true, true).parseCompilationUnit();
+		final JCMethodDecl[] result = new JCMethodDecl[1];
+		unit.accept(new TreeScanner() {
+
+			/* (non-Javadoc)
+			 * @see com.sun.tools.javac.tree.JCTree.Visitor#visitMethodDef(com.sun.tools.javac.tree.JCTree.JCMethodDecl)
+			 */
+			@Override
+			public void visitMethodDef(JCMethodDecl m) {
+				result[0] = m;
+			}
+		});
+		return result[0];
 	}
 	
 	public static MethodModel createUpdateBindingBeansMethod(ICodeGenerationContext context,ViewModelClass model, List<BeanBindingModel> beanBindings){
@@ -891,6 +916,9 @@ public abstract class ViewModelUtils {
 		model.setBeanType(bean.type());
 		model.setNullable(bean.nullable());
 		model.setValueExpression(bean.express());
+		if((bean.effectingFields() != null)&&(bean.effectingFields().length > 0)){
+			model.setEfftectingFields(bean.effectingFields());
+		}
 		updateBasicFieldModel(context, model, elem);
 		if((bean.type() == BindingType.Service)||StringUtils.isNotBlank(bean.express())){
 			BeanBindingModel binding = new BeanBindingModel();
@@ -1042,6 +1070,15 @@ public abstract class ViewModelUtils {
 		}
 	}
 
+	protected static boolean isStepInvocationCommand(MethodModel m) {
+		String[] pTypes = m.getParameterTypes();
+		if((pTypes == null)||(pTypes.length != 3)){
+			return false;
+		}
+		return pTypes[0].indexOf("ExecutionStep") >= 0;
+	}
+	
+	
 	/**
 	 * @param model
 	 * @param elem
@@ -1067,6 +1104,10 @@ public abstract class ViewModelUtils {
 			if(!StringUtils.isBlank(ann.visibleWhen())){
 				cmdModel.setVisibleWhenExpress(ann.visibleWhen());
 			}
+			if(!StringUtils.isBlank(ann.navigateMethod())){
+				cmdModel.setNavigateMethod(ann.navigateMethod());
+			}
+			cmdModel.setStepInvocation(isStepInvocationCommand(m));
 			model.addCommandModel(cmdModel);
 			processProgressGuard(model, elem, cmdModel);
 			processSecurityConstraint(model, elem, cmdModel);
@@ -1087,6 +1128,15 @@ public abstract class ViewModelUtils {
 					grpName = model.addImport(grpName);
 					validModel.setGroup(grpName);
 					cmdModel.addBeanValidations(validModel);
+				}
+			}
+			FieldUpdating[] fieldUpdatings = ann.updateFields();
+			if((fieldUpdatings != null)&&(fieldUpdatings.length > 0)){
+				for (FieldUpdating fUpdating : fieldUpdatings) {
+					FieldUpdatingModel uModel = new FieldUpdatingModel();
+					uModel.setFieldNames(fUpdating.fields());
+					uModel.setMessage(fUpdating.message());
+					cmdModel.addFieldUpdating(uModel);
 				}
 			}
 			Navigation[] navs = ann.navigations();

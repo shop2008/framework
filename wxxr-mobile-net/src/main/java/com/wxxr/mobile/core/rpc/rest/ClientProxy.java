@@ -4,6 +4,12 @@ package com.wxxr.mobile.core.rpc.rest;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import com.wxxr.mobile.core.async.api.Async;
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.util.MethodHashing;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -11,10 +17,10 @@ import java.util.Map;
  */
 public class ClientProxy implements InvocationHandler
 {
-	private Map<Method, MethodInvoker> methodMap;
+	private Map<Long, MethodInvoker<?>> methodMap;
 	private Class<?> clazz;
 
-	public ClientProxy(Map<Method, MethodInvoker> methodMap)
+	public ClientProxy(Map<Long, MethodInvoker<?>> methodMap)
 	{
 		super();
 		this.methodMap = methodMap;
@@ -30,15 +36,16 @@ public class ClientProxy implements InvocationHandler
 		this.clazz = clazz;
 	}
 
-	public Object invoke(Object o, Method method, Object[] args)
+	public Object invoke(Object o, Method method, final Object[] args)
            throws Throwable
    {
       // equals and hashCode were added for cases where the proxy is added to
       // collections. The Spring transaction management, for example, adds
       // transactional Resources to a Collection, and it calls equals and
       // hashCode.
-
-      MethodInvoker clientInvoker = methodMap.get(method);
+	Long hashId = MethodHashing.methodHash0(method);
+    @SuppressWarnings("rawtypes")
+	final MethodInvoker clientInvoker = methodMap.get(hashId);
       if (clientInvoker == null)
       {
          if (method.getName().equals("equals"))
@@ -59,7 +66,30 @@ public class ClientProxy implements InvocationHandler
       {
          throw new RuntimeException("Could not find a method for: " + method);
       }
-      return clientInvoker.invoke(args);
+	  Async<Object> async = new Async<Object>() {
+			
+		@SuppressWarnings("unchecked")
+		@Override
+		public void onResult(IAsyncCallback<Object> callback) {
+			clientInvoker.invoke(args, callback);
+		}
+      };
+      Class<?> returnType = method.getReturnType();
+      if(Async.class.isAssignableFrom(returnType)){
+    	  return async;
+      }else{
+    	  try {
+    		  return new AsyncFuture<Object>(async){
+				@Override
+				public IAsyncCallback<Object> getInternalCallback() {
+					return new InstantCallback<Object>(super.getInternalCallback());
+				}
+    			  
+    		  }.get();
+    	  }catch(ExecutionException e){
+    		  throw e.getCause();
+    	  }
+      }
    }
 
 	@Override

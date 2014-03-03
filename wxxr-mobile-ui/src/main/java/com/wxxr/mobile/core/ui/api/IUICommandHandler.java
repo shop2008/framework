@@ -10,9 +10,16 @@ import com.wxxr.mobile.core.command.annotation.ConstraintLiteral;
  *
  */
 public interface IUICommandHandler {
-	Object execute(InputEvent event);
+	Object doProcess(InputEvent event);
+	Object doNavigation(InputEvent event,Object result);
 	INavigationDescriptor[] getNavigations();
 	IProgressGuard getProgressGuard();
 	ConstraintLiteral[] getConstraints();
 	void validateUserInput() throws ValidationException;
+	
+	public enum ExecutionStep {
+		PROCESS,
+		NAVIGATION
+	}
+
 }

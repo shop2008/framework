@@ -19,10 +19,12 @@ import java.lang.annotation.Target;
 @PresentationModel
 public @interface Command {
 	String commandName() default "";
+	String navigateMethod() default "";
 	String description() default "";
 	String enableWhen() default "";
 	String visibleWhen() default "";
 	Navigation[] navigations() default {};
 	UIItem[] uiItems() default {};
 	BeanValidation[] validations() default {};
+	FieldUpdating[] updateFields() default {};
 }

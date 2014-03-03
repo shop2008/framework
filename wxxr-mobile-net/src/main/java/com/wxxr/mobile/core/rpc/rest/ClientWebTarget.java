@@ -61,18 +61,18 @@ public class ClientWebTarget implements ResteasyWebTarget
    }
 
    @Override
-   public <T> T proxy(Class<T> proxyInterface)
+   public <T> T proxy(Class<T> proxyInterface, Class<?> ifaceRest)
    {
       client.abortIfClosed();
-      return ProxyBuilder.builder(proxyInterface, this).build();
+      return ProxyBuilder.builder(proxyInterface, ifaceRest, this).build();
    }
 
    @Override
-   public <T> ProxyBuilder<T> proxyBuilder(Class<T> proxyInterface)
+   public <T> ProxyBuilder<T> proxyBuilder(Class<T> proxyInterface, Class<?> ifaceRest)
    {
       client.abortIfClosed();
       if (proxyInterface == null) throw new NullPointerException("proxyInterface was null");
-      return ProxyBuilder.builder(proxyInterface, this);
+      return ProxyBuilder.builder(proxyInterface, ifaceRest,this);
    }
 
    @Override

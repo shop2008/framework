@@ -4,18 +4,14 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 import com.wxxr.javax.validation.ConstraintViolation;
 import com.wxxr.javax.validation.Validator;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IDomainValueModel;
 import com.wxxr.mobile.core.ui.api.IEvaluatorContext;
 import com.wxxr.mobile.core.ui.api.IValueConvertor;
-import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.ValidationError;
 
 /**
@@ -34,11 +30,12 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 	public ELDomainValueModel(IEvaluatorContext elMgr, String expr, IDataField<T> comp, Class<V> expectedType) {
 		super(elMgr, expr, expectedType);
 		this.field = comp;
+//		addProgressFieldName(this.field.getName());
 	}
 
 
 	@Override
-	public ValidationError[] updateValue(Object value) {
+	public ValidationError[] updateDomainValue(Object value) {
 		if(!isUpdatable()){
 			throw new IllegalStateException("Value is readonly !");
 		}
@@ -77,34 +74,29 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		return this.updatable.booleanValue();
 	}
 
-	@Override
-	public T getValue() {
-		return super.doEvaluate();
-	}
 
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator#doEvaluate()
-	 */
-	@Override
-	public T doEvaluate() {
-		if(log.isDebugEnabled()){
-			log.debug("Going to evaluate expr :["+express+"] for data field:/["+field+"]");
-		}
-
-		if(!updateAsync){
-			return updateFieldValue();
-		}else{
-			@SuppressWarnings("unchecked")
-			final Future<T>[] future = new Future[1];
-			future[0] = KUtils.executeTask(new Callable<T>() {
-
-				@Override
-				public T call() throws Exception {
-					field.setAttribute(AttributeKeys.valueUpdating, future[0]);
-					return updateFieldValue();
-				}
-			});
+//	/* (non-Javadoc)
+//	 * @see com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator#doEvaluate()
+//	 */
+//	@Override
+//	public T doEvaluate() {
+//		if(log.isDebugEnabled()){
+//			log.debug("Going to evaluate expr :["+express+"] for data field:/["+field+"]");
+//		}
+//
+//		if(!updateAsync){
+//			return updateFieldValue(null);
+//		}else{
+//			final AsyncFuture<Object> future = new AsyncFuture<Object>();
+//			KUtils.invokeLater(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					field.setAttribute(AttributeKeys.valueUpdating, future);
+//					updateFieldValue(future.getInternalCallback());
+//				}
+//			});
 //			try {
 //				return future.get(1, TimeUnit.SECONDS);
 //			}catch(InterruptedException e){
@@ -114,37 +106,43 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 //			}catch(TimeoutException e){
 //				this.field.setAttribute(AttributeKeys.valueUpdating, future);
 //			}
-			return null;
-		}
-	}
+//			return null;
+//		}
+//	}
 
 
-	/**
-	 * @return
-	 */
-	protected T updateFieldValue() {
-		try {
-			T val = getValue();
-			this.field.setValue(val);
-			if(updateAsync){
-				this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
-				this.field.removeAttribute(AttributeKeys.valueUpdating);
-			}
-			return val;
-		}catch(Throwable t){
-			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
-			if(updateAsync){
-				this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
-				this.field.removeAttribute(AttributeKeys.valueUpdating);
-			}
-			IView view = ModelUtils.getView(field);
-			if(view instanceof ViewBase){
-				((ViewBase)view).handleStartupException(t);
-			}
-			return this.field.getValue();
-		}
-	}
-
+//	/**
+//	 * @return
+//	 */
+//	protected T updateFieldValue(IAsyncCallback<Object> cb) {
+//		try {
+//			T val = getValue();
+//			this.field.setValue(val);
+//			if(updateAsync){
+//				this.field.removeAttribute(AttributeKeys.valueUpdatedFailed);
+//				this.field.removeAttribute(AttributeKeys.valueUpdating);
+//			}
+//			if(cb != null){
+//				cb.success(val);
+//			}
+//			return val;
+//		}catch(Throwable t){
+//			log.warn("Failed to update value of data field :"+ this.field.getName()+" from express :"+this.valueExpr.getExpressionString(), t);
+//			if(updateAsync){
+//				this.field.setAttribute(AttributeKeys.valueUpdatedFailed, t);
+//				this.field.removeAttribute(AttributeKeys.valueUpdating);
+//			}
+//			IView view = ModelUtils.getView(field);
+//			if(view instanceof ViewBase){
+//				((ViewBase)view).handleStartupException(t);
+//			}
+//			if(cb != null){
+//				cb.failed(t);
+//			}
+//			return this.field.getValue();
+//		}
+//	}
+//
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.common.AbstractELValueEvaluator#setConvertor(com.wxxr.mobile.core.ui.api.IValueConvertor)
@@ -186,6 +184,9 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 	 */
 	public ELDomainValueModel<T,V> setUpdateAsync(boolean updateAsync) {
 		this.updateAsync = updateAsync;
+		if(this.updateAsync){
+			addProgressFieldName(this.field.getName());
+		}
 		return this;
 	}
 
@@ -199,6 +200,18 @@ public class ELDomainValueModel<T,V> extends AbstractELValueEvaluator<T,V> imple
 		return "value model of field=" + field.getName() + ", express ="
 				+ this.valueExpr.getExpressionString()+", refering beans :["+this.valueExpr.getReferringBeanNames()
 				+"], refering properties :["+this.valueExpr.getReferringPropertyNames()+ "]";
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.ui.api.IValueEvaluator#updateLocalValue(java.lang.Object)
+	 */
+	@Override
+	public void updateLocalValue(T val) {
+		if(log.isInfoEnabled()){
+			log.info("Going to update local value to data field value of :"+field.getName()+", value :["+val+"]");
+		}
+		this.field.setValue(val);
 	}
 	
 	

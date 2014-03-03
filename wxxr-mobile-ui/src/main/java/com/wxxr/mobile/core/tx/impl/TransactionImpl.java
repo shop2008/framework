@@ -41,8 +41,8 @@ import com.wxxr.javax.transaction.XAException;
 import com.wxxr.javax.transaction.XAResource;
 import com.wxxr.javax.transaction.Xid;
 import com.wxxr.mobile.core.api.ApplicationFactory;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.log.api.Trace;
-import com.wxxr.mobile.core.util.ICancellable;
 
 
 /**

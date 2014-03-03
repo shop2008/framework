@@ -18,4 +18,10 @@ public interface IViewGroup extends IUIContainer<IView>{
 	boolean hasView(String name);
 	String getDefaultViewId();
 	void resetViewStack();
+	
+//	void viewOnShow(IView view);
+//	void viewOnHide(IView view);
+	
+	void addViewActivationListner(IViewActivationListener listener);
+	boolean removeViewActivationListner(IViewActivationListener listener);
 }

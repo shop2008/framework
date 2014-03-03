@@ -14,25 +14,21 @@ public class AbstractViewNavigationCallback implements IViewNavigationCallback {
 
 	@Override
 	public void onCreate(IView view) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onShow(IView view) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onHide(IView view) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onDestroy(IView view) {
-		// TODO Auto-generated method stub
 		
 	}
 

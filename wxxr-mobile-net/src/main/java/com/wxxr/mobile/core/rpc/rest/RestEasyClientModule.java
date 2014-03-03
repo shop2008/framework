@@ -5,6 +5,7 @@ package com.wxxr.mobile.core.rpc.rest;
 
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.rpc.api.IServerUrlLocator;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 
 /**
@@ -22,6 +23,7 @@ public class RestEasyClientModule<T extends IKernelContext> extends
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(HttpRpcService.class);
+		addOptionalService(IServerUrlLocator.class);
 	}
 
 	/* (non-Javadoc)

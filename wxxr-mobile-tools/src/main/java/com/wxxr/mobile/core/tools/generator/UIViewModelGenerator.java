@@ -6,8 +6,10 @@ package com.wxxr.mobile.core.tools.generator;
 import static com.wxxr.mobile.tools.model.ViewModelUtils.createViewModelClass;
 import static com.wxxr.mobile.tools.model.ViewModelUtils.createWorkbenchModel;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +21,13 @@ import javax.tools.JavaFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.JCTree.JCImport;
+import com.sun.tools.javac.tree.Pretty;
+import com.sun.tools.javac.tree.TreeScanner;
+import com.sun.tools.javac.util.Context;
 import com.wxxr.mobile.android.ui.BindableFragment;
 import com.wxxr.mobile.android.ui.BindableFragmentActivity;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -37,7 +46,6 @@ import com.wxxr.mobile.tools.model.WorkbenchModel;
  * @author neillin
  *
  */
-@SuppressWarnings("restriction")
 public class UIViewModelGenerator extends AbstractCodeGenerator {
 	
 	private static final String TEMPATE_NAME = "/META-INF/template/ViewModel.vm";
@@ -84,11 +92,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 
 				try {
 					String text = context.getTemplateRenderer().renderFromFile(TEMPATE_NAME, attributes);
-					JavaFileObject file = filer.createSourceFile(model.getPkgName()+"."+model.getName());
-					log.info("Generate java class file : {}",file.toUri());
-					Writer w = file.openWriter();
-					w.write(text);
-					w.close();
+					createJavaFile(context, model.getPkgName(),model.getName(), text);
 				} catch (Throwable e) {
 					log.error("Failed to generate presentation model class for :"+model.getPkgName()+"."+model.getName(),e);
 				}
@@ -138,11 +142,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 						attributes.put("model", targetUI);
 						try {
 							String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/"+vmFile, attributes);
-							JavaFileObject file = filer.createSourceFile(targetUI.getPkgName()+"."+targetUI.getName());
-							log.info("Generate java class file : {}",file.toUri());
-							Writer w = file.openWriter();
-							w.write(text);
-							w.close();
+							createJavaFile(context, targetUI.getPkgName(),targetUI.getName(), text);
 						} catch (Throwable e) {
 							log.error("Failed to generate UI class for :"+targetUI.getPkgName()+"."+targetUI.getName(),e);
 						}
@@ -165,11 +165,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 			attributes.put("model", this.provider);
 			try {
 				String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/PModelProvider.vm", attributes);
-				JavaFileObject file = filer.createSourceFile(this.provider.getPkgName()+"."+this.provider.getName());
-				log.info("Generate java class file : {}",file.toUri());
-				Writer w = file.openWriter();
-				w.write(text);
-				w.close();
+				createJavaFile(context, this.provider.getPkgName(), this.provider.getName(), text);
 				this.provider = null;
 			} catch (Throwable e) {
 				log.error("Failed to generate UI class for :"+this.provider.getPkgName()+"."+this.provider.getName(),e);
@@ -178,6 +174,38 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 		}
 
 	}
+	/**
+	 * @param context
+	 * @param filer
+	 * @param model
+	 * @param content
+	 * @throws IOException
+	 */
+	protected void createJavaFile(ICodeGenerationContext context,String pkgname, String filename, String content) throws IOException {
+		JCCompilationUnit unit = ParserFactory.instance(context.getJavacContext()).newParser(content, true, true, true).parseCompilationUnit();
+		JavaFileObject file = context.getProcessingEnvironment().getFiler().createSourceFile(pkgname+"."+filename);
+		log.info("Generate java class file : {}",file.toUri());
+		Writer w = file.openWriter();
+		unit.accept(new Pretty(w, true));
+		w.close();
+	}
+	
+	protected void organizeImports(ICodeGenerationContext context, JCCompilationUnit unit){
+		List<JCImport> imports = unit.getImports();
+		unit.accept(new TreeScanner(){
+
+			/* (non-Javadoc)
+			 * @see com.sun.tools.javac.tree.TreeScanner#visitIdent(com.sun.tools.javac.tree.JCTree.JCIdent)
+			 */
+			@Override
+			public void visitIdent(JCIdent identifier) {
+				super.visitIdent(identifier);
+				identifier.name.toString();
+			}
+		});
+	}
+	
+	
 	/**
 	 * @param context
 	 * @param filer
@@ -231,11 +259,7 @@ public class UIViewModelGenerator extends AbstractCodeGenerator {
 		String vmFile = "WorkbenchDescriptor.vm";
 		try {
 			String text = context.getTemplateRenderer().renderFromFile("/META-INF/template/"+vmFile, attributes);
-			JavaFileObject file = filer.createSourceFile(model.getPkgName()+"."+model.getName());
-			log.info("Generate java class file : {}",file.toUri());
-			Writer w = file.openWriter();
-			w.write(text);
-			w.close();
+			createJavaFile(context, model.getPkgName(), model.getName(), text);
 		} catch (Throwable e) {
 			log.error("Failed to generate Workbench descriptor for :"+model.getPkgName()+"."+model.getName(),e);
 		}

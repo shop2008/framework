@@ -117,7 +117,7 @@ public abstract class GenericContainer<T>  implements Iterable<T>{
 		}
 		String name = getObjectId(child);
 		if(this.map.containsKey(name)){
-			throw new IllegalStateException("UIComponent with name :"+name+" already added in uicontainer :"+this);
+			throw new IllegalStateException("Child with name :"+name+" already added in uicontainer :"+this);
 		}
 		this.map.put(name, child);
 		handleAdded(child);

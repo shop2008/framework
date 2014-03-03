@@ -12,6 +12,9 @@ import com.wxxr.javax.ws.rs.client.WebTarget;
 import com.wxxr.javax.ws.rs.core.Configuration;
 import com.wxxr.javax.ws.rs.core.Link;
 import com.wxxr.javax.ws.rs.core.UriBuilder;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
+import com.wxxr.mobile.core.microkernel.api.IKernelContext;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -20,16 +23,18 @@ import com.wxxr.javax.ws.rs.core.UriBuilder;
 public class ResteasyClient implements Client
 {
    protected volatile ClientHttpEngine httpEngine;
-   protected volatile ExecutorService asyncInvocationExecutor;
+//   protected volatile ExecutorService asyncInvocationExecutor;
    protected ClientConfiguration configuration;
    protected boolean closed;
+   protected IKernelContext context;
 
 
-   ResteasyClient(ClientHttpEngine httpEngine, ExecutorService asyncInvocationExecutor, ClientConfiguration configuration)
+   ResteasyClient(IKernelContext ctx,ClientHttpEngine httpEngine, ClientConfiguration configuration)
    {
       this.httpEngine = httpEngine;
-      this.asyncInvocationExecutor = asyncInvocationExecutor;
+//      this.asyncInvocationExecutor = asyncInvocationExecutor;
       this.configuration = configuration;
+      this.context = ctx;
    }
 
    public ClientHttpEngine httpEngine()
@@ -39,9 +44,13 @@ public class ResteasyClient implements Client
    }
 
 
-   public ExecutorService asyncInvocationExecutor()
-   {
-      return asyncInvocationExecutor;
+//   public ExecutorService asyncInvocationExecutor()
+//   {
+//      return asyncInvocationExecutor;
+//   }
+   
+   public ICommandExecutor getExecutor() {
+	   return this.context.getService(ICommandExecutor.class);
    }
 
    public void abortIfClosed()

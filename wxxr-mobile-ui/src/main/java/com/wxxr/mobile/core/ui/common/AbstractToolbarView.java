@@ -1,7 +1,9 @@
 package com.wxxr.mobile.core.ui.common;
 
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
 import com.wxxr.mobile.core.ui.api.IBinding;
 import com.wxxr.mobile.core.ui.api.IMenu;
@@ -43,10 +45,8 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 		}
 		return null;
 	}
-	@Override
-	public IBinding<IView> getBinding() {
-		return super.getBinding();
-	}
+
+
 
 	protected IUICommand getMenuItem(String name) {
 		IUICommand cmd = null;
@@ -80,11 +80,25 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 			this.viewStack.remove(page);
 		}
 		this.viewStack.push(page);
+		KUtils.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshUI();
+			}
+		}, 200, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public void dettach(IView page) {
 		this.viewStack.remove(page);
+		KUtils.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshUI();
+			}
+		}, 200, TimeUnit.MILLISECONDS);
 	}
 
 	/* (non-Javadoc)
@@ -101,6 +115,15 @@ public abstract class AbstractToolbarView extends ViewBase implements IAppToolba
 	@Override
 	public void show() {
 		setAttribute(AttributeKeys.visible, true);
+	}
+	
+	protected void refreshUI() {
+		if(getBinding() != null){
+			IBinding<IView> binding = getBinding();
+			binding.deactivate();
+			binding.activate(this);
+			binding.doUpdate();
+		}
 	}
 
 }

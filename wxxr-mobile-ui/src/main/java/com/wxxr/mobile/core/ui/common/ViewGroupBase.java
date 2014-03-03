@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.wxxr.mobile.core.ui.api.IView;
+import com.wxxr.mobile.core.ui.api.IViewActivationListener;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.IViewNavigationListener;
 import com.wxxr.mobile.core.ui.api.IWorkbenchRTContext;
@@ -25,18 +26,17 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 		
 		@Override
 		public void onShow(IView view) {
-			String name = view.getName();
-			viewStack.remove(name);
-			viewStack.push(name);		}
+			viewOnShow(view);	
+		}
 		
 		@Override
 		public void onHide(IView view) {
-			viewStack.remove(view.getName());
+			viewOnHide(view);
 		}
 		
 		@Override
 		public void onDestroy(IView view) {
-			
+			viewStack.remove(view.getName());
 		}
 		
 		@Override
@@ -69,6 +69,8 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 
 	private Stack<String> viewStack = new Stack<String>();
 	private String defaultViewId;
+	private LinkedList<IViewActivationListener> listeners;
+	private String onShowViewId;
 
 	public ViewGroupBase() {
 		super();
@@ -117,8 +119,7 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 				setAttribute(AttributeKeys.visible, true);
 			}
 			view.show();
-			this.viewStack.remove(name);
-			this.viewStack.push(name);
+			viewOnShow(view);
 		}
 	}
 
@@ -133,6 +134,7 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 			view = nextViewId != null ? getView(nextViewId) : null;
 			if(view != null){
 				view.show();
+				notifyViewActivated(view.getName());
 			}
 		}else{
 			this.viewStack.remove(name);
@@ -169,4 +171,44 @@ public class ViewGroupBase extends UIContainer<IView> implements IViewGroup {
 			this.viewStack.clear();
 	}
 
+	@Override
+	public synchronized void addViewActivationListner(IViewActivationListener listener) {
+		if(this.listeners == null){
+			this.listeners = new LinkedList<IViewActivationListener>();
+		}
+		if(!this.listeners.contains(listener)){
+			this.listeners.add(listener);
+		}
+		if(getActiveViewId() != null){
+			listener.viewActivated(getActiveViewId());
+		}
+	}
+
+	@Override
+	public synchronized boolean removeViewActivationListner(IViewActivationListener listener) {
+		return this.listeners != null ? this.listeners.remove(listener) : false;
+	}
+
+	protected synchronized void notifyViewActivated(String viewId){
+		if(this.listeners == null){
+			return;
+		}
+		for (IViewActivationListener listener : this.listeners) {
+			listener.viewActivated(viewId);
+		}
+	}
+
+	protected void viewOnShow(IView view) {
+		String name = view.getName();
+		if(!name.equals(this.onShowViewId)){
+			this.viewStack.remove(name);
+			this.viewStack.push(name);
+			notifyViewActivated(name);
+			this.onShowViewId = name;
+			
+		}
+	}
+
+	protected void viewOnHide(IView view) {
+	}
 }

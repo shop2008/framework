@@ -19,6 +19,7 @@ public class UICommandModel implements JavaModel{
 	
 	private String name;
 	private String methodName;
+	private String navigateMethod;
 	private String className;
 	private String description;
 	private String enabledWhenExpress,visibleWhenExpress;
@@ -28,6 +29,8 @@ public class UICommandModel implements JavaModel{
 	private IProgressGuard progressGuard;
 	private NetworkConstraintLiteral networkConstraint;
 	private SecurityConstraintLiteral securityConstraint;
+	private boolean stepInvocation;
+	private LinkedList<FieldUpdatingModel> fieldUpdatings;
 	/**
 	 * @return the commandName
 	 */
@@ -80,6 +83,11 @@ public class UICommandModel implements JavaModel{
 	public BeanValidationModel[] getBeanValidations() {
 		return beanValidations != null ? beanValidations.toArray(new BeanValidationModel[0]) : null;
 	}
+	
+	public FieldUpdatingModel[] getFieldUpdatings() {
+		return fieldUpdatings != null ? fieldUpdatings.toArray(new FieldUpdatingModel[0]) : null;
+	}
+
 	/**
 	 * @param commandName the commandName to set
 	 */
@@ -146,6 +154,16 @@ public class UICommandModel implements JavaModel{
 	}
 
 	
+	public void addFieldUpdating(FieldUpdatingModel item){
+		if(this.fieldUpdatings == null){
+			this.fieldUpdatings = new LinkedList<FieldUpdatingModel>();
+		}
+		if(!this.fieldUpdatings.contains(item)){
+			this.fieldUpdatings.add(item);
+		}
+	}
+
+	
 	/**
 	 * @return the classModel
 	 */
@@ -200,6 +218,32 @@ public class UICommandModel implements JavaModel{
 	public void setSecurityConstraint(SecurityConstraintLiteral securityConstraint) {
 		this.securityConstraint = securityConstraint;
 	}
+	/**
+	 * @return the stepInvocation
+	 */
+	public boolean isStepInvocation() {
+		return stepInvocation;
+	}
+	/**
+	 * @param stepInvocation the stepInvocation to set
+	 */
+	public void setStepInvocation(boolean stepInvocation) {
+		this.stepInvocation = stepInvocation;
+	}
 
-	
+	public boolean isValidationRequired() {
+		return ((this.beanValidations != null)&&(this.beanValidations.size() > 0))||((this.fieldUpdatings != null)&&(this.fieldUpdatings.size() > 0));
+	}
+	/**
+	 * @return the navigateMethod
+	 */
+	public String getNavigateMethod() {
+		return navigateMethod;
+	}
+	/**
+	 * @param navigateMethod the navigateMethod to set
+	 */
+	public void setNavigateMethod(String navigateMethod) {
+		this.navigateMethod = navigateMethod;
+	}
 }

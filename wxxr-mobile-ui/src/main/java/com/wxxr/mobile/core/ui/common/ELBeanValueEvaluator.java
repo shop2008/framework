@@ -13,7 +13,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-public class ELBeanValueEvaluator<T> extends AbstractELValueEvaluator<T, T> {
+public abstract class ELBeanValueEvaluator<T> extends AbstractELValueEvaluator<T, T> {
 	private static final Trace log=Trace.getLogger(ELBeanValueEvaluator.class);
 	
 	protected final String enabledWhenExpress;
@@ -55,21 +55,15 @@ public class ELBeanValueEvaluator<T> extends AbstractELValueEvaluator<T, T> {
 	 * @see com.wxxr.mobile.core.ui.common.AbstractELValueEvaluator#doEvaluate()
 	 */
 	@Override
-	public T doEvaluate() {
+	public void doEvaluate() {
 		if(log.isDebugEnabled()){
 			log.debug("Going to evaluate express :["+express+"], expected type :"+expectedType.getCanonicalName());
 		}
-		T val = null;
 		if(checkEnableCondition()){
-			val = super.doEvaluate();
+			super.doEvaluate();
 		}else{
-			val = this.defaultValue;
+			updateLocalValue(this.defaultValue);
 		}
-		updateRegisteredBean(val);
-		return val;
 	}
 	
-	protected void updateRegisteredBean(T val){
-		
-	}
 }

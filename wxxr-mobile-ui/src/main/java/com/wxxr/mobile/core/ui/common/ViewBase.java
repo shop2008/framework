@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import com.wxxr.javax.el.BeanNameResolver;
@@ -36,6 +37,7 @@ import com.wxxr.mobile.core.ui.api.ISimpleSelection;
 import com.wxxr.mobile.core.ui.api.IStructureSelection;
 import com.wxxr.mobile.core.ui.api.IUICommandHandler;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
+import com.wxxr.mobile.core.ui.api.IUIContainer;
 import com.wxxr.mobile.core.ui.api.IUIExceptionHandler;
 import com.wxxr.mobile.core.ui.api.IValueEvaluator;
 import com.wxxr.mobile.core.ui.api.IView;
@@ -58,7 +60,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 
 	protected Trace getLog() {
 		if((vLog == null)&&(getName() != null)){
-			vLog = Trace.getLogger("com.wxxr.mobile.core.ui."+(IPage.class.isAssignableFrom(getClass()) ? "P" : "V")+getName());
+			vLog = Trace.getLogger("com.wxxr.mobile.core.ui.view."+(IPage.class.isAssignableFrom(getClass()) ? "P" : "V")+getName());
 		}
 		return vLog != null ? vLog : loger;
 	}
@@ -87,6 +89,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 
+	protected ViewBase getView() {
+		return this;
+	}
 
 	private BeanNameResolver beanNameResolver = new BeanNameResolver() {
 
@@ -150,7 +155,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	private ELManager elm;
 	private Map<String, Object> beans;
 	private List<IValueEvaluator<?>> evaluators;
-	private List<IValueEvaluator<?>> beanUpdaters;
+	private Map<String,IValueEvaluator<?>> beanUpdaters;
 	private List<IDomainValueModel<?>> domainModels;
 	private LinkedList<Throwable> startupExceptions = new LinkedList<Throwable>();
 	private List<String> handledExceptions = new ArrayList<String>();
@@ -169,6 +174,11 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		@Override
 		public Object getBean(String name) {
 			return beanNameResolver.getBean(name);
+		}
+
+		@Override
+		public IView getView() {
+			return ViewBase.this;
 		}
 	};
 	private boolean enableSelectionProvider;
@@ -215,8 +225,12 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 
 	protected BeanPropertyChangedListener getBeanListener(String name){
+		return getBeanListener(name, true);
+	}
+	
+	protected BeanPropertyChangedListener getBeanListener(String name,boolean create){
 		BeanPropertyChangedListener l = this.beanListeners.get(name);
-		if(l == null){
+		if((l == null)&&create){
 			l = new BeanPropertyChangedListener(name);
 			this.beanListeners.put(name, l);
 		}
@@ -224,6 +238,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	}
 
 	protected void registerBean(String name, Object bean){
+		if(getLog().isInfoEnabled()){
+			getLog().info("Going to register/update bean :"+name);
+		}
 		if(this.beans == null){
 			this.beans = new HashMap<String, Object>();
 		}
@@ -234,8 +251,21 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 				DomainValueChangedEventImpl evt = new DomainValueChangedEventImpl(this, name);
 				fireDataChangedEvent(evt);
 			}
-			if(bean instanceof IBindableBean){
-				((IBindableBean)bean).addPropertyChangeListener(getBeanListener(name));
+			if(oldBean instanceof IBindableBean){	// remove property listener from old bean
+				IPropertyChangeListener listener = getBeanListener(name,false);
+				if(listener != null){
+					((IBindableBean)oldBean).removePropertyChangeListener(listener);
+				}
+			}
+		}else{
+			if(getLog().isInfoEnabled()){
+				getLog().info("Bean :["+name+"] was registered,new value is same with old one ! ");
+			}
+		}
+		if(bean instanceof IBindableBean){		// add property listener to new bean
+			IPropertyChangeListener listener = getBeanListener(name);
+			if((listener != null)&&(((IBindableBean)bean).hasPropertyChangeListener(listener) == false)){
+				((IBindableBean)bean).addPropertyChangeListener(listener);
 			}
 		}
 	}
@@ -295,16 +325,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return this;
 	}
 	
-	protected void addBeanUpdater(IValueEvaluator<?> evaluator){
+	protected void addBeanUpdater(String beanName,IValueEvaluator<?> evaluator){
 		if(this.beanUpdaters == null){
-			this.beanUpdaters = new ArrayList<IValueEvaluator<?>>();
+			this.beanUpdaters = new HashMap<String,IValueEvaluator<?>>();
 		}
-		if(!this.beanUpdaters.contains(evaluator)){
-			this.beanUpdaters.add(evaluator);
-		}
+		this.beanUpdaters.put(beanName, evaluator);
 	}
 
-	protected ViewBase removeBeanUpdater(IValueEvaluator<?> evaluator){
+	protected ViewBase removeBeanUpdater(String beanName,IValueEvaluator<?> evaluator){
 		if(this.beanUpdaters != null){
 			this.beanUpdaters.remove(evaluator);
 		}
@@ -336,7 +364,9 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	 * @see com.wxxr.mobile.core.ui.api.IBindable#doBinding(com.wxxr.mobile.core.ui.api.IBinding)
 	 */
 	public void doBinding(IBinding<IView> binding) {
-		onShow(binding);
+		if(isActive()){
+			throw new IllegalStateException("view :"+getName()+" has been bound !");
+		}
 		List<IMenu> menus = getChildren(IMenu.class);
 		if((menus != null)&&(menus.size() > 0)){
 			for (IMenu iMenu : menus) {
@@ -363,22 +393,25 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 			}
 		}
 		this.binding = (IViewBinding)binding;
+		updateBeans();
 		forceValueEvalution();
 		clearValidationErrors();
-		if(this.beans != null){
-			for (Entry<String,Object> entry: this.beans.entrySet()) {
-				Object bean = entry.getValue();
-				if(bean instanceof IBindableBean){
-					((IBindableBean)bean).addPropertyChangeListener(getBeanListener(entry.getKey()));
-				}
-			}
-		}
+		onShow(binding);
+//		if(this.beans != null){
+//			for (Entry<String,Object> entry: this.beans.entrySet()) {
+//				Object bean = entry.getValue();
+//				if(bean instanceof IBindableBean){
+//					((IBindableBean)bean).addPropertyChangeListener(getBeanListener(entry.getKey()));
+//				}
+//			}
+//		}
 	}
 	
 	protected void clearValidationErrors() {
+		@SuppressWarnings("rawtypes")
 		List<IDataField> list = getChildren(IDataField.class);
 		if(list != null){
-			for (IDataField f : list) {
+			for (@SuppressWarnings("rawtypes") IDataField f : list) {
 				f.removeAttribute(AttributeKeys.validationErrors);
 			}
 		}
@@ -500,6 +533,16 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		onContentViewCreated();
 	}
 	
+	public final void onUIShow() {
+		onContentViewShow();
+	}
+	
+	public final void onUIHide() {
+		onContentViewHide();
+	}
+
+	
+	
 	protected void onContentViewDestroy(){
 		
 	}
@@ -507,6 +550,15 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 	protected void onContentViewCreated(){
 		
 	}
+	
+	protected void onContentViewShow(){
+		
+	}
+	
+	protected void onContentViewHide(){
+		
+	}
+
 	
 	protected void resetViewGroups(){
 		List<IViewGroup> vgs = getChildren(IViewGroup.class);
@@ -530,7 +582,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 					if(bean instanceof IBindableBean){
 						BeanPropertyChangedListener l = getBeanListener(entry.getKey());
 						if(l != null){
-							((IBindableBean)bean).addPropertyChangeListener(l);
+							((IBindableBean)bean).removePropertyChangeListener(l);
 						}
 					}
 				}
@@ -559,10 +611,6 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.ui.impl.AbstractUIComponent#fireDataChangedEvent(com.wxxr.mobile.core.ui.api.ValueChangedEvent)
-	 */
-	@Override
 	protected synchronized void fireDataChangedEvent(ValueChangedEvent event) {
 		if(getLog().isDebugEnabled()){
 			getLog().debug("processing event :", event);
@@ -570,7 +618,7 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		onDataChanged(event);
 		if(event instanceof DomainValueChangedEvent){
 			if(this.beanUpdaters != null){
-				for (IValueEvaluator<?> eval : this.beanUpdaters) {
+				for (IValueEvaluator<?> eval : this.beanUpdaters.values()) {
 					if(eval.valueEffectedBy(event)){
 						eval.doEvaluate();
 					}
@@ -616,16 +664,44 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		}
 	}
 	
+	/**
+	 * this method must be called before view was on shown, 
+	 * each evaluator must be called on sequence base on their dependency
+	 */
 	protected void updateBeans() {
-		if(this.beanUpdaters != null){
-			for (IValueEvaluator<?> eval : this.beanUpdaters) {
-				try {
-					eval.doEvaluate();
-				} catch (Throwable e) {
-					getLog().warn("Failed to update bean value from evaludator :"+eval, e);
-					handleStartupException(e);
+		if(this.beanUpdaters != null){		
+			List<String> doneBeans = new ArrayList<String>();
+			Set<String> keys = this.beanUpdaters.keySet();
+			for (String key : keys) {
+				if(doneBeans.contains(key)){
+					continue;
+				}
+				evaluateBeanUpdater(this.beanUpdaters.get(key),doneBeans);
+				if(!doneBeans.contains(key)){
+					doneBeans.add(key);
 				}
 			}
+		}
+	}
+	
+	protected void evaluateBeanUpdater(IValueEvaluator<?> eval,List<String> doneBeans){
+		if(eval == null){
+			return;
+		}
+		List<String> dependingBeans = eval.getDependingBeans();
+		for (String bean : dependingBeans) {
+			if(!doneBeans.contains(bean)){
+				evaluateBeanUpdater(this.beanUpdaters.get(bean),doneBeans);
+				if(!doneBeans.contains(bean)){
+					doneBeans.add(bean);
+				}
+			}
+		}
+		try {
+			eval.doEvaluate();
+		} catch (Throwable e) {
+			getLog().warn("Failed to update bean value from evaludator :"+eval, e);
+			handleStartupException(e);
 		}
 	}
 
@@ -656,17 +732,20 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		return this.commands != null && this.commands.containsKey(cmdName);
 	}
 
-	protected abstract void onCreate();
+	protected void onCreate(){
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.AbstractUIComponent#invokeCommand(java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public void invokeCommand(String cmdName, InputEvent event) {
+	public void handleInputEvent(InputEvent event) {
+		String cmdName = event.getTargetCommand();
 		if(hasCommand(cmdName)){
 			getUIContext().getWorkbenchManager().getCommandExecutor().executeCommand(cmdName,this,this.commands.get(cmdName), event);
 		}else{
-			super.invokeCommand(cmdName, event);
+			super.handleInputEvent(event);
 		}
 	}
 
@@ -807,6 +886,14 @@ public abstract class ViewBase extends UIContainer<IUIComponent> implements IVie
 		super.init(ctx);
 		doInit();
 	}	
+	
+	/**
+	 * 
+	 * @return true if quit, otherwise return false;
+	 */
+	public boolean onBackPressed() {
+		return false;
+	}
 
 
 }

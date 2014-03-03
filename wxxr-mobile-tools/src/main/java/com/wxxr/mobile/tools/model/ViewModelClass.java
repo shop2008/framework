@@ -27,7 +27,6 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-@SuppressWarnings("restriction")
 public class ViewModelClass extends AbstractClassModel {
 	private static final Logger log = LoggerFactory.getLogger(ViewModelClass.class);
 	
@@ -324,8 +323,8 @@ public class ViewModelClass extends AbstractClassModel {
 			}
 			MethodModel m = ViewModelUtils.createInitBeanUpdatersMethod(context, this, bbindings);
 			addMethod(m);
-			m = ViewModelUtils.createUpdateBindingBeansMethod(context, this, bbindings);
-			addMethod(m);
+//			m = ViewModelUtils.createUpdateBindingBeansMethod(context, this, bbindings);
+//			addMethod(m);
 			hasBeanBindings = true;
 		}
 		
@@ -364,7 +363,7 @@ public class ViewModelClass extends AbstractClassModel {
 		if((cmds != null)&&(cmds.size() > 0)){
 			boolean hasBeanValidation = false;
 			for (UICommandModel uiCommandModel : cmds) {
-				if((uiCommandModel.getBeanValidations() != null)&&(uiCommandModel.getBeanValidations().length >0)){
+				if(uiCommandModel.isValidationRequired()){
 					hasBeanValidation = true;
 					break;
 				}
@@ -420,7 +419,7 @@ public class ViewModelClass extends AbstractClassModel {
 
 
 		List<MethodModel> onShowMethods = getOnShowMethods();
-		if(hasBeanBindings || ((onShowMethods != null)&&(onShowMethods.size() > 0))){
+		if((onShowMethods != null)&&(onShowMethods.size() > 0)){
 			addImport(IBinding.class.getCanonicalName());
 			addImport(IView.class.getCanonicalName());
 			MethodModel m = ViewModelUtils.createOnShowMethod(context, this, onShowMethods);

@@ -29,7 +29,8 @@ public class UICommand extends UIComponent implements IUICommand{
 	 * @see com.wxxr.mobile.core.ui.common.UIComponent#invokeCommand(java.lang.String, com.wxxr.mobile.core.ui.api.InputEvent)
 	 */
 	@Override
-	public void invokeCommand(String command, InputEvent event) {
+	public void handleInputEvent(InputEvent event) {
+		String command = event.getTargetCommand();
 		if((this.handback != null)&&(event instanceof SimpleInputEvent)){
 			((SimpleInputEvent)event).addProperty(UIConstants.MESSAGEBOX_ATTRIBUTE_HANDBACK, this.handback);
 		}
@@ -39,8 +40,9 @@ public class UICommand extends UIComponent implements IUICommand{
 				return;
 			}
 			command = this.cmdName == null ? getName() : this.cmdName;
+			event.setTargetCommand(command);
 		}
-		super.invokeCommand(command, event);
+		super.handleInputEvent(event);
 	}
 	
 	/**

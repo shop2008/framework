@@ -12,9 +12,9 @@ public interface ResteasyWebTarget extends WebTarget
 {
    ResteasyClient getResteasyClient();
 
-   <T> T proxy(Class<T> proxyInterface);
+   <T> T proxy(Class<T> proxyInterface,Class<?> ifaceRest);
 
-   <T> ProxyBuilder<T> proxyBuilder(Class<T> proxyInterface);
+   <T> ProxyBuilder<T> proxyBuilder(Class<T> proxyInterface, Class<?> ifaceRest);
 
 
    ResteasyWebTarget queryParams(MultivaluedMap<String, Object> parameters) throws IllegalArgumentException, NullPointerException;

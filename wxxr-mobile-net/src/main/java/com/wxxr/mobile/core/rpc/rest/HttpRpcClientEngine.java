@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicHeader;
 
-import com.wxxr.javax.ws.rs.ProcessingException;
 import com.wxxr.javax.ws.rs.core.MultivaluedMap;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
+import com.wxxr.mobile.core.rpc.api.Request;
+import com.wxxr.mobile.core.rpc.api.RequestCallback;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpRequest;
 import com.wxxr.mobile.core.rpc.http.api.HttpResponse;
@@ -39,91 +40,103 @@ public class HttpRpcClientEngine implements ClientHttpEngine
    }
 
 
-   public ClientResponse invoke(ClientInvocation request)
+   public void invoke(final ClientInvocation invocation,final IAsyncCallback<ClientResponse> callback)
    {
-      String uri = request.getUri().toString();
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.valueOf(request.getMethod()));
-      final HttpRequest httpMethod = (HttpRequest)this.httpClient.createRequest(uri, params);
-      final HttpResponse res;
-      try
-      {
-         loadHttpMethod(request, httpMethod);
+	   String uri = invocation.getUri().toString();
+	   Map<String, Object> params = new HashMap<String, Object>();
+	   params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.valueOf(invocation.getMethod()));
+	   final HttpRequest httpMethod = (HttpRequest)this.httpClient.createRequest(uri, params);
+//	   try {
+//		   loadHttpMethod(invocation, httpMethod);
+//	   } catch (Throwable t) {
+//		   callback.failed(t);
+//		   return;
+//	   }
+	   callback.setCancellable(httpMethod);
+	   httpMethod.invokeAsync(new RequestCallback<HttpResponse, Request<HttpResponse>>() {
 
-         res = (HttpResponse)httpMethod.invoke(0L, TimeUnit.SECONDS);
-      }
-      catch (Exception e)
-      {
-         throw new ProcessingException("Unable to invoke request", e);
-      }
+		   @Override
+		   public void onResponseReceived(Request<HttpResponse> req,
+				   final HttpResponse res) {
+			   ClientResponse response = new ClientResponse(invocation.getClientConfiguration())
+			   {
+				   InputStream stream;
+				   InputStream hc4Stream;
 
-      ClientResponse response = new ClientResponse(request.getClientConfiguration())
-      {
-         InputStream stream;
-         InputStream hc4Stream;
+				   @Override
+				   protected void setInputStream(InputStream is)
+				   {
+					   stream = is;
+				   }
 
-         @Override
-         protected void setInputStream(InputStream is)
-         {
-            stream = is;
-         }
+				   public InputStream getInputStream()
+				   {
+					   if (stream == null)
+					   {
+						   DataEntity entity = res.getResponseEntity();
+						   if (entity == null) return null;
+						   try
+						   {
+							   hc4Stream = entity.getContent();
+							   stream = new SelfExpandingBufferredInputStream(hc4Stream);
+						   }
+						   catch (IOException e)
+						   {
+							   throw new RuntimeException(e);
+						   }
+					   }
+					   return stream;
+				   }
 
-         public InputStream getInputStream()
-         {
-            if (stream == null)
-            {
-               DataEntity entity = res.getResponseEntity();
-               if (entity == null) return null;
-               try
-               {
-                  hc4Stream = entity.getContent();
-                  stream = new SelfExpandingBufferredInputStream(hc4Stream);
-               }
-               catch (IOException e)
-               {
-                  throw new RuntimeException(e);
-               }
-            }
-            return stream;
-         }
+				   public void releaseConnection()
+				   {
+					   isClosed = true;
+					   // Apache Client 4 is stupid,  You have to get the InputStream and close it if there is an entity
+					   // otherwise the connection is never released.  There is, of course, no close() method on response
+					   // to make this easier.
+					   try
+					   {
+						   if (stream != null)
+						   {
+							   stream.close();
+						   }
+						   else
+						   {
+							   InputStream is = getInputStream();
+							   if (is != null)
+							   {
+								   is.close();
+							   }
+						   }
+						   if (hc4Stream != null)
+						   {
+							   // just in case the input stream was entirely replaced and not wrapped, we need
+							   // to close the apache client input stream.
+							   hc4Stream.close();
+						   }
+					   }
+					   catch (Exception ignore)
+					   {
+					   }
+				   }
+			   };
+			   response.setProperties(invocation.getMutableProperties());
+			   response.setStatus(res.getStatusCode());
+			   response.setHeaders(extractHeaders(res));
+			   response.setClientConfiguration(invocation.getClientConfiguration());
+			   callback.success(response);
+		   }
 
-         public void releaseConnection()
-         {
-            isClosed = true;
-            // Apache Client 4 is stupid,  You have to get the InputStream and close it if there is an entity
-            // otherwise the connection is never released.  There is, of course, no close() method on response
-            // to make this easier.
-            try
-            {
-               if (stream != null)
-               {
-                  stream.close();
-               }
-               else
-               {
-                  InputStream is = getInputStream();
-                  if (is != null)
-                  {
-                     is.close();
-                  }
-               }
-               if (hc4Stream != null)
-               {
-                  // just in case the input stream was entirely replaced and not wrapped, we need
-                  // to close the apache client input stream.
-                  hc4Stream.close();
-               }
-            }
-            catch (Exception ignore)
-            {
-            }
-         }
-      };
-      response.setProperties(request.getMutableProperties());
-      response.setStatus(res.getStatusCode());
-      response.setHeaders(extractHeaders(res));
-      response.setClientConfiguration(request.getClientConfiguration());
-      return response;
+		   @Override
+		   public void onError(Request<HttpResponse> request, Throwable exception) {
+			   callback.failed(exception);
+		   }
+
+		@Override
+		public void onPrepare(Request<HttpResponse> request) throws Exception {
+			loadHttpMethod(invocation,(HttpRequest)httpMethod);
+		}
+	   });
    }
 
 
