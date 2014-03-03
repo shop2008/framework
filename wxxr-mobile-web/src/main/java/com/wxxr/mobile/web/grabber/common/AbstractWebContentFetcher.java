@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.log4j.Logger;
 
+import com.wxxr.mobile.core.async.api.AsyncFuture;
 import com.wxxr.mobile.core.rpc.http.api.HttpEntity;
 import com.wxxr.mobile.core.rpc.http.api.HttpHeaderNames;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
@@ -86,7 +88,8 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 
 			params.put(ParamConstants.PARAMETER_KEY_HTTP_METHOD, HttpMethod.GET);
 			request = getHttpService().createRequest(toFetchURL, params);
-			HttpResponse response = request.invoke(this.httpRequestTimeout, TimeUnit.SECONDS);
+			AsyncFuture<HttpResponse> future = new AsyncFuture<HttpResponse>(new HttpRequestAsync(request));
+			HttpResponse response = future.get(this.httpRequestTimeout, TimeUnit.SECONDS);
 			
 			int statusCode = response.getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
@@ -131,7 +134,7 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 				}
 				if (size > task.getMaxDownloadSize()) {
 					fetchResult.setStatusCode(CustomFetchStatus.PageTooBig);
-					request.abort();
+					request.cancel();
 					return fetchResult;
 				}
 
@@ -140,25 +143,26 @@ public abstract class AbstractWebContentFetcher implements IWebContentFetcher {
 
 			}
 			
-			request.abort();
+			request.cancel();
 			
-		} catch (IOException e) {
+		} catch (ExecutionException e) {
 			logger.error("Fatal transport error: " + e.getMessage() + " while fetching " + toFetchURL
 					+ " (link found in doc #" + webUrl.getParentUrl() + ")");
-			fetchResult.setStatusCode(CustomFetchStatus.FatalTransportError);
-			return fetchResult;
+			if(e.getCause() instanceof IOException){
+				fetchResult.setStatusCode(CustomFetchStatus.FatalTransportError);
+				return fetchResult;
+			}
 		} catch (IllegalStateException e) {
 			// ignoring exceptions that occur because of not registering https
 			// and other schemes
-		} catch (Exception e) {
+		} catch (Throwable e) {
 				logger.error("Error while fetching " + webUrl.getURL(),e);
 		} finally {
 			try {
 				if (fetchResult.getEntity() == null && request != null) {
-					request.abort();
+					request.cancel();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		fetchResult.setStatusCode(CustomFetchStatus.UnknownError);

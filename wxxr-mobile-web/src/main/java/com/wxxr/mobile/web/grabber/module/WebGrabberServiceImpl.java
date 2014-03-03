@@ -11,6 +11,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -36,11 +38,16 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 	private static final Trace log = Trace.register(WebGrabberServiceImpl.class);
 	
 	private class CrawlerServiceContext extends AbstractContext implements IGrabberServiceContext{
+
+		@Override
+		public void invokeLater(Runnable task) {
+			getExecutorService().execute(task);
+		}
 		
 	}
 	
-	private int maxThreads = 10, minThread = 2, taskQueueSize = 5, maxCrawler = 2;
-	private ExecutorService executor;
+	private int maxThreads = 10, maxCrawler = 2;
+	private ScheduledExecutorService executor;
 	
 	private CrawlerServiceContext context = new CrawlerServiceContext();
 	
@@ -49,8 +56,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 		return context;
 	}
 
-	@Override
-	protected ExecutorService getExecutorService() {
+	protected ScheduledExecutorService getExecutorService() {
 		return executor;
 	}
 
@@ -60,7 +66,7 @@ public abstract class WebGrabberServiceImpl extends AbstractMicroKernel<IGrabber
 	@Override
 	public void start() throws Exception {
 		super.start();
-		this.executor = new ThreadPoolExecutor(this.minThread, this.maxThreads, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(this.taskQueueSize), 
+		this.executor = new ScheduledThreadPoolExecutor(this.maxThreads,
 				new ThreadFactory() {
 					private AtomicInteger seqNo = new AtomicInteger(1);
 					@Override
