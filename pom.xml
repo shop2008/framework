@@ -40,7 +40,6 @@
         <module>wxxr-mobile-gson</module>
         <module>wxxr-mobile-synclient</module>
         <module>wxxr-mobile-jackson</module>
-        <module>wxxr-mobile-rule</module>
         <module>wxxr-mobile-tools</module>
     </modules>
 	<dependencyManagement>
