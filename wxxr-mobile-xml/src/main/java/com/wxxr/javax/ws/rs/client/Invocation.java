@@ -40,7 +40,6 @@
 package com.wxxr.javax.ws.rs.client;
 
 import java.util.Locale;
-import java.util.concurrent.Future;
 
 import com.wxxr.javax.ws.rs.ProcessingException;
 import com.wxxr.javax.ws.rs.WebApplicationException;
@@ -50,6 +49,7 @@ import com.wxxr.javax.ws.rs.core.GenericType;
 import com.wxxr.javax.ws.rs.core.MediaType;
 import com.wxxr.javax.ws.rs.core.MultivaluedMap;
 import com.wxxr.javax.ws.rs.core.Response;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 
 /**
  * A client request invocation.
@@ -108,7 +108,7 @@ public interface Invocation {
      *           .header("Foo", "bar").async().get(String.class);
      * </pre>
      */
-    public static interface Builder extends SyncInvoker {
+    public static interface Builder {
 
         // Invocation builder methods
 
@@ -168,14 +168,6 @@ public interface Invocation {
          * @return invocation encapsulating the built PUT request.
          */
         public Invocation buildPut(Entity<?> entity);
-
-        /**
-         * Access the asynchronous uniform request invocation interface to
-         * asynchronously invoke the built request.
-         *
-         * @return asynchronous uniform request invocation interface.
-         */
-        public AsyncInvoker async();
 
         /**
          * Add the accepted response media types.
@@ -315,7 +307,7 @@ public interface Invocation {
      *                                     of a particular Java type).
      * @throws ProcessingException         in case the request processing or subsequent I/O operation fails.
      */
-    public Response invoke();
+    public void invoke(IAsyncCallback<Response> callback);
 
     /**
      * Synchronously invoke the request and receive a response of the specified
@@ -334,7 +326,7 @@ public interface Invocation {
      *                                     {@link com.wxxr.javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
      *                                     successful}.
      */
-    public <T> T invoke(Class<T> responseType);
+    public <T> void invoke(Class<T> responseType,IAsyncCallback<T> callback);
 
     /**
      * Synchronously invoke the request and receive a response of the specified
@@ -354,92 +346,6 @@ public interface Invocation {
      *                                     {@link com.wxxr.javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
      *                                     successful}.
      */
-    public <T> T invoke(GenericType<T> responseType);
+    public <T> void invoke(GenericType<T> responseType,IAsyncCallback<T> callback);
 
-    /**
-     * Submit the request for an asynchronous invocation and receive a future
-     * response back.
-     * <p>
-     * Note that calling the {@link java.util.concurrent.Future#get()} method on the returned
-     * {@code Future} instance may throw an {@link java.util.concurrent.ExecutionException}
-     * that wraps a {@link ProcessingException} thrown in case of an invocation processing
-     * failure.
-     * In case a processing of a properly received response fails, the wrapped processing exception
-     * will be of {@link ResponseProcessingException} type and will contain the {@link Response}
-     * instance whose processing has failed.
-     * </p>
-     *
-     * @return future {@link Response response} object as a result of the request
-     *         invocation.
-     */
-    public Future<Response> submit();
-
-    /**
-     * Submit the request for an asynchronous invocation and receive a future
-     * response of the specified type back.
-     * <p>
-     * Note that calling the {@link java.util.concurrent.Future#get()} method on the returned
-     * {@code Future} instance may throw an {@link java.util.concurrent.ExecutionException}
-     * that wraps either a {@link ProcessingException} thrown in case of an invocation processing
-     * failure or a {@link WebApplicationException} or one of its subclasses thrown in case the
-     * received response status code is not {@link com.wxxr.javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     * successful} and the specified response type is not {@link com.wxxr.javax.ws.rs.core.Response}.
-     * In case a processing of a properly received response fails, the wrapped processing exception
-     * will be of {@link ResponseProcessingException} type and will contain the {@link Response}
-     * instance whose processing has failed.
-     * </p>
-     *
-     * @param <T>          response type
-     * @param responseType Java type the response should be converted into.
-     * @return future response object of the specified type as a result of the
-     *         request invocation.
-     */
-    public <T> Future<T> submit(Class<T> responseType);
-
-    /**
-     * Submit the request for an asynchronous invocation and receive a future
-     * response of the specified generic type back.
-     * <p>
-     * Note that calling the {@link java.util.concurrent.Future#get()} method on the returned
-     * {@code Future} instance may throw an {@link java.util.concurrent.ExecutionException}
-     * that wraps either a {@link ProcessingException} thrown in case of an invocation processing
-     * failure or a {@link WebApplicationException} or one of its subclasses thrown in case the
-     * received response status code is not {@link com.wxxr.javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     * successful} and the specified response type is not {@link com.wxxr.javax.ws.rs.core.Response}.
-     * In case a processing of a properly received response fails, the wrapped processing exception
-     * will be of {@link ResponseProcessingException} type and will contain the {@link Response}
-     * instance whose processing has failed.
-     * </p>
-     *
-     * @param <T>          generic response type
-     * @param responseType type literal representing a generic Java type the
-     *                     response should be converted into.
-     * @return future response object of the specified generic type as a result
-     *         of the request invocation.
-     */
-    public <T> Future<T> submit(GenericType<T> responseType);
-
-    /**
-     * Submit the request for an asynchronous invocation and register an
-     * {@link InvocationCallback} to process the future result of the invocation.
-     * <p>
-     * Note that calling the {@link java.util.concurrent.Future#get()} method on the returned
-     * {@code Future} instance may throw an {@link java.util.concurrent.ExecutionException}
-     * that wraps either a {@link ProcessingException} thrown in case of an invocation processing
-     * failure or a {@link WebApplicationException} or one of its subclasses thrown in case the
-     * received response status code is not {@link com.wxxr.javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     * successful} and the generic type of the supplied response callback is not
-     * {@link com.wxxr.javax.ws.rs.core.Response}.
-     * In case a processing of a properly received response fails, the wrapped processing exception
-     * will be of {@link ResponseProcessingException} type and will contain the {@link Response}
-     * instance whose processing has failed.
-     * </p>
-     *
-     * @param <T>      response type
-     * @param callback invocation callback for asynchronous processing of the
-     *                 request invocation result.
-     * @return future response object of the specified type as a result of the
-     *         request invocation.
-     */
-    public <T> Future<T> submit(InvocationCallback<T> callback);
 }
