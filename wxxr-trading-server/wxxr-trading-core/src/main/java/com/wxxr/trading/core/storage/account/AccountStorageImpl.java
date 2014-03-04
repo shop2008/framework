@@ -10,7 +10,6 @@ import java.util.Map;
 import com.wxxr.common.jmx.annotation.ServiceMBean;
 import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.persistence.DAOFactory;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
 import com.wxxr.trading.core.model.ITradingRecord;
 import com.wxxr.trading.core.storage.account.bean.AssetAccountInfo;
 import com.wxxr.trading.core.storage.account.bean.AssetInfo;
@@ -213,19 +212,11 @@ public class AccountStorageImpl extends AbstractBizObjectStorage<Long, AssetAcco
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext ctx) {
+	public void start(IKernelContext ctx) {
 		ctx.registerService(IAccountStorage.class, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext ctx) {
+	public void stop(IKernelContext ctx) {
 		ctx.unregisterService(IAccountStorage.class, this);
 	}
 

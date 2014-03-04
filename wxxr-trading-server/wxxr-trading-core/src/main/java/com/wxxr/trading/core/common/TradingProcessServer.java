@@ -5,27 +5,25 @@ package com.wxxr.trading.core.common;
 
 import java.util.Date;
 
-import com.wxxr.common.jmx.annotation.ServiceMBean;
-import com.wxxr.stock.common.service.AbstractModule;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
-import com.wxxr.stock.common.service.api.ISchedulerContext;
-import com.wxxr.stock.common.service.api.ITaskExecutor;
-import com.wxxr.stock.common.service.api.ITaskScheduler;
+import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.trading.core.api.ITradingCodeManager;
 import com.wxxr.trading.core.api.ITradingManagment;
 import com.wxxr.trading.core.api.ITradingStrategy;
 import com.wxxr.trading.core.api.ITradingTransactionContext;
 import com.wxxr.trading.core.model.ITrading;
-import com.wxxr.trading.core.storage.account.TxStatus;
 import com.wxxr.trading.core.storage.transaction.AbstractTransaction;
 import com.wxxr.trading.core.storage.transaction.ITransactionStorage;
+import com.wxxr.trading.core.task.api.ISchedulerContext;
+import com.wxxr.trading.core.task.api.ITaskExecutor;
+import com.wxxr.trading.core.task.api.ITaskScheduler;
 
 /**
  * @author wangyan
  *
  */
-@ServiceMBean
-public class TradingProcessServer extends AbstractModule{
+public abstract class  TradingProcessServer {
+	private IKernelContext context;
+	
 	private ITaskExecutor transactionEventQueryExecutor = new ITaskExecutor(){
 		@Override
 		public void executeTask(ISchedulerContext ctx, Long jobId, String jobRequest)
@@ -77,20 +75,14 @@ public class TradingProcessServer extends AbstractModule{
 		tradingStrategy.getBackendProcess().handleTransaction(transactionContext, transaction);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext ctx) {
-		
+	public void start(IKernelContext ctx) {
+		this.context = ctx;
 	}
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext ctx) {
-		
+
+	public void stop(IKernelContext ctx) {
+		this.context = null;
 	}
+	
 	class TradingTransactionContext implements ITradingTransactionContext{
 		private ITrading trading;
 		/* (non-Javadoc)

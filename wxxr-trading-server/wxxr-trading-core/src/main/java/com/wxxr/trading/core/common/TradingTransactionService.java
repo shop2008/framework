@@ -3,14 +3,13 @@
  */
 package com.wxxr.trading.core.common;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.wxxr.common.jmx.annotation.ServiceMBean;
-import com.wxxr.stock.common.service.AbstractModule;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
-import com.wxxr.stock.common.service.api.ITaskScheduler;
+import com.wxxr.common.microkernel.AbstractModule;
+import com.wxxr.common.microkernel.IKernelContext;
+import com.wxxr.common.microkernel.IMicroKernal;
 import com.wxxr.trading.core.api.ITradingTransactionContext;
 import com.wxxr.trading.core.api.ITradingTransactionHandler;
 import com.wxxr.trading.core.api.ITradingTransactionService;
@@ -24,8 +23,9 @@ import com.wxxr.trading.core.storage.transaction.ITransactionStorage;
  * @author wangyan
  *
  */
-@ServiceMBean
-public class TradingTransactionService  extends AbstractModule implements ITradingTransactionService {
+public abstract class TradingTransactionService implements ITradingTransactionService {
+	
+	private IKernelContext context;
 
 	private Map<String, ITradingTransactionHandler<ITradingTransaction>> handlers = new ConcurrentHashMap<String, ITradingTransactionHandler<ITradingTransaction>>();
 
@@ -64,20 +64,14 @@ public class TradingTransactionService  extends AbstractModule implements ITradi
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext ctx) {
+	public void start(IKernelContext ctx) {
+		this.context = ctx;
 		ctx.registerService(ITradingTransactionService.class, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext ctx) {
+	public void stop(IKernelContext ctx) {
 		ctx.unregisterService(ITradingTransactionService.class, this);
+		this.context = null;
 	}
 	
 

@@ -5,9 +5,7 @@ package com.wxxr.trading.core.common;
 
 import java.util.List;
 
-import com.wxxr.common.jmx.annotation.ServiceMBean;
-import com.wxxr.stock.common.service.AbstractModule;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
+import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.trading.core.api.ITradingCodeManager;
 import com.wxxr.trading.core.api.ITradingContext;
 import com.wxxr.trading.core.api.ITradingManagment;
@@ -27,10 +25,10 @@ import com.wxxr.trading.core.storage.tradingcode.TradingCodeObject;
  * @author wangyan
  *
  */
-@ServiceMBean
-public class TradingManagment extends AbstractModule implements ITradingManagment {
+public abstract class TradingManagment implements ITradingManagment {
 
 	private ITradingCodeManager tradingCodeManager;
+	private IKernelContext context;
 	/* (non-Javadoc)
 	 * @see com.wxxr.trading.core.api.ITradingManagment#submitTrading(com.wxxr.trading.core.model.ITrading)
 	 */
@@ -115,22 +113,13 @@ public class TradingManagment extends AbstractModule implements ITradingManagmen
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext arg0) {
-		// TODO Auto-generated method stub
+	public void start(IKernelContext ctx) {
+		this.context = ctx;
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext arg0) {
-		// TODO Auto-generated method stub
-		
+	public void stop(IKernelContext ctx) {
+		this.context = null;
 	}
 
 	/**

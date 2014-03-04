@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.wxxr.common.jmx.annotation.ServiceMBean;
-import com.wxxr.stock.common.service.AbstractModule;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
+import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.trading.core.api.ITradingCodeBuilder;
 import com.wxxr.trading.core.api.ITradingCodeManager;
 import com.wxxr.trading.core.api.ITradingStrategy;
@@ -20,8 +18,7 @@ import com.wxxr.trading.core.model.ITradingCode;
  * @author wangyan
  *
  */
-@ServiceMBean
-public class TradingCodeManager extends AbstractModule implements ITradingCodeManager {
+public abstract class TradingCodeManager implements ITradingCodeManager {
 
 	private Map<String,ITradingStrategy<ITrading>> strategies=new ConcurrentHashMap<String,ITradingStrategy<ITrading>>();
 
@@ -76,19 +73,11 @@ public class TradingCodeManager extends AbstractModule implements ITradingCodeMa
 		return strategies.get(tradingCode);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext context) {
+	public void start(IKernelContext context) {
 		context.registerService(ITradingCodeManager.class, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext context) {
+	public void stop(IKernelContext context) {
 		context.unregisterService(ITradingCodeManager.class, this);
 	}
 

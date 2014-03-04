@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.wxxr.common.jmx.annotation.ServiceMBean;
+import com.wxxr.common.microkernel.IKernelContext;
 import com.wxxr.persistence.DAOFactory;
-import com.wxxr.stock.common.service.api.IMobileStockAppContext;
 import com.wxxr.trading.core.storage.api.IDataAccessObject;
 import com.wxxr.trading.core.storage.common.AbstractBizObjectStorage;
 import com.wxxr.trading.core.storage.tradingcode.persistence.ITradingCodeDAO;
@@ -117,19 +117,11 @@ public class TradingCodeStorageImpl extends AbstractBizObjectStorage<Integer, Tr
 		return tradingCodeDAO;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#registerService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void registerService(IMobileStockAppContext ctx) {
+	public void start(IKernelContext ctx) {
 		ctx.registerService(ITradingCodeStorage.class, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.stock.common.service.AbstractModule#unregisterService(com.wxxr.stock.common.service.api.IMobileStockAppContext)
-	 */
-	@Override
-	protected void unregisterService(IMobileStockAppContext ctx) {
+	public void stop(IKernelContext ctx) {
 		ctx.unregisterService(ITradingCodeStorage.class, this);
 	}
 
