@@ -7,89 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
+import com.wxxr.mobile.stock.app.command.GetPullMessasgeCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.db.PullMessageInfo;
 import com.wxxr.mobile.stock.app.db.dao.PullMessageInfoDao;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.stock.restful.json.PullMessageVOs;
 import com.wxxr.stock.restful.resource.ArticleResource;
+import com.wxxr.stock.restful.resource.ArticleResourceAsync;
 import com.wxxr.stock.trading.ejb.api.PullMessageVO;
 
 /**
  * @author wangyan
  *
  */
-public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageBean, PullMessageVO> {
-
-	private final static String COMMAND_NAME="GetPullMessasge";
-	
-	private static class GetPullMessasgeCommand implements ICommand<List<PullMessageVO>>{
-
-		private int start,limit;
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getCommandName()
-		 */
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getResultType()
-		 */
-		@Override
-		public Class<List<PullMessageVO>> getResultType() {
-			Class clazz=List.class;
-			return clazz;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#validate()
-		 */
-		@Override
-		public void validate() {
-			
-			
-		}
-
-		/**
-		 * @return the start
-		 */
-		public int getStart() {
-			return start;
-		}
-
-		/**
-		 * @param start the start to set
-		 */
-		public void setStart(int start) {
-			this.start = start;
-		}
-
-		/**
-		 * @return the limit
-		 */
-		public int getLimit() {
-			return limit;
-		}
-
-		/**
-		 * @param limit the limit to set
-		 */
-		public void setLimit(int limit) {
-			this.limit = limit;
-		}
-		
-		
-	}
+public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageBean, PullMessageVO, GetPullMessasgeCommand> {
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
-	public ICommand<List<PullMessageVO>> createCommand(
+	public GetPullMessasgeCommand createCommand(
 			Map<String, Object> params) {
 		
 		GetPullMessasgeCommand command=new GetPullMessasgeCommand();
@@ -109,7 +49,7 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<PullMessageVO> result,
+	public boolean handleCommandResult(GetPullMessasgeCommand cmd,List<PullMessageVO> result,
 			IReloadableEntityCache<String, PullMessageBean> cache) {
 		
 		
@@ -117,14 +57,18 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 
 		List<PullMessageBean> pullMessageBeans=queryRemindMessages();
 		for(PullMessageBean bean:pullMessageBeans){
-			String key=bean.getPullId()+getUserId();
+			String key=bean.getPullId()+"";
 			cache.putEntity(key, bean);
+			if (!bean.isRead()) {
+				bean.setRead(true);
+				insertOrUpdateDB(bean);
+			}
 			updated=true;
 		}
 
 		if(result!=null && !result.isEmpty()){
 			for (PullMessageVO vo : result) {
-					String key=vo.getId()+getUserId();
+					String key=vo.getId()+"";
 					PullMessageBean bean=cache.getEntity(key);
 					if(bean==null){
 						bean=new PullMessageBean();
@@ -146,8 +90,8 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	}
 
 	protected void insertOrUpdateDB(PullMessageBean bean) {
-		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
-		List<PullMessageInfo> list=dao.queryRaw("where PULL_ID =? and USER_ID =?", String.valueOf(bean.getId()),getUserId());
+		PullMessageInfoDao dao=this.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
+		List<PullMessageInfo> list=dao.queryRaw("where PULL_ID =?", String.valueOf(bean.getPullId()));
 		PullMessageInfo entity;
 		boolean insert=false;
 		if(list==null || list.size()>0){
@@ -156,6 +100,7 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 			entity=new PullMessageInfo();
 			insert=true;
 		}
+		entity.setRead(true);
 		entity.setUserId(getUserId());
 		entity.setPullId(bean.getPullId());
 		entity.setArticleUrl(bean.getArticleUrl());
@@ -172,9 +117,9 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	}
 	
 	protected List<PullMessageBean> queryRemindMessages() {
-		PullMessageInfoDao dao=this.cmdCtx.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
+		PullMessageInfoDao dao=this.getKernelContext().getService(IDBService.class).getDaoSession().getPullMessageInfoDao();
 		List<PullMessageBean> pullMessageBeans=new ArrayList<PullMessageBean>();
-		List<PullMessageInfo> list=dao.queryRaw("where USER_ID=?",getUserId());
+		List<PullMessageInfo> list=dao.loadAll();
 		if(list!=null ){
 			for(PullMessageInfo entity:list){
 				PullMessageBean bean=new PullMessageBean();
@@ -196,23 +141,28 @@ public class PullMessageLoader extends AbstractEntityLoader<String, PullMessageB
 	 */
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetPullMessasgeCommand.COMMAND_NAME;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader#executeCommand(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	protected List<PullMessageVO> executeCommand(
-			ICommand<List<PullMessageVO>> command) throws Exception {
-		PullMessageVOs vos= getRestService(ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit());
-		if(vos==null || vos.getPullMessages()==null){
-			return new ArrayList<PullMessageVO>();
-		}else{
-			return vos.getPullMessages();
-		}
+	protected void executeCommand(GetPullMessasgeCommand command, IAsyncCallback<List<PullMessageVO>> callback) {
+		getRestService(ArticleResourceAsync.class, ArticleResource.class).getPullMessage(((GetPullMessasgeCommand)command).getStart(), ((GetPullMessasgeCommand)command).getLimit()).
+		onResult(new DelegateCallback<PullMessageVOs,List<PullMessageVO>>(callback) {
+
+			@Override
+			protected List<PullMessageVO> getTargetValue(PullMessageVOs vos) {
+				if(vos==null || vos.getPullMessages()==null){
+					return new ArrayList<PullMessageVO>();
+				}else{
+					return vos.getPullMessages();
+				}
+			}
+		});
 	}
 	protected String getUserId() {
-		return this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).getUserId();
+		return this.getKernelContext().getService(IUserIdentityManager.class).getUserId();
 	}
 }

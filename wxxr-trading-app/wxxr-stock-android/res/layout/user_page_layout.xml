@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background_color" >
 
-
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color"
+        android:orientation="vertical"
+        bind:field="refreshView"
+        bind:on_PullRefresh="handleRefresh" >
 
         <com.wxxr.mobile.stock.client.widget.ImageRefreshListView
             android:layout_width="match_parent"
@@ -16,9 +22,14 @@
             android:dividerHeight="0dp"
             android:fadingEdge="none"
             android:scrollbars="none"
-            bind:field="successTradeRecords"
+            bind:field="successTradeRecords@StockViewDecorator"
             bind:itemViewId="PersonalHomeItemSelector"
-            bind:on_PinItemClick="handleTradeRecordItemClick" />
-  
+            bind:on_PinItemClick="handleTradeRecordItemClick"
+            bind:updateAllId="resourceId:id/all"
+            bind:updateFaieldId="resourceId:id/failed"
+            bind:updatingViewId="resourceId:id/progress" />
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-</RelativeLayout>
+    <include layout="@layout/stock_loading_progress_layout" />
+
+</FrameLayout>

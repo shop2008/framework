@@ -3,7 +3,11 @@
  */
 package com.wxxr.mobile.stock.client.service;
 
+import android.app.Application;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -101,6 +105,13 @@ public class GenericContentService extends AbstractModule<IStockAppContext> impl
 			navigator.startActivity(intent);
 		} catch(ActivityNotFoundException e) {
 		}
+	}
+
+	@Override
+	public void copyTextToClipBoard(String text) {
+		Application application = AppUtils.getFramework().getAndroidApplication();
+		ClipboardManager cbm = (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
+		cbm.setText(text);
 	}
 	
 /*	@Override

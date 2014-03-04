@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,12 +7,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="140dp"
         bind:field="headerContainer" >
 
         <com.wxxr.mobile.stock.client.widget.PageSwiperView
+            android:id="@+id/swiper"
             android:layout_width="fill_parent"
-            android:layout_height="170dp"
+            android:layout_height="140dp"
             android:background="@color/gray"
             bind:field="articles"
             bind:itemViewId="ImageSwiperItemView" >
@@ -104,5 +105,5 @@
 		</LinearLayout>
         -->
     </RelativeLayout>
-
-</RelativeLayout>
+	<include layout="@layout/hlines" android:layout_below="@id/swiper"/>
+</LinearLayout>

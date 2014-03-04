@@ -7,6 +7,7 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -16,8 +17,13 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
+import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
+import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
 @View(name="ApplyMoneyAuthConfirmDialog")
@@ -26,6 +32,9 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 
 	@Bean(type = BindingType.Service)
 	IUserManagementService userService;
+	
+	@Bean(type = BindingType.Pojo, express= "${userService.getMyUserInfo()}")
+	UserBean  user;
 	
 	@Field(valueKey = "text",binding="${accountName}")
 	String accountName;
@@ -45,9 +54,13 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 	String bankNameStr;
 	String bankAddrStr;
 	String bankNumStr;
+	
+	AuthInfo authInfo = null;
 	@Override
 	public void updateModel(Object value) {
 		// TODO Auto-generated method stub
+		
+		
 		if(value instanceof Map) {
 			Map map = (Map)value;
 			if (map.containsKey("accountName")) {
@@ -75,15 +88,32 @@ public abstract class ApplyMoneyAuthConfirmDialog extends ViewBase implements IM
 	@Command(navigations={ @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") }),
-			@Navigation(on="OK", showDialog="CardAuthSuccessDialogView")})
-	String done(InputEvent event) {
+			@Navigation(on="OK", showDialog="CardAuthSuccessDialogView"),
+			@Navigation(on="FAIL", showDialog="CardAuthFailDialogView")
+	})
+	@ExeGuard(cancellable=true, message="正在处理，请稍候...", silentPeriod=200)
+	String done(ExecutionStep step, InputEvent event, Object result) {
 		
-		hide();
-		userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
+		switch (step) {
+		case PROCESS:
+			hide();
+			userService.withDrawCashAuth(accountNameStr, bankNameStr, bankAddrStr, bankNumStr);
+			break;
+		case NAVIGATION:
+			if(user != null) {
+				if(user.getBindCard()) {
+					return "OK";
+				} else {
+					return "FAIL";
+				}
+			} 
+			return "FAIL";
+		default:
+			break;
+		}
 		
-		//throw new StockAppBizException("认证成功");
-		return "OK";
-		//return null;
+		return null;
+		
 	}
 	
 	@Command

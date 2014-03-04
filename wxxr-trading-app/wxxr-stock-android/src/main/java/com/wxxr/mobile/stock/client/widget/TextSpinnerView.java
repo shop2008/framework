@@ -1,7 +1,5 @@
 package com.wxxr.mobile.stock.client.widget;
 
-import com.wxxr.mobile.stock.client.R;
-
 import android.content.Context;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -9,14 +7,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.wxxr.mobile.stock.client.R;
 
 public class TextSpinnerView extends EditText implements OnClickListener,OnItemClickListener {
 
@@ -25,6 +26,7 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	private ListAdapter adapter;
 	private PopupWindow popupWindow;
 	private Context mContext;
+	private int position = -1;
 	
 	public TextSpinnerView(Context context) {
 		super(context);
@@ -53,11 +55,21 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	
 	@Override
 	public void onClick(View arg0) {
-		showPopUpWindowsList();
+		if(adapter!=null && adapter.getCount()>0){
+			showPopUpWindowsList();
+		}else{
+			Toast.makeText(mContext, "暂无数据", Toast.LENGTH_SHORT).show();
+		}
 	}
 
+	public int getPosition(){
+		return this.position;
+	}
+	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		this.position = position;
+		this.setTag(position);
 		TextView tx = (TextView) view.findViewById(R.id.money_text_id);
 		this.setText(tx.getText());
 		dismissPopupWindow();
@@ -76,11 +88,24 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 		if(adapter!=null && popupWindow==null){
 			int w = this.getWidth();
 			View view = LayoutInflater.from(mContext).inflate(R.layout.money_drop_down_menu, null);
-			popupWindow = new PopupWindow(view,w , LayoutParams.WRAP_CONTENT);
+			popupWindow = new PopupWindow(view,w , WindowManager.LayoutParams.WRAP_CONTENT);
 			popListView = (ListView) view.findViewById(R.id.lv_down_amount);
 			popListView.setAdapter(adapter);
 			popupWindow.setFocusable(true);
+			popupWindow.setTouchable(true);
 			popupWindow.setOutsideTouchable(true); 
+			popupWindow.setTouchInterceptor(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent event) {
+					if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+						if(popupWindow!=null && popupWindow.isShowing()){
+							popupWindow.dismiss();
+						}
+						return true;
+					}
+					return false;
+				}
+			});
 			popListView.setOnItemClickListener(this);
 		}
 	}
@@ -88,7 +113,12 @@ public class TextSpinnerView extends EditText implements OnClickListener,OnItemC
 	private void showPopUpWindowsList(){
 		createPopUpWindows();
 		if(adapter!=null && adapter.getCount()>0 && popupWindow!=null && !popupWindow.isShowing()){
-//			popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_activity_top_title));
+//			if(adapter.getCount()>4){
+//				popupWindow.setWindowLayoutMode(this.getWidth(),80);
+//			}else{
+//				popupWindow.setWindowLayoutMode(this.getWidth(),WindowManager.LayoutParams.WRAP_CONTENT);
+//			}
+			popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.pop_window));
 			popupWindow.showAsDropDown(this, 0, 0);
 			
 		}

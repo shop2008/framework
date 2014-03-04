@@ -63,6 +63,10 @@ public class GainPayDetailBean implements IBindableBean {
         emitter.removePropertyChangeListener(listener);
 
     }
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
     @Override
     public String toString() {

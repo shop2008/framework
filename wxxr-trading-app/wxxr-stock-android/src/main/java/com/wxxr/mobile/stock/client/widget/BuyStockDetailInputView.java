@@ -172,6 +172,8 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 	}
 
 	void setEditTextInputNull(EditText et) {
+		if(et == null)
+			return;
 		int sdkInt = Build.VERSION.SDK_INT;
 		if (sdkInt >= 11) {
 			Class<EditText> cls = EditText.class;
@@ -422,6 +424,20 @@ public class BuyStockDetailInputView extends RelativeLayout implements
 		radioGroup.requestFocus();
 	}
 
+	/** 输入框焦点获取 */
+	void getEditTextFocus(EditText v) {
+		if(radioGroup != null) {
+			radioGroup.setFocusableInTouchMode(false);
+			radioGroup.setFocusable(false);
+			radioGroup.clearFocus();
+		}
+		if(v != null) {
+			v.setFocusableInTouchMode(true);
+			v.setFocusable(true);
+			v.requestFocus();
+		}
+	}
+	
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN

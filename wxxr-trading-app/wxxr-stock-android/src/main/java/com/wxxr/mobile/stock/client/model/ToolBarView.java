@@ -91,7 +91,8 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 		}
 		IUICommand cmd = getMenuItem(name);
 		if(cmd != null){
-			cmd.invokeCommand(null, event);
+			event.setTargetCommand(null);
+			cmd.handleInputEvent(event);
 		}
 		return null;
 	}
@@ -104,14 +105,13 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	@Override
 	public IUIComponent getChild(String name) {
 		if("leftIcon".equals(name)){
-			//System.out.println("adStatus----ToolBarView--1----");
 			IMenu menu = getToolbarMenu();
 			if(menu != null){
 				IUICommand cmd  = menu.getCommand("left");
 				if(cmd != null){
-				//	System.out.println("adStatus----ToolBarView--2----"+cmd.getAttribute(AttributeKeys.visible));
-					this.leftIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
-					this.leftIconField.setAttribute(AttributeKeys.visible,cmd.getAttribute(AttributeKeys.visible)==null?true:cmd.getAttribute(AttributeKeys.visible));
+//					this.leftIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+//					this.leftIconField.setAttribute(AttributeKeys.visible,cmd.getAttribute(AttributeKeys.visible)==null?true:cmd.getAttribute(AttributeKeys.visible));
+					return cmd;
 				}else{
 					this.leftIconField.setAttribute(AttributeKeys.visible,false);
 					this.leftIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
@@ -122,8 +122,9 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 			if(menu != null){
 				IUICommand cmd  = menu.getCommand("right");
 				if(cmd != null){
-					this.rightIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
-					this.rightIconField.setAttribute(AttributeKeys.visible,true);
+//					this.rightIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+//					this.rightIconField.setAttribute(AttributeKeys.visible,cmd.getAttribute(AttributeKeys.visible)==null?true:cmd.getAttribute(AttributeKeys.visible));
+					return cmd;
 				}else{
 					this.rightIconField.setAttribute(AttributeKeys.visible,false);
 					this.rightIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
@@ -134,8 +135,9 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 			if(menu != null){
 				IUICommand cmd  = menu.getCommand("search");
 				if(cmd != null){
-					this.searchIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
-					this.searchIconField.setAttribute(AttributeKeys.visible,true);
+//					this.searchIconField.setValue(cmd.getAttribute(AttributeKeys.icon));
+//					this.searchIconField.setAttribute(AttributeKeys.visible,cmd.getAttribute(AttributeKeys.visible)==null?true:cmd.getAttribute(AttributeKeys.visible));
+					return cmd;
 				}else{
 					this.searchIconField.setAttribute(AttributeKeys.visible,false);
 					this.searchIconField.setAttribute(AttributeKeys.takeSpaceWhenInvisible,true);
@@ -185,6 +187,6 @@ public abstract class ToolBarView extends StockAppToolbar implements IEventListe
 	@OnHide
 	void unRegisterEventListener() {
 		pushMessageField.setValue(false);
-		//AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
+		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
 	}
 }

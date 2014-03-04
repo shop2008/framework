@@ -22,6 +22,8 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
@@ -44,9 +46,9 @@ public abstract class UserAuthPage extends PageBase {
 	@Bean(type=BindingType.Pojo,express="${usrMgr.myUserInfo}")
 	UserBean user;
 	
-	@Bean(type=BindingType.Pojo,express="${usrMgr.userAuthInfo}")
+	@Bean(type=BindingType.Pojo,express="${usrMgr.userAuthInfo}", effectingFields="accountName")
 	AuthInfo authBean;
-	
+	private ELBeanValueEvaluator<AuthInfo> authBeanUpdater;
 	/**手机未认证部分*/
 	@Field(valueKey="visible", binding="${false}")
 	boolean mobileUnAuthBody;
@@ -56,11 +58,11 @@ public abstract class UserAuthPage extends PageBase {
 	boolean mobileAuthedBody;
 	
 	/**提现认证未认证部分*/
-	@Field(valueKey="visible", binding="${authBean!=null&&authBean.bankNum!=null&&authBean.bankNum.length()>0?false:true}")
+	@Field(valueKey="visible", binding="${(authBean!=null)&&(authBean.bankNum!=null)?false:true}")
 	boolean bankCardUnAuthBody;
 	
 	/**提现认证已认证部分*/
-	@Field(valueKey="visible",binding="${authBean!=null&&authBean.bankNum!=null&&authBean.bankNum.length()>0?true:false}")
+	@Field(valueKey="visible",binding="${(authBean!=null)&&(authBean.bankNum!=null)?true:false}")
 	boolean bankCardAuthedBody;
 	/**
 	 * 认证手机号
@@ -86,6 +88,7 @@ public abstract class UserAuthPage extends PageBase {
 	@Field(valueKey="text", binding="${authBean!=null?authBean.accountName:null}", converter="s2sConvertor")
 	String accountName;
 	
+//	DataField<String> accountNameField;
 	/**
 	 * 开户银行名称
 	 */
@@ -102,14 +105,13 @@ public abstract class UserAuthPage extends PageBase {
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
 	}
 
-	
-	
 	/**
 	 * 更换银行卡
 	 * @param event
@@ -150,5 +152,11 @@ public abstract class UserAuthPage extends PageBase {
 		return "*";
 	}
 	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		//accountNameField.getDomainModel().doEvaluate();
+		authBeanUpdater.doEvaluate();
+		return null;
+	}
 	
 }

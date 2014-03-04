@@ -1,51 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@color/page_background_color">
-    
-    <ListView
-        android:id="@+id/listView1"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        bind:field="stockTradingOrder"
-        bind:itemViewId="SellTradingItemView"
-        bind:headerViewId="SellTDTradingPageHeaderView"
-        bind:on_ItemClick="sellStockItemClick"
-        style="@style/mListView"
-        android:layout_weight="1">
-    </ListView>
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center"
-	    android:padding="8dp">
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color"
+        android:orientation="vertical" >
 
-		<Button
-		    android:layout_width="fill_parent"
-		    android:layout_height="40dp"
-		    android:textColor="@color/white"
-		    android:textSize="14sp"
-		    android:layout_weight="1"
-		    android:text="卖出" 
-		    bind:field="isRedSellBtn"
-            bind:on_Click="sellTradingAction"
-		    android:layout_marginRight="4dp"
-		    android:background="@drawable/red_button_style"/>
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/buy_btn"
+            android:layout_below="@id/message_layout"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            bind:field="acctRefreshView"
+            bind:on_PullRefresh="handleRefresh" >
 
-		<Button
-		    android:layout_width="fill_parent"
-		    android:layout_height="40dp"
-		    android:textColor="@color/white"
-		    android:textSize="14sp"
-		    android:text="清仓" 
-		    bind:field="isRedCleanBtn"
-            bind:on_Click="handlerClearClick"
-		    android:layout_marginLeft="4dp"
-		    android:layout_weight="1"
-		    android:background="@drawable/red_button_style"/>
-	    
-	</LinearLayout>
-</LinearLayout>
+            <ListView
+                android:id="@+id/listView1"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                bind:field="stockTradingOrder@StockViewDecorator"
+                bind:headerViewId="SellTDTradingPageHeaderView"
+                bind:itemViewId="SellTradingItemView"
+                bind:on_ItemClick="sellStockItemClick"
+                bind:updateAllId="resourceId:id/all"
+                bind:updateFaieldId="resourceId:id/failed"
+                bind:updatingViewId="resourceId:id/progress" >
+            </ListView>
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp" >
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/red_button_style"
+                android:text="卖出"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                bind:field="isRedSellBtn"
+                bind:on_Click="sellTradingAction" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/red_button_style"
+                android:text="清仓"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                bind:field="isRedCleanBtn"
+                bind:on_Click="handlerClearClick" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/stock_loading_progress_layout" />
+
+</FrameLayout>

@@ -31,7 +31,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="申请实盘赠送"
                 android:textStyle="bold"
                 bind:field="scoreCatagory" />
@@ -56,7 +56,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:textColor="@color/red"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:text="+500"
             android:textStyle="bold"
             bind:field="gainNum" />

@@ -5,22 +5,20 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
 
@@ -47,9 +45,10 @@ public abstract class AppSetPage extends PageBase {
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 	
@@ -116,19 +115,24 @@ public abstract class AppSetPage extends PageBase {
 			)
 	String setPushMsgEnabled(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			
+
 			if (user == null) {
-				return "*";
+				return "";
 			}
-			pushEnabledFlag = user.getMessagePushSettingOn();
-			usrService.pushMessageSetting(!pushEnabledFlag);
-			
-			
-			pushEnabledFlag = !pushEnabledFlag;
-			if(user != null) {
-				user.setMessagePushSettingOn(pushEnabledFlag);
-			}
-			registerBean("pushEnabledFlag", pushEnabledFlag);
+			AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+
+				@Override
+				public void run() {
+					pushEnabledFlag = user.getMessagePushSettingOn();
+					usrService.pushMessageSetting(!pushEnabledFlag);
+
+					pushEnabledFlag = !pushEnabledFlag;
+					if (user != null) {
+						user.setMessagePushSettingOn(pushEnabledFlag);
+					}
+					registerBean("pushEnabledFlag", pushEnabledFlag);
+				}
+			});
 		}
 		return null;
 	}

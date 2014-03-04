@@ -15,7 +15,7 @@
         android:padding="8dp"
         android:text="尚未登录，请登录"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,6 @@
             android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:background="@drawable/red_button_small"
-            android:padding="15dp"
             android:text="登录"
             android:textColor="@color/white"
             android:textSize="14sp"
@@ -46,7 +45,6 @@
             android:layout_marginLeft="4dp"
             android:layout_weight="1"
             android:background="@drawable/red_button_small"
-            android:padding="15dp"
             android:text="取消"
             android:textColor="@color/white"
             android:textSize="14sp"

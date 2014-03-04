@@ -3,10 +3,15 @@ package com.wxxr.mobile.stock.client.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Path;
+import android.graphics.PathEffect;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.wxxr.mobile.stock.client.utils.Utils;
 
 public class GBasicLineView extends View {
 
@@ -66,19 +71,23 @@ public class GBasicLineView extends View {
 	public float sellWidthScale;
 	public float sellRightStartX;
 	private String stockState = GBasicLineView.BUY_STATE;
+	private Context context;
 //	public float fHeightScale; //分时线纵比；
 //	public float zHeightScale; //柱状图纵度比；
 	
 	public GBasicLineView(Context context) {
 		super(context);
+		this.context = context;
 		init();
 	}
 	public GBasicLineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.context = context;
 		init();
 	}
 	public GBasicLineView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		this.context = context;
 		init();
 	}
 	
@@ -163,6 +172,7 @@ public class GBasicLineView extends View {
 	private void countData(Canvas canvas){
 		this.cWidth = this.getWidth();
 		this.cHeight = this.getHeight();
+		this.textLineHeight = Utils.adjustVSpace(this.context);
 		this.fWidth = cWidth - (marginLeft + marginRight);
 		this.zWidth = this.fWidth;
 		this.lineHeight  = (cHeight - (marginTop + marginBottom + minuteTopPadding + minuteBottomPadding + textLineHeight)) / 6;
@@ -209,12 +219,29 @@ public class GBasicLineView extends View {
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));	
 		mPaint.setColor(stockBorderColor);
 		mPaint.setStyle(Paint.Style.STROKE);
+		mPaint.setAntiAlias(true);
 		//分时线最上边线
 		canvas.drawLine(mStartX, marginTop, mStopX, marginTop, mPaint);
 		//分时横线---begin
 		for(int i=0; i<5;i++){
 			mStartY = mStopY = (marginTop + minuteTopPadding) + i* lineHeight;
-			canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
+			if(i==2){
+				Paint xPaint = new Paint();
+				xPaint.setStyle(Paint.Style.STROKE);
+				xPaint.setAntiAlias(true);
+				xPaint.setStrokeWidth(1);  
+				xPaint.setColor(stockCloseColor);
+				Path path = new Path();
+				path.moveTo(mStartX, mStartY);
+				path.lineTo(mStopX, mStopY);
+				PathEffect effects = new DashPathEffect(new float[]{ 5, 5, 5, 5 }, 1);
+				xPaint.setPathEffect(effects);
+				canvas.drawPath(path, xPaint);
+			}else{
+				mPaint.setColor(stockBorderColor);
+				mPaint.setPathEffect(null);
+				canvas.drawLine(mStartX, mStartY, mStopX, mStopY , mPaint);
+			}
 		}
 		//分时最下边线条
 		mStartY = mStopY = (marginTop + minuteTopPadding)+lineHeight*4+minuteBottomPadding;

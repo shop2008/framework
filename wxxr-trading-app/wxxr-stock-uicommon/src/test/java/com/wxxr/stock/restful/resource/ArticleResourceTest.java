@@ -1,8 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -39,12 +37,6 @@ public class ArticleResourceTest extends TestCase{
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication(){
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 			
 			@Override
 			protected void initModules() {
@@ -93,7 +85,7 @@ public class ArticleResourceTest extends TestCase{
 		
 		MockRestClient builder = new MockRestClient();
 		builder.init(context);
-		articleResource=builder.getRestService(ArticleResource.class,"http://192.168.123.44:8480/mobilestock2");
+		articleResource=builder.getRestService(ArticleResource.class,null,"http://192.168.123.44:8480/mobilestock2");
 	}
 	public void testGetNewArticle()throws Exception{
 		NewsQueryBO query = new NewsQueryBO();

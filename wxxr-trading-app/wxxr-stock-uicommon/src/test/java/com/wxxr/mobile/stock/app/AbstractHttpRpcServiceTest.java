@@ -3,18 +3,15 @@ package com.wxxr.mobile.stock.app;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 
 import junit.framework.TestCase;
 
-import com.wxxr.mobile.android.app.IAndroidAppContext;
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
+import com.wxxr.mobile.core.rpc.api.Request;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpParamsBean;
@@ -33,21 +30,13 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testCreateRequest() throws Exception {
+	public void testCreateRequest() throws Throwable {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		MockApplication app = new MockApplication(){
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			/* (non-Javadoc)
-			 * @see com.wxxr.mobile.core.rpc.impl.MockApplication#getExecutor()
-			 */
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 
 			@Override
 			protected void initModules() {
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -58,22 +47,27 @@ public class AbstractHttpRpcServiceTest extends TestCase {
 			
 			@Override
 			public KeyStore getTrustKeyStore() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 						
 			@Override
 			public KeyStore getSiteKeyStore() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
 			public HostnameVerifier getHostnameVerifier() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		});
 		
 		HttpRequest req = service.createRequest("http://www.baidu.com", new HttpParamsBean().setHttpMethod(HttpMethod.GET).toMap());
-		HttpResponse resp = req.invoke(0L, TimeUnit.SECONDS);
+		HttpFuture<HttpResponse, Request<HttpResponse>> future = new HttpFuture<HttpResponse, Request<HttpResponse>>();
+		req.invokeAsync(future);
+		HttpResponse resp = future.getResponse(0L, TimeUnit.SECONDS);
 		assertTrue(resp != null);
 		assertEquals(HttpStatus.SC_OK, resp.getStatusCode());
 		System.out.println("Headers :["+resp.getHeaders()+"]");

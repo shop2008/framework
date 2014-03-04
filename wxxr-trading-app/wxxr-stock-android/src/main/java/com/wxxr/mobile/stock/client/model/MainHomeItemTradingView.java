@@ -11,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
+import com.wxxr.mobile.stock.client.utils.Float2StringConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 @View(name = "MainHomeItemTradingView")
@@ -21,11 +22,11 @@ public abstract class MainHomeItemTradingView extends ViewBase implements
 	@Bean
 	TradingAccountMenuItem tradingAccountBean;
 
-	@Convertor(params = { @Parameter(name = "format", value = "+%.2f%%"),
-			@Parameter(name = "multiple", value = "100.00") })
-	StockLong2StringConvertor stockLong2StringConvertorSpecial;
+	@Convertor(params = { 
+			@Parameter(name = "format", value = "%+.2f%%")})
+	Float2StringConvertor stockLong2StringConvertorSpecial;
 
-	@Convertor(params = { @Parameter(name = "format", value = "+%.2f"),
+	@Convertor(params = { @Parameter(name = "format", value = "%+.2f元"),
 			@Parameter(name = "multiple", value = "100.00") })
 	StockLong2StringConvertor stockLong2StringConvertor;
 
@@ -41,13 +42,13 @@ public abstract class MainHomeItemTradingView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.date:'--'}")
 	String date;
 
-	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.maxHoldStockName:'--'}", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null?'resourceId:color/gray':tradingAccountBean.incomeRate>0?'resourceId:color/stock_text_up':(tradingAccountBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
+	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?(tradingAccountBean.maxHoldStockName==null||tradingAccountBean.maxHoldStockName==''?'无持仓':tradingAccountBean.maxHoldStockName):'--'}", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null||tradingAccountBean.status == '2'?'resourceId:color/gray':tradingAccountBean.incomeRate>0?'resourceId:color/stock_text_up':(tradingAccountBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
 	String name;
 
-	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.incomeRate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null?'resourceId:color/gray':tradingAccountBean.incomeRate>0?'resourceId:color/stock_text_up':(tradingAccountBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
+	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.incomeRate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null||tradingAccountBean.status == '2'?'resourceId:color/gray':tradingAccountBean.incomeRate>0?'resourceId:color/stock_text_up':(tradingAccountBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
 	String incomeRate;
 
-	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.income:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null?'resourceId:color/gray':tradingAccountBean.income>0?'resourceId:color/stock_text_up':(tradingAccountBean.income<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
+	@Field(valueKey = "text", binding = "${tradingAccountBean!=null?tradingAccountBean.income:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${tradingAccountBean==null||tradingAccountBean.status == '2'?'resourceId:color/gray':tradingAccountBean.income>0?'resourceId:color/stock_text_up':(tradingAccountBean.income<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
 	String income;
 
 	@Override

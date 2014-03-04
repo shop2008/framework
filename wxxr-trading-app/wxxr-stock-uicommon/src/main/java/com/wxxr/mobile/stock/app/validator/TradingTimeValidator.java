@@ -5,7 +5,6 @@ import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
 import com.wxxr.mobile.core.command.api.ICommandValidator;
-import com.wxxr.mobile.stock.app.TradingTimeInvalidateException;
 import com.wxxr.mobile.stock.app.annotation.TadingTimeConstraint;
 import com.wxxr.mobile.stock.app.service.ITadingCalendarService;
 

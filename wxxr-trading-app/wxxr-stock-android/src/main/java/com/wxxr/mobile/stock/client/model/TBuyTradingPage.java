@@ -31,13 +31,16 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.ICancellableRunnable;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -54,6 +57,8 @@ public abstract class TBuyTradingPage extends PageBase implements
 
 	private static final Trace log = Trace.register(TBuyTradingPage.class);
 
+	private ICancellableRunnable refreshTask;
+	
 	@Bean
 	boolean isSelf = true; // true自己，false别人
 
@@ -85,8 +90,9 @@ public abstract class TBuyTradingPage extends PageBase implements
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getSyncTradingAccountInfo(acctId)}", effectingFields={"tradingOrders"})
 	TradingAccountBean tradingBean;
+	private ELBeanValueEvaluator<TradingAccountBean> tradingBeanUpdater;
 	// 字段
 	@Field(valueKey = "text", binding = "${tradingBean!=null?(tradingBean.buyDay==0?'-1':tradingBean.buyDay):'-1'}", converter = "longTime2StringConvertorBuy")
 	String buyDay;
@@ -100,7 +106,7 @@ public abstract class TBuyTradingPage extends PageBase implements
 	@Field(valueKey = "visible", visibleWhen = "${tradingBean != null ? (tradingBean.tradingOrders != null?(tradingBean.tradingOrders.size() > 0 ? false : true):false) : false}")
 	boolean noOrders;
 
-	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/blue_button_style':'resourceId:drawable/red_button_style'}") })
+	@Field(valueKey = "text", visibleWhen = "${isSelf}", enableWhen = "${tradingBean!=null&&tradingBean.getAvalibleFee()>0}", attributes = { @Attribute(name = "backgroundImageURI", value = "${isVirtual?'resourceId:drawable/blue_button_style':'resourceId:drawable/red_button_style'}") })
 	String buyBtn;
 
 	@Field(attributes = {
@@ -114,7 +120,8 @@ public abstract class TBuyTradingPage extends PageBase implements
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -130,9 +137,8 @@ public abstract class TBuyTradingPage extends PageBase implements
 	public void onEvent(IBroadcastEvent event) {
 		if (tradingService != null)
 			tradingService.getTradingAccountInfo(acctId);
-//		if (!AppUtils.getService(IUserManagementService.class)
-//				.getPushMessageSetting())
-//			return;
+		if(!(AppUtils.getService(IUserManagementService.class).getMyUserInfo()!=null?AppUtils.getService(IUserManagementService.class).getMyUserInfo().getMessagePushSettingOn():false))
+			return;
 		NewRemindingMessagesEvent e = (NewRemindingMessagesEvent) event;
 		final RemindMessageBean[] messages = e.getReceivedMessages();
 
@@ -182,7 +188,9 @@ public abstract class TBuyTradingPage extends PageBase implements
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style", visibleWhen = "${true}") }, 
+			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		resutl.setResult("TradingRecordsPage");
@@ -316,5 +324,56 @@ public abstract class TBuyTradingPage extends PageBase implements
 	@OnUIDestroy
 	void destroyData() {
 		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, "");
+	}
+	
+	@OnShow
+	void refreshList() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+		}
+		this.refreshTask = new ICancellableRunnable() {		
+			private boolean cancelled;
+			
+			@Override
+			public void run() {
+				if(cancelled||(!isActive())){
+					return;
+				}
+				try {
+					tradingService.getTradingAccountInfo(acctId);
+				}catch(Throwable t){
+					log.warn("Failed to refresh home menu list", t);
+				}
+				if(cancelled||(!isActive())){
+					return;
+				}
+				AsyncUtils.invokeLater(this, 10, TimeUnit.SECONDS);
+			}
+
+			@Override
+			public void cancel() {	
+				this.cancelled = true;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return this.cancelled;
+			}
+		};
+		AsyncUtils.invokeLater(refreshTask, 10, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void stopRefresh() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+			this.refreshTask = null;
+		}
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		tradingBeanUpdater.doEvaluate();
+		return null;
 	}
 }

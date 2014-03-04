@@ -3,13 +3,14 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/listview_selected_item1"
+    >
     
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#18191B"
         >
         
         <RelativeLayout 
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="平安银行模拟盘"
                 bind:field="title"
                 android:layout_alignParentLeft="true"
@@ -33,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#868A8B"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="20:55"
                 bind:field="time"
                 android:layout_marginRight="5dp"
@@ -53,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#868A8B"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 bind:field="content"
                 android:text="推送内容信送内容 推送内容"
                 />
@@ -61,38 +62,5 @@
         </LinearLayout>
         
     </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#121013"
-            />
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#0C0306"
-            />
-         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#656162"
-            />
-         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#2F2D30"
-            />
-         <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#2B2B2D"
-            />
-    </LinearLayout>
+	<include layout="@layout/hlines"/>
 </LinearLayout>

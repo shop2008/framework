@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -14,6 +12,7 @@ import junit.framework.TestCase;
 
 import com.wxxr.mobile.core.microkernel.api.IKernelContext;
 import com.wxxr.mobile.core.rpc.api.DataEntity;
+import com.wxxr.mobile.core.rpc.api.Request;
 import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.HttpMethod;
 import com.wxxr.mobile.core.rpc.http.api.HttpParamsBean;
@@ -42,22 +41,13 @@ public class SSLHttpRpcServiceTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testCreateRequest() throws Exception {
+	public void testCreateRequest() throws Throwable {
 
 		MockApplication app = new MockApplication() {
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			
-			
-			 
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 
 			@Override
 			protected void initModules() {
-				
+				// TODO Auto-generated method stub
 
 			}
 
@@ -74,13 +64,13 @@ public class SSLHttpRpcServiceTest extends TestCase {
 
 					@Override
 					public KeyStore getSiteKeyStore() {
-						
+						// TODO Auto-generated method stub
 						return null;
 					}
 
 					@Override
 					public HostnameVerifier getHostnameVerifier() {
-						
+						// TODO Auto-generated method stub
 						return null;
 					}
 				});
@@ -90,7 +80,9 @@ public class SSLHttpRpcServiceTest extends TestCase {
 						"https://www.xrcj.cn:8443/mobilestock2/secure/user/getUser",
 						new HttpParamsBean().setHttpMethod(HttpMethod.GET)
 								.toMap());
-		HttpResponse resp = req.invoke(0L, TimeUnit.SECONDS);
+		HttpFuture<HttpResponse, Request<HttpResponse>> future = new HttpFuture<HttpResponse, Request<HttpResponse>>();
+		req.invokeAsync(future);
+		HttpResponse resp = future.getResponse(0L, TimeUnit.SECONDS);
 		assertTrue(resp != null);
 		assertEquals(HttpStatus.SC_UNAUTHORIZED, resp.getStatusCode());
 		System.out.println("Headers :[" + resp.getHeaders() + "]");

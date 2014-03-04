@@ -44,14 +44,14 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 	
@@ -133,7 +133,9 @@ public abstract class OpetationDetailsPage extends PageBase implements IModelUpd
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style", visibleWhen="${true}") }, 
+			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		resutl.setResult("TradingRecordsPage");

@@ -3,48 +3,18 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVO;
 
-public class GainPayDetailsEntityLoader  extends AbstractEntityLoader<String, GainPayDetailBean, GainPayDetailsVO> {
-    private static final String COMMAND_NAME = "GainPayDetailCommand";
-    private static class GainPayDetailCommand implements ICommand<List<GainPayDetailsVO>> {
-        private int start, limit;
-        public int getStart() {
-            return start;
-        }
-        public void setStart(int start) {
-            this.start = start;
-        }
-        public int getLimit() {
-            return limit;
-        }
-        public void setLimit(int limit) {
-            this.limit = limit;
-        }
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<GainPayDetailsVO>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-        @Override
-        public void validate() {
-          
-        }
-    }
+public class GainPayDetailsEntityLoader  extends AbstractEntityLoader<String, GainPayDetailBean, GainPayDetailsVO, GainPayDetailCommand> {
     @Override
-    public ICommand<List<GainPayDetailsVO>> createCommand(Map<String, Object> params) {
+    public GainPayDetailCommand createCommand(Map<String, Object> params) {
     	GainPayDetailCommand cmd = new GainPayDetailCommand();
     	if(params == null) {
     		//params.put(key, value)
@@ -61,10 +31,10 @@ public class GainPayDetailsEntityLoader  extends AbstractEntityLoader<String, Ga
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GainPayDetailCommand.COMMAND_NAME;
     }
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<GainPayDetailsVO> result,IReloadableEntityCache<String, GainPayDetailBean> cache) {
+	public boolean handleCommandResult(GainPayDetailCommand cmd,List<GainPayDetailsVO> result,IReloadableEntityCache<String, GainPayDetailBean> cache) {
 		  boolean updated = false;
 	      if(result != null){
 	            for (GainPayDetailsVO vo : result) {
@@ -83,18 +53,18 @@ public class GainPayDetailsEntityLoader  extends AbstractEntityLoader<String, Ga
 	}
 	
 	@Override
-	protected List<GainPayDetailsVO> executeCommand(ICommand<List<GainPayDetailsVO>> command) throws Exception {
+	protected void executeCommand(GainPayDetailCommand command,IAsyncCallback<List<GainPayDetailsVO>> callback) {
 		GainPayDetailCommand cmd = (GainPayDetailCommand) command;
-	        VoucherDetailsVO vo=null;
-	        try {
-	            vo = RestUtils.getRestService(ITradingProtectedResource.class).getVoucherDetails(cmd.getStart(), cmd.getLimit());
-	        } catch (Throwable e) {
-	            throw new Exception(e.getMessage());
-	        }
-	        if (vo!=null){
-	        	return vo.getList();
-	        }
-	        return null;
+	    getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).getVoucherDetails(cmd.getStart(), cmd.getLimit()).
+	    onResult(new DelegateCallback<VoucherDetailsVO, List<GainPayDetailsVO>>(callback) {
+
+			@Override
+			protected List<GainPayDetailsVO> getTargetValue(
+					VoucherDetailsVO vo) {
+				return vo != null ? vo.getList() : null;
+			}
+		});
 	}
 }
+
 

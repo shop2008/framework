@@ -29,6 +29,7 @@ import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.stock.hq.ejb.api.StockLineVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
@@ -114,6 +115,7 @@ public class ConverterUtils {
     	if (stock!=null) {
     		 b.setStockName(stock.getName());
 		}
+    	b.setAdded(KUtils.getService(IOptionStockManagementService.class).isAdded(b.getCode(), b.getMarket()));
     }
     public static StockQuotationBean fromVO(StockQuotationVO vo){
         if (vo == null) {
@@ -142,6 +144,7 @@ public class ConverterUtils {
         b.setVirtual(vo.isVirtual());
         b.setElapseTime(vo.getElapseTime());
         b.setDurationDay(vo.getDurationDay());
+        b.setDayType(vo.getDayType());
         List<StockTradingOrderVO> orderVos = vo.getTradingOrders();
         if (orderVos != null) {
             List<StockTradingOrderBean> list = new ArrayList<StockTradingOrderBean>();
@@ -417,7 +420,8 @@ public class ConverterUtils {
         bean.setTotalGain(vo.getTotalGain());
         bean.setTradingAccountId(vo.getTradingAccountId());
         bean.setUserGain(vo.getUserGain());
-        bean.setVirtual(vo.isVirtual());        
+        bean.setVirtual(vo.isVirtual());       
+        bean.setAcctType(vo.getAcctType());
     }
     public static TradingRecordBean fromVO(TradeRecordVO vo) {
         if (vo == null) {

@@ -5,24 +5,23 @@ package com.wxxr.mobile.stock.app.service.impl;
 
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import android.util.Base64;
-
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.util.Md5;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.preference.api.IPreferenceManager;
 import com.wxxr.mobile.stock.app.IStockAppContext;
@@ -36,24 +35,43 @@ import com.wxxr.stock.restful.resource.IURLLocatorResource;
 public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppContext> implements
 		IURLLocatorManagementService {
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.URLLocatorManagementServiceImpl");
-	private long lastCheckTime;
-	private int checkIntervalInSeconds = 30*60;		// 30 minutes
-	private String serverUrl;
-	private String magnoliaUrl;
 	private final static String  RELATIVE_URI_APPLICATION ="/mobilestock2";
 	private final static String  RELATIVE_URI_MAGNOLIA ="/magnoliaPublic";
-	private Dictionary<String, String> defaultSettings = new Hashtable<String, String>();
-	private Timer timer;
-	Map<String,String> remoteConfig;
+	private final static String PREF_KEY_DIGEST = "_digest";
+	private final static String PREF_KEY_SERVER_URL = "server";
+	private final static String PREF_KEY_MAGNOLIA_URL = "magnolia";
+	private final static String PREF_KEY_LOCATOR_SERVER = "l_server";
+	
+	private int checkIntervalInSeconds = 30*60;		// 30 minutes
+	
+	private Dictionary<String, String> currentSetting;
+	private boolean started = false;
+	private CountDownLatch latch;
+	
+	private Runnable reloadTask = new Runnable() {
+		
+		@Override
+		public void run() {
+			if(!started){
+				return;
+			}
+			updateFromRemote();
+			if(started) {
+				context.getService(ICommandExecutor.class).invokeLater(reloadTask, checkIntervalInSeconds, TimeUnit.SECONDS);
+			}
+		}
+	}; 
+	
 	@Override
 	public String getServerURL() {
-		return serverUrl+RELATIVE_URI_APPLICATION;
+		return getURL(PREF_KEY_SERVER_URL)+RELATIVE_URI_APPLICATION;
 	}
 
 	@Override
 	public String getMagnoliaURL() {
+		String magnoliaUrl = getURL(PREF_KEY_MAGNOLIA_URL);
 		if (StringUtils.isBlank(magnoliaUrl)) {
-			magnoliaUrl = serverUrl+RELATIVE_URI_MAGNOLIA;
+			magnoliaUrl = getServerURL();
 		}
 		return magnoliaUrl;
 	}
@@ -61,107 +79,121 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 	@Override
 	protected void initServiceDependency() {
 		addRequiredService(IPreferenceManager.class);
+		addRequiredService(ICommandExecutor.class);
 	}
 
 	@Override
 	protected void startService() {
 		if (log.isDebugEnabled()) {
-			log.debug("Loading default settings...");
+			log.debug("Loading local settings...");
 		}
-		loadDefaultSettings();//加载出厂设置
-		this.serverUrl = getURL("server");
-		this.magnoliaUrl = getURL("magnolia");
+		loadInSettings();
 		
-		getService(IRestProxyService.class).setDefautTarget(getServerURL());
 		if (log.isDebugEnabled()) {
-			log.debug("Local settings:"+defaultSettings);
+			log.debug("Local settings:"+currentSetting);
 		}
-		timer = new Timer("Remote Settings Check Thread");
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if(((System.currentTimeMillis() - lastCheckTime) >= checkIntervalInSeconds*1000L)||context.getApplication().isInDebugMode()){
-					try {
-						loadRemoteSettings();
-					} catch (Throwable e) {
-							log.warn("Error when get remote settings", e);
-					}
-					lastCheckTime = System.currentTimeMillis();
-				}
-			}
-		}, 1000,60000);
 		context.registerService(IURLLocatorManagementService.class, this);
+		this.started = true;
+		this.latch = new CountDownLatch(1);
+		context.getService(ICommandExecutor.class).invokeLater(reloadTask, 1L, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	protected void stopService() {
+		this.started = false;
 		context.unregisterService(IURLLocatorManagementService.class,this);
 	}
 
-	private void loadDefaultSettings() {
-		InputStream in = null;
-		try {
-			in = context.getApplication().getAndroidApplication().getAssets()
-					.open("server.properties");
-			Properties props = new Properties();
-			props.load(in);
-			if (props.size() > 0) {
-				Set<Object> keys = props.keySet();
-				for (Object obj : keys) {
-					String key = (String) obj;
-					defaultSettings.put(key, props.getProperty(key));
-				}
+	private void loadInSettings() {
+		IPreferenceManager prefMgr = context.getService(IPreferenceManager.class);
+		currentSetting = prefMgr.getPreference(getModuleName());
+		if(currentSetting == null){
+			//加载出厂设置
+			if(log.isInfoEnabled()){
+				log.info("Load in factory setting from server.properties file ...");
 			}
-		} catch (IOException e) {
-			log.warn("Error when open file:server.properties", e);
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-
+			currentSetting = new Hashtable<String, String>();
+			InputStream in = null;
+			try {
+				in = context.getApplication().getAndroidApplication().getAssets()
+						.open("server.properties");
+				Properties props = new Properties();
+				props.load(in);
+				if (props.size() > 0) {
+					Set<Object> keys = props.keySet();
+					for (Object obj : keys) {
+						String key = (String) obj;
+						currentSetting.put(key, props.getProperty(key));
+					}
+				}
+				currentSetting.put(PREF_KEY_LOCATOR_SERVER,getServerURL());
+				prefMgr.newPreference(getModuleName(), currentSetting);
+				currentSetting = prefMgr.getPreference(getModuleName());
+			} catch (Throwable e) {
+				log.warn("Caught throwable when loading url settting from server.properties", e);
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+	
+					}
 				}
 			}
 		}
+		if(log.isDebugEnabled()){
+			log.debug("Local settting was loaded, setting :"+this.currentSetting);
+		}
+	}
+	
+	protected String getLocatorServerUrl() {
+		return this.currentSetting.get(PREF_KEY_LOCATOR_SERVER);
 	}
 
-	private void loadRemoteSettings() {
+	private void updateFromRemote() {
+		if(log.isDebugEnabled()){
+			log.debug("Going to update local settting from server ...");
+		}
 		try {
-		    byte[] localData = toBytes(remoteConfig);
-		    String digest =  null;
-		    if (localData!=null) {
-		       digest = Base64.encodeToString(localData, Base64.NO_WRAP);
-            }
-			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class).getURLSettings(digest);
-			if (data==null||(remoteConfig = fromBytes(data))==null) {
+		    String digest = this.currentSetting.get(PREF_KEY_DIGEST);
+			byte[] data = context.getService(IRestProxyService.class).getRestService(IURLLocatorResource.class,IURLLocatorResource.class,getLocatorServerUrl()).getURLSettings(digest);
+			Map<String, String> map = null;
+			if (data==null||(map = fromBytes(data))==null) {
+				if(log.isInfoEnabled()){
+					log.info("Server doesn't return any thing !");
+				}
 				return;
 			}
+			if(log.isInfoEnabled()){
+				log.info("Server return new setting :"+map);
+			}
 			IPreferenceManager prefManager = context.getService(IPreferenceManager.class);	
-			String prefName = getModuleName();
-			if (!prefManager.hasPreference(prefName)) {
-				Dictionary<String, String> d = new Hashtable<String, String>();
-				prefManager.newPreference(prefName, d);
-			}
-			String sUrl =  remoteConfig.get("server");
-			String mUrl =  remoteConfig.get("magnolia");
-			if (StringUtils.isNotBlank(sUrl)) {
-				this.serverUrl = sUrl;				
-				if (isChanged(getModuleName(), "server", sUrl)) {
-				    getService(IRestProxyService.class).setDefautTarget(getServerURL());
-					prefManager.updatePreference(prefName, "server", sUrl);
+			if(map.size() > 0){
+				for (Entry<String,String> entry : map.entrySet()) {
+					String key = StringUtils.trimToNull(entry.getKey());
+					String val = StringUtils.trimToNull(entry.getValue());
+					if((key != null)&&(val != null)){
+						prefManager.updatePreference(getModuleName(), key, val);
+					}
 				}
 			}
-			if (StringUtils.isNotBlank(mUrl)) {
-				this.magnoliaUrl = mUrl;
-				if (isChanged(getModuleName(), "magnolia", mUrl)) {
-					prefManager.updatePreference(prefName, "magnolia", mUrl);
-				}
+			digest = new Md5(data).getStringDigest();
+			prefManager.updatePreference(getModuleName(), PREF_KEY_DIGEST, digest);
+			if(this.latch != null){
+				this.latch.countDown();
+				this.latch = null;
 			}
-		} catch (Exception e) {
+			if(log.isInfoEnabled()){
+				log.info("Local setting was updated from server, new local setting :"+this.currentSetting);
+			}
+
+		} catch (Throwable e) {
 			log.warn("Error when loading properties from server", e);
 		}
 	}
-	private <T> T fromBytes(byte[] data) throws Exception {
+	
+	@SuppressWarnings({ "unchecked"})
+	private Map<String,String> fromBytes(byte[] data) {
 		if (data == null) {
 			return null;
 		}
@@ -169,10 +201,10 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(bis);
-			return (T)ois.readObject();
-		} catch (Exception e) {
+			return (Map<String,String>)ois.readObject();
+		} catch (Throwable e) {
 			log.warn("Error when data info from bytes", e);
-			throw e;
+			return null;
 		} finally {
 			try {
 				if (ois != null) {
@@ -184,54 +216,37 @@ public class URLLocatorManagementServiceImpl extends AbstractModule<IStockAppCon
 		}
 
 	}
-	private byte[] toBytes(Map<String,String> data) throws Exception {
-       if (data == null) {
-           return null;
-       }
-       ByteArrayOutputStream bos = new ByteArrayOutputStream();
-       ObjectOutputStream oos = null;
-       try {
-           oos = new ObjectOutputStream(bos);
-           oos.writeObject(data);
-           return bos.toByteArray();
-       } catch (Exception e) {
-           log.warn("Error when data info from bytes", e);
-           throw e;
-       } finally {
-           try {
-               if (oos != null) {
-                   oos.close();
-               }
-               bos.close();
-           } catch (IOException e) {
-           }
-       }
 
-   }
 	public String getURL(String name) {
-		if (StringUtils.isBlank(name)) {
-			throw new IllegalArgumentException("The attribute name is null!!!");
-		}
-		String value = null;
-		String pid = getModuleName();
-		if (context.getService(IPreferenceManager.class).hasPreference(pid,name)) {
-			value = context.getService(IPreferenceManager.class).getPreference(pid, name);
-			if (value != null) {
-				return value;
+		if(this.latch != null){		// waiting remote updating finish
+			try {
+				this.latch.await(3, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
 			}
+			this.latch = null;
 		}
-		value = defaultSettings.get(name);
-		return value;
+		return this.currentSetting.get(name);
 	}
-	boolean isChanged(String pid,String name,String new_value){
-		String old_value = context.getService(IPreferenceManager.class).getPreference(pid, name);
-		if (old_value==null) {
-			return new_value!=null;
-		}
-		return !old_value.equals(new_value);
-	}
-	@Override
+
 	public String getModuleName() {
 		return "URLManagement";
 	}
+
+	/**
+	 * @return the checkIntervalInSeconds
+	 */
+	public int getCheckIntervalInSeconds() {
+		return checkIntervalInSeconds;
+	}
+
+	/**
+	 * @param checkIntervalInSeconds the checkIntervalInSeconds to set
+	 */
+	public void setCheckIntervalInSeconds(int checkIntervalInSeconds) {
+		this.checkIntervalInSeconds = checkIntervalInSeconds;
+	}
+	
+	
+
+	
 }

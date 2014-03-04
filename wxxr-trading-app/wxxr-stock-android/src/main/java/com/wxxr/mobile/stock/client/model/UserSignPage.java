@@ -5,6 +5,7 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
@@ -14,6 +15,7 @@ import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserSignBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -25,6 +27,10 @@ import com.wxxr.mobile.stock.app.service.IUserManagementService;
 public abstract class UserSignPage extends PageBase {
 
 	
+	@Field(valueKey="text", upateAsync=true)
+	String refreshView;
+	
+	DataField<String> refreshViewField;
 	/**签到奖励积分数量*/
 	@Field(valueKey="text", binding="${userSignBean!=null?userSignBean.rewardVol:10}")
 	String signAwardAmount;
@@ -56,13 +62,14 @@ public abstract class UserSignPage extends PageBase {
 	@Bean(type=BindingType.Service)
 	IUserManagementService userService;
 	
-	@Bean(type=BindingType.Pojo, express="${userService!=null?userService.getUserSignBean():null}")
+	@Bean(type=BindingType.Pojo, express="${userService!=null?userService.getUserSignBean():null}", effectingFields="refreshView")
 	UserSignBean userSignBean;
 	
 	@Menu(items = {"left"})
 	IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/back_button_style")})
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}")})
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -74,18 +81,24 @@ public abstract class UserSignPage extends PageBase {
 			@Parameter(name = "title", value = "错误")
 	}) }
 	)
+	@ExeGuard(cancellable=false, silentPeriod=200, message="正在为您签到,请稍候...")
 	String clickToSign(InputEvent event) {
+		
+		
 		if(userService != null) {
 			userSignBean = userService.sign();
-			
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			userSignBean = userService.getUserSignBean();
-			registerBean("userSignBean", userSignBean);
+		userSignBean.setOngoingDays(userSignBean.getOngoingDays()+1);
 		}
 		return null;
 	}
+	
+	@Command
+	String handleRetryClick(InputEvent event){
+		if(userService !=  null) {
+			userService.getUserSignBean();
+		}
+		refreshViewField.getDomainModel().doEvaluate();
+		return null;
+	}
+	
 }

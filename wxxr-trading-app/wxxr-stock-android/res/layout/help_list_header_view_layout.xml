@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -22,20 +23,21 @@
             android:paddingLeft="8dp"
             android:layout_gravity="center"
             bind:field="UnGainScoreBody" >
-
             <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/liwu" />
-
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                bind:field="unGainAmount"
-                android:text="了解短线放大镜交易规则，领取新手奖励8000实盘积分！"
+                bind:updatingViewId="resourceId:id/progress"
+            	bind:updateFaieldId="resourceId:id/failed"
+            	bind:updateAllId="resourceId:id/all"
+                bind:field="unGainAmount@StockViewDecorator"
+                android:text="了解短线放大镜交易规则，领取新手奖励实盘积分！"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -46,6 +48,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="8dp"
+            android:visibility="invisible"
             android:layout_gravity="center"
             bind:field="GainScoreBody" >
 
@@ -54,11 +57,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                bind:field="gainAmount"
-                android:text="您已领取新手奖励1000实盘积分，点击查看！"
+                android:text="您已领取新手奖励实盘积分！"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
         </LinearLayout>
+        <include layout="@layout/stock_loading_progress_layout"/>
     </FrameLayout>
 
     <LinearLayout
@@ -73,7 +76,7 @@
             android:id="@+id/imageView2"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/head2" 
+            android:src="@drawable/head4" 
             />
 
         <LinearLayout
@@ -83,15 +86,15 @@
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="8dp" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="大家好，我是吉祥物K线哥~"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-
+           <com.wxxr.mobile.stock.client.widget.HighlightTextView
+               android:id="@+id/textView1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/white"
+               android:textSize="14sp"
+               android:text="大家好，我是K线哥~"
+               dslv:highLightText="K线哥~">
+            </com.wxxr.mobile.stock.client.widget.HighlightTextView>
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
@@ -307,17 +310,31 @@
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:layout_width="fill_parent"
+        <com.wxxr.mobile.stock.client.widget.HighlightTextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
+            android:textSize="13sp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:paddingTop="4dp"
-            android:text="同样上涨8%实际获利≈10万元x8%x80%=6400元短线放大镜一次交易将多赚≈6400元-800元=5600元"
             android:textColor="#000000"
-            android:textSize="13sp" />
+            android:text="同样上涨8%，实际获利≈10万元x8%x80%=6400元"
+            dslv:highLightText="实际获利≈10万元x8%x80%=6400元">
+         </com.wxxr.mobile.stock.client.widget.HighlightTextView>
+         
+         <com.wxxr.mobile.stock.client.widget.HighlightTextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:paddingLeft="6dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="6dp"
+            android:textColor="#000000"
+            android:text="一次交易将多赚≈6400元-800元=5600元"
+            dslv:highLightText="多赚≈6400元-800元=5600元">
+         </com.wxxr.mobile.stock.client.widget.HighlightTextView>
     </LinearLayout>
 
     <View

@@ -52,6 +52,12 @@ public class TradingConfigBean implements IBindableBean{
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		emitter.removePropertyChangeListener(listener);
 	}
+	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 
 	public String getVoIdentity() {
 		return voIdentity;

@@ -30,13 +30,16 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.ICancellableRunnable;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
@@ -45,19 +48,19 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 public abstract class SellTDTradingPageView extends PageBase implements IModelUpdater , IEventListener  {
 
 	static Trace log = Trace.getLogger(SellT3TradingPageView.class);
-	
+	private ICancellableRunnable refreshTask;
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen = "${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	
@@ -65,9 +68,9 @@ public abstract class SellTDTradingPageView extends PageBase implements IModelUp
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getSyncTradingAccountInfo(accid)}", effectingFields={"stockTradingOrder"})
 	TradingAccountBean tradingAccount;
-	
+	private ELBeanValueEvaluator<TradingAccountBean> tradingAccountUpdater;
 
 	/** 交易盘编号*/
 	private long id;
@@ -192,7 +195,7 @@ public abstract class SellTDTradingPageView extends PageBase implements IModelUp
 	 * @return
 	 */
 	@Command(description = "Invoke when a toolbar item was clicked", 
-			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style", visibleWhen = "${true}") }, 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage")
 			})
 	CommandResult toolbarClickedRight(InputEvent event) {
@@ -391,5 +394,56 @@ public abstract class SellTDTradingPageView extends PageBase implements IModelUp
 			
 		}
 		return null;
-	}	
+	}
+	
+	@OnShow
+	void refreshList() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+		}
+		this.refreshTask = new ICancellableRunnable() {		
+			private boolean cancelled;
+			
+			@Override
+			public void run() {
+				if(cancelled||(!isActive())){
+					return;
+				}
+				try {
+					tradingService.getTradingAccountInfo(accid);
+				}catch(Throwable t){
+					log.warn("Failed to refresh home menu list", t);
+				}
+				if(cancelled||(!isActive())){
+					return;
+				}
+				AsyncUtils.invokeLater(this, 10, TimeUnit.SECONDS);
+			}
+
+			@Override
+			public void cancel() {	
+				this.cancelled = true;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return this.cancelled;
+			}
+		};
+		AsyncUtils.invokeLater(refreshTask, 10, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void stopRefresh() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+			this.refreshTask = null;
+		}
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		tradingAccountUpdater.doEvaluate();
+		return null;
+	}
 }

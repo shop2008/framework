@@ -7,96 +7,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
+import com.wxxr.mobile.stock.app.command.GetMyArticlesCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.service.IURLLocatorManagementService;
 import com.wxxr.stock.article.ejb.api.ArticleVO;
 import com.wxxr.stock.article.ejb.api.ArticleVOs;
-import com.wxxr.stock.restful.json.NewsQueryBO;
 import com.wxxr.stock.restful.resource.ArticleResource;
+import com.wxxr.stock.restful.resource.ArticleResourceAsync;
 
 /**
  * @author neillin
  *
  */
-public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, ArticleVO> {
+public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, ArticleVO, GetMyArticlesCommand> {
 
-	private static final String COMMAND_NAME = "GetMyArticles";
-	 @NetworkConstraint
-	private static class GetMyArticlesCommand implements ICommand<List<ArticleVO>> {
-
-		private int start, limit, type;
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		@Override
-		public Class<List<ArticleVO>> getResultType() {
-			Class clazz = List.class;
-			return clazz;
-		}
-
-		@Override
-		public void validate() {
-			
-		}
-		
-		
-		/**
-		 * @return the start
-		 */
-		public int getStart() {
-			return start;
-		}
-
-		/**
-		 * @return the limit
-		 */
-		public int getLimit() {
-			return limit;
-		}
-
-
-		/**
-		 * @param start the start to set
-		 */
-		public void setStart(int start) {
-			this.start = start;
-		}
-
-		/**
-		 * @param limit the limit to set
-		 */
-		public void setLimit(int limit) {
-			this.limit = limit;
-		}
-
-		/**
-		 * @return the type
-		 */
-		public int getType() {
-			return type;
-		}
-
-		/**
-		 * @param type the type to set
-		 */
-		public void setType(int type) {
-			this.type = type;
-		}
-
-	}
-	
 	private int articleType;
 	
 	@Override
-	public ICommand<List<ArticleVO>> createCommand(Map<String, Object> params) {
+	public GetMyArticlesCommand createCommand(Map<String, Object> params) {
 		if(params == null){
 			return null;
 		}
@@ -114,10 +45,9 @@ public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, A
 	}
 
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd, List<ArticleVO> result,
+	public boolean handleCommandResult(GetMyArticlesCommand g, List<ArticleVO> result,
 			IReloadableEntityCache<String, ArticleBean> cache) {
-		GetMyArticlesCommand g=(GetMyArticlesCommand)cmd;
-		if(g.start == 0){
+		if(g.getStart() == 0){
 			cache.clear();
 		}
 		if((result != null)&&(result.size() > 0)){
@@ -166,17 +96,21 @@ public class MyArticleLoader extends AbstractEntityLoader<String, ArticleBean, A
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetMyArticlesCommand.COMMAND_NAME;
 	}
 
 	@Override
-	protected List<ArticleVO> executeCommand(ICommand<List<ArticleVO>> command)
-			throws Exception {
+	protected void executeCommand(GetMyArticlesCommand command,IAsyncCallback<List<ArticleVO>> callback) {
     	GetMyArticlesCommand g=(GetMyArticlesCommand) command;
 
-        ArticleVOs vos=RestUtils.getRestService(ArticleResource.class).getNewArticle(String.valueOf(g.getType()),g.getStart(),g.getLimit());
+        getRestService(ArticleResourceAsync.class,ArticleResource.class).getNewArticle(String.valueOf(g.getType()),g.getStart(),g.getLimit()).
+        onResult(new DelegateCallback<ArticleVOs, List<ArticleVO>>(callback) {
 
-        return vos==null?null:vos.getArticles();
+			@Override
+			protected List<ArticleVO> getTargetValue(ArticleVOs vos) {
+		        return vos==null?null:vos.getArticles();
+			}
+		});
 	}
 
 	/**

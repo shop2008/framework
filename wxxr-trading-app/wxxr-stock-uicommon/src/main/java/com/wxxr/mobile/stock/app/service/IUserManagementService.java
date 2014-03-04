@@ -7,6 +7,7 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.GainPayDetailBean;
+import com.wxxr.mobile.stock.app.bean.GuideGainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
@@ -28,11 +29,7 @@ public interface IUserManagementService {
 	 * @return
 	 */
 	UserBean getMyUserInfo();
-	/**
-	 * 获取他人用户信息
-	 * @return
-	 */
-	UserBean getUserInfoById(String userId);
+	
 
 	boolean verfiy(String userId,String password);
 	 
@@ -55,7 +52,7 @@ public interface IUserManagementService {
 	void pushMessageSetting(boolean on);
 
 	
-	void switchBankCard(String bankName, String bankAddr,String bankNum);
+	void switchBankCard(String accountName,String bankName, String bankAddr,String bankNum);
 	/**
 	 * 提现认证
 	 * @param accountName 用户名
@@ -91,7 +88,6 @@ public interface IUserManagementService {
 	 * @throws Exception
 	 */
 	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual);
-	BindableListWrapper<GainBean> getMorePersonalRecords(int start,int limit,boolean virtual,boolean wait4Finish);
 
 	
 	/**
@@ -106,7 +102,6 @@ public interface IUserManagementService {
 	 */
 	BindableListWrapper<RemindMessageBean> getRemindMessageBean();
 	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit);
-	BindableListWrapper<PullMessageBean> getPullMessageBean(int start,int limit,boolean wait4Finish);
 	void updateNickName(String nickName);
 	/**
 	 * 收支明细
@@ -130,6 +125,7 @@ public interface IUserManagementService {
 	UserSignBean getUserSignBean();
 	UserSignBean sign();
 	
-	String getGuideGainRule();
+	GuideGainBean getGuideGainRule();
 	void getGuideGain();
+	GuideGainBean checkGuideGain();
 }

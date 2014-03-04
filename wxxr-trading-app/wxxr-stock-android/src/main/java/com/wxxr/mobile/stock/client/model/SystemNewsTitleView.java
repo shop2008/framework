@@ -12,7 +12,7 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.system_news_title_layout")
 public abstract class SystemNewsTitleView extends ViewBase implements IModelUpdater {
 
-	@Field(valueKey="text", binding="${titleValue!=null?titleValue:null}", visibleWhen="${titleValue!=null}")
+	@Field(valueKey="text", binding="${titleValue!=null?titleValue:null}")
 	String title;
 	
 	@Bean

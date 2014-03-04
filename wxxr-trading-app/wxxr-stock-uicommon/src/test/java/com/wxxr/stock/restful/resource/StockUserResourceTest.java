@@ -1,8 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -26,12 +24,11 @@ import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
-import com.wxxr.stock.restful.json.RegQueryVO;
 
 
 public class StockUserResourceTest extends TestCase{
 	StockUserResource stockUserResource;
-	UserResource userResource;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -39,22 +36,15 @@ public class StockUserResourceTest extends TestCase{
 	}
 	@Override
 	protected void tearDown() throws Exception {
-		
+		// TODO Auto-generated method stub
 		super.tearDown();
 		stockUserResource=null;
-		userResource= null;
 	}
 
 	protected void init() {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication(){
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 			
 			@Override
 			protected void initModules() {
@@ -103,8 +93,7 @@ public class StockUserResourceTest extends TestCase{
 		
 		builder = new MockRestClient();
 		builder.init(context);
-		stockUserResource=builder.getRestService(StockUserResource.class,"http://192.168.123.44:8480/mobilestock2");
-		userResource=builder.getRestService(UserResource.class,"http://192.168.123.44:8480/mobilestock2");
+		stockUserResource=builder.getRestService(StockUserResource.class,null,"http://192.168.123.44:8480/mobilestock2");
 	}
 
 	MockRestClient builder= null;
@@ -128,7 +117,7 @@ public class StockUserResourceTest extends TestCase{
 //	public SimpleResultVo isBindApp() throws RestBizException;
 
 	public void testRegist() throws RestBizException{
-		SimpleResultVo vo = builder.getRestService(UserResource.class,"http://192.168.123.44:8480/mobilestock2").register("13671279085");
+		SimpleResultVo vo = builder.getRestService(UserResource.class,null,"http://192.168.123.44:8480/mobilestock2").register("13671279085");
 		System.out.println(vo);
 	}
 
@@ -206,7 +195,7 @@ public class StockUserResourceTest extends TestCase{
 //	public ResultBaseVO token() throws RestBizException;
 
 //	public TokenVO updateToken(TokenVO tokenVO) throws RestBizException;
-
+	//FIXME: the device id and the device type is null, so can not be succeed!
 	/*public void testUpdateToken(){
 		try {
 			TokenVO vo = new TokenVO();
@@ -231,15 +220,13 @@ public class StockUserResourceTest extends TestCase{
 //	public ResultBaseVO updateNickName(UserParamVO vo);
 	public void testUpdateNickName(){
 		UserParamVO vo = new UserParamVO();
-		vo.setNickName("晚点的动车");
+		vo.setNickName("666666");
 		ResultBaseVO info = stockUserResource.updateNickName(vo);
-		System.out.println(info);
 	}
 
 //	public UserVO getUser() throws Exception;
 	public void testGetUser()throws Exception{
 		UserVO info = stockUserResource.getUser();
-		System.out.println(info);
 	}
 	
 //	public ActivityUserVo getActivityUser() throws Exception;
@@ -270,19 +257,5 @@ public class StockUserResourceTest extends TestCase{
 //	public List<UserAttributeVO> getUserAttributes() throws Exception;
 	public void testGetUserAttributes()throws Exception{
 		UserAttributeVOs info = stockUserResource.getUserAttributes();
-		System.out.println(info);
-	}
-	
-	/*@POST
-	@Path("/registerWithPass")
-	@Produces({ "application/json;charset=utf-8" })
-	@Consumes({ "application/json" })
-	public SimpleResultVo registerWithPassword(RegQueryVO regInfo) throws RestBizException;*/
-	public void testRegisterWithPassword() throws Exception {
-		RegQueryVO vo = new RegQueryVO();
-		vo.setUsername("13800138000");
-		vo.setUsername("564231");
-		SimpleResultVo info = userResource.registerWithPassword(vo);
-		System.out.println(info);
 	}
 }

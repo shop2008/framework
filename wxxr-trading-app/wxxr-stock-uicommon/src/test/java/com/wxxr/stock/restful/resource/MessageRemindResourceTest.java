@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -63,12 +61,6 @@ public class MessageRemindResourceTest extends TestCase{
 		};
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication(){
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 			
 			@Override
 			protected void initModules() {
@@ -117,7 +109,7 @@ public class MessageRemindResourceTest extends TestCase{
 		
 		MockRestClient builder = new MockRestClient();
 		builder.init(context);
-		messageRemindResource=builder.getRestService(IMessageRemindResource.class,"http://192.168.123.44:8480/mobilestock2");
+		messageRemindResource=builder.getRestService(IMessageRemindResource.class,null,"http://192.168.123.44:8480/mobilestock2");
 	}
 	public void testFindById()throws Exception{
 		MsgQuery vo = new MsgQuery();

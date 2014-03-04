@@ -4,8 +4,10 @@
 package com.wxxr.mobile.stock.app.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IKernelComponent;
@@ -17,29 +19,43 @@ import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
  * @author neillin
  *
  */
-public class EntityLoaderRegistryImpl<T extends IKernelContext> extends AbstractModule<T> implements
+public class EntityLoaderRegistryImpl<KC extends IKernelContext> extends AbstractModule<KC> implements
 		IEntityLoaderRegistry {
 	
-	private Map<String, IEntityLoader<?,?,?>> registry  = new HashMap<String, IEntityLoader<?,?,?>>();
+	private Map<String, IEntityLoader<?,?,?,?>> registry  = new HashMap<String, IEntityLoader<?,?,?,?>>();
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry#getEntityLoader(java.lang.String)
-	 */
+
 	@Override
-	public IEntityLoader<?,?,?> getEntityLoader(String entityName) {
+	protected void initServiceDependency() {
+		addRequiredService(ICommandExecutor.class);
+	}
+
+	@Override
+	protected void startService() {
+		context.registerService(IEntityLoaderRegistry.class, this);
+	}
+
+	@Override
+	protected void stopService() {
+		context.unregisterService(IEntityLoaderRegistry.class, this);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IEntityLoader<?, ?, ?, ?> getEntityLoader(
+			String entityName) {
 		synchronized(this.registry){
-			return this.registry.get(entityName);
+			@SuppressWarnings("rawtypes")
+			IEntityLoader loader = this.registry.get(entityName);
+			return loader;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry#registerEntityLoader(java.lang.String, com.wxxr.mobile.stock.app.common.IEntityLoader)
-	 */
 	@Override
-	public IEntityLoaderRegistry registerEntityLoader(String entityName,
-			IEntityLoader<?,?,?> loader) {
+	public <K, V, T, C extends ICommand<List<T>>> IEntityLoaderRegistry registerEntityLoader(
+			String entityName, IEntityLoader<K, V, T, C> loader) {
 		synchronized(this.registry){
-			IEntityLoader<?,?,?> old = this.registry.get(entityName);
+			IEntityLoader<?,?,?,?> old = this.registry.get(entityName);
 			this.registry.put(entityName, loader);
 			if(old != null){
 				old.unregisterCommandHandler(context.getService(ICommandExecutor.class));
@@ -55,14 +71,11 @@ public class EntityLoaderRegistryImpl<T extends IKernelContext> extends Abstract
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry#unregisterEntityLoader(java.lang.String, com.wxxr.mobile.stock.app.common.IEntityLoader)
-	 */
 	@Override
-	public IEntityLoaderRegistry unregisterEntityLoader(String entityName,
-			IEntityLoader<?,?,?> loader) {
+	public <K, V, T, C extends ICommand<List<T>>> IEntityLoaderRegistry unregisterEntityLoader(
+			String entityName, IEntityLoader<K, V, T, C> loader) {
 		synchronized(this.registry){
-			IEntityLoader<?,?,?> old = this.registry.get(entityName);
+			IEntityLoader<?,?,?,?> old = this.registry.get(entityName);
 			if(old == loader){
 				this.registry.remove(entityName);
 				loader.unregisterCommandHandler(context.getService(ICommandExecutor.class));
@@ -72,21 +85,6 @@ public class EntityLoaderRegistryImpl<T extends IKernelContext> extends Abstract
 			}
 		}
 		return this;
-	}
-
-	@Override
-	protected void initServiceDependency() {
-		addRequiredService(ICommandExecutor.class);
-	}
-
-	@Override
-	protected void startService() {
-		context.registerService(IEntityLoaderRegistry.class, this);
-	}
-
-	@Override
-	protected void stopService() {
-		context.unregisterService(IEntityLoaderRegistry.class, this);
 	}
 
 }

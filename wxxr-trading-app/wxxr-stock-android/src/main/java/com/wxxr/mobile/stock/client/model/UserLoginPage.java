@@ -1,8 +1,5 @@
 package com.wxxr.mobile.stock.client.model;
 
-
-import android.os.SystemClock;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -12,6 +9,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
@@ -20,6 +18,7 @@ import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.model.UserLoginCallback;
@@ -51,7 +50,7 @@ public abstract class UserLoginPage extends PageBase {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen = "${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
@@ -65,7 +64,11 @@ public abstract class UserLoginPage extends PageBase {
 	 * @param event
 	 * @return null
 	 */
-	@Command(navigations = { @Navigation(on = "LoginFailedException", message = "resourceId:message/login_failed_message", params = {
+	@Command(
+			updateFields = {
+					@FieldUpdating(fields={"mobileNum","password"},message="请输入正确的用户名、密码")
+			},
+			navigations = { @Navigation(on = "LoginFailedException", message = "resourceId:message/login_failed_message", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "resourceId:message/login_failed_title")
 			
@@ -73,11 +76,14 @@ public abstract class UserLoginPage extends PageBase {
 	)
 	@NetworkConstraint
 	@ExeGuard(title = "登录中", message = "正在登录，请稍候...", silentPeriod = 200)
-	String login(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			SystemClock.sleep(500);
+	String login(ExecutionStep step, InputEvent event, Object result) {
+		switch(step){
+		case PROCESS:
 			usrService.login(this.callback.getUserName(),this.callback.getPassword());
+			break;
+		case NAVIGATION:
 			hide();
+			break;
 		}
 		return null;
 

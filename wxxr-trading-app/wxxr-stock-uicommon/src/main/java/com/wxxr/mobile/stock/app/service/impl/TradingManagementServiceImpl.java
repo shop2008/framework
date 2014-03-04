@@ -14,17 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
-import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
-import com.wxxr.mobile.core.command.api.CommandException;
+import com.wxxr.mobile.core.async.api.Async;
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.DelegateCallback;
+import com.wxxr.mobile.core.async.api.ExecAsyncException;
+import com.wxxr.mobile.core.async.api.IAsyncCallable;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.IDataConverter;
+import com.wxxr.mobile.core.async.api.NestedRuntimeException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
-import com.wxxr.mobile.core.event.api.IBroadcastEvent;
-import com.wxxr.mobile.core.event.api.IEventListener;
-import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.microkernel.api.IServiceDecoratorBuilder;
@@ -58,18 +57,31 @@ import com.wxxr.mobile.stock.app.bean.TradingRecordListBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.bean.VoucherDetailsBean;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.command.BuyStockCommand;
+import com.wxxr.mobile.stock.app.command.CancelOrderCommand;
+import com.wxxr.mobile.stock.app.command.ClearTradingAccountCommand;
+import com.wxxr.mobile.stock.app.command.CreateTradingAccountCommand;
+import com.wxxr.mobile.stock.app.command.QuickBuyStockCommand;
+import com.wxxr.mobile.stock.app.command.SellStockCommand;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IBindableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFetcher;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
-import com.wxxr.mobile.stock.app.event.HomePageRefreshRequestEvent;
 import com.wxxr.mobile.stock.app.service.IMessageManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyCommand;
 import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler;
-import com.wxxr.mobile.stock.app.service.handler.ApplyDrawMoneyHandler.ApplyDrawMoneyCommand;
+import com.wxxr.mobile.stock.app.service.handler.BuyStockHandler;
+import com.wxxr.mobile.stock.app.service.handler.CancelOrderHandler;
+import com.wxxr.mobile.stock.app.service.handler.ClearTradingAccountHandler;
+import com.wxxr.mobile.stock.app.service.handler.CreateTradingAccountHandler;
+import com.wxxr.mobile.stock.app.service.handler.QuickBuyStockHandler;
+import com.wxxr.mobile.stock.app.service.handler.SellStockHandler;
 import com.wxxr.mobile.stock.app.service.loader.AuditDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DealDetailLoader;
 import com.wxxr.mobile.stock.app.service.loader.DrawMoneyRecordLoader;
@@ -86,29 +98,18 @@ import com.wxxr.mobile.stock.app.service.loader.UserCreateTradAccInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherDetailsLoader;
 import com.wxxr.mobile.stock.app.service.loader.WeekRankItemLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
-import com.wxxr.mobile.stock.app.utils.Utils;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
-import com.wxxr.mobile.stock.trade.command.BuyStockCommand;
-import com.wxxr.mobile.stock.trade.command.BuyStockHandler;
-import com.wxxr.mobile.stock.trade.command.CancelOrderCommand;
-import com.wxxr.mobile.stock.trade.command.CancelOrderHandler;
-import com.wxxr.mobile.stock.trade.command.ClearTradingAccountCommand;
-import com.wxxr.mobile.stock.trade.command.ClearTradingAccountHandler;
-import com.wxxr.mobile.stock.trade.command.CreateTradingAccountCommand;
-import com.wxxr.mobile.stock.trade.command.CreateTradingAccountHandler;
-import com.wxxr.mobile.stock.trade.command.QuickBuyStockCommand;
-import com.wxxr.mobile.stock.trade.command.QuickBuyStockHandler;
-import com.wxxr.mobile.stock.trade.command.SellStockCommand;
-import com.wxxr.mobile.stock.trade.command.SellStockHandler;
 import com.wxxr.mobile.stock.trade.entityloader.TradingAccInfoLoader;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.AppHomePageListVO;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
 import com.wxxr.stock.trading.ejb.api.GainVO;
@@ -136,7 +137,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	private static final Trace log = Trace.register(TradingManagementServiceImpl.class);
 	private Timer timer = new Timer("Cache Clear Thread");
-	private Timer homePageRefresher = new Timer("HomePage Refresh Thread");
 	private static final Comparator<MegagameRankBean> tRankComparator = new Comparator<MegagameRankBean>() {
 		
 		@Override
@@ -192,7 +192,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	protected BindableListWrapper<RegularTicketBean> rtRank;
 
 	private GenericReloadableEntityCache<String, GainBean,GainVO> rightTotalGainCache;
-
+	private GenericReloadableEntityCache<String, GainBean,GainVO> leftSuccessGainCache;
 	/**
 	 * 首页右侧交易记录-全部操作
 	 */
@@ -246,19 +246,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     protected BindableListWrapper<GainPayDetailBean> vgainPayDetails;
     //提现
     private GenericReloadableEntityCache<Long,DrawMoneyRecordBean,List<DrawMoneyRecordVo>> drawMoneyRecordBean_cache;
-    //首页刷新监听器
-    private IEventListener listener = new IEventListener() {
-		public void onEvent(IBroadcastEvent event) {
-			if(event instanceof HomePageRefreshRequestEvent){
-				try {
-					refreshHomePage();
-				} catch (Throwable e) {
-					log.warn("Error when refresh home page",e);
-				}
-			}
-			
-		}
-	};
+
 	// =================module life cycle methods=============================
 	@Override
 	public void startService() {
@@ -269,6 +257,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		registry.registerEntityLoader("weekRank", new WeekRankItemLoader());
 		registry.registerEntityLoader("rtRank", new RegularTicketRankItemLoader());
 		registry.registerEntityLoader("rightTotalGain", new RightGainLoader());
+		registry.registerEntityLoader("leftSuccessGain", new RightGainLoader());
         registry.registerEntityLoader("tradingAccInfo", new TradingAccInfoLoader());
         registry.registerEntityLoader("UserCreateTradAccInfo", new UserCreateTradAccInfoLoader());
         registry.registerEntityLoader("TradingAccountInfo", new TradingAccountInfoLoader());
@@ -299,18 +288,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				clearCache();
 			}
 		}, date, 24*60*60*1000);
-        getService(IEventRouter.class).registerEventListener(HomePageRefreshRequestEvent.class, listener);
-        homePageRefresher.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				try {
-					refreshHomePage();
-				} catch (Throwable e) {
-					log.warn("Error when refresh home page",e);
-				}
-			}
-		}, 100, 15*1000);
-        context.registerService(ITradingManagementService.class, this);
+		context.registerService(ITradingManagementService.class, this);
 	}
 
 	/**
@@ -329,16 +307,10 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         dealDetailBean_cache=new  GenericReloadableEntityCache<String,DealDetailBean,List<DealDetailBean>> ("dealDetailBean");
         auditDetailBean_cache=new  GenericReloadableEntityCache<String,AuditDetailBean,List<AuditDetailBean>> ("auditDetailBean");
         voucherDetailsBean_cache=new GenericReloadableEntityCache<String,VoucherDetailsBean,List<VoucherDetailsBean>>("voucherDetailsBean");
-        try {
-			refreshHomePage();
-		} catch (Exception e) {
-			log.warn("Warning:Failed to refresh home menu", e);
-		}
 	}
 
 	@Override
 	public void stopService() {
-		getService(IEventRouter.class).unregisterEventListener(HomePageRefreshRequestEvent.class, listener);
 		context.unregisterService(ITradingManagementService.class, this);
 	}
 
@@ -346,11 +318,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	
 	@Override
 	public BindableListWrapper<EarnRankItemBean> getEarnRank(final int start, final int limit) {
-		return getEarnRank(start, limit, false);
-	}
-	
-	//赚钱榜
-	public BindableListWrapper<EarnRankItemBean> getEarnRank(final int start, final int limit, boolean wait4Finish) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("params:[start=%s,limit=%s]", start,limit));
 		}
@@ -363,11 +330,12 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		if(wait4Finish) {
-			this.earnRankCache.forceReload(params, wait4Finish);
-		} else {
-			this.earnRankCache.doReloadIfNeccessay(params);			
-		}
+		AsyncUtils.forceLoadNFetchAsyncInUI(this.earnRankCache, params, new AsyncFuture<BindableListWrapper<EarnRankItemBean>>(), new IEntityFetcher<BindableListWrapper<EarnRankItemBean>>() {
+
+			public BindableListWrapper fetchFromCache(IBindableEntityCache cache) {
+				return earnRank;
+			}
+		});
 		return this.earnRank;
 	}
 
@@ -378,7 +346,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			}
 			this.tRank = this.tRankCache.getEntities(null, tRankComparator);
 		}
-		this.tRankCache.doReloadIfNeccessay();
+		this.tRankCache.doReload(false,null,null);
 		return this.tRank;
 	}
 
@@ -390,7 +358,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			}
 			this.t1Rank = this.t1RankCache.getEntities(null, tRankComparator);
 		}
-		this.t1RankCache.doReloadIfNeccessay();
+		this.t1RankCache.doReload(false,null,null);
 		return this.t1Rank;
 
 	}
@@ -403,7 +371,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			}
 			this.rtRank = this.rtRankCache.getEntities(null, rtRankComparator);
 		}
-		this.rtRankCache.doReloadIfNeccessay();
+		this.rtRankCache.doReload(false,null,null);
 		this.rtRank.clear();
 		return this.rtRank;
 	}
@@ -416,7 +384,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			}
 			this.weekRank = this.weekRankCache.getEntities(null, weekRankComparator);
 		}
-		this.weekRankCache.doReloadIfNeccessay();
+		this.weekRankCache.doReload(false,null,null);
 		this.weekRank.clear();
 		return this.weekRank;
 
@@ -429,7 +397,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("acctID", acctID);
-        this.dealDetailBean_cache.forceReload(params,false);
+        this.dealDetailBean_cache.doReload(true,params,null);;
         return dealDetailBean_cache.getEntity(acctID);
 	}
 	
@@ -440,121 +408,205 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("acctID", acctId);
-        this.auditDetailBean_cache.forceReload(params,false);
+        this.auditDetailBean_cache.doReload(true,params,null);;
         return auditDetailBean_cache.getEntity(acctId);
 	}
+	
+
+
 	@Override
 	public void clearTradingAccount(final String acctID) {
-		try {
-			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID));
-			Object result = f.get();
-			if (result != null && result instanceof StockResultVO) {
-	            StockResultVO vo=(StockResultVO) result;
-	                if (vo.getSuccOrNot() == 0) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Failed to clearTradingAccount, caused by "
-	                                + vo.getCause());
-	                    }
-	                    throw new StockAppBizException(vo.getCause());
-	                }
-	                if (vo.getSuccOrNot() == 1) {
+		AsyncFuture<StockResultVO> future = new AsyncFuture<StockResultVO>(){
+
+			/* (non-Javadoc)
+			 * @see com.wxxr.mobile.core.async.api.AsyncFuture#getInternalCallback()
+			 */
+			@Override
+			public IAsyncCallback<StockResultVO> getInternalCallback() {
+				return new DelegateCallback<StockResultVO, StockResultVO>(super.getInternalCallback()) {
+
+					@Override
+					protected StockResultVO getTargetValue(StockResultVO value) {
+						return value;
+					}
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.async.api.DelegateCallback#success(java.lang.Object)
+					 */
+					@Override
+					public void success(StockResultVO result) {
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("clearTradingAccount successfully.");
 	                    }
-	                    tradingAccountBean_cache.forceReload(true);
-	                }
-	            }
+						AsyncUtils.forceLoadInSync(tradingAccountBean_cache, null);
+						super.success(result);
+					}
+				};
+			}
 			
-		} catch (InterruptedException e) {
-			throw new StockAppBizException("系统清仓失败");
-		} catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-            	throw new StockAppBizException("系统清仓失败");
-            }
-		}
+		};
+		context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID),future.getInternalCallback());
+		throw new ExecAsyncException(future);
+//		try {
+//			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new ClearTradingAccountCommand( acctID));
+//			Object result = f.get();
+//			if (result != null && result instanceof StockResultVO) {
+//	            StockResultVO vo=(StockResultVO) result;
+//	                if (vo.getSuccOrNot() == 0) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("Failed to clearTradingAccount, caused by "
+//	                                + vo.getCause());
+//	                    }
+//	                    throw new StockAppBizException(vo.getCause());
+//	                }
+//	                if (vo.getSuccOrNot() == 1) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("clearTradingAccount successfully.");
+//	                    }
+//	                    tradingAccountBean_cache.forceReload(true);
+//	                }
+//	            }
+//			
+//		} catch (InterruptedException e) {
+//			throw new StockAppBizException("系统清仓失败");
+//		} catch (ExecutionException e) {
+//			Throwable t = e.getCause();
+//            if( t instanceof CommandConstraintViolatedException){
+//                throw (CommandConstraintViolatedException)t;
+//            }else if(t instanceof StockAppBizException){
+//            	throw (StockAppBizException)t;
+//            }else{
+//            	throw new StockAppBizException("系统清仓失败");
+//            }
+//		}
 	}
 	@Override
 	public TradingAccountListBean getMyAllTradingAccountList(final int start,
 			final int limit) {
+		Async<GainVOs> vos = getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class)
+				.getTotalGain(start, limit);
+		AsyncFuture<TradingAccountListBean> future = AsyncFuture.newAsyncFuture(vos, new IDataConverter<GainVOs, TradingAccountListBean>() {
 
-		List<GainVO> volist = null;
-		try {
-			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
-				public List<GainVO> call() throws Exception {
-					try {
-						if (log.isDebugEnabled()) {
-							log.debug("fetch all trading account info...");
-						}
-						GainVOs vos=getRestService(ITradingProtectedResource.class)
-								.getTotalGain(start, limit);
-						List<GainVO> list =vos==null?null:vos.getGains() ;
-						return list;
-					} catch (Throwable e) {
-						log.warn("Failed to fetch all trading account", e);
-						throw new StockAppBizException(e.getMessage());
+			@Override
+			public TradingAccountListBean convert(GainVOs value) {
+				List<GainVO> volist =value==null?null:value.getGains() ;
+				if (volist != null && volist.size() > 0) {
+					List<GainBean> beanList = new ArrayList<GainBean>();
+					for (GainVO vo : volist) {
+						GainBean bean = ConverterUtils.fromVO(vo);
+						beanList.add(bean);
 					}
+					myTradingAccounts.setAllTradingAccounts(beanList);
 				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch all trading account", e);
-		}
-		if (volist != null && volist.size() > 0) {
-			List<GainBean> beanList = new ArrayList<GainBean>();
-			for (GainVO vo : volist) {
-				GainBean bean = ConverterUtils.fromVO(vo);
-				beanList.add(bean);
+				return myTradingAccounts;
 			}
-			myTradingAccounts.setAllTradingAccounts(beanList);
-		}
-		return myTradingAccounts;
+		});
+		throw new ExecAsyncException(future);
+
+//		List<GainVO> volist = null;
+//		try {
+//			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
+//				public List<GainVO> call() throws Exception {
+//					try {
+//						if (log.isDebugEnabled()) {
+//							log.debug("fetch all trading account info...");
+//						}
+//						GainVOs vos=getRestService(ITradingProtectedResource.class)
+//								.getTotalGain(start, limit);
+//						List<GainVO> list =vos==null?null:vos.getGains() ;
+//						return list;
+//					} catch (Throwable e) {
+//						log.warn("Failed to fetch all trading account", e);
+//						throw new StockAppBizException(e.getMessage());
+//					}
+//				}
+//			});
+//		} catch (Exception e) {
+//			log.warn("Failed to fetch all trading account", e);
+//		}
+//		if (volist != null && volist.size() > 0) {
+//			List<GainBean> beanList = new ArrayList<GainBean>();
+//			for (GainVO vo : volist) {
+//				GainBean bean = ConverterUtils.fromVO(vo);
+//				beanList.add(bean);
+//			}
+//			myTradingAccounts.setAllTradingAccounts(beanList);
+//		}
+//		return myTradingAccounts;
 	}
+	
+	private <T> T getRestService(Class<T> ifproxy,Class<?> ifRest) {
+		return context.getService(IRestProxyService.class).getRestService(
+				ifproxy,ifRest);
+	}
+
 
 	@Override
 	public TradingAccountListBean getMySuccessTradingAccountList(
 			final int start, final int limit) {
+		Async<GainVOs> vos = getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class)
+				.getTotalGain(start, limit);
+		AsyncFuture<TradingAccountListBean> future = AsyncFuture.newAsyncFuture(vos, new IDataConverter<GainVOs, TradingAccountListBean>() {
 
-		List<GainVO> volist = null;
-		try {
-			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
-				public List<GainVO> call() throws Exception {
-					try {
-						if (log.isDebugEnabled()) {
-							log.debug("fetch all trading account info...");
+			@Override
+			public TradingAccountListBean convert(GainVOs value) {
+				List<GainVO> volist =value==null?null:value.getGains() ;
+				if (volist != null && volist.size() > 0) {
+					List<GainBean> beanList = new ArrayList<GainBean>();
+					List<GainBean> vbeanList = new ArrayList<GainBean>();
+					List<GainBean> rbeanList = new ArrayList<GainBean>();
+					for (GainVO vo : volist) {
+						GainBean bean = ConverterUtils.fromVO(vo);
+						beanList.add(bean);
+						if (vo.isVirtual()) {
+							vbeanList.add(bean);
+						}else{
+							rbeanList.add(bean);
 						}
-						GainVOs vos=getRestService(ITradingProtectedResource.class)
-								.getTotalGain(start, limit);
-						List<GainVO> list =vos==null?null:vos.getGains() ;
-						return list;
-					} catch (Throwable e) {
-						log.warn("Failed to fetch success trading account", e);
-						throw new StockAppBizException(e.getMessage());
 					}
+					myTradingAccounts.setSuccessTradingAccounts(beanList);
 				}
-			});
-		} catch (Exception e) {
-			log.warn("Failed to fetch success trading account", e);
-		}
-		if (volist != null && volist.size() > 0) {
-			List<GainBean> beanList = new ArrayList<GainBean>();
-			List<GainBean> vbeanList = new ArrayList<GainBean>();
-			List<GainBean> rbeanList = new ArrayList<GainBean>();
-			for (GainVO vo : volist) {
-				GainBean bean = ConverterUtils.fromVO(vo);
-				beanList.add(bean);
-				if (vo.isVirtual()) {
-					vbeanList.add(bean);
-				}else{
-					rbeanList.add(bean);
-				}
+				return myTradingAccounts;
 			}
-			myTradingAccounts.setSuccessTradingAccounts(beanList);
-		}
-		return myTradingAccounts;
+		});
+		throw new ExecAsyncException(future);
+//		List<GainVO> volist = null;
+//		try {
+//			volist = fetchDataFromServer(new Callable<List<GainVO>>() {
+//				public List<GainVO> call() throws Exception {
+//					try {
+//						if (log.isDebugEnabled()) {
+//							log.debug("fetch all trading account info...");
+//						}
+//						GainVOs vos=getRestService(ITradingProtectedResource.class)
+//								.getTotalGain(start, limit);
+//						List<GainVO> list =vos==null?null:vos.getGains() ;
+//						return list;
+//					} catch (Throwable e) {
+//						log.warn("Failed to fetch success trading account", e);
+//						throw new StockAppBizException(e.getMessage());
+//					}
+//				}
+//			});
+//		} catch (Exception e) {
+//			log.warn("Failed to fetch success trading account", e);
+//		}
+//		if (volist != null && volist.size() > 0) {
+//			List<GainBean> beanList = new ArrayList<GainBean>();
+//			List<GainBean> vbeanList = new ArrayList<GainBean>();
+//			List<GainBean> rbeanList = new ArrayList<GainBean>();
+//			for (GainVO vo : volist) {
+//				GainBean bean = ConverterUtils.fromVO(vo);
+//				beanList.add(bean);
+//				if (vo.isVirtual()) {
+//					vbeanList.add(bean);
+//				}else{
+//					rbeanList.add(bean);
+//				}
+//			}
+//			myTradingAccounts.setSuccessTradingAccounts(beanList);
+//		}
+//		return myTradingAccounts;
 	}
 	//交易记录
     private GenericReloadableEntityCache<Long,TradingRecordBean,List<TradingRecordBean>> tradingRecordBean_cache;
@@ -576,7 +628,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
          p.put("acctID", acctID);
          p.put("start", start);
          p.put("limit", limit);
-         tradingRecordBean_cache.forceReload(p,false);
+         tradingRecordBean_cache.doReload(true,p,null);
          tradingRecordBean_cache.setCommandParameters(p);
 	    return tradingRecordBeans;
 	}
@@ -586,30 +638,32 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
           return b1.getDate()>b2.getDate()?-1:1;
         }
     }
-	// =================private method =======================================
-	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
-		Future<T> future = context.getExecutor().submit(task);
-		T result = null;
-		try {
-			result = future.get();
-			return result;
-		} catch (Exception e) {
-			log.warn("Error when fetching data from server", e);
-			throw e;
-		}
-	}
+//	// =================private method =======================================
+//	private <T> T fetchDataFromServer(Callable<T> task) throws Exception{
+//		AsyncUtils.execCallableInAsync(context.getService(ICommandExecutor.class), task);
+//		Future<T> future = context.getExecutor().submit(task);
+//		T result = null;
+//		try {
+//			result = future.get();
+//			return result;
+//		} catch (Exception e) {
+//			log.warn("Error when fetching data from server", e);
+//			throw e;
+//		}
+//		return null;
+//	}
 
-	private <T> T getRestService(Class<T> restResouce) {
-		return context.getService(IRestProxyService.class).getRestService(
-				restResouce);
-	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#reloadTMegagameRank(boolean)
 	 */
 	@Override
 	public void reloadTMegagameRank(boolean wait4Finish) {
-		tRankCache.forceReload(wait4Finish);
+		if(wait4Finish){
+			AsyncUtils.forceLoadAsyncInUI(tRankCache, null);
+		}else{
+			tRankCache.doReload(false,null,null);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -617,7 +671,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 */
 	@Override
 	public void reloadT1MegagameRank(boolean wait4Finish) {
-		t1RankCache.forceReload(wait4Finish);
+		if(wait4Finish){
+			AsyncUtils.forceLoadAsyncInUI(t1RankCache, null);
+		}else{
+			t1RankCache.doReload(false,null,null);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -625,7 +683,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 */
 	@Override
 	public void reloadRegularTicketRank(boolean wait4Finish) {
-		rtRankCache.forceReload(wait4Finish);
+		if(wait4Finish){
+			AsyncUtils.forceLoadAsyncInUI(rtRankCache, null);
+		}else{
+			rtRankCache.doReload(false,null,null);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -633,7 +695,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	 */
 	@Override
 	public void reloadWeekRank(boolean wait4Finish) {
-		weekRankCache.forceReload(wait4Finish);
+		if(wait4Finish){
+			AsyncUtils.forceLoadAsyncInUI(weekRankCache, null);
+		}else{
+			weekRankCache.doReload(false,null,null);
+		}
 	}
 
 	@Override
@@ -641,7 +707,11 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("limit", limit);
-		this.earnRankCache.forceReload(map, wait4Finish);
+		if(wait4Finish){
+			AsyncUtils.forceLoadAsyncInUI(earnRankCache, map);
+		}else{
+			weekRankCache.doReload(true,map,null);
+		}
 	}
 
 	
@@ -653,7 +723,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit) {
 		return getTotalGain(start, limit, false);
 	}
-
+	@Override
 	public BindableListWrapper<GainBean> getTotalGain(int start, int limit, boolean wait4Finish) {
 		if(rightTotalGain==null){
 				this.rightTotalGain = getRightTotalGainCache().getEntities(null, new Comparator<GainBean>(){
@@ -664,21 +734,44 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 				});
 		}
-		rightTotalGainCacheDoReload(start, limit, wait4Finish);
+		Map<String,Object> params=new HashMap<String,Object>();
+		params.put("start", start);
+		params.put("limit", limit);
+		if (wait4Finish) {
+			return AsyncUtils.forceLoadNFetchAsyncInUI(getRightTotalGainCache(),params, new AsyncFuture<BindableListWrapper<GainBean>>(),
+        			new IEntityFetcher<BindableListWrapper<GainBean>>() {
+
+						@Override
+						public BindableListWrapper<GainBean> fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return rightTotalGain;
+						}
+					});
+		}else{
+			getRightTotalGainCache().doReload(false,params,null);
+		}
+		//rightTotalGainCacheDoReload(start, limit, wait4Finish);
 		return this.rightTotalGain;
 
 	}
 
-	protected void rightTotalGainCacheDoReload(int start, int limit, boolean wait4Finish) {
-		synchronized (getRightTotalGainCache()) {
-			Map<String,Object> commandParameters=new HashMap<String,Object>();
-			commandParameters.put("start", start);
-			commandParameters.put("limit", limit);
-			if(wait4Finish) {
-				getRightTotalGainCache().forceReload(commandParameters, wait4Finish);
-			} else {
-				getRightTotalGainCache().doReloadIfNeccessay(commandParameters);
-			}
+	protected void rightTotalGainCacheDoReload(int start, int limit,
+			boolean wait4Finish) {
+		Map<String, Object> commandParameters = new HashMap<String, Object>();
+		commandParameters.put("start", start);
+		commandParameters.put("limit", limit);
+		if (wait4Finish) {
+			AsyncUtils.forceLoadNFetchAsyncInUI(getLeftSuccessGainCache(),
+					commandParameters,new AsyncFuture<BindableListWrapper<GainBean>>(),new IEntityFetcher<BindableListWrapper<GainBean>>() {
+
+						@Override
+						public BindableListWrapper<GainBean> fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return rightGain;
+						}
+					});
+		} else {
+			getLeftSuccessGainCache().doReload(false, commandParameters, null);
 		}
 	}
 
@@ -689,9 +782,10 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	public BindableListWrapper<GainBean> getGain(int start, int limit) {
 		return getGain(start, limit, false);
 	}
+	@Override
 	public BindableListWrapper<GainBean> getGain(int start, int limit, boolean wait4Finish) {
 		if(rightGain==null){
-			this.rightGain =getRightTotalGainCache().getEntities(new IEntityFilter<GainBean>() {
+			this.rightGain =getLeftSuccessGainCache().getEntities(new IEntityFilter<GainBean>() {
 				
 				@Override
 				public boolean doFilter(GainBean entity) {
@@ -710,27 +804,69 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 	protected GenericReloadableEntityCache<String, GainBean, GainVO> getRightTotalGainCache() {
 		if(rightTotalGainCache==null){
-			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain");
+			rightTotalGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("rightTotalGain"){
+				@Override
+				protected Map<String, Object> prepareLoadmoreCommandParameter(
+						BindableListWrapper<GainBean> list) {
+					Map<String, Object> params=new HashMap<String, Object>();
+					int start = rightTotalGainCache.getCacheSize();
+					params.put("start", start);
+					params.put("limit", 20);
+					return params;
+				}
+
+			};
 		}
 		return rightTotalGainCache;
+	}
+	
+	protected GenericReloadableEntityCache<String, GainBean, GainVO> getLeftSuccessGainCache() {
+		if(leftSuccessGainCache==null){
+			leftSuccessGainCache=new GenericReloadableEntityCache<String, GainBean, GainVO>("leftSuccessGain"){
+				@Override
+				protected Map<String, Object> prepareLoadmoreCommandParameter(
+						BindableListWrapper<GainBean> list) {
+					Map<String, Object> params=new HashMap<String, Object>();
+					int start = leftSuccessGainCache.getCacheSize();
+					params.put("start", start);
+					params.put("limit", 20);
+					return params;
+				}
+
+			};
+		}
+		return leftSuccessGainCache;
 	}
 	BindableListWrapper<TradingAccInfoBean> allT;
 	
 	//获取我的T日 和 T+1日交易盘
 	public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList(){
+		tradingAccInfo_cache.doReload(false,null,null);
     	if(allT == null)
     		allT = tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
-        return allT;		
+		AsyncUtils.forceLoadNFetchAsyncInUI(this.tradingAccInfo_cache, null, new AsyncFuture<BindableListWrapper<TradingAccInfoBean>>(), new IEntityFetcher<BindableListWrapper<TradingAccInfoBean>>() {
+
+			public BindableListWrapper fetchFromCache(IBindableEntityCache cache) {
+				return allT;
+			}
+		});
+		return this.allT;
 	}
 	
 	public BindableListWrapper<TradingAccInfoBean> getSyncAllTradingAccountList(){
-		tradingAccInfo_cache.forceReload(true);
-    	allT = tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
-        return allT;		
+		return AsyncUtils.forceLoadNFetchAsyncInUI(tradingAccInfo_cache, null, new AsyncFuture<BindableListWrapper<TradingAccInfoBean>>(), new IEntityFetcher<BindableListWrapper<TradingAccInfoBean>>() {
+
+			@Override
+			public BindableListWrapper<TradingAccInfoBean> fetchFromCache(
+					IBindableEntityCache<?, ?> cache) {
+				return tradingAccInfo_cache.getEntities(null, new  TradingAccInfoBeanComparator());
+			}
+		});
 	}
+	
     //获取我的T日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT0TradingAccountList(){
-        tradingAccInfo_cache.forceReload(false);
+        tradingAccInfo_cache.doReload(false,null,null);
         BindableListWrapper<TradingAccInfoBean> t0s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
             public boolean doFilter(TradingAccInfoBean entity) {
@@ -745,7 +881,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
     }
     //获取我的T+1日交易盘
     public BindableListWrapper<TradingAccInfoBean> getT1TradingAccountList(){
-        tradingAccInfo_cache.forceReload(false);
+        tradingAccInfo_cache.doReload(false,null,null);
         BindableListWrapper<TradingAccInfoBean> t1s = tradingAccInfo_cache.getEntities(new IEntityFilter<TradingAccInfoBean>(){
             @Override
             public boolean doFilter(TradingAccInfoBean entity) {
@@ -779,148 +915,159 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
             }
             this.userCreateTradAccInfo = this.userCreateTradAccInfo_Cache.getEntity("userId");//todo key 
         }
-        this.userCreateTradAccInfo_Cache.forceReload(false);
+        this.userCreateTradAccInfo_Cache.doReload(true,null,null);
         return this.userCreateTradAccInfo;
     }
 
     @Override
     public void createTradingAccount(Long captitalAmount, float capitalRate, boolean virtual, float depositRate,String assetType) throws StockAppBizException {
-		try {
-			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
-			Object result = f.get();
-			if (result != null && result instanceof StockResultVO) {
-	            StockResultVO vo=(StockResultVO) result;
-	           
-	                if (vo.getSuccOrNot() == 0) {
+		doCreateTradingAccount(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
+    	
+//		try {
+//			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType));
+//			Object result = f.get();
+//			if (result != null && result instanceof StockResultVO) {
+//	            StockResultVO vo=(StockResultVO) result;
+//	           
+//	                if (vo.getSuccOrNot() == 0) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("Failed to create trading account, caused by "
+//	                                + vo.getCause());
+//	                    }
+//	                    throw new StockAppBizException(vo.getCause());
+//	                }
+//	                if (vo.getSuccOrNot() == 1) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("Create trading account successfully.");
+//	                    }
+//	                    tradingAccInfo_cache.forceReload(true);
+//	                }
+//	           }			
+//		}catch (ExecutionException e) {
+//			Throwable t = e.getCause();
+//            if( t instanceof CommandConstraintViolatedException){
+//                throw (CommandConstraintViolatedException)t;
+//            }else if(t instanceof StockAppBizException){
+//            	throw (StockAppBizException)t;
+//            }else{
+//                throw new StockAppBizException("创建交易盘失败");
+//            }
+//		} catch (InterruptedException e){
+//			throw new StockAppBizException("创建交易盘失败");
+//		}
+    }
+
+	/**
+	 * @param captitalAmount
+	 * @param capitalRate
+	 * @param virtual
+	 * @param depositRate
+	 * @param assetType
+	 */
+	public void doCreateTradingAccount(CreateTradingAccountCommand command) {
+		AsyncUtils.execCommandAsyncInUI(command,
+				new IDataConverter<StockResultVO, Object>() {
+
+					@Override
+					public Object convert(StockResultVO vo)
+							throws NestedRuntimeException {
+		                if (vo.getSuccOrNot() == 0) {
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("Failed to create trading account, caused by "
 	                                + vo.getCause());
 	                    }
-	                    throw new StockAppBizException(vo.getCause());
+	                    throw new NestedRuntimeException(new StockAppBizException(vo.getCause()));
 	                }
 	                if (vo.getSuccOrNot() == 1) {
 	                    if (log.isDebugEnabled()) {
 	                        log.debug("Create trading account successfully.");
 	                    }
-	                    tradingAccInfo_cache.forceReload(true);
-	                }
-	           }			
-		}catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-                throw new StockAppBizException("创建交易盘失败");
-            }
-		} catch (InterruptedException e){
-			throw new StockAppBizException("创建交易盘失败");
-		}
-    }
+						try {//交易盘创建成功后及时更新首页
+							refreshHomePage();
+						} catch (Exception e) {
+							log.warn("Refresh home page after create trading account", e);
+						}
+					}
+	                return null;
+					}
+		});
+	}
     
     @Override
-    public void buyStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-        try {
-        	Future<StockResultVO> f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
-        	StockResultVO result= f.get();
-           if (result != null ) {
-               StockResultVO vo=result;
-                   if (vo.getSuccOrNot() == 0) {
-                       if (log.isDebugEnabled()) {
-                           log.debug("Failed to buyStock, caused by "
-                                   + vo.getCause());
-                       }
-                       throw new StockAppBizException(vo.getCause());
-                   }
-                   if (vo.getSuccOrNot() == 1) {
-                       if (log.isDebugEnabled()) {
-                           log.debug("buyStock successfully.");
-                       }
-                       tradingAccountBean_cache.forceReload(true);
-                   }
-               }
-        }catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-                throw new StockAppBizException("买人股票失败");
-            }
-		} catch (InterruptedException e){
-			throw new StockAppBizException("买人股票失败");
-		}      
+    public void buyStock(final String acctID, final String market, final String code, final String price, final String amount) throws StockAppBizException {
+		AsyncFuture<StockResultVO> future = new AsyncFuture<StockResultVO>(){
+
+			/* (non-Javadoc)
+			 * @see com.wxxr.mobile.core.async.api.AsyncFuture#getInternalCallback()
+			 */
+			@Override
+			public IAsyncCallback<StockResultVO> getInternalCallback() {
+				return new DelegateCallback<StockResultVO, StockResultVO>(super.getInternalCallback()) {
+
+					@Override
+					protected StockResultVO getTargetValue(StockResultVO value) {
+						return value;
+					}
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.async.api.DelegateCallback#success(java.lang.Object)
+					 */
+					@Override
+					public void success(StockResultVO result) {
+	                    if (log.isDebugEnabled()) {
+	                        log.debug("clearTradingAccount successfully.");
+	                    }
+	                    Map<String, Object> params=new HashMap<String, Object>(); 
+	                    params.put("acctID", acctID);
+						AsyncUtils.forceLoadInSync(tradingAccountBean_cache, params);
+						super.success(result);
+					}
+				};
+			}
+			
+		};
+		context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount),future.getInternalCallback());
+		throw new ExecAsyncException(future);
+//        try {
+//        	Future<StockResultVO> f=  context.getService(ICommandExecutor.class).submitCommand(new BuyStockCommand( acctID,  market,  code,  price,  amount));
+//        	StockResultVO result= f.get();
+//           if (result != null ) {
+//               StockResultVO vo=result;
+//                   if (vo.getSuccOrNot() == 0) {
+//                       if (log.isDebugEnabled()) {
+//                           log.debug("Failed to buyStock, caused by "
+//                                   + vo.getCause());
+//                       }
+//                       throw new StockAppBizException(vo.getCause());
+//                   }
+//                   if (vo.getSuccOrNot() == 1) {
+//                       if (log.isDebugEnabled()) {
+//                           log.debug("buyStock successfully.");
+//                       }
+//                       tradingAccountBean_cache.forceReload(true);
+//                   }
+//               }
+//        }catch (ExecutionException e) {
+//			Throwable t = e.getCause();
+//            if( t instanceof CommandConstraintViolatedException){
+//                throw (CommandConstraintViolatedException)t;
+//            }else if(t instanceof StockAppBizException){
+//            	throw (StockAppBizException)t;
+//            }else{
+//                throw new StockAppBizException("买人股票失败");
+//            }
+//		} catch (InterruptedException e){
+//			throw new StockAppBizException("买人股票失败");
+//		}      
     }
 
     @Override
     public void sellStock(String acctID, String market, String code, String price, String amount) throws StockAppBizException {
-		try {
-			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new SellStockCommand( acctID,  market,  code,  price,  amount));
-			StockResultVO result = f.get();
-	    	if (result != null) {
-	            StockResultVO vo=(StockResultVO) result;
-	                if (vo.getSuccOrNot() == 0) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Failed sellStock, caused by "
-	                                + vo.getCause());
-	                    }
-	                    throw new StockAppBizException(vo.getCause());
-	                }
-	                if (vo.getSuccOrNot() == 1) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Create sellStock successfully.");
-	                    }
-	                    tradingAccountBean_cache.forceReload(true);
-	                }
-	            }			
-		}catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-                throw new StockAppBizException("卖出股票失败");
-            }
-		} catch (InterruptedException e){
-			throw new StockAppBizException("卖出股票失败");
-		}      
+    	AsyncUtils.execCommandAsyncInUI(context.getService(ICommandExecutor.class), new SellStockCommand( acctID,  market,  code,  price,  amount));
     }
     @Override
     public void quickBuy(Long captitalAmount, String capitalRate, boolean virtual, String stockMarket, String stockCode, String stockBuyAmount, String depositRate,String assetType ) throws StockAppBizException {
-    	try {
-    		Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType));
-    		StockResultVO result = f.get();
-			if (result != null) {
-              StockResultVO vo=(StockResultVO) result;
-              if (vo.getSuccOrNot() == 0) {
-                      if (log.isDebugEnabled()) {
-                          log.debug("Failed quickBuy, caused by "
-                                  + vo.getCause());
-                      }
-                      throw new StockAppBizException(vo.getCause());
-                  }
-                  if (vo.getSuccOrNot() == 1) {
-                      if (log.isDebugEnabled()) {
-                          log.debug("quickBuy successfully.");
-                      }
-                      tradingAccountBean_cache.forceReload(true);
-                  }
-              }
-		} catch (InterruptedException e) {
-			 throw new StockAppBizException("买入股票失败");
-		} catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-                throw new StockAppBizException("买入股票失败");
-            }
-		}
+    	AsyncUtils.execCommandAsyncInUI(context.getService(ICommandExecutor.class), new QuickBuyStockCommand( captitalAmount,  capitalRate,  virtual,  stockMarket,  stockCode,  stockBuyAmount,  depositRate,assetType));
     }
     //未结算
     @Override
@@ -936,13 +1083,14 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("acctID", acctID);
-        this.tradingAccountBean_cache.forceReload(params,false);
+        this.tradingAccountBean_cache.setCommandParameters(params);
+        this.tradingAccountBean_cache.doReload(true,params,null);
         return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
     }
 
   //未结算
     @Override
-    public TradingAccountBean getSyncTradingAccountInfo(String acctID) throws StockAppBizException {
+    public TradingAccountBean getSyncTradingAccountInfo(final String acctID) throws StockAppBizException {
     	if (!StringUtils.isNumeric(acctID)) {
 			throw new IllegalArgumentException("Invalid Argument:accId===>"+acctID);
 		}
@@ -954,76 +1102,104 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
         }
         Map<String, Object> params=new HashMap<String, Object>(); 
         params.put("acctID", acctID);
-        this.tradingAccountBean_cache.forceReload(params,true);
-        return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
+        return AsyncUtils.forceLoadNFetchAsyncInUI(this.tradingAccountBean_cache, params, new AsyncFuture<TradingAccountBean>(), 
+        		new IEntityFetcher<TradingAccountBean>() {
+
+					@Override
+					public TradingAccountBean fetchFromCache(
+							IBindableEntityCache<?, ?> cache) {
+				        return tradingAccountBean_cache.getEntity(Long.valueOf(acctID));
+					}
+		});
     }
     
     @Override
-    public void cancelOrder(String accId,String orderID) {
-    	TradingAccountBean bean = tradingAccountBean_cache.getEntity(Long.valueOf(accId));
-		try {
-			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
-			Object result = f.get();
-	    	if (result != null && result instanceof StockResultVO) {
-	            StockResultVO vo=(StockResultVO) result;
-	           
-	                if (vo.getSuccOrNot() == 0) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Failed to cancelOrder, caused by "
-	                                + vo.getCause());
-	                    }
-	                    throw new StockAppBizException(vo.getCause());
-	                }
-	                if (vo.getSuccOrNot() == 1) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("cancelOrder successfully.");
-	                    }
-	                    if (bean!=null) {
-	            			List<StockTradingOrderBean>  orders = bean.getTradingOrders();
-	            			if (orders!=null) {
-	            				for (StockTradingOrderBean order : orders) {
-	            					if (order.getId().toString().equals(orderID)) {
-	            						order.setStatus("100");
-	            						break;
-	            					}
-	            				}
-	            			}
-	            		}
-	                }
-	            }			
-		} catch (InterruptedException e) {
-			throw new StockAppBizException("系统执行撤单失败");
-		} catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-            	throw new StockAppBizException("系统执行撤单失败");
-            }
-		}
+    public void cancelOrder(final String accId,final String orderID) {
+    	AsyncUtils.execCommandAsyncInUI(new CancelOrderCommand(orderID), new IDataConverter<StockResultVO, Object>() {
+
+    		@Override
+    		public Object convert(StockResultVO result) {
+    			if (result.getSuccOrNot() == 0) {
+    				if (log.isDebugEnabled()) {
+    					log.debug("Failed to cancelOrder, caused by "
+    							+ result.getCause());
+    				}
+    				throw new NestedRuntimeException(new StockAppBizException(result.getCause()));
+    			}
+    			if (result.getSuccOrNot() == 1) {
+    				if (log.isDebugEnabled()) {
+    					log.debug("cancelOrder successfully.");
+    				}
+    				try {
+    					TradingAccountBean bean = tradingAccountBean_cache.getEntity(Long.valueOf(accId));
+    					if (bean!=null) {
+    						List<StockTradingOrderBean>  orders = bean.getTradingOrders();
+    						if (orders!=null) {
+    							for (StockTradingOrderBean order : orders) {
+    								if (order.getId().toString().equals(orderID)) {
+    									order.setStatus("100");
+    									break;
+    								}
+    							}
+    						}
+    					}
+    				} catch (Throwable e) {
+    					log.warn(" Failed to update local cache",e);
+    				}
+    			}
+    			return null;
+    		}
+    	});
+//    	TradingAccountBean bean = tradingAccountBean_cache.getEntity(Long.valueOf(accId));
+//		try {
+//			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(new CancelOrderCommand( orderID));
+//			Object result = f.get();
+//	    	if (result != null && result instanceof StockResultVO) {
+//	            StockResultVO vo=(StockResultVO) result;
+//	           
+//	                if (vo.getSuccOrNot() == 0) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("Failed to cancelOrder, caused by "
+//	                                + vo.getCause());
+//	                    }
+//	                    throw new StockAppBizException(vo.getCause());
+//	                }
+//	                if (vo.getSuccOrNot() == 1) {
+//	                    if (log.isDebugEnabled()) {
+//	                        log.debug("cancelOrder successfully.");
+//	                    }
+//	                    if (bean!=null) {
+//	            			List<StockTradingOrderBean>  orders = bean.getTradingOrders();
+//	            			if (orders!=null) {
+//	            				for (StockTradingOrderBean order : orders) {
+//	            					if (order.getId().toString().equals(orderID)) {
+//	            						order.setStatus("100");
+//	            						break;
+//	            					}
+//	            				}
+//	            			}
+//	            		}
+//	                }
+//	            }			
+//		} catch (InterruptedException e) {
+//			throw new StockAppBizException("系统执行撤单失败");
+//		} catch (ExecutionException e) {
+//			Throwable t = e.getCause();
+//            if( t instanceof CommandConstraintViolatedException){
+//                throw (CommandConstraintViolatedException)t;
+//            }else if(t instanceof StockAppBizException){
+//            	throw (StockAppBizException)t;
+//            }else{
+//            	throw new StockAppBizException("系统执行撤单失败");
+//            }
+//		}
     }
 
 	@Override
 	public void applyDrawMoney(long amount) {
 		ApplyDrawMoneyCommand cmd=new ApplyDrawMoneyCommand();
 		cmd.setAmount(amount);
-		try{
-		Future<StockResultVO> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-			try {
-				StockResultVO vo=future.get(30,TimeUnit.SECONDS);
-				if(vo.getSuccOrNot()!=1){
-					throw new StockAppBizException(vo.getCause());
-				}
-			} catch(StockAppBizException e){
-				throw e;
-			}catch (Exception e) {
-				throw new StockAppBizException("系统错误");
-			}
-		}catch(CommandException e){
-			throw new StockAppBizException(e.getMessage());
-		}
+    	AsyncUtils.execCommandAsyncInUI(context.getService(ICommandExecutor.class), cmd);
 	}
 
 	public VoucherDetailsBean getVoucherDetails(int start, int limit){
@@ -1035,7 +1211,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	    Map<String, Object> params = new HashMap<String, Object>();
         params.put("start", start);
         params.put("limit", limit);
-        this.voucherDetailsBean_cache.forceReload(params, false);
+        this.voucherDetailsBean_cache.doReload(true,params, null);
         return voucherDetailsBean_cache.getEntity(key);
 	}
 	private static final Comparator<GainPayDetailBean> vgainPayDetailsComparator = new Comparator<GainPayDetailBean>() {
@@ -1043,14 +1219,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		@Override
 		public int compare(GainPayDetailBean o1, GainPayDetailBean o2) {
 			if(o1!=null && o2!=null){
-				return (int) (o2.getTime() - o1.getTime());
+				return o2.getTime() - o1.getTime() > 0 ? 1:-1;
 			}
 			return 0;
 		}
 	};
-	
 	public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit){
-		return getGainPayDetailDetails(start, limit, false);
+		return getGainPayDetailDetails(start,limit,true);
 	}
 	
 	public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish){
@@ -1059,19 +1234,42 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		if(this.vgainPayDetails == null){
 			if(this.gainPayDetailBean_cache == null){
-				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>>("vgainPayDetails");
+				this.gainPayDetailBean_cache = new  GenericReloadableEntityCache<String,GainPayDetailBean,List<GainPayDetailBean>>("vgainPayDetails"){
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache#prepareLoadmoreCommandParameter(java.util.Map)
+					 */
+					@Override
+					protected Map<String, Object> prepareLoadmoreCommandParameter(
+							BindableListWrapper<GainPayDetailBean> list) {
+						Map<String, Object> params=new HashMap<String, Object>();
+						List<GainPayDetailBean> data = list.getData();
+						int start = data != null ? data.size() : 0;
+						params.put("start", start);
+						params.put("limit", 20);
+						return params;
+					}
+
+				};
 			}
-			
+			this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("start", start);
 		params.put("limit", limit);
-		if(wait4Finish) {
-			this.gainPayDetailBean_cache.forceReload(params, wait4Finish);
-		} else {
-			this.gainPayDetailBean_cache.doReloadIfNeccessay(params);
+		if(wait4Finish){
+			return AsyncUtils.forceLoadNFetchAsyncInUI(this.gainPayDetailBean_cache, params, 
+					new AsyncFuture<BindableListWrapper<GainPayDetailBean>>(), new IEntityFetcher<BindableListWrapper<GainPayDetailBean>>() {
+
+						@Override
+						public BindableListWrapper<GainPayDetailBean> fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return vgainPayDetails;
+						}
+					});
+		}else{
+			this.gainPayDetailBean_cache.doReload(true,params,null);
 		}
-		this.vgainPayDetails = this.gainPayDetailBean_cache.getEntities(null, vgainPayDetailsComparator);
 		return this.vgainPayDetails;
 	}
 	
@@ -1096,6 +1294,9 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
         if (voucherDetailsBean_cache!=null) {
         	 voucherDetailsBean_cache.clear();
+		}
+        if (gainPayDetailBean_cache!=null) {
+        	gainPayDetailBean_cache.clear();
 		}
        
 	}
@@ -1135,6 +1336,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						 */
 						public HomePageMenu getHomeMenuList() {
 							return ((ITradingManagementService)holder.getDelegate()).getHomeMenuList();
+						}
+						/**
+						 * @return
+						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getHomeMenuList()
+						 */
+						public HomePageMenu getHomeMenuList(boolean forceload) {
+							return ((ITradingManagementService)holder.getDelegate()).getHomeMenuList(forceload);
 						}
 						/**
 						 * @return
@@ -1474,19 +1682,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						}
 
 						/**
-						 * @param start
-						 * @param limit
-						 * @param wait4Finish
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getGainPayDetailDetails(int, int)
-						 */
-						public BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(
-								int start, int limit, boolean wait4Finish) {
-							return ((ITradingManagementService)holder.getDelegate()).getGainPayDetailDetails(start,
-									limit, wait4Finish);
-						}
-						
-						/**
 						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getAllTradingAccountList()
 						 */
 						public BindableListWrapper<TradingAccInfoBean> getAllTradingAccountList() {
@@ -1507,18 +1702,6 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 						public TradingAccountBean getSyncTradingAccountInfo(
 								String acctID) throws StockAppBizException {
 							return ((ITradingManagementService)holder.getDelegate()).getSyncTradingAccountInfo(acctID);
-						}
-
-						/**
-						 * @param start
-						 * @param limit
-						 * @param wait4Finish
-						 * @return
-						 * @see com.wxxr.mobile.stock.app.service.ITradingManagementService#getEarnRank(int, int, wait4Finish)
-						 */
-						public BindableListWrapper<EarnRankItemBean> getEarnRank(
-								int start, int limit, boolean wait4Finish) {
-							return ((ITradingManagementService)holder.getDelegate()).getEarnRank(start, limit, wait4Finish);
 						}
 
 						/**
@@ -1577,21 +1760,54 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	/*****************V2********************/
 
 	private HomePageMenu menu;
+	
 	public HomePageMenu getHomeMenuList() {
-		getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
+		return getHomeMenuList(false);
+	}
+	
+	public HomePageMenu getHomeMenuList(boolean forceReload) {
 		if (menu==null) {
 			menu = new HomePageMenu();
+			forceReload = true;
 		}
-		 return menu;
+		if(forceReload){
+			AsyncUtils.execCallableAsyncInUI(new IAsyncCallable<Object>() {
+
+				@Override
+				public void call(IAsyncCallback<Object> cb) {
+					try {
+						refreshHomePage();
+						cb.success(null);
+					}catch(Throwable t){
+						cb.failed(t);
+					}
+				}
+			}, new IDataConverter<Object, HomePageMenu>(){
+
+				/* (non-Javadoc)
+				 * @see com.wxxr.mobile.core.async.api.IDataConverter#convert(java.lang.Object)
+				 */
+				@Override
+				public HomePageMenu convert(Object arg0)
+						throws NestedRuntimeException {
+					return menu;
+				}
+				
+			});
+
+		}
+		return menu;
 	}
-	private void refreshHomePage(){
+	
+	private void refreshHomePage() throws Exception {
 		List<BaseMenuItem> homePageItems = new ArrayList<BaseMenuItem>();
 		boolean login = getService(IUserIdentityManager.class).isUserAuthenticated();
 		List<TradingAccountMenuItem> items1 = null;
 		SignInMessageMenuItem sign =null;
 		ChampionShipMessageMenuItem champion = null;
 		try {
-			AppHomePageListVO vo = RestUtils.getRestService(ITradingResource.class).unSecurityAppHome(0, 0);
+			Async<AppHomePageListVO> async = context.getService(IRestProxyService.class).getRestService(ITradingResourceAsync.class,ITradingResource.class).unSecurityAppHome(0, 20);
+			AppHomePageListVO vo = new AsyncFuture<AppHomePageListVO>(async).get();
 			//参数排行榜
 			MegagameRankNUpdateTimeVO m = vo.getRankVo();			
 			if (m!=null) {
@@ -1617,17 +1833,18 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			List<PullMessageVO> pMsg = vo.getPullMessageList();
 			savePullMessages(pMsg);
 			if (login) {
-				SecurityAppHomePageVO svo = RestUtils.getRestService(ITradingProtectedResource.class).securityAppHome();
+				Async<SecurityAppHomePageVO> voasync = context.getService(IRestProxyService.class).getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).securityAppHome();
+				SecurityAppHomePageVO svo = new AsyncFuture<SecurityAppHomePageVO>(voasync).get();
 				//签到信息
 				UserSignVO signVo = svo.getSignMessage();
 				
 				if (signVo!=null) {
 					sign = new SignInMessageMenuItem();
-					sign.setHasSignIn(signVo.isSign());
+					sign.setHasSignIn(signVo.getSign());
 					sign.setType("80");
 					sign.setTitle("每日签到");
 					sign.setDate(StringUtils.isBlank(signVo.getSignDate())?sdf1.format(new Date())+" 00:00":sdf.format(new Date(Long.valueOf(signVo.getSignDate()))));
-					if (signVo.isSign()) {
+					if (signVo.getSign()) {
 						sign.setMessage("今日已签到");
 					}else{
 						sign.setMessage(String.format("可获%d实盘积分", signVo.getRewardVol()));
@@ -1643,6 +1860,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 			
 		} catch (Exception e) {
 			log.warn("Error when get menu info", e);
+			throw e;
 		}
 		
 		
@@ -1660,10 +1878,13 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		if (champion!=null) {//参赛交易盘
 			homePageItems.add(champion);
 		}
-		msg_item = generateMsgMenuItem2();
-		if (msg_item!=null) {//系统消息
-			homePageItems.add(msg_item);
+		if (login) {
+			msg_item = generateMsgMenuItem2();
+			if (msg_item!=null) {//系统消息
+				homePageItems.add(msg_item);
+			}
 		}
+		
 		if (sign!=null&&sign.isHasSignIn()) {//已签到
 			homePageItems.add(sign);
 		}
@@ -1673,12 +1894,14 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}
 		menu.setMenuItems(homePageItems);
 	}
+	
+	
 	private void savePullMessages(List<PullMessageVO> pMsgs) {
 		if (pMsgs!=null&&pMsgs.size()>0) {
 			for (PullMessageVO vo : pMsgs) {
 				PullMessageBean bean=new PullMessageBean();
 				bean.setPullId(vo.getId());
-				bean.setArticleUrl(Utils.getAbsoluteURL(vo.getArticleUrl()));
+				bean.setArticleUrl(vo.getArticleUrl());
 				bean.setMessage(vo.getMessage());
 				bean.setPhone(vo.getPhone());
 				bean.setRead(false);
@@ -1713,13 +1936,17 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		List<PullMessageBean> list = getService(IMessageManagementService.class).getUnReadPullMessage();
 		MessageMenuItem msg_item = new MessageMenuItem();
 		msg_item.setType("61");
-		msg_item.setTitle("操盘咨询");
-		if (list!=null&&list.size()>0) {
-			PullMessageBean msg = list.get(0);
+		msg_item.setTitle("操盘资讯");
+		PullMessageBean msg =  getService(IMessageManagementService.class).getFirstPullMessage();
+		if (msg!=null) {
 			msg_item.setDate(sdf.format(new Date(Long.valueOf(msg.getCreateDate()))));
 			msg_item.setMessage(msg.getMessage());
 		}
-		msg_item.setNum(list==null?0:list.size());
+		int size = 0;
+		if (list!=null) {
+			size = list.size()>20?20:list.size();
+		}
+		msg_item.setNum(size);
 		return msg_item; 
 	}
 	private MessageMenuItem generateMsgMenuItem2(){//生成系统消息菜单项
@@ -1727,9 +1954,15 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		MessageMenuItem msg_item = new MessageMenuItem();
 		msg_item.setType("60");
 		msg_item.setTitle("系统消息");
-		if (list!=null&&list.size()>0) {
-			RemindMessageBean msg = list.get(0);
-			msg_item.setDate(sdf.format(new Date(Long.valueOf(msg.getCreatedDate()))));
+		RemindMessageBean msg = getService(IMessageManagementService.class).getFirstRemindMessage();
+		if (msg!=null) {
+			String date = null;
+			String time = null;
+			if (msg.getAttrs()!=null) {
+				date = msg.getAttrs().get("ms");
+				time = msg.getAttrs().get("time");
+			}
+			msg_item.setDate(StringUtils.isBlank(date)?sdf1.format(new Date())+" "+time:sdf.format(new Date(Long.valueOf(date))));
 			msg_item.setMessage(msg.getTitle());
 		}
 		msg_item.setNum(list==null?0:list.size());
@@ -1739,9 +1972,12 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 
 		@Override
 		public int compare(TradingAccountMenuItem o1, TradingAccountMenuItem o2) {
-			int ret = o1.getType().substring(0, 1).compareTo(o2.getType().substring(0, 1));
+			int ret = o1.getStatus().compareTo(o2.getStatus());
 			if (ret==0) {
-				ret = o1.getDate().compareTo(o2.getDate());
+				ret = o2.getType().substring(0, 1).compareTo(o1.getType().substring(0, 1));
+			}
+			if (ret==0) {
+				ret = o2.getDate().compareTo(o1.getDate());
 			}
 			return ret;
 		}
@@ -1765,20 +2001,20 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 				}
 				trading.setMaxHoldStockName(stockName);
 				trading.setIncome(vo.getTotalGain());
-				trading.setIncomeRate(vo.getTotalGain()*100.0f/vo.getSum());
+				trading.setIncomeRate(vo.getTotalGain()*100.0f/vo.getSum()*1.00f);
 				trading.setStatus(getStockStatus(vo));
 				if (vo.isVirtual()) {
 					trading.setType("0");
 					trading.setTitle("参赛模拟盘");
 				}else if ("ASTOCKT1".equals(vo.getAcctType())) {
 					trading.setType("11");
-					trading.setTitle("挑战交易盘 T+1");
+					trading.setTitle("挑战交易盘 ");
 				}else if("ASTOCKT3".equals(vo.getAcctType())){
 					trading.setType("13");
-					trading.setTitle("挑战交易盘 T+3");
+					trading.setTitle("挑战交易盘 ");
 				}else if("ASTOCKTN".equals(vo.getAcctType())){
 					trading.setType("1d");
-					trading.setTitle("挑战交易盘 T+D");
+					trading.setTitle("挑战交易盘");
 				}
 				tradingItemList.add(trading);
 			}
@@ -1794,7 +2030,7 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		}else if(vo.getStatus()==1){
 			return "0";//可买
 		}
-		return "";
+		return "9";
 	}
 	private BindableListWrapper<DrawMoneyRecordBean> drawMoneyRecords;
 	
@@ -1812,16 +2048,41 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	public BindableListWrapper<DrawMoneyRecordBean> getDrawMoneyRecordList(int start,
 			int limit, boolean wait4Finish) {
 		if (drawMoneyRecordBean_cache==null) {
-			drawMoneyRecordBean_cache = new GenericReloadableEntityCache<Long, DrawMoneyRecordBean, List<DrawMoneyRecordVo>>("drawMoneyRecordBean");
+			drawMoneyRecordBean_cache = new GenericReloadableEntityCache<Long, DrawMoneyRecordBean, List<DrawMoneyRecordVo>>(
+					"drawMoneyRecordBean") {
+				@Override
+				protected Map<String, Object> prepareLoadmoreCommandParameter(
+						BindableListWrapper<DrawMoneyRecordBean> list) {
+					Map<String, Object> params = new HashMap<String, Object>();
+					List<DrawMoneyRecordBean> data = list.getData();
+					int start = data != null ? data.size() : 0;
+					params.put("start", start);
+					params.put("limit", 20);
+					return params;
+				}
+			};
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
         params.put("start", start);
         params.put("limit", limit);
-		drawMoneyRecordBean_cache.forceReload(params,wait4Finish);
 		if (drawMoneyRecords==null) {
 			drawMoneyRecords = drawMoneyRecordBean_cache.getEntities(null, dcomparator);
 		}
+		drawMoneyRecordBean_cache.setCommandParameters(params);
 		drawMoneyRecords.setReloadParameters(params);
+		if(wait4Finish){
+			return AsyncUtils.forceLoadNFetchAsyncInUI(drawMoneyRecordBean_cache, params, 
+					new AsyncFuture<BindableListWrapper<DrawMoneyRecordBean>>(), new IEntityFetcher<BindableListWrapper<DrawMoneyRecordBean>>() {
+
+						@Override
+						public BindableListWrapper<DrawMoneyRecordBean> fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return drawMoneyRecords;
+						}
+					});
+		}else{
+			drawMoneyRecordBean_cache.doReload(true, params, null);
+		}
 		return drawMoneyRecords;
 	}
 
@@ -1829,47 +2090,15 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 	public void createTradingAccount(Long captitalAmount, float capitalRate,
 			boolean virtual, float depositRate, String assetType,
 			String tradingType) {
-		try {
-			CreateTradingAccountCommand cmd = new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType);
-			cmd.setTrdingType(tradingType);
-			Future<StockResultVO> f = context.getService(ICommandExecutor.class).submitCommand(cmd);
-			Object result = f.get();
-			if (result != null && result instanceof StockResultVO) {
-	            StockResultVO vo=(StockResultVO) result;
-	           
-	                if (vo.getSuccOrNot() == 0) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Failed to create trading account, caused by "
-	                                + vo.getCause());
-	                    }
-	                    throw new StockAppBizException(vo.getCause());
-	                }
-	                if (vo.getSuccOrNot() == 1) {
-	                    if (log.isDebugEnabled()) {
-	                        log.debug("Create trading account successfully.");
-	                    }
-	                   getService(IEventRouter.class).routeEvent(new HomePageRefreshRequestEvent());
-	                   throw new StockAppBizException("创建交易盘成功");
-	                }
-	           }			
-		}catch (ExecutionException e) {
-			Throwable t = e.getCause();
-            if( t instanceof CommandConstraintViolatedException){
-                throw (CommandConstraintViolatedException)t;
-            }else if(t instanceof StockAppBizException){
-            	throw (StockAppBizException)t;
-            }else{
-                throw new StockAppBizException("创建交易盘失败");
-            }
-		} catch (InterruptedException e){
-			throw new StockAppBizException("创建交易盘失败");
-		}
-		
+		CreateTradingAccountCommand cmd = new CreateTradingAccountCommand(captitalAmount,  capitalRate,  virtual,  depositRate,assetType);
+		cmd.setTrdingType(tradingType);
+		doCreateTradingAccount(cmd);		
 	}
 	
 	@Override
-	public TradingConfigBean getTradingConfig(String tradingType,
+	public TradingConfigBean getTradingConfig(final String tradingType,
 			boolean isVirtual) {
+		boolean forceLoad = false;
 		if (tradingConfig_Cache==null) {
 			tradingConfig_Cache = new GenericReloadableEntityCache<String, TradingConfigBean, TradingConfigVO>("tradingConfigBean");
 		}
@@ -1877,9 +2106,22 @@ public class TradingManagementServiceImpl extends AbstractModule<IStockAppContex
 		if (bean==null) {
 			bean = new TradingConfigBean();
 			tradingConfig_Cache.putEntity(tradingType, bean);
+			forceLoad = true;
 		}
-		tradingConfig_Cache.forceReload(false);
-		return bean;
+		if(forceLoad){
+			return AsyncUtils.forceLoadNFetchAsyncInUI(tradingConfig_Cache, null, 
+				new AsyncFuture<TradingConfigBean>(), new IEntityFetcher<TradingConfigBean>() {
+
+					@Override
+					public TradingConfigBean fetchFromCache(
+							IBindableEntityCache<?, ?> cache) {
+						return tradingConfig_Cache.getEntity(tradingType);
+					}
+				});
+		}else{
+			tradingConfig_Cache.doReload(false, null, null);
+			return bean;
+		}
 	}
 }
 

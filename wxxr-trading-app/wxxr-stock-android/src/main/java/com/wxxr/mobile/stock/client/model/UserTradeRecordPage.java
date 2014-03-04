@@ -13,12 +13,16 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -36,18 +40,21 @@ public abstract class UserTradeRecordPage extends PageBase {
 	boolean recordNotNullVisible;*/
 
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(allStart,allLimit):null}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getTotalGain(0,20,true):null}", effectingFields="virtualRecordsList")
 	BindableListWrapper<GainBean> allTradeAccountListBean;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(sucStart,sucLimit):null}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService!=null?tradingService.getGain(0,20,true):null}", effectingFields="actualRecordsList")
 	BindableListWrapper<GainBean> successTradeAccountListBean;
 
-	@Field(valueKey = "options",upateAsync=true,binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData(true):null}")
+	@Field(valueKey = "options",binding = "${allTradeAccountListBean!=null?allTradeAccountListBean.getData():null}", visibleWhen = "${curItemId==2}")
 	List<GainBean> actualRecordsList;
 
-	@Field(valueKey = "options",upateAsync=true, binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData(true):null}")
+	@Field(valueKey = "options", binding = "${successTradeAccountListBean!=null?successTradeAccountListBean.getData():null}", visibleWhen = "${curItemId==1}")
 	List<GainBean> virtualRecordsList;
-
+	
+	private ELBeanValueEvaluator<BindableListWrapper> allTradeAccountListBeanUpdater;
+	private ELBeanValueEvaluator<BindableListWrapper> successTradeAccountListBeanUpdater;
+	
 	@Field(valueKey = "checked", attributes = {
 			@Attribute(name = "checked", value = "${curItemId == 1}"),
 			@Attribute(name = "textColor", value = "${curItemId == 1?'resourceId:color/white':'resourceId:color/gray'}") })
@@ -64,35 +71,34 @@ public abstract class UserTradeRecordPage extends PageBase {
 	/*@Field(valueKey = "visible", binding = "${(curItemId == 2)&&(allTradeAccountListBean!=null?(allTradeAccountListBean.data!=null?(allTradeAccountListBean.data.size()>0?false:true):true):true)}")
 	boolean wholeRecordNullVisible;*/
 	
-	@Menu(items = { "left", "right" })
+	@Menu(items = { "left" })
 	private IMenu toolbar;
 
+	@Bean
+	boolean sucessNoMoreDataAlert = false;
 	
 	@Bean
-	private int sucStart = 0;
+	boolean allNoMoreDataAlert = false;
 	
-	@Bean
-	private int sucLimit = 20;
+
+	private int oldDataSize = 0;
+
+	private int newDataSize = 0;
 	
-	@Bean
-	private int allStart = 0;
-	
-	@Bean
-	private int allLimit = 20;
 	@Bean
 	int curItemId = 1;
 	
-	@Field(valueKey = "text",visibleWhen = "${curItemId == 1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId == 1}",attributes= {@Attribute(name="noMoreDataAlert", value="${sucessNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${successTradeAccountListBean!=null&&successTradeAccountListBean.data!=null&&successTradeAccountListBean.data.size()>0?true:false}")})
 	String virtualRefreshView;
 	
-	@Field(valueKey = "text",visibleWhen = "${curItemId == 2}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId == 2}",attributes= {@Attribute(name="noMoreDataAlert", value="${allNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${allTradeAccountListBean!=null&&allTradeAccountListBean.data!=null&&allTradeAccountListBean.data.size()>0?true:false}")})
 	String actualRefreshView;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 
@@ -110,6 +116,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 	
 	void showSucRecords(boolean wait4Finish) {
+		closeAlert();
 		curItemId = 1;
 		registerBean("curItemId", curItemId);
 		if (tradingService != null)
@@ -136,6 +143,7 @@ public abstract class UserTradeRecordPage extends PageBase {
 	}
 
 	void showAllRecords(boolean wait4Finish) {
+		closeAlert();
 		curItemId = 2;
 		registerBean("curItemId", curItemId);
 		if (tradingService != null)
@@ -175,10 +183,10 @@ public abstract class UserTradeRecordPage extends PageBase {
 		return null;
 	}
 
-	@Command(commandName = "virtualRecordsList", navigations = {
+	@Command(commandName = "virtualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails")
 			})
-	CommandResult virtualRecordsList(InputEvent event) {
+	CommandResult virtualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
 			GainBean sucBean = null;
@@ -205,58 +213,120 @@ public abstract class UserTradeRecordPage extends PageBase {
 				result.setPayload(map);
 				result.setResult("operationDetails");
 				updateSelection(new AccidSelection(String.valueOf(accId), isVirtual));
-				//updateSelection(new StockSelection(String.valueOf(accId), isVirtual));
 			}
 			return result;
 		}
 		return null;
 	}
 
+
 	@Command
-	String handleVirtualRefresh(InputEvent event) {
+	String handleVirtualRefresh(ExecutionStep step, InputEvent event, Object result) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showSucRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
-			int completeSize = 0;
-			if(successTradeAccountListBean != null)
-				completeSize = successTradeAccountListBean.getData().size();
-			sucStart = completeSize;
-			if(tradingService != null) {
-				tradingService.getGain(sucStart, sucLimit, true);
+			sucessNoMoreDataAlert = false;
+			registerBean("sucessNoMoreDataAlert", sucessNoMoreDataAlert);
+			if(successTradeAccountListBean != null) {
+
+				switch (step) {
+				case PROCESS:
+					if(successTradeAccountListBean.getData() != null && successTradeAccountListBean.getData().size()>0)
+						oldDataSize  = successTradeAccountListBean.getData().size();
+					
+					successTradeAccountListBean.loadMoreData();
+					break;
+				case NAVIGATION:
+					if(successTradeAccountListBean.getData() != null && successTradeAccountListBean.getData().size()>0) {
+						newDataSize  = successTradeAccountListBean.getData().size();
+					}
+					
+					if(newDataSize <= oldDataSize) {
+						sucessNoMoreDataAlert = true;
+						registerBean("sucessNoMoreDataAlert", sucessNoMoreDataAlert);
+					} else {
+						return null;
+					}
+					
+				default:
+					break;
+				}
+			
 			}
 		}
 		return null;
 	}
-
+	
+	
 	@Command
-	String handleActualRefresh(InputEvent event) {
+	String handleActualRefresh(ExecutionStep step, InputEvent event, Object result) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showAllRecords(true);
 		} else if(event.getEventType().equals("BottomRefresh")) {
-			int completeSize = 0;
-			if(allTradeAccountListBean != null)
-				completeSize = allTradeAccountListBean.getData().size();
-			allStart = completeSize;
-			if(tradingService != null) {
-				tradingService.getTotalGain(allStart, allLimit, true);
+			allNoMoreDataAlert = false;
+			registerBean("allNoMoreDataAlert", allNoMoreDataAlert);
+			if(allTradeAccountListBean != null) {
+				switch (step) {
+				case PROCESS:
+					if(allTradeAccountListBean.getData() != null && allTradeAccountListBean.getData().size()>0)
+						oldDataSize = allTradeAccountListBean.getData().size();
+					
+					allTradeAccountListBean.loadMoreData();
+					break;
+				case NAVIGATION:
+					if(allTradeAccountListBean.getData() != null && allTradeAccountListBean.getData().size()>0) {
+						newDataSize = allTradeAccountListBean.getData().size();
+					}
+					
+					if(newDataSize <= oldDataSize) {
+						allNoMoreDataAlert = true;
+						registerBean("allNoMoreDataAlert", allNoMoreDataAlert);
+					} else {
+						return null;
+					}
+					
+				default:
+					break;
+				}
+				//myChallengeListBean.loadMoreData();
 			}
 		}
 		return null;
 	}
 
 	
+	private void closeAlert() {
+		allNoMoreDataAlert = false;
+		sucessNoMoreDataAlert = false;
+		
+		registerBean("allNoMoreDataAlert", allNoMoreDataAlert);
+		registerBean("sucessNoMoreDataAlert", sucessNoMoreDataAlert);
+	}
+	
 	@Command
-	String handleRetryClick(InputEvent event) {
-		if(curItemId  == 1) {
-			if(tradingService != null) {
-				int completeSize = successTradeAccountListBean.getData().size();
-				tradingService.getGain(completeSize, sucLimit);
-			}
-		} else if(curItemId == 0) {
-			int completeSize = allTradeAccountListBean.getData().size();
-			tradingService.getTotalGain(completeSize, allLimit);
-		}
+	String handlerReTryClicked(InputEvent event) {
+		allTradeAccountListBeanUpdater.doEvaluate();
+		successTradeAccountListBeanUpdater.doEvaluate();
+//		if(curItemId  == 1) {
+//			if(tradingService != null) {
+//				//int completeSize = successTradeAccountListBean.getData().size();
+////				tradingService.getGain(0, 20);
+//			}
+//			virtualRecordsListField.getDomainModel().doEvaluate();
+//			
+//		} else if(curItemId == 2) {
+//			if(tradingService != null) {
+//			//	int completeSize = allTradeAccountListBean.getData().size();
+////				tradingService.getTotalGain(0, 20);
+//			}
+//			actualRecordsListField.getDomainModel().doEvaluate();
+//		}
 		
 		return null;
+	}
+	
+	@OnHide
+	void DestroyData() {
+		closeAlert();
 	}
 }

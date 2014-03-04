@@ -25,7 +25,7 @@
             <TextView 
                  android:layout_width="wrap_content"
     			android:layout_height="wrap_content"	
-    			android:text="本地帐号:"
+    			android:text="本地账号:"
     			android:layout_marginLeft="10dip"
     			android:layout_alignParentLeft="true"
     			android:textColor="#B2B8B8"
@@ -83,11 +83,10 @@
     <Button 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/red_btn"
         android:text="退出登录"
         bind:field="*"
         bind:on_Click="logout"
-        style="@style/ButtonLabelStyle"
+        style="@style/LoginRegisterBtnStyle"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="20dp"

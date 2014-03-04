@@ -76,7 +76,7 @@ public abstract class ChampionWeekShipSelectorItemView extends ViewBase implemen
 
 			@Override
 			public Object getItem(int i) {
-				return data.length>0?data[i]:null;
+				return data!=null&&data.length>0?data[i]:null;
 			}
 
 			@Override

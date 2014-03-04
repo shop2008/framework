@@ -28,7 +28,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="--"
-                    android:textColor="@color/black"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp"
                     bind:field="stockName" />
 
@@ -37,8 +37,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="委托价格"
-                    android:textColor="@color/black"
+                    android:text="买入价格"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp" />
 
                 <TextView
@@ -46,8 +46,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="委托数量"
-                    android:textColor="@color/black"
+                    android:text="买入数量"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -62,7 +62,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="--"
-                    android:textColor="@color/black"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp"
                     bind:field="stockCode" />
 
@@ -72,7 +72,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="--"
-                    android:textColor="@color/black"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp"
                     bind:field="buy" />
 
@@ -82,22 +82,30 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="--"
-                    android:textColor="@color/black"
+                    android:textColor="#3d3e38"
                     android:textSize="14sp"
                     bind:field="amount" />
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="3"
             android:gravity="center"
-            android:text="撤  单"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            bind:field="status"
-            bind:on_Click="handlerCancelClick"/>
+            android:paddingLeft="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/precssiong_tv_bg"
+                android:gravity="center"
+                android:text="撤  单"
+                android:textColor="#3d3e38"
+                android:textSize="15sp"
+                bind:field="status"
+                bind:on_Click="handlerCancelClick" />
+        </LinearLayout>
     </LinearLayout>
 
     <include layout="@layout/hlines" />

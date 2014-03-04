@@ -127,8 +127,10 @@ public class MinuteLineViewFieldBinding extends BasicFieldBinding implements IOb
 		if(comp!=null){
 			MinuteLineView view = (MinuteLineView)getUIControl();
 			String stockClose = comp.getAttribute(MinuteLineViewKeys.stockClose);
-			if(stockClose!=null){
-				view.setStockClose(stockClose);
+			String stockCode = comp.getAttribute(MinuteLineViewKeys.stockCode);
+			String stockMarket = comp.getAttribute(MinuteLineViewKeys.stockMarket);
+			if(stockClose!=null && stockCode!=null && stockMarket!=null){
+				view.setStockInfo(stockClose,stockCode,stockMarket);
 			}
 			Boolean stockStatus = comp.getAttribute(MinuteLineViewKeys.stockStatus);
 			if(stockStatus!=null){

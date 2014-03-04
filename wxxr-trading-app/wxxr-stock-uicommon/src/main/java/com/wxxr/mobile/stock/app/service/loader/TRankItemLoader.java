@@ -6,12 +6,13 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
+import com.wxxr.mobile.stock.app.command.GetTRankItemsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVO;
 import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 
@@ -19,39 +20,16 @@ import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
  * @author neillin
  *
  */
-public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBean, MegagameRankVO> {
-
-	private static final String COMMAND_NAME = "GetTRankItems";
-	
-	@NetworkConstraint
-	private static class GetTRankItemsCommand implements ICommand<List<MegagameRankVO>> {
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		@Override
-		public Class<List<MegagameRankVO>> getResultType() {
-			Class clazz = List.class;
-			return clazz;
-		}
-
-		@Override
-		public void validate() {
-		}
-		
-	}
+public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBean, MegagameRankVO, GetTRankItemsCommand> {
 	
 	@Override
-	public ICommand<List<MegagameRankVO>> createCommand(
+	public GetTRankItemsCommand createCommand(
 			Map<String, Object> params) {
 		return new GetTRankItemsCommand();
 	}
 
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<MegagameRankVO> result,
+	public boolean handleCommandResult(GetTRankItemsCommand cmd,List<MegagameRankVO> result,
 			IReloadableEntityCache<String, MegagameRankBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;
@@ -85,18 +63,24 @@ public class TRankItemLoader extends AbstractEntityLoader<String, MegagameRankBe
 
 
 	@Override
-	protected List<MegagameRankVO> executeCommand(ICommand<List<MegagameRankVO>> command)
-			throws Exception {
+	protected void executeCommand(GetTRankItemsCommand cmd, IAsyncCallback<List<MegagameRankVO>> callback) {
 		
-		MegagameRankVOs vos=getRestService(ITradingResource.class).getTMegagameRank();
-		return vos==null?null:vos.getMegagameRanks();
+		getRestService(ITradingResourceAsync.class,ITradingResource.class).getTMegagameRank().
+		onResult(new DelegateCallback<MegagameRankVOs, List<MegagameRankVO>>(callback) {
+
+			@Override
+			protected List<MegagameRankVO> getTargetValue(MegagameRankVOs vos) {
+				return vos==null?null:vos.getMegagameRanks();
+			}
+		});
 	}
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetTRankItemsCommand.COMMAND_NAME;
 	}
 
 
 
 }
+

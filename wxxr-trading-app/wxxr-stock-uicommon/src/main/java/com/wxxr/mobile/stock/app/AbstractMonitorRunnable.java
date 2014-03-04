@@ -3,7 +3,7 @@
  */
 package com.wxxr.mobile.stock.app;
 
-import com.wxxr.mobile.core.api.IProgressMonitor;
+import com.wxxr.mobile.core.async.api.IProgressMonitor;
 import com.wxxr.mobile.core.log.api.Trace;
 
 /**

@@ -3,88 +3,28 @@
  */
 package com.wxxr.mobile.stock.app.service.handler;
 
-import com.wxxr.mobile.core.command.api.CommandException;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
-import com.wxxr.mobile.core.command.api.ICommandHandler;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 
 /**
  * @author wangyan
  *
  */
-public class ApplyDrawMoneyHandler implements ICommandHandler {
+public class ApplyDrawMoneyHandler extends BasicCommandHandler<StockResultVO,ApplyDrawMoneyCommand> {
 
-	private ICommandExecutionContext context;
 	public static final String COMMAND_NAME="ApplyDrawMoneyCommand";
 	
 	
-	public static class ApplyDrawMoneyCommand implements ICommand<StockResultVO>{
-
-		private long amount;
-		
-		
-		/**
-		 * @return the amount
-		 */
-		public long getAmount() {
-			return amount;
-		}
-
-		/**
-		 * @param amount the amount to set
-		 */
-		public void setAmount(long amount) {
-			this.amount = amount;
-		}
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@Override
-		public Class<StockResultVO> getResultType() {
-			return StockResultVO.class;
-		}
-
-		@Override
-		public void validate() {
-			if(amount<=0){
-				throw new CommandException("提取金额必须大于0");
-			}
-			if (amount%10000!=0) {
-				throw new CommandException("提取金额必须为100整数倍");
-			}
-		}
-		
-	}
 	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#destroy()
+	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	public void destroy() {
-
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T execute(ICommand<T> cmd) throws Exception {
+	public void execute(final ApplyDrawMoneyCommand cmd, IAsyncCallback<StockResultVO> callback) {
 		ApplyDrawMoneyCommand command=(ApplyDrawMoneyCommand)cmd;
-
-		StockResultVO result=context.getKernelContext().getService(IRestProxyService.class).
-			getRestService(ITradingProtectedResource.class).drawMoney(command.getAmount());
-		return (T)  result;
+		getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).drawMoney(command.getAmount()).onResult(callback);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#init(com.wxxr.mobile.core.command.api.ICommandExecutionContext)
-	 */
-	@Override
-	public void init(ICommandExecutionContext context) {
-		this.context=context;
-	}
 
 }

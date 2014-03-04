@@ -25,10 +25,9 @@
 
         <com.wxxr.mobile.stock.client.widget.MinuteLineView
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="170dp"
             android:layout_marginLeft="4dip"
             android:layout_marginRight="4dip"
-            android:layout_marginTop="2dip"
             bind:updatingViewId="resourceId:id/progress"
             bind:updateFaieldId="resourceId:id/failed"
             bind:updateAllId="resourceId:id/all"

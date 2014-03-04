@@ -37,6 +37,10 @@ public class PullMessageBean implements IBindableBean {
 	}
 
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 	/**
 	 * @return the message

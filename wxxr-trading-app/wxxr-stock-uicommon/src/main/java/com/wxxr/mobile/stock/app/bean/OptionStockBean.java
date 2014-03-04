@@ -85,5 +85,9 @@ public class OptionStockBean implements IBindableBean{
 		emitter.removePropertyChangeListener(listener);
 	}
 	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 }

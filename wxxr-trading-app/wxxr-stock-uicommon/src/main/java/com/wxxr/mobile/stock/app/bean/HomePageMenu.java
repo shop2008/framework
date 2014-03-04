@@ -34,6 +34,12 @@ public class HomePageMenu implements IBindableBean {
 		emitter.removePropertyChangeListener(listener);
 	}
 
+	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 	public List<BaseMenuItem> getMenuItems() {
 		return menuItems;
 	}

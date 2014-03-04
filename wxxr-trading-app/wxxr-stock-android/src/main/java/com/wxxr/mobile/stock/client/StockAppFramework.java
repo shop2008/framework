@@ -73,6 +73,11 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		public IAndroidFramework getApplication() {
 			return StockAppFramework.this;
 		}
+
+		@Override
+		public void invokeLater(Runnable task) {
+			runOnUIThread(task,0,null);
+		}
 		
 	};
 	
@@ -117,7 +122,7 @@ public class StockAppFramework extends AndroidFramework<IStockAppContext, Abstra
 		registerKernelModule(new UserBasedSessionManagerModule<IStockAppContext>());
 		HttpRpcServiceModule<IStockAppContext> m = new HttpRpcServiceModule<IStockAppContext>();
 		m.setEnablegzip(false);
-		m.setConnectionPoolSize(30);
+		m.setConnectionPoolSize(10);
 		registerKernelModule(m);
 		RestEasyClientModule<IStockAppContext> rest = new RestEasyClientModule<IStockAppContext>();
 //		rest.getClient().register(GSONProvider.class);

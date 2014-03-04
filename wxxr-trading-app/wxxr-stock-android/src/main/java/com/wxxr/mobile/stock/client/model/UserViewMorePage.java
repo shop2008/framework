@@ -9,10 +9,10 @@ import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
-import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
@@ -22,6 +22,9 @@ import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
+import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
@@ -40,18 +43,20 @@ public abstract class UserViewMorePage extends PageBase implements
 	
 	@Bean(type=BindingType.Pojo, express="${usrService.getMyUserInfo()}")
 	UserBean userInfo;
-	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeAStart,myHomeALimit,false)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeAStart,myHomeALimit,false)}", effectingFields="actualRecordList")
 	BindableListWrapper<GainBean> myChallengeListBean;
-
-	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeVStart,myHomeVLimit,true)}")
+	private ELBeanValueEvaluator<BindableListWrapper> myChallengeListBeanUpdater;
+	
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMorePersonalRecords(myHomeVStart,myHomeVLimit,true)}", effectingFields="virtualRecordsList")
 	BindableListWrapper<GainBean> myJoinListBean;
+	private ELBeanValueEvaluator<BindableListWrapper> myJoinListBeanUpdater;
 
-	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.getData(true):null}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${myChallengeListBean!=null?myChallengeListBean.getData():null}",  visibleWhen="${curItemId==0}")
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.getData(true):null}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${myJoinListBean!=null?myJoinListBean.getData():null}", visibleWhen="${curItemId==1}")
 	List<GainBean> virtualRecordsList;
-
+	
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
 	boolean actualRecordBtn;
 
@@ -87,21 +92,31 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Menu(items = { "left"})
 	private IMenu toolbar;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
 	}
 
-	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name="noMoreDataAlert", value="${virtualNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${myJoinListBean!=null&&myJoinListBean.data!=null&&myJoinListBean.data.size()>0?true:false}")})
 	String virtualRefreshView;
 	
-	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name="noMoreDataAlert", value="${actualNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${myChallengeListBean!=null&&myChallengeListBean.data!=null&&myChallengeListBean.data.size()>0?true:false}")})
 	String actualRefreshView;
 	
+	@Bean
+	boolean virtualNoMoreDataAlert = false;
 	
+	@Bean
+	boolean actualNoMoreDataAlert = false;
+
+
+	private int oldDataSize = 0;
+
+
+	private int newDataSize = 0;
 	@OnShow
 	void initData() {
 		getAppToolbar().setTitle(userInfo.getNickName()+"的交易", null);
@@ -115,6 +130,10 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Command
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showActualRecords(InputEvent event) {
+		
+		closeAlert();
+		
+		
 		curItemId = 0;
 		registerBean("curItemId", 0);
 
@@ -125,7 +144,19 @@ public abstract class UserViewMorePage extends PageBase implements
 
 		return null;
 	}
+	private void closeAlert() {
+		actualNoMoreDataAlert = false;
+		virtualNoMoreDataAlert = false;
+		
+		registerBean("actualNoMoreDataAlert", actualNoMoreDataAlert);
+		registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+	}
 
+	@OnHide
+	void DestroyData() {
+		closeAlert();
+	}
+	
 	/**
 	 * 参赛交易盘操作记录
 	 * 
@@ -135,7 +166,7 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Command
 	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showVirtualRecords(InputEvent event) {
-		
+		closeAlert();
 		curItemId = 1;
 		registerBean("curItemId", 1);
 
@@ -149,7 +180,11 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Command(commandName = "virtualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") ,
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView")})
 	CommandResult virtualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -167,6 +202,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				Long accId = virtualBean.getTradingAccountId();
 				String tradeStatus = virtualBean.getOver();
 				Boolean isVirtual = virtualBean.getVirtual();
+				String accType = virtualBean.getAcctType();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
@@ -179,10 +215,26 @@ public abstract class UserViewMorePage extends PageBase implements
 					int status = virtualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
-						result.setResult("SellOut");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("SellOut");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("SellOutT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("SellOutTD");
+							}
+						}
 					} else if (status == 1) {
 						// 进入买入界面
-						result.setResult("BuyIn");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("BuyIn");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("BuyInT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("BuyInTD");
+							}
+						}
 					}
 				}
 				updateSelection(new AccidSelection(String.valueOf(accId),
@@ -196,7 +248,11 @@ public abstract class UserViewMorePage extends PageBase implements
 	@Command(commandName = "actualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage"),
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView") })
 	CommandResult actualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -215,6 +271,7 @@ public abstract class UserViewMorePage extends PageBase implements
 				Long accId = actualBean.getTradingAccountId();
 				String tradeStatus = actualBean.getOver();
 				Boolean isVirtual = actualBean.getVirtual();
+				String accType = actualBean.getAcctType();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accId", accId);
@@ -229,10 +286,27 @@ public abstract class UserViewMorePage extends PageBase implements
 					int status = actualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
-						result.setResult("SellOut");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("SellOut");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("SellOutT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("SellOutTD");
+							}
+						}
+						//result.setResult("SellOut");
 					} else if (status == 1) {
 						// 进入买入界面
-						result.setResult("BuyIn");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("BuyIn");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("BuyInT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("BuyInTD");
+							}
+						}
 					}
 				}
 				updateSelection(new AccidSelection(String.valueOf(accId),
@@ -244,21 +318,40 @@ public abstract class UserViewMorePage extends PageBase implements
 	}
 
 	@Command
-	String handleActualRefresh(InputEvent event) {
+	String handleActualRefresh(ExecutionStep step, InputEvent event, Object result) {
 			
 		if(event.getEventType().equals("TopRefresh")) {
 			if (usrService != null) {
-					usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false, true);
+					usrService.getMorePersonalRecords(0, myChallengeListBean.getData().size(), false);
 				}
 		} else if(event.getEventType().equals("BottomRefresh")) {
-			int completeSize = 0;
-			if(myChallengeListBean != null)
-				completeSize = myChallengeListBean.getData().size();
-			myHomeAStart = completeSize;
-			
-			if(usrService != null) {
-				usrService.getMorePersonalRecords(myHomeAStart, myHomeALimit, false, true);
+			closeAlert();
+			if(myChallengeListBean != null) {
+				switch (step) {
+				case PROCESS:
+					if(myChallengeListBean.getData() != null && myChallengeListBean.getData().size()>0)
+						oldDataSize = myChallengeListBean.getData().size();
+					
+					myChallengeListBean.loadMoreData();
+					break;
+				case NAVIGATION:
+					if(myChallengeListBean.getData() != null && myChallengeListBean.getData().size()>0) {
+						newDataSize = myChallengeListBean.getData().size();
+					}
+					
+					if(newDataSize <= oldDataSize) {
+						actualNoMoreDataAlert = true;
+						registerBean("actualNoMoreDataAlert", actualNoMoreDataAlert);
+					} else {
+						return null;
+					}
+					
+				default:
+					break;
+				}
+				//myChallengeListBean.loadMoreData();
 			}
+			
 		}
 		return null;
 	}
@@ -292,20 +385,39 @@ public abstract class UserViewMorePage extends PageBase implements
 //	}
 
 	@Command
-	String handleVirtualRefresh(InputEvent event) {
+	String handleVirtualRefresh(ExecutionStep step, InputEvent event, Object result) {
 			if (event.getEventType().equals("TopRefresh")) {
 				// 用户自己的挑战交易记录
 				if (usrService != null) {
 					usrService.getMorePersonalRecords(0, myJoinListBean
-							.getData().size(), true, true);
+							.getData().size(), true);
 				}
 			} else if(event.getEventType().equals("BottomRefresh")) {
-				int completeSize = 0;
-				if(myJoinListBean != null)
-					completeSize = myJoinListBean.getData().size();
-				myHomeVStart += completeSize;
-				if(usrService != null) {
-					usrService.getMorePersonalRecords(myHomeVStart, myHomeVLimit, true, true);
+				virtualNoMoreDataAlert = false;
+				registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+				if(myJoinListBean != null) {
+					switch (step) {
+					case PROCESS:
+						if(myJoinListBean.getData() != null && myJoinListBean.getData().size()>0)
+							oldDataSize  = myJoinListBean.getData().size();
+						
+						myJoinListBean.loadMoreData();
+						break;
+					case NAVIGATION:
+						if(myJoinListBean.getData() != null && myJoinListBean.getData().size()>0) {
+							newDataSize  = myJoinListBean.getData().size();
+						}
+						
+						if(newDataSize <= oldDataSize) {
+							virtualNoMoreDataAlert = true;
+							registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+						} else {
+							return null;
+						}
+						
+					default:
+						break;
+					}
 				}
 			}
 		return null;
@@ -331,12 +443,15 @@ public abstract class UserViewMorePage extends PageBase implements
 
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		
-		if(curItemId == 0) {
-			usrService.getMorePersonalRecords(0, 20, false);
-		} else if(curItemId == 1) {
-			usrService.getMorePersonalRecords(0, 20, true);
-		}
+		myChallengeListBeanUpdater.doEvaluate();
+		myJoinListBeanUpdater.doEvaluate();
+//		if(curItemId == 0) {
+////			usrService.getMorePersonalRecords(0, 20, false);
+//			myChallengeListBeanUpdater.doEvaluate();
+//		} else if(curItemId == 1) {
+////			usrService.getMorePersonalRecords(0, 20, true);
+//			myJoinListBeanUpdater.doEvaluate();
+//		}
 		return null;
 	}
 }

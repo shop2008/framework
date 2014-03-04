@@ -1,11 +1,19 @@
 package com.wxxr.mobile.stock.app.model;
 
+import com.wxxr.javax.validation.constraints.NotNull;
+import com.wxxr.javax.validation.constraints.Size;
+
 public class UserRegCallback {
 	
+	@NotNull
 	private String userName;
 
+	@NotNull
+	@Size(min=6,max=12)
 	private String password;
 	
+	@NotNull
+	@Size(min=6,max=12)
 	private String retypePassword;
 	
 	

@@ -12,4 +12,12 @@ public interface IClientInfoService {
 	 * 是否提示更新
 	 */
 	boolean alertUpdateEnabled();
+	
+	void setGuideGainned(boolean gainnd, String phoneNum);
+	
+	boolean getGuideGainnedByUserId(String phoneNum);
+	
+	boolean alertUpdateDialogShown();
+	
+	void updateDialogShowStatus(boolean isShown);
 }

@@ -12,27 +12,38 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:gravity="center"
-        android:text="提示"
+        android:text="版本有更新"
         android:textColor="@color/white"
         android:textSize="20sp" />
 
-
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.52"
+        android:background="#404040" />
 
     <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:gravity="center" >
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginBottom="5dp"
-            android:text="版本有更新，是否更新到最新版本？"
+            android:layout_marginLeft="8dp"
+            android:text="1、版本有更新，是否更新到最新版本？\n2、更新内容提示"
+            android:gravity="center_vertical|left"
             android:textColor="@color/white"
-        android:textSize="18sp" />
+            bind:field="updateDesc"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +61,6 @@
             android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:background="@drawable/red_button_small"
-            android:padding="15dp"
             android:text="是"
             android:textColor="#e1e1e1"
             android:textSize="14sp"
@@ -64,7 +74,6 @@
             android:layout_marginLeft="4dp"
             android:layout_weight="1"
             android:background="@drawable/red_button_small"
-            android:padding="15dp"
             android:text="下次再说"
             android:textColor="#e1e1e1"
             android:textSize="14sp"

@@ -29,7 +29,7 @@ public abstract class ConstructUsPage extends PageBase {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
@@ -41,20 +41,6 @@ public abstract class ConstructUsPage extends PageBase {
 	void initData() {
 		vertionValue = AppUtils.getFramework().getApplicationVersion();
 		registerBean("vertionValue", vertionValue);
-	}
-	/**
-	 * 标题栏-"返回"按钮事件处理
-	 * 
-	 * @param event
-	 * @return
-	 */
-	@Command(commandName = "back", description = "Back To Last UI")
-	String back(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			getUIContext().getWorkbenchManager().getPageNavigator()
-					.hidePage(this);
-		}
-		return null;
 	}
 
 	@Command

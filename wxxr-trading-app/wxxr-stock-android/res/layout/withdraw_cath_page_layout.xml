@@ -226,9 +226,9 @@
             android:layout_marginBottom="5dp"
             android:background="@drawable/red_btn_selector"
             android:text="提  交 "
-            style="@style/ButtonLabelStyle"
+            style="@style/LoginRegisterBtnStyle"
             bind:field="commitBtn"
-            bind:on_Click="commit@EditablePageBtnClickedDecorator" />
+            bind:on_Click="commit" />
   
 
     <LinearLayout

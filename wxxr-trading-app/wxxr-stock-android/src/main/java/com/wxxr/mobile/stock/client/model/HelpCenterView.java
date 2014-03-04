@@ -25,12 +25,13 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.ArticleBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 
 /**
  * @author neillin
  *
  */
-@View(name="helpCenter", description="帮助中心")
+@View(name="helpCenter", description="帮助中心", provideSelection = true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.help_center_page_layout")
 public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	static Trace log = Trace.getLogger(HelpCenterView.class);
@@ -53,17 +54,18 @@ public abstract class HelpCenterView extends ViewBase implements IModelUpdater {
 	
  
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
-				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
+				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style",visibleWhen="${true}")
 			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
 	)
 	String toolbarClickedLeft(InputEvent event) {
+		updateSelection(new StockSelection());
 		return "";
 	}
 	
 	@Command
 	String handleRefresh(InputEvent event) {
 		if("TopRefresh".equals(event.getEventType())) {
-			articleService.getHelpArticles(0, 10, true);
+			articleService.getHelpArticles(0, 10);
 		}
 		return null;
 	}	

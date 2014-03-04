@@ -55,8 +55,8 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 	String date;
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
-	/*@Field(valueKey="enabled", binding="${accountBean.virtual==true?false:true}")
-	boolean type;*/
+	@Field(valueKey="enabled", binding="${accountBean.virtual==true?false:true}")
+	boolean type;
 	
 	
 	@Convertor(params={@Parameter(name="format", value="%.0f")})
@@ -78,8 +78,7 @@ public abstract class UserTradeRecordItemView extends ViewBase implements IModel
 			@Parameter(name="format", value="%.2f"),
 			@Parameter(name="multiple",value="100.00f"),
 			@Parameter(name="formatUnit",value="元"),
-			@Parameter(name="nullString",value="--"),
-			@Parameter(name="plusString", value="+")
+			@Parameter(name="nullString",value="--")
 			}
 	)
 	StockLong2StringConvertor profitConvertor;

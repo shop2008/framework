@@ -13,7 +13,7 @@
         android:layout_margin="5dp"
         android:gravity="center_horizontal"
         android:padding="8dp"
-        android:text="已领取1000实盘积分"
+        android:text="已领取实盘积分奖励"
         android:textColor="@color/white"
         android:textSize="20sp" />
 
@@ -29,19 +29,13 @@
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:background="@drawable/red_button_small"
-            android:padding="15dp"
             android:text="知道 了"
             android:textColor="@color/white"
             android:textSize="14sp"
             bind:field="*"
             bind:on_Click="done" />
-
-       
-        
-        
     </LinearLayout>
 
 </LinearLayout>

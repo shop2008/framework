@@ -8,19 +8,22 @@ import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
-import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -34,18 +37,19 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	@Bean(type = BindingType.Service)
 	IUserLoginManagementService usrService;
-	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeAStart,otherHomeALimit,false)):null}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeAStart,otherHomeALimit,false)):null}", effectingFields="actualRecordList")
 	BindableListWrapper<GainBean> otherChallengeListBean;
+	ELBeanValueEvaluator<BindableListWrapper> otherChallengeListBeanUpdater;
 
-	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeVStart,otherHomeVLimit,true)):null}")
+	@Bean(type=BindingType.Pojo,express="${userId!=null?(usrService.getMoreOtherPersonal(userId,otherHomeVStart,otherHomeVLimit,true)):null}", effectingFields="virtualRecordsList")
 	BindableListWrapper<GainBean> otherJoinListBean;
+	ELBeanValueEvaluator<BindableListWrapper> otherJoinListBeanUpdater;
 	
-	@Field(valueKey = "options", upateAsync=true,binding = "${otherChallengeListBean!=null?otherChallengeListBean.getData(true):null}", visibleWhen = "${curItemId == 0}")
+	@Field(valueKey = "options", binding = "${otherChallengeListBean!=null?otherChallengeListBean.getData():null}", visibleWhen = "${curItemId == 0}")
 	List<GainBean> actualRecordList;
 
-	@Field(valueKey = "options", upateAsync=true,binding = "${otherJoinListBean!=null?otherJoinListBean.getData(true):null}", visibleWhen = "${curItemId == 1}")
+	@Field(valueKey = "options", binding = "${otherJoinListBean!=null?otherJoinListBean.getData():null}", visibleWhen = "${curItemId == 1}")
 	List<GainBean> virtualRecordsList;
-
 	@Field(valueKey = "checked", attributes = { @Attribute(name = "checked", value = "${curItemId == 0}")})
 	boolean actualRecordBtn;
 
@@ -75,14 +79,19 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Bean
 	boolean isVirtual;
 	
-	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId==1}",attributes= {@Attribute(name="noMoreDataAlert", value="${virtualNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${otherJoinListBean!=null&&otherJoinListBean.data!=null&&otherJoinListBean.data.size()>0?true:false}")})
 	String virtualRefreshView;
 	
-	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+	@Field(valueKey = "text",visibleWhen = "${curItemId==0}",attributes= {@Attribute(name="noMoreDataAlert", value="${actualNoMoreDataAlert}"),@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "${otherChallengeListBean!=null&&otherChallengeListBean.data!=null&&otherChallengeListBean.data.size()>0?true:false}")})
 	String actualRefreshView;
 	
+	@Bean
+	boolean virtualNoMoreDataAlert = false;
+	
+	@Bean
+	boolean actualNoMoreDataAlert = false;
 	@OnShow
 	void initData() {
 		if(nickName != null) {
@@ -97,11 +106,12 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Bean
 	int curItemId = 1;
 	
-	@SuppressWarnings("unused")
 	@Menu(items = { "left"})
 	private IMenu toolbar;
+	private int oldDataSize;
+	private int newDataSize;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -114,8 +124,8 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 * @return
 	 */
 	@Command
-	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showActualRecords(InputEvent event) {
+		closeAlert();
 		curItemId = 0;
 		registerBean("curItemId", 0);
 
@@ -134,14 +144,13 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	 * @return
 	 */
 	@Command
-	//@ExeGuard(title = "提示", message = "正在获取数据，请稍后...", silentPeriod = 500, cancellable = true)
 	String showVirtualRecords(InputEvent event) {
-		
+		closeAlert();
 		curItemId = 1;
 		registerBean("curItemId", 1);
 
 		if (usrService != null) {
-			usrService.getMoreOtherPersonal(userId,0, otherChallengeListBean.getData().size(), true);
+			usrService.getMoreOtherPersonal(userId,0, otherJoinListBean.getData().size(), true);
 		}
 
 		return null;
@@ -150,7 +159,11 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Command(commandName = "virtualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage"),
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView") })
 	CommandResult virtualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -168,6 +181,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 				Long accId = virtualBean.getTradingAccountId();
 				String tradeStatus = virtualBean.getOver();
 				Boolean isVirtual = virtualBean.getVirtual();
+				String accType = virtualBean.getAcctType();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accid", accId);
@@ -180,10 +194,27 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 					int status = virtualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
-						result.setResult("SellOut");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("SellOut");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("SellOutT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("SellOutTD");
+							}
+						}
 					} else if (status == 1) {
 						// 进入买入界面
-						result.setResult("BuyIn");
+						//result.setResult("BuyIn");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("BuyIn");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("BuyInT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("BuyInTD");
+							}
+						}
 					}
 				}
 				updateSelection(new AccidSelection(String.valueOf(accId),
@@ -197,7 +228,11 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 	@Command(commandName = "actualRecordItemClicked", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage"),
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView") })
 	CommandResult actualRecordItemClicked(InputEvent event) {
 		if (event.getEventType().equals(InputEvent.EVENT_TYPE_ITEM_CLICK)) {
 			int position = (Integer) event.getProperty("position");
@@ -216,6 +251,7 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 				Long accId = actualBean.getTradingAccountId();
 				String tradeStatus = actualBean.getOver();
 				Boolean isVirtual = actualBean.getVirtual();
+				String accType = actualBean.getAcctType();
 				result = new CommandResult();
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("accId", accId);
@@ -230,10 +266,28 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 					int status = actualBean.getStatus();
 					if (status == 0) {
 						// 进入卖出界面
-						result.setResult("SellOut");
+						//result.setResult("SellOut");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("SellOut");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("SellOutT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("SellOutTD");
+							}
+						}
 					} else if (status == 1) {
 						// 进入买入界面
-						result.setResult("BuyIn");
+						//result.setResult("BuyIn");
+						if(accType != null) {
+							if(accType.equals("ASTOCKT1"))
+								result.setResult("BuyIn");
+							else if(accType.equals("ASTOCKT3")) {
+								result.setResult("BuyInT3");
+							} else if(accType.equals("ASTOCKTN")) {
+								result.setResult("BuyInTD");
+							}
+						}
 					}
 				}
 				updateSelection(new AccidSelection(String.valueOf(accId),
@@ -246,18 +300,37 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	
 	@Command
-	String handleActualTopRefresh(InputEvent event) {
+	String handleActualRefresh(ExecutionStep step, InputEvent event, Object result) {
 			
 		
 		if (event.getEventType().equals("TopRefresh")) {
 			showActualRecords(event);
 		} else if(event.getEventType().equals("BottomRefresh")) {
-			int completeSize = 0;
-			if(otherChallengeListBean != null)
-				completeSize = otherChallengeListBean.getData().size();
-			otherHomeAStart = completeSize;
-			if(usrService != null) {
-				usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
+			actualNoMoreDataAlert = false;
+			registerBean("actualNoMoreDataAlert", actualNoMoreDataAlert);
+			if(otherChallengeListBean != null) {
+				switch (step) {
+				case PROCESS:
+					if(otherChallengeListBean.getData() != null && otherChallengeListBean.getData().size()>0)
+						oldDataSize = otherChallengeListBean.getData().size();
+					
+					otherChallengeListBean.loadMoreData();
+					break;
+				case NAVIGATION:
+					if(otherChallengeListBean.getData() != null && otherChallengeListBean.getData().size()>0) {
+						newDataSize = otherChallengeListBean.getData().size();
+					}
+					
+					if(newDataSize <= oldDataSize) {
+						actualNoMoreDataAlert = true;
+						registerBean("actualNoMoreDataAlert", actualNoMoreDataAlert);
+					} else {
+						return null;
+					}
+					
+				default:
+					break;
+				}
 			}
 		}
 		return null;
@@ -265,43 +338,62 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 
 	
 
-	@Command
-	String handleVirtualBottomRefresh(InputEvent event) {
-		
-		int completeSize = 0;
-		if(otherJoinListBean != null)
-			completeSize = otherJoinListBean.getData().size();
-		otherHomeVStart = completeSize;
-		if(usrService != null) {
-			usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
-		}
-		return null;
-	}
+//	@Command
+//	String handleVirtualBottomRefresh(InputEvent event) {
+//		
+//		int completeSize = 0;
+//		if(otherJoinListBean != null)
+//			completeSize = otherJoinListBean.getData().size();
+//		otherHomeVStart = completeSize;
+//		if(usrService != null) {
+//			usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
+//		}
+//		return null;
+//	}
 	
 	
-	@Command
-	String handleActualBottomRefresh(InputEvent event) {
-		int completeSize = 0;
-		if(otherChallengeListBean != null)
-			completeSize = otherChallengeListBean.getData().size();
-		otherHomeAStart += completeSize;
-		if(usrService != null) {
-			usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
-		}
-		return null;
-	}
+//	@Command
+//	String handleActualBottomRefresh(InputEvent event) {
+//		int completeSize = 0;
+//		if(otherChallengeListBean != null)
+//			completeSize = otherChallengeListBean.getData().size();
+//		otherHomeAStart += completeSize;
+//		if(usrService != null) {
+//			usrService.getMoreOtherPersonal(userId,otherHomeAStart, otherHomeALimit, false);
+//		}
+//		return null;
+//	}
 
 	@Command
-	String handleVirtualTopRefresh(InputEvent event) {
+	String handleVirtualRefresh(ExecutionStep step, InputEvent event, Object result) {
 		if(event.getEventType().equals("TopRefresh")) {
 			showVirtualRecords(event);
 		} else if(event.getEventType().equals("BottomRefresh")) {
-			int completeSize = 0;
-			if(otherJoinListBean != null)
-				completeSize = otherJoinListBean.getData().size();
-			otherHomeVStart = completeSize;
-			if(usrService != null) {
-				usrService.getMoreOtherPersonal(userId,otherHomeVStart, otherHomeVLimit, true);
+			virtualNoMoreDataAlert = false;
+			registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+			if(otherJoinListBean != null) {
+				switch (step) {
+				case PROCESS:
+					if(otherJoinListBean.getData() != null && otherJoinListBean.getData().size()>0)
+						oldDataSize  = otherJoinListBean.getData().size();
+					
+					otherJoinListBean.loadMoreData();
+					break;
+				case NAVIGATION:
+					if(otherJoinListBean.getData() != null && otherJoinListBean.getData().size()>0) {
+						newDataSize  = otherJoinListBean.getData().size();
+					}
+					
+					if(newDataSize <= oldDataSize) {
+						virtualNoMoreDataAlert = true;
+						registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+					} else {
+						return null;
+					}
+					
+				default:
+					break;
+				}
 			}
 		}
 		
@@ -339,14 +431,32 @@ public abstract class OtherViewMorePage extends PageBase implements IModelUpdate
 		}
 	}
 	
+	private void closeAlert() {
+		actualNoMoreDataAlert = false;
+		virtualNoMoreDataAlert = false;
+		
+		registerBean("actualNoMoreDataAlert", actualNoMoreDataAlert);
+		registerBean("virtualNoMoreDataAlert", virtualNoMoreDataAlert);
+	}
+
+	@OnHide
+	void DestroyData() {
+		closeAlert();
+	}
+	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		
-		if(curItemId == 0) {
-			usrService.getMoreOtherPersonal(userId, 0, 20, false);
-		} else if(curItemId == 1) {
-			usrService.getMoreOtherPersonal(userId, 0, 20, true);
-		}
+		otherChallengeListBeanUpdater.doEvaluate();
+		otherJoinListBeanUpdater.doEvaluate();
+//		if(curItemId == 0) {
+////			usrService.getMoreOtherPersonal(userId, 0, 20, false);
+////			actualRecordListField.getDomainModel().doEvaluate();
+//			otherChallengeListBeanUpdater.doEvaluate();
+//		} else if(curItemId == 1) {
+////			usrService.getMoreOtherPersonal(userId, 0, 20, true);
+////			virtualRecordsListField.getDomainModel().doEvaluate();
+//			otherJoinListBeanUpdater.doEvaluate();
+//		}
 		return null;
 	}
 }

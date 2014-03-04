@@ -28,27 +28,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                    <FrameLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="220dp" >
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/content_frame"
                             android:layout_width="match_parent"
-                            android:layout_height="202dp"
+                            android:layout_height="220dp"
                             bind:field="contents" 
                             bind:on_PageChange="handlerPageChanged">
                         </android.support.v4.view.ViewPager>
 						<com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup
 		                     android:layout_width="wrap_content"
 		                     android:layout_height="wrap_content"
-		                     android:layout_gravity="center_horizontal"
-		                     bind:field="indexGroup" 
-		                     android:layout_marginTop="6dp"
-		                     android:layout_marginBottom="8dp">
+		                     android:layout_gravity="center_horizontal|bottom"
+		                     bind:field="indexGroup" >
 		                </com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup>                        
-                    </LinearLayout>
+                   	</FrameLayout>
 
                     <View
                         android:layout_width="fill_parent"

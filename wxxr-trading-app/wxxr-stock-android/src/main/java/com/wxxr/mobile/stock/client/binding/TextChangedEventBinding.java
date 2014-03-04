@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
+import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 
 public class TextChangedEventBinding extends AbstractEventBinding {
 
@@ -43,6 +44,7 @@ public class TextChangedEventBinding extends AbstractEventBinding {
 			if (null == s) {
 				return;
 			}
+			int position = -1;
 			String text = s.toString();
 			if(log.isDebugEnabled()) {
 				log.debug("afterTextChanged , text is : " + text);
@@ -51,6 +53,12 @@ public class TextChangedEventBinding extends AbstractEventBinding {
 					getField());
 			editText.setSelection(text.length());
 			event.addProperty("changedText", ""+text);
+			if(editText instanceof TextSpinnerView){
+				if(editText.getTag() instanceof Integer){
+					position = (Integer) editText.getTag();
+				}
+				event.addProperty("position", position);
+			}
 			handleInputEvent(event);
 		}
 	};

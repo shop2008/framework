@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,8 +19,6 @@
 		    <LinearLayout
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" 
-		        android:background="#ffffff"
-		    	android:padding="8dp"
 		    	android:layout_marginBottom="8dp"
 		        android:gravity="center_vertical">
 		        <ImageView
@@ -28,14 +27,16 @@
 		            android:layout_height="48dp"
 		            android:src="@drawable/trading1d" />
 		
-		        <TextView
-		            android:id="@+id/textView1"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textColor="@color/black"
-		            android:textSize="14sp"
-		            android:text="重要提示：每日递延费用将直接从您的账户中扣除，请保持账户中余额充足，以免余额不足导致被系统清仓" 
-		            android:layout_marginLeft="6dp"/>
+	           <com.wxxr.mobile.stock.client.widget.HighlightTextView
+	               android:id="@+id/textView1"
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:textColor="@color/white"
+	               android:textSize="14sp"
+	               android:text="重要提示:每日递延费用将直接从您的账户中扣除，请保持账户中余额充足，以免余额不足导致被系统清仓"
+	               dslv:highLightText="重要提示:"
+	               android:layout_marginLeft="6dp">
+	            </com.wxxr.mobile.stock.client.widget.HighlightTextView>
 		    </LinearLayout>
 		    
 		    <!-- bind:field="money"
@@ -102,11 +103,22 @@
 		                android:id="@+id/tv_composite_cost"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
-		                android:text="0.00元"
+		                android:text="0%"
 		                android:textSize="14sp"
 		                bind:field="lossRate"
 		                android:layout_alignParentRight="true"
 		                android:textColor="@color/black" />
+
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentTop="true"
+		                android:textColor="@color/black" 
+		                android:layout_toLeftOf="@+id/tv_composite_cost"
+		                android:text="-"
+		                android:visibility="gone" />
+
 		        </RelativeLayout>
 		
 		        <RelativeLayout
@@ -123,15 +135,38 @@
 		                android:textSize="14sp"
 		                android:layout_alignParentLeft="true"/>
 		
-		            <TextView
-		                android:id="@+id/tv_composite_cost"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:text="0.00元"
-		                bind:field="originalFeeValue"
-		                android:textSize="14sp"
-		                android:layout_alignParentRight="true"
-		                android:textColor="@color/black" />
+          <LinearLayout 
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              >            
+				<TextView
+	               android:layout_width="wrap_content"
+	               android:layout_height="wrap_content"
+	               android:text="优惠价："
+	               bind:field="isDiscountFee"
+	               android:textColor="@color/black" 
+	               android:textSize="14sp"/>
+	            <TextView
+	                android:id="@+id/tv_composite_cost"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="0.00元"
+	                android:textSize="14sp"
+	                android:textColor="@color/red" 
+	                bind:field="discountFeeValue"
+	                />
+	            <com.wxxr.mobile.stock.client.widget.DelLineTextView
+	                android:id="@+id/tv_composite_cost"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="0.00元"
+	                android:textSize="14sp"
+	                bind:field="originalFeeValue"
+	                android:layout_marginLeft="6dp"
+	                android:textColor="@color/black">
+	           </com.wxxr.mobile.stock.client.widget.DelLineTextView>
+			</LinearLayout>
 		        </RelativeLayout>
 		
 		        <RelativeLayout
@@ -211,7 +246,7 @@
 		            android:id="@+id/tv_trade_rule_text"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:text="《挑战盘交易规则》"
+		            android:text="《挑战盘T+D规则》"
 		            android:textColor="@color/red" 
 		            android:textSize="14sp"
 		            android:enabled="true"
@@ -311,7 +346,21 @@
 			            android:layout_height="wrap_content"
 			            android:textSize="14sp"
 			            android:textColor="@color/white"
-			            android:text="操盘利润84%归玩家所有" />		    
+			            android:text="操盘利润" /> 
+			        <TextView 
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:text="--"
+			            android:textColor="@color/red"
+			            bind:field="companyGainRate"/>	    
+			        <TextView
+			            android:id="@+id/textView3"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:textColor="@color/white"
+			            android:text="归玩家所有" />	    
 				</LinearLayout>
 				<LinearLayout 
 				    android:layout_height="wrap_content"
@@ -349,7 +398,22 @@
 			            android:layout_height="wrap_content"
 			            android:textSize="14sp"
 			            android:textColor="@color/white"
-			            android:text="每日9.98元/每万元" />	    
+			            android:text="每日" />
+			        <TextView
+			            android:id="@+id/textView3"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:textColor="@color/white"
+			            android:text="--"
+			            bind:field="delayFee" />
+			        <TextView
+			            android:id="@+id/textView3"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:textColor="@color/white"
+			            android:text="/每万元" />	    
 				</LinearLayout>
 		    </LinearLayout>    	            
         </LinearLayout>

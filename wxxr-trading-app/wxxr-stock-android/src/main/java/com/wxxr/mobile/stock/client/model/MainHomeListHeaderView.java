@@ -5,9 +5,6 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.List;
 
-import android.os.SystemClock;
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
@@ -23,7 +20,6 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.AdStatusBean;
@@ -60,7 +56,7 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 	BindableListWrapper<ArticleBean> myArticles;
 	
 	/**绑定文章*/ 
-	@Field(valueKey="options",binding="${myArticles.data}")
+	@Field(valueKey="options",binding="${myArticles.data}", attributes={@Attribute(name="titleBarVisible", value="true")})
 	List<ArticleBean> articles; 
 
 	/**
@@ -98,8 +94,6 @@ public abstract class MainHomeListHeaderView extends ViewBase{
 		
 		if(adStatusBean != null)
 			adStatusBean.setOff(true);
-		SystemClock.sleep(500);
-		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
 		return null;
 	}
 }

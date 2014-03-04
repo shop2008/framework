@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 import com.wxxr.stock.hq.ejb.api.ComponentStocksVO;
 

@@ -1,189 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/page_background_color"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color"
+        android:orientation="vertical" >
 
-        <RadioButton
-            android:id="@+id/textView1"
+        <RadioGroup
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="T日排名"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            bind:field="tMegaBtn"
-            bind:on_Click="reloadTRank" />
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_champion_btn"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="T日排名"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="tMegaBtn"
+                bind:on_Click="reloadTRank" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/champion_btn_divider" />
+
+            <RadioButton
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_champion_btn"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="T+1日排名"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="t1MegaBtn"
+                bind:on_Click="reloadT1Rank" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/champion_btn_divider" />
+
+            <RadioButton
+                android:id="@+id/textView3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_champion_btn"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="周赛排名"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="weekBtn"
+                bind:on_Click="reloadWeekRank" />
+
+            <RadioButton
+                android:id="@+id/textView4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_champion_btn"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="实盘券"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="gone"
+                bind:field="regularTicketBtn"
+                bind:on_Click="reloadRegularTicketRank" />
+        </RadioGroup>
 
         <View
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/champion_btn_divider" />
-
-        <RadioButton
-            android:id="@+id/textView2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="T+1日排名"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            bind:field="t1MegaBtn"
-            bind:on_Click="reloadT1Rank" />
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/champion_btn_divider" />
-
-        <RadioButton
-            android:id="@+id/textView3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="周赛排名"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            bind:field="weekBtn"
-            bind:on_Click="reloadWeekRank" />
-
-        <RadioButton
-            android:id="@+id/textView4"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_champion_btn"
-            android:button="@null"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="实盘券"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:visibility="gone"
-            bind:field="regularTicketBtn"
-            bind:on_Click="reloadRegularTicketRank" />
-    </RadioGroup>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/champion_head_divider" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible"
-            bind:field="TRefreshView"
-            bind:on_PullRefresh="reloadRefreshTRank" >
+            android:layout_height="1dp"
+            android:background="@drawable/champion_head_divider" />
 
-            <ListView
-                android:id="@+id/listView1"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/home_list_divider"
-                android:fadingEdge="none"
-                android:overScrollMode="never"
-                android:scrollbars="none"
-                bind:field="ChampionShip"
-                bind:itemViewId="ChampionShipItemView"
-                bind:on_ItemClick="handleChampionShipItemClick" />
-        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+                android:orientation="vertical"
+                android:visibility="visible"
+                bind:field="TRefreshView"
+                bind:on_PullRefresh="reloadRefreshTRank" >
 
-        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            bind:field="T1RefreshView"
-            bind:on_PullRefresh="reloadRefreshT1Rank" >
+                <ListView
+                    android:id="@+id/listView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@drawable/home_list_divider"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"
+                    bind:field="ChampionShip@StockViewDecorator"
+                    bind:itemViewId="ChampionShipItemView"
+                    bind:on_ItemClick="handleChampionShipItemClick"
+                    bind:updateAllId="resourceId:id/all"
+                    bind:updateFaieldId="resourceId:id/failed"
+                    bind:updatingViewId="resourceId:id/progress" />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-            <ListView
-                android:id="@+id/listView2"
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/home_list_divider"
-                android:fadingEdge="none"
-                android:overScrollMode="never"
-                android:scrollbars="none"
-                bind:field="ChampionT1Ship"
-                bind:itemViewId="ChampionShipItemView"
-                bind:on_ItemClick="handleChampionShipT1ItemClick" />
-        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+                android:orientation="vertical"
+                android:visibility="invisible"
+                bind:field="T1RefreshView"
+                bind:on_PullRefresh="reloadRefreshT1Rank" >
 
-        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            bind:field="WeekRefreshView"
-            bind:on_PullRefresh="reloadRefreshWeekRank" >
+                <ListView
+                    android:id="@+id/listView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@drawable/home_list_divider"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"
+                    bind:field="ChampionT1Ship@StockViewDecorator"
+                    bind:itemViewId="ChampionShipItemView"
+                    bind:on_ItemClick="handleChampionShipT1ItemClick"
+                    bind:updateAllId="resourceId:id/all"
+                    bind:updateFaieldId="resourceId:id/failed"
+                    bind:updatingViewId="resourceId:id/progress" />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-            <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
-                android:id="@+id/listView3"
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/home_list_divider"
-                android:fadingEdge="none"
-                android:overScrollMode="never"
-                android:scrollbars="none"
-                bind:field="ChampionWeekShip"
-                bind:itemViewId="ChampionWeekShipSelectorItemView"
-                bind:on_PinItemClick="handleChampionWeekShipItemClick" >
-            </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
-        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+                android:orientation="vertical"
+                android:visibility="invisible"
+                bind:field="WeekRefreshView"
+                bind:on_PullRefresh="reloadRefreshWeekRank" >
 
-        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            bind:field="RegularRefreshView"
-            bind:on_PullRefresh="reloadRegularTicketRank" >
+                <com.wxxr.mobile.stock.client.widget.PinnedHeaderListView
+                    android:id="@+id/listView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@drawable/home_list_divider"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"
+                    bind:field="ChampionWeekShip@StockViewDecorator"
+                    bind:itemViewId="ChampionWeekShipSelectorItemView"
+                    bind:on_PinItemClick="handleChampionWeekShipItemClick"
+                    bind:updateAllId="resourceId:id/all"
+                    bind:updateFaieldId="resourceId:id/failed"
+                    bind:updatingViewId="resourceId:id/progress" >
+                </com.wxxr.mobile.stock.client.widget.PinnedHeaderListView>
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
 
-            <ListView
-                android:id="@+id/listView4"
+            <com.wxxr.mobile.stock.client.widget.PullToRefreshView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/home_list_divider"
-                android:fadingEdge="none"
-                android:overScrollMode="never"
-                android:scrollbars="none"
-                bind:field="ChampionRegularShip"
-                bind:itemViewId="ChampionRegularShipItemView"
-                bind:on_ItemClick="handleChampionRegularShipItemClick" />
-        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
-    </FrameLayout>
+                android:orientation="vertical"
+                android:visibility="invisible"
+                bind:field="RegularRefreshView"
+                bind:on_PullRefresh="reloadRegularTicketRank" >
 
-</LinearLayout>
+                <ListView
+                    android:id="@+id/listView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@drawable/home_list_divider"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"
+                    bind:field="ChampionRegularShip@StockViewDecorator"
+                    bind:itemViewId="ChampionRegularShipItemView"
+                    bind:on_ItemClick="handleChampionRegularShipItemClick"
+                    bind:updateAllId="resourceId:id/all"
+                    bind:updateFaieldId="resourceId:id/failed"
+                    bind:updatingViewId="resourceId:id/progress" />
+            </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+        </FrameLayout>
+    </LinearLayout>
+
+    <include layout="@layout/stock_loading_progress_layout" />
+
+</FrameLayout>

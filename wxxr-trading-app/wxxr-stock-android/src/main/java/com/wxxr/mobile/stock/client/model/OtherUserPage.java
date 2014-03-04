@@ -9,22 +9,25 @@ import java.util.Map;
 
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
+import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
-
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
-import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
@@ -33,44 +36,63 @@ import com.wxxr.mobile.stock.client.utils.Constants;
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.other_user_page_layout")
 public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 
+	@Field(valueKey = "text",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${false}")})
+	String refreshView;
+	
+	@Menu(items = { "left" }) 
+	private IMenu toolbar;
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
+		return null;
+	}
 	
 	@OnShow
 	void initData() {
 		getAppToolbar().setTitle(userName+"的主页", null);
 	}
 	
-	
 	@Bean(type=BindingType.Service)
 	IUserLoginManagementService service;
 	
-	@Bean(type=BindingType.Pojo, express="${service.getUserInfoById(userId)}")
-	UserBean userBean;
+	/*@Bean(type=BindingType.Pojo, express="${service.getUserInfoById(userId)}")
+	UserBean userBean;*/
 	
-	@Bean(type=BindingType.Pojo, express="${service!=null?service.getOtherPersonalHomePage(userId,false):null}")
+	@Bean(type=BindingType.Pojo, express="${service!=null?service.getOtherPersonalHomePage(userId):null}", effectingFields={"successTradeRecords"})
 	PersonalHomePageBean personalHomePageBean;
 	
 	@Field(valueKey="options", binding="${personalHomePageBean!=null?personalHomePageBean.allist:null}", 
 			attributes={
 			@Attribute(name="joinShareCount", value="${personalHomePageBean!=null?personalHomePageBean.virtualCount:0}"), 
 			@Attribute(name="challengeShareCount", value="${personalHomePageBean!=null?personalHomePageBean.actualCount:0}"),
-			@Attribute(name="userHomeBackUri", value="${userBean!=null?userBean.homeBack:'resourceId:drawable/back1'}"),
-			@Attribute(name="userIconUri", value="${userBean!=null?userBean.userPic:'resourceId:drawable/head4'}"),
+			@Attribute(name="userHomeBackUri", value="${'resourceId:drawable/back1'}"),
+			@Attribute(name="userIconUri", value="${'resourceId:drawable/head4'}"),
 			@Attribute(name="totalScoreProfit", value="${personalHomePageBean!=null?personalHomePageBean.voucherVol:0}"),
-			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.0}"),
-			@Attribute(name="userName", value="${userBean!=null?userBean.nickName:'--'}")
+			@Attribute(name="totalMoneyProfit", value="${personalHomePageBean!=null?personalHomePageBean.totalProfit:0.00}"),
+			@Attribute(name="userName", value="${userName}"),
+			@Attribute(name="userId",value="${userId}")
 	})
 	List<GainBean> successTradeRecords;
 	
+	//DataField<List> successTradeRecordsField;
 	private String userId;
-
+	
 
 	private String userName;
+
+	private ELBeanValueEvaluator<PersonalHomePageBean> personalHomePageBeanUpdater;
 	
 	
 	@Command(commandName = "handleTradeRecordItemClick", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage"),
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView") })
 	CommandResult handleTradeRecordItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
@@ -128,7 +150,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		actualBean = sortList.get(position);
 		CommandResult result = null;	
 		if (actualBean != null) {
-			
+			String accType = actualBean.getAcctType();
 			Long accId = actualBean.getTradingAccountId();
 			String tradeStatus = actualBean.getOver();
 			Boolean isVirtual = actualBean.getVirtual();
@@ -136,7 +158,7 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("accid", accId);
 			map.put("isVirtual", isVirtual);
-			map.put("isSelf", true);
+			map.put("isSelf", false);
 			result.setPayload(map);
 			if ("CLOSED".equals(tradeStatus)) {
 				result.setResult("operationDetails");
@@ -144,10 +166,28 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				int status = actualBean.getStatus();
 				if (status == 0) {
 					// 进入卖出界面
-					result.setResult("SellOut");
+					//result.setResult("SellOut");
+					if(accType != null) {
+						if(accType.equals("ASTOCKT1"))
+							result.setResult("SellOut");
+						else if(accType.equals("ASTOCKT3")) {
+							result.setResult("SellOutT3");
+						} else if(accType.equals("ASTOCKTN")) {
+							result.setResult("SellOutTD");
+						}
+					}
 				} else if (status == 1) {
 					// 进入买入界面
-					result.setResult("BuyIn");
+					//result.setResult("BuyIn");
+					if(accType != null) {
+						if(accType.equals("ASTOCKT1"))
+							result.setResult("BuyIn");
+						else if(accType.equals("ASTOCKT3")) {
+							result.setResult("BuyInT3");
+						} else if(accType.equals("ASTOCKTN")) {
+							result.setResult("BuyInTD");
+						}
+					}
 				}
 			}
 			updateSelection(new AccidSelection(String.valueOf(accId),
@@ -159,6 +199,17 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 		return null;
 	}
 	
+	@Command
+	String handleRefresh(InputEvent event) {
+		
+		if(event.getEventType().equals("TopRefresh")) {
+			if(service!= null) {
+				//tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size());
+				service.getOtherPersonalHomePage(userId);
+			}
+		}
+		return null;
+	}
 	@Override
 	public void updateModel(Object value) {
 		if (value instanceof Map) {
@@ -180,5 +231,14 @@ public abstract class OtherUserPage extends PageBase implements IModelUpdater {
 				}
 			}
 		}
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event){
+		if(service != null) {
+//			service.getOtherPersonalHomePage(userId);
+		}
+		personalHomePageBeanUpdater.doEvaluate();
+		return null;
 	}
 }

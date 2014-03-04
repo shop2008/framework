@@ -10,7 +10,7 @@ import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
 
 public class UserSignBean implements IBindableBean {
 	private final BindableBeanSupport emitter = new BindableBeanSupport(this);
-	private Boolean sign;
+	private Boolean sign = false;
 	private long ongoingDays;
 	private long rewardVol;
 	private String signDate;
@@ -29,6 +29,12 @@ public class UserSignBean implements IBindableBean {
 	public void removePropertyChangeListener(IPropertyChangeListener listener) {
 		emitter.removePropertyChangeListener(listener);
 	}
+	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 
 	public Boolean getSign() {
 		return sign;

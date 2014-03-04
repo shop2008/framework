@@ -9,8 +9,6 @@
 
 package com.wxxr.stock.restful.json;
 
-import java.io.Serializable;
-
 import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 

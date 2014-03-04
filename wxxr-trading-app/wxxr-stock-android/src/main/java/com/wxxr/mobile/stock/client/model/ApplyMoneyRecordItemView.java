@@ -11,7 +11,8 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
 import com.wxxr.mobile.stock.client.utils.DateFormatConvertor;
-import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
+import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
 
 @View(name = "ApplyMoneyRecordItemView")
@@ -27,7 +28,7 @@ public abstract class ApplyMoneyRecordItemView extends ViewBase implements IMode
 	String applyTime;
 	
 	/**申请数量*/
-	@Field(valueKey="text", binding="${dataBean!=null?dataBean.drawAmount:null}")
+	@Field(valueKey="text", binding="${dataBean!=null?dataBean.drawAmount:null}", converter="applyAmountConvertor")
 	String applyAmount;
 	
 	/**审请状态*/
@@ -39,6 +40,14 @@ public abstract class ApplyMoneyRecordItemView extends ViewBase implements IMode
 	
 	@Convertor(params={@Parameter(name="subString2",value="HH:mm:ss"), @Parameter(name="nullString",value="--:--:--")})
 	DateFormatConvertor timeConvertor;
+	
+	@Convertor(
+			params={
+					@Parameter(name="format", value="%.0f"),
+					@Parameter(name="multiple", value="100.0f"),
+					@Parameter(name="formatUnit", value="元")
+			})
+	StockLong2StringConvertor applyAmountConvertor;
 	@Bean
 	DrawMoneyRecordBean dataBean;
 	@Override

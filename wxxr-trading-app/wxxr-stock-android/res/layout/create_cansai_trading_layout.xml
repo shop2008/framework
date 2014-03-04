@@ -1,53 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:background="@color/page_background_color"
     android:padding="8dp" >
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" 
+           
+           android:gravity="center_vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="#ffffff"
-        android:padding="8dp"
-        android:orientation="vertical">
+           <ImageView
+               android:id="@+id/imageView1"
+               android:layout_width="48dp"
+               android:layout_height="48dp"
+               android:src="@drawable/trading0" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/trading0" />
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:text="每个交易日可创建一个参赛模拟盘，正收益即可获得实盘积分奖励！" 
-                android:layout_marginLeft="6dp"/>
-
-            
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="实盘积分可兑换实盘资金操作权，满1万积分即可申请实盘！"
-            android:textColor="@color/black"
-            android:textSize="14sp" 
-            android:layout_marginTop="8dp"/>
-
-    </LinearLayout>
+           <com.wxxr.mobile.stock.client.widget.HighlightTextView
+               android:id="@+id/textView1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/white"
+               android:textSize="14sp"
+               android:text="实盘积分可兑换实盘资金操作权，满1万积分即可申请实盘！"
+               dslv:highLightText="1万"
+               android:layout_marginLeft="6dp">
+            </com.wxxr.mobile.stock.client.widget.HighlightTextView>
+           
+       </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
@@ -266,7 +249,9 @@
 	            android:layout_height="wrap_content"
 	            android:textSize="14sp"
 	            android:textColor="#0183ff"
-	            android:text="奖励详情" />		    
+	            android:text="奖励详情" 
+	            bind:field="*"
+	            bind:on_Click="RewardRuleClick"/>		    
 		</LinearLayout>
     </LinearLayout>
     

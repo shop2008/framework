@@ -163,8 +163,6 @@ public interface ITradingManagementService {
 	 */
 	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit);
 	
-	public BindableListWrapper<EarnRankItemBean> getEarnRank(int start, int limit, boolean wait4Finish);
-	
 	public void reloadEarnRank(int start, int limit,boolean wait4Finish);
 	/**
 	 * 获取T日排行榜
@@ -248,13 +246,14 @@ public interface ITradingManagementService {
 	 * */
 	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit);
 	
-	BindableListWrapper<GainPayDetailBean> getGainPayDetailDetails(int start, int limit, boolean wait4Finish);
 	/**************************V2****************************/
 	/**
 	 * 获取首页列表
 	 * @return
 	 */
 	public HomePageMenu getHomeMenuList();
+	
+	public HomePageMenu getHomeMenuList(boolean forceReload);
 	/***
 	 * 提现记录
 	 * @param start

@@ -24,10 +24,12 @@ import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
@@ -44,18 +46,19 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService; 
 	
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeBean,marketBean)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(map.get('code'),map.get('market'))}")
 	StockQuotationBean quotationBean;	
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map, false)}")
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map, true)}",effectingFields="stockMinuteData")
 	StockMinuteKBean minute;
 	
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 		
-	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(map.get('code'),map.get('market'))}")
 	StockBaseInfo stockInfoBean;
 	
+	private ELBeanValueEvaluator<StockMinuteKBean> minuteUpdater;
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000f"),
 			@Parameter(name="format",value="%.2f"),
@@ -118,13 +121,13 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	StockLong2StringConvertor stockLong2StringConvertorInt;
 	
 	@Bean
-	Map<String, String> map;
-	@Bean
-	String nameBean;
-	@Bean
-	String codeBean;
-	@Bean
-	String marketBean;
+	Map<String, String> map = new HashMap<String, String>();
+//	@Bean
+//	String nameBean;
+//	@Bean
+//	String codeBean;
+//	@Bean
+//	String marketBean;
 	
 	@Bean
 	String stockType = "1"; //0-指数，1-个股
@@ -206,23 +209,23 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	
 	//卖
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice5:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String sellPrice5;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice4:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String sellPrice4;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice3:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String sellPrice3;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice2:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String sellPrice2;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice1:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String sellPrice1;
 	
@@ -239,23 +242,23 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 
 	//买
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice5:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String buyPrice5;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice4:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String buyPrice4;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice3:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String buyPrice3;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice2:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String buyPrice2;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice1:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value = "${quotationBean==null?'resourceId:color/gray':quotationBean.newprice>quotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
 			})
 	String buyPrice1;
 	
@@ -270,17 +273,17 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyvolume1:'0'}", converter="stockLong2StringConvertorInt")
 	String buyVolume1;	
 	
-	@Field(valueKey="options",binding="${infoCenterService.getMinuteline(map, true)!=null?infoCenterService.getMinuteline(map, false).list:null}",attributes={
+	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
 			@Attribute(name = "stockStatus", value = "${minute!=null?minute.stop:null}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
 			@Attribute(name="stockType",value="${stockType}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
 			@Attribute(name = "stockUpColor",value="resourceId:color/red"),
-			@Attribute(name = "stockDownColor",value="resourceId:color/green"),
+			@Attribute(name = "stockDownColor",value="resourceId:color/green1"),
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	}, upateAsync=true)
+	})
 	List<StockMinuteLineBean> stockMinuteData;
 	DataField<List> stockMinuteDataField;
 	
@@ -299,9 +302,15 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getStockQuotation(codeBean,marketBean);
-		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-		stockMinuteDataField.getDomainModel().doEvaluate();
+		AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+			
+			@Override
+			public void run() {
+				infoCenterService.getStockQuotation(map.get("code"),map.get("market"));
+				stockInfoSyncService.getStockBaseInfoByCode(map.get("code"),map.get("market"));
+				minuteUpdater.doEvaluate();
+			}
+		});
 		return null;
 	}
 	
@@ -310,25 +319,26 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 		if(selection instanceof StockSelection){
 			HashMap<String, String> minuteMap = new HashMap<String, String>();
 			StockSelection stockSelection = (StockSelection) selection;
+			String codeBean = null;
+			String marketBean = null;
 			try {
 				if(stockSelection!=null){
-					this.codeBean = stockSelection.getCode();
-					this.marketBean = stockSelection.getMarket();
-					this.minuteHeaderType = stockSelection.getType();
-					if(this.marketBean!=null && this.codeBean!=null){
-					}
+					codeBean = stockSelection.getCode();
+					marketBean = stockSelection.getMarket();
+//					this.minuteHeaderType = stockSelection.getType(); fix bug：该页面头部同个股界面，不再动态改变
 				}
-				registerBean("codeBean", this.codeBean);
-				registerBean("nameBean", this.nameBean);
-				registerBean("marketBean", this.marketBean);
+//				registerBean("codeBean", codeBean);
+//				registerBean("nameBean", this.nameBean);
+//				registerBean("marketBean", marketBean);
 				registerBean("minuteHeaderType", this.minuteHeaderType);
-				if(this.codeBean!=null && this.marketBean!=null){
-					minuteMap.put("code", this.codeBean);
-					minuteMap.put("market", this.marketBean);
+				if(codeBean!=null && marketBean!=null){
+					minuteMap.put("code", codeBean);
+					minuteMap.put("market", marketBean);
+					minuteMap.put("time", System.currentTimeMillis()+"");
 					this.map = minuteMap;
 					registerBean("map", this.map);
 				}
-				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean)) || ("399005".equals(this.codeBean) && "SZ".equals(this.marketBean))){
+				if(("000001".equals(codeBean) && "SH".equals(marketBean)) || ("399001".equals(codeBean) && "SZ".equals(marketBean)) || ("399005".equals(codeBean) && "SZ".equals(marketBean))){
 					this.stockType = "0";
 				}	
 			} catch (RequiredNetNotAvailablexception e) {

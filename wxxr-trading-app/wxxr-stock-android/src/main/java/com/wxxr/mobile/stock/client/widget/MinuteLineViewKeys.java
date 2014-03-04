@@ -19,16 +19,23 @@ public abstract class MinuteLineViewKeys {
 	public static final AttributeKey<String> background= new AttributeKey<String>(String.class, "background");
 	
 	public static final AttributeKey<String> stockCode = new AttributeKey<String>(String.class, "stockCode"); //股票代码
+	public static final AttributeKey<String> stockMarket = new AttributeKey<String>(String.class, "stockMarket"); //市场代码
 	public static final AttributeKey<String> stockClose = new AttributeKey<String>(String.class, "stockClose"); //昨收价
 	public static final AttributeKey<String> stockDate = new AttributeKey<String>(String.class, "stockDate"); //日期
 	public static final AttributeKey<String> stockType = new AttributeKey<String>(String.class, "stockType"); //股票类型0-指数；1-个股
 	
 	public static final AttributeKey<Integer> count = new AttributeKey<Integer>(Integer.class, "count");
 	public static final AttributeKey<Integer> position = new AttributeKey<Integer>(Integer.class, "position");
+	public static final AttributeKey<Integer> viewPosition = new AttributeKey<Integer>(Integer.class, "viewPosition");
+	
 	public static final AttributeKey<Long> buyPrice = new AttributeKey<Long>(Long.class, "buyPrice");
 	public static final AttributeKey<Boolean> isPagination = new AttributeKey<Boolean>(Boolean.class, "isPagination");
 	public static final AttributeKey<Boolean> stockStatus = new AttributeKey<Boolean>(Boolean.class, "stockStatus");
 	public static final AttributeKey<String> nullValue = new AttributeKey<String>(String.class, "nullValue");
+	
+	public static final AttributeKey<String> delText= new AttributeKey<String>(String.class, "delText");
+	public static final AttributeKey<Boolean> isDelLine= new AttributeKey<Boolean>(Boolean.class, "isDelLine");
+	public static final AttributeKey<String> imgUrl = new AttributeKey<String>(String.class, "imgUrl");
 	
 	
 	public static void registerKeys(IFieldAttributeManager attrMgr){
@@ -48,5 +55,10 @@ public abstract class MinuteLineViewKeys {
 		attrMgr.registerAttribute(isPagination);
 		attrMgr.registerAttribute(stockStatus);
 		attrMgr.registerAttribute(nullValue);
+		attrMgr.registerAttribute(stockMarket);
+		attrMgr.registerAttribute(delText);
+		attrMgr.registerAttribute(isDelLine);
+		attrMgr.registerAttribute(imgUrl);
+		attrMgr.registerAttribute(viewPosition);
 	}
 }

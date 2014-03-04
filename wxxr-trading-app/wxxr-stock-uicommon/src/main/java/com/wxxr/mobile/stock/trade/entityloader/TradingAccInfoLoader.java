@@ -3,47 +3,26 @@ package com.wxxr.mobile.stock.trade.entityloader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.TradingAccInfoBean;
+import com.wxxr.mobile.stock.app.command.GetTradingAccInfoCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 
-public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAccInfoBean,TradingAccInfoVO>{
+public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAccInfoBean,TradingAccInfoVO, GetTradingAccInfoCommand>{
     
-    @NetworkConstraint(allowConnectionTypes={})
-    @SecurityConstraint(allowRoles={})
-    public class GetTradingAccInfoCommand implements ICommand<List<TradingAccInfoVO>> {
-        public final static String Name="GetTradingAccInfoCommand";
-        @Override
-        public String getCommandName() {
-            return Name;
-        }
-
-        @Override
-        public Class getResultType() {
-            return List.class;
-        }
-
-        @Override
-        public void validate() {
-            
-        }
-
-    }
     @Override
-    public ICommand<List<TradingAccInfoVO>> createCommand(Map<String, Object> params) {
+    public GetTradingAccInfoCommand createCommand(Map<String, Object> params) {
         return new GetTradingAccInfoCommand();
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<TradingAccInfoVO> result, IReloadableEntityCache<String, TradingAccInfoBean> cache) {
+    public boolean handleCommandResult(GetTradingAccInfoCommand cmd,List<TradingAccInfoVO> result, IReloadableEntityCache<String, TradingAccInfoBean> cache) {
         boolean updated = false;
         for (TradingAccInfoVO vo : result) {
             String accId = String.valueOf(vo.getAcctID());
@@ -67,12 +46,14 @@ public class TradingAccInfoLoader extends AbstractEntityLoader<String,TradingAcc
     }
 
     @Override
-    protected List<TradingAccInfoVO> executeCommand(ICommand<List<TradingAccInfoVO>> command) throws Exception {
-    	TradingAccInfoVOs vos = null;
-    	if ( this.cmdCtx.getKernelContext().getService(IUserIdentityManager.class).isUserAuthenticated()) {//用户登录后方可获取列表信息
-    		 vos=getRestService(ITradingProtectedResource.class).getTradingAccountList();
-		}
-        return vos==null?null:vos.getTradingAccInfos();
+    protected void executeCommand(GetTradingAccInfoCommand command,IAsyncCallback<List<TradingAccInfoVO>> callback) {
+    	getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).getTradingAccountList().onResult(new DelegateCallback<TradingAccInfoVOs, List<TradingAccInfoVO>>(callback) {
+
+			@Override
+			protected List<TradingAccInfoVO> getTargetValue(TradingAccInfoVOs vos) {
+		        return vos==null?null:vos.getTradingAccInfos();
+			}
+		});
     }
    
 

@@ -22,6 +22,7 @@ import com.wxxr.mobile.stock.client.binding.BackgroundAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.BuyStockClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.CompoundButtonCheckChangeEventBinder;
+import com.wxxr.mobile.stock.client.binding.DelLineTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.DragSortListOnDragEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
@@ -29,11 +30,13 @@ import com.wxxr.mobile.stock.client.binding.EditableNavPageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.EditablePageBtnClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.GeGuMinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.GroupByItemClickEventBinder;
+import com.wxxr.mobile.stock.client.binding.GuideSwiperImageAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.GuideSwiperViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.IViewPagerSelEventBinder;
 import com.wxxr.mobile.stock.client.binding.ImageRefreshListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ImageViewPagerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.KlineFieldBinder;
+import com.wxxr.mobile.stock.client.binding.KlineNewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.MinuteLineViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.NewDragSortListViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.PageChangeEventBinder;
@@ -50,6 +53,7 @@ import com.wxxr.mobile.stock.client.binding.StockViewDecorator;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.TextSpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
+import com.wxxr.mobile.stock.client.binding.ViewPageAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ViewPagerIndexGroupFieldBinder;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
@@ -60,6 +64,7 @@ import com.wxxr.mobile.stock.client.widget.GuideSwiperView;
 import com.wxxr.mobile.stock.client.widget.ImageRefreshListView;
 import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.KLineView;
+import com.wxxr.mobile.stock.client.widget.KlineViewNew;
 import com.wxxr.mobile.stock.client.widget.MinuteLineView;
 import com.wxxr.mobile.stock.client.widget.MinuteLineViewKeys;
 import com.wxxr.mobile.stock.client.widget.NewDragSortListView;
@@ -97,6 +102,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, GMinuteLineView.class, new GeGuMinuteLineViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, NewDragSortListView.class, new NewDragSortListViewFieldBinder());		
 		mgr.registerFieldBinder(UIComponent.class, ImageRefreshListView.class, new ImageRefreshListViewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, KlineViewNew.class, new KlineNewFieldBinder());
 	}
 
 	@Override
@@ -127,6 +133,10 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
 		mgr.registerAttributeUpdater("validationErrors", new EditTextAttributeUpdater());
+		mgr.registerAttributeUpdater("text", new DelLineTextAttributeUpdater());
+		mgr.registerAttributeUpdater("isDelLine", new DelLineTextAttributeUpdater());
+		mgr.registerAttributeUpdater("imgUrl", new GuideSwiperImageAttributeUpdater());
+		mgr.registerAttributeUpdater("viewPosition", new ViewPageAttributeUpdater());
 	}
 
 	@Override

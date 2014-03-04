@@ -29,12 +29,15 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.client.ICancellableRunnable;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.SpUtil;
@@ -45,6 +48,8 @@ import com.wxxr.mobile.stock.client.utils.Utils;
 public abstract class TBuyT3TradingPageView extends PageBase implements IModelUpdater, IEventListener {
 	private static final Trace log = Trace.register(TBuyT3TradingPageView.class);
 
+	private ICancellableRunnable refreshTask;
+	
 	@Bean
 	boolean isSelf = true; // true自己，false别人
 
@@ -68,8 +73,9 @@ public abstract class TBuyT3TradingPageView extends PageBase implements IModelUp
 	@Bean(type = BindingType.Service)
 	ITradingManagementService tradingService;
 
-	@Bean(type = BindingType.Pojo, express = "${tradingService.getTradingAccountInfo(acctId)}")
+	@Bean(type = BindingType.Pojo, express = "${tradingService.getSyncTradingAccountInfo(acctId)}", effectingFields={"tradingOrders"})
 	TradingAccountBean tradingBean;
+	private ELBeanValueEvaluator<TradingAccountBean> tradingBeanUpdater;
 	// 字段
 
 	@Field(valueKey = "options", binding = "${tradingBean != null ? tradingBean.tradingOrders : null}")
@@ -89,7 +95,8 @@ public abstract class TBuyT3TradingPageView extends PageBase implements IModelUp
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -157,7 +164,9 @@ public abstract class TBuyT3TradingPageView extends PageBase implements IModelUp
 	 * @param event
 	 * @return
 	 */
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style", visibleWhen = "${true}") }, 
+			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage") })
 	CommandResult toolbarClickedRight(InputEvent event) {
 		CommandResult resutl = new CommandResult();
 		resutl.setResult("TradingRecordsPage");
@@ -291,5 +300,56 @@ public abstract class TBuyT3TradingPageView extends PageBase implements IModelUp
 	@OnUIDestroy
 	void destroyData() {
 		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, "");
+	}
+	
+	@OnShow
+	void refreshList() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+		}
+		this.refreshTask = new ICancellableRunnable() {		
+			private boolean cancelled;
+			
+			@Override
+			public void run() {
+				if(cancelled||(!isActive())){
+					return;
+				}
+				try {
+					tradingService.getTradingAccountInfo(acctId);
+				}catch(Throwable t){
+					log.warn("Failed to refresh home menu list", t);
+				}
+				if(cancelled||(!isActive())){
+					return;
+				}
+				AsyncUtils.invokeLater(this, 10, TimeUnit.SECONDS);
+			}
+
+			@Override
+			public void cancel() {	
+				this.cancelled = true;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return this.cancelled;
+			}
+		};
+		AsyncUtils.invokeLater(refreshTask, 10, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void stopRefresh() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+			this.refreshTask = null;
+		}
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		tradingBeanUpdater.doEvaluate();
+		return null;
 	}
 }

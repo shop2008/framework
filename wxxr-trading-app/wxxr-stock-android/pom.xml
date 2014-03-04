@@ -5,12 +5,12 @@
     <parent>
         <artifactId>wxxr-stock-app</artifactId>
         <groupId>com.wxxr.mobile.stock</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-stock-android</artifactId>
-	<version>${application.version}</version>
 	<packaging>apk</packaging>
+	<version>${application.version}</version>
 	<name>wxxr-stock-android - Application</name>
     <properties>
         <android.version>4.3</android.version>
@@ -81,7 +81,6 @@
              <dependency>
               <groupId>com.wxxr.mobile.stock</groupId>
               <artifactId>wxxr-stock-uicommon</artifactId>
-                <version>${application.version}</version>
             </dependency>
              <dependency>
               <groupId>com.wxxr.mobile.core</groupId>
@@ -109,6 +108,42 @@
 		</resources>
 
 		<plugins>
+		 <!-- 
+            <plugin>
+                <groupId>com.wxxr.mobile.core</groupId>
+                <artifactId>wxxr-mobile-tools</artifactId>
+                <version>${framework.version}</version>
+		          <dependencies>
+		            <dependency>
+		              <groupId>sun.jdk</groupId>
+		              <artifactId>tools</artifactId>
+		              <version>1.6</version>
+		              <scope>system</scope>
+		              <systemPath>${java.home}/../lib/tools.jar</systemPath>
+		            </dependency>
+			        <dependency>
+			            <groupId>com.google.android</groupId>
+			            <artifactId>android</artifactId>
+			            <scope>compile</scope>
+			            <version>4.3</version>
+			        </dependency>
+		          </dependencies>        
+		        <executions>
+		          <execution>
+		            <id>gen_view_model</id>
+		            <phase>generate-sources</phase>
+		            <goals>
+		              <goal>gen_viewmodel</goal>
+		            </goals>
+		            <configuration>
+                        <encoding>UTF-8</encoding>
+		                <verbose>true</verbose>
+		                <outputDirectory>${project.build.directory}/generated</outputDirectory>
+		            </configuration>
+		          </execution>
+                </executions>
+            </plugin>
+             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -1,137 +1,142 @@
 package com.wxxr.mobile.stock.client.widget;
 
-
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wxxr.mobile.stock.client.R;
-import com.wxxr.mobile.stock.client.binding.IViewPagerSelCallBack;
-
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 
-public class GuideSwiperView extends LinearLayout {
+import com.wxxr.mobile.android.ui.RUtils;
+import com.wxxr.mobile.core.ui.api.IDataChangedListener;
+import com.wxxr.mobile.core.ui.api.IObservableListDataProvider;
+import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.stock.client.binding.IViewPagerSelCallBack;
 
-	
-	private ViewPager mViewPager;
-	
-	
-	/**引导图片适配器*/
-	private ListAdapter mListAdapter;
-	
+public class GuideSwiperView extends ViewPager implements IDataChangedListener{
+
+	private IObservableListDataProvider dataProvider;
 	/**引导图片集合*/
-	private List<View> mViewList;
-	
+	private List<View> mViewList = null;
+	private ImageView view = null;
 	private Context mContext;
-	private int mViewCount;
-	
-	private int mCurSelected;
-	
 	private IViewPagerSelCallBack iSelCallBack;
-
+	private int mViewCount;
+	private int mCurSelected;
+	private ViewPagerChangedListener listener;
 	public GuideSwiperView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context);
+		this.mContext = context;
 	}
 
-	public GuideSwiperView(Context context) {
-		super(context);
-		init(context);
+	public IObservableListDataProvider getDataProvider() {
+		return dataProvider;
 	}
-
-	private void init(Context context) {
-		mContext = context;
-		View view = View.inflate(context, R.layout.guide_swiper_view_layout, null);
-		mViewPager = (ViewPager) view.findViewById(R.id.guide_view_pager);
-		addView(view);
-	}
-
-	public void setAdapter(ListAdapter adapter) {
-		if (adapter != null) {
-			this.mListAdapter = adapter;
-			loadImages(adapter);
+	public void setDataProvider(IObservableListDataProvider dataProvider) {
+		IObservableListDataProvider oldProv = this.dataProvider;
+		this.dataProvider = dataProvider;
+		if(this.dataProvider != null){
+			this.dataProvider.registerDataChangedListener(this);
+		}else if(oldProv != null){
+			oldProv.unregisterDataChangedListener(this);
 		}
+	}	
+	
+	@Override
+	public void dataSetChanged() {
+		initData();
 	}
 
-	private void loadImages(ListAdapter adapter) {
-		if (mListAdapter == null) {
-			return;
-		}
-		
-		/*if (dotsContainer.getChildCount() > 0) {
-			dotsContainer.removeAllViews();
-		}
-		*/
-		mViewCount = mListAdapter.getCount();
-		
-		if (mViewCount > 0) {
-			mViewList = new ArrayList<View>();
-			//dots = new View[mViewCount];
-			for(int i=0;i<mViewCount;i++) {
-				View view = mListAdapter.getView(i, null, null);
-				
-				if (view != null) {
-					mViewList.add(view);
-					//dots[i] = new View(mContext);
-					//dots[i].setBackgroundResource(R.drawable.bg_guide_dot);
-					/*if (i==0) {
-						dots[i].setEnabled(true);
-					} else {
-						dots[i].setEnabled(false);
-					}*/
-					
-					/*if (dotsContainer != null) {
-						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20,20);
-						if (i != 0) {
-							params.setMargins(10, 0, 0, 0);
-						}
-						dotsContainer.addView(dots[i],params);
-						invalidate();
-					}*/
-				}
+	@Override
+	public void dataItemChanged() {
+		initData();
+	}
+	
+	private void initData(){
+		if(dataProvider==null) return;
+		int size = dataProvider.getItemCounts();
+		if(size==0) return; 
+		mViewList = new ArrayList<View>();
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		mViewCount = size;
+		for(int i=0; i<size;i++){
+			String img = dataProvider.getItem(i).toString();
+			if(img!=null && !StringUtils.isBlank(img)){
+				int temp = getImage(img);
+				view = new ImageView(mContext);
+				view.setLayoutParams(params);
+				Bitmap bitmap = readBitMap(mContext, temp);
+				Drawable drawable =new BitmapDrawable(bitmap);
+				view.setBackgroundDrawable(drawable);
+				mViewList.add(view);
 			}
-			
-			mViewPager.setAdapter(new ViewPagerAdapter(mViewList));
-			mViewPager.setCurrentItem(0);
-			mViewPager.setOnPageChangeListener(new ViewPagerChangedListener());
+		}
+		if(mViewList!=null && mViewList.size()>0){
+			this.setAdapter(new ViewPagerAdapter(mViewList));
+			this.setCurrentItem(0);
+			listener = new ViewPagerChangedListener();
+			this.setOnPageChangeListener(listener);
 		}
 	}
 	
-	private class ViewPagerAdapter extends PagerAdapter{
-
-		private List<View> viewList;
-		public ViewPagerAdapter(List<View> viewList) {
-			this.viewList = viewList;
+	public static Bitmap readBitMap(Context context, int resId){
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inPreferredConfig = Bitmap.Config.RGB_565;
+		opt.inPurgeable = true;
+//		opt.inSampleSize = 2;
+		opt.inInputShareable = true;
+		//获取资源图片
+		InputStream is = context.getResources().openRawResource(resId);
+		return BitmapFactory.decodeStream(is,null,opt);
 		}
-		
+	
+	private int getImage(String val){
+		if(val!=null && !StringUtils.isBlank(val)){
+			int img = RUtils.getInstance().getResourceIdByURI(val);
+			return img;
+		}
+		return 0;
+	}
+	
+	private class ViewPagerAdapter extends PagerAdapter {
+		private List<View> provider;
+
+		public ViewPagerAdapter(List<View> provider) {
+			this.provider = provider;
+		}
+
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			container.addView(viewList.get(position), 0); 
-			return viewList.get(position);
+			container.addView(provider.get(position), 0);
+			return provider.get(position);
 		}
-		
+
 		@Override
 		public int getCount() {
-			return viewList.size();
+			return provider.size();
 		}
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0==arg1;
+			return arg0 == arg1;
 		}
-		
+
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			container.removeView(viewList.get(position)); 
+			container.removeView(provider.get(position));
 		}
 	}
+	
 	
 	private class ViewPagerChangedListener implements OnPageChangeListener {
 
@@ -152,20 +157,16 @@ public class GuideSwiperView extends LinearLayout {
 	    	{
 	    		return ;
 	    	}
-	    	/*dots[mCurSelected].setEnabled(false);
-	    	dots[position].setEnabled(true);*/
 	    	mCurSelected = position;
 	    	if (iSelCallBack != null) {
 				iSelCallBack.selected(position);
 			}
 		}
 
-	}
+	}	
 	
 	public void setCurrentPage(int position) {
-		if(mViewPager != null) {
-			mViewPager.setCurrentItem(position);
-		}
+		this.setCurrentItem(position);
 	}
 	
 	public void setIViewPageSelCallBack(IViewPagerSelCallBack iViewPagerSelCallBack) {

@@ -4,63 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
+import com.wxxr.mobile.stock.app.command.GetDayStockLineCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockLineVO;
 import com.wxxr.stock.restful.json.LineListVO;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.resource.StockResource;
+import com.wxxr.stock.restful.resource.StockResourceAsync;
 
-public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBean, StockLineBean> {
-   public  final static String COMMAND_NAME = "GetDayStockLineCommand";
-   @NetworkConstraint
-    public class GetDayStockLineCommand implements ICommand<List<StockLineBean>> {
-        private String code;
-        private String market;
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
-
-        public String getMarket() {
-            return market;
-        }
-
-        public void setMarket(String market) {
-            this.market = market;
-        }
-
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-		@Override
-        public Class<List<StockLineBean>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-
-        @Override
-        public void validate() {
-        	if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
-				throw new IllegalArgumentException("Invalid market or code");
-			}
-        }
-
-    }
+public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBean, StockLineBean,GetDayStockLineCommand> {
 
     @Override
-    public ICommand<List<StockLineBean>> createCommand(Map<String, Object> params) {
+    public GetDayStockLineCommand createCommand(Map<String, Object> params) {
         if (params==null){
             return null;
         }
@@ -71,7 +29,7 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<StockLineBean> result, IReloadableEntityCache<String, StockLineBean> cache) {
+    public boolean handleCommandResult(GetDayStockLineCommand cmd,List<StockLineBean> result, IReloadableEntityCache<String, StockLineBean> cache) {
         boolean updated = false;
         if(result!=null && !result.isEmpty()){
             for (StockLineBean vo : result) {
@@ -90,12 +48,12 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetDayStockLineCommand.COMMAND_NAME;
     }
 
     @Override
-    protected List<StockLineBean> executeCommand(ICommand<List<StockLineBean>> command) throws Exception {
-        GetDayStockLineCommand cmd = (GetDayStockLineCommand)command;
+    protected void executeCommand(GetDayStockLineCommand command,final IAsyncCallback<List<StockLineBean>> callback)  {
+        final GetDayStockLineCommand cmd = (GetDayStockLineCommand)command;
         ParamVO vo=new  ParamVO();
         vo.setCode(cmd.getCode());
         vo.setMarket(cmd.getMarket());
@@ -103,20 +61,24 @@ public class DayStockLineLoader extends AbstractEntityLoader<String, StockLineBe
         ps.add(vo);
         vo.setStart(0L);
         vo.setLimit(50L);
-        LineListVO svos= getRestService(StockResource.class).getDayline(vo);
-        
-        if (svos!=null && svos.getList()!=null){
-            List<StockLineBean> result=new ArrayList<StockLineBean>();
-            List<StockLineVO> stockLineVOs=svos.getList();
-            for (StockLineVO item:stockLineVOs ){
-                StockLineBean bean=ConverterUtils.fromVO(item);
-                bean.setCode(cmd.getCode());
-                bean.setMarket(cmd.getMarket());
-                result.add(bean);
-            }
-            return result;
-        }
-        return null;
+        getRestService(StockResourceAsync.class,StockResource.class).getDayline(vo).onResult(new DelegateCallback<LineListVO,List<StockLineBean>>(callback) {
+			
+			@Override
+			public List<StockLineBean> getTargetValue(LineListVO svos) {
+				List<StockLineBean> result= null;
+		        if (svos!=null){
+		            result=new ArrayList<StockLineBean>();
+		            List<StockLineVO> stockLineVOs=svos.getList();
+		            for (StockLineVO item:stockLineVOs ){
+		                StockLineBean bean=ConverterUtils.fromVO(item);
+		                bean.setCode(cmd.getCode());
+		                bean.setMarket(cmd.getMarket());
+		                result.add(bean);
+		            }
+		        }
+		        return result;
+			}
+		});
     }
 
 }

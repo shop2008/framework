@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.javax.ws.rs.NotAuthorizedException;
@@ -18,11 +16,19 @@ import com.wxxr.mobile.android.preference.DictionaryUtils;
 import com.wxxr.mobile.core.api.IUserAuthCredential;
 import com.wxxr.mobile.core.api.IUserAuthManager;
 import com.wxxr.mobile.core.api.UsernamePasswordCredential;
-import com.wxxr.mobile.core.command.api.CommandException;
+import com.wxxr.mobile.core.async.api.Async;
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.DelegateCallback;
+import com.wxxr.mobile.core.async.api.ExecAsyncException;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
+import com.wxxr.mobile.core.async.api.IDataConverter;
+import com.wxxr.mobile.core.async.api.NestedRuntimeException;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.event.api.IEventRouter;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
+import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.rpc.http.api.HttpRpcService;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
 import com.wxxr.mobile.core.security.api.LoginAction;
@@ -34,21 +40,25 @@ import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.command.UserRegister2Command;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IBindableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFetcher;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.event.UserLoginEvent;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 import com.wxxr.mobile.stock.app.service.handler.Register2Handher;
-import com.wxxr.mobile.stock.app.service.handler.Register2Handher.UserRegister2Command;
-import com.wxxr.mobile.stock.app.service.handler.RegisterHandher.UserRegisterCommand;
-import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler.RestPasswordCommand;
+import com.wxxr.mobile.stock.app.service.handler.RestPasswordCommand;
+import com.wxxr.mobile.stock.app.service.handler.UserRegisterCommand;
 import com.wxxr.mobile.stock.app.service.loader.GainBeanLoader;
 import com.wxxr.mobile.stock.app.service.loader.OtherPersonalHomePageLoader;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.restful.resource.StockUserResourceAsync;
 
 /**
  * @author wangyan
@@ -77,82 +87,79 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
     private GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>> otherpersonalHomePageBean_cache;
 	@Override
 	public  void login(final String userId, final String pwd) throws LoginFailedException {
-		Future<?> future = context.getExecutor().submit(new Runnable() {
+
+		usernamePasswordCredential4Login = new UsernamePasswordCredential(
+				userId, pwd);
+		AsyncFuture<UserVO> future = doAsyncLogin(userId, pwd);
+		throw new ExecAsyncException(future);
+	}
+
+	protected AsyncFuture<UserVO> doAsyncLogin(final String userId,
+			final String pwd) {
+		Async<UserVO> vo = context.getService(IRestProxyService.class).getRestService(StockUserResourceAsync.class,StockUserResource.class).getUser();
+		AsyncFuture<UserVO> future = new AsyncFuture<UserVO>(vo){
+
+			/* (non-Javadoc)
+			 * @see com.wxxr.mobile.core.async.api.AsyncFuture#getInternalCallback()
+			 */
 			@Override
-			public void run() {
-                usernamePasswordCredential4Login = new UsernamePasswordCredential(
-                        userId, pwd);
-				try {
-					UserVO vo = context.getService(IRestProxyService.class).getRestService(StockUserResource.class).getUser();
-					if (vo!=null){
-    					myUserInfo = new UserBean();
-    					myUserInfo.setNickName(vo.getNickName());
-    					myUserInfo.setUsername(vo.getUserName());
-    					myUserInfo.setPhoneNumber(vo.getMoblie());
-    					myUserInfo.setUserPic(vo.getIcon());
-    					saveCookie(userId,pwd);
-    					restoreUserBean(myUserInfo);
-    					myUserInfo.setPassword(pwd);
-    					getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGIN));
-    					 //根据用户密码登录成功
-    	                Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
-    	                if(pref == null){
-    	                    pref= new Hashtable<String, String>();
-    	                    getPrefManager().newPreference(getModuleName(), pref);
-    	                }else{
-    	                    pref = DictionaryUtils.clone(pref);
-    	                }
-    	                pref.put(KEY_USERNAME, userId);
-    	                pref.put(KEY_PASSWORD, pwd);
-    	                pref.put(KEY_UPDATE_DATE, String.valueOf(System.currentTimeMillis()));
-    	                getPrefManager().putPreference(getModuleName(), pref);
+			public IAsyncCallback<UserVO> getInternalCallback() {
+				return new DelegateCallback<UserVO, UserVO>(super.getInternalCallback()) {
+
+					@Override
+					protected UserVO getTargetValue(UserVO vo) {
+						return vo;
 					}
-					
-				} catch (NotAuthorizedException e) {
-					log.warn("Failed to login user due to invalid user name and/or password",e);
-					usernamePasswordCredential4Login = null;
-					throw new LoginFailedException("用户名或密码错误");
-				} catch (Throwable e) {
-					log.warn("Failed to login user due to unexpected exception",e);
-					usernamePasswordCredential4Login = null;
-					throw new LoginFailedException("登录失败，请稍后再试...");
-				}
-				
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.async.api.DelegateCallback#failed(java.lang.Throwable)
+					 */
+					@Override
+					public void failed(Throwable cause) {
+						if(cause instanceof NotAuthorizedException){
+							log.warn("Failed to login user due to invalid user name and/or password",cause);
+							usernamePasswordCredential4Login = null;
+							cause = new LoginFailedException("用户名或密码错误");
+						}else{
+							log.warn("Failed to login user due to unexpected exception",cause);
+							usernamePasswordCredential4Login = null;
+							cause = new LoginFailedException("登录失败，请稍后再试...");
+						}
+						super.failed(cause);
+					}
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.async.api.DelegateCallback#success(java.lang.Object)
+					 */
+					@Override
+					public void success(UserVO vo) {
+						if (vo!=null){
+							try {
+								if(myUserInfo == null){
+									myUserInfo = new UserBean();
+								}
+								updateBindingUser(userId, pwd, vo);
+								getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGIN));
+								//KUtils.getService(ITradingManagementService.class).getHomeMenuList(true);//登陆成功后按需刷新首页菜单
+							}catch(Throwable t){
+								super.failed(t);
+								return;
+							}
+						}
+						super.success(vo);
+					}
+				};
 			}
 
-			
-		});
-		if (future != null) {
-			try {
-				future.get(20, TimeUnit.SECONDS);
-			} catch (ExecutionException e) {
-				throw (StockAppBizException)e.getCause();
-			} catch(Throwable e){
-				log.warn("连接超时",e);
-				throw new LoginFailedException("登录超时，请稍后再试...");
-			}
-		}
-
+		};
+		return future;
 	}
 	
 	@Override
 	public void register(final String phoneNumber) throws StockAppBizException {
 		UserRegisterCommand cmd=new UserRegisterCommand();
 		cmd.setUserName(phoneNumber);
-		try{
-			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-				try {
-					SimpleResultVo vo=future.get(30,TimeUnit.SECONDS);
-					if(vo.getResult()!=0){
-						throw new StockAppBizException(vo.getMessage());
-					}
-				} catch (Exception e) {
-					throw new StockAppBizException(e.getMessage());
-				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
-			}
-
+		AsyncUtils.execCommandAsyncInUI(context.getService(ICommandExecutor.class), cmd);
 	}
 	
 	@Override
@@ -167,6 +174,59 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
        }
        usernamePasswordCredential4Login=null;
        getService(IEventRouter.class).routeEvent(new UserLoginEvent(userId,LoginAction.LOGOUT));
+       
+       /*AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+   		public void run() {
+   			try {
+   		    	   KUtils.getService(ITradingManagementService.class).getHomeMenuList(true);//退出登陆后按需刷新首页菜单
+   				} catch (Exception e) {
+   					log.warn("Failed to refresh homepage after logout", e);
+   				}
+   			
+   		}
+          });*/
+	}
+	
+	private void initBindingUser(){
+	    IPreferenceManager mgr = getPrefManager();
+        Dictionary<String, String> d = mgr.getPreference(getModuleName());
+        String pwd = d != null ? d.get(KEY_PASSWORD) : null;
+        String user_name = d != null ? d.get(KEY_USERNAME) : null;
+        if(user_name != null && this.myUserInfo==null){
+    		myUserInfo = new UserBean();
+    		myUserInfo.setUsername(user_name);
+    		loadUserBean(myUserInfo);
+    		myUserInfo.setPassword(pwd);
+    		usernamePasswordCredential4Login = new UsernamePasswordCredential(user_name,pwd);
+
+        }
+	}
+	
+	private void loadUserBean(UserBean user){
+	    IPreferenceManager mgr = getPrefManager();
+	    if (mgr.hasPreference(getModuleName()+"_"+user.getUsername())) {
+	    	  Dictionary<String, String> d = mgr.getPreference(getModuleName()+"_"+user.getUsername());
+	          if (d != null ){
+	        	  if (StringUtils.isBlank(user.getUsername())) {
+	        		  user.setUsername(d.get(KEY_USERNAME));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getNickName())) {
+	        		  user.setNickName(d.get(KEY_NICKNAME));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getPhoneNumber())) {
+	        		  user.setPhoneNumber(d.get(KEY_PHONENUMBER));
+	        	  }
+	        	  if (StringUtils.isBlank(user.getUserPic())) {
+	        		  user.setUserPic(d.get(KEY_USERPIC));
+	        	  }
+	        	  user.setPassword(d.get(KEY_PASSWORD));
+	        	  user.setHomeBack(d.get(KEY_HOME_BGIMG));
+	        	  String msg_setting = d.get(KEY_MSG_SETTTING);
+	        	  user.setMessagePushSettingOn("ON".equals(msg_setting));
+	        	  String isBindCard = d.get(KEY_BINDCARD);
+	        	  user.setBindCard("true".equalsIgnoreCase(isBindCard));
+	          }
+		}
 	}
 	
 	private void saveUserBean(UserBean b){
@@ -206,45 +266,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
         getPrefManager().putPreference(getModuleName()+"_"+b.getUsername(), pref);
 
 	}
-	private void loadCookie(){
-	    IPreferenceManager mgr = getPrefManager();
-        Dictionary<String, String> d = mgr.getPreference(getModuleName());
-        String pwd = d != null ? d.get(KEY_PASSWORD) : null;
-        String user_name = d != null ? d.get(KEY_USERNAME) : null;
-        if(user_name != null && this.myUserInfo==null){
-        	try {
-				login(user_name, pwd);
-			} catch (Exception e) {
-				log.warn("Failed to login by cookie",e);
-			}
-        }
-	}
-	private void restoreUserBean(UserBean user){
-	    IPreferenceManager mgr = getPrefManager();
-	    if (mgr.hasPreference(getModuleName()+"_"+user.getUsername())) {
-	    	  Dictionary<String, String> d = mgr.getPreference(getModuleName()+"_"+user.getUsername());
-	          if (d != null ){
-	        	  if (StringUtils.isBlank(user.getUsername())) {
-	        		  user.setUsername(d.get(KEY_USERNAME));
-	        	  }
-	        	  if (StringUtils.isBlank(user.getNickName())) {
-	        		  user.setNickName(d.get(KEY_NICKNAME));
-	        	  }
-	        	  if (StringUtils.isBlank(user.getPhoneNumber())) {
-	        		  user.setPhoneNumber(d.get(KEY_PHONENUMBER));
-	        	  }
-	        	  if (StringUtils.isBlank(user.getUserPic())) {
-	        		  user.setUserPic(d.get(KEY_USERPIC));
-	        	  }
-	        	  user.setPassword(d.get(KEY_PASSWORD));
-	        	  user.setHomeBack(d.get(KEY_HOME_BGIMG));
-	        	  String msg_setting = d.get(KEY_MSG_SETTTING);
-	        	  user.setMessagePushSettingOn("ON".equals(msg_setting));
-	        	  String isBindCard = d.get(KEY_BINDCARD);
-	        	  user.setMessagePushSettingOn("true".equalsIgnoreCase(isBindCard));
-	          }
-		}
-	}
+
 	
 	protected IPreferenceManager getPrefManager() {
 		if (this.prefManager == null) {
@@ -281,16 +303,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	public void resetPassword(String userName) {
 		RestPasswordCommand command=new RestPasswordCommand();
 		command.setUserName(userName);
-		try{
-			Future<Void> future=context.getService(ICommandExecutor.class).submitCommand(command);
-				try {
-					future.get(30,TimeUnit.SECONDS);
-				} catch (Exception e) {
-					throw new StockAppBizException("系统错误");
-				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
-			}
+		AsyncUtils.execCommandAsyncInUI(context.getService(ICommandExecutor.class), command);
 	}
 	
 
@@ -306,13 +319,13 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	@Override
 	protected void startService() {	
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
-		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
+//		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
 		registry.registerEntityLoader("otherGainBean", new GainBeanLoader());
-		context.getService(ICommandExecutor.class).registerCommandHandler(Register2Handher.COMMAND_NAME, new Register2Handher());
+		context.getService(ICommandExecutor.class).registerCommandHandler(UserRegister2Command.COMMAND_NAME, new Register2Handher());
 		registry.registerEntityLoader("otherpersonalHomePageBean", new OtherPersonalHomePageLoader());
 		context.registerService(IUserLoginManagementService.class, this);
 		context.registerService(IUserAuthManager.class, this);
-		loadCookie();
+		initBindingUser();
 		
 	}
 
@@ -333,6 +346,7 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	public UserBean getMyUserInfo() {
 		return myUserInfo;
 	}
+	
 	private void saveCookie(String userId, String pwd) {
 		  Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
 	        if(pref == null){
@@ -349,30 +363,59 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 	        }
 	        getPrefManager().putPreference(getModuleName(), pref);
 	}
-	
+//	protected PersonalHomePageBean personalHomePageBean;
 	@Override
-	public PersonalHomePageBean getOtherPersonalHomePage(final String userId, boolean isAsync) {
+	public PersonalHomePageBean getOtherPersonalHomePage(final String userId) {
 		if (otherpersonalHomePageBean_cache==null) {
 			 otherpersonalHomePageBean_cache=new GenericReloadableEntityCache<String,PersonalHomePageBean,List<PersonalHomePageBean>>("otherpersonalHomePageBean");
 		}
-	    String key=userId;
-        if (otherpersonalHomePageBean_cache.getEntity(key)==null){
-            PersonalHomePageBean b=new PersonalHomePageBean();
-            otherpersonalHomePageBean_cache.putEntity(key,b);
-        }
+	    final String key=userId;
+	    boolean forceload = false;
+	    PersonalHomePageBean bean = this.otherpersonalHomePageBean_cache.getEntity(key);
+		if (bean == null) {
+			bean = new PersonalHomePageBean();
+			otherpersonalHomePageBean_cache.putEntity(key, bean);
+			forceload = true;
+		}
+//        if (otherpersonalHomePageBean_cache.getEntity(key)==null){
+//            PersonalHomePageBean b=new PersonalHomePageBean();
+//            otherpersonalHomePageBean_cache.putEntity(key,b);
+//        }
         Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("userId", userId);
-        this.otherpersonalHomePageBean_cache.forceReload(p,isAsync);
-        return otherpersonalHomePageBean_cache.getEntity(key);
+        if(forceload){
+	        AsyncUtils.forceLoadNFetchAsyncInUI(this.otherpersonalHomePageBean_cache, p, new AsyncFuture<PersonalHomePageBean>(), new IEntityFetcher<PersonalHomePageBean>() {
+	
+				@Override
+				public PersonalHomePageBean fetchFromCache(
+						IBindableEntityCache<?, ?> cache) {
+					return (PersonalHomePageBean)cache.getEntity(key);
+				}
+			});
+        }else{
+        	 this.otherpersonalHomePageBean_cache.doReload(true, p, null);
+        }
+        return bean;
 	}
 
-	BindableListWrapper<GainBean> otherGainBeans ;
     public BindableListWrapper<GainBean> getMoreOtherPersonal(final String userId, int start,int limit, final boolean virtual) {
     	if (otherGainBean_cache==null) {
-    		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean");
+    		otherGainBean_cache = new GenericReloadableEntityCache<String, GainBean, List<GainBean>>("otherGainBean"){
+    			@Override
+				protected Map<String, Object> prepareLoadmoreCommandParameter(
+						BindableListWrapper<GainBean> list) {
+					Map<String, Object> params=new HashMap<String, Object>();
+					int start = otherGainBean_cache.getCacheSize();
+					params.put("virtual", virtual);
+					params.put("start", start);
+					params.put("limit", 20);
+					params.put("userId", userId);
+					return params;
+				}
+    		};
 		}
     	//if (otherGainBeans==null) {
-    		otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
+    	final BindableListWrapper<GainBean> otherGainBeans = otherGainBean_cache.getEntities(new IEntityFilter<GainBean>(){
                 @Override
                 public boolean doFilter(GainBean entity) {
                     if ( entity.getUserId().equals(userId) && entity.getVirtual()==virtual ){
@@ -387,21 +430,114 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
       p.put("start", start);
       p.put("limit", limit);
       p.put("userId", userId);
-      otherGainBean_cache.forceReload(p,false);
       otherGainBean_cache.setCommandParameters(p);
       otherGainBeans.setReloadParameters(p);
-     return otherGainBeans;
+      return AsyncUtils.forceLoadNFetchAsyncInUI(otherGainBean_cache,p, new AsyncFuture<BindableListWrapper<GainBean>>(),
+  			new IEntityFetcher<BindableListWrapper<GainBean>>() {
+
+					@Override
+					public BindableListWrapper<GainBean> fetchFromCache(
+							IBindableEntityCache<?, ?> cache) {
+						return otherGainBeans;
+					}
+				});
     }
     private static Comparator<GainBean> viewMoreComparator = new Comparator<GainBean>() {
 		@Override
 		public int compare(GainBean o1, GainBean o2) {
 			if (o2!=null&&o1!=null) {
-				return (int)(o2.getTradingAccountId()-o1.getTradingAccountId());
+				return (o2.getTradingAccountId()-o1.getTradingAccountId())>0?1:-1;
 			}
 			return 0;
 			//return o2.getCloseTime().compareTo(o1.getCloseTime());
 		}
 	};
+	
+	private void scheduleLoginVerification(int delay, TimeUnit unit) {
+		Runnable task = new Runnable() {
+			
+			@Override
+			public void run() {
+				if(myUserInfo != null){
+					getService(IEventRouter.class).routeEvent(new UserLoginEvent(myUserInfo.getUsername(),LoginAction.LOGIN));		
+					Async<UserVO> vo = context.getService(IRestProxyService.class).getRestService(StockUserResourceAsync.class,StockUserResource.class).getUser();
+					vo.onResult(new IAsyncCallback<UserVO>() {
+
+						@Override
+						public void cancelled() {
+							log.warn("Verfication of binding user was cancelled, will retry later");
+							scheduleLoginVerification(5,TimeUnit.SECONDS);
+						}
+
+						@Override
+						public void failed(Throwable cause) {
+							if(cause instanceof NotAuthorizedException){
+								log.warn("Failed to login user due to invalid user name and/or password",cause);
+								usernamePasswordCredential4Login = null;
+								logout();
+							}else{
+								log.warn("Failed to login user due to unexpected exceptionm will retry later",cause);
+								scheduleLoginVerification(5,TimeUnit.SECONDS);
+							}
+						}
+
+						@Override
+						public void setCancellable(ICancellable arg0) {
+						}
+
+						@Override
+						public void success(UserVO vo) {
+							updateBindingUser(usernamePasswordCredential4Login.getUserName(), usernamePasswordCredential4Login.getAuthPassword(), vo);
+						}
+					});
+				}
+			}
+		};
+		if(delay <= 0){
+			KUtils.invokeLater(task);
+		}else{
+			KUtils.invokeLater(task, delay, unit);
+		}
+	}
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.microkernel.api.AbstractModule#onKernelStarted()
+	 */
+	@Override
+	protected void onKernelStarted() {
+		if(this.myUserInfo != null){
+			getService(IEventRouter.class).routeEvent(new UserLoginEvent(this.myUserInfo.getUsername(),LoginAction.LOGIN));
+			scheduleLoginVerification(200, TimeUnit.MILLISECONDS);
+		}
+	}
+
+	/**
+	 * @param userId
+	 * @param pwd
+	 * @param vo
+	 */
+	public void updateBindingUser(final String userId, final String pwd,
+			UserVO vo) {
+		myUserInfo.setNickName(vo.getNickName());
+		myUserInfo.setUsername(userId);
+		myUserInfo.setPhoneNumber(vo.getMoblie());
+		myUserInfo.setUserPic(vo.getIcon());
+		saveCookie(userId,pwd);
+		loadUserBean(myUserInfo);
+		myUserInfo.setPassword(pwd);
+		//根据用户密码登录成功
+		Dictionary<String, String> pref = getPrefManager().getPreference(getModuleName());
+		if(pref == null){
+			pref= new Hashtable<String, String>();
+			getPrefManager().newPreference(getModuleName(), pref);
+		}else{
+			pref = DictionaryUtils.clone(pref);
+		}
+		pref.put(KEY_USERNAME, userId);
+		pref.put(KEY_PASSWORD, pwd);
+		pref.put(KEY_UPDATE_DATE, String.valueOf(System.currentTimeMillis()));
+		getPrefManager().putPreference(getModuleName(), pref);
+	}
+	
 	@Override
 	public void register(String userName, String pass, String pass2)
 			throws StockAppBizException {
@@ -414,19 +550,18 @@ public class UserLoginManagementServiceImpl extends AbstractModule<IStockAppCont
 		UserRegister2Command cmd=new UserRegister2Command();
 		cmd.setUserName(userName);
 		cmd.setPassword(pass);
-		try{
-			Future<SimpleResultVo> future=context.getService(ICommandExecutor.class).submitCommand(cmd);
-				try {
-					SimpleResultVo vo=future.get(30,TimeUnit.SECONDS);
-					if(vo.getResult()!=0){
-						throw new StockAppBizException(vo.getMessage());
-					}
-				} catch (Exception e) {
-					throw new StockAppBizException(e.getMessage());
+		AsyncUtils.execCommandAsyncInUI(cmd,new IDataConverter<SimpleResultVo, Object>(){
+
+			@Override
+			public Object convert(SimpleResultVo vo)
+					throws NestedRuntimeException {
+				if(vo.getResult()!=0){
+					throw new NestedRuntimeException(new StockAppBizException(vo.getMessage()));
 				}
-			}catch(CommandException e){
-				throw new StockAppBizException(e.getMessage());
+				return null;
 			}
+			
+		});
 		
 	}
 	

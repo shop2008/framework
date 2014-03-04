@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.wxxr.mobile.core.api.IDataExchangeCoordinator;
+import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -44,6 +45,7 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 	private static final String TYPE_STOCK_DATA_BLOCK = "stock_block";
 	@Override
 	protected void initServiceDependency() {
+		addRequiredService(ICommandExecutor.class);
 		addRequiredService(IContentManager.class);
 		addRequiredService(IMTreeDataSyncServerConnector.class);
 	}
@@ -58,11 +60,11 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			log.debug(String.format("%d stocks loaded.", cache.size()));
 		}
 		context.registerService(IStockInfoSyncService.class, this);
-		context.getExecutor().execute(new Runnable() {
+		context.getService(ICommandExecutor.class).submit(new Runnable() {
 			public void run() {
 				restartSync();// 启动同步组件
 			}
-		});
+		},null);
 	}
 
 	@Override
@@ -243,9 +245,9 @@ public class StockInfoSyncServiceImpl extends AbstractModule<IStockAppContext>
 			cache.clear();
 			if (list!=null&&list.size()>0) {
 				for (StockBaseInfo stockInfo : list) {
-					if (log.isDebugEnabled()) {
-						log.debug(String.format("Putting stock[%s]  to cache...", getStockKey(stockInfo.getCode(), stockInfo.getMc())));
-					}
+//					if (log.isDebugEnabled()) {
+//						log.debug(String.format("Putting stock[%s]  to cache...", getStockKey(stockInfo.getCode(), stockInfo.getMc())));
+//					}
 					cache.put(getStockKey(stockInfo.getCode(), stockInfo.getMc()),stockInfo);
 				}
 			}

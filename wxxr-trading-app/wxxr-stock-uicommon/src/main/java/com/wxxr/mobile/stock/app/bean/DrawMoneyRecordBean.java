@@ -37,6 +37,12 @@ public class DrawMoneyRecordBean implements IBindableBean{
 		this.drawAmount = drawAmount;
 		this.emitter.firePropertyChange("drawAmount", old, this.drawAmount);
 	}
+	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 	/**
 	 * @return the drawState
 	 */

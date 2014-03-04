@@ -1,12 +1,16 @@
 package com.wxxr.mobile.stock.client.binding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.view.View;
 
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.InputEventDecorator;
 import com.wxxr.mobile.core.ui.api.InputEventHandlingContext;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 
 public class BuyStockClickedDecorator implements InputEventDecorator {
 
@@ -22,7 +26,7 @@ public class BuyStockClickedDecorator implements InputEventDecorator {
 		if(v != null)
 			v.setEnabled(false);
 		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_SOURCE_VIEW, context.getViewModel());
-		IAsyncCallback cb = new IAsyncCallback() {
+		IAsyncCallback<Object> cb = new IAsyncCallback<Object>() {
 			
 			@Override
 			public void success(Object result) {
@@ -31,12 +35,30 @@ public class BuyStockClickedDecorator implements InputEventDecorator {
 			}
 			
 			@Override
-			public void failed(Object cause) {
+			public void failed(Throwable cause) {
 				if(v != null)
 					v.setEnabled(true);
 			}
+
+			@Override
+			public void cancelled() {
+				if(v != null)
+					v.setEnabled(true);
+			}
+
+			@Override
+			public void setCancellable(ICancellable cancellable) {
+				
+			}
 		};
-		((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_CALLBACK, cb);
+		List<IAsyncCallback> list = (List<IAsyncCallback>)((SimpleInputEvent)event).getProperty(InputEvent.PROPERTY_ATTACH_CALLBACK);
+		if(list != null)
+			list.add(cb);
+		else {
+			list = new ArrayList<IAsyncCallback>();
+			list.add(cb);
+			((SimpleInputEvent)event).addProperty(InputEvent.PROPERTY_ATTACH_CALLBACK, list);
+		}
 		this.next.handleEvent(context, event);
 	}
 

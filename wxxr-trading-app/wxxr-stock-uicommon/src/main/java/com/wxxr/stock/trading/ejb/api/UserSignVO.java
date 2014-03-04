@@ -28,7 +28,7 @@ public class UserSignVO implements Serializable{
 	 * @return the isSign
 	 */
 	
-	public Boolean isSign() {
+	public Boolean getSign() {
 		return sign;
 	}
 	/**

@@ -44,7 +44,7 @@
             android:layout_marginRight="5dip"
             android:background="@drawable/edit_text_clear"
             bind:field="*"
-            bind:onClick="clearTextContent" />
+            bind:on_Click="clearTextContent" />
     </RelativeLayout>
 
 
@@ -57,6 +57,6 @@
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
         bind:field="setNick"
-        bind:on_Click="commit@EditablePageBtnClickedDecorator" />
+        bind:on_Click="commit" />
 
 </LinearLayout>

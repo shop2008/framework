@@ -12,11 +12,12 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.service.IUserLoginManagementService;
 
-@View(name="AccountManagePage",withToolbar=true, description="我的帐号")
+@View(name="AccountManagePage",withToolbar=true, description="我的账号")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.account_manage_layout")
 public abstract class AccountManagePage extends PageBase {
 
@@ -35,7 +36,7 @@ public abstract class AccountManagePage extends PageBase {
 	
 	@Command(
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style",visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event){
@@ -51,9 +52,10 @@ public abstract class AccountManagePage extends PageBase {
 	
 	@Command
 	String logout(InputEvent event){
+	
 		usrService.logout();
 		hide();
-		return "*";
+		return null;
 	}
 	
 }

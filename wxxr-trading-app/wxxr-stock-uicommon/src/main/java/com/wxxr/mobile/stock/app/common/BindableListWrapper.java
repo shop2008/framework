@@ -6,10 +6,13 @@ package com.wxxr.mobile.stock.app.common;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.DelegateCallback;
+import com.wxxr.mobile.core.async.api.ExecAsyncException;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -117,20 +120,58 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		pSupport.removePropertyChangeListener(listener);
 	}
 
-	public List<E> getData(boolean forceReload){
+	public List<E> getData(boolean forceReload) {
 		if(forceReload){
 			this.disableEvent = true;
 			try {
-				doReload(getReloadParameters(),false);
+				AsyncFuture<List<E>> future = new AsyncFuture<List<E>>();
+				doReload(getReloadParameters(),new DelegateCallback<Boolean, List<E>>(future.getInternalCallback()){
+
+					/* (non-Javadoc)
+					 * @see com.wxxr.mobile.core.async.api.DelegateCallback#getTargetValue(java.lang.Object)
+					 */
+					@Override
+					protected List<E> getTargetValue(Boolean value) {
+						return getData();
+					}
+					
+				});
+				if(!future.isDone()){
+					throw new ExecAsyncException(future);
+				}
 			}finally {
 				this.disableEvent = false;
 			}
 		}else{
-			doReload(getReloadParameters(), true);
+			doReload(getReloadParameters(), null);
 		}
 		return getData();
 	}
 	
+	public List<E> loadMoreData() {
+		this.disableEvent = true;
+		try {
+			AsyncFuture<List<E>> future = new AsyncFuture<List<E>>();
+			doReload(getLoadMoreParameters(),new DelegateCallback<Boolean, List<E>>(future.getInternalCallback()){
+
+				/* (non-Javadoc)
+				 * @see com.wxxr.mobile.core.async.api.DelegateCallback#getTargetValue(java.lang.Object)
+				 */
+				@Override
+				protected List<E> getTargetValue(Boolean value) {
+					return getData();
+				}
+				
+			});
+			if(!future.isDone()){
+				throw new ExecAsyncException(future);
+			}
+		}finally {
+			this.disableEvent = false;
+		}
+		return getData();
+	}
+
 	public synchronized List<E> getData() {
 		if(this.data == null){
 			if(getLog().isDebugEnabled()){
@@ -158,7 +199,7 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 		return this.data;
 	}
 	
-	protected abstract void doReload(Map<String, Object> params, boolean async);
+	protected abstract void doReload(Map<String, Object> params, IAsyncCallback<Boolean> cb);
 	/**
 	 * @return the reloadParameters
 	 */
@@ -170,6 +211,15 @@ public abstract class BindableListWrapper<E> implements IBindableBean {
 	 */
 	public void setReloadParameters(Map<String, Object> reloadParameters) {
 		this.reloadParameters = reloadParameters;
+	}
+	
+	protected abstract Map<String, Object> getLoadMoreParameters();
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.core.bean.api.IBindableBean#hasPropertyChangeListener(com.wxxr.mobile.core.bean.api.IPropertyChangeListener)
+	 */
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return pSupport.hasPropertyChangeListener(listener);
 	}
 	
 }

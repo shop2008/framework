@@ -4,55 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.AuditDetailBean;
+import com.wxxr.mobile.stock.app.command.GetAuditDetailVOsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 
-public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditInfoVO> {
-
-    private static final String COMMAND_NAME = "GetAuditDetailVOsCommand";
-    @NetworkConstraint
-    private static class GetAuditDetailVOsCommand implements ICommand<List<AuditInfoVO>> {
-        private String acctID;
-
-
-        public String getAcctID() {
-            return acctID;
-        }
-        public void setAcctID(String acctID) {
-            this.acctID = acctID;
-        }
-
-
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<AuditInfoVO>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-
-        @Override
-        public void validate() {
-            if(this.acctID == null){
-                throw new IllegalArgumentException();
-            }
-        }
-        
-    }
+public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailBean, AuditInfoVO, GetAuditDetailVOsCommand> {
     
     
     @Override
-    public ICommand<List<AuditInfoVO>> createCommand(Map<String, Object> params) {
+    public GetAuditDetailVOsCommand createCommand(Map<String, Object> params) {
         if((params == null)||params.isEmpty()){
             return null;
         }
@@ -63,9 +28,8 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<AuditInfoVO> result,
+    public boolean handleCommandResult(GetAuditDetailVOsCommand command,List<AuditInfoVO> result,
             IReloadableEntityCache<String, AuditDetailBean> cache) {
-        GetAuditDetailVOsCommand command = (GetAuditDetailVOsCommand) cmd;
         boolean updated = false;
        
         if(result != null){
@@ -85,21 +49,31 @@ public class AuditDetailLoader extends AbstractEntityLoader<String, AuditDetailB
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetAuditDetailVOsCommand.COMMAND_NAME;
     }
 
     @Override
-    protected List<AuditInfoVO> executeCommand(
-            ICommand<List<AuditInfoVO>> command) throws Exception {
-        GetAuditDetailVOsCommand cmd = (GetAuditDetailVOsCommand)command;
-        AuditInfoVO vo = RestUtils.getRestService(ITradingResource.class).getAuditDetail(cmd.getAcctID());
-        if (vo!=null){
-            ArrayList<AuditInfoVO> result=new ArrayList<AuditInfoVO>();
-            result.add(vo);
-            return result;
-        }
-        return null;
+    protected void executeCommand(GetAuditDetailVOsCommand cmd,final IAsyncCallback<List<AuditInfoVO>> callback) {
+       getRestService(ITradingResourceAsync.class,ITradingResource.class).getAuditDetail(cmd.getAcctID()).onResult(
+    		   
+    		   
+    	 new DelegateCallback<AuditInfoVO,List<AuditInfoVO>>(callback) {
+			
+			@Override
+			protected List<AuditInfoVO> getTargetValue(AuditInfoVO result) {
+				if(result != null){
+					ArrayList<AuditInfoVO> list=new ArrayList<AuditInfoVO>();
+					list.add(result);
+					return list;
+				}else{
+					return null;
+				}
+			}
+			
+		});
     }
 
-}
+ }
+
+
 

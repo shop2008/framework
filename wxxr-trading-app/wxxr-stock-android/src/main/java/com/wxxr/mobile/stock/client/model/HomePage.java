@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
-import android.widget.ListView;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -131,12 +130,11 @@ public abstract class HomePage extends PageBase {
 		} else {
 			vertionItem.setAttribute(AttributeKeys.icon,
 					"resourceId:drawable/v_update");
-			alertUpdateEnabled = AppUtils.getFramework()
-					.getService(IClientInfoService.class).alertUpdateEnabled();
+			alertUpdateEnabled = AppUtils.getFramework().getService(IClientInfoService.class).alertUpdateEnabled();
 			if (alertUpdateEnabled) {
-				updateSelection(new VertionUpdateSelection(
-						vertionInfoBean.getUrl()));
-				KUtils.executeTask(new Runnable() {
+				/*updateSelection(new VertionUpdateSelection(
+						vertionInfoBean.getUrl()));*/
+				KUtils.invokeLater(new Runnable() {
 
 					@Override
 					public void run() {
@@ -160,7 +158,8 @@ public abstract class HomePage extends PageBase {
 
 		}
 	}
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/list_button_style", visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
@@ -174,7 +173,8 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "右菜单", icon = "resourceId:drawable/user_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "右菜单", icon = "resourceId:drawable/user_button_style", visibleWhen="${true}") })
 	String toolbarClickedRight(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :right was clicked !");
@@ -188,7 +188,9 @@ public abstract class HomePage extends PageBase {
 		return null;
 	}
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "search", label = "搜索", icon = "resourceId:drawable/find_button_style") }, navigations = { @Navigation(on = "*", showPage = "GeGuStockPage") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "search", label = "搜索", icon = "resourceId:drawable/find_button_style", visibleWhen="${true}") }, 
+			navigations = { @Navigation(on = "*", showPage = "GeGuStockPage") })
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
@@ -273,8 +275,8 @@ public abstract class HomePage extends PageBase {
 				if (isLastest) {
 					return "";
 				} else {
-					updateSelection(new VertionUpdateSelection(
-							vertionInfoBean.getUrl()));
+					/*updateSelection(new VertionUpdateSelection(
+							vertionInfoBean.getUrl()));*/
 					return "+";
 
 				}

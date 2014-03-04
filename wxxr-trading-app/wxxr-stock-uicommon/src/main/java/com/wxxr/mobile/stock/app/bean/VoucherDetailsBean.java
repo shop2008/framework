@@ -68,6 +68,11 @@ public class VoucherDetailsBean implements IBindableBean {
     }
 
 	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

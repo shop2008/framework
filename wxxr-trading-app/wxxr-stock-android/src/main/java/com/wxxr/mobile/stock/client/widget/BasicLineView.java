@@ -1,5 +1,7 @@
 package com.wxxr.mobile.stock.client.widget;
 
+import com.wxxr.mobile.stock.client.utils.Utils;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -66,19 +68,23 @@ public class BasicLineView extends View {
 	public float sellWidthScale;
 	public float sellRightStartX;
 	private String stockState = BasicLineView.BUY_STATE;
+	private Context context;
 //	public float fHeightScale; //分时线纵比；
 //	public float zHeightScale; //柱状图纵度比；
 	
 	public BasicLineView(Context context) {
 		super(context);
+		this.context = context;
 		init();
 	}
 	public BasicLineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.context = context;
 		init();
 	}
 	public BasicLineView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		this.context = context;
 		init();
 	}
 	
@@ -163,6 +169,8 @@ public class BasicLineView extends View {
 	private void countData(Canvas canvas){
 		this.cWidth = this.getWidth();
 		this.cHeight = this.getHeight();
+		this.marginLeft = this.marginRight = Utils.adjustPadding(this.context);
+		this.textLineHeight = Utils.adjustVSpace(this.context);
 		this.fWidth = cWidth - (marginLeft + marginRight);
 		this.zWidth = this.fWidth;
 		this.lineHeight  = (cHeight - (marginTop + marginBottom + minuteTopPadding + minuteBottomPadding + textLineHeight)) / 6;

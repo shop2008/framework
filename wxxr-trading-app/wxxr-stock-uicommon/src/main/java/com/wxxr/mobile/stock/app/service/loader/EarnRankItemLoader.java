@@ -6,12 +6,13 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.app.command.GetEarnRankItemsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.Utils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.HomePageVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 
@@ -20,79 +21,14 @@ import com.wxxr.stock.trading.ejb.api.HomePageVOs;
  *
  */
 @SuppressWarnings("rawtypes")
-public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItemBean,HomePageVO>{
+public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItemBean,HomePageVO,GetEarnRankItemsCommand>{
 
-	final static String COMMAND_NAME = "GetEarnRankItems";
-
-	@NetworkConstraint
-	private static class GetEarnRankItemsCommand implements ICommand<List<HomePageVO>> {
-		
-		private int start, limit;
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public Class<List<HomePageVO>> getResultType() {
-			Class clazz = List.class;
-			return clazz;
-		}
-
-		@Override
-		public void validate() {
-			if((start < 0)||(limit <= 0)){
-				throw new IllegalArgumentException("start and limit parameters must large than 0");
-			}
-		}
-
-		/**
-		 * @return the start
-		 */
-		public int getStart() {
-			return start;
-		}
-
-		/**
-		 * @return the limit
-		 */
-		public int getLimit() {
-			return limit;
-		}
-
-		/**
-		 * @param start the start to set
-		 */
-		public void setStart(int start) {
-			this.start = start;
-		}
-
-		/**
-		 * @param limit the limit to set
-		 */
-		public void setLimit(int limit) {
-			this.limit = limit;
-		}
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.core.command.api.ICommandHandler#execute(com.wxxr.mobile.core.command.api.ICommand)
-	 */
-	@Override
-	protected List<HomePageVO> executeCommand(ICommand<List<HomePageVO>> command) throws Exception {
-		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
-		HomePageVOs vos=getRestService(ITradingResource.class).getHomeList(cmd.getStart(), cmd.getLimit());
-		return vos==null?null:vos.getHomePages();
-	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
-	public ICommand<List<HomePageVO>> createCommand(Map<String, Object> params) {
+	public GetEarnRankItemsCommand createCommand(Map<String, Object> params) {
 		GetEarnRankItemsCommand cmd = new GetEarnRankItemsCommand();
 		cmd.setStart((Integer)params.get("start"));
 		cmd.setLimit((Integer)params.get("limit"));
@@ -103,7 +39,7 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.lang.Object, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<HomePageVO> result,
+	public boolean handleCommandResult(GetEarnRankItemsCommand cmd,List<HomePageVO> result,
 			IReloadableEntityCache<String, EarnRankItemBean> cache) {
 		boolean updated = false;
 		for (HomePageVO vo : result) {
@@ -124,7 +60,23 @@ public class EarnRankItemLoader extends AbstractEntityLoader<String,EarnRankItem
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetEarnRankItemsCommand.COMMAND_NAME;
+	}
+
+	@Override
+	protected void executeCommand(GetEarnRankItemsCommand command,
+			IAsyncCallback<List<HomePageVO>> callback) {
+		GetEarnRankItemsCommand cmd = (GetEarnRankItemsCommand)command;
+		getRestService(ITradingResourceAsync.class,ITradingResource.class).getHomeList(cmd.getStart(), cmd.getLimit()).
+			onResult(new DelegateCallback<HomePageVOs, List<HomePageVO>>(callback) {
+
+				@Override
+				protected List<HomePageVO> getTargetValue(HomePageVOs vos) {
+					 return vos==null? null: vos.getHomePages();
+				}
+		});
 	}
 
 }
+
+

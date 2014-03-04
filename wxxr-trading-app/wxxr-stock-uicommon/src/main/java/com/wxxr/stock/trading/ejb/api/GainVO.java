@@ -42,6 +42,9 @@ public class GainVO implements Serializable{
 	private int status;
 	/**交易盘状态（完结/未完结）*/
 	private String over;
+	/**交易盘类型*/
+	private String acctType;
+
 	
 	
 	
@@ -149,13 +152,22 @@ public class GainVO implements Serializable{
 	public void setOver(String over) {
 		this.over = over;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public String getAcctType() {
+		return acctType;
+	}
+	public void setAcctType(String acctType) {
+		this.acctType = acctType;
+	}
 	@Override
 	public String toString() {
-		return "GainVO [maxStockCode=" + maxStockCode + ", maxStockName=" + maxStockName + ", maxStockMarket=" + maxStockMarket + ", userGain=" + userGain
-				+ ", closeTime=" + closeTime + ", virtual=" + virtual + ", tradingAccountId=" + tradingAccountId + ", sum=" + sum + ", totalGain=" + totalGain
-				+ ", status=" + status + ", over=" + over + "]";
+		return "GainVO [tradingAccountId=" + tradingAccountId
+				+ ", maxStockCode=" + maxStockCode + ", maxStockName="
+				+ maxStockName + ", maxStockMarket=" + maxStockMarket
+				+ ", userGain=" + userGain + ", closeTime=" + closeTime
+				+ ", virtual=" + virtual + ", sum=" + sum + ", totalGain="
+				+ totalGain + ", status=" + status + ", over=" + over
+				+ ", acctType=" + acctType + "]";
 	}
+	
+
 }

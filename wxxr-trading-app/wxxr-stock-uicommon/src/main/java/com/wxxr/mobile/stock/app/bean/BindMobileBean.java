@@ -50,6 +50,11 @@ public class BindMobileBean implements IBindableBean {
 		this.emitter.firePropertyChange("mobileNum", old, this.mobileNum);
 	}
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 	/**
 	 * @return the code
 	 */

@@ -7,60 +7,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.stock.app.bean.UserAssetBean;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.UserBean;
+import com.wxxr.mobile.stock.app.command.GetUserInfoCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.restful.resource.StockUserResourceAsync;
 
 /**
  * @author wangyan
  *
  */
-public class UserInfoLoader extends AbstractEntityLoader<String, UserBean, UserVO> {
+public class UserInfoLoader extends AbstractEntityLoader<String, UserBean, UserVO, GetUserInfoCommand> {
 
-	private static final String COMMAND_NAME = "GetUserInfoCommand";
-
-	
-	@NetworkConstraint
-	private static class GetUserInfoCommand implements ICommand<List<UserVO>>{
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getCommandName()
-		 */
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getResultType()
-		 */
-		@Override
-		public Class<List<UserVO>> getResultType() {
-			Class clazz=List.class;
-			return clazz;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#validate()
-		 */
-		@Override
-		public void validate() {
-			
-		}
-		
-	}
 	@Override
-	public ICommand<List<UserVO>> createCommand(Map<String, Object> params) {
+	public GetUserInfoCommand createCommand(Map<String, Object> params) {
 		return new GetUserInfoCommand();
 	}
 
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd, List<UserVO> result,
+	public boolean handleCommandResult(GetUserInfoCommand cmd, List<UserVO> result,
 			IReloadableEntityCache<String, UserBean> cache) {
 		boolean updated = false;
 		if (result != null && !result.isEmpty()) {
@@ -82,21 +49,25 @@ public class UserInfoLoader extends AbstractEntityLoader<String, UserBean, UserV
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetUserInfoCommand.COMMAND_NAME;
 	}
 
 	@Override
-	protected List<UserVO> executeCommand(ICommand<List<UserVO>> command)
-			throws Exception {
-		UserVO vo=null;
-		try{
-			vo= getRestService(StockUserResource.class).getUser();
-		}catch(Exception e){
-			vo=null;
-		}
-		List<UserVO> list=new ArrayList<UserVO>();
-		list.add(vo);
-		return list;
+	protected void executeCommand(GetUserInfoCommand cmd, IAsyncCallback<List<UserVO>> callback) {
+			getRestService(StockUserResourceAsync.class,StockUserResource.class).getUser().
+			onResult(new DelegateCallback<UserVO, List<UserVO>>(callback) {
+
+				@Override
+				protected List<UserVO> getTargetValue(UserVO vo) {
+					List<UserVO> list= null;
+					if(vo != null) {
+						list = new ArrayList<UserVO>();
+						list.add(vo);
+					}
+					return list;
+				}
+			});
 	}
 
 }
+

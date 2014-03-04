@@ -4,8 +4,11 @@ import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Command;
+import com.wxxr.mobile.core.ui.annotation.Convertor;
+import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnDestroy;
+import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.ISelection;
 import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
@@ -15,12 +18,20 @@ import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.client.biz.VertionUpdateSelection;
 import com.wxxr.mobile.stock.client.service.IGenericContentService;
 import com.wxxr.mobile.stock.client.service.IUpdateVertionService;
+import com.wxxr.mobile.stock.client.utils.TextContentConvertor;
 
 @View(name="updateVertionDialog")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.update_vertion_dialog")
 public abstract class UpdateVertionDialog extends ViewBase implements ISelectionChangedListener{
 
 	String url;
+	String updateDescBean = null;
+	
+	@Field(valueKey="text", binding="${description}",converter="textConvertor")
+	String updateDesc;
+	
+	@Convertor
+	TextContentConvertor textConvertor;
 	
 	@Command
 	String downloadApk(InputEvent event) {
@@ -34,9 +45,9 @@ public abstract class UpdateVertionDialog extends ViewBase implements ISelection
 	@OnCreate
 	void registerListener() {
 		ISelectionService service = getUIContext().getWorkbenchManager().getWorkbench().getSelectionService();
-		ISelection selection = service.getSelection("home");
-		selectionChanged("home", selection);
-		service.addSelectionListener("home",this);
+		ISelection selection = service.getSelection("AppManageView");
+		selectionChanged("AppManageView", selection);
+		service.addSelectionListener("AppManageView",this);
 	}
 	
 	@Override
@@ -45,13 +56,15 @@ public abstract class UpdateVertionDialog extends ViewBase implements ISelection
 			VertionUpdateSelection updateSelection = (VertionUpdateSelection) selection;
 			String downloadUrl = updateSelection.getDownloadUrl();
 			//System.out.println("---download url---"+downloadUrl);
+			String description = updateSelection.getUpdateDesc();
+			registerBean("description", description);
 			url = downloadUrl;
 		}
 	}
 	
 	@OnDestroy
 	void unregisterListener() {
-		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("home",this);
+		getUIContext().getWorkbenchManager().getWorkbench().getSelectionService().removeSelectionListener("AppManageView",this);
 	}
 	@Command
 	String cancel(InputEvent event) {

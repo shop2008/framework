@@ -142,6 +142,10 @@ public class NewDragSortListView extends DragSortListView implements IDataChange
 						datas.get(i).setSelected(false);
 					}
 				}
+			}else{
+				for(int i=0; i<datas.size();i++){
+					datas.get(i).setSelected(false);
+				}				
 			}
 			notifyDataSetChanged();
 		}

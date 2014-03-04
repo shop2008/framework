@@ -29,6 +29,9 @@ public class GainBean implements IBindableBean {
 	private Long userGain;
 	private String maxStockName;
 	
+	/**交易盘类型*/
+	private String acctType;
+	
 	public String getUserId() {
         return userId;
     }
@@ -212,6 +215,12 @@ public class GainBean implements IBindableBean {
 		this.emitter.firePropertyChange("userGain", old, this.userGain);
 	}
 
+	
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 	/**
 	 * @return the maxStockName
 	 */
@@ -228,30 +237,34 @@ public class GainBean implements IBindableBean {
 		this.emitter.firePropertyChange("maxStockName", old, this.maxStockName);
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override   
-    public String toString() {
-        return "GainBean ["+
-                "virtual=" + this.virtual +
-                " , maxStockCode=" + this.maxStockCode +
-                " , over=" + this.over +
-                " , closeTime=" + this.closeTime +
-                " , status=" + this.status +
-                " , totalGain=" + this.totalGain +
-                " , tradingAccountId=" + this.tradingAccountId +
-                " , maxStockMarket=" + this.maxStockMarket +
-                " , sum=" + this.sum +
-                " , userGain=" + this.userGain +
-                " , maxStockName=" + this.maxStockName +
-        "]";
-    }
+  
+    public String getAcctType() {
+		return acctType;
+	}
+
+	public void setAcctType(String acctType) {
+		String old = this.acctType;
+		this.acctType = acctType;
+		this.emitter.firePropertyChange("acctType", old, this.acctType);
+	}
+
+	@Override
+	public String toString() {
+		return "GainBean [userId=" + userId + ", virtual=" + virtual
+				+ ", maxStockCode=" + maxStockCode + ", over=" + over
+				+ ", closeTime=" + closeTime + ", status=" + status
+				+ ", totalGain=" + totalGain + ", tradingAccountId="
+				+ tradingAccountId + ", maxStockMarket=" + maxStockMarket
+				+ ", sum=" + sum + ", userGain=" + userGain + ", maxStockName="
+				+ maxStockName + ", acctType=" + acctType + "]";
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((acctType == null) ? 0 : acctType.hashCode());
 		result = prime * result
 				+ ((closeTime == null) ? 0 : closeTime.hashCode());
 		result = prime * result
@@ -282,6 +295,11 @@ public class GainBean implements IBindableBean {
 		if (getClass() != obj.getClass())
 			return false;
 		GainBean other = (GainBean) obj;
+		if (acctType == null) {
+			if (other.acctType != null)
+				return false;
+		} else if (!acctType.equals(other.acctType))
+			return false;
 		if (closeTime == null) {
 			if (other.closeTime != null)
 				return false;
@@ -337,6 +355,8 @@ public class GainBean implements IBindableBean {
 		if (virtual != other.virtual)
 			return false;
 		return true;
-	}	
+	}
+
+	
 
 }

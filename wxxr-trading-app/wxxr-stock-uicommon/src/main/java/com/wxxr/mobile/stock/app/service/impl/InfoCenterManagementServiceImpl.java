@@ -10,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.async.api.Async;
+import com.wxxr.mobile.core.async.api.AsyncFuture;
+import com.wxxr.mobile.core.async.api.DelegateCallback;
+import com.wxxr.mobile.core.async.api.ExecAsyncException;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
@@ -23,8 +28,11 @@ import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IBindableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFetcher;
 import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
@@ -189,17 +197,33 @@ public class InfoCenterManagementServiceImpl extends
 	   if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
 	       return null;
 	   }
-	    String mc=market+code;
+	    final String mc=market+code;
         if (stockMinuteKBean_cache.getEntity(mc)==null){
             StockMinuteKBean b=new StockMinuteKBean();
             b.setMarket(market);
             b.setCode(code);
             stockMinuteKBean_cache.putEntity(mc,b);
         }
-        Map<String, Object> p=new HashMap<String, Object>(); 
+        final Map<String, Object> p=new HashMap<String, Object>(); 
         p.put("code", code);
         p.put("market", market);
-        this.stockMinuteKBean_cache.forceReload(p,wait4finish);
+        if(wait4finish){
+        	AsyncFuture<StockMinuteKBean> future = new AsyncFuture<StockMinuteKBean>(new Async<StockMinuteKBean>() {
+
+				@Override
+				public void onResult(IAsyncCallback<StockMinuteKBean> callback) {
+			        stockMinuteKBean_cache.doReload(true, p, new DelegateCallback<Boolean, StockMinuteKBean>(callback) {
+
+						@Override
+						protected StockMinuteKBean getTargetValue(Boolean value) {
+							return stockMinuteKBean_cache.getEntity(mc);
+						}
+					});
+				}
+			});
+        	throw new ExecAsyncException(future);
+        }
+        this.stockMinuteKBean_cache.doReload(false, p, null);
         return stockMinuteKBean_cache.getEntity(mc);
 	}
 	//K线
@@ -208,36 +232,48 @@ public class InfoCenterManagementServiceImpl extends
      
 		return null;
 	}
-	 public BindableListWrapper<StockLineBean> getDayStockline(final String code, final String market){
-	     if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
-             return null;
-         }
-	     String key = new StringBuffer().append(market).append(code).toString();
-	     
-	     BindableListWrapper<StockLineBean> dayline = dayLineCache.get(key);
-	     if(dayline == null) {
-	    	 dayline = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
-	            @Override
-	            public boolean doFilter(StockLineBean entity) {
-	                if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
-	                    return true;
-	                }
-	                return false;
-	            }
-	            
-	        }, new  StockLineBeanComparator());
-	          Map<String, Object> p=new HashMap<String, Object>(); 
-	          p.put("code", code);
-	          p.put("market", market);
-	          this.dayStockLineBean_cache.forceReload(p,false);
-	          dayStockLineBean_cache.setCommandParameters(p);
-	          dayline.setReloadParameters(p);
-	          this.dayLineCache.put(key, dayline);
-	     }else{
-	    	 this.dayStockLineBean_cache.doReloadIfNeccessay(dayline.getReloadParameters());
-	     }
-          return dayline;
-	 }
+	public BindableListWrapper<StockLineBean> getDayStockline(final String code, final String market){
+		if (StringUtils.isBlank(market) || StringUtils.isBlank(code) ){
+			return null;
+		}
+		final String key = new StringBuffer().append(market).append(code).toString();
+
+		BindableListWrapper<StockLineBean> dayline = dayLineCache.get(key);
+		if(dayline == null) {
+			final  BindableListWrapper<StockLineBean> result = dayStockLineBean_cache.getEntities(new IEntityFilter<StockLineBean>(){
+				@Override
+				public boolean doFilter(StockLineBean entity) {
+					if (entity.getMarket().equals(market) && entity.getCode().equals(code)){
+						return true;
+					}
+					return false;
+				}
+
+			}, new  StockLineBeanComparator());
+			final Map<String, Object> p=new HashMap<String, Object>(); 
+			p.put("code", code);
+			p.put("market", market);
+			result.setReloadParameters(p);
+			this.dayLineCache.put(key, result);
+			AsyncFuture<BindableListWrapper<StockLineBean>> future = new AsyncFuture<BindableListWrapper<StockLineBean>>(new Async<BindableListWrapper<StockLineBean>>() {
+
+				@Override
+				public void onResult(IAsyncCallback<BindableListWrapper<StockLineBean>> callback) {
+					dayStockLineBean_cache.doReload(true, p, new DelegateCallback<Boolean, BindableListWrapper<StockLineBean>>(callback) {
+
+						@Override
+						protected BindableListWrapper<StockLineBean> getTargetValue(Boolean value) {
+							return result;
+						}
+					});
+				}
+			});
+			throw new ExecAsyncException(future);
+		}else{
+			this.dayStockLineBean_cache.doReload(false,dayline.getReloadParameters(),null);
+		}
+		return dayline;
+	}
 	 
 	class StockLineBeanComparator implements Comparator<StockLineBean>{
         @Override
@@ -265,42 +301,57 @@ public class InfoCenterManagementServiceImpl extends
     private BindableListWrapper<StockTaxisBean> stockTaxisList;
 	@Override
     public StockQuotationBean getStockQuotation(String code, String market) {
-		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
-			return new StockQuotationBean();//fix闪退问题
+		if (StringUtils.isBlank(market) || StringUtils.isBlank(code)) {
+			return new StockQuotationBean();// fix闪退问题
 		}
-	    String mc=market+code;
-        Map<String, Object> params=new HashMap<String, Object>(); 
-        params.put("code", code);
-        params.put("market", market);
-	    if (stockQuotationBean_cache.getEntity(market+code)==null){
-	        StockQuotationBean b=new StockQuotationBean();
-            stockQuotationBean_cache.putEntity(mc,b);
-            this.stockQuotationBean_cache.forceReload(params,false);
-        }else{
-            this.stockQuotationBean_cache.doReloadIfNeccessay(params);
+		final String mc = market + code;
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("market", market);
+		if (stockQuotationBean_cache.getEntity(market + code) == null) {
+			AsyncUtils.forceLoadNFetchAsyncInUI(this.stockQuotationBean_cache,
+					params, new AsyncFuture<StockQuotationBean>(),
+					new IEntityFetcher<StockQuotationBean>() {
 
-        }
-         return stockQuotationBean_cache.getEntity(mc);
+						@Override
+						public StockQuotationBean fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return (StockQuotationBean) cache.getEntity(mc);
+						}
+					});
+		} else {
+			this.stockQuotationBean_cache.doReload(false, params, null);
+
+		}
+		return stockQuotationBean_cache.getEntity(mc);
     }
 	
 	@Override
-    public StockQuotationBean getSyncStockQuotation(String code, String market) {
-		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
-			return new StockQuotationBean();//fix闪退问题
+	public StockQuotationBean getSyncStockQuotation(String code, String market) {
+		if (StringUtils.isBlank(market) || StringUtils.isBlank(code)) {
+			return new StockQuotationBean();// fix闪退问题
 		}
-	    String mc=market+code;
-        Map<String, Object> params=new HashMap<String, Object>(); 
-        params.put("code", code);
-        params.put("market", market);
-	    if (stockQuotationBean_cache.getEntity(market+code)==null){
-	        StockQuotationBean b=new StockQuotationBean();
-            stockQuotationBean_cache.putEntity(mc,b);
-            this.stockQuotationBean_cache.forceReload(params,true);
-        }else{
-        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,true);
-        }
-        return stockQuotationBean_cache.getEntity(mc);
-    }
+		final String mc = market + code;
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("market", market);
+//		if (stockQuotationBean_cache.getEntity(market + code) == null) {
+			AsyncUtils.forceLoadNFetchAsyncInUI(this.stockQuotationBean_cache,
+					params, new AsyncFuture<StockQuotationBean>(),
+					new IEntityFetcher<StockQuotationBean>() {
+
+						@Override
+						public StockQuotationBean fetchFromCache(
+								IBindableEntityCache<?, ?> cache) {
+							return (StockQuotationBean) cache.getEntity(mc);
+						}
+					});
+//		} else {
+//			this.stockQuotationBean_cache.doReload(false, params, null);
+
+//		}
+		return stockQuotationBean_cache.getEntity(mc);
+	}
 //=====================beans =====================
 	
 	@Override
@@ -315,12 +366,14 @@ public class InfoCenterManagementServiceImpl extends
 			comp.setFieldName(taxis);
 			comp.setOrder(orderby);
 		}
-		Map<String, Object> params = new HashMap<String, Object>();
+		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("taxis",taxis);
 		params.put("orderby", orderby);
 		params.put("start", (long)start);
 		params.put("limit", (long)limit);
-		this.stockTaxis_cache.forceReload(params, true);
+		AsyncFuture<Boolean> future = new AsyncFuture<Boolean>();
+		this.stockTaxis_cache.doReload(true,params, future.getInternalCallback());
+		throw new ExecAsyncException(future);
 	}
 	
 	
@@ -342,7 +395,7 @@ public class InfoCenterManagementServiceImpl extends
 		params.put("orderby", orderby);
 		params.put("start", (long)start);
 		params.put("limit", (long)limit);
-		this.stockTaxis_cache.doReloadIfNeccessay(params);
+		this.stockTaxis_cache.doReload(false,params,null);
 		return this.stockTaxisList;
 	}
 
@@ -368,10 +421,10 @@ public class InfoCenterManagementServiceImpl extends
 	        p.put("code", code);
 	        p.put("market", market);
 	        stockMinuteKBeans.setReloadParameters(p);
-	        this.fiveDaystockMinuteKBean_cache.forceReload(p,false);
+	        this.fiveDaystockMinuteKBean_cache.doReload(true,p,null);
 	        this.fiveDayMinKCache.put(key, stockMinuteKBeans);
 	    }else{
-	    	 this.fiveDaystockMinuteKBean_cache.doReloadIfNeccessay(stockMinuteKBeans.getReloadParameters());
+	    	 this.fiveDaystockMinuteKBean_cache.doReload(false,stockMinuteKBeans.getReloadParameters(),null);
 	    }
 	    
 		return stockMinuteKBeans;

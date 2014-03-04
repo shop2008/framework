@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res/com.wxxr.mobile.stock.client"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,8 +19,6 @@
 		    <LinearLayout
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" 
-		        android:background="#ffffff"
-		    	android:padding="8dp"
 		    	android:layout_marginBottom="8dp"
 		        android:gravity="center_vertical">
 		        <ImageView
@@ -27,15 +26,17 @@
 		            android:layout_width="48dp"
 		            android:layout_height="48dp"
 		            android:src="@drawable/trading13" />
-		
-		        <TextView
-		            android:id="@+id/textView1"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textColor="@color/black"
-		            android:textSize="14sp"
-		            android:text="您所买入的股票最长持有期为4个交易日，持有期内可随时卖出" 
-		            android:layout_marginLeft="6dp"/>
+           <com.wxxr.mobile.stock.client.widget.HighlightTextView
+               android:id="@+id/textView1"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/white"
+               android:textSize="14sp"
+               android:text="您所买入的股票最长持有期为4个交易日，持有期内可随时卖出"
+               dslv:highLightText="4"
+               android:layout_marginLeft="6dp">
+            </com.wxxr.mobile.stock.client.widget.HighlightTextView>
+
 		    </LinearLayout>
 		    
 		    <!-- bind:field="money"
@@ -101,11 +102,23 @@
 		                android:id="@+id/tv_composite_cost"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
-		                android:text="--"
+		                android:text="0%"
 		                android:textSize="14sp"
 		                bind:field="lossRate"
 		                android:layout_alignParentRight="true"
 		                android:textColor="@color/black" />
+
+		            <TextView
+		                android:id="@+id/textView2"
+		                android:textSize="14sp"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentTop="true"
+		                android:textColor="@color/black" 
+		                android:layout_toLeftOf="@+id/tv_composite_cost"
+		                android:text="-"
+		                android:visibility="gone" />
+
 		        </RelativeLayout>
 		
 		        <RelativeLayout
@@ -130,6 +143,7 @@
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:text="优惠价："
+		                bind:field="isDiscountFee"
 		                android:textColor="@color/black" 
 		                android:textSize="14sp"/>
 			            <TextView
@@ -141,7 +155,7 @@
 			                android:textColor="@color/red" 
 			                bind:field="discountFeeValue"
 			                />
-			            <TextView
+			            <com.wxxr.mobile.stock.client.widget.DelLineTextView
 			                android:id="@+id/tv_composite_cost"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
@@ -149,7 +163,8 @@
 			                android:textSize="14sp"
 			                bind:field="originalFeeValue"
 			                android:layout_marginLeft="6dp"
-			                android:textColor="@color/black" />
+			                android:textColor="@color/black">
+			           </com.wxxr.mobile.stock.client.widget.DelLineTextView>
 		            </LinearLayout>
 		        </RelativeLayout>
 		
@@ -230,7 +245,7 @@
 		            android:id="@+id/tv_trade_rule_text"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:text="《挑战盘交易规则》"
+		            android:text="《挑战盘T+3规则》"
 		            android:textColor="@color/red" 
 		            android:textSize="14sp"
 		            android:enabled="true"
@@ -330,7 +345,21 @@
 			            android:layout_height="wrap_content"
 			            android:textSize="14sp"
 			            android:textColor="@color/white"
-			            android:text="操盘利润80%归玩家所有" />	    
+			            android:text="操盘利润" /> 
+			        <TextView 
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:text="--"
+			            android:textColor="@color/red"
+			            bind:field="companyGainRate"/>	    
+			        <TextView
+			            android:id="@+id/textView3"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="14sp"
+			            android:textColor="@color/white"
+			            android:text="归玩家所有" />    
 				</LinearLayout>
 		    </LinearLayout>    	            
             

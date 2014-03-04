@@ -47,5 +47,11 @@
             <flag name="pullUpFromBottom" value="0x2" />
         </attr>
     </declare-styleable>
-
+    
+    <declare-styleable name="HighlightTextView">
+        <attr name="highLightText" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="ImgLinearLayout">
+        <attr name="backgroundImage" format="string"></attr>
+    </declare-styleable>
 </resources>

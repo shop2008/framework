@@ -179,7 +179,8 @@ public class EditTextFocusChangedEventBinding extends AbstractEventBinding {
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if (actionId == EditorInfo.IME_ACTION_SEARCH ||
 					actionId == EditorInfo.IME_ACTION_DONE ||
-					event.getAction() == KeyEvent.ACTION_DOWN &&
+					actionId == EditorInfo.IME_ACTION_NEXT ||
+					event != null && event.getAction() == KeyEvent.ACTION_DOWN &&
 					event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 				if (event == null || !event.isShiftPressed()) {
 					if(monitor != null){

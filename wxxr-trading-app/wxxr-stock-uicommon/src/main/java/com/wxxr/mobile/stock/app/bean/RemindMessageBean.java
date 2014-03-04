@@ -4,6 +4,7 @@
 package com.wxxr.mobile.stock.app.bean;
 
 import java.util.Map;
+
 import com.wxxr.mobile.core.bean.api.IBindableBean;
 import com.wxxr.mobile.core.bean.api.IPropertyChangeListener;
 import com.wxxr.mobile.core.ui.common.BindableBeanSupport;
@@ -38,6 +39,10 @@ public class RemindMessageBean implements IBindableBean {
 	}
 
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 	/**
 	 * @return the content

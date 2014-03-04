@@ -88,9 +88,10 @@ public abstract class TradingRecordOrderDetailPage extends PageBase implements
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 

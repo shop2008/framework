@@ -22,14 +22,16 @@
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_gravity="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
-            android:text="@string/article_body_loading_text" />
+            android:layout_marginLeft="10dip"
+            android:gravity="center"
+            android:text="@string/loading_text"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </RelativeLayout>

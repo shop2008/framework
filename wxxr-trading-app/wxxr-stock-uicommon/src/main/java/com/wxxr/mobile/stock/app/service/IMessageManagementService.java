@@ -15,6 +15,8 @@ import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 public interface IMessageManagementService {
 	 List<PullMessageBean> getUnReadPullMessage();
 	 List<RemindMessageBean> getUnReadRemindMessage();
+	 PullMessageBean getFirstPullMessage();
+	 RemindMessageBean getFirstRemindMessage();
 	 void saveRemindMsg(RemindMessageBean msg);
 	 void savePullMsg(PullMessageBean msg);
 }

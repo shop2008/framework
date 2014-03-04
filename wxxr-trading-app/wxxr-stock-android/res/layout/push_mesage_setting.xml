@@ -36,6 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="#202123"
+        
+        bind:field="pushMsgBodyEnabled"
+        bind:on_Click="pushMsgBodyClick"
         >
 
         <TextView

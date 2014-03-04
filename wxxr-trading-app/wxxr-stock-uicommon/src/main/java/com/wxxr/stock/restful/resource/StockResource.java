@@ -8,8 +8,6 @@
  */
 
 package com.wxxr.stock.restful.resource;
-import java.util.List;
-
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;

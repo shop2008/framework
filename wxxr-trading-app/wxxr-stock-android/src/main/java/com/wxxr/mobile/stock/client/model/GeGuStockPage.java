@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUICreate;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.annotation.ViewGroup;
@@ -42,12 +43,12 @@ import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 
-@View(name="GeGuStockPage",description="个股界面",provideSelection=true)
+@View(name="GeGuStockPage", description="个股界面",provideSelection=true,withToolbar=true)
 @AndroidBinding(type=AndroidBindingType.ACTIVITY, layoutId="R.layout.gegu_page_layout")
 public abstract class GeGuStockPage extends PageBase implements IModelUpdater, ISelectionChangedListener {
 	
 	static Trace log = Trace.getLogger(GeGuStockPage.class);
-	@Menu(items = { "left","right" }) 
+	@Menu(items = { "left","right","search" }) 
 	private IMenu toolbar;
 
 	private boolean hasShow = false;
@@ -55,43 +56,91 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@Bean(type = BindingType.Service)
 	IOptionStockManagementService optionStockService;
 	
-//    <ImageButton
-//    android:layout_width="wrap_content"
-//    android:layout_height="wrap_content"
-//    android:layout_alignParentRight="true"
-//    android:layout_centerVertical="true"
-//    android:src="@drawable/add_stock_button_style"
-//    android:background="@null"
-//    bind:field="addStockField"
-//    bind:on_Click="addStockClick" 
-//    android:layout_marginLeft="6dp"/>
+	@Bean(type = BindingType.Service)
+	IInfoCenterManagementService infoCenterService;
 	
-	//返回
-	@Command()
-	String handleClick(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(stockSelection.getCode(), stockSelection.getMarket())}", effectingFields="f_overlay")
+	StockQuotationBean quotationBean;
+	
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
 		return null;
+	}
+	
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="right",label="添加自选股",icon="resourceId:drawable/add_stock_button_style", visibleWhen="${(quotationBean!=null && !quotationBean.added)}")
+			},
+			navigations = { 
+				 @Navigation(on = "*", message = "成功添加自选股", params = {
+							@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
+							@Parameter(name="autoClosed",type=ValueType.INETGER,value="1")
+				 }) 
+			})
+	String toolbarClickedRight(InputEvent event) {
+		if(optionStockService!=null){
+			this.optionStockService.add(stockSelection.getCode(), stockSelection.getMarket());
+			if(quotationBean!=null){
+				quotationBean.setAdded(true);
+			}
+		}
+		return "";
+	}
+	
+	@Command(description="Invoke when a toolbar item was clicked",
+			uiItems={
+				@UIItem(id="search",label="删除自选股",icon="resourceId:drawable/del_stock_button_style", visibleWhen="${(quotationBean!=null && quotationBean.added)}")
+			},
+			navigations = { 
+			@Navigation(on = "*", message = "成功删除自选股", params = {
+						@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
+						@Parameter(name="autoClosed",type=ValueType.INETGER,value="1")
+			}) 
+			})
+	String toolbarClickedRightSearch(InputEvent event) {
+		if(optionStockService!=null){
+			this.optionStockService.delete(stockSelection.getCode(), stockSelection.getMarket());
+			if(quotationBean!=null){
+				quotationBean.setAdded(false);
+			}
+		}
+		return "";
 	}
 	
 	@Bean
 	boolean isAddStock;
 	
-	@Field(valueKey="visible", visibleWhen="${!isAddStock}")
-	boolean addStockField;
+/**	@Field(valueKey="visible", visibleWhen="${(quotationBean!=null && !quotationBean.added)}")
+	boolean addStock;
+	DataField<Boolean> addStockField;
 	
-	@Field(valueKey="visible", visibleWhen="${isAddStock}")
-	boolean delStockField;
+	@Field(valueKey="visible", visibleWhen="${(quotationBean!=null && quotationBean.added)}")
+	boolean delStock;
+	DataField<Boolean> delStockField;
+*/
 	
-	@Command(commandName="addStockClick",
+	@Field
+	String f_overlay;
+	
+	@Command
+	String handleClick(InputEvent event) {
+		hide();
+		return null;
+	}
+	
+/**	@Command(commandName="addStockClick",
 		navigations={
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})
 	})
 	String addStockClick(InputEvent event) {
 		if(optionStockService!=null){
-			optionStockService.add(this.codeValue, this.marketCode);
-			this.isAddStock = true;
-			registerBean("isAddStock", this.isAddStock);
+			this.optionStockService.add(this.codeValue, this.marketCode);
+			if(quotationBean!=null){
+				quotationBean.setAdded(true);
+			}
 		}
 		return "";
 	}
@@ -104,17 +153,13 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		String delStockClick(InputEvent event) {
 			if(optionStockService!=null){
 				optionStockService.delete(this.codeValue, this.marketCode);
-				this.isAddStock = false;
-				registerBean("isAddStock", this.isAddStock);
+				if(quotationBean!=null){
+					quotationBean.setAdded(false);
+				}
 			}
 			return "";
 		}
-	
-	@Bean(type = BindingType.Service)
-	IInfoCenterManagementService infoCenterService;
-	
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeValue,marketCode)}")
-	StockQuotationBean quotationBean;
+*/
 	
 	@Convertor(params={
 			@Parameter(name="multiple",value="1000"),
@@ -155,8 +200,8 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 			if (log.isDebugEnabled()) {
 				log.debug("GeGuStockPage : getStockQuotation");
 			}
-			updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), stockName));
-			this.infoCenterService.getSyncStockQuotation(codeValue,marketCode);
+			updateSelection(new StockSelection(stockSelection.getMarket(), stockSelection.getCode(), stockSelection.getName()));
+			this.infoCenterService.getSyncStockQuotation(stockSelection.getCode(),stockSelection.getMarket());
 		}
 		return null;
 	}	
@@ -164,15 +209,17 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@Bean
 	Map<String, String> map;
 	
-	@Bean
-	String codeValue; //股票代码
-	 
-	@Bean
-	String marketCode; // 市场代码
+//	@Bean
+//	String codeValue; //股票代码
+//	 
+//	@Bean
+//	String marketCode; // 市场代码
+//	
+//	@Bean
+//	String stockName;
 	
 	@Bean
-	String stockName;
-	
+	StockSelection stockSelection = new StockSelection();
 	@Bean
 	List<String> counts;
 	
@@ -272,14 +319,6 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@Field(valueKey="visible",visibleWhen="${quotationBean!=null && quotationBean.status==1}")
 	boolean goingStockTrading;
 	
-	
-	@OnShow
-	protected void initData(){
-		boolean temp = optionStockService.isAdded(codeValue, marketCode);
-		this.isAddStock = temp;
-		registerBean("isAddStock", this.isAddStock);
-	}
-	
 	@Command
 	String handlerPageChanged(InputEvent event) {
 		Object p = event.getProperty("position");
@@ -293,52 +332,14 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		log.debug("GeGuStockPage handlerPageChanged position: " + position + "size: "+size);
 		return null;
 	}
-	/**
-	//挑战交易盘买入
-	@Command(navigations={
-			@Navigation(on = "tiaozhan",showPage="QuickBuyStockPage")
-	})
-	@SecurityConstraint(allowRoles={})
-	@NetworkConstraint
-	CommandResult tiaoZhanTradingBuyClick(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			CommandResult result = new CommandResult();
-			HashMap<String, Object> temp = payData();
-			temp.put("tiaozhan", "tiaozhan");
-			result.setPayload(temp);
-			result.setResult("tiaozhan");
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-			return result;
-		}
-		return null;
-	}
-	//参数交易盘买入
-	@Command(navigations={
-			@Navigation(on = "cansai",showPage="QuickBuyStockPage")
-	})
-	@SecurityConstraint(allowRoles={})
-	@NetworkConstraint
-	CommandResult canSaiTradingBuyClick(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			CommandResult result = new CommandResult();
-			HashMap<String, Object> temp = payData();
-			temp.put("cansai", "cansai");
-			result.setPayload(temp);
-			result.setResult("cansai");
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-			return result;
-		}
-		return null;
-	}
-	*/
 	
 	private HashMap<String, Object> payData(){
 		HashMap<String, Object> tempMap = new HashMap<String, Object>();
 		if(quotationBean!=null){
-			tempMap.put("code", quotationBean.getCode());
-			tempMap.put("market", quotationBean.getMarket());
-			tempMap.put("name", this.stockName);
-			updateSelection(new StockSelection(quotationBean.getMarket(), quotationBean.getCode(), this.stockName, 1));
+			tempMap.put("code", stockSelection.getCode());
+			tempMap.put("market", stockSelection.getMarket());
+			tempMap.put("name", stockSelection.getName());
+			updateSelection(new StockSelection(stockSelection.getMarket(), stockSelection.getCode(), stockSelection.getName(), 1));
 		}
 		return tempMap;
 	}
@@ -351,20 +352,24 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 			for (Object key : data.keySet()) {
 				if(key.equals("code")){
 					String code = (String)data.get(key);
-					this.codeValue = code;
-					registerBean("codeValue", this.codeValue);
+					stockSelection.setCode(code);
+//					this.codeValue = code;
+//					registerBean("codeValue", this.codeValue);
 				}
 				if(key.equals("market")){
 					String market = (String)data.get(key);
-					this.marketCode = market;
-					registerBean("marketCode", this.marketCode);
+					stockSelection.setMarket(market);
+//					this.marketCode = market;
+//					registerBean("marketCode", this.marketCode);
 				}
 				if(key.equals("name")){
 					String name = (String) data.get(key);
-					this.stockName = name;
-					registerBean("stockName", this.stockName);
+					stockSelection.setName(name);
+//					this.stockName = name;
+//					registerBean("stockName", this.stockName);
 				}
 	        }
+			registerBean("stockSelection", stockSelection);
 		}
 		registerBean("size", 2);
 		registerBean("position", 0);
@@ -388,19 +393,21 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 		if(selection instanceof StockSelection){
 			StockSelection stockSelection = (StockSelection) selection;
 			if(stockSelection!=null){
-				this.codeValue = stockSelection.getCode();
-				this.stockName = stockSelection.getName();
-				this.marketCode = stockSelection.getMarket();
+				this.stockSelection = stockSelection;
+//				this.codeValue = stockSelection.getCode();
+//				this.stockName = stockSelection.getName();
+//				this.marketCode = stockSelection.getMarket();
 			}
-			registerBean("codeValue", this.codeValue);
-			registerBean("stockName", this.stockName);
-			registerBean("marketCode", this.marketCode);
+			registerBean("stockSelection", this.stockSelection);
+//			registerBean("codeValue", this.codeValue);
+//			registerBean("stockName", this.stockName);
+//			registerBean("marketCode", this.marketCode);
 		}
 	}
 	
 	@OnUICreate
 	void initSearchView() {
-		if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
+		if(StringUtils.isBlank(this.stockSelection.getMarket()) || StringUtils.isBlank(this.stockSelection.getCode())) {
 			AppUtils.invokeLater(new Runnable() {
 				
 				@Override
@@ -417,10 +424,9 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@OnShow
 	void startStockSearch() {
 		if(hasShow) {
-			if(StringUtils.isBlank(marketCode) || StringUtils.isBlank(codeValue)) {
+			if(StringUtils.isBlank(this.stockSelection.getMarket()) || StringUtils.isBlank(this.stockSelection.getCode())) {
 				hide();
 			} else {
-				
 			}
 			return;
 		} else {
@@ -430,7 +436,7 @@ public abstract class GeGuStockPage extends PageBase implements IModelUpdater, I
 	@OnUIDestroy
 	void destroyData() {
 		hasShow = false;
-		marketCode = null;
-		codeValue = null;
+//		marketCode = null;
+//		codeValue = null;
 	}
 }

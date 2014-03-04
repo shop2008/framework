@@ -14,7 +14,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 /**
  * 倍数转换格式化
  * 
- * format:float格式化字符 multiple:缩小的倍数，float型 formatUnit:需要添加的单位
+ * format:double格式化字符 multiple:缩小的倍数，float型 formatUnit:需要添加的单位
  * 
  * @author dz
  * 
@@ -22,7 +22,7 @@ import com.wxxr.mobile.core.util.StringUtils;
 public class StockLong2StringConvertor implements IValueConvertor<Long, String> {
 
 	private String format = "%+10.2f";
-	private float multiple = 1.00f;
+	private double multiple = 1.00f;
 	private String formatUnit = "";
 	private String nullString;
 	private Long nullLong;
@@ -48,7 +48,7 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 			this.format = (String) map.get("format");
 		}
 		if (map.containsKey("multiple")) {
-			this.multiple = Float.parseFloat((String) map.get("multiple"));
+			this.multiple = Double.parseDouble((String) map.get("multiple"));
 		}
 		if (map.containsKey("formatUnit")) {
 			this.formatUnit = (String) map.get("formatUnit");
@@ -76,7 +76,7 @@ public class StockLong2StringConvertor implements IValueConvertor<Long, String> 
 				s = s.substring(0, index);
 		}
 		try {
-			return (long) (Float.parseFloat(s) * multiple);
+			return (long) (Double.parseDouble(s) * multiple);
 		} catch (NumberFormatException e) {
 			throw new ValidationException("Invalid Long value :" + s);
 		}

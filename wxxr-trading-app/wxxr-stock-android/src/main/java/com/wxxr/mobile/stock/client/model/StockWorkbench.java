@@ -37,6 +37,10 @@ import com.wxxr.mobile.core.ui.common.WorkbenchBase;
 		@Navigation(on="RequiredNetNotAvailablexception",message="resourceId:message/network_not_available",params={
 				@Parameter(name="title",value="网络异常"),
 				@Parameter(name="onOK",value="确 认"),
+				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")}),
+		@Navigation(on="TimeoutException",message="resourceId:message/network_time_out",params={
+				@Parameter(name="title",value="网络超时异常"),
+				@Parameter(name="onOK",value="确 认"),
 				@Parameter(name="autoClosed",type=ValueType.INETGER,value="5")
 		})
 })

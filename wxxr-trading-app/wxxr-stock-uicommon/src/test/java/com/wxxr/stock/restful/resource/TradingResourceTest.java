@@ -1,8 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -15,8 +13,6 @@ import com.wxxr.mobile.core.rpc.http.apache.AbstractHttpRpcService;
 import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
-import com.wxxr.stock.restful.json.SimpleVO;
-import com.wxxr.stock.trading.ejb.api.AppHomePageListVO;
 import com.wxxr.stock.trading.ejb.api.AuditInfoVO;
 import com.wxxr.stock.trading.ejb.api.ClosedSummaryVO;
 import com.wxxr.stock.trading.ejb.api.DealDetailInfoVO;
@@ -26,7 +22,6 @@ import com.wxxr.stock.trading.ejb.api.MegagameRankVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
 import com.wxxr.stock.trading.ejb.api.RegularTicketVOs;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
-import com.wxxr.stock.trading.ejb.api.TradingConfigListVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
 import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
@@ -39,12 +34,6 @@ public class TradingResourceTest extends TestCase {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication() {
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 
 			@Override
 			protected void initModules() {
@@ -94,7 +83,7 @@ public class TradingResourceTest extends TestCase {
 
 		MockRestClient builder = new MockRestClient();
 		builder.init(context);
-		tradingResource = builder.getRestService(ITradingResource.class,
+		tradingResource = builder.getRestService(ITradingResource.class,null,
 				"http://192.168.123.44:8480/mobilestock2");
 	}
 
@@ -216,22 +205,11 @@ public class TradingResourceTest extends TestCase {
 		System.out.println(a);
 	}
 
-
+	// public List<GainVO> getMoreOtherPersonal( String userId, int start, int
+	// limit, boolean virtual)throws Exception;
 	public void testGetMoreOtherPersonal() throws Exception {
 		GainVOs a = tradingResource.getMoreOtherPersonal("13500001009", 0,
 				10, true);
-		System.out.println(a);
-	}
-	public void testGetHomepageMenu() throws Exception {
-		AppHomePageListVO a = tradingResource.unSecurityAppHome(0, 4);
-		System.out.println(a);
-	}
-	public void testGetTradingConfig() throws Exception {
-		TradingConfigListVO a = tradingResource.getStrategyConfig();
-		System.out.println(a);
-	}
-	public void testGetGuideAmount() throws Exception {
-		SimpleVO a = tradingResource.getGuideGainAmount();
 		System.out.println(a);
 	}
 }

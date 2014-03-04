@@ -4,62 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
+import com.wxxr.mobile.stock.app.command.GetFiveDayStockMinuteCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVO;
 import com.wxxr.stock.hq.ejb.api.StockMinuteKVOs;
 import com.wxxr.stock.restful.json.ParamVO;
 import com.wxxr.stock.restful.resource.StockResource;
+import com.wxxr.stock.restful.resource.StockResourceAsync;
 
-public class FiveDayStockMinuteKLoader extends AbstractEntityLoader<String, StockMinuteKBean, StockMinuteKBean> {
-    public final static String Name = "GetFiveDayStockMinuteCommand";
-    @NetworkConstraint
-    public class GetFiveDayStockMinuteCommand implements ICommand<List<StockMinuteKBean>> {
-        private String code;
-        private String market;
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
-
-        public String getMarket() {
-            return market;
-        }
-
-        public void setMarket(String market) {
-            this.market = market;
-        }
-
-        @Override
-        public String getCommandName() {
-            return Name;
-        }
-
-        @Override
-        public Class<List<StockMinuteKBean>>  getResultType() {
-            Class clazz=List.class;
-            return clazz;
-        }
-
-        @Override
-        public void validate() {
-        	if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
-				throw new IllegalArgumentException("Invalid market or code");
-			}
-        }
-
-    }
+public class FiveDayStockMinuteKLoader extends AbstractEntityLoader<String, StockMinuteKBean, StockMinuteKBean,GetFiveDayStockMinuteCommand> {
 
     @Override
-    public ICommand<List<StockMinuteKBean>> createCommand(Map<String, Object> params) {
+    public GetFiveDayStockMinuteCommand createCommand(Map<String, Object> params) {
         GetFiveDayStockMinuteCommand cmd = new GetFiveDayStockMinuteCommand();
         cmd.setCode((String) params.get("code"));
         cmd.setMarket((String) params.get("market"));
@@ -67,7 +26,7 @@ public class FiveDayStockMinuteKLoader extends AbstractEntityLoader<String, Stoc
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<StockMinuteKBean> result, IReloadableEntityCache<String, StockMinuteKBean> cache) {
+    public boolean handleCommandResult(GetFiveDayStockMinuteCommand cmd,List<StockMinuteKBean> result, IReloadableEntityCache<String, StockMinuteKBean> cache) {
         boolean updated = false;
         if(result!=null && !result.isEmpty()){
             for (StockMinuteKBean vo : result) {
@@ -86,27 +45,33 @@ public class FiveDayStockMinuteKLoader extends AbstractEntityLoader<String, Stoc
 
     @Override
     protected String getCommandName() {
-        return Name;
+        return GetFiveDayStockMinuteCommand.Name;
     }
 
     @Override
-    protected List<StockMinuteKBean> executeCommand(ICommand<List<StockMinuteKBean>> command) throws Exception {
-        GetFiveDayStockMinuteCommand cmd = (GetFiveDayStockMinuteCommand)command;
+    protected void executeCommand(GetFiveDayStockMinuteCommand command,IAsyncCallback<List<StockMinuteKBean>> callback) {
+        final GetFiveDayStockMinuteCommand cmd = (GetFiveDayStockMinuteCommand)command;
         ParamVO p=new ParamVO();
         p.setMarket(cmd.getMarket());
         p.setCode(cmd.getCode());
-        StockMinuteKVOs vos= getRestService(StockResource.class).getFiveDayMinuteline(p);
-        if (vos!=null &&vos.getStockMinuteKVOs()!=null ){
-            List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
-            for (StockMinuteKVO vo:vos.getStockMinuteKVOs()){
-            StockMinuteKBean bean =ConverterUtils.fromVO(vo);
-            bean.setMarket(cmd.getMarket());
-            bean.setCode(cmd.getCode());
-                result.add(bean);
-            }
-            return result;
-        }
-        return null;
+        getRestService(StockResourceAsync.class,StockResource.class).getFiveDayMinuteline(p).onResult(new DelegateCallback<StockMinuteKVOs, List<StockMinuteKBean>>(callback) {
+
+			@Override
+			protected List<StockMinuteKBean> getTargetValue(
+					StockMinuteKVOs vos) {
+		        if (vos!=null &&vos.getStockMinuteKVOs()!=null ){
+		            List<StockMinuteKBean> result= new ArrayList<StockMinuteKBean>();
+		            for (StockMinuteKVO vo:vos.getStockMinuteKVOs()){
+		            StockMinuteKBean bean =ConverterUtils.fromVO(vo);
+		            bean.setMarket(cmd.getMarket());
+		            bean.setCode(cmd.getCode());
+		                result.add(bean);
+		            }
+		            return result;
+		        }
+		        return null;
+			}
+		});
     }
 }
 

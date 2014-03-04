@@ -5,12 +5,12 @@
     <parent>
         <artifactId>wxxr-stock-app</artifactId>
         <groupId>com.wxxr.mobile.stock</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-stock-uicommon</artifactId>
-	<version>${application.version}</version>
 	<packaging>jar</packaging>
+	<version>${application.version}</version>
 	<name>wxxr-stock-uicommon</name>
 
 	<dependencies>

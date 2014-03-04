@@ -1,14 +1,14 @@
 package com.wxxr.mobile.stock.client.model;
 
-import android.os.SystemClock;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.BeanValidation;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
@@ -16,11 +16,12 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.CrossFieldValidation;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.UserAlterPswCallback;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
@@ -51,7 +52,8 @@ public abstract class UserAlterPswPage extends PageBase {
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -64,6 +66,9 @@ public abstract class UserAlterPswPage extends PageBase {
 	 * @return
 	 */
 	@Command(commandName="done",
+			updateFields = {
+				@FieldUpdating(fields={"oldPsw","newPsw","reNewPsw"},message="请确保输入的密码正确")
+			},
 			validations={
 				@BeanValidation(bean="callback", message="请确保输入的密码正确"),
 				@BeanValidation(bean="callback", group=CrossFieldValidation.class, message="新密码和重复新密码必须一致")
@@ -80,13 +85,32 @@ public abstract class UserAlterPswPage extends PageBase {
 			}
 	)
 	@ExeGuard(title = "修改密码", message = "正在处理，请稍候...", silentPeriod = 200)
-	String done(InputEvent event) {
-		if (event.getEventType().equals(InputEvent.EVENT_TYPE_CLICK)) {
-			SystemClock.sleep(500);
+	String done(ExecutionStep step, InputEvent event, Object result) {
+		
+		String oldPassword = callback.getOldPassword();
+		
+		boolean verifyResult = usrService.verfiy(user.getPhoneNumber(),
+				oldPassword);
+		
+		if(!verifyResult) {
+			throw new StockAppBizException("旧密码不正确");
+		}
+		
+		String newPassword = callback.getNewPassword();
+		if(newPassword!=null) {
+			if(newPassword.contains(" ")) {
+				throw new StockAppBizException("密码不能包含空格");
+			}
+		}
+		switch(step){
+		case PROCESS:
 			if (usrService != null) {
 				usrService.updatePassword(this.callback.getOldPassword(), this.callback.getNewPassword(), this.callback.getNewPasswordAgain());
 			}
+			break;
+		case NAVIGATION:
 			hide();
+			break;
 		}
 		return null;
 	}

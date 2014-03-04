@@ -83,6 +83,8 @@ public class StockSearchView extends RelativeLayout implements
 		deleteImage.setOnClickListener(this);
 	}
 	void setEditTextInputNull(EditText et) {
+		if(et == null)
+			return;
 		int sdkInt = Build.VERSION.SDK_INT;
 		if (sdkInt >= 11) {
 			Class<EditText> cls = EditText.class;

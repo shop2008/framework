@@ -215,7 +215,7 @@ public class ViewPagerAdapterViewFieldBinding extends BasicFieldBinding {
 			IViewBinder vBinder = getWorkbenchContext().getWorkbenchManager().getViewBinder();
 			binding = vBinder.createBinding(bindingCtx, bDesc);
 			binding.init(getWorkbenchContext());
-			v.doBinding(binding);
+//			v.doBinding(binding);
 		}
 		
 		view = (View)binding.getUIControl();

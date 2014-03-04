@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0.0-SNAPSHOT" package="com.wxxr.mobile.stock.client">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0.1-SNAPSHOT" package="com.wxxr.mobile.stock.client">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="18"/>
 
-    <application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/app_name" android:name=".StockApplication" android:theme="@android:style/Theme.NoTitleBar" >
+    <application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/app_name" android:name=".StockApplication" android:theme="@android:style/Theme.NoTitleBar">
         <activity android:label="@string/app_name" android:name=".ui.SplashPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,7 +27,7 @@
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAccountPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAuthPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserLoginPage" android:screenOrientation="portrait"/>
-        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserFindPswPage" android:screenOrientation="portrait" android:launchMode="singleTask"/>
+        <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserFindPswPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserRegPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserAlterPswPage" android:screenOrientation="portrait"/>
         <activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.UserManagePage" android:screenOrientation="portrait"/>
@@ -79,7 +79,13 @@
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.PushMessageSetPage" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.InfoCenterEditPageView" android:screenOrientation="portrait"/>
     	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.ApplyMoneyRecordPage" android:screenOrientation="portrait"/>
-  		
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.RewardRuleWebPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.CustomerServicePage" android:screenOrientation="portrait"/>
+    	
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.T1RuleWebPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.T3RuleWebPage" android:screenOrientation="portrait"/>
+    	<activity android:configChanges="keyboardHidden|orientation" android:exported="true" android:name=".ui.TDRuleWebPage" android:screenOrientation="portrait"/>
+    	
     	</application>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

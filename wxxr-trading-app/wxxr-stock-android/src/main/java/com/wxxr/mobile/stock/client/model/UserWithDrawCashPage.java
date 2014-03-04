@@ -3,16 +3,16 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.os.SystemClock;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
@@ -20,12 +20,9 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.api.AttributeKey;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
-import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.StockAppBizException;
@@ -46,7 +43,7 @@ import com.wxxr.mobile.stock.client.utils.String2StringConvertor;
  * 
  * @author renwenjie
  */
-@View(name = "userWithDrawCashPage", withToolbar = true, description = "提现金")
+@View(name = "userWithDrawCashPage", withToolbar = true, description = "提取现金")
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.withdraw_cath_page_layout")
 public abstract class UserWithDrawCashPage extends PageBase {
 
@@ -116,19 +113,25 @@ public abstract class UserWithDrawCashPage extends PageBase {
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		
 		return null;
 	}
 
-	@Command(uiItems = { @UIItem(id = "right", label = "提现记录", icon = "resourceId:drawable/icon_record") }, navigations = { @Navigation(on = "OK", showPage = "ApplyMoneyRecordPage") })
+	@Command(uiItems = { @UIItem(id = "right", label = "提现记录", icon = "resourceId:drawable/message_button_style", visibleWhen = "${true}") }, 
+			navigations = { @Navigation(on = "OK", showPage = "ApplyMoneyRecordPage") })
 	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
 
-	@Command(navigations = {
+	@Command(
+			updateFields = {
+					@FieldUpdating(fields={"availCashAmountET"},message="请输入正确的金额")
+			},
+			navigations = {
 			@Navigation(on = "+", showDialog = "InputPswDialog"),
 			@Navigation(on = "StockAppBizException", message = "%m%n", params = {
 					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
@@ -139,9 +142,14 @@ public abstract class UserWithDrawCashPage extends PageBase {
 
 		if (tradingService != null) {
 			
-			
-			if (!StringUtils.isBlank(callBack.getApplyAmount())) {
+			String applyAmount = callBack.getApplyAmount();
+			if (!StringUtils.isBlank(applyAmount)) {
 
+				
+				if(applyAmount.startsWith("0")) {
+					throw new StockAppBizException("输入金额必须为100的整数倍");
+				}
+				
 				if(Long.parseLong(callBack.getApplyAmount()) % 100 != 0) {
 					throw new StockAppBizException("输入金额必须为100的整数倍");
 				}

@@ -17,7 +17,7 @@
             bind:field="refreshView"
             bind:on_PullRefresh="handleRefresh" >
 
-            <ListView
+            <com.wxxr.mobile.stock.client.widget.MainListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@android:color/transparent"
@@ -30,7 +30,8 @@
                 bind:on_ItemClick="homeMessageClick"
                 bind:updateAllId="resourceId:id/all"
                 bind:updateFaieldId="resourceId:id/failed"
-                bind:updatingViewId="resourceId:id/progress" />
+                bind:updatingViewId="resourceId:id/progress">
+            </com.wxxr.mobile.stock.client.widget.MainListView>
         </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
     </FrameLayout>
 

@@ -39,9 +39,18 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.ArticleManagementServiceImpl");
 	private IReloadableEntityCache<String, ArticleBean> homeArticlesCache;
 	private IReloadableEntityCache<String, ArticleBean> helpArticlesCache;
-	private IReloadableEntityCache<String, ArticleBean> tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> v_tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> t1_tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> t3_tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> td_tradingRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> h_getScoreRuleCache;
+	private IReloadableEntityCache<String, ArticleBean> h_rechargeCache;
+	private IReloadableEntityCache<String, ArticleBean> p_registerCache;
+	private IReloadableEntityCache<String, ArticleBean> rewardRuleCache;
 	private IReloadableEntityCache<String, ArticleBean> withdrawlNoticeCache;
-	private BindableListWrapper<ArticleBean> homeArticles,helpArticles,tradingRuleArticles,withdrawlNoticeArticles;
+	private BindableListWrapper<ArticleBean> homeArticles,helpArticles;
+	private BindableListWrapper<ArticleBean> v_tradingRuleArticles,t1_tradingRuleArticles,t3_tradingRuleArticles,td_tradingRuleArticles;
+	private BindableListWrapper<ArticleBean> h_getScoreArticles,h_rechargeArticles,p_registerArticles,rewardRuleArticles,withdrawlNoticeArticles;
 	private AdStatusBean adStatusBean;
 	//=================module life cycle methods=============================
 	@Override
@@ -56,17 +65,53 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 	@Override
 	protected void startService() {
 		MyArticleLoader loader = new MyArticleLoader();
-		loader.setArticleType(15);
+		loader.setArticleType(18);//原来15，后改为18
 		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("homeArticles", loader);
-		loader = new MyArticleLoader();
-		loader.setArticleType(19);
-		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("helpArticles", loader);
+		
 		loader = new MyArticleLoader();
 		loader.setArticleType(16);
-		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("tradingRuleArticles", loader);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("v_tradingRuleArticles", loader);
+		
 		loader = new MyArticleLoader();
 		loader.setArticleType(17);
 		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("withdrawlNoticeArticles", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(11);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("T1tradingRuleArticles", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(19);//原来19
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("helpArticles", loader);
+		
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(22);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("T3tradingRuleArticles", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(23);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("TDtradingRuleArticles", loader);
+		
+		
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(24);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("h_getScoreArticles", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(25);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("h_rechargeArticles", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(26);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("rewardRuleCache", loader);
+		
+		loader = new MyArticleLoader();
+		loader.setArticleType(27);
+		context.getService(IEntityLoaderRegistry.class).registerEntityLoader("p_registerArticles", loader);
+		
+		
 		loadConfig();
 		context.registerService(IArticleManagementService.class, this);
 	}
@@ -150,17 +195,16 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("limit", limit);
-		this.homeArticlesCache.doReloadIfNeccessay(map);
+		this.homeArticles.setReloadParameters(map);
+		this.homeArticlesCache.doReload(false,map,null);
 		return this.homeArticles;
 	}
 
-	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit) {
-		return getHelpArticles(start,limit,false);
-	}
+
 	/**
 	 * @return the helpArticles
 	 */
-	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit, boolean wait4Finish) {
+	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit) {
 		if(this.helpArticlesCache == null){
 			this.helpArticlesCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("helpArticles");
 		}
@@ -182,31 +226,42 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("limit", limit);
-		if(wait4Finish) {
-			this.helpArticlesCache.forceReload(map, wait4Finish);
-		} else {
-			this.helpArticlesCache.doReloadIfNeccessay(map);
-		}
+		this.helpArticles.setReloadParameters(map);
+		this.helpArticlesCache.doReload(false,map,null);
 		return this.helpArticles;
 	}
 
 
 	@Override
 	public BindableListWrapper<ArticleBean> getTradingRuleArticle() {
-		if(this.tradingRuleCache == null){
-			this.tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("tradingRuleArticles");
+		if(this.v_tradingRuleCache == null){
+			this.v_tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("v_tradingRuleArticles");
 		}
-		if(this.tradingRuleArticles == null){
-			this.tradingRuleArticles = this.tradingRuleCache.getEntities(null,null);
+		if(this.v_tradingRuleArticles == null){
+			this.v_tradingRuleArticles = this.v_tradingRuleCache.getEntities(null,null);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", 0);
 		map.put("limit", 1);
-		this.tradingRuleCache.doReloadIfNeccessay(map);
-		return this.tradingRuleArticles;
+		this.v_tradingRuleArticles.setReloadParameters(map);
+		this.v_tradingRuleCache.doReload(false,map,null);
+		return this.v_tradingRuleArticles;
 	}
 
-
+	public BindableListWrapper<ArticleBean> getRewardRuleArticle() {
+		if(this.rewardRuleCache == null){
+			this.rewardRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("rewardRuleCache");
+		}
+		if(this.rewardRuleArticles == null){
+			this.rewardRuleArticles = this.rewardRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.rewardRuleArticles.setReloadParameters(map);
+		this.rewardRuleCache.doReload(false,map,null);
+		return this.rewardRuleArticles;
+	}
 	@Override
 	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle() {
 		if(this.withdrawlNoticeCache == null){
@@ -218,7 +273,8 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", 0);
 		map.put("limit", 1);
-		this.withdrawlNoticeCache.doReloadIfNeccessay(map);
+		this.withdrawlNoticeArticles.setReloadParameters(map);
+		this.withdrawlNoticeCache.doReload(false,map,null);
 		return this.withdrawlNoticeArticles;
 	}
 
@@ -229,6 +285,108 @@ public class ArticleManagementServiceImpl extends AbstractModule<IStockAppContex
 			adStatusBean = new AdStatusBean();
 		}
 		return adStatusBean;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getT1TradingRuleArticle() {
+		if(this.t1_tradingRuleCache == null){
+			this.t1_tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("T1tradingRuleArticles");
+		}
+		if(this.t1_tradingRuleArticles == null){
+			this.t1_tradingRuleArticles = this.t1_tradingRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.t1_tradingRuleArticles.setReloadParameters(map);
+		this.t1_tradingRuleCache.doReload(false,map,null);
+		return this.t1_tradingRuleArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getT3TradingRuleArticle() {
+		if(this.t3_tradingRuleCache == null){
+			this.t3_tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("T3tradingRuleArticles");
+		}
+		if(this.t3_tradingRuleArticles == null){
+			this.t3_tradingRuleArticles = this.t3_tradingRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.t3_tradingRuleArticles.setReloadParameters(map);
+		this.t3_tradingRuleCache.doReload(false,map,null);
+		return this.t3_tradingRuleArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getTDTradingRuleArticle() {
+		if(this.td_tradingRuleCache == null){
+			this.td_tradingRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("TDtradingRuleArticles");
+		}
+		if(this.td_tradingRuleArticles == null){
+			this.td_tradingRuleArticles = this.td_tradingRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.td_tradingRuleArticles.setReloadParameters(map);
+		this.td_tradingRuleCache.doReload(false,map,null);
+		return this.td_tradingRuleArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getHow2GetScoreArticle() {
+		if(this.h_getScoreRuleCache == null){
+			this.h_getScoreRuleCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("h_getScoreArticles");
+		}
+		if(this.h_getScoreArticles == null){
+			this.h_getScoreArticles = this.h_getScoreRuleCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.h_getScoreArticles.setReloadParameters(map);
+		this.h_getScoreRuleCache.doReload(false,map,null);
+		return this.h_getScoreArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getHow2RechargeArticle() {
+		if(this.h_rechargeCache == null){
+			this.h_rechargeCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("h_rechargeArticles");
+		}
+		if(this.h_rechargeArticles == null){
+			this.h_rechargeArticles = this.h_rechargeCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.h_rechargeArticles.setReloadParameters(map);
+		this.h_rechargeCache.doReload(false,map,null);
+		return this.h_rechargeArticles;
+	}
+
+
+	@Override
+	public BindableListWrapper<ArticleBean> getRegisterArticle() {
+		if(this.p_registerCache == null){
+			this.p_registerCache = new GenericReloadableEntityCache<String, ArticleBean, ArticleVO>("p_registerArticles");
+		}
+		if(this.p_registerArticles == null){
+			this.p_registerArticles = this.p_registerCache.getEntities(null,null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", 0);
+		map.put("limit", 1);
+		this.p_registerArticles.setReloadParameters(map);
+		this.p_registerCache.doReload(false,map,null);
+		return this.p_registerArticles;
 	}
 
 

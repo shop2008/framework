@@ -26,7 +26,7 @@
 	    		<TextView
 	    		    android:id="@+id/textView1"
 	    		    android:layout_width="wrap_content"
-	    		    android:layout_height="32dp"
+	    		    android:layout_height="wrap_content"
 	    		    android:text="盈亏结算" 
 	    		    style="@style/qsxqTextTitleStyle_01"/>
 	    		<RelativeLayout
@@ -118,7 +118,7 @@
 				<TextView
 	    		    android:id="@+id/textView1"
 	    		    android:layout_width="wrap_content"
-	    		    android:layout_height="32dp"
+	    		    android:layout_height="wrap_content"
 	    		    android:text="收益分配" 
 	    		    style="@style/qsxqTextTitleStyle_01"/>
 				<RelativeLayout
@@ -207,7 +207,7 @@
 	    		<TextView
 	    		    android:id="@+id/textView1"
 	    		    android:layout_width="wrap_content"
-	    		    android:layout_height="32dp"
+	    		    android:layout_height="wrap_content"
 	    		    android:text="其它" 
 					style="@style/qsxqTextTitleStyle_01"/> 
 				<RelativeLayout

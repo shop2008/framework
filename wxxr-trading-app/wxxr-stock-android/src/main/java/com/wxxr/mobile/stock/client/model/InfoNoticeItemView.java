@@ -17,7 +17,7 @@ import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.utils.StringTime2StringConvertor;
 
-@View(name="InfoNoticesItemView")
+@View(name="InfoNoticeItemView")
 @AndroidBinding(type=AndroidBindingType.VIEW, layoutId="R.layout.notice_info_item_layout")
 public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdater {
 
@@ -27,8 +27,8 @@ public abstract class InfoNoticeItemView extends ViewBase implements IModelUpdat
 	@Bean(type = BindingType.Service)
 	IUserManagementService usrService;
 	
-	@Field(valueKey="visible", binding="${message.read==false}")
-	boolean readFlag;
+	/*@Field(valueKey="visible", binding="${message.read==false}")
+	boolean readFlag;*/
 	
 	@Field(valueKey="text", binding="${message.createDate}", converter="stime2StrConvertor")
 	String time;

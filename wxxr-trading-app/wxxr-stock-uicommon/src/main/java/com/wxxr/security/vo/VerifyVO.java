@@ -1,6 +1,5 @@
 package com.wxxr.security.vo;
 
-import com.wxxr.javax.xml.bind.annotation.XmlElement;
 import com.wxxr.javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "VerifyQuery")

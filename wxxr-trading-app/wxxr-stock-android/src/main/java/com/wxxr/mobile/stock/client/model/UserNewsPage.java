@@ -84,15 +84,15 @@ public abstract class UserNewsPage extends PageBase {
 			@Attribute(name = "enablePullUpRefresh", value = "${infoNoticeListBean!=null&&infoNoticeListBean.data!=null&&infoNoticeListBean.data.size()>0?true:false}") })
 	String noticeRefreshView;
 
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 
 	@OnShow
 	protected void initData() {
-		usrService.readAllUnremindMessage();
+//		usrService.readAllUnremindMessage();
 	}
 
 	@Command
@@ -108,7 +108,7 @@ public abstract class UserNewsPage extends PageBase {
 
 		if (usrService != null) {
 			usrService.getPullMessageBean(0, infoNoticeListBean.getData()
-					.size(), wait4Finish);
+					.size());
 		}
 	}
 	
@@ -135,7 +135,7 @@ public abstract class UserNewsPage extends PageBase {
 			if (infoNoticeListBean != null)
 				completeLoadSize += infoNoticeListBean.getData().size();
 			if (usrService != null) {
-				usrService.getPullMessageBean(completeLoadSize, limit, true);
+				usrService.getPullMessageBean(completeLoadSize, limit);
 			}
 		}
 		return null;

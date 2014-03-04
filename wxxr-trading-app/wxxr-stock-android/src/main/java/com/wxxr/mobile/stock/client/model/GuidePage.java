@@ -3,141 +3,130 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
-import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
-import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
-import com.wxxr.mobile.core.ui.annotation.Parameter;
-import com.wxxr.mobile.core.ui.annotation.ValueType;
+import com.wxxr.mobile.core.ui.annotation.Menu;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnUICreate;
+import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.ViewGroup;
+import com.wxxr.mobile.core.ui.api.IMenu;
+import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.stock.app.StockAppBizException;
-import com.wxxr.mobile.stock.app.bean.UserBean;
-import com.wxxr.mobile.stock.app.service.IUserManagementService;
 
+@View(name = "guidePage", withToolbar = true, description = "新手指引")
+@AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.guide_page_layout")
+public abstract class GuidePage extends PageBase implements IModelUpdater{
 
-@View(name="guidePage", withToolbar=true, description="新手指引")
-@AndroidBinding(type=AndroidBindingType.FRAGMENT_ACTIVITY, layoutId="R.layout.guide_page_layout")
-public abstract class GuidePage extends PageBase {
-
-	@Bean(type = BindingType.Service)
-	IUserManagementService usrService;
+	@ViewGroup(viewIds={"Guide1", "Guide2", "Guide3", "Guide4", "Guide5", "Guide6", "Guide7", "Guide8", "Guide9", "GuideVoucherItemView"},attributes={
+			@Attribute(name = "viewPosition", value = "${nextPosition}")
+	})
+	private IViewGroup contents;
 	
-	@Bean(type = BindingType.Pojo, express = "${usrService.myUserInfo}")
-	UserBean user;
-	
-	
-	@Field(valueKey="options", binding="${imageUris}", attributes={@Attribute(name="position", value="${nextPosition}")})
+	@Field(valueKey = "options", binding = "${imageUris}", attributes = { @Attribute(name = "position", value = "${nextPosition}") })
 	List<String> guideImages;
-	
-	
+
 	int selectPos;
-	
-	
-	@Field(valueKey="text", binding="${10}")
+
+	@Field(valueKey = "text", binding = "${10}")
 	String totalPage;
-	
-	@Field(valueKey="text", binding="${currentPosition+1}")
+
+	@Field(valueKey = "text", binding = "${(currentPosition+1)>10?'10':(currentPosition+1)}")
 	String currentPage;
-	
-	
-	
+
+	@Menu(items = { "left" })
+	private IMenu toolbar;
+
+	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
+	String toolbarClickedLeft(InputEvent event) {
+		hide();
+		return null;
+	}
+
+	@OnUICreate
+	void onUiCreateDemo() {
+		selectPos = 0;
+		registerBean("nextPosition", 0);
+		registerBean("currentPosition", 0);
+	}
+
+	@OnHide
+	void onHideDemo() {
+		registerBean("nextPosition", selectPos + 1);
+	}
+
 	@Bean
 	int nextPosition = 0;
-	
+
 	@Bean
 	int currentPosition = 0;
-	@Field(valueKey="text", visibleWhen="${currentPosition<9}")
+
+	@Field(valueKey = "text", visibleWhen = "${currentPosition<9}")
 	String bottomRightBtn;
-	
-	@Field(valueKey="text", visibleWhen="${currentPosition>0}")
+
+	@Field(valueKey = "text", visibleWhen = "${currentPosition>0}")
 	String bottomLeftBtn;
-	
-	@Field(valueKey="text", enableWhen="${currentPosition==9}")
+
+	@Field(valueKey = "text", enableWhen = "${currentPosition==9}", visibleWhen = "${currentPosition==9}")
 	String centerBtn;
-	
-	@OnShow
+
+	@Bean
+	List<String> imageUris;
+
+	@OnCreate
 	protected void initGuideImages() {
 		List<String> guideImages = new ArrayList<String>();
-		for(int i=0;i<10;i++) {
-			guideImages.add("resourceId:drawable/guide_"+(i+1));
+		for (int i = 0; i < 10; i++) {
+			guideImages.add("resourceId:drawable/guide_" + (i + 1));
 		}
-		registerBean("imageUris", guideImages);
+		this.imageUris = guideImages;
+		registerBean("imageUris", this.imageUris);
 	}
-	
-
 
 	@Command
-	String selected(InputEvent event) {
-		
-		Integer position = (Integer)event.getProperty("selectPos");
-		
+	String handlerPageChanged(InputEvent event) {
+
+		Integer position = (Integer) event.getProperty("position");
+
 		if (position != null) {
 			selectPos = position;
 			registerBean("currentPosition", selectPos);
 		}
 		return null;
 	}
-	
+
 	@Command
 	String bottomLeftClick(InputEvent event) {
-		
-		registerBean("nextPosition", selectPos -1);
+
+		selectPos = selectPos - 1;
+		if (selectPos >= 0) {
+			registerBean("currentPosition", selectPos);
+			registerBean("nextPosition", selectPos);
+		}
 		return null;
 	}
-	
+
 	@Command
 	String bottomRightClick(InputEvent event) {
+		selectPos = selectPos + 1;
 		
-		registerBean("nextPosition", selectPos+1);
+		if (selectPos < 10) {
+			registerBean("currentPosition", selectPos);
+			registerBean("nextPosition", selectPos);
+		}
 		return null;
 	}
 	
-	@Command(navigations={
-			@Navigation(on = "+",showDialog="UnLoginDialogView"),
-			@Navigation(on = "-",showDialog="GainedAwardDialogView"), 
-			@Navigation(on = "OK",showDialog="GainAwardSucDialogView"),
-			@Navigation(on="StockAppBizException", message = "%m%n", params = {
-					@Parameter(name = "autoClosed", type =
-
-					ValueType.INETGER, value = "2"),
-					@Parameter(name = "title", value = "错误") })
-			})
-	String centerBtnClick(InputEvent event) {
+	@Override
+	public void updateModel(Object arg0) {
 		
-		if(!AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated()) {
-			return "+";
-		}
-		
-		boolean guideGainned = true;
-		if(user != null) {
-			guideGainned = user.getAllowGuideGain();
-			if (!guideGainned) {
-				return "-";
-			} else {
-				usrService.getGuideGain();
-			}
-		}
-		
-		hide();
-		return "OK";
 	}
-	
-	@OnUIDestroy
-	void clearData() {
-		selectPos = 0;
-		registerBean("nextPosition", 0);
-		registerBean("currentPosition", 0);
-	}
-	
 }

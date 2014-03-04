@@ -1,8 +1,6 @@
 package com.wxxr.stock.restful.resource;
 
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -16,18 +14,14 @@ import com.wxxr.mobile.core.security.api.ISiteSecurityService;
 import com.wxxr.mobile.stock.app.MockApplication;
 import com.wxxr.mobile.stock.app.MockRestClient;
 import com.wxxr.stock.restful.json.VoucherDetailsVO;
-import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 import com.wxxr.stock.trading.ejb.api.GainPayDetailsVOs;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
-import com.wxxr.stock.trading.ejb.api.GuideResultVO;
 import com.wxxr.stock.trading.ejb.api.HomePageVOs;
 import com.wxxr.stock.trading.ejb.api.PersonalHomePageVO;
-import com.wxxr.stock.trading.ejb.api.SecurityAppHomePageVO;
 import com.wxxr.stock.trading.ejb.api.StockResultVO;
 import com.wxxr.stock.trading.ejb.api.TradingAccInfoVOs;
 import com.wxxr.stock.trading.ejb.api.UserAssetVO;
 import com.wxxr.stock.trading.ejb.api.UserCreateTradAccInfoVO;
-import com.wxxr.stock.trading.ejb.api.UserSignVO;
 
 public class TradingProtectedResourceTest extends TestCase {
 	ITradingProtectedResource tradingProtectedResource;
@@ -42,12 +36,6 @@ public class TradingProtectedResourceTest extends TestCase {
 		AbstractHttpRpcService service = new AbstractHttpRpcService();
 		service.setEnablegzip(false);
 		MockApplication app = new MockApplication() {
-			ExecutorService executor = Executors.newFixedThreadPool(3);
-
-			@Override
-			public ExecutorService getExecutorService() {
-				return executor;
-			}
 
 			@Override
 			protected void initModules() {
@@ -98,7 +86,7 @@ public class TradingProtectedResourceTest extends TestCase {
 		MockRestClient builder = new MockRestClient();
 		builder.init(context);
 		tradingProtectedResource = builder.getRestService(
-				ITradingProtectedResource.class,
+				ITradingProtectedResource.class,null,
 				"http://192.168.123.44:8480/mobilestock2");
 	}
 
@@ -246,33 +234,7 @@ public class TradingProtectedResourceTest extends TestCase {
 
 //	public VoucherDetailsVO getVoucherDetails(@QueryParam("start") int start,@QueryParam("limit") int limit)throws Throwable;
 	public void testGetVoucherDetails() throws Throwable {
-		VoucherDetailsVO a = tradingProtectedResource.getVoucherDetails(0, 10);
-		System.out.println(a);
-	}
-	
-	//public DrawMoneyRecordVos drawMoneyRecords(@QueryParam("start") int start,@QueryParam("limit") int limit) throws Exception;
-	public void testDrawMoneyRecords() throws Exception {
-		DrawMoneyRecordVos a = tradingProtectedResource.drawMoneyRecords(0, 10);
-		System.out.println(a.getDrawMoneyRecordVos());
-	}
-	public void testGetSignMessage() throws Exception {
-		UserSignVO a = tradingProtectedResource.getUserSignMessage();
-		System.out.println(a);
-	}
-	public void testSign() throws Exception {
-		UserSignVO a = tradingProtectedResource.getUserSignMessage();
-		System.out.println(a);
-	}
-	public void testCheckGuideGainAllow() throws Exception {
-		GuideResultVO a = tradingProtectedResource.checkGuideGainAllow();
-		System.out.println(a);
-	}
-	public void testGuideGain() throws Exception {
-		StockResultVO a = tradingProtectedResource.guideGain();
-		System.out.println(a);
-	}
-	public void testSecurityAppHomePage() throws Exception {
-		SecurityAppHomePageVO a = tradingProtectedResource.securityAppHome();
+		VoucherDetailsVO a = tradingProtectedResource.getVoucherDetails(1, 10);
 		System.out.println(a);
 	}
 }

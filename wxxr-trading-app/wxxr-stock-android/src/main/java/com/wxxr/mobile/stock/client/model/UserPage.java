@@ -23,6 +23,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.GainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
@@ -41,6 +42,9 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 public abstract class UserPage extends PageBase {
 
 	
+	@Field(valueKey = "text",attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
+			@Attribute(name = "enablePullUpRefresh", value= "${false}")})
+	String refreshView;
 	/*@Bean(type=BindingType.Service)
 	IMockDataService service;*/
 	@Bean(type=BindingType.Service)
@@ -49,9 +53,10 @@ public abstract class UserPage extends PageBase {
 	@Bean(type=BindingType.Pojo, express="${service.getMyUserInfo()}")
 	UserBean userBean;
 	
-	@Bean(type=BindingType.Pojo, express="${service!=null?service.getMyPersonalHomePage(false):null}")
+	@Bean(type=BindingType.Pojo, express="${service!=null?service.getMyPersonalHomePage(true):null}", effectingFields={"successTradeRecords"})
 	PersonalHomePageBean personalHomePageBean;
 	
+	private ELBeanValueEvaluator<PersonalHomePageBean> personalHomePageBeanUpdater;
 	@Field(valueKey="options", binding="${personalHomePageBean!=null?personalHomePageBean.allist:null}", 
 			attributes={
 			@Attribute(name="joinShareCount", value="${personalHomePageBean!=null?personalHomePageBean.virtualCount:0}"), 
@@ -64,17 +69,19 @@ public abstract class UserPage extends PageBase {
 	})
 	List<GainBean> successTradeRecords;
 	
+//	DataField<List> successTradeRecordsField;
 	
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 	
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style",visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
 	}
 
-	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting_small") }, navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
+	@Command(uiItems = { @UIItem(id = "right", label = "", icon = "resourceId:drawable/setting_self_selector",visibleWhen="${true}") },
+			navigations = { @Navigation(on = "OK", showPage = "userSelfDefine") })
 	String toolbarClickedRight(InputEvent event) {
 		return "OK";
 	}
@@ -94,7 +101,7 @@ public abstract class UserPage extends PageBase {
 	@Menu(items = { "left", "right" })
 	private IMenu toolbar;
 
-	@Bean(type = BindingType.Pojo, express = "${usrService.getMyPersonalHomePage(false)}")
+	@Bean(type = BindingType.Pojo, express = "${usrService.getMyPersonalHomePage(true)}", effectingFields={"refreshLayout"})
 	PersonalHomePageBean personalBean;
 	*//**
 	 * 用户形象照
@@ -132,10 +139,10 @@ public abstract class UserPage extends PageBase {
 	@Field(valueKey = "text", binding = "${personalBean!=null?personalBean.virtualCount:null}", converter = "shareNumConvertor")
 	String joinSharedNum;
 
-	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).getVirtualList()}", upateAsync=true)
+	@Field(valueKey = "options", binding = "${personalBean.getVirtualList()}")
 	List<GainBean> joinTradeInfos;
 
-	@Field(valueKey = "options", binding = "${usrService.getMyPersonalHomePage(true).getActualList()}",upateAsync=true)
+	@Field(valueKey = "options", binding = "${personalBean.getActualList()}")
 	List<GainBean> challengeTradeInfos;
 
 	@Field(valueKey = "visible", binding = "${personalBean!=null?(personalBean.actualList!=null?(personalBean.actualList.size()>0?true:false):false):false}")
@@ -374,7 +381,13 @@ public abstract class UserPage extends PageBase {
 	@Command(commandName = "handleTradeRecordItemClick", navigations = {
 			@Navigation(on = "operationDetails", showPage = "OperationDetails"),
 			@Navigation(on = "SellOut", showPage = "sellTradingAccount"),
-			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage") })
+			@Navigation(on = "BuyIn", showPage = "TBuyTradingPage"),
+			@Navigation(on = "BuyInT3", showPage = "TBuyT3TradingPageView"),
+			@Navigation(on = "BuyInTD", showPage = "TBuyTdTradingPageView"),
+			@Navigation(on = "SellOutT3", showPage = "SellT3TradingPageView"),
+			@Navigation(on = "SellOutTD", showPage = "SellTDTradingPageView")
+			
+	})
 	CommandResult handleTradeRecordItemClick(InputEvent event) {
 		
 		int position = (Integer) event.getProperty("position");
@@ -433,6 +446,7 @@ public abstract class UserPage extends PageBase {
 		CommandResult result = null;	
 		if (actualBean != null) {
 			
+			String accType = actualBean.getAcctType();
 			Long accId = actualBean.getTradingAccountId();
 			String tradeStatus = actualBean.getOver();
 			Boolean isVirtual = actualBean.getVirtual();
@@ -448,10 +462,27 @@ public abstract class UserPage extends PageBase {
 				int status = actualBean.getStatus();
 				if (status == 0) {
 					// 进入卖出界面
-					result.setResult("SellOut");
+					if(accType != null) {
+						if(accType.equals("ASTOCKT1"))
+							result.setResult("SellOut");
+						else if(accType.equals("ASTOCKT3")) {
+							result.setResult("SellOutT3");
+						} else if(accType.equals("ASTOCKTN")) {
+							result.setResult("SellOutTD");
+						}
+					}
 				} else if (status == 1) {
 					// 进入买入界面
-					result.setResult("BuyIn");
+					//result.setResult("BuyIn");
+					if(accType != null) {
+						if(accType.equals("ASTOCKT1"))
+							result.setResult("BuyIn");
+						else if(accType.equals("ASTOCKT3")) {
+							result.setResult("BuyInT3");
+						} else if(accType.equals("ASTOCKTN")) {
+							result.setResult("BuyInTD");
+						}
+					}
 				}
 			}
 			updateSelection(new AccidSelection(String.valueOf(accId),
@@ -460,6 +491,27 @@ public abstract class UserPage extends PageBase {
 			return result;
 		}
 		
+		return null;
+	}
+	
+	@Command
+	String handleRefresh(InputEvent event) {
+		
+		if(event.getEventType().equals("TopRefresh")) {
+			if(service!= null) {
+				service.getMyPersonalHomePage(true);
+			}
+		}
+		return null;
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event){
+		if(service != null) {
+//			service.getMyPersonalHomePage(true);
+		}
+		//successTradeRecordsField.getDomainModel().doEvaluate();
+		personalHomePageBeanUpdater.doEvaluate();
 		return null;
 	}
 }

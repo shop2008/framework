@@ -24,10 +24,12 @@ import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockMinuteLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
@@ -36,7 +38,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringAutoUnitConvertor;
 import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
 import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
-@View(name="GZMinuteLineView",description="个股界面")
+@View(name="GZMinuteLineView",description="指数界面")
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.gegu_zhishu_minute_line_layout")
 public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater,ISelectionChangedListener{
 	static Trace log = Trace.getLogger(GZMinuteLineView.class);
@@ -44,16 +46,16 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService; 
 	
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(codeBean,marketBean)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(map.get('code'),map.get('market'))}")
 	StockQuotationBean quotationBean;	
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map, false)}")
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getMinuteline(map, true)}", effectingFields={"stockMinuteData"})
 	StockMinuteKBean minute;
 	
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 		
-	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(map.get('code'),map.get('market'))}")
 	StockBaseInfo stockInfoBean;
 	
 	@Convertor(params={
@@ -111,14 +113,16 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	})
 	StockLong2StringAutoUnitConvertor stockLong2StringAutoUnitConvertor3;
 	
+	private ELBeanValueEvaluator<StockMinuteKBean> minuteUpdater;
+	
 	@Bean
-	Map<String, String> map;
-	@Bean
-	String nameBean;
-	@Bean
-	String codeBean;
-	@Bean
-	String marketBean;
+	Map<String, String> map = new HashMap<String, String>();
+//	@Bean
+//	String nameBean;
+//	@Bean
+//	String codeBean;
+//	@Bean
+//	String marketBean;
 	
 	@Bean
 	String stockType = "1"; //0-指数，1-个股
@@ -202,17 +206,19 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 	@Field(valueKey = "text", binding = "${quotationBean!=null?quotationBean.capital:null}", converter = "stockLong2StringAutoUnitConvertor2")
 	String capital;
 	
-	@Field(valueKey="options",binding="${infoCenterService.getMinuteline(map, true)!=null?infoCenterService.getMinuteline(map, false).list:null}",attributes={
+	@Field(valueKey="options",binding="${minute!=null?minute.list:null}",attributes={
 			@Attribute(name = "stockClose", value = "${minute!=null?minute.close:'0'}"),
-			@Attribute(name = "stockStatus", value = "${quotationBean!=null&&quotationBean.status == 2}"),
+//			@Attribute(name = "stockStatus", value = "${minute!=null?minute.stop:null}"),
 			@Attribute(name = "stockDate", value = "${minute!=null?minute.date:'0'}"),
+			@Attribute(name = "stockCode", value = "${map.get('code')!=null?map.get('code'):null}"),
+			@Attribute(name = "stockMarket", value = "${map.get('market')!=null?map.get('market'):null}"),
 			@Attribute(name="stockType",value="${stockType}"),
 			@Attribute(name = "stockBorderColor",value="#535353"),
 			@Attribute(name = "stockUpColor",value="resourceId:color/red"),
-			@Attribute(name = "stockDownColor",value="resourceId:color/green"),
+			@Attribute(name = "stockDownColor",value="resourceId:color/green1"),
 			@Attribute(name = "stockAverageLineColor",value="#FFE400"),
 			@Attribute(name = "stockCloseColor",value="#FFFFFF")
-	}, upateAsync=true)
+	})
 	List<StockMinuteLineBean> stockMinuteData;
 	DataField<List> stockMinuteDataField;
 	
@@ -229,11 +235,21 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 		service.removeSelectionListener(this);
 	}
 	
-	@Command
+	@Command(navigateMethod="handleReTryClickedResult")
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getStockQuotation(codeBean,marketBean);
-		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-		stockMinuteDataField.getDomainModel().doEvaluate();
+		AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+			
+			@Override
+			public void run() {
+				infoCenterService.getStockQuotation(map.get("code"),map.get("market"));
+				stockInfoSyncService.getStockBaseInfoByCode(map.get("code"),map.get("market"));
+				minuteUpdater.doEvaluate();
+			}
+		});
+		return null;
+	}
+	
+	String handleReTryClickedResult(InputEvent event, Object result){
 		return null;
 	}
 	
@@ -242,25 +258,26 @@ public abstract class GZMinuteLineView extends ViewBase implements IModelUpdater
 		if(selection instanceof StockSelection){
 			HashMap<String, String> minuteMap = new HashMap<String, String>();
 			StockSelection stockSelection = (StockSelection) selection;
+			String codeBean = null;
+			String marketBean = null;
 			try {
 				if(stockSelection!=null){
-					this.codeBean = stockSelection.getCode();
-					this.marketBean = stockSelection.getMarket();
+					codeBean = stockSelection.getCode();
+					marketBean = stockSelection.getMarket();
 					this.minuteHeaderType = stockSelection.getType();
-					if(this.marketBean!=null && this.codeBean!=null){
-					}
 				}
-				registerBean("codeBean", this.codeBean);
-				registerBean("nameBean", this.nameBean);
-				registerBean("marketBean", this.marketBean);
+//				registerBean("codeBean", this.codeBean);
+//				registerBean("nameBean", this.nameBean);
+//				registerBean("marketBean", this.marketBean);
 				registerBean("minuteHeaderType", this.minuteHeaderType);
-				if(this.codeBean!=null && this.marketBean!=null){
-					minuteMap.put("code", this.codeBean);
-					minuteMap.put("market", this.marketBean);
+				if(codeBean!=null && marketBean!=null){
+					minuteMap.put("code", codeBean);
+					minuteMap.put("market", marketBean);
+					minuteMap.put("time", System.currentTimeMillis()+"");
 					this.map = minuteMap;
 					registerBean("map", this.map);
 				}
-				if(("000001".equals(this.codeBean) && "SH".equals(this.marketBean)) || ("399001".equals(this.codeBean) && "SZ".equals(this.marketBean)) || ("399005".equals(this.codeBean) && "SZ".equals(this.marketBean))){
+				if(("000001".equals(codeBean) && "SH".equals(marketBean)) || ("399001".equals(codeBean) && "SZ".equals(marketBean)) || ("399005".equals(codeBean) && "SZ".equals(marketBean))){
 					this.stockType = "0";
 				}	
 			} catch (RequiredNetNotAvailablexception e) {

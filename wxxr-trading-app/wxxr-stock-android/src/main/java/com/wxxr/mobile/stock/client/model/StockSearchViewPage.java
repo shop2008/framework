@@ -59,7 +59,8 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
 	List<StockBaseInfoWrapper> searchList;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
@@ -76,7 +77,7 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@OnUIDestroy
 	void DestroyData() {
 		registerBean("key", "");
-		infoCenterService.searchStock(null);
+//		infoCenterService.searchStock(null);
 	}
 
 	@Command

@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockMinuteKBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
@@ -146,9 +147,15 @@ public abstract class SellFiveDayMinuteLineView extends ViewBase implements
 	
 	@Command
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getStockQuotation(codeBean,marketBean);
-		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-		fiveDayMinuteField.getDomainModel().doEvaluate();
+		AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+			
+			@Override
+			public void run() {
+				infoCenterService.getStockQuotation(codeBean,marketBean);
+				stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
+				fiveDayMinuteField.getDomainModel().doEvaluate();
+			}
+		});
 		return null;
 	}
 	

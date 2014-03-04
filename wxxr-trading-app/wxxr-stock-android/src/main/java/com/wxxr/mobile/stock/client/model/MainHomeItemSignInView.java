@@ -3,12 +3,9 @@ package com.wxxr.mobile.stock.client.model;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
-import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
-import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
 
@@ -50,10 +47,5 @@ public abstract class MainHomeItemSignInView extends ViewBase implements
 			signInBean = (SignInMessageMenuItem) value;
 			registerBean("signInBean", value);
 		}
-	}
-	
-	@Command(navigations={@Navigation(on="*",showPage="UserSignPage")})
-	String enterUserSignPage(InputEvent event) {
-		return "";
 	}
 }

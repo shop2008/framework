@@ -38,6 +38,7 @@ public abstract class RefreshableLayout extends LinearLayout {
 	private static final int PULL_TO_REFRESH = 2;
 	private static final int RELEASE_TO_REFRESH = 3;
 	private static final int REFRESHING = 4;
+	
 	private static final int PULL_UP_STATE = 0;
 	private static final int PULL_DOWN_STATE = 1;
 	
@@ -625,5 +626,12 @@ public abstract class RefreshableLayout extends LinearLayout {
 	public void setHeaderView(boolean show) {
 		mHeaderView.setVisibility(show?View.VISIBLE:View.GONE);
 		isHeaderInvisible = show;
+	}
+	
+	public void showToast(boolean isNoDataAlert) {
+		if(isNoDataAlert) {
+			
+			Toast.show(getContext(), "无更多数据", 0);
+		} 
 	}
 }

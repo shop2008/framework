@@ -5,23 +5,27 @@ import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -59,11 +63,11 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 	private IMenu toolbar;
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	
@@ -73,17 +77,26 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 	@Field(valueKey="options",binding="${userCreateTradAccInfo!=null?userCreateTradAccInfo.rateList:null}")
 	List<LossRateNDepositRate> depositCash;
 	
-	@Field(valueKey="text",binding="${changeLossRate!=null?changeLossRate:'--'}",converter="stockLong2StringConvertorSpecial")
+	@Field(valueKey="text",binding="${changeLossRate!=null?-1*changeLossRate:'--'}",converter="stockLong2StringConvertorSpecial")
 	String lossRate;
 	
 	@Field(valueKey="text", binding="${djMoney!=null?djMoney:'0.0元'}")
 	String dj_money;
 	
-	@Field(valueKey="text", binding="${originalFee!=null?originalFee:'--'}",converter="stockLong2StringConvertorYuan")
+	@Field(valueKey="text", binding="${originalFee!=null?originalFee:'--'}",converter="stockLong2StringConvertorYuan",attributes={
+			@Attribute(name = "isDelLine", value = "${discountFee!=null && discountFee>0}")
+	})
 	String originalFeeValue;
 	
-	@Field(valueKey="text", binding="${discountFee!=null?discountFee:'--'}", converter="stockLong2StringConvertorYuan")
+	@Field(valueKey="text", binding="${discountFee!=null?discountFee:'--'}", converter="stockLong2StringConvertorYuan",visibleWhen="${discountFee!=null && discountFee>0}")
 	String discountFeeValue;
+	
+	@Field(valueKey="visible",visibleWhen="${discountFee!=null&&discountFee>0}")
+	boolean isDiscountFee;
+	
+	@Field(valueKey="text", binding="${userCreateTradAccInfo!=null?(1-userCreateTradAccInfo.companyGainRate):null}",converter="stockLong2StringConvertorSpecial")
+	String companyGainRate;
+	
 	@Bean
 	String djMoney;
 	@Bean
@@ -111,25 +124,44 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 	
 	@Command(commandName="handleCreateTrading",navigations = { 
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")}),
+			@Navigation(on = "success", message = "创建成功", params = {
+					@Parameter(name = "title", value = "提示"),
+					@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
+					@Parameter(name = "onOK", value = "leftok"),
+					@Parameter(name = "cancelable", value = "false")}) 
 			}
 	)
+	@SecurityConstraint(allowRoles = { "" })
 	@NetworkConstraint
 	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
-	String handleCreateTrading(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	String handleCreateTrading(ExecutionStep step, InputEvent event, Object result){
+		switch(step){
+		case PROCESS:
 			if(userCreateService!=null){
 				if(userCreateTradAccInfo!=null){
 					List<LossRateNDepositRate> temp = userCreateTradAccInfo.getRateList();
 					if(temp!=null){
 						Long money = (long) (changeMoney * 10000 * 100);
-						log.info("CreateT3TradingPageView handleCreateTrading money="+money+"LossRate=  "+changeLossRate +" changeDeposit=  "+changeDeposit);
+//						log.info("CreateT3TradingPageView handleCreateTrading money="+money+"LossRate=  "+changeLossRate +" changeDeposit=  "+changeDeposit);
 						userCreateService.createTradingAccount(money, changeLossRate, false, changeDeposit, "CASH", "ASTOCKT3");
-						getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+						hide();
 					}
 				}
 			}
+			break;
+		case NAVIGATION:
+			return "success";
 		}
+		return null;
+	}
+	
+	@Command(uiItems = @UIItem(id = "leftok", label = "确定", icon = "resourceId:drawable/home", visibleWhen="true"))
+	String confirmOkClick(InputEvent event) {
+		IView v = (IView) event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if (v != null)
+			v.hide();
+		hide();
 		return null;
 	}
 	
@@ -146,11 +178,11 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 		return null;
 	}
 	
-	@OnShow
+	@OnCreate
 	void initData(){
 		this.changeMoney = 0;
 		this.changeDeposit = 0.0f;
-		this.djMoney = "0.0元";
+		this.djMoney = "0.00元";
 		registerBean("djMoney", this.djMoney);
 		this.changeLossRate = 0.0f;
 		registerBean("changeLossRate", this.changeLossRate);
@@ -181,24 +213,17 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 	@Command
 	String depositCashTextChanged(InputEvent event){
 		if(InputEvent.EVENT_TYPE_TEXT_CHANGED.equals(event.getEventType())){
-			Object changedText = event.getProperty("changedText");
-			if(changedText instanceof String){
-				String deposit = (String) changedText;
-				if(deposit!=null && !StringUtils.isBlank(deposit)){
-					deposit = String.format("%.2f", Float.parseFloat(deposit.substring(0, deposit.indexOf("%")))/100);
-					this.changeDeposit = Float.parseFloat(deposit);
-				}
-				if(userCreateTradAccInfo!=null)
+			Object position = event.getProperty("position");
+			if(position instanceof Integer){
+				int id = (Integer) position;
+				if(userCreateTradAccInfo!=null && id >= 0)
 				{
 					List<LossRateNDepositRate> temp = userCreateTradAccInfo.getRateList();
-					if(temp!=null && temp.size()>0){
-						for(int i=0; i<temp.size();i++){
-							LossRateNDepositRate data = temp.get(i);
-							if(deposit.equals(data.getDepositCash())){
-								this.changeLossRate = Float.parseFloat(data.getLossRate());
-								registerBean("changeLossRate", this.changeLossRate);
-							}
-						}
+					LossRateNDepositRate data = temp.get(id);
+					if(data!=null){
+						this.changeDeposit = Float.parseFloat(data.getDepositCash());
+						this.changeLossRate = Float.parseFloat(data.getLossRate());
+						registerBean("changeLossRate", this.changeLossRate);
 					}
 				}
 				updataData(changeMoney, changeDeposit, changeLossRate);
@@ -213,20 +238,29 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 			registerBean("djMoney", this.djMoney);
 		}
 		if(userCreateTradAccInfo!=null && money>0){
-			this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * money * 10000;
-			registerBean("originalFee", this.originalFee);
-			this.discountFee = Float.parseFloat(userCreateTradAccInfo.getDiscountFee()) * money * 10000;
-			registerBean("discountFee", this.discountFee);
+			if(userCreateTradAccInfo.getOriginalFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getOriginalFee())){
+				this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * money;
+				registerBean("originalFee", this.originalFee);
+			}
+			if(userCreateTradAccInfo.getDiscountFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getDiscountFee())){
+				this.discountFee = Float.parseFloat(userCreateTradAccInfo.getDiscountFee()) * money;
+			}
+			if(this.originalFee == this.discountFee){
+				this.discountFee = 0;
+				registerBean("discountFee", this.discountFee);
+			}else{
+				registerBean("discountFee", this.discountFee);
+			}
 		}
 	}
 	
 	//交易规则
 	@Command(navigations={
-			@Navigation(on = "TradingRuleWebPage",showPage="TradingRuleWebPage")
+			@Navigation(on = "T3RuleWebPage",showPage="T3RuleWebPage")
 	})
 	String showTradingRulePage(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			return "TradingRuleWebPage";
+			return "T3RuleWebPage";
 		}
 		return null;
 		
@@ -234,5 +268,19 @@ public abstract class CreateT3TradingPageView extends PageBase implements IModel
 	
 	@Override
 	public void updateModel(Object value) {
+	}
+	
+	@OnUIDestroy
+	public void destroy(){
+		this.changeMoney = 0;
+		this.changeDeposit = 0.0f;
+		this.djMoney = "0.00元";
+		registerBean("djMoney", this.djMoney);
+		this.changeLossRate = 0.0f;
+		registerBean("changeLossRate", this.changeLossRate);
+		this.originalFee = 0;
+		registerBean("originalFee", this.originalFee);
+		this.discountFee = 0;
+		registerBean("discountFee", this.discountFee);
 	}
 }

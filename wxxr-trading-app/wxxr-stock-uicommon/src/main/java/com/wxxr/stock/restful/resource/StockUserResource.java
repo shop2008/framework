@@ -5,7 +5,6 @@ import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
 import com.wxxr.javax.ws.rs.Path;
 import com.wxxr.javax.ws.rs.Produces;
-import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.BindMobileVO;

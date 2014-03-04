@@ -3,48 +3,20 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.DrawMoneyRecordBean;
+import com.wxxr.mobile.stock.app.command.GetDrawMoneyRecordCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVo;
 import com.wxxr.stock.trading.ejb.api.DrawMoneyRecordVos;
 
-public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoneyRecordBean, DrawMoneyRecordVo> {
-    private static final String COMMAND_NAME = "GetDrawMoneyRecordCommand";
-    private static class GetDrawMoneyRecordCommand implements ICommand<List<DrawMoneyRecordVo>> {
-        private int start, limit;
-        public int getStart() {
-            return start;
-        }
-        public void setStart(int start) {
-            this.start = start;
-        }
-        public int getLimit() {
-            return limit;
-        }
-        public void setLimit(int limit) {
-            this.limit = limit;
-        }
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<DrawMoneyRecordVo>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-        @Override
-        public void validate() {
-          
-        }
-    }
-    @Override
-    public ICommand<List<DrawMoneyRecordVo>> createCommand(Map<String, Object> params) {
+public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoneyRecordBean, DrawMoneyRecordVo, GetDrawMoneyRecordCommand> {
+
+	@Override
+    public GetDrawMoneyRecordCommand createCommand(Map<String, Object> params) {
     	GetDrawMoneyRecordCommand cmd = new GetDrawMoneyRecordCommand();
         cmd.setLimit((Integer) params.get("limit"));
         cmd.setStart((Integer) params.get("start"));
@@ -52,9 +24,8 @@ public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoney
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<DrawMoneyRecordVo> result,
+    public boolean handleCommandResult(GetDrawMoneyRecordCommand command,List<DrawMoneyRecordVo> result,
             IReloadableEntityCache<Long, DrawMoneyRecordBean> cache) {
-    	GetDrawMoneyRecordCommand command = (GetDrawMoneyRecordCommand) cmd;
         boolean updated = false;
         if(result != null){
             for (DrawMoneyRecordVo vo : result) {
@@ -73,19 +44,25 @@ public class DrawMoneyRecordLoader  extends AbstractEntityLoader<Long, DrawMoney
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetDrawMoneyRecordCommand.COMMAND_NAME;
     }
 
-    @Override
-    protected List<DrawMoneyRecordVo> executeCommand(
-            ICommand<List<DrawMoneyRecordVo>> command) throws Exception {
-    	GetDrawMoneyRecordCommand cmd = (GetDrawMoneyRecordCommand) command;
-    	DrawMoneyRecordVos vo = RestUtils.getRestService(ITradingProtectedResource.class).drawMoneyRecords(cmd.getStart(), cmd.getLimit());
-        if (vo!=null){
-            return vo.getDrawMoneyRecordVos();
-        }
-        return null;
-    }
+	@Override
+	protected void executeCommand(GetDrawMoneyRecordCommand cmd,
+			IAsyncCallback<List<DrawMoneyRecordVo>> callback) {
+		getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).
+			drawMoneyRecords(cmd.getStart(), cmd.getLimit()).onResult(new DelegateCallback<DrawMoneyRecordVos,List<DrawMoneyRecordVo>>(callback) {
+
+				@Override
+				protected List<DrawMoneyRecordVo> getTargetValue(
+						DrawMoneyRecordVos vo) {
+			        if (vo!=null){
+			            return vo.getDrawMoneyRecordVos();
+			        }
+			        return null;
+				}
+			});;
+	}
 
 }
 

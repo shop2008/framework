@@ -129,9 +129,9 @@ public abstract class TradingBuySelectorItemView extends ViewBase implements Ite
 		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
-				Method m = obj.getClass().getMethod(method, null);
+				Method m = obj.getClass().getMethod(method);
 				m.setAccessible(true);
-				Object labelObj = m.invoke(obj, null);
+				Object labelObj = m.invoke(obj);
 				if(labelObj instanceof Integer) {
 					if((Integer)labelObj==0){
 						labelObj = "T+1日";

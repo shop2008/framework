@@ -8,7 +8,7 @@
     <ListView
         android:id="@+id/lv_down_amount"
         android:layout_width="match_parent"
-        android:layout_height="150dip"
         style="@style/mListView"
+        android:layout_height="wrap_content"
         bind:on_ItemClick="dropDownMenuListItemClick"/>
 </LinearLayout>

@@ -19,19 +19,30 @@ public interface IArticleManagementService {
 	 * @param start-起始位置 
 	 * @param limit-查询条数
 	 * @param type-文章类型
-	 * 				15-代表首页文章 ；19-代表帮助中心 16-交易规则
+	 * 				
 	 * @return
 	 */
 	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit);
-	
-	public BindableListWrapper<ArticleBean> getHelpArticles(int start,int limit, boolean wait4Finish);
-	
+		
 	public BindableListWrapper<ArticleBean> getHomeArticles(int start,int limit);
-	
+	//参赛盘创建规则
 	public BindableListWrapper<ArticleBean> getTradingRuleArticle();
-	
+	//T+1挑战盘创建规则
+	public BindableListWrapper<ArticleBean> getT1TradingRuleArticle();
+	//T+3挑战盘创建规则
+	public BindableListWrapper<ArticleBean> getT3TradingRuleArticle();
+	//T+D挑战盘创建规则
+	public BindableListWrapper<ArticleBean> getTDTradingRuleArticle();
+	//积分奖励规则
+	public BindableListWrapper<ArticleBean> getRewardRuleArticle();
+	//如何获取积分
+	public BindableListWrapper<ArticleBean> getHow2GetScoreArticle();
+	//如何充值
+	public BindableListWrapper<ArticleBean> getHow2RechargeArticle();
+	//提现须知
 	public BindableListWrapper<ArticleBean> getWithdrawalNoticeArticle();
-	
+	//注册条款
+	public BindableListWrapper<ArticleBean> getRegisterArticle();
 	public AdStatusBean getAdStatusBean();
 	
 

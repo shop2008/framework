@@ -5,6 +5,7 @@ import java.util.List;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
+import com.wxxr.mobile.core.command.annotation.SecurityConstraint;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
@@ -15,14 +16,17 @@ import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnShow;
+import com.wxxr.mobile.core.ui.annotation.OnCreate;
+import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
+import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.TradingConfigBean;
@@ -48,11 +52,11 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	private IMenu toolbar;
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	
@@ -94,6 +98,9 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	},binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?userCreateTradAccInfo.rateList.get(0).lossRate:null}")
 	String rate_01;
 	
+	@Field(valueKey="text", binding="${userCreateTradAccInfo!=null?(1-userCreateTradAccInfo.companyGainRate):null}",converter="stockLong2StringConvertorSpecial")
+	String companyGainRate;
+	
 	@Field(valueKey="enabled",enableWhen="${radionId==1}")
 	boolean rate_txt_01;
 	
@@ -113,6 +120,12 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	
 	@Field(valueKey="enabled",enableWhen="${radionId==2}")
 	boolean deposit_layout_01;
+	
+	@Field(valueKey="visible",visibleWhen="${radionId==1}")
+	boolean title_01;
+	
+	@Field(valueKey="visible",visibleWhen="${radionId==2}")
+	boolean title_02;
 	
 	/**积分*/
 	
@@ -137,33 +150,44 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	boolean voucher_layout_02;
 	
 	
-//	@Field(valueKey="text",binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).depositCash):'--'}" +
-//			"${'保证金\\n'}" +
-//			"${'-'}" +
-//			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).lossRate):'--'}" +
-//			"${'止损'}",
-//			attributes={
-//			@Attribute(name = "checked", value = "${radionId==1?true:false}")
-//	})
-//	String rateList;
+	@Field(valueKey="text",binding="${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).depositCash):'--'}" +
+			"${'保证金\\n'}" +
+			"${'-'}" +
+			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.rateList!=null&&userCreateTradAccInfo.rateList.size()>0)?utils.getValue(userCreateTradAccInfo.rateList.get(0).lossRate):'--'}" +
+			"${'止损'}",
+			attributes={
+			@Attribute(name = "checked", value = "${radionId==1?true:false}")
+	})
+	String rateList;
 	
 	@Bean
 	Utils utils = Utils.getInstance();
 	
-	/**积分创建-止损*/
-//	@Bean
-//	String vLossRate;
-//	@Field(valueKey="text",binding="${'积分创建\\n'}" +
-//			"${'-'}" +
-//			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.voucherRateList!=null&&userCreateTradAccInfo.voucherRateList.size()>0)?utils.getValue(userCreateTradAccInfo.voucherRateList.get(0).lossRate):'--'}" +
-//			"${'止损'}",
-//			attributes={
-//			@Attribute(name = "checked", value = "${radionId==2?true:false}")
-//	})
-//	String voucherRate;
+	@Bean
+	boolean flagDelLine = true;
 	
-	@Field(valueKey="text", binding="${originalFee!=null?originalFee:'--'}",converter="stockLong2StringConvertorYuan")
+	/**积分创建-止损*/
+	@Bean
+	String vLossRate;
+	@Field(valueKey="text",binding="${'积分创建\\n'}" +
+			"${'-'}" +
+			"${(userCreateTradAccInfo!=null&&userCreateTradAccInfo.voucherRateList!=null&&userCreateTradAccInfo.voucherRateList.size()>0)?utils.getValue(userCreateTradAccInfo.voucherRateList.get(0).lossRate):'--'}" +
+			"${'止损'}",
+			attributes={
+			@Attribute(name = "checked", value = "${radionId==2?true:false}")
+	})
+	String voucherRate;
+	
+	@Field(valueKey="text", binding="${originalFee!=null?originalFee:'--'}",converter="stockLong2StringConvertorYuan",attributes={
+			@Attribute(name = "isDelLine", value = "${discountFee!=null && discountFee>0}")
+	})
 	String originalFeeValue;
+	
+	@Field(valueKey="text", binding="${discountFee!=null?discountFee:'--'}", converter="stockLong2StringConvertorYuan",visibleWhen="${discountFee!=null && discountFee>0}")
+	String discountFeeValue;
+	
+	@Field(valueKey="visible",visibleWhen="${discountFee!=null&&discountFee>0}")
+	boolean isDiscountFee;
 	
 	@Field(valueKey="text", binding="${djMoney!=null?djMoney:'0.0元'}")
 	String dj_money;
@@ -183,7 +207,7 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	@Bean
 	List<String> createMoney;
 	
-	@OnShow
+	@OnCreate
 	void initDatas(){
 		this.radionId = 1;
 		registerBean("radionId", this.radionId);
@@ -196,6 +220,9 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 		registerBean("djMoney", this.djMoney);
 		this.originalFee = 0;
 		registerBean("originalFee", this.originalFee);
+		this.discountFee = 0;
+		registerBean("discountFee", this.discountFee);
+		registerBean("flagDelLine", this.flagDelLine);
 	}
 
 	int changeMoney = 0;
@@ -234,30 +261,60 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	
 	@Bean
 	float originalFee;
+	@Bean
+	float discountFee;//优惠价
 	
 	private void upData(){
-		this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * changeMoney * 10000;
-		registerBean("originalFee", this.originalFee);
 		if(userCreateTradAccInfo!=null){
+			if(userCreateTradAccInfo.getOriginalFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getOriginalFee())){
+				this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * changeMoney;
+				registerBean("originalFee", this.originalFee);
+			}
+			if(userCreateTradAccInfo.getDiscountFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getDiscountFee())){
+				this.discountFee = Float.parseFloat(userCreateTradAccInfo.getDiscountFee()) * changeMoney;
+			}
+			if(originalFee==discountFee){
+				this.discountFee = 0;
+				registerBean("discountFee", this.discountFee);
+			}else{
+				registerBean("discountFee", this.discountFee);
+			}
 			List<LossRateNDepositRate> temp = userCreateTradAccInfo.getRateList();
 			if(temp!=null && temp.size()>0){
 				LossRateNDepositRate lossRate = temp.get(0);
-				this.djMoney = String.format("%.2f", changeMoney * 10000 * Float.parseFloat(lossRate.getDepositCash())) + "元"; 
-				registerBean("djMoney", this.djMoney);
+				if(lossRate.getDepositCash()!=null && !StringUtils.isBlank(lossRate.getDepositCash())){
+					this.djMoney = String.format("%.2f", changeMoney * 10000.0 * Float.parseFloat(lossRate.getDepositCash())) + "元"; 
+					registerBean("djMoney", this.djMoney);
+				}
 			}
 		}
 	}
 	
 	private void updataVoucher(){
-		this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * vChangeMoney * 10000;
-		registerBean("originalFee", this.originalFee);
 		if(userCreateTradAccInfo!=null){
-			List<LossRateNDepositRate> temp = userCreateTradAccInfo.getVirtualRateList();
-			if(temp!=null && temp.size()>0){
-				LossRateNDepositRate lossRate = temp.get(0);
-				this.djMoney = String.format("%.2f", vChangeMoney * 10000 * Float.parseFloat(lossRate.getDepositCash())) + "元"; 
-				registerBean("djMoney", this.djMoney);
+			if(userCreateTradAccInfo.getOriginalFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getOriginalFee())){
+				this.originalFee = Float.parseFloat(userCreateTradAccInfo.getOriginalFee()) * vChangeMoney;
+				registerBean("originalFee", this.originalFee);
 			}
+			if(userCreateTradAccInfo.getDiscountFee()!=null && !StringUtils.isBlank(userCreateTradAccInfo.getDiscountFee())){
+				this.discountFee = Float.parseFloat(userCreateTradAccInfo.getDiscountFee()) * vChangeMoney;
+			}
+			if(originalFee==discountFee){
+				this.discountFee = 0;
+				registerBean("discountFee", this.discountFee);
+			}else{
+				registerBean("discountFee", this.discountFee);
+			}
+//			List<LossRateNDepositRate> temp = userCreateTradAccInfo.getVirtualRateList();
+//			if(temp!=null && temp.size()>0){
+//				LossRateNDepositRate lossRate = temp.get(0);
+//				if(lossRate.getDepositCash()!=null && !StringUtils.isBlank(lossRate.getDepositCash())){
+//					this.djMoney = String.format("%.2f", vChangeMoney * 10000.0 * Float.parseFloat(lossRate.getDepositCash())) + "元"; 
+//					registerBean("djMoney", this.djMoney);
+//				}
+//			}
+			this.djMoney = String.format("%.2f", vChangeMoney * 10000.0) + "元"; 
+			registerBean("djMoney", this.djMoney);
 		}
 	}
 	
@@ -275,6 +332,8 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 		}else{
 			this.moneyText = String.valueOf(changeMoney)+"万";
 		}
+		this.flagDelLine = true;
+		registerBean("flagDelLine", this.flagDelLine);
 		registerBean("moneyText", this.moneyText);
 		registerBean("nullValue", this.nullValue);
 		registerBean("radionId", this.radionId);
@@ -291,6 +350,8 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 		}else{
 			this.moneyText = String.valueOf(vChangeMoney)+"万";
 		}
+		this.flagDelLine = false;
+		registerBean("flagDelLine", this.flagDelLine);
 		registerBean("moneyText", this.moneyText);
 		registerBean("nullValue", this.nullValue);
 		registerBean("radionId", this.radionId);
@@ -315,24 +376,31 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 	
 	//交易规则
 	@Command(navigations={
-			@Navigation(on = "TradingRuleWebPage",showPage="TradingRuleWebPage")
+			@Navigation(on = "T1RuleWebPage",showPage="T1RuleWebPage")
 	})
 	String showTradingRulePage(InputEvent event){
 		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-			return "TradingRuleWebPage";
+			return "T1RuleWebPage";
 		}
 		return null;
 	}
 	
 	@Command(commandName="handleCreateTrading",navigations = { 
 			@Navigation(on = "StockAppBizException", message = "%m", params = {
-					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")}),
+			@Navigation(on = "success", message = "创建成功", params = {
+					@Parameter(name = "title", value = "提示"),
+					@Parameter(name = "icon", value = "resourceId:drawable/remind_focus"),
+					@Parameter(name = "onOK", value = "leftok"),
+					@Parameter(name = "cancelable", value = "false")}) 
 			}
 	)
+	@SecurityConstraint(allowRoles = { "" })
 	@NetworkConstraint
 	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
-	String handleCreateTrading(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	String handleCreateTrading(ExecutionStep step, InputEvent event, Object result){
+		switch(step){
+		case PROCESS:
 			if(userCreateService!=null){
 				if(userCreateTradAccInfo!=null){
 					switch(radionId){
@@ -341,7 +409,7 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 						if(temp!=null && temp.size()>0){
 							LossRateNDepositRate lossRate = temp.get(0);
 							Long money = (long) (changeMoney * 10000 * 100);
-							log.info("CreateT1TradingPageView handleCreateTrading money="+money+"LossRate=  "+lossRate.getLossRate() +" changeDeposit=  "+lossRate.getDepositCash());
+//							log.info("CreateT1TradingPageView handleCreateTrading money="+money+"LossRate=  "+lossRate.getLossRate() +" changeDeposit=  "+lossRate.getDepositCash());
 							userCreateService.createTradingAccount(money, Float.parseFloat(lossRate.getLossRate()), false, Float.parseFloat(lossRate.getDepositCash()), "CASH", "ASTOCKT1");
 						}
 						break;
@@ -350,21 +418,51 @@ public abstract class CreateT1TradingPageView extends PageBase implements IModel
 						if(temp1!=null && temp1.size()>0){
 							LossRateNDepositRate lossRate = temp1.get(0);
 							Long money = (long) (vChangeMoney * 10000 * 100);
-							log.info("CreateT1TradingPageView handleCreateTrading VoucherMoney="+money+"VoucherLossRate=  "+lossRate.getLossRate() +" VoucherDeposit=  "+lossRate.getDepositCash());
+//							log.info("CreateT1TradingPageView handleCreateTrading VoucherMoney="+money+"VoucherLossRate=  "+lossRate.getLossRate() +" VoucherDeposit=  "+lossRate.getDepositCash());
 							userCreateService.createTradingAccount(money, Float.parseFloat(lossRate.getLossRate()), false, Float.parseFloat(lossRate.getDepositCash()), "VOUCHER", "ASTOCKT1");
 						}
 						
 						break;
 					}
-					getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+					hide();
 				}
-			}
+			}			
+			break;
+		case NAVIGATION:
+			return "success";
 		}
 		return null;
 	}	
 	
+	@Command(uiItems = @UIItem(id = "leftok", label = "确定", icon = "resourceId:drawable/home", visibleWhen="true"))
+	String confirmOkClick(InputEvent event) {
+		IView v = (IView) event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+		if (v != null)
+			v.hide();
+		hide();
+		return null;
+	}
 	
 	@Override
 	public void updateModel(Object value) {
+	}
+	
+	@OnUIDestroy
+	public void Destory(){
+		this.radionId = 1;
+		registerBean("radionId", this.radionId);
+		registerBean("nullValue", this.nullValue);
+		this.moneyText = null;
+		registerBean("moneyText", this.moneyText);
+		this.changeMoney = 0;
+		this.vChangeMoney = 0;
+		this.djMoney = "0.00元";
+		registerBean("djMoney", this.djMoney);
+		this.originalFee = 0f;
+		registerBean("originalFee", this.originalFee);
+		this.discountFee = 0;
+		registerBean("discountFee", this.discountFee);
+		this.flagDelLine = true;
+		registerBean("flagDelLine", this.flagDelLine);
 	}
 }

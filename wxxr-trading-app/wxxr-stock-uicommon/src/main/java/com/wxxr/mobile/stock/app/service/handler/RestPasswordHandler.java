@@ -2,73 +2,46 @@ package com.wxxr.mobile.stock.app.service.handler;
 
 
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.CommandException;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
-import com.wxxr.mobile.core.command.api.ICommandHandler;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.javax.ws.rs.core.Response;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
+import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.stock.restful.resource.UserResource;
+import com.wxxr.stock.restful.resource.UserResourceAsync;
 
-public class RestPasswordHandler implements ICommandHandler {
+public class RestPasswordHandler extends BasicCommandHandler<Object,RestPasswordCommand> {
 
 	public static final String COMMAND_NAME = "RestPasswordCommand";
 
-	private ICommandExecutionContext context;
-	@NetworkConstraint
-	public static class RestPasswordCommand implements ICommand<Void>{
+	@Override
+	public void execute(RestPasswordCommand command, final IAsyncCallback<Object> callback) {
+		getRestService(UserResourceAsync.class,UserResource.class).resetPassword(((RestPasswordCommand)command).getUserName()).
+		onResult(new IAsyncCallback<Response>() {
 
-		private String userName;
-		
-		
-		/**
-		 * @return the userName
-		 */
-		public String getUserName() {
-			return userName;
-		}
-
-		/**
-		 * @param userName the userName to set
-		 */
-		public void setUserName(String userName) {
-			this.userName = userName;
-		}
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@Override
-		public Class<Void> getResultType() {
-			return Void.class;
-		}
-
-		@Override
-		public void validate() {
-			if(StringUtils.isBlank(userName)){
-				throw new CommandException("用户名不能为空");
+			@Override
+			public void success(Response result) {
+				if(result.getStatus() == 200){
+					callback.success(null);
+				}else{
+					callback.failed(new StockAppBizException("Http请求错误，代码："+result.getStatus()));
+				}
 			}
-		}
-		
-	}
-	@Override
-	public void destroy() {
-		context=null;
-	}
 
-	@Override
-	public <T> T execute(ICommand<T> command) throws Exception {
-		context.getKernelContext().getService(IRestProxyService.class).
-		getRestService(UserResource.class).resetPassword(((RestPasswordCommand)command).getUserName());
-		return null;
-	}
+			@Override
+			public void failed(Throwable cause) {
+				callback.failed(cause);
+			}
 
-	@Override
-	public void init(ICommandExecutionContext context) {
-		this.context=context;
+			@Override
+			public void cancelled() {
+				callback.cancelled();
+			}
+
+			@Override
+			public void setCancellable(ICancellable cancellable) {
+				callback.setCancellable(cancellable);
+			}
+		});
 	}
 
 }

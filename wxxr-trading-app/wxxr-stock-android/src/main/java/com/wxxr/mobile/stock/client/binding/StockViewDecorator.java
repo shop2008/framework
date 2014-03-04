@@ -29,30 +29,33 @@ public class StockViewDecorator implements IUIDecorator {
 		View updating = getUpdateViewById(context, UPDATINGVIEWID, uiControl);
 		View updateFaield = getUpdateViewById(context, UPDATEFAIELDID,
 				uiControl);
-		if (all != null) {
-			all.setVisibility(View.VISIBLE);
-			all.setOnClickListener(null);
-		}
-		if (comp.hasAttribute(AttributeKeys.valueUpdating)) {
-			if (updating != null)
-				updating.setVisibility(View.VISIBLE);
-			if (updateFaield != null)
-				updateFaield.setVisibility(View.GONE);
-			return;
-		}
-		if (comp.hasAttribute(AttributeKeys.valueUpdatedFailed)) {
+		if (comp.getAttribute(AttributeKeys.visible) == null ? true : comp
+				.getAttribute(AttributeKeys.visible)) {
+			if (all != null) {
+				all.setVisibility(View.VISIBLE);
+				all.setOnClickListener(null);
+			}
+			if (comp.hasAttribute(AttributeKeys.valueUpdating)) {
+				if (updating != null)
+					updating.setVisibility(View.VISIBLE);
+				if (updateFaield != null)
+					updateFaield.setVisibility(View.GONE);
+				return;
+			}
+			if (comp.hasAttribute(AttributeKeys.valueUpdatedFailed)) {
+				if (updating != null)
+					updating.setVisibility(View.GONE);
+				if (updateFaield != null)
+					updateFaield.setVisibility(View.VISIBLE);
+				return;
+			}
 			if (updating != null)
 				updating.setVisibility(View.GONE);
 			if (updateFaield != null)
-				updateFaield.setVisibility(View.VISIBLE);
-			return;
+				updateFaield.setVisibility(View.GONE);
+			if (all != null)
+				all.setVisibility(View.GONE);
 		}
-		if (updating != null)
-			updating.setVisibility(View.GONE);
-		if (updateFaield != null)
-			updateFaield.setVisibility(View.GONE);
-		if (all != null)
-			all.setVisibility(View.GONE);
 		this.delegate.handleUIUpdating(context, comp, uiControl);
 	}
 

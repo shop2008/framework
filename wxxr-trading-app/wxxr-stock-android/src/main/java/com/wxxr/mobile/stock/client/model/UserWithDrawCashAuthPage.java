@@ -3,14 +3,14 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.os.SystemClock;
-
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.ui.annotation.Bean;
+import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
@@ -18,7 +18,6 @@ import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
@@ -60,7 +59,7 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -78,7 +77,10 @@ public abstract class UserWithDrawCashAuthPage extends PageBase {
 	 * @param event
 	 * @return
 	 */
-	@Command(commandName = "cashAuth", description = "Back To Last UI", navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
+	@Command(commandName = "cashAuth", description = "Back To Last UI", 
+			updateFields = {
+				@FieldUpdating(fields={"accountName", "bankName", "bankAddr", "bankNum"},message="请输入正确的提现认证信息")
+			},navigations = { @Navigation(on = "StockAppBizException", message = "%m%n", params = {
 			@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2"),
 			@Parameter(name = "title", value = "错误") }),
 			@Navigation(on="ApplyMoneyAuthConfirmDialog", showDialog="ApplyMoneyAuthConfirmDialog")

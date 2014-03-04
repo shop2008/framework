@@ -59,7 +59,6 @@
 	        android:layout_height="wrap_content"
 	        android:text="主页背景"/>
 	    <ImageView android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/b"/>
+	        android:layout_height="wrap_content"/>
 	</LinearLayout>
 </LinearLayout>

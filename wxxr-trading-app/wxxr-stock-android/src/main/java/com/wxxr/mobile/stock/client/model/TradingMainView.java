@@ -63,7 +63,7 @@ public abstract class TradingMainView extends ViewBase{
 	@Bean(type=BindingType.Pojo,express="${tradingService.getAllTradingAccountList()}",enableWhen="${idManager.userAuthenticated}")
     BindableListWrapper<TradingAccInfoBean> AllTradingAccountList;
 	
-	@Field(valueKey="options",binding="${AllTradingAccountList!=null?AllTradingAccountList.getData(true):null}", upateAsync=true)
+	@Field(valueKey="options",binding="${AllTradingAccountList!=null?AllTradingAccountList.data:null}")//, upateAsync=true)
 	List<TradingAccInfoBean> alltrading;
 	DataField<List> alltradingField;
 	
@@ -81,7 +81,7 @@ public abstract class TradingMainView extends ViewBase{
 				log.debug("TradingMainView : getHomeArticles");
 			}
 			this.articleService.getHomeArticles(0, 4);
-			this.tradingService.getSyncAllTradingAccountList();
+			this.tradingService.getAllTradingAccountList();
 		}
 		return null;
 	}	

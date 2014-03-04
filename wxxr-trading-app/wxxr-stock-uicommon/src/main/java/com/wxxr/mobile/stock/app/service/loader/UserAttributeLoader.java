@@ -6,56 +6,28 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.stock.app.command.GetUserAttributesCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.hq.ejb.api.UserAttributeVOs;
 import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.restful.resource.StockUserResourceAsync;
 
 /**
  * @author wangyan
  *
  */
-public class UserAttributeLoader extends AbstractEntityLoader<String, AuthInfo, UserAttributeVO>{
+public class UserAttributeLoader extends AbstractEntityLoader<String, AuthInfo, UserAttributeVO, GetUserAttributesCommand>{
 
-	private final static String COMMAND_NAME="GetUserAttributes";
-	
-	private static class GetUserAttributesCommand implements ICommand<List<UserAttributeVO>>{
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getCommandName()
-		 */
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getResultType()
-		 */
-		@Override
-		public Class<List<UserAttributeVO>> getResultType() {
-			Class clazz=List.class;
-			return clazz;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#validate()
-		 */
-		@Override
-		public void validate() {
-			
-		}
-		
-	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
-	public ICommand<List<UserAttributeVO>> createCommand(
+	public GetUserAttributesCommand createCommand(
 			Map<String, Object> params) {
 		
 		return new GetUserAttributesCommand();
@@ -65,7 +37,7 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, AuthInfo, 
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<UserAttributeVO> result,
+	public boolean handleCommandResult(GetUserAttributesCommand cmd,List<UserAttributeVO> result,
 			IReloadableEntityCache<String, AuthInfo> cache) {
 		boolean updated = false;
 		if(result!=null && !result.isEmpty()){
@@ -98,17 +70,24 @@ public class UserAttributeLoader extends AbstractEntityLoader<String, AuthInfo, 
 	 */
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetUserAttributesCommand.COMMAND_NAME;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader#executeCommand(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	protected List<UserAttributeVO> executeCommand(
-			ICommand<List<UserAttributeVO>> command) throws Exception {
-		UserAttributeVOs vos=getRestService(StockUserResource.class).getUserAttributes();
-		return vos==null?null:vos.getUserAttributes();
+	protected void executeCommand(GetUserAttributesCommand cmd, IAsyncCallback<List<UserAttributeVO>> callback) {
+		getRestService(StockUserResourceAsync.class,StockUserResource.class).getUserAttributes().
+		onResult(new DelegateCallback<UserAttributeVOs, List<UserAttributeVO>>(callback) {
+
+			@Override
+			protected List<UserAttributeVO> getTargetValue(
+					UserAttributeVOs vos) {
+				return vos==null?null:vos.getUserAttributes();
+			}
+		});
 	}
 
 }
+

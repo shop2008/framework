@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wxxr.mobile.core.async.api.AsyncFuture;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
@@ -14,27 +15,30 @@ import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.common.GenericReloadableEntityCache;
+import com.wxxr.mobile.stock.app.common.IBindableEntityCache;
+import com.wxxr.mobile.stock.app.common.IEntityFetcher;
+import com.wxxr.mobile.stock.app.common.IEntityFilter;
 import com.wxxr.mobile.stock.app.common.IEntityLoaderRegistry;
 import com.wxxr.mobile.stock.app.db.OptionStock;
 import com.wxxr.mobile.stock.app.service.IDBService;
 import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
-import com.wxxr.mobile.stock.app.service.loader.StockQuotationLoader;
+import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
+import com.wxxr.mobile.stock.app.service.loader.OptionStockQuotationLoader;
 import com.wxxr.stock.hq.ejb.api.StockQuotationVO;
+import com.wxxr.stock.info.mtree.sync.bean.StockBaseInfo;
 
 public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppContext> implements IOptionStockManagementService {
 	private static final Trace log = Trace.register("com.wxxr.mobile.stock.app.service.impl.OptionStockManagementServiceImpl");
-	Map<String,OptionStock> cache;
+	Map<String,OptionStock> cache = new HashMap<String, OptionStock>() ;
 	
 	private GenericReloadableEntityCache<String,StockQuotationBean,List<StockQuotationVO>> stockQuotationBean_cache;
 	@Override
 	public void add(String stockCode, String mc) {
 		if (StringUtils.isBlank(stockCode)||StringUtils.isBlank(mc)) {
 			return;
-		}
-		if (cache==null) {
-			cache = new HashMap<String, OptionStock>();
 		}
 		if (cache.containsKey(stockCode+"."+mc)) {
 			throw new StockAppBizException("该股票已添加！");
@@ -43,10 +47,20 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		s.setCreateDate(new Date());
 		s.setMc(mc);
 		s.setStockCode(stockCode);
+		s.setNewprice(0l);
+		s.setRisefallrate(0l);
 		s.setPower(cache.size()+1);
 		long id = getService(IDBService.class).getDaoSession().getOptionStockDao().insertOrReplace(s);
 		s.setId(id);
 		cache.put(stockCode+"."+mc,s);
+		if(log.isDebugEnabled()){
+			log.debug("Add option stock successfully:"+s.toString());
+		}
+		initStockQuotation(stockCode, mc);
+		if (stockQuotationBean_cache!=null) {
+			stockQuotationBean_cache.notifyDataChanged();
+		}
+		
 	}
 	@Override
 	public void updateOrder(Map<String, Integer> orders) {
@@ -60,19 +74,33 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 	}
 
 	@Override
-	public void delete(String stockCode, String mc) {
+	public void delete(String stockCode, String mc) {		
+		OptionStock optionStock = cache.remove(stockCode+"."+mc);
+		if (optionStock!=null) {
+			getService(IDBService.class).getDaoSession().getOptionStockDao().delete(optionStock);
+			if (stockQuotationBean_cache!=null) {
+				stockQuotationBean_cache.removeEntity(mc+stockCode);
+				stockQuotationBean_cache.notifyDataChanged();
+			}
+		}
+	}
+	@Override
+	public OptionStock find(String stockCode, String mc) {
+		OptionStock stock = cache.get(stockCode+"."+mc);
+		if (stock!=null) {
+			return stock;
+		}
 		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().queryRaw(" where STOCK_CODE=? and MC=?", stockCode,mc);
-		if (log.isDebugEnabled()) {
-			log.debug("stocks:"+stocks);
-		}
 		if (stocks!=null&&stocks.size()==1) {
-			getService(IDBService.class).getDaoSession().getOptionStockDao().delete(stocks.get(0));
+			return stocks.get(0);
 		}
-		cache.remove(stockCode+"."+mc);
-		if (stockQuotationBean_cache!=null) {
-			stockQuotationBean_cache.removeEntity(mc+stockCode);
+		return null;
+	}
+	@Override
+	public void update(OptionStock optionStock) {
+		if (optionStock!=null) {
+			getService(IDBService.class).getDaoSession().getOptionStockDao().update(optionStock);
 		}
-
 	}
 
 	
@@ -152,47 +180,64 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		}
 	}
 	private BindableListWrapper<StockQuotationBean> myStocks;
+	
+	private IEntityFilter<StockQuotationBean> filter = new IEntityFilter<StockQuotationBean>() {
+
+		@Override
+		public boolean doFilter(StockQuotationBean entity) {
+			return cache.containsKey(entity.getCode()+"."+entity.getMarket());
+		}
+	};
 	@Override
 	public BindableListWrapper<StockQuotationBean> getMyOptionStocks(String taxis, String orderby) {
 		OptionStock[] stocks = getMyOptionStock();
 		if (stocks!=null&&stocks.length>0) {
 			for (OptionStock optionStock : stocks) {
-				loadStockQuotation(optionStock.getStockCode(), optionStock.getMc());
+				initStockQuotation(optionStock.getStockCode(), optionStock.getMc());
 			}
 		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("options", stocks);
 		if(this.myStocks == null){
-			this.myStocks = this.stockQuotationBean_cache.getEntities(null, new MyOptionStockComparator(taxis,orderby));
+			this.myStocks = this.stockQuotationBean_cache.getEntities(filter, new MyOptionStockComparator(taxis,orderby));
 		}else{
 			MyOptionStockComparator comp = (MyOptionStockComparator)this.myStocks.getComparator();
 			comp.setFieldName(taxis);
 			comp.setOrder(orderby);
+			this.stockQuotationBean_cache.notifyDataChanged();
 		}
+		this.stockQuotationBean_cache.doReload(true, map, null);
 		return this.myStocks;
 	}
-    private void loadStockQuotation(String code, String market) {
+	
+    private void initStockQuotation(String code, String market) {//初始化自选股，不加载行情
 		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
 			return;
 		}
 	    String mc=market+code;
-        Map<String, Object> params=new HashMap<String, Object>(); 
-        params.put("code", code);
-        params.put("market", market);
         StockQuotationBean b =null;
 	    if ((b=stockQuotationBean_cache.getEntity(mc))==null){
 	        b=new StockQuotationBean();
 	        OptionStock stock = null;
 	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
+	        	StockBaseInfo sInfo = getService(IStockInfoSyncService.class).getStockBaseInfoByCode(code, market);
+	        	if (sInfo!=null) {
+	        		b.setStockName(sInfo.getName());
+				}
+	        	b.setMarket(market);
+	        	b.setCode(code);
 	        	b.setPower(stock.getPower());
+	        	b.setNewprice(stock.getNewprice()==null?0:stock.getNewprice());
+	        	b.setRisefallrate(stock.getRisefallrate()==null?0:stock.getRisefallrate());
+	        	b.setAdded(true);
 			}
             stockQuotationBean_cache.putEntity(mc,b);
-            this.stockQuotationBean_cache.forceReload(params,false);
         }else{        	
         	OptionStock stock = null;
- 	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
- 	        	b.setPower(stock.getPower());
- 			}
-        	this.stockQuotationBean_cache.doReloadIfNeccessay(params,false);
-        }
+	        if (cache!=null&& (stock=cache.get(code+"."+market))!=null) {
+	        	b.setPower(stock.getPower());	
+	        }
+       	}
        
     }
     private Comparator<OptionStock> c = new Comparator<OptionStock>() {
@@ -205,10 +250,6 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		}
 	};
 	private void loadMyStocks(){
-		if (!getService(IUserIdentityManager.class).isUserAuthenticated()) {
-			return;
-		}
-		
 		List<OptionStock> stocks = getService(IDBService.class).getDaoSession().getOptionStockDao().loadAll();
 		if (stocks!=null&&stocks.size()>0) {
 			Collections.sort(stocks,c);
@@ -234,7 +275,7 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 		context.registerService(IOptionStockManagementService.class, this);
 		IEntityLoaderRegistry registry = getService(IEntityLoaderRegistry.class);
 	    stockQuotationBean_cache=new GenericReloadableEntityCache<String, StockQuotationBean, List<StockQuotationVO>>("myOptionStock",30);
-	    registry.registerEntityLoader("myOptionStock", new StockQuotationLoader());
+	    registry.registerEntityLoader("myOptionStock", new OptionStockQuotationLoader());
 	    doInit();
 	   
 	}
@@ -263,7 +304,27 @@ public class OptionStockManagementServiceImpl extends AbstractModule<IStockAppCo
 	public boolean isAdded(String stockCode, String mc) {
 		return cache!=null&&cache.containsKey(stockCode+"."+mc);
 	}
+	@Override
+	public StockQuotationBean getOptionStockQuotation(String code, String market) {
+		if (StringUtils.isBlank(market)||StringUtils.isBlank(code)) {
+			return new StockQuotationBean();//fix闪退问题
+		}
+	    final String mc=market+code;
+        final Map<String, Object> params=new HashMap<String, Object>(); 
+        params.put("code", code);
+        params.put("market", market);
+	    if (stockQuotationBean_cache.getEntity(market+code)==null){
+	        AsyncUtils.forceLoadNFetchAsyncInUI(this.stockQuotationBean_cache, params, new AsyncFuture<StockQuotationBean>(), new IEntityFetcher<StockQuotationBean>() {
 
-	
-	
+				@Override
+				public StockQuotationBean fetchFromCache(
+						IBindableEntityCache<?, ?> cache) {
+					return (StockQuotationBean)cache.getEntity(mc);
+				}
+			});
+        }else{
+            this.stockQuotationBean_cache.doReload(false,params,null);
+        }
+        return stockQuotationBean_cache.getEntity(mc);
+	}
 }

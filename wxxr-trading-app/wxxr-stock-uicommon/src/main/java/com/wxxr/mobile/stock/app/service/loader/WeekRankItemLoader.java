@@ -6,12 +6,13 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.WeekRankBean;
+import com.wxxr.mobile.stock.app.command.GetWeekRankItemsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.WeekRankVO;
 import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
 
@@ -19,39 +20,17 @@ import com.wxxr.stock.trading.ejb.api.WeekRankVOs;
  * @author neillin
  *
  */
-public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBean, WeekRankVO> {
+public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBean, WeekRankVO, GetWeekRankItemsCommand> {
 
-	private static final String COMMAND_NAME = "GetWeekRankItems";
-	
-	@NetworkConstraint
-	private static class GetWeekRankItemsCommand implements ICommand<List<WeekRankVO>> {
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		@Override
-		public Class<List<WeekRankVO>> getResultType() {
-			Class clazz = List.class;
-			return clazz;
-		}
-
-		@Override
-		public void validate() {
-		}
-		
-	}
 	
 	@Override
-	public ICommand<List<WeekRankVO>> createCommand(
+	public GetWeekRankItemsCommand createCommand(
 			Map<String, Object> params) {
 		return new GetWeekRankItemsCommand();
 	}
 
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<WeekRankVO> result,
+	public boolean handleCommandResult(GetWeekRankItemsCommand cmd,List<WeekRankVO> result,
 			IReloadableEntityCache<String, WeekRankBean> cache) {
 		boolean updated = false;
 		int rankNo = 1;
@@ -70,16 +49,23 @@ public class WeekRankItemLoader extends AbstractEntityLoader<String, WeekRankBea
 
 
 	@Override
-	protected List<WeekRankVO> executeCommand(ICommand<List<WeekRankVO>> command)
-			throws Exception {
-		WeekRankVOs vos=getRestService(ITradingResource.class).getWeekRank();
-		return vos==null?null:vos.getWeekRanks();
+	protected void executeCommand(GetWeekRankItemsCommand cmd, IAsyncCallback<List<WeekRankVO>> callback) {
+		getRestService(ITradingResourceAsync.class,ITradingResource.class).getWeekRank().
+		onResult(new DelegateCallback<WeekRankVOs, List<WeekRankVO>>(callback) {
+
+			@Override
+			protected List<WeekRankVO> getTargetValue(WeekRankVOs vos) {
+				return vos==null?null:vos.getWeekRanks();
+			}
+		});
 	}
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetWeekRankItemsCommand.COMMAND_NAME;
 	}
 
 
 }
+
+

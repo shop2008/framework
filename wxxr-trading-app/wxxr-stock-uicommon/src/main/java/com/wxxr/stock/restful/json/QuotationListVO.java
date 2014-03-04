@@ -34,6 +34,11 @@ public class QuotationListVO implements Serializable {
     public void add(StockQuotationVO vo) {
         this.list.add(vo);
     }
+
+	@Override
+	public String toString() {
+		return "QuotationListVO [list=" + list + "]";
+	}
     
 
 }

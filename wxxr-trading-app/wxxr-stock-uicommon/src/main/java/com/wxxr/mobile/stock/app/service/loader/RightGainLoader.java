@@ -6,11 +6,13 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.command.GetRightGainCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 
@@ -18,74 +20,13 @@ import com.wxxr.stock.trading.ejb.api.GainVOs;
  * @author wangyan
  *
  */
-public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO> {
+public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO, GetRightGainCommand> {
 
-	private static final String COMMAND_NAME = "GetRightGain";
-
-	
-	private static class GetRightGainCommand implements ICommand<List<GainVO>>{
-
-		private int start,limit;
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getCommandName()
-		 */
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#getResultType()
-		 */
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		@Override
-		public Class getResultType() {
-			Class clazz=List.class;
-			return clazz;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.wxxr.mobile.core.command.api.ICommand#validate()
-		 */
-		@Override
-		public void validate() {
-			
-		}
-
-		/**
-		 * @return the start
-		 */
-		public int getStart() {
-			return start;
-		}
-
-		/**
-		 * @param start the start to set
-		 */
-		public void setStart(int start) {
-			this.start = start;
-		}
-
-		/**
-		 * @return the limit
-		 */
-		public int getLimit() {
-			return limit;
-		}
-
-		/**
-		 * @param limit the limit to set
-		 */
-		public void setLimit(int limit) {
-			this.limit = limit;
-		}
-		
-	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#createCommand(java.util.Map)
 	 */
 	@Override
-	public ICommand<List<GainVO>> createCommand(Map<String, Object> params) {
+	public GetRightGainCommand createCommand(Map<String, Object> params) {
 		GetRightGainCommand command=new GetRightGainCommand();
 		if(params == null) {
 			command.setStart(0);
@@ -102,7 +43,7 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	 * @see com.wxxr.mobile.stock.app.common.IEntityLoader#handleCommandResult(java.util.List, com.wxxr.mobile.stock.app.common.IReloadableEntityCache)
 	 */
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<GainVO> result,
+	public boolean handleCommandResult(GetRightGainCommand cmd,List<GainVO> result,
 			IReloadableEntityCache<Long, GainBean> cache) {
 		boolean updated = false;
 		if(result!=null && !result.isEmpty()){
@@ -127,18 +68,24 @@ public class RightGainLoader extends AbstractEntityLoader<Long, GainBean, GainVO
 	 */
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetRightGainCommand.COMMAND_NAME;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.service.loader.AbstractEntityLoader#executeCommand(com.wxxr.mobile.core.command.api.ICommand)
 	 */
 	@Override
-	protected List<GainVO> executeCommand(ICommand<List<GainVO>> command)
-			throws Exception {
+	protected void executeCommand(GetRightGainCommand command, IAsyncCallback<List<GainVO>> callback) {
 		GetRightGainCommand cmd=(GetRightGainCommand)command;
-		GainVOs vos=getRestService(ITradingResource.class).getTotalGain(cmd.getStart(), cmd.getLimit());
-		return vos==null?null:vos.getGains();
+		getRestService(ITradingResourceAsync.class, ITradingResource.class).getTotalGain(cmd.getStart(), cmd.getLimit()).
+		onResult(new DelegateCallback<GainVOs, List<GainVO>>(callback) {
+
+			@Override
+			protected List<GainVO> getTargetValue(GainVOs vos) {
+				return vos==null?null:vos.getGains();
+			}
+		});
 	}
 
 }
+

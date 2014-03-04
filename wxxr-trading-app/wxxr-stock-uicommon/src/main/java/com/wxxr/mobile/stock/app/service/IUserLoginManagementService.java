@@ -50,7 +50,7 @@ public interface IUserLoginManagementService {
 	 * @param userId
 	 * @return
 	 */
-	PersonalHomePageBean getOtherPersonalHomePage(String userId, boolean isAsync);
+	PersonalHomePageBean getOtherPersonalHomePage(String userId);
 	/**
 	 * 获取他人主页更多条数地址
 	 * @param userId 用户ID

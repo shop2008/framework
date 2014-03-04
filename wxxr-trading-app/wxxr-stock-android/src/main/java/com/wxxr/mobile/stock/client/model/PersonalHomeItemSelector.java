@@ -1,6 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
@@ -173,6 +175,7 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 				if(virtualList.size() <= 0) {
 					result.add(new NoShareRecordBean());
 				} else {
+					sortList(virtualList);
 					result.addAll(virtualList);
 					ViewMoreBean viewMoreBean = new ViewMoreBean();
 					viewMoreBean.setVirtual(true);
@@ -197,6 +200,7 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 				if(actualList.size() <= 0) {
 					result.add(new NoShareRecordBean());
 				} else {
+					sortList(actualList);
 					result.addAll(actualList);
 					ViewMoreBean viewMoreBean = new ViewMoreBean();
 					viewMoreBean.setVirtual(false);
@@ -224,6 +228,30 @@ public abstract class PersonalHomeItemSelector extends ViewBase implements
 			return result != null?result.toArray():null;
 		}
 		return null;
+	}
+
+	private void sortList(List<GainBean> list) {
+		Collections.sort(list, new Comparator<GainBean>() {
+
+			@Override
+			public int compare(GainBean lhs, GainBean rhs) {
+				Long lh = null;
+				Long rh = null;
+				if(lhs != null) {
+					lh = lhs.getTradingAccountId();
+				}
+				
+				if(rhs != null) {
+					rh = rhs.getTradingAccountId();
+				}
+				
+				if(lh !=null && rh !=null) {
+					return rh > lh? 1:-1;
+				}
+				return 0;
+			}
+			
+		});
 	}
 
 }

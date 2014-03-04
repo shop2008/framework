@@ -12,25 +12,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import com.wxxr.mobile.core.command.api.CommandConstraintViolatedException;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.core.command.api.ICommandExecutor;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
-import com.wxxr.mobile.core.util.IAsyncCallback;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 
 
 /**
  * @author neillin
  *
  */
-public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntityCache<K, V> {
+public abstract class ReloadableEntityCacheImpl<K,V,T> implements IReloadableEntityCache<K, V> {
 	private static final Trace log = Trace.register(ReloadableEntityCacheImpl.class);
 	private Trace cLog;
 	
@@ -38,12 +35,12 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	
 	private static class Reloader extends Thread {
         
-        private List<WeakReference<ReloadableEntityCacheImpl<?,?>>> refs ;
+        private List<WeakReference<ReloadableEntityCacheImpl<?,?,?>>> refs ;
                 
         public Reloader(){
             super("ReloadableEntityCache reloading Processor");
             super.setDaemon(true);
-            refs = Collections.synchronizedList(new ArrayList<WeakReference<ReloadableEntityCacheImpl<?,?>>>());
+            refs = Collections.synchronizedList(new ArrayList<WeakReference<ReloadableEntityCacheImpl<?,?,?>>>());
         }
         
         public void run(){
@@ -57,16 +54,16 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	                	continue;
 	                }
 	                @SuppressWarnings("unchecked")
-	                WeakReference<ReloadableEntityCacheImpl<?,?>>[] vals = refs.toArray(new WeakReference[refs.size()]);
-	                for(WeakReference<ReloadableEntityCacheImpl<?,?>> ref: vals) {
-	                	ReloadableEntityCacheImpl<?,?> list = ref.get();
+	                WeakReference<ReloadableEntityCacheImpl<?,?,?>>[] vals = refs.toArray(new WeakReference[refs.size()]);
+	                for(WeakReference<ReloadableEntityCacheImpl<?,?,?>> ref: vals) {
+	                	ReloadableEntityCacheImpl<?,?,?> list = ref.get();
 	                    if(list != null){
 	                    	if((System.currentTimeMillis() - list.lastUpdateTime) >= list.reloadIntervalInSeconds){
 		                    	int numOfActiveClient = list.getNumberOfActiveClient();
 	                    		if(list.isStopAutoReloadIfNotActiveClient() && (numOfActiveClient == 0)){
 		                    		continue;
 		                    	}
-	                    		list.doReloadIfNeccessay();
+	                    		list.doReload(false,null,null);
 	                    	}
 	                    }else{
 	                    	refs.remove(ref);
@@ -78,8 +75,8 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
             }
         }
         
-        public void add(ReloadableEntityCacheImpl<?,?> cache) {
-        	WeakReference<ReloadableEntityCacheImpl<?,?>> ref = new WeakReference<ReloadableEntityCacheImpl<?,?>>(cache);
+        public void add(ReloadableEntityCacheImpl<?,?,?> cache) {
+        	WeakReference<ReloadableEntityCacheImpl<?,?,?>> ref = new WeakReference<ReloadableEntityCacheImpl<?,?,?>>(cache);
         	this.refs.add(ref);
         }
     }
@@ -202,122 +199,124 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		this.wlock = this.rwLock.writeLock();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#doReloadIfNeccessay()
-	 */
-	@Override
-	public void doReloadIfNeccessay(){
-		doReloadIfNeccessay(null);
-	}
 	
-	public void doReloadIfNeccessay(Map<String, Object> params) {
-		doReloadIfNeccessay(params, false);
-	}
-	
-	public void doReloadIfNeccessay(Map<String, Object> params, boolean wait4Finish) {
+	protected boolean checkIfReloadNeccessay(IAsyncCallback<Boolean> cb) {
 		if(inReloading){
 			if(getLog().isDebugEnabled()){
 				getLog().debug("cache is still in loading, reloading aborted, cache name :"+getEntityTypeName());
 			}
-			return;
+			if(cb != null){
+				cb.cancelled();
+			}
+			return false;
 		}
 		int secondsElapsed = (int)((System.currentTimeMillis() - lastUpdateTime)/1000L);
 		if(secondsElapsed < minReloadIntervalInSeconds){
 			if(getLog().isDebugEnabled()){
 				getLog().debug("minimum reload interval is ["+this.minReloadIntervalInSeconds+"] seconds, seconds elapsed since last reload :"+secondsElapsed);
 			}
-			return;
+			if(cb != null){
+				cb.cancelled();
+			}
+			return false;
 		}
 		if(getLog().isDebugEnabled()){
 			getLog().debug("cache is going to be reloaded ...");
 		}
-		doReload(wait4Finish,params);
+		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#forceReload()
-	 */
-	@Override
-	public void forceReload(boolean wait4Finish) {
-		if(getLog().isDebugEnabled()){
-			getLog().debug("cache is forced to reload ...");
-		}
-		doReload(wait4Finish,null);
-	}
-	
 	/**
 	 * 
 	 */
-	protected void doReload(boolean wait4Finish,Map<String, Object> params) {
-		final ICommand<?> cmd = getReloadCommand(params);
-		if(cmd == null){
-			log.info("Not reload will be performanced since getReloadCommand() return null !");
+	@Override
+	public void doReload(boolean forceReload,Map<String, Object> params,final IAsyncCallback<Boolean> cb) {
+		if((!forceReload)&&(!checkIfReloadNeccessay(cb))){
 			return;
 		}
-		IAsyncCallback callback = new IAsyncCallback() {
+		final ICommand<List<T>> cmd = getReloadCommand(params);
+		if(cmd == null){
+			log.info("Not reload will be performanced since getReloadCommand() return null !");
+			if(cb != null){
+				cb.failed(new RuntimeException("Not reload will be performanced since getReloadCommand() return null !"));
+			}
+			return;
+		}
+		IAsyncCallback<List<T>> callback = new IAsyncCallback<List<T>>() {
 			
 			@Override
-			public void success(Object result) {
+			public void success(List<T> result) {
 					if(getLog().isDebugEnabled()){
-						getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? ((List)result).size() : 0));
+						getLog().debug("Entity loader command was execute successfuly, size of result list :"+ (result != null ? result.size() : 0));
 					}
+					boolean hasNew = false;
 					try {
 						if(processReloadResult(cmd,result)){
-							WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
-							if(getLog().isDebugEnabled()){
-								getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
-							}
-							for (WeakReference<ICacheUpdatedCallback> ref : refs) {
-								ICacheUpdatedCallback cb = ref.get();
-								if(cb != null){
-									if(getLog().isDebugEnabled()){
-										getLog().debug("notify list warpper :"+cb);
-									}
-									cb.dataChanged(ReloadableEntityCacheImpl.this);
-								}
-							}
+							notifyDataChanged();
+							hasNew = true;
 						}
 					}finally {
 						inReloading = false;
 						lastUpdateTime = System.currentTimeMillis();
 					}
+					if(cb != null){
+						cb.success(hasNew);
+					}
 			}
 			
 			@Override
-			public void failed(Object cause) {
+			public void failed(Throwable cause) {
 				try {
 					handleReloadFailed(cmd,cause);
 				}finally{
 					inReloading = false;
 				}
-			}
-		};
-		if(!wait4Finish){
-			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
-			this.inReloading = true;
-		}else{
-			Future<?> future = KUtils.getService(ICommandExecutor.class).submitCommand(cmd);
-			try {
-				callback.success(future.get());
-			} catch (InterruptedException e) {
-				return;
-			} catch (ExecutionException e) {
-				Throwable t = e.getCause();
-				handleReloadFailed(cmd,t);
-				if(t instanceof StockAppBizException){
-					throw (StockAppBizException)t;
-				}else if( t instanceof CommandConstraintViolatedException){
-					throw (CommandConstraintViolatedException)t;
-				}else{
-					throw new StockAppBizException("Caught exception when try to reload data for cache :"+getEntityTypeName(),t);
+				if(cb != null){
+					cb.failed(cause);
 				}
 			}
-		}
+
+			@Override
+			public void cancelled() {
+				if(cb != null){
+					cb.cancelled();
+				}
+				inReloading = false;
+			}
+
+			@Override
+			public void setCancellable(ICancellable cancellable) {
+				if(cb != null){
+					cb.setCancellable(cancellable);
+				}
+			}
+		};
+//		if(!wait4Finish){
+			KUtils.getService(ICommandExecutor.class).submitCommand(cmd, callback);
+			this.inReloading = true;
+//		}else{
+//			Future<?> future = KUtils.getService(ICommandExecutor.class).submitCommand(cmd);
+//			try {
+//				callback.success(future.get());
+//			} catch (InterruptedException e) {
+//				return;
+//			} catch (ExecutionException e) {
+//				Throwable t = e.getCause();
+//				handleReloadFailed(cmd,t);
+//				if(t instanceof StockAppBizException){
+//					throw (StockAppBizException)t;
+//				}else if( t instanceof CommandConstraintViolatedException){
+//					throw (CommandConstraintViolatedException)t;
+//				}else{
+//					throw new StockAppBizException("Caught exception when try to reload data for cache :"+getEntityTypeName(),t);
+//				}
+//			}
+//		}
 	}
 		
-	protected abstract ICommand<?> getReloadCommand(Map<String, Object> params);
+	protected abstract ICommand<List<T>> getReloadCommand(Map<String, Object> params);
 	
-	protected abstract boolean processReloadResult(ICommand<?> cmd,Object result);
+	protected abstract boolean processReloadResult(ICommand<List<T>> cmd,List<T> result);
 	
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getEntity(java.lang.Object)
@@ -428,7 +427,7 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		}
 	}
 	
-	protected void handleReloadFailed(ICommand<?> cmd,Object cause) {
+	protected void handleReloadFailed(ICommand<List<T>> cmd,Object cause) {
 		getLog().warn("Failed to reload list data of :"+name, cause);
 	}
 
@@ -473,12 +472,19 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 		return new BindableListWrapper<V>(this,filter,comparator) {
 
 			@Override
-			protected void doReload(Map<String, Object> params, boolean async) {
-					forceReload(params,async == false);
+			protected void doReload(Map<String, Object> params, IAsyncCallback<Boolean> cb) {
+				ReloadableEntityCacheImpl.this.doReload(true, params, cb);
+			}
+
+			@Override
+			protected Map<String, Object> getLoadMoreParameters() {
+				return prepareLoadmoreCommandParameter(this);
 			}
 			
 		};
 	}
+	
+	protected abstract Map<String, Object> prepareLoadmoreCommandParameter(BindableListWrapper<V> listWrapper);
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.IBindableEntityCache#getEntityTypeName()
@@ -486,14 +492,6 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	@Override
 	public String getEntityTypeName() {
 		return this.name;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxxr.mobile.stock.app.common.IReloadableEntityCache#forceReload(java.util.Map, boolean)
-	 */
-	@Override
-	public void forceReload(Map<String, Object> params, boolean wait4Finish) {
-		doReload(wait4Finish,params);
 	}
 
 	/**
@@ -509,6 +507,25 @@ public abstract class ReloadableEntityCacheImpl<K,V> implements IReloadableEntit
 	public void setStopAutoReloadIfNotActiveClient(
 			boolean stopAutoReloadIfNotActiveClient) {
 		this.stopAutoReloadIfNotActiveClient = stopAutoReloadIfNotActiveClient;
+	}
+
+	/**
+	 * 
+	 */
+	public void notifyDataChanged() {
+		WeakReference<ICacheUpdatedCallback>[] refs = getCallbacks();
+		if(getLog().isDebugEnabled()){
+			getLog().debug("Entity cache was updated , going to notify bindable list warpper, callback number :"+(refs != null ? refs.length : 0));
+		}
+		for (WeakReference<ICacheUpdatedCallback> ref : refs) {
+			ICacheUpdatedCallback cb = ref.get();
+			if(cb != null){
+				if(getLog().isDebugEnabled()){
+					getLog().debug("notify list warpper :"+cb);
+				}
+				cb.dataChanged(ReloadableEntityCacheImpl.this);
+			}
+		}
 	}
 
 

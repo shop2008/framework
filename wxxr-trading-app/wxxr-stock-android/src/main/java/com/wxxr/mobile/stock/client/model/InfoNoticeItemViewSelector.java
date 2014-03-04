@@ -24,13 +24,13 @@ public abstract class InfoNoticeItemViewSelector extends ViewBase implements Ite
 		if(itemData instanceof String) {
 			return "SystemNewsTitleView";
 		} else {
-			return "InfoNoticesItemView";
+			return "InfoNoticeItemView";
 		}
 	}
 	
 	@Override
 	public String[] getAllViewIds() {
-		return new String[]{"SystemNewsTitleView", "InfoNoticesItemView"};
+		return new String[]{"SystemNewsTitleView", "InfoNoticeItemView"};
 	}
 
 	

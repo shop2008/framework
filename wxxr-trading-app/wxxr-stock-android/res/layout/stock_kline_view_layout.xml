@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:text="(--.--)"
-                android:textColor="@color/white"
+                android:textColor="@color/code_market_date"
                 android:textSize="10sp"
                 bind:field="code" />
         </LinearLayout>
@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="@color/white"
+                android:textColor="@color/code_market_date"
                 android:textSize="10sp"
                 bind:field="time" />
         </LinearLayout>
@@ -245,12 +245,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <com.wxxr.mobile.stock.client.widget.KLineView
+        <com.wxxr.mobile.stock.client.widget.KlineViewNew
             android:layout_width="match_parent"
-            android:layout_height="160dip"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="15dip"
-            android:layout_marginTop="2dip"
+            android:layout_height="170dp"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
             bind:updatingViewId="resourceId:id/progress"
             bind:updateFaieldId="resourceId:id/failed"
             bind:updateAllId="resourceId:id/all"

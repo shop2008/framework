@@ -22,7 +22,7 @@ public abstract class MainHomeItemChampionShipView extends ViewBase implements
 	ChampionShipMessageMenuItem ChampionShipBean;
 
 	@Convertor(params = { @Parameter(name = "format", value = "+%.2f%%"),
-			@Parameter(name = "multiple", value = "100.00") })
+			@Parameter(name = "multiple", value = "10000") })
 	StockLong2StringConvertor stockLong2StringConvertorSpecial;
 
 	@Convertor(params = { @Parameter(name = "format", value = "+%.2f"),
@@ -44,7 +44,8 @@ public abstract class MainHomeItemChampionShipView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${ChampionShipBean!=null?ChampionShipBean.stockName:'--'}")
 	String stockName;
 
-	@Field(valueKey = "text", binding = "${ChampionShipBean!=null?ChampionShipBean.incomeRate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${ChampionShipBean==null?'resourceId:color/gray':ChampionShipBean.incomeRate>0?'resourceId:color/stock_text_up':(ChampionShipBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
+	@Field(valueKey = "text", binding = "${ChampionShipBean!=null?ChampionShipBean.incomeRate:'0'}", converter = "stockLong2StringConvertorSpecial", 
+			attributes = { @Attribute(name = "textColor", value = "${ChampionShipBean==null?'resourceId:color/gray':ChampionShipBean.incomeRate>0?'resourceId:color/stock_text_up':(ChampionShipBean.incomeRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}") })
 	String incomeRate;
 
 	@Override

@@ -23,7 +23,7 @@
 	        android:src="@drawable/list_button_style"
 	        android:background="@null"
 	        bind:field="leftIcon"
-	        bind:on_Click="handleClick" 
+	        bind:on_Click="" 
 	        android:layout_marginLeft="6dp"/>
 	
 	    <TextView
@@ -44,23 +44,24 @@
 	        android:layout_alignParentRight="true"
 	        android:layout_centerVertical="true"
 	        android:background="@null"
+	        android:layout_marginRight="6dp"
 	        android:src="@drawable/user_button_style"
-	        android:visibility="invisible"
 	        bind:field="rightIcon"
-	        bind:on_Click="handleClick" />
+	        android:visibility="invisible"
+	        bind:on_Click="" />
 	
 	    <ImageButton
 	        android:id="@id/ib_toggle_search"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerVertical="true"
-	        android:layout_marginRight="10dp"
-	        android:layout_toLeftOf="@id/ib_toggle_right_menu"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="6dp"
 	        android:background="@null"
-	        android:src="@drawable/find_button_style"
 	        android:visibility="invisible"
+	        android:src="@drawable/find_button_style"
 	        bind:field="searchIcon"
-	        bind:on_Click="handleClick" />
+	        bind:on_Click="" />
 	</RelativeLayout>
 	<View android:layout_width="fill_parent"
         android:layout_height="0.5dp"

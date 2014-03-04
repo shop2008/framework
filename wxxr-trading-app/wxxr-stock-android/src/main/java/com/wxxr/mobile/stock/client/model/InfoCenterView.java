@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IOptionStockManagementService;
@@ -34,7 +35,7 @@ import com.wxxr.mobile.stock.client.utils.StockLong2StringConvertor;
  * @author neillin
  * 
  */
-@View(name = "infoCenter", description = "行情中心",provideSelection=true)
+@View(name = "infoCenter", description = "行情中心", provideSelection=true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT, layoutId = "R.layout.price_center_page_layout")
 public abstract class InfoCenterView extends ViewBase {
 	
@@ -106,11 +107,11 @@ public abstract class InfoCenterView extends ViewBase {
 	/**-----------深圳成指 深圳*/
 	
 	//箭头 
-		@Field(valueKey="text",enableWhen="${(szBean!=null && szBean.newprice > szBean.close)?true:false}",visibleWhen="${(szBean!=null && szBean.newprice != szBean.close)?true:false}",upateAsync=true)
+		@Field(valueKey="text",enableWhen="${(szBean!=null && szBean.newprice > szBean.close)?true:false}",visibleWhen="${(szBean!=null && szBean.newprice != szBean.close)?true:false}")
 		String szType;
 	
 	// 涨跌幅
-	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.risefallrate:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String sz_risefallrate;
@@ -120,19 +121,19 @@ public abstract class InfoCenterView extends ViewBase {
 	String sz_market;
 	
 	// 最新
-	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.newprice:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor")
 	String sz_newprice;
 	
 	// 涨跌额
-	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${szBean!=null?szBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(szBean!=null && szBean.newprice > szBean.close)?'resourceId:color/red':((szBean!=null && szBean.newprice < szBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor1")
 	String sz_change;
 	
 	// 股票列表
-	@Field(valueKey = "options",binding="${stockTaxis.data}",upateAsync=true,visibleWhen="${stockTaxis.data!=null && stockTaxis.data.size()>0}")
+	@Field(valueKey = "options",binding="${stockTaxis.data}",visibleWhen="${stockTaxis.data!=null && stockTaxis.data.size()>0}")
 	List<StockQuotationBean> stockInfos;
 	
 	@Field(valueKey = "visible",visibleWhen="${stockTaxis.data==null || stockTaxis.data.size()==0}")
@@ -141,11 +142,11 @@ public abstract class InfoCenterView extends ViewBase {
 	/**-----------深圳中小版指 深圳*/
 	
 	//箭头 
-		@Field(valueKey="text",enableWhen="${(zxBean!=null && zxBean.newprice > zxBean.close)?true:false}",visibleWhen="${(zxBean!=null && zxBean.newprice != zxBean.close)?true:false}",upateAsync=true)
+		@Field(valueKey="text",enableWhen="${(zxBean!=null && zxBean.newprice > zxBean.close)?true:false}",visibleWhen="${(zxBean!=null && zxBean.newprice != zxBean.close)?true:false}")
 		String zxType;
 	
 	// 涨跌幅
-	@Field(valueKey="text",binding="${zxBean!=null?zxBean.risefallrate:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.risefallrate:null}",attributes={
 			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringConvertorSpecial")
 	String zx_risefallrate;
@@ -155,13 +156,13 @@ public abstract class InfoCenterView extends ViewBase {
 	String zx_market;
 	
 	// 最新
-	@Field(valueKey="text",binding="${zxBean!=null?zxBean.newprice:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.newprice:null}",attributes={
 			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor")
 	String zx_newprice;
 	
 	// 涨跌额
-	@Field(valueKey="text",binding="${zxBean!=null?zxBean.change:null}",upateAsync=true,attributes={
+	@Field(valueKey="text",binding="${zxBean!=null?zxBean.change:null}",attributes={
 			@Attribute(name = "textColor", value = "${(zxBean!=null && zxBean.newprice > zxBean.close)?'resourceId:color/red':((zxBean!=null && zxBean.newprice < zxBean.close)?'resourceId:color/green':'resourceId:color/white')}")
 	},converter="stockLong2StringAutoUnitConvertor1")
 	String zx_change;
@@ -183,16 +184,17 @@ public abstract class InfoCenterView extends ViewBase {
 	private IMenu toolbar;
 	
 	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { 
-			@UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/edit_infocenter_button_style") 
+			@UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/edit_infocenter_button_style", visibleWhen="${true}") 
 			},navigations={@Navigation(on = "*", showPage="InfoCenterEditPageView")})
 	String toolbarClickedLeft(InputEvent event) {
 		return "";
 	}
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
-				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style")
+				@UIItem(id="right",label="搜索",icon="resourceId:drawable/find_button_style", visibleWhen="${true}")
 			},navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")}
 	)
 	String toolbarClickedRight(InputEvent event) {
+		updateSelection(new StockSelection());
 		return "";
 	}
 	
@@ -200,6 +202,7 @@ public abstract class InfoCenterView extends ViewBase {
 			@Navigation(on = "*", showPage = "GeGuStockPage")
 	})
 	String addStockClick(InputEvent event){
+		updateSelection(new StockSelection());
 		return "*";
 	}
 	
@@ -216,8 +219,8 @@ public abstract class InfoCenterView extends ViewBase {
 				if(szBean.getCode()!=null && szBean.getMarket()!=null){
 					temp.put("code", szBean.getCode());
 					temp.put("market", szBean.getMarket());
-					temp.put("name", "深圳成指");
-					updateSelection(new StockSelection(szBean.getMarket(),szBean.getCode(),"深圳成指"));
+					temp.put("name", "深证成指");
+					updateSelection(new StockSelection(szBean.getMarket(),szBean.getCode(),"深证成指"));
 					result.setPayload(temp);
 					result.setResult("SZ_ZhiShuPage");
 					return result;
@@ -263,8 +266,8 @@ public abstract class InfoCenterView extends ViewBase {
 				if(zxBean.getCode()!=null && zxBean.getMarket()!=null){
 					temp.put("code", zxBean.getCode());
 					temp.put("market", zxBean.getMarket());
-					temp.put("name", "中小版指");
-					updateSelection(new StockSelection(zxBean.getMarket(),zxBean.getCode(),"中小版指"));
+					temp.put("name", "中小板指");
+					updateSelection(new StockSelection(zxBean.getMarket(),zxBean.getCode(),"中小板指"));
 					result.setPayload(temp);
 					result.setResult("ZX_ZhiShuPage");
 					return result;
@@ -315,9 +318,15 @@ public abstract class InfoCenterView extends ViewBase {
 	@Command
 	String handleRefresh(InputEvent event){
 		if(event.getEventType().equals("TopRefresh")){
-			this.infoCenterService.getStockQuotation("000001","SH");
-			this.infoCenterService.getStockQuotation("399001","SZ");
-			this.optionStockService.getMyOptionStocks(this.orderBy, this.direction);
+			AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+				
+				@Override
+				public void run() {
+					optionStockService.getMyOptionStocks(orderBy, direction);
+					infoCenterService.getSyncStockQuotation("000001","SH");
+					infoCenterService.getSyncStockQuotation("399001","SZ");
+				}
+			});
 		}
 		return null;
 	}

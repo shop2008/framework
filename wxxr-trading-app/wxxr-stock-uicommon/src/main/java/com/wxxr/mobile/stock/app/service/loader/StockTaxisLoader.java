@@ -6,67 +6,28 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.StockTaxisBean;
+import com.wxxr.mobile.stock.app.command.GetStockTaxisVOsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.hq.ejb.api.StockTaxisVO;
 import com.wxxr.stock.hq.ejb.api.TaxisVO;
 import com.wxxr.stock.restful.json.StockTaxisListVO;
 import com.wxxr.stock.restful.resource.StockResource;
+import com.wxxr.stock.restful.resource.StockResourceAsync;
 
 /**
  * @author neillin
  *
  */
-public class StockTaxisLoader extends AbstractEntityLoader<String, StockTaxisBean, StockTaxisVO> {
+public class StockTaxisLoader extends AbstractEntityLoader<String, StockTaxisBean, StockTaxisVO, GetStockTaxisVOsCommand> {
 
-	private static final String COMMAND_NAME = "GetStockTaxisVOs";
-	
-	private static class GetStockTaxisVOsCommand implements ICommand<List<StockTaxisVO>> {
-
-		private TaxisVO taxis;
-		
-		/**
-		 * @return the taxis
-		 */
-		public TaxisVO getTaxis() {
-			return taxis;
-		}
-
-		/**
-		 * @param taxis the taxis to set
-		 */
-		public void setTaxis(TaxisVO taxis) {
-			this.taxis = taxis;
-		}
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		@Override
-		public Class<List<StockTaxisVO>> getResultType() {
-			Class clazz = List.class;
-			return clazz;
-		}
-
-		@Override
-		public void validate() {
-			if(this.taxis == null){
-				throw new IllegalArgumentException();
-			}
-		}
-		
-	}
 	
 	private TaxisVO previousSearchCriteria;
 	
 	@Override
-	public ICommand<List<StockTaxisVO>> createCommand(Map<String, Object> params) {
+	public GetStockTaxisVOsCommand createCommand(Map<String, Object> params) {
 		if((params == null)||params.isEmpty()){
 			return null;
 		}
@@ -92,7 +53,7 @@ public class StockTaxisLoader extends AbstractEntityLoader<String, StockTaxisBea
 	}
 
 	@Override
-	public boolean handleCommandResult(ICommand<?> cmd,List<StockTaxisVO> result,
+	public boolean handleCommandResult(GetStockTaxisVOsCommand cmd,List<StockTaxisVO> result,
 			IReloadableEntityCache<String, StockTaxisBean> cache) {
 		TaxisVO criteria = ((GetStockTaxisVOsCommand)cmd).getTaxis();
 		boolean updated = false;
@@ -113,15 +74,21 @@ public class StockTaxisLoader extends AbstractEntityLoader<String, StockTaxisBea
 
 	@Override
 	protected String getCommandName() {
-		return COMMAND_NAME;
+		return GetStockTaxisVOsCommand.COMMAND_NAME;
 	}
 
 	@Override
-	protected List<StockTaxisVO> executeCommand(
-			ICommand<List<StockTaxisVO>> command) throws Exception {
+	protected void executeCommand(GetStockTaxisVOsCommand command, IAsyncCallback<List<StockTaxisVO>> callback) {
 		GetStockTaxisVOsCommand cmd = (GetStockTaxisVOsCommand)command;
-		StockTaxisListVO result = RestUtils.getRestService(StockResource.class).getStocktaxis(cmd.getTaxis());
-		return result.getList();
+		getRestService(StockResourceAsync.class, StockResource.class).getStocktaxis(cmd.getTaxis()).
+		onResult(new DelegateCallback<StockTaxisListVO, List<StockTaxisVO>>(callback) {
+
+			@Override
+			protected List<StockTaxisVO> getTargetValue(StockTaxisListVO result) {
+				return result != null ? result.getList() : null;
+			}
+		});
 	}
 
 }
+

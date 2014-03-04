@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.R.integer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -37,7 +36,7 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	private ListViewPool viewPool;
 	private int unItemPosition = 0;
 	private int titlePos = 0;
-	
+	private int firstVisibleItemPos = 0;
 	public AbstractPinnedHeaderListAdapter(IAndroidBindingContext ctx,IListDataProvider provider, ItemViewSelector selector){
 		if((ctx == null)||(provider == null)||(selector == null)){
 			throw new IllegalArgumentException("Binding context, provider, selector cannot be NULL !");
@@ -91,8 +90,9 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		//refresh();
-		return getViewPool().getView(null, convertView, getItem(position), position);
+		Object val = getItem(position);
+		String vid = this.viewSelector.getItemViewId(val);
+		return getViewPool().getView(vid, convertView, getItem(position), position);
 	}
 
 	/**
@@ -135,7 +135,12 @@ public abstract class AbstractPinnedHeaderListAdapter extends BaseAdapter implem
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
+			firstVisibleItemPos = firstVisibleItem;
 			((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
+	}
+	
+	public int getFirstVisibleItem() {
+		return firstVisibleItemPos;
 	}
 	
 	public View getPinnedHeaderView() {

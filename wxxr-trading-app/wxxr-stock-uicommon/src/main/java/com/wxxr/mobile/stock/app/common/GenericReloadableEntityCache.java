@@ -14,9 +14,9 @@ import com.wxxr.mobile.core.microkernel.api.KUtils;
  *
  */
 public class GenericReloadableEntityCache<K,V,T> extends
-		ReloadableEntityCacheImpl<K, V> {
+		ReloadableEntityCacheImpl<K, V, T> {
 	
-	private IEntityLoader<K,V,T> entityLoader;
+	private IEntityLoader<K,V,T,ICommand<List<T>>> entityLoader;
 	private Map<String, Object> commandParameters;
 
 	public GenericReloadableEntityCache(String name, int reloadInterval) {
@@ -28,7 +28,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected IEntityLoader<K,V,T> getEntityLoader() {
+	protected IEntityLoader<K,V,T,ICommand<List<T>>> getEntityLoader() {
 		if(this.entityLoader == null){
 			@SuppressWarnings("rawtypes")
 			IEntityLoader loader = KUtils.getService(IEntityLoaderRegistry.class).getEntityLoader(getEntityTypeName());
@@ -41,16 +41,15 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	 * @see com.wxxr.mobile.stock.app.common.ReloadableEntityCacheImpl#getReloadCommand()
 	 */
 	@Override
-	protected ICommand<?> getReloadCommand(Map<String, Object> params) {
+	protected ICommand<List<T>> getReloadCommand(Map<String, Object> params) {
 		return getEntityLoader().createCommand(params != null ? params : getCommandParameters());
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.stock.app.common.ReloadableEntityCacheImpl#processReloadResult(java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	protected boolean processReloadResult(ICommand<?> cmd,Object result) {
+	protected boolean processReloadResult(ICommand<List<T>> cmd,List<T> result) {
 		if(result == null){
 			getLog().warn("Command return null value, going clear cache.");
 			if(getCacheSize() > 0){
@@ -67,7 +66,7 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	/**
 	 * @param entityLoader the entityLoader to set
 	 */
-	public void setEntityLoader(IEntityLoader<K,V,T> entityLoader) {
+	public void setEntityLoader(IEntityLoader<K,V,T,ICommand<List<T>>> entityLoader) {
 		this.entityLoader = entityLoader;
 	}
 
@@ -83,6 +82,15 @@ public class GenericReloadableEntityCache<K,V,T> extends
 	 */
 	public void setCommandParameters(Map<String, Object> commandParameters) {
 		this.commandParameters = commandParameters;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.wxxr.mobile.stock.app.common.ReloadableEntityCacheImpl#prepareLoadmoreCommandParameter(java.util.Map)
+	 */
+	@Override
+	protected Map<String, Object> prepareLoadmoreCommandParameter(
+			BindableListWrapper<V> list) {
+		return list.getReloadParameters();
 	}
 
 }

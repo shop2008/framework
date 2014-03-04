@@ -62,6 +62,8 @@ public class StockQuotationBean implements IBindableBean {
 	private Integer power;
 
 	private String stockName;
+	
+	private boolean added;
 	/**
 	 * @param listener
 	 */
@@ -77,6 +79,10 @@ public class StockQuotationBean implements IBindableBean {
 	}
 
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 	/**
 	 * @return the risefallrate
@@ -802,6 +808,16 @@ public class StockQuotationBean implements IBindableBean {
 
 	
 
+	public boolean getAdded() {
+		return added;
+	}
+
+	public void setAdded(boolean added) {
+		boolean old = this.added;
+		this.added = added;
+		this.emitter.firePropertyChange("added", old, this.added);
+	}
+
 	@Override
 	public String toString() {
 		return "StockQuotationBean [risefallrate=" + risefallrate + ", change="
@@ -832,6 +848,7 @@ public class StockQuotationBean implements IBindableBean {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (added ? 1231 : 1237);
 		result = prime * result
 				+ ((averageprice == null) ? 0 : averageprice.hashCode());
 		result = prime * result
@@ -918,6 +935,8 @@ public class StockQuotationBean implements IBindableBean {
 		if (getClass() != obj.getClass())
 			return false;
 		StockQuotationBean other = (StockQuotationBean) obj;
+		if (added != other.added)
+			return false;
 		if (averageprice == null) {
 			if (other.averageprice != null)
 				return false;
@@ -1151,5 +1170,6 @@ public class StockQuotationBean implements IBindableBean {
 		return true;
 	}
 
+	
 
 }

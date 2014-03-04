@@ -3,21 +3,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
-        <version>1.0.0</version>
+        <artifactId>wxxr-mobile-parent</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
    <groupId>com.wxxr.mobile.stock</groupId>
    <artifactId>wxxr-stock-app</artifactId>
-   <version>1.0.0-SNAPSHOT</version>
+   <version>1.0.1-SNAPSHOT</version>
    <packaging>pom</packaging>
-	<properties>
-        <application.version>1.0.0-SNAPSHOT</application.version>
-	</properties>
+    <properties>
+        <application.version>1.0.1-SNAPSHOT</application.version>
+    </properties>
 
    <modules>
-       <module>wxxr-stock-android</module>
        <module>wxxr-stock-uicommon</module>
+       <module>wxxr-stock-android</module>
    </modules>
-   
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.wxxr.mobile.stock</groupId>
+                <artifactId>wxxr-stock-uicommon</artifactId>
+                <version>${application.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wxxr.mobile.stock</groupId>
+                <artifactId>wxxr-stock-android</artifactId>
+                <version>${application.version}</version>
+            </dependency>
+        </dependencies>
+   </dependencyManagement>
 </project>

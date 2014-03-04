@@ -3,13 +3,14 @@ package com.wxxr.mobile.stock.client.binding;
 import java.util.concurrent.TimeUnit;
 
 import com.wxxr.mobile.android.app.AppUtils;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.ui.api.IDataField;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.InputEventDecorator;
 import com.wxxr.mobile.core.ui.api.InputEventHandlingContext;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 
 public class StockSuspensionRefreshClickedDecorator implements InputEventDecorator {
 
@@ -26,7 +27,7 @@ public class StockSuspensionRefreshClickedDecorator implements InputEventDecorat
 		setProgressFieldStatus(v, true);
 		handleTime = System.currentTimeMillis();
 
-		IAsyncCallback cb = new IAsyncCallback() {
+		IAsyncCallback<Object> cb = new IAsyncCallback<Object>() {
 
 			@Override
 			public void success(Object result) {
@@ -45,7 +46,7 @@ public class StockSuspensionRefreshClickedDecorator implements InputEventDecorat
 			}
 
 			@Override
-			public void failed(Object cause) {
+			public void failed(Throwable cause) {
 				long time = System.currentTimeMillis();
 				if (time - handleTime < 1000) {
 					AppUtils.invokeLater(new Runnable() {
@@ -58,6 +59,16 @@ public class StockSuspensionRefreshClickedDecorator implements InputEventDecorat
 				} else {
 					setProgressFieldStatus(v, false);
 				}
+			}
+
+			@Override
+			public void cancelled() {
+				setProgressFieldStatus(v, false);
+			}
+
+			@Override
+			public void setCancellable(ICancellable cancellable) {
+				
 			}
 		};
 		((SimpleInputEvent) event)

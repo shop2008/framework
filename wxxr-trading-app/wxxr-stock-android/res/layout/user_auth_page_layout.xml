@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
-    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fadingEdge="none"
-    android:scrollbars="none"
-    android:background="@color/page_background_color"
-     >
+    android:background="@color/page_background_color" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +25,6 @@
                 style="@style/qsxqTextTitleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
                 android:text="@string/tv_mobile_auth" />
 
             <RelativeLayout
@@ -116,7 +111,6 @@
                 style="@style/qsxqTextTitleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
                 android:text="@string/tv_title_cash_auth" />
 
             <FrameLayout
@@ -158,7 +152,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:visibility="gone"
-                    bind:field="bankCardAuthedBody" >
+                    bind:field="bankCardAuthedBody"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -190,15 +185,17 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="xxx"
-                                    bind:field="accountName" />
+                                    bind:field="accountName@StockViewDecorator"
+                                    bind:updateAllId="resourceId:id/all"
+                                    bind:updateFaieldId="resourceId:id/failed"
+                                    bind:updatingViewId="resourceId:id/progress" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal"
                                 android:layout_marginTop="5dp"
-                                 >
+                                android:orientation="horizontal" >
 
                                 <TextView
                                     style="@style/qsxqTextTitleStyle_item_tv"
@@ -215,35 +212,32 @@
                                     bind:field="bankName" />
                             </LinearLayout>
                         </LinearLayout>
-                        
-                        <LinearLayout 
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
                             android:gravity="center_vertical|right"
-                            >
-                            <Button 
+                            android:orientation="vertical" >
+
+                            <Button
                                 android:layout_width="wrap_content"
-                           		android:layout_height="35dp"
-                           		android:text="更换银行卡"
-                           		android:textSize="15sp"
-                           		android:gravity="center"
-                           		android:textColor="@color/white"
-                           		android:background="@drawable/red_button_small"
-                           		bind:field="*"
-                           		bind:on_Click="switchBankCard"
-                                />
-                            
+                                android:layout_height="35dp"
+                                android:background="@drawable/red_button_small"
+                                android:gravity="center"
+                                android:text="更换银行卡"
+                                android:textColor="@color/white"
+                                android:textSize="15sp"
+                                bind:field="*"
+                                bind:on_Click="switchBankCard" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" 
                         android:layout_marginTop="5dp"
-                        >
+                        android:orientation="horizontal" >
 
                         <TextView
                             style="@style/qsxqTextTitleStyle_item_tv"
@@ -274,4 +268,6 @@
         </LinearLayout>
     </LinearLayout>
 
-</ScrollView>
+    <include layout="@layout/stock_loading_progress_layout" />
+
+</FrameLayout>

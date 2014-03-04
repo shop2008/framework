@@ -25,9 +25,11 @@ import com.wxxr.mobile.core.ui.api.ISelectionChangedListener;
 import com.wxxr.mobile.core.ui.api.ISelectionService;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
+import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
@@ -52,6 +54,9 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(orderBean!=null?orderBean.stockCode:'', orderBean!=null?orderBean.marketCode:'')}")
 	StockBaseInfo stockInfoBean;
 
+	@Bean(type=BindingType.Pojo,express="${manageService.getTradingAccountInfo(accid)}")
+	TradingAccountBean tradingAccount;
+	
 	@Bean
 	StockTradingOrderBean orderBean;
 
@@ -71,7 +76,7 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 	@Field(valueKey = "text", binding = "${orderBean!=null?orderBean.amount:'--'}${'股'}")
 	String amount;
 
-	@Field(valueKey = "text", binding = "${orderBean!=null?(orderBean.status=='PROCESSING'?'撤  单':(orderBean.status=='100'?'正在撤单':'正在撤单')):'撤  单'}")
+	@Field(valueKey = "text", binding = "${orderBean!=null?(orderBean.status=='PROCESSING'?'撤  单':(orderBean.status=='100'?'正在撤单':'正在撤单')):'撤  单'}", enableWhen="${tradingAccount.over!='CLEARING'}")
 	String status;
 
 	@Menu(items = { "left", "right", "search" })
@@ -129,24 +134,32 @@ public abstract class TBuyTradingItemOrderView extends ViewBase implements
 		return "";
 	}
 
-	@Command(uiItems = @UIItem(id = "leftok", label = "确定", icon = "resourceId:drawable/home"), navigations = { @Navigation(on = "StockAppBizException", message = "%m", params = { @Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2") }) })
+	@Command(uiItems = @UIItem(id = "leftok", label = "确定", icon = "resourceId:drawable/home"), navigations = { @Navigation(on = "StockAppBizException", message = "%m", params = { @Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2") }),
+		 @Navigation(on = "success", message = "撤单已经提交成功，请稍候", params = { @Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2") }) })
 	@ExeGuard(title = "提示", message = "正在取消订单，请稍后...", silentPeriod = 0, cancellable = true)
-	String confirmCancelClick(InputEvent event) {
-		IView v = (IView) event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
-		if (v != null)
-			v.hide();
+	String confirmCancelClick(ExecutionStep step, InputEvent event, Object result) {
 		String id = orderBean.getId() + "";
-		manageService.cancelOrder(accid, id);
-//		orderBean.setStatus("100");
-		
-		String orders = SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).find(Constants.KEY_CANCEL_ORDERS);
-		if(StringUtils.isBlank(orders))	{
-			orders = id;
-		} else {
-			if(!orders.contains(id))
-				orders += ("," + id);
+		switch(step){
+		case PROCESS:
+			IView v = (IView) event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+			if (v != null)
+				v.hide();
+			manageService.cancelOrder(accid, id);
+			break;
+		case NAVIGATION:
+			orderBean.setStatus("100");
+			
+			String orders = SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).find(Constants.KEY_CANCEL_ORDERS);
+			if(StringUtils.isBlank(orders))	{
+				orders = id;
+			} else {
+				if(!orders.contains(id))
+					orders += ("," + id);
+			}
+			SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, orders);
+			return "success";
 		}
-//		SpUtil.getInstance(AppUtils.getFramework().getAndroidApplication()).save(Constants.KEY_CANCEL_ORDERS, orders);
 		return null;
+
 	}
 }

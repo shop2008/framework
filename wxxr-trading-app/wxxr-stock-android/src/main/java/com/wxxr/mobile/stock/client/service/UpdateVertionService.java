@@ -13,31 +13,25 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.IAndroidPageNavigator;
 import com.wxxr.mobile.core.microkernel.api.AbstractModule;
-import com.wxxr.mobile.core.ui.api.IPage;
-import com.wxxr.mobile.core.ui.api.IWorkbench;
 import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.IStockAppContext;
 import com.wxxr.mobile.stock.client.R;
 
 public class UpdateVertionService extends AbstractModule<IStockAppContext>
-		implements IUpdateVertionService, OnClickListener {
+		implements IUpdateVertionService{
 
 	private final int DownApk = 100;
 	private static final int DOWNLOAD_PREPARE = 0;
@@ -50,8 +44,7 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 	public static final int NETTYPE_CMNET = 0x03;
 	private Notification notification;
 
-	/** 是否正在下载 */
-	private boolean isDownloading = false;
+	
 
 	boolean isDownloadFinish = false;
 
@@ -119,7 +112,6 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 
 		new Thread() {
 			public void run() {
-				isDownloading = true;
 				InputStream is = null;
 				FileOutputStream fos = null;
 				File downloadFile = null;
@@ -210,7 +202,7 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 		// startActivity(intent);
 	}
 
-	private void alertUserSaveFlow() {
+	/*private void alertUserSaveFlow() {
 		dialog = new Dialog(androidContext, R.style.myDialogStyle);
 		View view = View
 				.inflate(androidContext, R.layout.download_dialog, null);
@@ -220,14 +212,14 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 		done.setOnClickListener(this);
 		cancel.setOnClickListener(this);
 		dialog.show();
-	}
+	}*/
 
 	/**
 	 * 获取当前网络类型
 	 * 
 	 * @return 1：WIFI网络 2：WAP网络 3：NET网络
 	 */
-	private int getNetworkType() {
+	/*private int getNetworkType() {
 		int netType = 0;
 		ConnectivityManager connectivityManager = (ConnectivityManager) androidContext
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -249,7 +241,7 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 			netType = NETTYPE_WIFI;
 		}
 		return netType;
-	}
+	}*/
 
 	private boolean isNetworkConnected() {
 		ConnectivityManager cm = (ConnectivityManager) context.getApplication()
@@ -338,10 +330,5 @@ public class UpdateVertionService extends AbstractModule<IStockAppContext>
 
 	private Activity homeActivity = null;
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

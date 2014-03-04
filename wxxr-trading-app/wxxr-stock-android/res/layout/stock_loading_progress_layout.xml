@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:gravity="center"
-            android:text="正在加载数据,请稍后"
+            android:text="@string/loading_text"
             android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
@@ -36,7 +36,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:gravity="center"
-        android:text="数据加载失败,点击重试"
+        android:text="@string/loading_error_retry"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"

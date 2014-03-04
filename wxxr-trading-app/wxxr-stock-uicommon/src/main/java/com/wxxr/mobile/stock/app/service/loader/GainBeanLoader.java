@@ -3,81 +3,26 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.Async;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.microkernel.api.KUtils;
 import com.wxxr.mobile.core.security.api.IUserIdentityManager;
 import com.wxxr.mobile.stock.app.bean.GainBean;
+import com.wxxr.mobile.stock.app.command.GetGainBeanCommand;
+import com.wxxr.mobile.stock.app.command.GetOtherUserGainBeanCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingProtectedResource;
+import com.wxxr.stock.restful.resource.ITradingProtectedResourceAsync;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.GainVO;
 import com.wxxr.stock.trading.ejb.api.GainVOs;
 
-public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, GainVO> {
+public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, GainVO, GetGainBeanCommand> {
 
-    private static final String COMMAND_NAME = "GetGainBeanCommand";
-    @NetworkConstraint
-    private  class GetOtherUserGainBeanCommand extends GetGainBeanCommand {
-        String userId;
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-    }
-    private  class GetGainBeanCommand implements ICommand<List<GainVO>> {
-        int start;
-        int limit;
-        boolean virtual;
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<GainVO>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public int getLimit() {
-            return limit;
-        }
-
-        public void setLimit(int limit) {
-            this.limit = limit;
-        }
-
-        public boolean isVirtual() {
-            return virtual;
-        }
-
-        public void setVirtual(boolean virtual) {
-            this.virtual = virtual;
-        }
-        
-        @Override
-        public void validate() {
-        }
-        
-    }
-    
-    
     @Override
-    public ICommand<List<GainVO>> createCommand(Map<String, Object> params) {
+    public GetGainBeanCommand createCommand(Map<String, Object> params) {
         if((params == null)||params.isEmpty()){
             return null;
         }
@@ -98,9 +43,8 @@ public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, Gain
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<GainVO> result,
+    public boolean handleCommandResult(GetGainBeanCommand cmd,List<GainVO> result,
             IReloadableEntityCache<String, GainBean> cache) {
-        GetGainBeanCommand command = (GetGainBeanCommand) cmd;
         boolean updated = false;
        
         if(result != null){
@@ -126,24 +70,28 @@ public class GainBeanLoader  extends AbstractEntityLoader<String, GainBean, Gain
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetGainBeanCommand.COMMAND_NAME;
     }
 
     @Override
-    protected List<GainVO> executeCommand(
-            ICommand<List<GainVO>> command) throws Exception {
-    		GainVOs vos=null;
+    protected void  executeCommand(GetGainBeanCommand command, IAsyncCallback<List<GainVO>> callback) {
+    		Async<GainVOs> async=null;
         if ( command instanceof GetOtherUserGainBeanCommand){
             GetOtherUserGainBeanCommand cmd =(GetOtherUserGainBeanCommand) command;
-             vos = RestUtils.getRestService(ITradingResource.class).getMoreOtherPersonal(cmd.getUserId(), cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
+            async = getRestService(ITradingResourceAsync.class,ITradingResource.class).getMoreOtherPersonal(cmd.getUserId(), cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
         }else if (command instanceof GetGainBeanCommand){
             GetGainBeanCommand cmd =(GetGainBeanCommand) command;
-          
-            	vos=RestUtils.getRestService(ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());
-            		
-            		
+            async=getRestService(ITradingProtectedResourceAsync.class,ITradingProtectedResource.class).getMorePersonalRecords(cmd.getStart(), cmd.getLimit(), cmd.isVirtual());           		            		
         }
-        return vos==null?null:vos.getGains();
+        async.onResult(new DelegateCallback<GainVOs, List<GainVO>>(callback) {
+
+			@Override
+			protected List<GainVO> getTargetValue(GainVOs vos) {
+		        return vos==null?null:vos.getGains();
+			}
+		});
     }
 
 }
+
+

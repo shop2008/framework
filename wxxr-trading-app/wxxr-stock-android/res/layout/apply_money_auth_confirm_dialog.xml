@@ -3,7 +3,7 @@
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/page_background_color"
     android:orientation="vertical" >
 
     <TextView
@@ -38,28 +38,15 @@
             android:text="王XX"
             bind:field="accountName"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#EFEFEF"
-            android:textSize="20sp" 
-            android:text="("
-            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#F72102"
             android:textSize="20sp" 
-            android:text="请使用真实姓名，一经认证不得更改"
+            android:text="(请使用真实姓名，一经认证不得更改)"
             />
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#EFEFEF"
-            android:textSize="20sp" 
-            android:text=")"
-            />
+   
     </LinearLayout>
     
     <LinearLayout
@@ -153,6 +140,7 @@
             android:text="认证"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:layout_margin="10dp"
             android:background="@drawable/red_button_small"
             bind:field="*"
             bind:on_Click="done"
@@ -165,6 +153,7 @@
             android:text="取消"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:layout_margin="10dp"
             android:background="@drawable/red_button_small"
             bind:field="*"
             bind:on_Click="cancel"

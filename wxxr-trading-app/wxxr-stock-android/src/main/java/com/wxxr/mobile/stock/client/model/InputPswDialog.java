@@ -10,6 +10,7 @@ import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.ExeGuard;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.FieldUpdating;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.ValueType;
@@ -17,10 +18,10 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.core.util.StringUtils;
-import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.model.AuthInfo;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -53,7 +54,12 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 	@Bean(type = BindingType.Pojo, express = "${userService.userAuthInfo}")
 	AuthInfo authBean;
 
-	@Command(navigations = {
+	
+	@Command(
+			updateFields = {
+					@FieldUpdating(fields={"inputPsw"},message="请输入正确的密码")
+			},
+			navigations = {
 			@Navigation(on = "VerifyFail", showDialog = "RetryVerifyDialog", closeCurrentView = true),
 			@Navigation(on = "DRAWCASH", showPage = "userWithDrawCashPage", closeCurrentView = true),
 			@Navigation(on = "SWITCHCARD", showPage = "userSwitchCardPage", closeCurrentView = true),
@@ -66,14 +72,7 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 			@Navigation(on="WaitVerify", showDialog="WaitVerifyDialogView")
 			})
 	@ExeGuard(cancellable=true,silentPeriod=200,title="提示",message="正在处理，请稍候...")
-	CommandResult commitVerifyPasswd(InputEvent event) {
-		
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	CommandResult commitVerifyPasswd(ExecutionStep step, InputEvent event, Object r) {
 		String inputPasswrod = this.inputPswField.getValue();
 		boolean verifyResult = userService.verfiy(user.getPhoneNumber(),
 				inputPasswrod);
@@ -92,21 +91,24 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 				if (authBean != null) {
 					boolean confirmed = authBean.getConfirmed();
 					if (confirmed) {
-						
-						
-						hide();
 						long applyMoney = 0l;
 						if(StringUtils.isNotBlank(moneyAmount)) {
 							applyMoney = Long.parseLong(moneyAmount);
 						}
-						tradingService.applyDrawMoney(applyMoney*100);
-						
-						result.setResult("WaitVerify");
-						return result;
+						switch(step){
+							case PROCESS:
+								tradingService.applyDrawMoney(applyMoney*100);
+								break;
+							case NAVIGATION:
+								hide();
+								result.setResult("WaitVerify");
+								return result;
+						}
 					} else {
 						hide();
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("moneyAmount", moneyAmount);
+						map.put("type", type);
 						result.setPayload(map);
 						result.setResult("UnConfirmDialogView");
 						return result;
@@ -116,6 +118,10 @@ public abstract class InputPswDialog extends ViewBase implements IModelUpdater {
 			}
 		} else {
 			hide();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("type", type);
+			map.put("moneyAmount", moneyAmount);
+			result.setPayload(map);
 			result.setResult("VerifyFail");
 			return result;
 		}

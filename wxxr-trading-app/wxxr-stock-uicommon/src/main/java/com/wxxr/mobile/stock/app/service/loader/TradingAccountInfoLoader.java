@@ -4,47 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.annotation.NetworkConstraint;
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.command.GetTradingAccountInfoCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.TradingAccountVO;
 
-public class TradingAccountInfoLoader extends AbstractEntityLoader<String, TradingAccountBean,TradingAccountVO>{
-    private final static String COMMAND_NAME = "GetTradingAccountInfo";
+public class TradingAccountInfoLoader extends AbstractEntityLoader<String, TradingAccountBean,TradingAccountVO, GetTradingAccountInfoCommand>{
 
-    @NetworkConstraint
-    private static class GetTradingAccountInfoCommand implements ICommand<List<TradingAccountVO>> {
-       private String acctID;
-        public String getAcctID() {
-            return acctID;
-        }
-
-        public void setAcctID(String acctID) {
-            this.acctID = acctID;
-        }
-
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<TradingAccountVO>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-
-        @Override
-        public void validate() {
-        }
-        
-    }
     @Override
-    public ICommand<List<TradingAccountVO>> createCommand(Map<String, Object> params) {
+    public GetTradingAccountInfoCommand createCommand(Map<String, Object> params) {
     	if(params == null || params.get("acctID") == null)
     		return null;
         GetTradingAccountInfoCommand cmd = new GetTradingAccountInfoCommand();
@@ -53,7 +25,7 @@ public class TradingAccountInfoLoader extends AbstractEntityLoader<String, Tradi
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<TradingAccountVO> result, IReloadableEntityCache<String, TradingAccountBean> cache) {
+    public boolean handleCommandResult(GetTradingAccountInfoCommand cmd,List<TradingAccountVO> result, IReloadableEntityCache<String, TradingAccountBean> cache) {
         boolean updated = false;
         for (TradingAccountVO vo : result) {
             String accId = String.valueOf(vo.getId());
@@ -72,19 +44,27 @@ public class TradingAccountInfoLoader extends AbstractEntityLoader<String, Tradi
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetTradingAccountInfoCommand.COMMAND_NAME;
     }
 
     @Override
-    protected List<TradingAccountVO> executeCommand(ICommand<List<TradingAccountVO>> command) throws Exception {
+    protected void executeCommand(GetTradingAccountInfoCommand command, IAsyncCallback<List<TradingAccountVO>> callback) {
         GetTradingAccountInfoCommand cmd = (GetTradingAccountInfoCommand)command;
-        TradingAccountVO vo= getRestService(ITradingResource.class).getAccount(cmd.getAcctID());
-        if (vo!=null){
-            List<TradingAccountVO> vos=new ArrayList<TradingAccountVO>();
-            vos.add(vo);
-            return vos;
-        }
-         return null;
+        getRestService(ITradingResourceAsync.class, ITradingResource.class).getAccount(cmd.getAcctID()).
+        onResult(new DelegateCallback<TradingAccountVO, List<TradingAccountVO>>(callback) {
+
+			@Override
+			protected List<TradingAccountVO> getTargetValue(
+					TradingAccountVO vo) {
+		        if (vo!=null){
+		            List<TradingAccountVO> vos=new ArrayList<TradingAccountVO>();
+		            vos.add(vo);
+		            return vos;
+		        }
+		         return null;
+			}
+		});
     } 
 
 }
+

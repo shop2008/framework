@@ -15,8 +15,10 @@ import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.EarnRankItemBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
@@ -34,11 +36,12 @@ public abstract class TradingWinnerView extends ViewBase {
 	@Bean(type=BindingType.Service)
 	ITradingManagementService service;
 
-	@Bean(express = "${service.getEarnRank(0,20)}")
+	@Bean(express = "${service.getEarnRank(0,20)}", effectingFields={"earnRankList"})
 	BindableListWrapper<EarnRankItemBean> rankBean;
 	
 	@Field(valueKey="options",binding="${rankBean.data}")
 	List<EarnRankItemBean> earnRankList;
+	DataField<List> earnRankListField;
 	
 	@Field(valueKey="text", attributes= {@Attribute(name = "enablePullDownRefresh", value= "true"),
 			@Attribute(name = "enablePullUpRefresh", value= "true")})
@@ -50,11 +53,11 @@ public abstract class TradingWinnerView extends ViewBase {
 	String handleRefresh(InputEvent event) {
 		if(event.getEventType().equals("TopRefresh")){
 			this.start = 0;
-			this.service.getEarnRank(0,20,true);
+			this.service.getEarnRank(0,20);
 		}else if(event.getEventType().equals("BottomRefresh")){
 			if(rankBean!=null && rankBean.getData()!=null){
 				this.start = rankBean.getData().size();
-				this.service.getEarnRank(start,20,true); 
+				this.service.getEarnRank(start,20); 
 			}
 		}
 		return null;
@@ -66,6 +69,21 @@ public abstract class TradingWinnerView extends ViewBase {
 //		this.service.getEarnRank((start*20)+1,20);
 //		return null;
 //	}
+	@Command(navigateMethod="handleReTryClickedResult")
+	String handlerReTryClicked(InputEvent event) {
+		AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+			
+			@Override
+			public void run() {
+				earnRankListField.getDomainModel().doEvaluate();
+			}
+		});
+		return null;
+	}
+	
+	String handleReTryClickedResult(InputEvent event, Object result){
+		return null;
+	}
 	
 	@OnShow	
 	protected void updateEarnRankList() {

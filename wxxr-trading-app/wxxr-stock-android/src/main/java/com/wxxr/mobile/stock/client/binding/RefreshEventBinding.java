@@ -7,13 +7,14 @@ package com.wxxr.mobile.stock.client.binding;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+import com.wxxr.mobile.core.async.api.ICancellable;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.api.ValueChangedEvent;
 import com.wxxr.mobile.core.ui.common.AbstractEventBinding;
 import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView.IRefreshViewListener;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshView;
@@ -36,7 +37,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback<Object>() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -46,10 +47,22 @@ public class RefreshEventBinding extends AbstractEventBinding {
 					}
 					
 					@Override
-					public void failed(Object arg0) {
+					public void failed(Throwable arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onHeaderRefreshComplete(false);
 						}
+					}
+
+					@Override
+					public void cancelled() {
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onHeaderRefreshComplete(false);
+						}
+					}
+
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+						
 					}
 				});
 				handleInputEvent(event);
@@ -68,7 +81,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback<Object>() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -78,10 +91,22 @@ public class RefreshEventBinding extends AbstractEventBinding {
 					}
 					
 					@Override
-					public void failed(Object arg0) {
+					public void failed(Throwable arg0) {
 						if(control instanceof PullToRefreshView) {
 							((PullToRefreshView)control).onFooterRefreshComplete();
 						}
+					}
+
+					@Override
+					public void cancelled() {
+						if(control instanceof PullToRefreshView) {
+							((PullToRefreshView)control).onFooterRefreshComplete();
+						}
+					}
+
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+						
 					}
 				});
 				handleInputEvent(event);
@@ -99,7 +124,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("TopRefresh",field);
-				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback<Object>() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -109,10 +134,22 @@ public class RefreshEventBinding extends AbstractEventBinding {
 					}
 					
 					@Override
-					public void failed(Object arg0) {
+					public void failed(Throwable arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopRefresh();
 						}
+					}
+					
+					@Override
+					public void cancelled() {
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopRefresh();
+						}
+					}
+
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+						
 					}
 				});
 				handleInputEvent(event);
@@ -126,7 +163,7 @@ public class RefreshEventBinding extends AbstractEventBinding {
 			IUIComponent field = getField();
 			if(field != null){
 				SimpleInputEvent event = new SimpleInputEvent("BottomRefresh",field);
-				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback() {
+				event.addProperty(InputEvent.PROPERTY_CALLBACK, new IAsyncCallback<Object>() {
 					
 					@Override
 					public void success(Object arg0) {
@@ -136,10 +173,22 @@ public class RefreshEventBinding extends AbstractEventBinding {
 					}
 					
 					@Override
-					public void failed(Object arg0) {
+					public void failed(Throwable arg0) {
 						if(control instanceof PullToRefreshListView) {
 							((PullToRefreshListView)control).stopLoadMore();
 						}
+					}
+					
+					@Override
+					public void cancelled() {
+						if(control instanceof PullToRefreshListView) {
+							((PullToRefreshListView)control).stopLoadMore();
+						}
+					}
+
+					@Override
+					public void setCancellable(ICancellable cancellable) {
+						
 					}
 				});
 				handleInputEvent(event);

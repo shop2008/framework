@@ -5,10 +5,8 @@ package com.wxxr.mobile.stock.client.model;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-
-
-import android.os.SystemClock;
 
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
@@ -22,36 +20,46 @@ import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
+import com.wxxr.mobile.core.ui.annotation.OnHide;
+import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
-import com.wxxr.mobile.core.ui.api.IView;
-import com.wxxr.mobile.core.ui.api.IWorkbenchManager;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.AdStatusBean;
 import com.wxxr.mobile.stock.app.bean.HomePageMenu;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.service.IArticleManagementService;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.app.v2.bean.BaseMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.ChampionShipMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.MessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.SignInMessageMenuItem;
 import com.wxxr.mobile.stock.app.v2.bean.TradingAccountMenuItem;
+import com.wxxr.mobile.stock.client.ICancellableRunnable;
 import com.wxxr.mobile.stock.client.biz.AccidSelection;
+import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * @author dz
  *
  */
-@View(name="MainHomeView", description="短线放大镜",provideSelection=true)
+@View(name="MainHomeView", description="短线放大镜", provideSelection=true)
 @AndroidBinding(type=AndroidBindingType.FRAGMENT,layoutId="R.layout.main_home_view_layout")
 public abstract class MainHomeView extends ViewBase{
 	private static final Trace log = Trace.register(MainHomeView.class);
+	
+	private ICancellableRunnable refreshTask;
+	
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
 	
 	@Bean(type=BindingType.Service)
 	IUserIdentityManager idManager;
@@ -64,7 +72,7 @@ public abstract class MainHomeView extends ViewBase{
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo, express="${tradingService.getHomeMenuList()}")
+	@Bean(type=BindingType.Pojo, express="${tradingService.getHomeMenuList(true)}")
 	HomePageMenu homeMenuBean;
 	
 	
@@ -87,7 +95,8 @@ public abstract class MainHomeView extends ViewBase{
 	@Menu(items = { "left", "right" })
 	IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/btn_ad_home_selector",visibleWhen="${adStatusBean.off==true}")})
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "左菜单", icon = "resourceId:drawable/btn_ad_home_selector",visibleWhen="${adStatusBean.off==true}")})
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
@@ -95,20 +104,17 @@ public abstract class MainHomeView extends ViewBase{
 		if(adStatusBean != null) {
 			adStatusBean.setOff(false);
 		}
-		try {
-			Thread.sleep(400);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().getPageToolbar().getBinding().doUpdate();
 		return null;
 	}
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style",visibleWhen="${false}") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "right", label = "搜索", icon = "resourceId:drawable/find_button_style",visibleWhen="${true}") },
+			navigations = { @Navigation(on = "*", showPage = "GeGuStockPage")})
 	String toolbarClickedSearch(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :search was clicked !");
 		}
+		updateSelection(new StockSelection());
 		return "";
 	}
 	
@@ -118,8 +124,8 @@ public abstract class MainHomeView extends ViewBase{
 			if (log.isDebugEnabled()) {
 				log.debug("MainHomeView : handleRefresh");
 			}
-//			this.articleService.getHomeArticles(0, 4);
-//			this.tradingService.getHomeMenuList();
+			this.articleService.getHomeArticles(0, 4);
+			this.tradingService.getHomeMenuList(true);
 		}
 		return null;
 	}	
@@ -133,10 +139,12 @@ public abstract class MainHomeView extends ViewBase{
 	
 	/**交易盘类型  0-模拟盘；1-实盘*/
 	int type=0;
+	/**状态 0-未结算 ； 1-已结算*/
 	int status=0;
 	
 	
 	@Command(navigations={
+			@Navigation(on="UserSignPage",showPage="UserSignPage"),
 			@Navigation(on="ChampionShipPage",showPage="championShip"),
 			@Navigation(on="TBuyTradingPage",showPage="TBuyTradingPage"),
 			@Navigation(on="sellTradingAccount",showPage="sellTradingAccount"),
@@ -150,13 +158,12 @@ public abstract class MainHomeView extends ViewBase{
 			@Navigation(on="SellT3TradingPageView",showPage="SellT3TradingPageView"),
 			@Navigation(on="SellTDTradingPageView",showPage="SellTDTradingPageView")
 	})
-	CommandResult homeMessageClick(InputEvent event){
+	CommandResult homeMessageClick(ExecutionStep step, InputEvent event, Object result){
 			CommandResult resutl = new CommandResult();
 			if(event.getProperty("position") instanceof Integer){
 				int position = (Integer) event.getProperty("position");
 				List<BaseMenuItem> menuList = null;
 				if(homeMenuBean != null)
-					
 					menuList = homeMenuBean.getMenuItems();
 				if(menuList!=null && menuList.size()>0){
 					BaseMenuItem menu = menuList.get(position);
@@ -199,10 +206,27 @@ public abstract class MainHomeView extends ViewBase{
 						}
 						updateSelection(new AccidSelection(acctId, isVirtual));
 					} else if(menu instanceof SignInMessageMenuItem) {
-						resutl.setResult("ChampionShipPage");
+						resutl.setResult("UserSignPage");
 					} else if(menu instanceof MessageMenuItem) {
 						MessageMenuItem m = (MessageMenuItem)menu;
 						resutl.setResult(m.getType());
+						if(m.getType().equals("60")) {
+							switch (step) {
+							case PROCESS:
+								if(usrService != null) {
+									boolean isLogined = AppUtils.getService(IUserIdentityManager.class).isUserAuthenticated();
+									if(isLogined) {
+										usrService.readAllUnremindMessage();
+									} 
+								}
+								break;
+							case NAVIGATION:
+								resutl.setResult(m.getType());
+								return resutl;
+							default:
+								break;
+							}
+						} 
 					}
 					return resutl;
 				}
@@ -216,4 +240,49 @@ public abstract class MainHomeView extends ViewBase{
 		registerBean("headerVisible", headerVisible);
 		return null;
 	}*/
+	
+	@OnShow
+	void refreshList() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+		}
+		this.refreshTask = new ICancellableRunnable() {		
+			private boolean cancelled;
+			
+			@Override
+			public void run() {
+				if(cancelled||(!isActive())){
+					return;
+				}
+				try {
+					tradingService.getHomeMenuList(true);
+				}catch(Throwable t){
+					log.warn("Failed to refresh home menu list", t);
+				}
+				if(cancelled||(!isActive())){
+					return;
+				}
+				AsyncUtils.invokeLater(this, 10, TimeUnit.SECONDS);
+			}
+
+			@Override
+			public void cancel() {	
+				this.cancelled = true;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return this.cancelled;
+			}
+		};
+		AsyncUtils.invokeLater(refreshTask, 10, TimeUnit.SECONDS);
+	}
+	
+	@OnHide
+	void stopRefresh() {
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+			this.refreshTask = null;
+		}
+	}
 }

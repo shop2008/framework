@@ -66,6 +66,12 @@ public class ClientInfoBean implements IBindableBean {
       this.description = description;
       this.emitter.firePropertyChange("description", old, this.description);
    }
+   
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
 
    public String getUrl() {
       return url;

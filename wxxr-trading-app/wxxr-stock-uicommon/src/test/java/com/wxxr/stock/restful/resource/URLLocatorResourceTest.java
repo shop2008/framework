@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.security.KeyStore;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -53,12 +51,6 @@ public class URLLocatorResourceTest extends TestCase {
    protected void init() {
 
       MockApplication app = new MockApplication() {
-         ExecutorService executor = Executors.newFixedThreadPool(3);
-
-         @Override
-         public ExecutorService getExecutorService() {
-            return executor;
-         }
 
          @Override
          protected void initModules() {
@@ -118,7 +110,7 @@ public class URLLocatorResourceTest extends TestCase {
 
       MockRestClient builder = new MockRestClient();
       builder.init(context);
-      resource = builder.getRestService(IURLLocatorResource.class,
+      resource = builder.getRestService(IURLLocatorResource.class,null,
             "http://192.168.123.44:8480/mobilestock2");
    }
 

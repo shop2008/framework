@@ -7,6 +7,7 @@
     <color name="red">#ff2200</color>
     <color name="blue">#0966be</color>
     <color name="green">#00ff1c</color>
+    <color name="green1">#30a329</color>
     <color name="green_bg">#0a9a03</color>
     <color name="qsxq">#404040</color>
     <color name="page_background_color">#17191a</color>
@@ -19,9 +20,9 @@
     <color name="mid_gray">#2c2c2c</color>
     <color name="stock_line_gray">#10DCDCDC</color>
     <color name="stock_up">#ff2200</color>
-    <color name="stock_down">#00ff1c</color>
+    <color name="stock_down">#30a329</color>
     <color name="stock_text_up">#ff2200</color>
-    <color name="stock_text_down">#00ff1c</color>
+    <color name="stock_text_down">#30a329</color>
     <color name="champion_select">#17191a</color>
      <!-- 软键盘 -->
     <color name="numkey_bg_color">#606060</color>
@@ -41,4 +42,6 @@
     <color name="tab_default_color">#202123</color>
     
     <color name="text_spinner_select_color">#f3f3f3</color>
+    <color name="pop_window_background">#00000000</color>
+    <color name="t3_title_color">#989e9e</color>
 </resources>

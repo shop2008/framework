@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.format.Time;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.wxxr.mobile.stock.client.R;
@@ -30,8 +29,6 @@ public class MyAnalogClock extends View {
 	private float mHour;
 
 	private boolean mChanged;
-
-	private static String debug = "MyAnalogClock";
 
 	private static int SECONDS_FLAG = 0;
 	private Message secondsMsg;
@@ -94,7 +91,6 @@ public class MyAnalogClock extends View {
 	 * * 吸附到窗体上
 	 */
 	protected void onAttachedToWindow() {
-		Log.e(debug, "onAttachedToWindow");
 		super.onAttachedToWindow();
 
 		if (!mAttached) {
@@ -129,7 +125,6 @@ public class MyAnalogClock extends View {
 
 	@Override
 	protected void onDetachedFromWindow() {
-		Log.e(debug, "onDetachedFromWindow");
 		super.onDetachedFromWindow();
 		if (mAttached) {
 			mAttached = false;
@@ -138,7 +133,6 @@ public class MyAnalogClock extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		Log.e(debug, "onMeasure");
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -164,7 +158,6 @@ public class MyAnalogClock extends View {
 
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		Log.e(debug, "onSizeChanged");
 		super.onSizeChanged(w, h, oldw, oldh);
 		mChanged = true;
 	}
@@ -172,7 +165,6 @@ public class MyAnalogClock extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		Log.e(debug, "canvas");
 		boolean changed = mChanged;
 		if (changed) {
 			mChanged = false;
@@ -248,7 +240,6 @@ public class MyAnalogClock extends View {
 	}
 
 	private void onTimeChanged() {
-		Log.e(debug, "onTimeChanged");
 		mCalendar.setToNow();// ///获取手机自身的当前时间，而非实际中的标准的北京时间
 
 		int hour = mCalendar.hour-3;// 小时

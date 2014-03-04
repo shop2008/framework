@@ -53,9 +53,10 @@ public abstract class URealPanelScorePage extends PageBase{
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 	
@@ -69,7 +70,7 @@ public abstract class URealPanelScorePage extends PageBase{
 		
 		if(event.getEventType().equals("TopRefresh")) {
 			if(tradingService != null) {
-				tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size(), true);
+				tradingService.getGainPayDetailDetails(0, voucherDetailsBean.getData().size());
 			}
 		} else if(event.getEventType().equals("BottomRefresh")) {
 			int completeSize = 0;
@@ -77,7 +78,7 @@ public abstract class URealPanelScorePage extends PageBase{
 				completeSize = voucherDetailsBean.getData().size();
 			start = completeSize;
 			if(tradingService != null) {
-				tradingService.getGainPayDetailDetails(start, limit, true);
+				tradingService.getGainPayDetailDetails(start, limit);
 			}
 		}
 		return null;

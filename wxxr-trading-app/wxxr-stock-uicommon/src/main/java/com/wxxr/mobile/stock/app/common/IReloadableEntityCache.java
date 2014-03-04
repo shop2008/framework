@@ -2,15 +2,18 @@ package com.wxxr.mobile.stock.app.common;
 
 import java.util.Map;
 
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
+
 public interface IReloadableEntityCache<K, V> extends IBindableEntityCache<K, V>{
 
-	void doReloadIfNeccessay();
+	/**
+	 * 
+	 * @param forceReload : true -> 无条件重新刷新， false按照既定的刷新条件刷新
+	 * @param params : 刷新参数
+	 * @param callback : 回调，true -> 刷新成功，有新数据， false -> 刷新成功，无新数据。可以为空
+	 */
+	void doReload(boolean forceReload, Map<String, Object> params, IAsyncCallback<Boolean> callback);
 	
-	void doReloadIfNeccessay(Map<String, Object> params);
-
-	void forceReload(boolean wait4Finish);
-
-	void forceReload(Map<String, Object> params, boolean wait4Finish);
 	/**
 	 * @return the lastUpdateTime
 	 */

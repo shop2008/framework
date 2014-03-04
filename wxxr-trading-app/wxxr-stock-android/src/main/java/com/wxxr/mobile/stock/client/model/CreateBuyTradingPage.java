@@ -25,6 +25,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
@@ -44,14 +45,14 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen="${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	
@@ -73,7 +74,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	/**用户唯一标识*/
 	String userId;
-	
+	@Bean
 	int currentRadioBtnId = 1;
 	
 	@Convertor(params={
@@ -127,6 +128,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	@Field(valueKey="checked",binding="${checkedbox==0?true:false}")
 	boolean isChecked;
+	@Bean
 	int checkedbox = 0;
 	
 	
@@ -147,7 +149,7 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	
 	@Bean
 	int radioBtn = 0;
-	
+	@Bean
 	int checkedbox1 = 0;
 	
 	
@@ -159,8 +161,10 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	@Bean
 	int currentViewId = 1;
 	
-
-	String zhfzf,djDeposit;
+	@Bean
+	String zhfzf;
+	@Bean
+	String djDeposit;
 	float djMoney;
 	
 	//交易综合费
@@ -358,8 +362,9 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 	)
 	@NetworkConstraint
 	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
-	String submitDataClick(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	String submitDataClick(ExecutionStep step, InputEvent event, Object result) {
+		switch (step) {
+		case PROCESS:
 			long money = changeMoney * 10000 * 100;
 			float _rate = 0.0f;
 			float _depositRate = 0.0f;
@@ -388,32 +393,42 @@ public abstract class CreateBuyTradingPage extends PageBase implements IModelUpd
 				break;
 			}
 			userCreateService.createTradingAccount(money, _rate, false, _depositRate, assetType);
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			break;
+		case NAVIGATION:
+			hide();
+			break;
 		}
 		return null;
 	}
 	
-	
 	//参赛交易-提交
-		@Command(commandName="submitDataClick1",navigations = { 
-				@Navigation(on = "StockAppBizException", message = "%m", params = {
-						@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
-				}
-		)
-		@NetworkConstraint
-		@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
-		String submitDataClick1(InputEvent event){
-			if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
-				if(getRate3()>0 && getDeposit3()>0){
-					userCreateService.createTradingAccount(10000000l, getRate3(), true, getDeposit3(), "CASH");
-					getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
-				}else{
-					log.info("creataBuyTradePage  Can Sai submitDataClick1: getRate3= " +getRate3()+ " getDeposit3= " + getDeposit3());
-					return "";
-				}
+	@Command(commandName="submitDataClick1",navigations = { 
+			@Navigation(on = "StockAppBizException", message = "%m", params = {
+					@Parameter(name = "autoClosed", type = ValueType.INETGER, value = "2")})				
 			}
-			return null;
+	)
+	@NetworkConstraint
+	@ExeGuard(title = "创建交易盘", message = "正在处理，请稍候...", silentPeriod = 1)
+	String submitDataClick1(ExecutionStep step, InputEvent event, Object result) {
+		switch (step) {
+		case PROCESS:
+			if (getRate3() > 0 && getDeposit3() > 0) {
+				userCreateService.createTradingAccount(10000000l, getRate3(),
+						true, getDeposit3(), "CASH");
+			} else {
+				log.info("creataBuyTradePage  Can Sai submitDataClick1: getRate3= "
+						+ getRate3() + " getDeposit3= " + getDeposit3());
+				return "";
+			}
+			break;
+		case NAVIGATION:
+			if (getRate3() > 0 && getDeposit3() > 0) {
+				hide();
+			}
+			break;
 		}
+		return null;
+	}
 	
 	
 	//初始化数据

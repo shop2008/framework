@@ -22,6 +22,10 @@ public class CircleAnimation {
 	}
 
 	public static void stopRotateAnmiation(View animatedView) {
-		animatedView.getAnimation().cancel();
+		
+		if(animatedView != null && animatedView.getAnimation()!=null) {
+			animatedView.getAnimation().cancel();
+		}
+			
 	}
 }

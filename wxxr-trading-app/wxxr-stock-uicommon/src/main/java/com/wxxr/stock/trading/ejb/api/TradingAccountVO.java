@@ -98,6 +98,9 @@ public class TradingAccountVO implements Serializable{
 	private int elapseTime;//交易盘持续了几天,返回1:已经是t+1天了，2：t+2天了
 	@XmlElement(name = "durationDay")
 	private int durationDay;//盘存续的天数
+	@XmlElement(name = "dayType")
+	private String dayType;//
+
 	/**
 	 * @return the id
 	 */
@@ -325,6 +328,14 @@ public class TradingAccountVO implements Serializable{
 	public void setDurationDay(int durationDay) {
 		this.durationDay = durationDay;
 	}
+	
+	
+	public String getDayType() {
+		return dayType;
+	}
+	public void setDayType(String dayType) {
+		this.dayType = dayType;
+	}
 	@Override
 	public String toString() {
 		return "TradingAccountVO [id=" + id + ", buyDay=" + buyDay
@@ -336,11 +347,7 @@ public class TradingAccountVO implements Serializable{
 				+ maxStockMarket + ", type=" + type + ", tradingOrders="
 				+ tradingOrders + ", over=" + over + ", virtual=" + virtual
 				+ ", status=" + status + ", elapseTime=" + elapseTime
-				+ ", durationDay=" + durationDay + "]";
+				+ ", durationDay=" + durationDay + ", dayType=" + dayType + "]";
 	}
-	
-
-
-
-	
+		
 }

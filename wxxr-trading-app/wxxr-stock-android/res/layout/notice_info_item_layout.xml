@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://wxxr.com.cn/binding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#18191B"
+        android:background="@drawable/listview_selected_item1"
         android:orientation="horizontal" >
 
         
-        <LinearLayout 
+<!--         <LinearLayout 
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:orientation="vertical"
@@ -25,7 +26,7 @@
                 bind:field="readFlag"
                 android:background="@drawable/remind_focus"
                 />
-        </LinearLayout>
+        </LinearLayout> -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +44,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="平安银行模拟盘"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     bind:field="title" />
 
                 <TextView
@@ -53,7 +54,7 @@
                     android:layout_marginRight="5dp"
                     android:text="20:55"
                     android:textColor="#868A8B"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     bind:field="time" />
             </RelativeLayout>
 
@@ -69,41 +70,10 @@
                     android:layout_height="wrap_content"
                     android:text="推送内容信送内容 推送内容"
                     android:textColor="#868A8B"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     bind:field="content" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#121013" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#0C0306" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#656162" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#2F2D30" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#2B2B2D" />
-    </LinearLayout>
-
+	<include layout="@layout/hlines"/>
 </LinearLayout>

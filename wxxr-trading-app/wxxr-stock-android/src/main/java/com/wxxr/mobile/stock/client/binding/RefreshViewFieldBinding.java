@@ -52,6 +52,11 @@ public class RefreshViewFieldBinding extends BasicFieldBinding {
 		if(val != null){
 			view.setFooterView(val);
 		}
+		
+		val = comp.getAttribute(Pull2RefreshViewKeys.noMoreDataAlert);
+		if(val != null) {
+			view.showToast(val.booleanValue());
+		}
 		super.updateUI(arg0);
 	}
 	

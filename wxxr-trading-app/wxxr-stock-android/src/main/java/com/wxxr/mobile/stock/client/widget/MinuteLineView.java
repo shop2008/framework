@@ -31,24 +31,36 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	private int size;
 	private boolean isZhiShu = false; //是否是指数，默认是false
 	private boolean stockStatus = false; //默认是开盘
-	
+	private String code;
+	private String market;
+	private Context context;
 	public MinuteLineView(Context context) {
 		super(context);
+		this.context = context;
 		init();
 	}
 	public MinuteLineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.context = context;
 		init();
 	}
 	public MinuteLineView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		this.context = context;
 		init();
 	}
 	
 	/**昨收价*/
-	public void setStockClose(String val){
-		if(val!=null)
-		this.yesterdayClose = Float.parseFloat(val);
+	public void setStockInfo(String val, String code, String market){
+		if(val!=null){
+			this.yesterdayClose = Float.parseFloat(val);
+		}
+		if(code!=null){
+			this.code = code;
+		}
+		if(market!=null){
+			this.market = market;
+		}
 	}
 	
 	/**股票盘状态*/
@@ -192,11 +204,17 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 		/** 画分时线 */
 		setOnDrawMinuteLine(canvas);
 		if(!stockStatus){
-			/** 画均线 */
-			setOnDrawAverageLine(canvas);
-			/** 画成交量柱状图 */
-			setOnDrawSecuVolume(canvas);
 		}
+		/** 画均线 */
+		if(code!=null && market!=null){
+			if(code.equals("399005") && market.equals("SZ")){
+				setOnDrawAverageLine(canvas,false);
+			}else{
+				setOnDrawAverageLine(canvas,true);
+			}
+		}
+		/** 画成交量柱状图 */
+		setOnDrawSecuVolume(canvas);
 		/** 设置分时线表格底边时间文字 */
 		setOnDrawBottomTextFont(canvas);
 		/** 画成交量柱状图的值 */
@@ -206,24 +224,30 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/** 设置分时线表格左边的股票价格文字 */
 	private void setOnDrawLeftTextFont(Canvas canvas){
+		mPaint.setTextSize(Utils.adjustFontSize(this.context));
 		mPaint.setAntiAlias(true);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-		if (cWidth >= 570)
-		{
-			mPaint.setTextSize(17);
-		}
-		else if (cWidth >= 450)
-		{
-			mPaint.setTextSize(15);
-		}
-		else if (cWidth >= 330)
-		{
-			mPaint.setTextSize(10);
-		}
-		else
-		{
-			mPaint.setTextSize(9);
-		}
+//		log.info("MinuteLineView==============================="+cWidth);
+//		if (cWidth >= 570)
+//		{
+//			mPaint.setTextSize(17);
+//		}
+//		else if (cWidth >= 570)
+//		{
+//			mPaint.setTextSize(17);
+//		}
+//		else if (cWidth >= 450)
+//		{
+//			mPaint.setTextSize(15);
+//		}
+//		else if (cWidth >= 330)
+//		{
+//			mPaint.setTextSize(10);
+//		}
+//		else
+//		{
+//			mPaint.setTextSize(9);
+//		}
 		float textMarginLeft = fStartX - 5;
 		float padding = 5;
 		mPaint.setTextAlign(Paint.Align.RIGHT);
@@ -245,22 +269,23 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/** 设置分时线表格右边的涨跌额文字 */
 	private void setOnDrawRightTextFont(Canvas canvas){
-		if (cWidth >= 570)
-		{
-			mPaint.setTextSize(17);
-		}
-		else if (cWidth >= 450)
-		{
-			mPaint.setTextSize(15);
-		}
-		else if (cWidth >= 330)
-		{
-			mPaint.setTextSize(10);
-		}
-		else
-		{
-			mPaint.setTextSize(9);
-		}
+//		if (cWidth >= 570)
+//		{
+//			mPaint.setTextSize(17);
+//		}
+//		else if (cWidth >= 450)
+//		{
+//			mPaint.setTextSize(15);
+//		}
+//		else if (cWidth >= 330)
+//		{
+//			mPaint.setTextSize(10);
+//		}
+//		else
+//		{
+//			mPaint.setTextSize(9);
+//		}
+		mPaint.setTextSize(Utils.adjustFontSize(this.context));
 		float padding = 5;
 		float textMarginRight = fStopX + 5;
 		mPaint.setAntiAlias(true);
@@ -298,27 +323,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/** 设置分时线表格底边时间文字 */
 	private void setOnDrawBottomTextFont(Canvas canvas){
-		
-		if (cWidth >= 700)
-		{
-			mPaint.setTextSize(16);
-		}
-		else if (cWidth >= 570)
-		{
-			mPaint.setTextSize(14);
-		}
-		else if (cWidth >= 450)
-		{
-			mPaint.setTextSize(10);
-		}
-		else if (cWidth >= 330)
-		{
-			mPaint.setTextSize(9);
-		}
-		else
-		{
-			mPaint.setTextSize(8);
-		}
+		mPaint.setTextSize(Utils.adjustFontSize(this.context));
 		mPaint.setAntiAlias(true);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setColor(getStockCloseColor());
@@ -349,7 +354,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 			{
 				mPaint.setAntiAlias(true);
 				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-				mPaint.setStrokeWidth(1);
+				mPaint.setStrokeWidth(2);
 				StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
 				StockMinuteLineBean stockMinute1 = (StockMinuteLineBean)dataProvider.getItem(i+1);
 				if (i <= 239 && stockMinute!=null && stockMinute1!=null)
@@ -403,7 +408,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	 * 画均线
 	 * @param canvas
 	 */
-	private void setOnDrawAverageLine(Canvas canvas){
+	private void setOnDrawAverageLine(Canvas canvas,boolean flag){
 		float width = (float) (zWidth / 241.0);
 		float scale = 0.0f;
 		if(highPrice - lowPrice>0){
@@ -437,7 +442,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 				}
 			}
 		}
-		if(isZhiShu){
+		if(isZhiShu && flag){
 			mPaint.setColor(getStockAverageLineColor());
 			float middlePrice = (highPrice + lowPrice)/2;
 			for (int i = 0; i < size-1; i++)
@@ -445,7 +450,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 				if (i <= 239)
 				{
 					mPaint.setAntiAlias(true);
-					mPaint.setStrokeWidth(1);
+					mPaint.setStrokeWidth(2);
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 					StockMinuteLineBean stockMinute = (StockMinuteLineBean) dataProvider.getItem(i);
 					StockMinuteLineBean stockMinute1 = (StockMinuteLineBean) dataProvider.getItem(i+1);
@@ -453,11 +458,14 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 						startX = fStartX + (width*i)+1.0f;
 						stopX = fStartX + (width*(i+1))+1.0f;
 						if(stockMinute.getAvgChangeRate()!=null && stockMinute1.getAvgChangeRate()!=null){
-							float tempValue = (middlePrice * (stockMinute.getAvgChangeRate()/100000.0f)+middlePrice);
-							startY = fStopY-((tempValue - lowPrice)/scale);
-							float tempValue1 = (middlePrice * (stockMinute1.getAvgChangeRate()/100000.0f)+middlePrice);
-							stopY = fStopY-((tempValue1 - lowPrice)/scale);
-							canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+							log.info("stockMinute.getAvgChangeRate():=============="+stockMinute.getAvgChangeRate());
+//							if(stockMinute.getAvgChangeRate()>0 && stockMinute1.getAvgChangeRate()>0){
+								float tempValue = (middlePrice * (stockMinute.getAvgChangeRate()/100000.0f)+middlePrice);
+								startY = fStopY-((tempValue - lowPrice)/scale);
+								float tempValue1 = (middlePrice * (stockMinute1.getAvgChangeRate()/100000.0f)+middlePrice);
+								stopY = fStopY-((tempValue1 - lowPrice)/scale);
+								canvas.drawLine(startX, startY, stopX, stopY, mPaint);
+//							}
 						}
 					}
 				}
@@ -466,22 +474,7 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	}	
 	/** 画成交量柱状图的值 */
 	private void setOnDrawSecuVolumeChart(Canvas canvas){
-		if (cWidth >= 570)
-		{
-			mPaint.setTextSize(16);
-		}
-		else if (cWidth >= 450)
-		{
-			mPaint.setTextSize(12);
-		}
-		else if (cWidth >= 330)
-		{
-			mPaint.setTextSize(10);
-		}
-		else
-		{
-			mPaint.setTextSize(8);
-		}
+		mPaint.setTextSize(Utils.adjustFontSize(this.context));
 		mPaint.setAntiAlias(true);
 		mPaint.setColor(getStockCloseColor());
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
@@ -494,7 +487,6 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 	
 	/** 画成交量柱状图 */
 	private void setOnDrawSecuVolume(Canvas canvas){
-		mPaint.setColor(getStockAverageLineColor());
 		float scale = maxSecuvolume/zHeight;
 		float width = (float) (zWidth / 241.0);
 		for (int i = 0; i < size-1; i++)
@@ -507,6 +499,24 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 				// 成交量
 				if (stockMinute!=null)
 				{
+					float newprice = stockMinute.getPrice();
+					if(i==0){
+						if(yesterdayClose>=newprice){
+							mPaint.setColor(getStockDownColor());
+						}else{
+							mPaint.setColor(getStockUpColor());
+						}
+					}else{
+						StockMinuteLineBean tempData = (StockMinuteLineBean)dataProvider.getItem(i-1);
+						float newprice1 = tempData.getPrice();
+						StockMinuteLineBean tempData1 = (StockMinuteLineBean)dataProvider.getItem(i);
+						float newprice2 = tempData1.getPrice();
+						if(newprice1>=newprice2){
+							mPaint.setColor(getStockDownColor());
+						}else{
+							mPaint.setColor(getStockUpColor());
+						}
+					}
 					mPaint.setAntiAlias(true);
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 	//				mPaint.setStrokeWidth(3);
@@ -522,4 +532,5 @@ public class MinuteLineView extends BasicLineView  implements IDataChangedListen
 			}	
 		}
 	}
+
 }

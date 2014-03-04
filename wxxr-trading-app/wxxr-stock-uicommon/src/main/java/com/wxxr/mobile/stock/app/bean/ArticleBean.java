@@ -167,6 +167,11 @@ public class ArticleBean implements IBindableBean {
 		this.emitter.firePropertyChange("articleUrl", old, this.articleUrl);
 	}
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

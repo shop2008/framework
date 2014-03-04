@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
@@ -29,6 +31,7 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -63,14 +66,14 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Command(description="Invoke when a toolbar item was clicked",
 			uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen = "${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	@Bean(type=BindingType.Service)
@@ -85,7 +88,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
 	TradingAccountBean tradingAccount;
 	
-	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(stockCode,stockMarket)}")
+	@Bean(type = BindingType.Pojo, express = "${infoCenterService.getStockQuotation(stockSelection.getCode(), stockSelection.getMarket())}")
 	StockQuotationBean stockQuotation;
 
 	@Convertor(params={
@@ -95,7 +98,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	})
 	StockLong2StringConvertor stockLong2StringAutoUnitConvertor;	
 	
-	@ViewGroup(viewIds={"StockQuotationView","SellFiveDayMinuteLineView","StockKLineView"})
+	@ViewGroup(viewIds={"GeGuMinuteLineView","StockKLineView"})
 	private IViewGroup contents;	
 	
 	@Bean
@@ -108,14 +111,17 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			@Attribute(name = "position", value = "${indexGroupPosition}") })
 	String indexGroup;
 	
-	@Bean
-	String stockCode; //股票代码
+//	@Bean
+//	String stockCode; //股票代码
 	@Bean
 	Long orderId ; //订单id
+//	@Bean
+//	String stockName; //股票名称
+//	@Bean
+//	String stockMarket; //市场代码
+	
 	@Bean
-	String stockName; //股票名称
-	@Bean
-	String stockMarket; //市场代码
+	StockSelection stockSelection = new StockSelection();
 	
 	@Bean
 	String accid; //交易盘ID
@@ -205,55 +211,80 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		log.debug("GeGuStockPage handlerPageChanged position: " + indexGroupPosition + "size: "+size);
 		return null;
 	}
-	
-	@Command()
-	String handlerRefreshClicked(InputEvent event) {
-		if(stockQuotation!=null) {
-			long price = stockQuotation.getNewprice();
-			String val = String.format("%.2f", price/1000f);
-			newpriceField.setValue("");
-			newpriceField.setValue(val);
+
+	@Command
+	String handlerRefreshClicked(ExecutionStep step, InputEvent event,
+			Object result) {
+		switch (step) {
+		case PROCESS:
+			if (stockQuotation != null) {
+				Long price = stockQuotation.getNewprice();
+				if(price != null) {
+					String val = String.format("%.2f", price / 1000f);
+					newpriceField.setValue("");
+					newpriceField.setValue(val);
+				}
+			}
+			// infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
+			this.stockQuotation = infoCenterService.getSyncStockQuotation(stockSelection.getCode(), stockSelection.getMarket());
+			break;
+		case NAVIGATION:
+			registerBean("stockQuotation", this.stockQuotation);
+			String sellPrice = stockQuotation.getNewprice() + "";
+			closePriceBean = stockQuotation.getClose() + "";
+			registerBean("closePriceBean", closePriceBean);
+			registerBean("sellPrice", sellPrice);
+			// 刷新viewpager
+			updateSelection(new StockSelection(stockSelection.getMarket(), stockSelection.getCode(),
+					stockSelection.getName(), 1));
+			break;
 		}
-		infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
-		
-		// 需要回调
-		StockQuotationBean stockQuotation = infoCenterService.getSyncStockQuotation(stockCode, stockMarket);
-		String sellPrice = stockQuotation.getNewprice() + "";
-		closePriceBean = stockQuotation.getClose() + "";
-		registerBean("closePriceBean", closePriceBean);
-		registerBean("sellPrice", sellPrice);
-		//刷新viewpager
-		updateSelection(new StockSelection(stockMarket, stockCode, stockName,1));
 		return null;
 	}
 	
 	@Command
-	String dropDownMenuListItemClick(InputEvent event){
-		if("SpinnerItemSelected".equals(event.getEventType())){
-			if (event.getProperty("position") instanceof Integer) {
-				int position = (Integer) event.getProperty("position");
-				StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
-				long buyPrice = 0;
-				if(stockTrading!=null){
-					maxAmountBean = stockTrading.getAmount() + "";
-					this.stockMarket = stockTrading.getMarketCode();
-					this.stockCode = stockTrading.getStockCode();
-					buyPrice = stockTrading.getBuy();
+	String dropDownMenuListItemClick(ExecutionStep step, InputEvent event,
+			Object result) {
+		switch (step) {
+		case PROCESS:
+			if("SpinnerItemSelected".equals(event.getEventType())){
+				if (event.getProperty("position") instanceof Integer) {
+					int position = (Integer) event.getProperty("position");
+					StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
+					String stockMarket = null;
+					String stockCode = null;
+					String stockName = null;
+					if(stockTrading!=null){
+						maxAmountBean = stockTrading.getAmount() + "";
+						stockMarket = stockTrading.getMarketCode();
+						stockCode = stockTrading.getStockCode();
+					}
+					if(stockInfoSyncService!=null){
+						StockBaseInfo stockInfo = this.stockInfoSyncService.getStockBaseInfoByCode(stockCode, stockMarket);
+						stockName = stockInfo.getName();
+					}
+					stockSelection.setMarket(stockMarket);
+					stockSelection.setCode(stockCode);
+					stockSelection.setName(stockName);
+//					registerBean("stockCode", this.stockCode);
+//					registerBean("stockName", this.stockName);
+//					registerBean("stockMarket", this.stockMarket);
+					registerBean("maxAmountBean", this.maxAmountBean);
+//					log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
+					this.stockQuotation = this.infoCenterService.getStockQuotation(stockCode, stockMarket);
 				}
-				if(stockInfoSyncService!=null){
-					StockBaseInfo stockInfo = this.stockInfoSyncService.getStockBaseInfoByCode(this.stockCode, this.stockMarket);
-					this.stockName = stockInfo.getName();
-				}
-				registerBean("stockCode", this.stockCode);
-				registerBean("stockName", this.stockName);
-				registerBean("stockMarket", this.stockMarket);
-				registerBean("maxAmountBean", this.maxAmountBean);
-				log.info("SellStockPage SpinnerItemSelected: stockCode = "+this.stockCode +"stockMarket = "+this.stockMarket);
-				this.stockQuotation = this.infoCenterService.getStockQuotation(stockCode, stockMarket);
-				registerBean("stockQuotation", this.stockQuotation);
-				//刷新viewpager
-				updateSelection(new StockSelection(stockMarket, stockCode, stockName,buyPrice, 1));
 			}
+			break;
+		case NAVIGATION:
+			StockTradingOrderBean stockTrading = tradingAccount.getTradingOrders().get(position);
+			long buyPrice = 0;
+			if(stockTrading!=null){
+				buyPrice = stockTrading.getBuy();
+			}
+			registerBean("stockQuotation", this.stockQuotation);
+			//刷新viewpager
+			updateSelection(new StockSelection(stockSelection.getMarket(), stockSelection.getCode(), stockSelection.getName(),buyPrice, 1));
+			break;
 		}
 		return null;
 	}
@@ -277,7 +308,13 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				}
 				if(tempOrder!=null && tempOrder.size()>0){
 					this.TradingOrder = tempOrder;
-					registerBean("TradingOrder", this.TradingOrder);
+					AppUtils.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							registerBean("TradingOrder", TradingOrder);
+						}
+					}, 100, TimeUnit.MILLISECONDS);
 				}
 			}
 		}
@@ -315,10 +352,11 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 				sellPrice = key;
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 		}
-		closePriceBean = stockQuotation.getClose()+ "";
-		registerBean("closePriceBean", closePriceBean);
+		if(stockQuotation != null) {
+			closePriceBean = this.stockQuotation.getClose()+ "";
+			registerBean("closePriceBean", closePriceBean);
+		}
 		return null;
 	}
 	
@@ -332,7 +370,7 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 	
 	@Override
 	public void updateModel(Object data) {
-		registerBean("size", 3);
+		registerBean("size", 2);
 		registerBean("indexGroupPosition", 0);
 		HashMap<String, String> tempMap = new HashMap<String, String>();
 		if(data instanceof Map){
@@ -351,18 +389,21 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 		        		}
 		        	} else if("name".equals(key)){
 		        		if(temp.get(key) instanceof String){
-		        			this.stockName = (String) temp.get(key);
-		        			registerBean("stockName", this.stockName);
+		        			String stockName = (String) temp.get(key);
+		        			stockSelection.setName(stockName);
+//		        			registerBean("stockName", this.stockName);
 		        		}
 		        	} else if("code".equals(key)){
 		        		if(temp.get(key) instanceof String){
-		        			this.stockCode = (String) temp.get(key);
-		        			registerBean("stockCode", this.stockCode);
+		        			String stockCode = (String) temp.get(key);
+		        			stockSelection.setName(stockCode);
+//		        			registerBean("stockCode", this.stockCode);
 		        		}
 		        	} else if("market".equals(key)){
 		        		if(temp.get(key) instanceof String){
-		        			this.stockMarket = (String) temp.get(key);
-		        			registerBean("stockMarket", this.stockMarket);
+		        			String stockMarket = (String) temp.get(key);
+		        			stockSelection.setName(stockMarket);
+//		        			registerBean("stockMarket", this.stockMarket);
 		        		}
 		        	} else if("amount".equals(key)){
 		        		if(temp.get(key) instanceof Long){
@@ -381,10 +422,11 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 						registerBean("isVirtual", isVirtual);
 					}
 		        }
-				 if(this.stockName!=null && this.stockCode!=null){
-					 this.defStockNameCode = this.stockName+""+this.stockCode;
-					 registerBean("defStockNameCode", defStockNameCode);
-				 }
+				 registerBean("stockSelection", this.stockSelection);
+//				 if(this.stockName!=null && this.stockCode!=null){
+//					 this.defStockNameCode = this.stockName+""+this.stockCode;
+//					 registerBean("defStockNameCode", defStockNameCode);
+//				 }
 			}
 		}
 	}
@@ -395,38 +437,46 @@ public abstract class SellStockPage extends PageBase implements IModelUpdater {
 			}
 	)
 	@ExeGuard(title="提示", message="正在提交订单，请稍后...", silentPeriod=1, cancellable=false)
-	String sellStockClick(InputEvent event){
-		String price = null;
-		if(isSelected == 0) {
-			try {
-				if(sellPrice!=null && !StringUtils.isEmpty(sellPrice)){
-					price = Long.parseLong(sellPrice)/10 + "";
+	String sellStockClick(ExecutionStep step, InputEvent event, Object result) {
+		switch(step){
+		case PROCESS:
+			String price = null;
+			if(isSelected == 0) {
+				try {
+					if(sellPrice!=null && !StringUtils.isEmpty(sellPrice)){
+						price = Long.parseLong(sellPrice)/10 + "";
+					}
+					if("0".equals(price))
+						price = "00000";
+					tradingService.sellStock(accid, stockSelection.getMarket(), stockSelection.getCode(), price, amount);
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
 				}
-				if("0".equals(price))
-					price = "00000";
-				tradingService.sellStock(accid, stockMarket, stockCode, price, amount);
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
+			}else{
+				tradingService.sellStock(accid, stockSelection.getMarket(), stockSelection.getCode(), "0", amount);
 			}
-		}else{
-			tradingService.sellStock(accid, stockMarket, stockCode, "0", amount);
+			break;
+		case NAVIGATION:
+			IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
+			if(v != null)
+				v.hide();
+			break;
 		}
-		IView v = (IView)event.getProperty(InputEvent.PROPERTY_SOURCE_VIEW);
-		v.hide();
-		return "";
+		return null;
+
 	}
 	
 	@OnUIDestroy
 	void destroyData() {
 		isSelected = 0;
-		stockMarket = null;
-		stockCode = null;
+//		stockMarket = null;
+//		stockCode = null;
 		amount = null;
 		accid = null;
 		sellPrice = null;
 		closePriceBean = null;
-		registerBean("stockMarket", "");
-		registerBean("stockCode", "");
+//		registerBean("stockMarket", "");
+//		registerBean("stockCode", "");
 		registerBean("amount", "");
 		registerBean("accid", "");
 		registerBean("sellPrice", "");

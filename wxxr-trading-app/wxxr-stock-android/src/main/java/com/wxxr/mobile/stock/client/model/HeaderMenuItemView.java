@@ -16,6 +16,7 @@ import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
 import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
@@ -112,9 +113,15 @@ public abstract class HeaderMenuItemView extends ViewBase {
 	@Command(navigations={
 			@Navigation(on="*",showPage="userNewsPage", keepMenuOpen=true)
 		})
-	String handleClickUnread(InputEvent event){
-		log.info("User click on Unread acticles !");
-		return "*";
+	String handleClickUnread(ExecutionStep step, InputEvent event, Object result) {
+		switch(step){
+		case PROCESS:
+			usrMgr.readAllUnremindMessage();
+			break;
+		case NAVIGATION:
+			return "";
+		}
+		return null;
 	}
 	
 	@Command(navigations={

@@ -16,7 +16,6 @@ public abstract class WaitVerifyDialogView extends ViewBase {
 	@Command
 	String cancel(InputEvent event) {
 		hide();
-		
 		AppUtils.getService(IWorkbenchManager.class).getPageNavigator().getCurrentActivePage().hide();
 		return null;
 	}

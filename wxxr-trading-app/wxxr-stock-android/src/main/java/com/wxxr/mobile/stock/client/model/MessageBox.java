@@ -20,6 +20,7 @@ import com.wxxr.mobile.core.ui.common.AttributeKeys;
 import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.UICommand;
 import com.wxxr.mobile.core.ui.common.ViewBase;
+import com.wxxr.mobile.core.util.StringUtils;
 
 /**
  * @author neillin
@@ -107,6 +108,9 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_LEFT_BUTTON);
 			if(val instanceof UICommand){
 				this.left = (UICommand)val;
+				if(!StringUtils.isBlank(this.left.getCommandName())){
+						this.isController = true;
+				}
 			}else if(val instanceof String){
 				super.getChild("left_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 				this.isController = true;
@@ -117,20 +121,28 @@ public abstract class MessageBox extends ViewBase implements IModelUpdater{
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_MID_BUTTON);
 			if(val instanceof UICommand){
 				this.middle = (UICommand)val;
+				if(!StringUtils.isBlank(this.middle.getCommandName())){
+					this.isController = true;
+				}
 			}else if(val instanceof String){
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
+				this.isController = true;
 			}else{
 				super.getChild("mid_button").setAttribute(AttributeKeys.visible, false);
+				this.isController = false || isController;
 			}
 			val = map.get(IDialog.DIALOG_ATTRIBUTE_RIGHT_BUTTON);
 			if(val instanceof UICommand){
 				this.right = (UICommand)val;
+				if(!StringUtils.isBlank(this.right.getCommandName())){
+					this.isController = true;
+				}
 			}else if(val instanceof String){
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, true).setAttribute(AttributeKeys.label, (String)val);
 				this.isController = true;
 			}else{
-				this.isController = false;
 				super.getChild("right_button").setAttribute(AttributeKeys.visible, false);
+				this.isController = false || isController;
 			}
 			registerBean("isController", this.isController);
 		}

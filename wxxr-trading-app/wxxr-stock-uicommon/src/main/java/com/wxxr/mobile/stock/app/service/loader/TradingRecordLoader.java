@@ -3,73 +3,21 @@ package com.wxxr.mobile.stock.app.service.loader;
 import java.util.List;
 import java.util.Map;
 
-import com.wxxr.mobile.core.command.api.ICommand;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.TradingRecordBean;
+import com.wxxr.mobile.stock.app.command.GetTradingRecordVOsCommand;
 import com.wxxr.mobile.stock.app.common.IReloadableEntityCache;
-import com.wxxr.mobile.stock.app.common.RestUtils;
 import com.wxxr.mobile.stock.app.utils.ConverterUtils;
 import com.wxxr.stock.restful.resource.ITradingResource;
+import com.wxxr.stock.restful.resource.ITradingResourceAsync;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVO;
 import com.wxxr.stock.trading.ejb.api.TradingRecordVOs;
 
-public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRecordBean, TradingRecordVO> {
+public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRecordBean, TradingRecordVO, GetTradingRecordVOsCommand> {
 
-    private static final String COMMAND_NAME = "GetTradingRecordCommand";
-    
-    private static class GetTradingRecordVOsCommand implements ICommand<List<TradingRecordVO>> {
-
-        private String acctID;
-        private int start;
-        private int limit;
-
-        public String getAcctID() {
-            return acctID;
-        }
-
-        public void setAcctID(String acctID) {
-            this.acctID = acctID;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public int getLimit() {
-            return limit;
-        }
-
-        public void setLimit(int limit) {
-            this.limit = limit;
-        }
-
-        @Override
-        public String getCommandName() {
-            return COMMAND_NAME;
-        }
-
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        @Override
-        public Class<List<TradingRecordVO>> getResultType() {
-            Class clazz = List.class;
-            return clazz;
-        }
-
-        @Override
-        public void validate() {
-            if(this.acctID == null){
-                throw new IllegalArgumentException();
-            }
-        }
-        
-    }
-    
-    
+     
     @Override
-    public ICommand<List<TradingRecordVO>> createCommand(Map<String, Object> params) {
+    public GetTradingRecordVOsCommand createCommand(Map<String, Object> params) {
         if((params == null)||params.isEmpty()){
             return null;
         }
@@ -81,7 +29,7 @@ public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRec
     }
 
     @Override
-    public boolean handleCommandResult(ICommand<?> cmd,List<TradingRecordVO> result,
+    public boolean handleCommandResult(GetTradingRecordVOsCommand cmd,List<TradingRecordVO> result,
             IReloadableEntityCache<String, TradingRecordBean> cache) {
         GetTradingRecordVOsCommand command = (GetTradingRecordVOsCommand) cmd;
         boolean updated = false;
@@ -100,15 +48,23 @@ public class TradingRecordLoader extends AbstractEntityLoader<String, TradingRec
 
     @Override
     protected String getCommandName() {
-        return COMMAND_NAME;
+        return GetTradingRecordVOsCommand.COMMAND_NAME;
     }
 
     @Override
-    protected List<TradingRecordVO> executeCommand(
-            ICommand<List<TradingRecordVO>> command) throws Exception {
+    protected void executeCommand(GetTradingRecordVOsCommand command, IAsyncCallback<List<TradingRecordVO>> callback) {
         GetTradingRecordVOsCommand cmd = (GetTradingRecordVOsCommand)command;
-        TradingRecordVOs vos=RestUtils.getRestService(ITradingResource.class).getTradingAccountRecord(cmd.getAcctID(), cmd.getStart(), cmd.getLimit());
-        return vos==null?null:vos.getTradingRecords();
+        getRestService(ITradingResourceAsync.class, ITradingResource.class).getTradingAccountRecord(cmd.getAcctID(), cmd.getStart(), cmd.getLimit()).
+        onResult(new DelegateCallback<TradingRecordVOs, List<TradingRecordVO>>(callback) {
+
+			@Override
+			protected List<TradingRecordVO> getTargetValue(
+					TradingRecordVOs vos) {
+		        return vos==null?null:vos.getTradingRecords();
+			}
+		});
     }
 
 }
+
+

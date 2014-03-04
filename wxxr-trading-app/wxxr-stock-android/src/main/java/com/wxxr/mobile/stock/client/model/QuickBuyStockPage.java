@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IViewGroup;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
 import com.wxxr.mobile.stock.app.bean.UserCreateTradAccInfoBean;
@@ -43,9 +44,10 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 	@Bean(type = BindingType.Service)
@@ -381,8 +383,9 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			}
 	)
 	@ExeGuard(title="提示", message="正处理数据，请稍后...", silentPeriod=1, cancellable=false)
-	String CanSaiBuyStockClick(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	String CanSaiBuyStockClick(ExecutionStep step, InputEvent event, Object result) {
+		switch(step){
+		case PROCESS:
 			String market = null;
 			String code = null;
 			long maxBuyNum = 0; //委托数量
@@ -399,10 +402,13 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				return "buyNum";
 			}
 			userCreateService.quickBuy(10000000l, String.valueOf(getRate3()), true, market, code, String.valueOf(maxBuyNum), String.valueOf(getDeposit3()),"CASH");
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			break;
+		case NAVIGATION:
+			hide();
 			return "home";	
 		}
 		return null;
+
 	}
 	
 	@Command(commandName="TiaoZhanBuyStockClick",navigations = { 
@@ -412,8 +418,9 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 			}
 	)
 	@ExeGuard(title="提示", message="正处理数据，请稍后...", silentPeriod=1, cancellable=false)
-	String TiaoZhanBuyStockClick(InputEvent event){
-		if(InputEvent.EVENT_TYPE_CLICK.equals(event.getEventType())){
+	String TiaoZhanBuyStockClick(ExecutionStep step, InputEvent event, Object result) {
+		switch(step){
+		case PROCESS:
 			long captitalAmount = changeMoney * 10000 * 100; //-申请额度
 			float _rate = 0.0f; //-中止止损
 			float _depositRate = 0.0f; //保证金
@@ -452,12 +459,14 @@ public abstract class QuickBuyStockPage extends PageBase implements IModelUpdate
 				break;
 			}
 			userCreateService.quickBuy(captitalAmount, String.valueOf(_rate), false, market, code, String.valueOf(maxBuyNum), String.valueOf(_depositRate),assetType);
-			getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+			break;
+		case NAVIGATION:
+			hide();
 			return "home";
 		}
 		return null;
+
 	}
-	
 	
 	private Long buyNumber(long captitalAmount,long close){
 		long maxBuyNum=0;

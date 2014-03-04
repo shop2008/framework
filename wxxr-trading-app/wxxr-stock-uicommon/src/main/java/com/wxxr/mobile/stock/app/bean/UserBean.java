@@ -31,7 +31,7 @@ public class UserBean implements IBindableBean {
 	private boolean login;
 	private String totoalScore;
 	
-	private boolean allowGuideGain;
+	private boolean allowGuideGain = true;
 
 	/**
 	 * @param listener
@@ -48,6 +48,10 @@ public class UserBean implements IBindableBean {
 	}
 
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 	/**
 	 * @return the messagePushSettingOn
@@ -328,7 +332,7 @@ public class UserBean implements IBindableBean {
                 " , score=" + this.score +
                 " , totoalProfit=" + this.totoalProfit +
                 " , challengeShared=" + this.challengeShared +
-                " , password=" + this.password +
+                //" , password=" + this.password +
                 " , homeBack=" + this.homeBack +
                 " , joinShared=" + this.joinShared +
                 " , balance=" + this.balance +

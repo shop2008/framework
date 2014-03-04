@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.wxxr.mobile.android.ui.RUtils;
 import com.wxxr.mobile.stock.client.R;
+import com.wxxr.mobile.stock.client.binding.AbstractPinnedHeaderListAdapter;
 
 
 
@@ -20,7 +21,11 @@ import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;;
 public class ImageRefreshListView extends PinnedHeaderListView {
@@ -37,6 +42,7 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	private final int DISMISS_CIRCLE = 102;
 	private ImageView circle;
 
+	private RelativeLayout userHomeBody;
 	private int CircleMarginTop;
 
 	private TextView totalScoreProfit;
@@ -52,7 +58,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 				setCircleMargin();
 				break;
 			case LOAD_DATA:
-				// clearCircleViewMarginTop();
 				Thread thread = new Thread(new DismissCircleThread());
 				thread.start();
 				currentState = LoadState.LOADSTATE_IDLE;
@@ -75,7 +80,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	private TextView userNickName;
 
 	private void setCircleViewStay() {
-		// TODO Auto-generated method stub
 		if (headView.getPaddingTop() > (CircleMarginTop)) {
 			MarginLayoutParams lp = (MarginLayoutParams) circle
 					.getLayoutParams();
@@ -86,7 +90,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	
 	private void loadDataForThreeSecond() {
 		currentState = LoadState.LOADSTATE_LOADING;
-		//data.add("New Data");
 		Message msg = Message.obtain();
 		msg.what = LOAD_DATA;
 		handler.sendMessageDelayed(msg, 3000);
@@ -101,7 +104,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			int temp = 0;
 			for (int i = 0; i <= COUNT; i++) {
 				if (i == 10) {
@@ -134,7 +136,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	}
 
 	protected void setCircleMargin() {
-		// TODO Auto-generated method stub
 		MarginLayoutParams lp = (MarginLayoutParams) circle.getLayoutParams();
 		lp.topMargin = CircleMarginTop - headView.getPaddingTop();
 		circle.setLayoutParams(lp);
@@ -188,7 +189,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 	private void init(Context context) {
 		headView = LayoutInflater.from(context).inflate(R.layout.personal_home_header_layout, null);
 		addHeaderView(headView);
-		circle = (ImageView) headView.findViewById(R.id.circleprogress);
 		totalScoreProfit = (TextView) headView.findViewById(R.id.total_score_profit);
 		totalMoneyProfit = (TextView) headView.findViewById(R.id.total_money_profit);
 		
@@ -197,6 +197,7 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 		userIcon = (ImageView) headView.findViewById(R.id.user_icon_back);
 		
 		userNickName = (TextView) headView.findViewById(R.id.user_nick_name);
+		userHomeBody = (RelativeLayout) headView.findViewById(R.id.user_home_body);
 		headView.getViewTreeObserver().addOnPreDrawListener(
 				new OnPreDrawListener() {
 					@Override
@@ -209,7 +210,6 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 						return true;
 					}
 				});
-		//setOnScrollListener(this);
 		currentScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 		currentState = LoadState.LOADSTATE_IDLE;
 		firstVisibleItem = 0;
@@ -224,44 +224,19 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 
 	}
 
-
 	private void decreasePadding(int count) {
 		Thread thread = new Thread(new DecreaseThread(count));
 		thread.start();
 	}
-
-	/*@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-		// TODO Auto-generated method stub
-		// System.out.println(headView.getHeight());
-		this.firstVisibleItem = firstVisibleItem;
-	}*/
-
-	/*@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
-
-		switch (scrollState) {
-		case SCROLL_STATE_FLING:
-			currentScrollState = SCROLL_STATE_FLING;
-			break;
-		case SCROLL_STATE_IDLE:
-			currentScrollState = SCROLL_STATE_IDLE;
-			break;
-		case SCROLL_STATE_TOUCH_SCROLL:
-			currentScrollState = SCROLL_STATE_TOUCH_SCROLL;
-			break;
-
-		}
-
-	}*/
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
 		float downY = event.getY();
 		switch (event.getAction()) {
+		
+		case MotionEvent.ACTION_DOWN:
+			downY = event.getY();
+			break;
 		case MotionEvent.ACTION_UP:
 			if (deltaCount > 0 && currentState != LoadState.LOADSTATE_LOADING
 					&& firstVisibleItem == 0
@@ -272,6 +247,9 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
+			getFirstVisibleItemPos();
+			lastDownY = event.getY();
+			//System.out.println("--y--"+event.getY());
 			int nowDeltaCount = (int) ((downY - lastDownY) / 3.0);
 			int grepDegree = nowDeltaCount - deltaCount;
 			deltaCount = nowDeltaCount;
@@ -287,6 +265,18 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 		}
 
 		return super.onTouchEvent(event);
+	}
+
+	private void getFirstVisibleItemPos() {
+		ListAdapter adapter = getAdapter();
+		if(adapter instanceof  HeaderViewListAdapter) {
+			HeaderViewListAdapter headerAdapter = (HeaderViewListAdapter) adapter;
+			ListAdapter  wrapAdapter = headerAdapter.getWrappedAdapter();
+			if(wrapAdapter instanceof  AbstractPinnedHeaderListAdapter) {
+				AbstractPinnedHeaderListAdapter pinHeaderListAdpter = (AbstractPinnedHeaderListAdapter) wrapAdapter;
+				firstVisibleItem = pinHeaderListAdpter.getFirstVisibleItem();
+			}
+		}
 	}
 	
 	public void setTotalScoreProfit(Long totalScore) {
@@ -309,9 +299,7 @@ public class ImageRefreshListView extends PinnedHeaderListView {
 		userNickName.setText(nickName);
 	}
 	
-	//public void updateUserBack(Image)
 	private void startCircleAnimation() {
 		CircleAnimation.startRotateAnimation(circle);
-
 	}
 }

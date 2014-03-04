@@ -7,8 +7,6 @@ import android.widget.ListAdapter;
 import com.wxxr.mobile.android.ui.IAndroidBindingContext;
 import com.wxxr.mobile.android.ui.binding.AdapterViewFieldBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
-import com.wxxr.mobile.stock.client.widget.ImageRefreshListView;
-import com.wxxr.mobile.stock.client.widget.ImageRefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PageSwiperView;
 import com.wxxr.mobile.stock.client.widget.PageSwiperViewKeys;
 

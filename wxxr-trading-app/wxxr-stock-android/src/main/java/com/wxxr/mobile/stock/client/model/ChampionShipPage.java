@@ -26,6 +26,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.ObjectUtils;
 import com.wxxr.mobile.stock.app.bean.MegagameRankBean;
@@ -40,7 +41,7 @@ import com.wxxr.mobile.stock.client.utils.Constants;
  * @author neillin
  * 
  */
-@View(name = "championShip", withToolbar=true, description = "大赛排行榜", provideSelection = true)
+@View(name = "championShip", withToolbar=true, description = "参赛排行榜", provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.champion_ship_page_layout")
 public abstract class ChampionShipPage extends PageBase {
 	private static final Trace log = Trace.register(ChampionShipPage.class);
@@ -61,16 +62,19 @@ public abstract class ChampionShipPage extends PageBase {
 	BindableListWrapper<RegularTicketBean> rtRankListBean;
 
 	// List
-	@Field(valueKey = "options", binding = "${tRankListBean.data}")
+	@Field(valueKey = "options", binding = "${tRankListBean.getData(true)}", upateAsync=true, visibleWhen = "${currentViewId == 1}")
 	List<MegagameRankBean> ChampionShip;
-
-	@Field(valueKey = "options", binding = "${t1RankListBean.data}")
+	DataField<List> ChampionShipField;
+	
+	@Field(valueKey = "options", binding = "${t1RankListBean.getData(true)}", upateAsync=true, visibleWhen = "${currentViewId == 2}")
 	List<MegagameRankBean> ChampionT1Ship;
-
-	@Field(valueKey = "options", binding = "${weekRankListBean.data}", visibleWhen = "${weekRankListBean != null && weekRankListBean.data!=null && weekRankListBean.data.size()>0?true:false}")
+	DataField<List> ChampionT1ShipField;
+	
+	@Field(valueKey = "options", binding = "${weekRankListBean.getData(true)}", upateAsync=true, visibleWhen = "${currentViewId == 3}")//, visibleWhen = "${weekRankListBean != null && weekRankListBean.data!=null && weekRankListBean.data.size()>0?true:false}")
 	List<WeekRankBean> ChampionWeekShip;
-
-	@Field(valueKey = "options", binding = "${rtRankListBean.data}")
+	DataField<List> ChampionWeekShipField;
+	
+	@Field(valueKey = "options", binding = "${rtRankListBean.data}", visibleWhen = "false")
 	List<RegularTicketBean> ChampionRegularShip;
 
 	@Field(valueKey = "text", visibleWhen = "${currentViewId == 1}", attributes = {
@@ -117,12 +121,13 @@ public abstract class ChampionShipPage extends PageBase {
 	// String weekDate;
 
 	@Bean
-	int currentViewId = 1;
+	int currentViewId = 2;
 
 	@Menu(items = { "left" })
 	private IMenu toolbar;
 	
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen="${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		hide();
 		return null;
@@ -360,5 +365,13 @@ public abstract class ChampionShipPage extends PageBase {
 		}
 		result.setResult("");
 		return result;
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		ChampionShipField.getDomainModel().doEvaluate();
+		ChampionT1ShipField.getDomainModel().doEvaluate();
+		ChampionWeekShipField.getDomainModel().doEvaluate();
+		return null;
 	}
 }

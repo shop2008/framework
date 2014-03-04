@@ -38,6 +38,10 @@ public class WeekRankBean implements IBindableBean {
 	}
 
 
+	@Override
+	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
+		return this.emitter.hasPropertyChangeListener(listener);
+	}	
 
 	/**
 	 * @return the rankSeq

@@ -20,7 +20,6 @@ import com.wxxr.mobile.core.ui.annotation.Convertor;
 import com.wxxr.mobile.core.ui.annotation.Field;
 import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
-import com.wxxr.mobile.core.ui.annotation.OnCreate;
 import com.wxxr.mobile.core.ui.annotation.OnHide;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.Parameter;
@@ -32,15 +31,16 @@ import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.IView;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.DataField;
+import com.wxxr.mobile.core.ui.common.ELBeanValueEvaluator;
 import com.wxxr.mobile.core.ui.common.PageBase;
-import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
-import com.wxxr.mobile.core.util.IAsyncCallback;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 import com.wxxr.mobile.stock.app.bean.StockTradingOrderBean;
 import com.wxxr.mobile.stock.app.bean.TradingAccountBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.event.NewRemindingMessagesEvent;
 import com.wxxr.mobile.stock.app.service.ITradingManagementService;
 import com.wxxr.mobile.stock.app.service.IUserManagementService;
+import com.wxxr.mobile.stock.client.ICancellableRunnable;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
 import com.wxxr.mobile.stock.client.utils.Constants;
 import com.wxxr.mobile.stock.client.utils.LongTime2StringConvertor;
@@ -55,16 +55,17 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Menu(items={"left","right"})
 	private IMenu toolbar;
 	
+	private ICancellableRunnable refreshTask;
  
 	@Command(description="Invoke when a toolbar item was clicked",uiItems={
-				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style")
+				@UIItem(id="left",label="返回",icon="resourceId:drawable/back_button_style", visibleWhen = "${true}")
 			}
 	)
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
 			log.debug("Toolbar item :left was clicked !");
 		}
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}	
 	
@@ -72,8 +73,9 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	@Bean(type=BindingType.Service)
 	ITradingManagementService tradingService;
 	
-	@Bean(type=BindingType.Pojo,express="${tradingService.getTradingAccountInfo(accid)}")
+	@Bean(type=BindingType.Pojo,express="${tradingService.getSyncTradingAccountInfo(accid)}", effectingFields={"stockTradingOrder"})
 	TradingAccountBean tradingAccount;
+	private ELBeanValueEvaluator<TradingAccountBean> tradingAccountUpdater;
 	
 	@Convertor(params={
 			@Parameter(name="format",value="M月d日买入"),
@@ -176,11 +178,39 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 			getAppToolbar().setTitle("挑战交易盘T+1", null);
 		}
 		AppUtils.getService(IEventRouter.class).registerEventListener(NewRemindingMessagesEvent.class, this);
-		
-		if( tradingAccount != null && tradingAccount.getTradingOrders() != null && tradingAccount.getTradingOrders().size()>0){
-			enabled_view = true;
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
 		}
-		registerBean("enabled_view", enabled_view);
+		this.refreshTask = new ICancellableRunnable() {		
+			private boolean cancelled;
+			
+			@Override
+			public void run() {
+				if(cancelled||(!isActive())){
+					return;
+				}
+				try {
+					tradingService.getTradingAccountInfo(accid);
+				}catch(Throwable t){
+					log.warn("Failed to refresh home menu list", t);
+				}
+				if(cancelled||(!isActive())){
+					return;
+				}
+				AsyncUtils.invokeLater(this, 10, TimeUnit.SECONDS);
+			}
+
+			@Override
+			public void cancel() {	
+				this.cancelled = true;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return this.cancelled;
+			}
+		};
+		AsyncUtils.invokeLater(refreshTask, 10, TimeUnit.SECONDS);
 	}
 	
 	
@@ -217,6 +247,10 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	void unRegisterEventListener() {
 		messageLayoutField.setValue(false);
 		AppUtils.getService(IEventRouter.class).unregisterEventListener(NewRemindingMessagesEvent.class, this);
+		if(this.refreshTask != null){
+			this.refreshTask.cancel();
+			this.refreshTask = null;
+		}
 	}	
 
 	/**
@@ -239,7 +273,7 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 	 * @return
 	 */
 	@Command(description = "Invoke when a toolbar item was clicked", 
-			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style") }, 
+			uiItems = { @UIItem(id = "right", label = "交易详情", icon = "resourceId:drawable/message_button_style", visibleWhen = "${true}") }, 
 			navigations = { @Navigation(on = "*", showPage = "TradingRecordsPage")
 			})
 	CommandResult toolbarClickedRight(InputEvent event) {
@@ -438,5 +472,11 @@ public abstract class SellTradingAccountPage extends PageBase implements IModelU
 			
 		}
 		return null;
-	}	
+	}
+	
+	@Command
+	String handlerReTryClicked(InputEvent event) {
+		tradingAccountUpdater.doEvaluate();
+		return null;
+	}
 }

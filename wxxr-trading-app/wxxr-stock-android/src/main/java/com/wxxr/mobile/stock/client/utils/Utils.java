@@ -10,15 +10,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import com.wxxr.mobile.stock.app.bean.PullMessageBean;
-import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.wxxr.mobile.stock.app.bean.PullMessageBean;
+import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
 
 public class Utils {
 
@@ -279,9 +282,9 @@ public class Utils {
 		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
-				Method m = obj.getClass().getMethod(method, null);
+				Method m = obj.getClass().getMethod(method);
 				m.setAccessible(true);
-				Object labelObj = m.invoke(obj, null);
+				Object labelObj = m.invoke(obj);
 
 				if (i == 0) {
 					curLabelObj = labelObj;
@@ -371,10 +374,10 @@ public class Utils {
 			@Override
 			public int compare(Object lhs, Object rhs) {
 				try {
-					Method lMethod = lhs.getClass().getMethod(method, null);
-					Method rMethod = rhs.getClass().getMethod(method, null);
-					Object lValue = lMethod.invoke(lhs, null);
-					Object rValue = rMethod.invoke(rhs, null);
+					Method lMethod = lhs.getClass().getMethod(method);
+					Method rMethod = rhs.getClass().getMethod(method);
+					Object lValue = lMethod.invoke(lhs);
+					Object rValue = rMethod.invoke(rhs);
 
 					if (lValue instanceof String || rValue instanceof String) {
 						long lTime = stringTime2Long((String) lValue);
@@ -419,9 +422,9 @@ public class Utils {
 		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
-				Method m = obj.getClass().getMethod(method, null);
+				Method m = obj.getClass().getMethod(method);
 				m.setAccessible(true);
-				Object labelObj = m.invoke(obj, null);
+				Object labelObj = m.invoke(obj);
 
 				if (i == 0) {
 					curLabelObj = labelObj;
@@ -495,9 +498,9 @@ public class Utils {
 		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
-				Method m = obj.getClass().getMethod(method, null);
+				Method m = obj.getClass().getMethod(method);
 				m.setAccessible(true);
-				Object labelObj = m.invoke(obj, null);
+				Object labelObj = m.invoke(obj);
 				if (labelObj instanceof Long) {
 					labelObj = longTimeFormat((Long) labelObj);
 				}
@@ -552,9 +555,9 @@ public class Utils {
 		for (int i = 0; i < data.size(); i++) {
 			Object obj = data.get(i);
 			try {
-				Method m = obj.getClass().getMethod(method, null);
+				Method m = obj.getClass().getMethod(method);
 				m.setAccessible(true);
-				Object labelObj = m.invoke(obj, null);
+				Object labelObj = m.invoke(obj);
 
 				if (i == 0) {
 					curLabelObj = labelObj;
@@ -626,5 +629,44 @@ public class Utils {
 	public static String getDayString(int val){
 		if(val==0) val = 1;
 		return "T+"+val+"日";
+	}
+	
+	public static float adjustFontSize(Context context){
+		WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int screenWidth = wm.getDefaultDisplay().getWidth();
+		if(screenWidth <= 240){ return 10;} //240X320 屏幕 
+		else if(screenWidth <= 320){ return 14;} // 320X480 屏幕
+		else if(screenWidth <= 480){ return 12;} // 480X800 或 480X854 屏幕
+		else if(screenWidth <= 540){ return 16;} // 540X960 屏幕 
+		else if(screenWidth <= 800){ return 20;} // 800X1280 屏幕
+		else{return 28;}
+	}
+	public static float adjustPadding(Context context){
+		WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int screenWidth = wm.getDefaultDisplay().getWidth();
+		if(screenWidth <= 240){ return 70;} //240X320 屏幕 
+		else if(screenWidth <= 320){ return 80;} // 320X480 屏幕
+		else if(screenWidth <= 480){ return 80;} // 480X800 或 480X854 屏幕
+		else if(screenWidth <= 540){ return 90;} // 540X960 屏幕 
+		else if(screenWidth <= 800){ return 100;} // 800X1280 屏幕
+		else{return 120;}
+	}
+	public static float adjustVSpace(Context context){
+		WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		int screenWidth = wm.getDefaultDisplay().getWidth();
+		if(screenWidth <= 240){ return 20;} //240X320 屏幕 
+		else if(screenWidth <= 320){ return 10;} // 320X480 屏幕
+		else if(screenWidth <= 480){ return 16;} // 480X800 或 480X854 屏幕
+		else if(screenWidth <= 540){ return 22;} // 540X960 屏幕 
+		else if(screenWidth <= 800){ return 30;} // 800X1280 屏幕
+		else{return 50;}
+	}
+	
+	
+	public boolean isMobileNum(String phoneNum) {
+		String regStr = "^[1][358]\\d{9}$";
+		Pattern p = Pattern.compile(regStr);
+		Matcher m = p.matcher(phoneNum);
+		return m.matches();
 	}
 }

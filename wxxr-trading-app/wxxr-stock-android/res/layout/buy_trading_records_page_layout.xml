@@ -34,7 +34,7 @@
             android:layout_height="32dp"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="名称代码"
+            android:text="股票"
             android:textColor="#989e9e"
             android:gravity="center"
             android:textSize="15sp"

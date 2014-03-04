@@ -19,6 +19,12 @@ public class OptionStock {
 	@Column
 	private  Date createDate;
 	@Column
+	private  Date lastUpdate;
+	@Column
+	private Long newprice;
+	@Column
+	private Long risefallrate;
+	@Column
 	private  Integer power;
 	public Long getId() {
 		return id;
@@ -50,10 +56,31 @@ public class OptionStock {
 	public void setPower(Integer power) {
 		this.power = power;
 	}
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+	public Long getNewprice() {
+		return newprice;
+	}
+	public void setNewprice(Long newprice) {
+		this.newprice = newprice;
+	}
+	public Long getRisefallrate() {
+		return risefallrate;
+	}
+	public void setRisefallrate(Long risefallrate) {
+		this.risefallrate = risefallrate;
+	}
 	@Override
 	public String toString() {
 		return "OptionStock [id=" + id + ", stockCode=" + stockCode + ", mc="
-				+ mc + ", createDate=" + createDate + ", power=" + power + "]";
+				+ mc + ", createDate=" + createDate + ", lastUpdate="
+				+ lastUpdate + ", newprice=" + newprice + ", risefallrate="
+				+ risefallrate + ", power=" + power + "]";
 	}
+	
 }
 

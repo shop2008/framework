@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.common.DataField;
 import com.wxxr.mobile.core.ui.common.ViewBase;
 import com.wxxr.mobile.stock.app.bean.StockLineBean;
 import com.wxxr.mobile.stock.app.bean.StockQuotationBean;
+import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
 import com.wxxr.mobile.stock.app.service.IStockInfoSyncService;
@@ -43,15 +44,17 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Bean(type = BindingType.Service)
 	IStockInfoSyncService stockInfoSyncService;
 
-	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean)}")
+	@Bean(type = BindingType.Pojo, express = "${stockInfoSyncService.getStockBaseInfoByCode(stockSelection.getCode(), stockSelection.getMarket())}")
 	StockBaseInfo stockInfoBean;
 	
+//	@Bean
+//	String nameBean;
+//	@Bean
+//	String codeBean;
+//	@Bean
+//	String marketBean;
 	@Bean
-	String nameBean;
-	@Bean
-	String codeBean;
-	@Bean
-	String marketBean;
+	StockSelection stockSelection = new StockSelection();
 	//0:个股 or 1:买入
 	@Bean
 	int type = 1;
@@ -95,14 +98,14 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Bean(type=BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 	
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayStockline(codeBean, marketBean)}")
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getDayStockline(stockSelection.getCode(), stockSelection.getMarket())}")
 	BindableListWrapper<StockLineBean> lineListBean;
 	//K 线
 	@Field(valueKey="options", binding="${lineListBean != null ? lineListBean.getData(true) : null}", upateAsync=true)
 	List<StockLineBean> dayLineList;
 	DataField<List> dayLineListField;
 	//Title数据
-	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(codeBean, marketBean)}")
+	@Bean(type=BindingType.Pojo,express="${infoCenterService.getStockQuotation(stockSelection.getCode(), stockSelection.getMarket())}")
 	StockQuotationBean stockQuotationBean;
 	
 	// Title
@@ -112,13 +115,13 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 	@Field(valueKey = "text", binding = "${'('}${stockQuotationBean!=null?stockQuotationBean.code:'--'}${'.'}${stockQuotationBean!=null?stockQuotationBean.market:'--'}${')'}")
 	String code;
 	//个股界面
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.newprice:'0'}", converter = "stockLong2StringConvertorNoSign", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.newprice:'0'}", converter = "stockLong2StringConvertorNoSign", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/green'}") })
 	String newprice;
 
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.change:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.change:'0'}", converter = "stockLong2StringConvertor", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/green'}") })
 	String change;
 
-	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.risefallrate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/stock_down'}") })
+	@Field(valueKey = "text", visibleWhen = "${type == 0}", binding = "${stockQuotationBean!=null?stockQuotationBean.risefallrate:'0'}", converter = "stockLong2StringConvertorSpecial", attributes = { @Attribute(name = "textColor", value = "${stockQuotationBean==null?'resourceId:color/gray':stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:color/stock_up':'resourceId:color/green'}") })
 	String risefallRate;
 
 	@Field(valueKey = "imageURI", visibleWhen = "${stockQuotationBean!=null&&type == 0}", attributes = { @Attribute(name = "imageURI", value = "${stockQuotationBean.newprice>stockQuotationBean.close?'resourceId:drawable/up_arrows_01':'resourceId:drawable/down_arrows_01'}") })
@@ -165,14 +168,16 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 		if(selection instanceof StockSelection){
 			StockSelection stockSelection = (StockSelection) selection;
 			if(stockSelection!=null){
-				this.codeBean = stockSelection.getCode();
-				this.nameBean = stockSelection.getName();
-				this.marketBean = stockSelection.getMarket();
+				this.stockSelection = stockSelection;
+//				this.codeBean = stockSelection.getCode();
+//				this.nameBean = stockSelection.getName();
+//				this.marketBean = stockSelection.getMarket();
 				this.type = stockSelection.getType();
 			}
-			registerBean("codeBean", this.codeBean);
-			registerBean("nameBean", this.nameBean);
-			registerBean("marketBean", this.marketBean);
+			registerBean("stockSelection", this.stockSelection);
+//			registerBean("codeBean", this.codeBean);
+//			registerBean("nameBean", this.nameBean);
+//			registerBean("marketBean", this.marketBean);
 			registerBean("type", this.type);
 //			try {
 //				if(infoCenterService != null) {
@@ -192,13 +197,24 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 //			}
 		}
 	}
-	@Command
+	@Command(navigateMethod="handleReTryClickedResult")
 	String handlerReTryClicked(InputEvent event) {
-		infoCenterService.getStockQuotation(codeBean,marketBean);
-		stockInfoSyncService.getStockBaseInfoByCode(codeBean, marketBean);
-		dayLineListField.getDomainModel().doEvaluate();
+		AsyncUtils.execRunnableAsyncInUI(new Runnable() {
+			
+			@Override
+			public void run() {
+				infoCenterService.getStockQuotation(stockSelection.getCode(), stockSelection.getMarket());
+				stockInfoSyncService.getStockBaseInfoByCode(stockSelection.getCode(), stockSelection.getMarket());
+				dayLineListField.getDomainModel().doEvaluate();
+			}
+		});
 		return null;
 	}
+	
+	String handleReTryClickedResult(InputEvent event, Object result){
+		return null;
+	}
+	
 	@OnShow
 	void initStockData() {
 	}

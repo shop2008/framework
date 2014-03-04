@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@drawable/splash640x960">
+    android:background="@drawable/splash">
 	<View android:layout_width="fill_parent"
 	    android:layout_height="300dp"/>
 

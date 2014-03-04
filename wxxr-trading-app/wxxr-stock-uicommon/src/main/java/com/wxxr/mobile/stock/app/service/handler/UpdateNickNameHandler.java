@@ -1,84 +1,20 @@
 package com.wxxr.mobile.stock.app.service.handler;
 
-import java.util.regex.Pattern;
-
-import com.wxxr.mobile.core.command.api.CommandException;
-import com.wxxr.mobile.core.command.api.ICommand;
-import com.wxxr.mobile.core.command.api.ICommandExecutionContext;
-import com.wxxr.mobile.core.command.api.ICommandHandler;
-import com.wxxr.mobile.core.rpc.http.api.IRestProxyService;
-import com.wxxr.mobile.core.util.StringUtils;
+import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.security.vo.UserParamVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.restful.resource.StockUserResource;
+import com.wxxr.stock.restful.resource.StockUserResourceAsync;
 
-public class UpdateNickNameHandler implements ICommandHandler {
-	private ICommandExecutionContext context;
+public class UpdateNickNameHandler extends BasicCommandHandler<ResultBaseVO,UpdateNickNameCommand> {
 	public final static String COMMAND_NAME="UpdateNickNameCommand";
 	
 	
-	public static class UpdateNickNameCommand implements ICommand<ResultBaseVO>{
-
-		private String nickName;
-		
-		
-		/**
-		 * @return the nickName
-		 */
-		public String getNickName() {
-			return nickName;
-		}
-
-		/**
-		 * @param nickName the nickName to set
-		 */
-		public void setNickName(String nickName) {
-			this.nickName = nickName;
-		}
-
-		@Override
-		public String getCommandName() {
-			return COMMAND_NAME;
-		}
-
-		@Override
-		public Class<ResultBaseVO> getResultType() {
-			return ResultBaseVO.class;
-		}
-
-		@Override
-		public void validate() {
-			if(StringUtils.isBlank(nickName)){
-				throw new CommandException("昵称不能为空");
-			}
-			
-			
-			if (!Pattern.matches("[\u4E00-\u9FA5]{2,6}", nickName)) {
-				throw new CommandException("昵称必须为2到6个中文字符！");
-			}
-			
-		}
-		
-	}
-	
 	@Override
-	public void destroy() {
-
-	}
-
-	@Override
-	public <T> T execute(ICommand<T> cmd) throws Exception {
-		UpdateNickNameCommand command=(UpdateNickNameCommand)cmd;
+	public void execute(final UpdateNickNameCommand command, IAsyncCallback<ResultBaseVO> callback) {
 		UserParamVO vo=new UserParamVO();
 		vo.setNickName(command.getNickName());
-		ResultBaseVO resultBaseVO=context.getKernelContext().getService(IRestProxyService.class).
-			getRestService(StockUserResource.class).updateNickName(vo);
-		return (T) resultBaseVO;
-	}
-
-	@Override
-	public void init(ICommandExecutionContext context) {
-		this.context=context;
+		getRestService(StockUserResourceAsync.class,StockUserResource.class).updateNickName(vo).onResult(callback);
 	}
 
 }

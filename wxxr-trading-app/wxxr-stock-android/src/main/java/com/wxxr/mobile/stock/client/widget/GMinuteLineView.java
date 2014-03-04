@@ -39,17 +39,22 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 	private static int RIGHT_TOP = 2;
 	private static int RIGHT_BOTTOM = 3;
 	private Rect rect = null;
+	private float textSize;
+	private Context context;
 	
 	public GMinuteLineView(Context context) {
 		super(context);
+		this.context = context;
 		init();
 	}
 	public GMinuteLineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.context = context;
 		init();
 	}
 	public GMinuteLineView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		this.context = context;
 		init();
 	}
 	
@@ -101,6 +106,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 	 * */
 	private void init(){
 		mPaint = new Paint();
+		textSize = Utils.adjustFontSize(context);
 	}
 	
 	/**初始化股票数据*/
@@ -221,7 +227,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 		canvas.restore();
 		mPaint.setAntiAlias(true);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-		mPaint.setTextSize(18);
+		mPaint.setTextSize(textSize);
 		mPaint.setTextAlign(Paint.Align.RIGHT);
 		mPaint.setColor(getStockUpColor());// 上涨
 		String tempHighPice = String.format("%.2f", highPrice/1000);
@@ -242,7 +248,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 		mPaint.setAntiAlias(true);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setPathEffect(null);
-		mPaint.setTextSize(18);
+		mPaint.setTextSize(textSize);
 		mPaint.setColor(getStockDownColor()); //下跌
 		String templowPrice = String.format("%.2f", lowPrice/1000);
 		//画黑色背景
@@ -260,6 +266,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 		canvas.save();
 		canvas.restore();
 		mPaint.setAntiAlias(true);
+		mPaint.setTextSize(textSize);
 		mPaint.setTextAlign(Paint.Align.LEFT);
 		mPaint.setColor(getStockUpColor());
 		String highPicePercentage="0.00%";
@@ -281,6 +288,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 		canvas.save();
 		canvas.restore();
 		mPaint.setAntiAlias(true);
+		mPaint.setTextSize(textSize);
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 		mPaint.setColor(getStockDownColor());
 		String lowPicePercentage = "0.00%";
@@ -432,7 +440,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 			{
 				mPaint.setAntiAlias(true);
 				canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
-				mPaint.setStrokeWidth(1);
+				mPaint.setStrokeWidth(2);
 				StockMinuteLineBean stockMinute = (StockMinuteLineBean)dataProvider.getItem(i);
 				StockMinuteLineBean stockMinute1 = (StockMinuteLineBean)dataProvider.getItem(i+1);
 				if (i <= 239 && stockMinute!=null && stockMinute1!=null)
@@ -502,7 +510,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 				if (i <= 239)
 				{
 					mPaint.setAntiAlias(true);
-					mPaint.setStrokeWidth(1);
+					mPaint.setStrokeWidth(2);
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 					StockMinuteLineBean stockMinute = (StockMinuteLineBean) dataProvider.getItem(i);
 					StockMinuteLineBean stockMinute1 = (StockMinuteLineBean) dataProvider.getItem(i+1);
@@ -528,7 +536,7 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 				if (i <= 239)
 				{
 					mPaint.setAntiAlias(true);
-					mPaint.setStrokeWidth(1);
+					mPaint.setStrokeWidth(2);
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 					StockMinuteLineBean stockMinute = (StockMinuteLineBean) dataProvider.getItem(i);
 					StockMinuteLineBean stockMinute1 = (StockMinuteLineBean) dataProvider.getItem(i+1);
@@ -577,7 +585,6 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 	
 	/** 画成交量柱状图 */
 	private void setOnDrawSecuVolume(Canvas canvas){
-		mPaint.setColor(getStockAverageLineColor());
 		float scale = maxSecuvolume/zHeight;
 		float width = (float) (zWidth / 241.0);
 		for (int i = 0; i < size-1; i++)
@@ -590,6 +597,24 @@ public class GMinuteLineView extends GBasicLineView  implements IDataChangedList
 				// 成交量
 				if (stockMinute!=null)
 				{
+					float newPrice = stockMinute.getPrice();
+					if(i==0){
+						if(yesterdayClose>=newPrice){
+							mPaint.setColor(getStockDownColor());
+						}else{
+							mPaint.setColor(getStockUpColor());
+						}
+					}else{
+						StockMinuteLineBean stockMinute1 = (StockMinuteLineBean)dataProvider.getItem(i-1);
+						float newprice1 = stockMinute1.getPrice();
+						StockMinuteLineBean stockMinute2 = (StockMinuteLineBean)dataProvider.getItem(i);
+						float newprice2 = stockMinute2.getPrice();
+						if(newprice1>=newprice2){
+							mPaint.setColor(getStockDownColor());
+						}else{
+							mPaint.setColor(getStockUpColor());
+						}
+					}
 					mPaint.setAntiAlias(true);
 					canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));  
 	//				mPaint.setStrokeWidth(3);

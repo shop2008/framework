@@ -36,16 +36,17 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	@Menu(items = { "left" })
 	private IMenu toolbar; 
 
-	@Command(description = "Invoke when a toolbar item was clicked", uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style") })
+	@Command(description = "Invoke when a toolbar item was clicked", 
+			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
-		getUIContext().getWorkbenchManager().getPageNavigator().hidePage(this);
+		hide();
 		return null;
 	}
 	
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
-	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation(stockCode,stockMarket)}")
+	@Bean(type = BindingType.Pojo,express = "${infoCenterService.getStockQuotation(stockSelection.getCode(), stockSelection.getMarket())}")
 	StockQuotationBean stockBean;
 
 	@Convertor(params={
@@ -78,12 +79,15 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 	StockLong2StringAutoUnitConvertor convertorSecuamount;
 	
 	
+//	@Bean
+//	String stockName;
+//	@Bean
+//	String stockCode;
+//	@Bean
+//	String stockMarket;
+	
 	@Bean
-	String stockName;
-	@Bean
-	String stockCode;
-	@Bean
-	String stockMarket;
+	StockSelection stockSelection = new StockSelection();
 	
 	@ViewGroup(viewIds={"GZMinuteLineView", "StockKLineView"})
 	private IViewGroup contents;
@@ -97,10 +101,10 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 			@Attribute(name = "position", value = "${position}") })
 	String indexGroup;
 	
-	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='000001'&&stockMarket=='SH')}")
+	@Field(valueKey="visible",visibleWhen="${(stockSelection.getCode()!=null&&stockSelection.getCode()=='000001'&&stockSelection.getMarket()=='SH')}")
 	boolean showSHLayout = true;
 	
-	@Field(valueKey="visible",visibleWhen="${(stockCode!=null&&stockCode=='399001'&&stockMarket=='SZ') || (stockCode!=null&&stockCode=='399005'&&stockMarket=='SZ')}")
+	@Field(valueKey="visible",visibleWhen="${(stockSelection.getCode()!=null&&stockSelection.getCode()=='399001'&&stockSelection.getMarket()=='SZ') || (stockSelection.getCode()!=null&&stockSelection.getCode()=='399005'&&stockSelection.getMarket()=='SZ')}")
 	boolean showSZLayout = false;
 	
 	/**昨收*/
@@ -176,8 +180,8 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 			if (log.isDebugEnabled()) {
 				log.debug("SZzhiShuPage : getStockQuotation");
 			}
-			updateSelection(new StockSelection(stockBean.getMarket(),stockBean.getCode(),this.stockName));
-			this.infoCenterService.getSyncStockQuotation(this.stockCode, this.stockMarket);
+			updateSelection(new StockSelection(stockSelection.getMarket(),stockSelection.getCode(),stockSelection.getName()));
+			this.infoCenterService.getSyncStockQuotation(stockSelection.getCode(), stockSelection.getMarket());
 		}
 		return null;
 	}	
@@ -207,25 +211,29 @@ public abstract class ZhiShuPage extends PageBase implements IModelUpdater {
 			for (Object key : data.keySet()) {
 	            if(key.equals("code")){
 	            	String val = (String)data.get(key);
-	            	this.stockCode = val;
-	            	registerBean("stockCode", this.stockCode);
+	            	stockSelection.setCode(val);
+//	            	this.stockCode = val;
+//	            	registerBean("stockCode", this.stockCode);
 	            }
 	            if(key.equals("market")){
 	            	String val = (String)data.get(key);
-	            	this.stockMarket = val;
-	            	registerBean("stockMarket", this.stockMarket);
+	            	stockSelection.setMarket(val);
+//	            	this.stockMarket = val;
+//	            	registerBean("stockMarket", this.stockMarket);
 	            }
 	            if(key.equals("name")){
 					String name = (String) data.get(key);
-					this.stockName = name;
-					registerBean("stockName", this.stockName);
+					stockSelection.setName(name);
+//					this.stockName = name;
+//					registerBean("stockName", this.stockName);
 				}
 	        }
-			if(this.stockCode!=null && this.stockMarket!=null){
-				temp.put("code", this.stockCode);
-				temp.put("market", this.stockMarket);
-				registerBean("map", temp);
-			}
+			registerBean("stockSelection", this.stockSelection);
+//			if(this.stockCode!=null && this.stockMarket!=null){
+//				temp.put("code", this.stockCode);
+//				temp.put("market", this.stockMarket);
+//				registerBean("map", temp);
+//			}
 		}
 		registerBean("size", 2);
 		registerBean("position", 0);
