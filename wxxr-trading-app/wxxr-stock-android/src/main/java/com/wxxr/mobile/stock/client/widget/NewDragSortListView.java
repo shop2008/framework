@@ -156,15 +156,22 @@ public class NewDragSortListView extends DragSortListView implements IDataChange
 		}
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.price_info_center_edit_item_view,null);
-			TextView stockName = (TextView) convertView.findViewById(R.id.stock_name);
-			TextView click_remove = (TextView) convertView.findViewById(R.id.click_remove);
-			if(datas.get(position).isSelected()){
-				click_remove.setVisibility(View.VISIBLE);
+			ViewHolder holder;
+			if(convertView==null){
+				holder = new ViewHolder();
+				convertView = LayoutInflater.from(context).inflate(R.layout.price_info_center_edit_item_view,null);
+				holder.stockName = (TextView) convertView.findViewById(R.id.stock_name);
+				holder.click_remove = (TextView) convertView.findViewById(R.id.click_remove);
+				convertView.setTag(holder);
 			}else{
-				click_remove.setVisibility(View.GONE);
+				holder = (ViewHolder) convertView.getTag();
 			}
-			stockName.setText(datas.get(position).getName());
+			if(datas.get(position).isSelected()){
+				holder.click_remove.setVisibility(View.VISIBLE);
+			}else{
+				holder.click_remove.setVisibility(View.GONE);
+			}
+			holder.stockName.setText(datas.get(position).getName());
 			TextView stockCode = (TextView) convertView.findViewById(R.id.stock_code);
 			stockCode.setText(datas.get(position).getCode());
 			RadioButton radio = (RadioButton) convertView.findViewById(R.id.selected_radio);
@@ -174,6 +181,10 @@ public class NewDragSortListView extends DragSortListView implements IDataChange
 		
 	}
 
+	static class ViewHolder{
+		TextView stockName;
+		TextView click_remove;
+	}
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if(adapter!=null){
