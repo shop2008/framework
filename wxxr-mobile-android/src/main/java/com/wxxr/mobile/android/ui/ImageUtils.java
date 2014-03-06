@@ -164,6 +164,7 @@ public abstract class ImageUtils {
 			con.setRequestProperty("appName", AppUtils.getFramework().getApplicationName());
 			con.setRequestProperty("appVer", AppUtils.getFramework().getApplicationVersion());
 			output = con.getOutputStream();
+			input = con.getInputStream();
 			if(input.available()>30000){
 				op.inSampleSize = 6;
 			}
