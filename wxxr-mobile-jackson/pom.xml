@@ -3,10 +3,9 @@
     <parent>
         <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
-        <version>1.0.0</version>
+        <version>${framework.version}</version>
     </parent>
   <artifactId>wxxr-mobile-jackson</artifactId>
-  <version>${framework.version}</version>
   <packaging>jar</packaging>
 
 	<dependencies>

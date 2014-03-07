@@ -5,7 +5,7 @@
     <parent>
         <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
-        <version>1.0.0</version>
+        <version>${framework.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <!-- This needed so that the Plugin Documentation has the correct System Requirements. -->
@@ -13,7 +13,6 @@
         <maven>${maven.api.version}</maven>
     </prerequisites>
 	<artifactId>wxxr-mobile-tools</artifactId>
-	<version>${framework.version}</version>
     <packaging>maven-plugin</packaging>
 	<properties>
 	    <maven.api.version>3.1.1</maven.api.version>
