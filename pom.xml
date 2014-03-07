@@ -10,9 +10,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<android.version>2.3.3</android.version>
-		<platform.version>10</platform.version>
-        <framework.version>1.0.2</framework.version>
+		<android.version>3.0</android.version>
+		<platform.version>11</platform.version>
+        <framework.version>1.0.3-SNAPSHOT</framework.version>
 		<android.plugin.version>3.8.1</android.plugin.version>
 	</properties>
 	<distributionManagement>
@@ -129,11 +129,6 @@
                 <artifactId>android</artifactId>
                 <version>${android.version}</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>support-v4</artifactId>
-                <version>r8</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>

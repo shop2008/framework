@@ -11,10 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,7 +36,7 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-public abstract class BindableFragmentActivity extends FragmentActivity implements IBindableActivity {
+public abstract class BindableFragmentActivity extends Activity implements IBindableActivity {
 
 
 	private static final Trace log = Trace.register(BindableFragmentActivity.class);
@@ -200,7 +199,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	}
 
 	public void showFragment(ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack) {
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		try {
 			BindableFragment fragment = (BindableFragment)bDesc.getTargetClass().newInstance();
 			transaction.replace(vgControl.getId(),fragment);
@@ -218,7 +217,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	public void hideFragment(String viewId) {
 		BindableFragment fragment = getFragment(viewId);
 		if(fragment != null){
-			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.hide(fragment);
 			transaction.commit();
 		}
@@ -400,7 +399,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 			@Override
 			public void show() {
-				dialog.show(getSupportFragmentManager(), view.getName());
+				dialog.show(getFragmentManager(), view.getName());
 			}
 
 			@Override

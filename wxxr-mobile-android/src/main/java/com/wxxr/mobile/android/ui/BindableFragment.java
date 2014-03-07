@@ -10,9 +10,9 @@ import static com.wxxr.mobile.android.ui.BindingUtils.getViewBinder;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,7 +126,8 @@ public abstract class BindableFragment extends Fragment {
 		if(bindingView instanceof ViewBase){
 			((ViewBase)bindingView).onUICreate();
 		}		
-		return (View)this.androidViewBinding.getUIControl();
+		View v = (View)this.androidViewBinding.getUIControl();
+		return v;
 	}
 
 
@@ -176,17 +177,14 @@ public abstract class BindableFragment extends Fragment {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.Fragment#onInflate(android.app.Activity, android.util.AttributeSet, android.os.Bundle)
-	 */
 	@Override
-	public void onInflate(Activity activity, AttributeSet attrs,
+	public void onInflate(AttributeSet attrs,
 			Bundle savedInstanceState) {
 		if(getLogger().isDebugEnabled()){
 			getLogger().debug("onInflate ...");
 		}
 
-		super.onInflate(activity, attrs, savedInstanceState);
+		super.onInflate(attrs, savedInstanceState);
 	}
 
 	/* (non-Javadoc)
@@ -281,20 +279,9 @@ public abstract class BindableFragment extends Fragment {
 		super.onStop();
 		getNavigator().onViewHide(bindingView);
 	}
-
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.Fragment#onViewCreated(android.view.View, android.os.Bundle)
-	 */
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		if(getLogger().isDebugEnabled()){
-			getLogger().debug("onViewCreated ...");
-		}
-
-		super.onViewCreated(view, savedInstanceState);
-	}
-
 	
+	
+
 	public boolean onBackPressed() {
 		return false;
 	}
