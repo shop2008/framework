@@ -21,7 +21,8 @@
         android:id="@+id/contents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/view_switch" >
+        android:layout_below="@id/view_switch"
+        android:visibility="gone" >
     </FrameLayout>
 
 </RelativeLayout>
