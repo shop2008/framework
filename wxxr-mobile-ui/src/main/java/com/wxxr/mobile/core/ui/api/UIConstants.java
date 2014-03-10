@@ -23,6 +23,7 @@ public interface UIConstants {
 	String HOME_PAGE_ID = "home";
 	String MESSAGE_BOX_ID = "messageBox";
 	String TOOL_BAR_VIEW_ID = "toolbarView";
+	String ROOT_VIEW_ID = "rootView";
 	String PROGRESSMONITOR_DIALOG_ID = "progressMonitor";
 
 }

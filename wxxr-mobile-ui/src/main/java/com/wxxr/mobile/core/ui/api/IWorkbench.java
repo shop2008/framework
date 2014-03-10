@@ -14,6 +14,7 @@ public interface IWorkbench {
 	public final static String MESSAGE_BOX_ID = UIConstants.MESSAGE_BOX_ID;
 	public final static String MESSAGE_BOX_MESSAGE_ID = UIConstants.MESSAGEBOX_ATTRIBUTE_MESSAGE;
 	public final static String TOOL_BAR_VIEW_ID = UIConstants.TOOL_BAR_VIEW_ID;
+	public final static String ROOT_VIEW_ID = UIConstants.ROOT_VIEW_ID;
 	public final static String PROGRESSMONITOR_DIALOG_ID = UIConstants.PROGRESSMONITOR_DIALOG_ID;
 
 	

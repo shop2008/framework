@@ -11,10 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,11 +36,12 @@ import com.wxxr.mobile.core.util.StringUtils;
  * @author neillin
  *
  */
-public abstract class BindableFragmentActivity extends FragmentActivity implements IBindableActivity {
+public abstract class BindableFragmentActivity extends Activity implements IBindableActivity {
 
 
 	private static final Trace log = Trace.register(BindableFragmentActivity.class);
 
+	private IViewBinding rootViewBingding;
 	private IViewBinding androidViewBinding;
 	private Map<String, BindableFragment> fragments;
 	private IViewBinding toolbarViewBingding;
@@ -61,8 +61,8 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 		}
 		this.page = getBindingPage();
 		IPageDescriptor descriptor = AppUtils.getService(IWorkbenchManager.class).getPageDescriptor(page.getName());
-		if(descriptor.withToolbar()){
-			this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
+		if(true) {
+			this.rootViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
 
 				@Override
 				public Context getUIContext() {
@@ -92,54 +92,168 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 				public Map<String, String> getBindingAttrSet() {
 					return null;
 				}
-			}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
-			this.contentRoot = (View)toolbarViewBingding.getUIControl();
-			this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
-			if(this.rootView instanceof IAppToolbar){
-				this.toolbar = (IAppToolbar)this.rootView;
-				page.onToolbarCreated(toolbar);
-			}
-		}else{
-			this.contentRoot = null;
-		}
-		this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
+			}, getBindingDescriptor(IWorkbench.ROOT_VIEW_ID));
+			
+			this.contentRoot = (View)rootViewBingding.getUIControl();
+			
+			if(descriptor.withToolbar()){
+				this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
 
-			@Override
-			public Context getUIContext() {
-				return getActivity();
-			}
+					@Override
+					public Context getUIContext() {
+						return BindableFragmentActivity.this;
+					}
 
-			@Override
-			public View getBindingControl() {
-				return null;
-			}
-			@Override
-			public IWorkbenchManager getWorkbenchManager() {
-				return AppUtils.getService(IWorkbenchManager.class);
-			}
+					@Override
+					public View getBindingControl() {
+						return null;
+					}
 
-			@Override
-			public boolean isOnShow() {
-				return onShow;
-			}
+					@Override
+					public IWorkbenchManager getWorkbenchManager() {
+						return AppUtils.getService(IWorkbenchManager.class);
+					}
 
-			@Override
-			public void hideView() {
-				finish();
-			}
+					@Override
+					public boolean isOnShow() {
+						return onShow;
+					}
 
-			@Override
-			public Map<String, String> getBindingAttrSet() {
-				return null;
-			}
-		}, getBindingDescriptor(getBindingPageId()));
+					@Override
+					public void hideView() {
+					}
 
-		if(this.contentRoot != null){
-			ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
-			vg.addView((View)this.androidViewBinding.getUIControl());
+					@Override
+					public Map<String, String> getBindingAttrSet() {
+						return null;
+					}
+				}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
+				if(this.contentRoot instanceof RootLayout){
+					((RootLayout)contentRoot).addHeaderView((View)toolbarViewBingding.getUIControl());
+				}
+				this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
+				if(this.rootView instanceof IAppToolbar){
+					this.toolbar = (IAppToolbar)this.rootView;
+					page.onToolbarCreated(toolbar);
+				}
+			}
+			this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
+
+				@Override
+				public Context getUIContext() {
+					return getActivity();
+				}
+
+				@Override
+				public View getBindingControl() {
+					return null;
+				}
+				@Override
+				public IWorkbenchManager getWorkbenchManager() {
+					return AppUtils.getService(IWorkbenchManager.class);
+				}
+
+				@Override
+				public boolean isOnShow() {
+					return onShow;
+				}
+
+				@Override
+				public void hideView() {
+					finish();
+				}
+
+				@Override
+				public Map<String, String> getBindingAttrSet() {
+					return null;
+				}
+			}, getBindingDescriptor(getBindingPageId()));
+
+			if(this.contentRoot instanceof RootLayout){
+				((RootLayout)contentRoot).addContentView((View)this.androidViewBinding.getUIControl());
+			}
 			setContentView(this.contentRoot);
-		}else{
-			setContentView((View)this.androidViewBinding.getUIControl());
+		} else {
+			if(descriptor.withToolbar()){
+				this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
+	
+					@Override
+					public Context getUIContext() {
+						return BindableFragmentActivity.this;
+					}
+	
+					@Override
+					public View getBindingControl() {
+						return null;
+					}
+	
+					@Override
+					public IWorkbenchManager getWorkbenchManager() {
+						return AppUtils.getService(IWorkbenchManager.class);
+					}
+	
+					@Override
+					public boolean isOnShow() {
+						return onShow;
+					}
+	
+					@Override
+					public void hideView() {
+					}
+	
+					@Override
+					public Map<String, String> getBindingAttrSet() {
+						return null;
+					}
+				}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
+				this.contentRoot = (View)toolbarViewBingding.getUIControl();
+				this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
+				if(this.rootView instanceof IAppToolbar){
+					this.toolbar = (IAppToolbar)this.rootView;
+					page.onToolbarCreated(toolbar);
+				}
+			}else{
+				this.contentRoot = null;
+			}
+			this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
+	
+				@Override
+				public Context getUIContext() {
+					return getActivity();
+				}
+	
+				@Override
+				public View getBindingControl() {
+					return null;
+				}
+				@Override
+				public IWorkbenchManager getWorkbenchManager() {
+					return AppUtils.getService(IWorkbenchManager.class);
+				}
+	
+				@Override
+				public boolean isOnShow() {
+					return onShow;
+				}
+	
+				@Override
+				public void hideView() {
+					finish();
+				}
+	
+				@Override
+				public Map<String, String> getBindingAttrSet() {
+					return null;
+				}
+			}, getBindingDescriptor(getBindingPageId()));
+	
+			if(this.contentRoot != null){
+				ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
+				vg.addView((View)this.androidViewBinding.getUIControl());
+				setContentView(this.contentRoot);
+			}else{
+				setContentView((View)this.androidViewBinding.getUIControl());
+			}
 		}
 		if(page instanceof ViewBase){
 			((ViewBase)page).onUICreate();
@@ -200,7 +314,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	}
 
 	public void showFragment(ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack) {
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		try {
 			BindableFragment fragment = (BindableFragment)bDesc.getTargetClass().newInstance();
 			transaction.replace(vgControl.getId(),fragment);
@@ -218,7 +332,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 	public void hideFragment(String viewId) {
 		BindableFragment fragment = getFragment(viewId);
 		if(fragment != null){
-			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.hide(fragment);
 			transaction.commit();
 		}
@@ -400,7 +514,7 @@ public abstract class BindableFragmentActivity extends FragmentActivity implemen
 
 			@Override
 			public void show() {
-				dialog.show(getSupportFragmentManager(), view.getName());
+				dialog.show(getFragmentManager(), view.getName());
 			}
 
 			@Override
