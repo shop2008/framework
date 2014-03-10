@@ -5,10 +5,10 @@
     <parent>
         <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
-        <version>1.0.0</version>
+        <version>${framework.version}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-mobile-android</artifactId>
-	<version>${framework.version}</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -17,10 +17,6 @@
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.wxxr.mobile.core</groupId>
             <artifactId>wxxr-mobile-core</artifactId>

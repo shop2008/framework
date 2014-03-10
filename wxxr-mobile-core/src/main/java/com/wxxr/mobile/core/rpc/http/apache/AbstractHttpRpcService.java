@@ -4,6 +4,7 @@
 package com.wxxr.mobile.core.rpc.http.apache;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -223,6 +224,19 @@ public class AbstractHttpRpcService implements HttpRpcService {
 			}
 			try {
 				resp = httpClient.execute(request);
+				if (resp.getStatusLine().getStatusCode()==302) {
+					for (Header header : resp.getAllHeaders()) {
+						if ("location".equalsIgnoreCase(header.getName())) {
+							String endpointUrl =  header.getValue();
+							request.setURI(URI.create(endpointUrl));
+							if(log.isDebugEnabled()){
+								log.debug("After redirect, Sending HttpRequest :{"+printRequest(request)+"\n}");
+							}
+							resp = httpClient.execute(request);
+							break;
+						}
+					}
+				}
 				return new HttpResponseImpl(resp);
 			}finally {
 				if(log.isDebugEnabled()){

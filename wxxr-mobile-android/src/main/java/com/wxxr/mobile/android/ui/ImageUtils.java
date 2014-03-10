@@ -5,9 +5,10 @@ package com.wxxr.mobile.android.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Callable;
+import java.net.URLConnection;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -153,8 +154,17 @@ public abstract class ImageUtils {
 		op.inPreferredConfig = Bitmap.Config.RGB_565;
 		Bitmap bitmap;
 		InputStream input=null;
+		OutputStream output = null;
 		try {
-			input=url.openStream();
+			URLConnection con = url.openConnection();
+			con.setDoOutput(true);
+			con.setDoInput(true);
+			con.setRequestProperty("deviceid", AppUtils.getFramework().getDeviceId());
+			con.setRequestProperty("deviceType", AppUtils.getFramework().getDeviceType());
+			con.setRequestProperty("appName", AppUtils.getFramework().getApplicationName());
+			con.setRequestProperty("appVer", AppUtils.getFramework().getApplicationVersion());
+			output = con.getOutputStream();
+			input = con.getInputStream();
 			if(input.available()>30000){
 				op.inSampleSize = 6;
 			}
@@ -165,6 +175,12 @@ public abstract class ImageUtils {
 		} catch (IOException e) {
 			return null;
 		}finally{
+			if(output!=null){
+				try {
+					output.close();
+				} catch (IOException e) {
+				}
+			}
 			if(input!=null){
 				try {
 					input.close();
