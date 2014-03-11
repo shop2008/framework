@@ -5,7 +5,8 @@
     <parent>
         <artifactId>wxxr-mobile-parent</artifactId>
         <groupId>com.wxxr.mobile.core</groupId>
-        <version>${framework.version}</version>
+        <version>1.0.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-mobile-validation</artifactId>
 	<packaging>jar</packaging>

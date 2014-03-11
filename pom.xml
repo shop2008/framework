@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wxxr.mobile.core</groupId>
 	<artifactId>wxxr-mobile-parent</artifactId>
-	<version>${framework.version}</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>wxxr-mobile-parent</name>
 
@@ -18,11 +18,11 @@
 	<distributionManagement>
         <repository>
             <id>wxxr-releases</id>
-            <url>http://repository.corp.wxxr.com.cn:8081/nexus/content/repositories/releases</url>
+            <url>http://developer.corp.wxxr.com.cn/nexus/content/repositories/releases</url>
         </repository>		
         <snapshotRepository>
 			<id>wxxr-snapshots</id>
-			<url>http://repository.corp.wxxr.com.cn:8081/nexus/content/repositories/snapshots</url>
+			<url>http://developer.corp.wxxr.com.cn/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
     <modules>
