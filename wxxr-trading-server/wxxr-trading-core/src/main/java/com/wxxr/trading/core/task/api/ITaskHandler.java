@@ -10,5 +10,4 @@ package com.wxxr.trading.core.task.api;
  */
 public interface ITaskHandler {
 	HandlerStatus handleTask(ITaskInfo task);
-	void letgo();
 }

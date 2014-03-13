@@ -9,6 +9,6 @@ package com.wxxr.trading.core.task.api;
  */
 public enum HandlerStatus {
 	OK,
-	NEXT,
+	SKIP,
 	STOP
 }
