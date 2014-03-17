@@ -48,6 +48,8 @@ import com.wxxr.mobile.stock.client.binding.SellFiveDayMinuteLineViewFieldBinder
 import com.wxxr.mobile.stock.client.binding.SpinnerItemClickEventBinder;
 import com.wxxr.mobile.stock.client.binding.SpinnerViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.StockRefreshClickedDecorator;
+import com.wxxr.mobile.stock.client.binding.StockSearchViewEventDecorator;
+import com.wxxr.mobile.stock.client.binding.StockSearchViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.StockSuspensionRefreshClickedDecorator;
 import com.wxxr.mobile.stock.client.binding.StockViewDecorator;
 import com.wxxr.mobile.stock.client.binding.TextChangedEventBinder;
@@ -56,6 +58,7 @@ import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPageAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ViewPagerIndexGroupFieldBinder;
+import com.wxxr.mobile.stock.client.view.StockSearchItemViewModelDescriptor;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
@@ -74,6 +77,8 @@ import com.wxxr.mobile.stock.client.widget.Pull2RefreshViewKeys;
 import com.wxxr.mobile.stock.client.widget.PullToRefreshListView;
 import com.wxxr.mobile.stock.client.widget.RefreshableLayout;
 import com.wxxr.mobile.stock.client.widget.SellFiveDayMinuteLine;
+import com.wxxr.mobile.stock.client.widget.StockSearchView;
+import com.wxxr.mobile.stock.client.widget.StockSearchViewKeys;
 import com.wxxr.mobile.stock.client.widget.TextSpinnerView;
 import com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup;
 import com.wxxr.mobile.stock.client.widget.imageViewPager;
@@ -103,6 +108,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder(UIComponent.class, NewDragSortListView.class, new NewDragSortListViewFieldBinder());		
 		mgr.registerFieldBinder(UIComponent.class, ImageRefreshListView.class, new ImageRefreshListViewFieldBinder());
 		mgr.registerFieldBinder(UIComponent.class, KlineViewNew.class, new KlineNewFieldBinder());
+		mgr.registerFieldBinder(UIComponent.class, StockSearchView.class, new StockSearchViewFieldBinder());
 	}
 
 	@Override
@@ -116,7 +122,6 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		mgr.registerFieldBinder("DropItemEvent", new DragSortListOnDragEventBinder());
 		mgr.registerFieldBinder("RemoveItemEvent", new DragSortListOnDragEventBinder());
 		
-		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
 		mgr.registerFieldBinder("BoxChanged", new CompoundButtonCheckChangeEventBinder());
 	}
@@ -129,6 +134,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		BuyStockViewKeys.registerKeys(mgr);
 		ImageRefreshViewKeys.registerKeys(mgr);
 		PageSwiperViewKeys.registerKeys(mgr);
+		StockSearchViewKeys.registerKeys(mgr);
 		mgr.registerAttributeUpdater("text", new ToolbarTextAttributeUpdater());
 		mgr.registerAttributeUpdater("background", new BackgroundAttributeUpdater());
 		mgr.registerAttributeUpdater("text", new ArticleBodyAttributeUpdater());
@@ -157,6 +163,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		registry.registerDecorator("EditablePageBtnClickedDecorator", EditablePageBtnClickedDecorator.class);
 		registry.registerDecorator("EditableNavPageBtnClickedDecorator", EditableNavPageBtnClickedDecorator.class);
 		registry.registerDecorator("StockViewDecorator", StockViewDecorator.class);
+		registry.registerDecorator("StockSearchViewEventDecorator", StockSearchViewEventDecorator.class);
 	}
 
 }

@@ -194,7 +194,7 @@ public class PageSwiperView extends LinearLayout {
 	
 	private void stopPageSwipe() {
 		handler.removeMessages(START_SWIPE_MSG);
-		startPageSwipe();
+		//startPageSwipe();
 	}
 
 	private class ViewPagerAdapter extends PagerAdapter {

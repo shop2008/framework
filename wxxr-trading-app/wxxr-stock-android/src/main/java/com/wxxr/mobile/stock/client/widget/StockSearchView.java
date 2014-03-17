@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.EditText;
@@ -26,18 +27,21 @@ import android.widget.RelativeLayout;
 import com.wxxr.mobile.stock.client.R;
 
 public class StockSearchView extends RelativeLayout implements
-		OnKeyboardActionListener, OnTouchListener, OnClickListener, OnScrollListener {
+		OnKeyboardActionListener, OnTouchListener, OnClickListener,
+		OnScrollListener {
 
 	private Context context;
 	private EditText editText;
 	private ImageView deleteImage;
 	private ListView listView;
+	private ListView nickListView;
 	private KeyboardView keyboardView;
 
 	private Keyboard eng;
 	private Keyboard search_num;
 	private boolean isEng;
 	private boolean isupper;
+
 
 	public StockSearchView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -58,6 +62,7 @@ public class StockSearchView extends RelativeLayout implements
 		editText = (EditText) findViewById(R.id.et_stock_search);
 		deleteImage = (ImageView) findViewById(R.id.bt_delete);
 		listView = (ListView) findViewById(R.id.lv_stock_list);
+		nickListView = (ListView) findViewById(R.id.lv_nick_list);
 		keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
 		progressLogic();
 	}
@@ -65,7 +70,7 @@ public class StockSearchView extends RelativeLayout implements
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-//		progressLogic(context);
+		// progressLogic(context);
 		initEditBox();
 	}
 
@@ -78,12 +83,14 @@ public class StockSearchView extends RelativeLayout implements
 		keyboardView.setOnKeyboardActionListener(this);
 		keyboardView.setPreviewEnabled(false);
 		editText.setOnTouchListener(this);
+		nickListView.setOnTouchListener(this);
 		listView.setOnTouchListener(this);
-		setEditTextInputNull(editText);
+		setEditTextInputNull(editText, false);
 		deleteImage.setOnClickListener(this);
 	}
-	void setEditTextInputNull(EditText et) {
-		if(et == null)
+
+	void setEditTextInputNull(EditText et, boolean isFocusable) {
+		if (et == null)
 			return;
 		int sdkInt = Build.VERSION.SDK_INT;
 		if (sdkInt >= 11) {
@@ -91,8 +98,8 @@ public class StockSearchView extends RelativeLayout implements
 			try {
 				Method setShowSoftInputOnFocus = cls.getMethod(
 						"setShowSoftInputOnFocus", boolean.class);
-				setShowSoftInputOnFocus.setAccessible(false);
-				setShowSoftInputOnFocus.invoke(et, false);
+				setShowSoftInputOnFocus.setAccessible(true);
+				setShowSoftInputOnFocus.invoke(et, isFocusable);
 			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 			}
@@ -101,14 +108,17 @@ public class StockSearchView extends RelativeLayout implements
 				setSoftInputShownOnFocus = cls.getMethod(
 						"setSoftInputShownOnFocus", boolean.class);
 				setSoftInputShownOnFocus.setAccessible(true);
-				setSoftInputShownOnFocus.invoke(et, false);
+				setSoftInputShownOnFocus.invoke(et, isFocusable);
 			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 			}
 		} else {
-			et.setInputType(InputType.TYPE_NULL);
+			if (editText.getVisibility() == View.VISIBLE) {
+				et.setInputType(InputType.TYPE_NULL);
+			}
 		}
 	}
+
 	@Override
 	public void onKey(int primaryCode, int[] keyCodes) {
 		// TODO Auto-generated method stub
@@ -259,10 +269,20 @@ public class StockSearchView extends RelativeLayout implements
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			switch (v.getId()) {
 			case R.id.et_stock_search:
-				keyboardView.setVisibility(View.VISIBLE);
+				if (listView.getVisibility() == View.VISIBLE) {
+					keyboardView.setVisibility(View.VISIBLE);
+				} else {
+
+					setEditTextInputNull(editText, true);
+				}
 				break;
 			case R.id.lv_stock_list:
-				keyboardView.setVisibility(View.GONE);
+				if (listView.getVisibility() == View.VISIBLE) {
+					keyboardView.setVisibility(View.GONE);
+				}
+				break;
+			case R.id.lv_nick_list:
+				hideSoftKeyBoard();
 				break;
 			}
 		}
@@ -282,16 +302,41 @@ public class StockSearchView extends RelativeLayout implements
 		}
 	}
 
+	public void setKeyBoardViewVisible(boolean visible) {
+		if (keyboardView != null) {
+			keyboardView.setVisibility(visible ? View.VISIBLE : View.GONE);
+			if (editText != null) {
+				setEditTextInputNull(editText, !visible);
+			}
+		}
+
+	}
+
+	public void setTextHint(CharSequence charSequence) {
+		if (editText != null) {
+			editText.setText("");
+			editText.setHint(charSequence);
+		}
+	}
+
+	public void hideSoftKeyBoard() {
+		
+		InputMethodManager imm = ((InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE));
+		imm.hideSoftInputFromWindow(getWindowToken(), 0);
+
+	}
+
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("-----onScroll----");
 	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("-----scrollState----" + scrollState);
 	}
 }

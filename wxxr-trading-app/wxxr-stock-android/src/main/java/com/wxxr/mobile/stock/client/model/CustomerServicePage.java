@@ -41,7 +41,7 @@ public abstract class CustomerServicePage extends PageBase {
 	@Command(navigations={@Navigation(on="*", showDialog="Copy2ClipBoardDialogView")})
 	String constructUsByQQ(InputEvent event) {
 		//AppUtils.getService(IGenericContentService.class).showEmailUI("dxfdj@7500.com.cn");
-		AppUtils.getService(IGenericContentService.class).copyTextToClipBoard("297603313");
+		AppUtils.getService(IGenericContentService.class).copyTextToClipBoard("2092149934");
 		return "*";
 	}
 	

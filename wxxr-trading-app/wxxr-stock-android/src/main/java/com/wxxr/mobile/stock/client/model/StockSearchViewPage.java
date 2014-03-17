@@ -6,19 +6,19 @@ package com.wxxr.mobile.stock.client.model;
 import java.util.List;
 import java.util.Map;
 
+
+
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
-import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
-import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
-import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -33,7 +33,7 @@ import com.wxxr.mobile.stock.client.biz.StockSelection;
  * @author duzhen
  * 
  */
-@View(name = "stockSearchPage", withToolbar = true, description = "搜索股票", provideSelection = true)
+@View(name = "stockSearchPage",provideSelection = true)
 @AndroidBinding(type = AndroidBindingType.FRAGMENT_ACTIVITY, layoutId = "R.layout.stock_search_layout")
 public abstract class StockSearchViewPage extends PageBase implements IModelUpdater {
 
@@ -44,22 +44,52 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 
 	int type = 0;
 	
-	@Menu(items = { "left" })
-	private IMenu toolbar;
+	/*@Menu(items = { "left" })
+	private IMenu toolbar;*/
 
 	@Field(valueKey = "text", binding = "${key}")
 	String searchEdit;
 
+	@Field(valueKey= "text", attributes={
+			@Attribute(name = "hintText", value = "${nowSearchId == 0?'拼音/股票代码':'玩家昵称'}"),
+			@Attribute(name = "keyBoardViewVisible", value = "${nowSearchId == 0?true:false}"),
+			@Attribute(name = "keyBoardShow", value = "${keyboardShow}")
+	})
+	String stockSearchViewBody;
+	
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.searchStock(key)}")
 	SearchStockListBean searchListBean;
 
-	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
-	List<StockBaseInfoWrapper> searchList;
+	/**股票搜索按钮*/
+	@Field(valueKey="text", attributes = { @Attribute(name = "checked", value = "${nowSearchId == 0}")})
+	String stockBtn;
+	
+	
+	@Bean
+	boolean keyboardShow = false;
+	
+	/**玩家搜索按钮*/
+	@Field(valueKey="text", attributes = { @Attribute(name = "checked", value = "${nowSearchId == 1}")})
+	String playerBtn;
+	
+	@Bean
+	int nowSearchId = 0;
+	
+	
+/*	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
+	List<StockBaseInfoWrapper> searchList;*/
 
-	@Command(description = "Invoke when a toolbar item was clicked", 
+	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}", visibleWhen="${nowSearchId==0}")
+	List<StockBaseInfoWrapper> stockSearchList;
+	
+	
+	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}", visibleWhen="${nowSearchId==1}")
+	List<StockBaseInfoWrapper> nickNameSearchList;
+	
+	/*@Command(description = "Invoke when a toolbar item was clicked", 
 			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
 	String toolbarClickedLeft(InputEvent event) {
 		if (log.isDebugEnabled()) {
@@ -67,11 +97,12 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 		}
 		hide();
 		return null;
-	}
+	}*/
 
 	@OnShow
 	void initStockView() {
 		registerBean("key", "");
+		
 	}
 
 	@OnUIDestroy
@@ -119,5 +150,28 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 				}
 			}
 		}
+	}
+	
+	@Command
+	String back(InputEvent event) {
+		hide();
+		return null;
+	}
+	
+	@Command
+	String playerBtnClicked(InputEvent event) {
+		nowSearchId = 1;
+		registerBean("nowSearchId", nowSearchId);
+		return null;
+	}
+	
+	@Command
+	String stockBtnClicked(InputEvent event) {
+		keyboardShow = true;
+		registerBean("keyboardShow", keyboardShow);
+		
+		nowSearchId = 0;
+		registerBean("nowSearchId", nowSearchId);
+		return null;
 	}
 }
