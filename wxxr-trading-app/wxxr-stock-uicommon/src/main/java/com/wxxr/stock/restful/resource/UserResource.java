@@ -3,6 +3,8 @@
  */
 package com.wxxr.stock.restful.resource;
 
+import java.util.List;
+
 import com.wxxr.javax.ws.rs.Consumes;
 import com.wxxr.javax.ws.rs.GET;
 import com.wxxr.javax.ws.rs.POST;
@@ -12,6 +14,8 @@ import com.wxxr.javax.ws.rs.QueryParam;
 import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.SimpleResultVo;
+import com.wxxr.security.vo.UserParamVO;
+import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.json.RegQueryVO;
 
 /**
@@ -69,4 +73,10 @@ public interface UserResource {
 	@Produces({ "application/json;charset=utf-8" })
 	@Consumes({ "application/json" })
 	public SimpleResultVo registerWithPassword(RegQueryVO regInfo) throws RestBizException;
+	
+	@POST
+    @Path("/getMatchUsers")
+    @Produces( { "application/json" })
+	public List<UserVO> getUserByNickName(UserParamVO vo) throws Exception;
+
 }

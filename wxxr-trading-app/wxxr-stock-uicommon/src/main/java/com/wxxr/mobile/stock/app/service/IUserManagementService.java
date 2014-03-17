@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.stock.app.service;
 
+import java.util.List;
+
 import com.wxxr.mobile.stock.app.StockAppBizException;
 import com.wxxr.mobile.stock.app.bean.ClientInfoBean;
 import com.wxxr.mobile.stock.app.bean.GainBean;
@@ -11,6 +13,7 @@ import com.wxxr.mobile.stock.app.bean.GuideGainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import com.wxxr.mobile.stock.app.bean.SearchUserListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserSignBean;
@@ -128,4 +131,6 @@ public interface IUserManagementService {
 	GuideGainBean getGuideGainRule();
 	void getGuideGain();
 	GuideGainBean checkGuideGain();
+	
+	SearchUserListBean searchByNickName(String nickName);
 }

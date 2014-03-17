@@ -3,6 +3,7 @@
  */
 package com.wxxr.mobile.stock.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import com.wxxr.mobile.stock.app.bean.GuideGainBean;
 import com.wxxr.mobile.stock.app.bean.PersonalHomePageBean;
 import com.wxxr.mobile.stock.app.bean.PullMessageBean;
 import com.wxxr.mobile.stock.app.bean.RemindMessageBean;
+import com.wxxr.mobile.stock.app.bean.SearchUserListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserSignBean;
@@ -43,6 +45,7 @@ import com.wxxr.mobile.stock.app.command.CheckGuideGainCommand;
 import com.wxxr.mobile.stock.app.command.GetGuideGainCommand;
 import com.wxxr.mobile.stock.app.command.GetGuideGainRuleCommand;
 import com.wxxr.mobile.stock.app.command.GetUserSignMessageCommand;
+import com.wxxr.mobile.stock.app.command.SearchUserCommand;
 import com.wxxr.mobile.stock.app.command.SignUpCommand;
 import com.wxxr.mobile.stock.app.common.AsyncUtils;
 import com.wxxr.mobile.stock.app.common.BindableListWrapper;
@@ -74,6 +77,7 @@ import com.wxxr.mobile.stock.app.service.handler.RefresUserInfoHandler;
 import com.wxxr.mobile.stock.app.service.handler.RefreshUserInfoCommand;
 import com.wxxr.mobile.stock.app.service.handler.RegisterHandher;
 import com.wxxr.mobile.stock.app.service.handler.RestPasswordHandler;
+import com.wxxr.mobile.stock.app.service.handler.SearchUserCommandHandler;
 import com.wxxr.mobile.stock.app.service.handler.SignUpHandler;
 import com.wxxr.mobile.stock.app.service.handler.SubmitAuthCommand;
 import com.wxxr.mobile.stock.app.service.handler.SubmitPushMesasgeCommand;
@@ -99,6 +103,7 @@ import com.wxxr.mobile.stock.app.service.loader.UserClientInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.UserInfoLoader;
 import com.wxxr.mobile.stock.app.service.loader.VoucherLoader;
 import com.wxxr.security.vo.SimpleResultVo;
+import com.wxxr.security.vo.UserParamVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
@@ -175,6 +180,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private UserBean myUserInfo;
 
 	private UserSignBean userSignBean;
+	
+	
+	/**
+	 * 用户昵称查询结果
+	 */
+	private SearchUserListBean searchUserListBean = new SearchUserListBean();
 
 	// ============== module life cycle =================
 
@@ -196,6 +207,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				new UNReadRemindingMessageLoader());
 
 		registry.registerEntityLoader("myUserInfo", new UserInfoLoader());
+		
+	    //registry.registerEntityLoader("searchUserListBean", new SearchUserLoader());
 
 		getCommandExecutor().registerCommandHandler(UpPwdHandler.COMMAND_NAME,
 				new UpPwdHandler());
@@ -230,6 +243,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		getCommandExecutor().registerCommandHandler(
 				ReadPullMessageHandler.COMMAND_NAME,
 				new ReadPullMessageHandler());
+		
+		getCommandExecutor().registerCommandHandler(
+				SearchUserCommandHandler.COMMAND_NAME,
+				new SearchUserCommandHandler());
+		
 		context.getService(ICommandExecutor.class).registerCommandHandler(
 				SignUpCommand.COMMAND_NAME, new SignUpHandler());
 		context.getService(ICommandExecutor.class).registerCommandHandler(
@@ -1286,6 +1304,12 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 
 						}
 
+						@Override
+						public SearchUserListBean searchByNickName(String nickName) {
+							return ((IUserManagementService) holder
+									.getDelegate()).searchByNickName(nickName);
+						}
+
 					});
 				}
 				throw new IllegalArgumentException("Invalid service class :"
@@ -1488,6 +1512,35 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 					.getGuideGain());
 		}
 		return guideGain;
+	}
+	
+	@Override
+	public SearchUserListBean searchByNickName(String nickName) {
+
+		SearchUserCommand command = new SearchUserCommand();
+		UserParamVO vo = new UserParamVO();
+		vo.setNickName(nickName);
+		command.setUserParamVo(vo);
+		// AsyncUtils.execCommandAsyncInUI(getCommandExecutor(), command);
+		AsyncUtils.execCommandAsyncInUI(command, new IDataConverter<List<UserVO>, Object>() {
+			@Override
+			public Object convert(List<UserVO> vo) throws NestedRuntimeException {
+				if (vo != null) {
+					List<UserBean> list = new ArrayList<UserBean>();
+					for (UserVO userVO : vo) {
+						UserBean userBean = new UserBean();
+						userBean.setUsername(userVO.getUserName());
+						userBean.setNickName(userVO.getNickName());
+						userBean.setPhoneNumber(userVO.getMoblie());
+						list.add(userBean);
+					}
+					searchUserListBean.setSearchResult(list);
+				}
+				return searchUserListBean;
+			}
+		});
+		return searchUserListBean;
+
 	}
 
 }
