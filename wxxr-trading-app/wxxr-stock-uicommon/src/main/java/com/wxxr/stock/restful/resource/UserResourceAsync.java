@@ -3,6 +3,8 @@
  */
 package com.wxxr.stock.restful.resource;
 
+import java.util.List;
+
 import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.core.async.api.Async;
 import com.wxxr.security.vo.SimpleResultVo;
@@ -50,7 +52,7 @@ public interface UserResourceAsync {
 	
 	public Async<SimpleResultVo> registerWithPassword(RegQueryVO regInfo);
 	
-	public Async<UserVO> getUserByNickName(UserParamVO vo);
+	public Async<List<UserVO>> getUserByNickName(UserParamVO vo);
 
 			
 }
