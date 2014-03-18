@@ -23,7 +23,7 @@ import com.wxxr.mobile.core.ui.common.ListDecorator;
  */
 public class SearchUserListBean implements IBindableBean {
 	private final BindableBeanSupport emitter = new BindableBeanSupport(this);
-	private List<UserBean> searchResult;
+	private List<UserWrapper> searchResult;
 
 	@Override
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
@@ -46,11 +46,11 @@ public class SearchUserListBean implements IBindableBean {
 	 * @param searchResult
 	 *            the searchResult to set
 	 */
-	public void setSearchResult(List<UserBean> searchResult) {
-		List<UserBean> old = this.searchResult;
+	public void setSearchResult(List<UserWrapper> searchResult) {
+		List<UserWrapper> old = this.searchResult;
 		this.searchResult = searchResult;
 		if (this.searchResult != null) {
-			this.searchResult = new ListDecorator<UserBean>("searchResult", this.emitter, this.searchResult);
+			this.searchResult = new ListDecorator<UserWrapper>("searchResult", this.emitter, this.searchResult);
 		}
 		this.emitter.firePropertyChange("searchResult", old, this.searchResult);
 	}

@@ -40,6 +40,7 @@ import com.wxxr.mobile.stock.app.bean.SearchUserListBean;
 import com.wxxr.mobile.stock.app.bean.UserAssetBean;
 import com.wxxr.mobile.stock.app.bean.UserBean;
 import com.wxxr.mobile.stock.app.bean.UserSignBean;
+import com.wxxr.mobile.stock.app.bean.UserWrapper;
 import com.wxxr.mobile.stock.app.bean.VoucherBean;
 import com.wxxr.mobile.stock.app.command.CheckGuideGainCommand;
 import com.wxxr.mobile.stock.app.command.GetGuideGainCommand;
@@ -1526,13 +1527,11 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 			@Override
 			public Object convert(List<UserVO> vo) throws NestedRuntimeException {
 				if (vo != null) {
-					List<UserBean> list = new ArrayList<UserBean>();
+					List<UserWrapper> list = new ArrayList<UserWrapper>();
 					for (UserVO userVO : vo) {
-						UserBean userBean = new UserBean();
-						userBean.setUsername(userVO.getUserName());
-						userBean.setNickName(userVO.getNickName());
-						userBean.setPhoneNumber(userVO.getMoblie());
-						list.add(userBean);
+						UserWrapper userWrapper = new UserWrapper(userVO);
+						
+						list.add(userWrapper);
 					}
 					searchUserListBean.setSearchResult(list);
 				}
