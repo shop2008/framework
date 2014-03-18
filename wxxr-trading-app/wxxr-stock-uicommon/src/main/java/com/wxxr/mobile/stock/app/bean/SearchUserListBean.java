@@ -31,6 +31,10 @@ public class SearchUserListBean implements IBindableBean {
 
 	}
 
+	public List<UserWrapper> getSearchResult() {
+		return searchResult;
+	}
+
 	@Override
 	public boolean hasPropertyChangeListener(IPropertyChangeListener listener) {
 		return emitter.hasPropertyChangeListener(listener);
