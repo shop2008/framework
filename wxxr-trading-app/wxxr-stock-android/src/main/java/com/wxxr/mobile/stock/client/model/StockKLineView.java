@@ -172,7 +172,7 @@ public abstract class StockKLineView extends ViewBase implements ISelectionChang
 //				this.codeBean = stockSelection.getCode();
 //				this.nameBean = stockSelection.getName();
 //				this.marketBean = stockSelection.getMarket();
-				this.type = stockSelection.getType();
+				this.type = 0;//stockSelection.getType(); 2014-03-17 edit from email
 			}
 			registerBean("stockSelection", this.stockSelection);
 //			registerBean("codeBean", this.codeBean);

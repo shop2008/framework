@@ -1,5 +1,8 @@
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
@@ -8,6 +11,7 @@ import com.wxxr.mobile.core.ui.annotation.Menu;
 import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.UIItem;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IMenu;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
@@ -39,17 +43,27 @@ public abstract class CustomerServicePage extends PageBase {
 	}
 	
 	@Command(navigations={@Navigation(on="*", showDialog="Copy2ClipBoardDialogView")})
-	String constructUsByQQ(InputEvent event) {
+	CommandResult constructUsByQQ(InputEvent event) {
 		//AppUtils.getService(IGenericContentService.class).showEmailUI("dxfdj@7500.com.cn");
 		AppUtils.getService(IGenericContentService.class).copyTextToClipBoard("2092149934");
-		return "*";
+		CommandResult result = new CommandResult();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("message", "客服QQ号码已复制到剪切板");
+		result.setResult("*");
+		result.setPayload(map);
+		return result;
 	}
 	
 	@Command(navigations={@Navigation(on="*", showDialog="Copy2ClipBoardDialogView")})
-	String constructUsByWeChat(InputEvent event) {
+	CommandResult constructUsByWeChat(InputEvent event) {
 		//AppUtils.getService(IGenericContentService.class).showEmailUI("dxfdj@7500.com.cn");
 		AppUtils.getService(IGenericContentService.class).copyTextToClipBoard("duanxianfadajing");
-		return "*";
+		CommandResult result = new CommandResult();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("message", "客服微信号码已复制到剪切板");
+		result.setResult("*");
+		result.setPayload(map);
+		return result;
 	}
 	
 	

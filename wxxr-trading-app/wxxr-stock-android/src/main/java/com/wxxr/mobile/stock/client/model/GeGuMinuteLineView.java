@@ -209,23 +209,23 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 	
 	//卖
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice5:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String sellPrice5;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice4:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String sellPrice4;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice3:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String sellPrice3;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice2:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String sellPrice2;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.sellprice1:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.sellprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.sellprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String sellPrice1;
 	
@@ -242,23 +242,23 @@ public abstract class GeGuMinuteLineView extends ViewBase implements IModelUpdat
 
 	//买
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice5:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice5>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice5<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String buyPrice5;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice4:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice4>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice4<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String buyPrice4;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice3:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice3>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice3<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String buyPrice3;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice2:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice2>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice2<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String buyPrice2;
 	@Field(valueKey = "text", binding= "${quotationBean!=null?quotationBean.buyprice1:'0'}", converter = "stockLong2StringAutoUnitConvertor", attributes={
-			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/gray'}")
+			@Attribute(name = "textColor", value="${(quotationBean!=null && quotationBean.buyprice1>quotationBean.close)?'resourceId:color/stock_up':(quotationBean!=null && quotationBean.buyprice1<quotationBean.close)?'resourceId:color/stock_down':'resourceId:color/white'}")
 			})
 	String buyPrice1;
 	

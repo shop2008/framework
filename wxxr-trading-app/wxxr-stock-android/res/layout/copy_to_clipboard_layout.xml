@@ -15,7 +15,8 @@
         android:padding="8dp"
         android:text="已成功复制到剪贴板"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        bind:field="message" />
 
 
     <LinearLayout

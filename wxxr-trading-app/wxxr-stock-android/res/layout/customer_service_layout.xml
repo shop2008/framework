@@ -102,7 +102,7 @@
                 android:id="@+id/label_qq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="官方QQ群"
+                android:text="客服QQ号"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
