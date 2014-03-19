@@ -42,6 +42,7 @@ public class StockSearchView extends RelativeLayout implements
 	private boolean isEng;
 	private boolean isupper;
 
+	private EditText nickSearchEdit;
 
 	public StockSearchView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -60,6 +61,7 @@ public class StockSearchView extends RelativeLayout implements
 	 */
 	private void initEditBox() {
 		editText = (EditText) findViewById(R.id.et_stock_search);
+		nickSearchEdit = (EditText) findViewById(R.id.et_nick_search);
 		deleteImage = (ImageView) findViewById(R.id.bt_delete);
 		listView = (ListView) findViewById(R.id.lv_stock_list);
 		nickListView = (ListView) findViewById(R.id.lv_nick_list);
@@ -83,6 +85,7 @@ public class StockSearchView extends RelativeLayout implements
 		keyboardView.setOnKeyboardActionListener(this);
 		keyboardView.setPreviewEnabled(false);
 		editText.setOnTouchListener(this);
+		nickSearchEdit.setOnTouchListener(this);
 		nickListView.setOnTouchListener(this);
 		listView.setOnTouchListener(this);
 		setEditTextInputNull(editText, false);
@@ -269,33 +272,34 @@ public class StockSearchView extends RelativeLayout implements
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			switch (v.getId()) {
 			case R.id.et_stock_search:
-				if (listView.getVisibility() == View.VISIBLE) {
-					keyboardView.setVisibility(View.VISIBLE);
-				} else {
-
-					setEditTextInputNull(editText, true);
-				}
+			    keyboardView.setVisibility(View.VISIBLE);
 				break;
 			case R.id.lv_stock_list:
-				if (listView.getVisibility() == View.VISIBLE) {
-					keyboardView.setVisibility(View.GONE);
-				}
+				keyboardView.setVisibility(View.GONE);
 				break;
 			case R.id.lv_nick_list:
 				hideSoftKeyBoard();
 				break;
+				
+			case R.id.et_nick_search:
+				setEditTextInputNull(nickSearchEdit, true);
+				break;
 			}
+			
+			
 		}
 		return false;
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
 		case R.id.bt_delete:
-			editText.setText(null);
+			if(editText.getVisibility() == View.VISIBLE)
+				editText.setText(null);
+			if(nickSearchEdit.getVisibility() == View.VISIBLE)
+				nickSearchEdit.setText(null);
 			break;
 		default:
 			break;
@@ -305,18 +309,8 @@ public class StockSearchView extends RelativeLayout implements
 	public void setKeyBoardViewVisible(boolean visible) {
 		if (keyboardView != null) {
 			keyboardView.setVisibility(visible ? View.VISIBLE : View.GONE);
-			if (editText != null) {
-				setEditTextInputNull(editText, !visible);
-			}
 		}
 
-	}
-
-	public void setTextHint(CharSequence charSequence) {
-		if (editText != null) {
-			editText.setText("");
-			editText.setHint(charSequence);
-		}
 	}
 
 	public void hideSoftKeyBoard() {
@@ -324,6 +318,7 @@ public class StockSearchView extends RelativeLayout implements
 		InputMethodManager imm = ((InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE));
 		imm.hideSoftInputFromWindow(getWindowToken(), 0);
+		setEditTextInputNull(nickSearchEdit, true);
 
 	}
 
@@ -331,12 +326,11 @@ public class StockSearchView extends RelativeLayout implements
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
-		System.out.println("-----onScroll----");
+		
 	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
-		System.out.println("-----scrollState----" + scrollState);
 	}
 }

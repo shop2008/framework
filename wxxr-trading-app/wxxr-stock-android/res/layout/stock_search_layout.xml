@@ -87,6 +87,25 @@
                 android:textSize="18sp"
                 bind:field="searchEdit"
                 bind:on_TextChanged="searchTextChanged" />
+            
+            <EditText
+                android:id="@+id/et_nick_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_stock_input"
+                android:drawableLeft="@drawable/menu_search"
+                android:drawablePadding="4dip"
+                android:gravity="left|center_vertical"
+                android:hint="玩家昵称"
+                android:imeOptions="actionSearch"
+                android:maxLength="6"
+                android:padding="6dip"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="nickSearchEdit"
+                bind:on_ActionDone="inputDoneAndSearch"
+                />
 
             <ImageView
                 android:id="@+id/bt_delete"
@@ -138,7 +157,7 @@
                 android:visibility="gone"
                 bind:field="nickNameSearchList"
                 bind:itemViewId="NickNameSearchItemView"
-                bind:on_ItemClick="handleItemClick" >
+                bind:on_ItemClick="handleNickItemClick" >
             </ListView>
         </FrameLayout>
 

@@ -3,29 +3,38 @@
  */
 package com.wxxr.mobile.stock.client.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
+import com.wxxr.mobile.android.app.AppUtils;
 import com.wxxr.mobile.android.ui.AndroidBindingType;
 import com.wxxr.mobile.android.ui.annotation.AndroidBinding;
 import com.wxxr.mobile.core.log.api.Trace;
+import com.wxxr.mobile.core.security.api.IUserIdentityManager;
+import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Bean;
 import com.wxxr.mobile.core.ui.annotation.Bean.BindingType;
-import com.wxxr.mobile.core.ui.annotation.Attribute;
 import com.wxxr.mobile.core.ui.annotation.Command;
 import com.wxxr.mobile.core.ui.annotation.Field;
+import com.wxxr.mobile.core.ui.annotation.Navigation;
 import com.wxxr.mobile.core.ui.annotation.OnShow;
 import com.wxxr.mobile.core.ui.annotation.OnUIDestroy;
 import com.wxxr.mobile.core.ui.annotation.View;
+import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
 import com.wxxr.mobile.core.ui.common.PageBase;
+import com.wxxr.mobile.core.util.ObjectUtils;
+import com.wxxr.mobile.core.util.StringUtils;
 import com.wxxr.mobile.stock.app.bean.SearchStockListBean;
+import com.wxxr.mobile.stock.app.bean.SearchUserListBean;
 import com.wxxr.mobile.stock.app.bean.StockBaseInfoWrapper;
+import com.wxxr.mobile.stock.app.bean.UserWrapper;
 import com.wxxr.mobile.stock.app.service.IInfoCenterManagementService;
+import com.wxxr.mobile.stock.app.service.IUserManagementService;
 import com.wxxr.mobile.stock.client.biz.StockSelection;
+import com.wxxr.mobile.stock.client.utils.Constants;
 
 /**
  * 股票搜索页面
@@ -42,16 +51,17 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Bean
 	String key;
 
+	@Bean
+	String nickKey;
 	int type = 0;
 	
 	/*@Menu(items = { "left" })
 	private IMenu toolbar;*/
 
-	@Field(valueKey = "text", binding = "${key}")
+	@Field(valueKey = "text", binding = "${key}", visibleWhen="${nowSearchId==0?true:false}")
 	String searchEdit;
 
 	@Field(valueKey= "text", attributes={
-			@Attribute(name = "hintText", value = "${nowSearchId == 0?'拼音/股票代码':'玩家昵称'}"),
 			@Attribute(name = "keyBoardViewVisible", value = "${nowSearchId == 0?true:false}"),
 			@Attribute(name = "keyBoardShow", value = "${keyboardShow}")
 	})
@@ -60,9 +70,17 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@Bean(type = BindingType.Service)
 	IInfoCenterManagementService infoCenterService;
 
+	@Bean(type = BindingType.Service)
+	IUserManagementService usrService;
+	
+	
 	@Bean(type = BindingType.Pojo, express = "${infoCenterService.searchStock(key)}")
 	SearchStockListBean searchListBean;
 
+	@Bean(type = BindingType.Pojo, express = "${usrService.searchByNickName(nickKey)}")
+	SearchUserListBean searchUserBean;
+	
+	
 	/**股票搜索按钮*/
 	@Field(valueKey="text", attributes = { @Attribute(name = "checked", value = "${nowSearchId == 0}")})
 	String stockBtn;
@@ -79,6 +97,12 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	int nowSearchId = 0;
 	
 	
+	
+	
+	
+	@Field(valueKey="text", binding="${nickKey}", visibleWhen="${nowSearchId==1?true:false}")
+	String nickSearchEdit;
+	
 /*	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}")
 	List<StockBaseInfoWrapper> searchList;*/
 
@@ -86,8 +110,8 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	List<StockBaseInfoWrapper> stockSearchList;
 	
 	
-	@Field(valueKey = "options", binding = "${searchListBean != null ? searchListBean.searchResult : null}", visibleWhen="${nowSearchId==1}")
-	List<StockBaseInfoWrapper> nickNameSearchList;
+	@Field(valueKey = "options", binding = "${searchUserBean != null ? searchUserBean.searchResult : null}", visibleWhen="${nowSearchId==1}")
+	List<UserWrapper> nickNameSearchList;
 	
 	/*@Command(description = "Invoke when a toolbar item was clicked", 
 			uiItems = { @UIItem(id = "left", label = "返回", icon = "resourceId:drawable/back_button_style", visibleWhen = "${true}") })
@@ -102,12 +126,13 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	@OnShow
 	void initStockView() {
 		registerBean("key", "");
-		
+		registerBean("nickKey", "");
 	}
 
 	@OnUIDestroy
 	void DestroyData() {
 		registerBean("key", "");
+		registerBean("nickKey", "");
 //		infoCenterService.searchStock(null);
 	}
 
@@ -160,6 +185,8 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	
 	@Command
 	String playerBtnClicked(InputEvent event) {
+		keyboardShow = false;
+		registerBean("keyboardShow", keyboardShow);
 		nowSearchId = 1;
 		registerBean("nowSearchId", nowSearchId);
 		return null;
@@ -172,6 +199,60 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 		
 		nowSearchId = 0;
 		registerBean("nowSearchId", nowSearchId);
+		return null;
+	}
+	
+	
+	@Command
+	String inputDoneAndSearch(InputEvent event) {
+		
+		if(event.getEventType().equals("ActionDone")) {
+			String textContent = (String) event.getProperty("textContent");
+			if(StringUtils.isNotEmpty(textContent)) {
+				nickKey = textContent;
+				registerBean("nickKey", nickKey);
+				if(usrService != null) {
+					usrService.searchByNickName(nickKey);
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Command(navigations = { @Navigation(on = "otherUserPage", showPage = "otherUserPage"),
+			@Navigation(on = "userPage", showPage = "userPage")})
+	CommandResult handleNickItemClick(InputEvent event) {
+		
+		if (event.getProperty("position") instanceof Integer) {
+			int position = (Integer) event.getProperty("position");
+			List<UserWrapper> users = null;
+			if(searchUserBean!=null) {
+				users = searchUserBean.getSearchResult();
+			}
+			
+			if(users != null && users.size()>0) {
+				UserWrapper userWrapper = users.get(position);
+				CommandResult result = new CommandResult();
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				boolean isSelf = false;
+				String userId = userWrapper.getMoblie();
+				String user = AppUtils.getService(IUserIdentityManager.class)
+						.getUserId();
+				isSelf = ObjectUtils.isEquals(userId, user);
+				map.put(Constants.KEY_USER_ID_FLAG, userId);
+				map.put(Constants.KEY_USER_NAME_FLAG, userWrapper.getNickName());
+				result.setPayload(map);
+				if (isSelf) {
+					result.setResult("userPage");
+				} else {
+					result.setResult("otherUserPage");
+				}
+				return result;
+			}
+			
+			return null;
+		}
+		
 		return null;
 	}
 }

@@ -24,6 +24,7 @@ import com.wxxr.mobile.stock.client.binding.BuyStockViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.CompoundButtonCheckChangeEventBinder;
 import com.wxxr.mobile.stock.client.binding.DelLineTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.DragSortListOnDragEventBinder;
+import com.wxxr.mobile.stock.client.binding.EditTextActionEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.EditTextFocusChangedEventBinder;
 import com.wxxr.mobile.stock.client.binding.EditableNavPageBtnClickedDecorator;
@@ -58,7 +59,6 @@ import com.wxxr.mobile.stock.client.binding.ToolbarTextAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPageAttributeUpdater;
 import com.wxxr.mobile.stock.client.binding.ViewPagerAdapterViewFieldBinder;
 import com.wxxr.mobile.stock.client.binding.ViewPagerIndexGroupFieldBinder;
-import com.wxxr.mobile.stock.client.view.StockSearchItemViewModelDescriptor;
 import com.wxxr.mobile.stock.client.widget.ArticleBodyViewKeys;
 import com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView;
 import com.wxxr.mobile.stock.client.widget.BuyStockViewKeys;
@@ -124,6 +124,7 @@ public class WorkbenchManagerModule extends AbstractWorkbenchManagerModule<IStoc
 		
 		mgr.registerFieldBinder("PinItemClick", new GroupByItemClickEventBinder());
 		mgr.registerFieldBinder("BoxChanged", new CompoundButtonCheckChangeEventBinder());
+		mgr.registerFieldBinder("ActionDone", new EditTextActionEventBinder());
 	}
 
 	@Override

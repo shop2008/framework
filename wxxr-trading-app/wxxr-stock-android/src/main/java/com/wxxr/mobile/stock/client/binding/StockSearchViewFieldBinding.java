@@ -18,12 +18,8 @@ public class StockSearchViewFieldBinding extends BasicFieldBinding {
 	@Override
 	protected void updateUI(boolean arg0) {
 		IUIComponent comp = getField();
-		String val = comp.getAttribute(StockSearchViewKeys.hintText);
 		StockSearchView view = (StockSearchView) getUIControl();
-		if (val != null) {
-			view.setTextHint(val);
-		}
-
+		
 		Boolean keyVal = (Boolean) comp
 				.getAttribute(StockSearchViewKeys.keyBoardViewVisible);
 		if (keyVal != null) {
