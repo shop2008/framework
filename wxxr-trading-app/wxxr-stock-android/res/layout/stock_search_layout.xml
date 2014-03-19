@@ -105,6 +105,7 @@
                 android:textSize="18sp"
                 bind:field="nickSearchEdit"
                 bind:on_ActionDone="inputDoneAndSearch"
+                bind:on_TextChanged="textIsNull"
                 />
 
             <ImageView
@@ -144,6 +145,7 @@
                 bind:on_ItemClick="handleItemClick" >
             </ListView>
 
+            
             <ListView
                 android:id="@+id/lv_nick_list"
                 android:layout_width="match_parent"
@@ -159,6 +161,18 @@
                 bind:itemViewId="NickNameSearchItemView"
                 bind:on_ItemClick="handleNickItemClick" >
             </ListView>
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               	android:text="无搜索结果"
+               	android:gravity="center"
+               	android:textSize="20sp"
+               	android:textStyle="bold"
+               	android:textColor="@color/white"
+               	bind:field="noDataBody"
+               	android:visibility="gone"
+                />
         </FrameLayout>
 
         <android.inputmethodservice.KeyboardView

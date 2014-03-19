@@ -24,6 +24,7 @@ import com.wxxr.mobile.core.ui.annotation.View;
 import com.wxxr.mobile.core.ui.api.CommandResult;
 import com.wxxr.mobile.core.ui.api.IModelUpdater;
 import com.wxxr.mobile.core.ui.api.InputEvent;
+import com.wxxr.mobile.core.ui.api.IUICommandHandler.ExecutionStep;
 import com.wxxr.mobile.core.ui.common.PageBase;
 import com.wxxr.mobile.core.util.ObjectUtils;
 import com.wxxr.mobile.core.util.StringUtils;
@@ -87,6 +88,17 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	
 	
 	@Bean
+	boolean isNullText = true;
+	
+	
+	@Bean
+	boolean isInputDone = false;
+	
+	@Field(valueKey="visible", binding="${nowSearchId==0?false:((searchUserBean!=null)&&(searchUserBean.searchResult!=null)&&(searchUserBean.searchResult.size()>0)?false:true)}", 
+			attributes={@Attribute(name="text", value="${isNullText==true?'请输入玩家昵称':(isInputDone==true?'无搜索结果':'请输入玩家昵称')}")})
+	boolean noDataBody;
+	
+	@Bean
 	boolean keyboardShow = false;
 	
 	/**玩家搜索按钮*/
@@ -133,6 +145,8 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	void DestroyData() {
 		registerBean("key", "");
 		registerBean("nickKey", "");
+		
+		//registerBean("searchUserBean", null);
 //		infoCenterService.searchStock(null);
 	}
 
@@ -189,6 +203,8 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 		registerBean("keyboardShow", keyboardShow);
 		nowSearchId = 1;
 		registerBean("nowSearchId", nowSearchId);
+		nickKey = "";
+		registerBean("nickKey", nickKey);
 		return null;
 	}
 	
@@ -204,17 +220,31 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 	
 	
 	@Command
-	String inputDoneAndSearch(InputEvent event) {
+	String inputDoneAndSearch(ExecutionStep step, InputEvent event, Object result) {
 		
 		if(event.getEventType().equals("ActionDone")) {
-			String textContent = (String) event.getProperty("textContent");
-			if(StringUtils.isNotEmpty(textContent)) {
-				nickKey = textContent;
-				registerBean("nickKey", nickKey);
-				if(usrService != null) {
-					usrService.searchByNickName(nickKey);
+			switch (step) {
+			case PROCESS:
+				String textContent = (String) event.getProperty("textContent");
+				
+				if(StringUtils.isNotEmpty(textContent)) {
+					nickKey = textContent;
+					registerBean("nickKey", nickKey);
+					if(usrService != null) {
+						usrService.searchByNickName(nickKey);
+					}
 				}
+				break;
+				
+			case NAVIGATION:
+				
+				isInputDone = true;
+				registerBean("isInputDone", isInputDone);
+				break;
+			default:
+				break;
 			}
+			
 		}
 		return null;
 	}
@@ -253,6 +283,27 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 			return null;
 		}
 		
+		return null;
+	}
+	
+	
+	@Command
+	String textIsNull(InputEvent event) {
+		
+		if(event.getEventType().equals("TextChanged")) {
+			String s = (String)event.getProperty("changedText");
+			
+			
+			if (StringUtils.isBlank(s)) {
+				isNullText = true;
+				registerBean("isNullText", isNullText);
+			} else {
+				isNullText = false;
+				registerBean("isNullText", isNullText);
+				isInputDone = false;
+				registerBean("isInputDone", isInputDone);
+			}
+		}
 		return null;
 	}
 }
