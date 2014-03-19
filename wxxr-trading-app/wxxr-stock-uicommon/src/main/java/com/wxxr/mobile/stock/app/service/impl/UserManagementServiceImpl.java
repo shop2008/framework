@@ -187,7 +187,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	/**
 	 * 用户昵称查询结果
 	 */
-	private SearchUserListBean searchUserListBean = new SearchUserListBean();
+	private SearchUserListBean searchUserListBean = null;
 
 	// ============== module life cycle =================
 
@@ -1519,6 +1519,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	@Override
 	public SearchUserListBean searchByNickName(String nickName) {
 		log.debug("=============================start searchByNickName("+nickName+")");
+		searchUserListBean = new SearchUserListBean();
 		SearchUserCommand command = new SearchUserCommand();
 		UserParamVO vo = new UserParamVO();
 		vo.setNickName(nickName);
@@ -1548,8 +1549,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				return searchUserListBean;
 			}
 		});
-//		log.debug("searchUserList="+(searchUserListBean.getSearchResult()==null?"null":searchUserListBean.getSearchResult().size()));
-//		return searchUserListBean;
+
 
 	}
 
