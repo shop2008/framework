@@ -1530,13 +1530,19 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				if (vo != null) {
 					List<UserWrapper> list = new ArrayList<UserWrapper>();
 					List<UserVO> userVOs = vo.getNickList();
-					for (UserVO userVO : userVOs) {
-						UserWrapper userWrapper = new UserWrapper(userVO);
+					if(userVOs != null){
+						 for (UserVO userVO : userVOs) {
+								UserWrapper userWrapper = new UserWrapper(userVO);
+								
+								list.add(userWrapper);
+						}
+						 searchUserListBean.setSearchResult(list);
+						 
 						
-						list.add(userWrapper);
 					}
-					searchUserListBean.setSearchResult(list);
+					
 				}
+					
 				
 				log.debug("searchUserList="+(searchUserListBean.getSearchResult()==null?"null":searchUserListBean.getSearchResult().size()));
 				return searchUserListBean;
