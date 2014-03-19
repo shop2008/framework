@@ -9,6 +9,7 @@ import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.core.async.api.Async;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UserParamVO;
+import com.wxxr.stock.crm.customizing.ejb.api.SearchNickNameVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.json.RegQueryVO;
 
@@ -52,7 +53,7 @@ public interface UserResourceAsync {
 	
 	public Async<SimpleResultVo> registerWithPassword(RegQueryVO regInfo);
 	
-	public Async<List<UserVO>> getUserByNickName(UserParamVO vo);
+	public Async<SearchNickNameVO> getUserByNickName(UserParamVO vo);
 
 			
 }

@@ -8,16 +8,10 @@
  */
 package com.wxxr.mobile.stock.app.service.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wxxr.mobile.core.async.api.IAsyncCallback;
 import com.wxxr.mobile.core.log.api.Trace;
 import com.wxxr.mobile.stock.app.command.SearchUserCommand;
-import com.wxxr.mobile.stock.app.service.handler.BasicCommandHandler.DelegateCallback;
-import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
-import com.wxxr.stock.restful.resource.StockUserResource;
-import com.wxxr.stock.restful.resource.StockUserResourceAsync;
+import com.wxxr.stock.crm.customizing.ejb.api.SearchNickNameVO;
 import com.wxxr.stock.restful.resource.UserResource;
 import com.wxxr.stock.restful.resource.UserResourceAsync;
 
@@ -26,12 +20,12 @@ import com.wxxr.stock.restful.resource.UserResourceAsync;
  * @author maruili
  * @createtime 2014-3-17 下午6:41:34
  */
-public class SearchUserCommandHandler extends BasicCommandHandler<List<UserVO>,SearchUserCommand>{
+public class SearchUserCommandHandler extends BasicCommandHandler<SearchNickNameVO,SearchUserCommand>{
 	private static final Trace log = Trace
 			.register("com.wxxr.mobile.stock.app.service.handler.SearchUserCommandHandler");
 	public static final String COMMAND_NAME = "SearchUserInfoCommand";
 	@Override
-	public void execute(SearchUserCommand cmd, IAsyncCallback<List<UserVO>> callback) {
+	public void execute(SearchUserCommand cmd, IAsyncCallback<SearchNickNameVO> callback) {
 	
 		getRestService(UserResourceAsync.class,UserResource.class).getUserByNickName(cmd.getUserParamVo()).onResult(callback);
 		

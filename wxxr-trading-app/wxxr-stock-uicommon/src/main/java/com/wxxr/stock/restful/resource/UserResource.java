@@ -15,6 +15,7 @@ import com.wxxr.javax.ws.rs.core.Response;
 import com.wxxr.mobile.stock.app.RestBizException;
 import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UserParamVO;
+import com.wxxr.stock.crm.customizing.ejb.api.SearchNickNameVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.restful.json.RegQueryVO;
 
@@ -77,6 +78,7 @@ public interface UserResource {
 	@POST
     @Path("/getMatchUsers")
     @Produces( { "application/json" })
-	public List<UserVO> getUserByNickName(UserParamVO vo) throws Exception;
+	@Consumes({ "application/json" })
+	public SearchNickNameVO getUserByNickName(UserParamVO vo) throws Exception;
 
 }

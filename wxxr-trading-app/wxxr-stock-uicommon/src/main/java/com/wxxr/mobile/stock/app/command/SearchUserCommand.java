@@ -13,6 +13,7 @@ import java.util.List;
 import com.wxxr.mobile.core.command.api.ICommand;
 import com.wxxr.mobile.stock.app.service.handler.SearchUserCommandHandler;
 import com.wxxr.security.vo.UserParamVO;
+import com.wxxr.stock.crm.customizing.ejb.api.SearchNickNameVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 
 /**
@@ -20,7 +21,7 @@ import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
  * @author maruili
  * @createtime 2014-3-17 下午4:44:28
  */
-public class SearchUserCommand implements ICommand<List<UserVO>>{
+public class SearchUserCommand implements ICommand<SearchNickNameVO>{
 	
 	private UserParamVO userParamVo;
 	
@@ -39,16 +40,17 @@ public class SearchUserCommand implements ICommand<List<UserVO>>{
 		return SearchUserCommandHandler.COMMAND_NAME;
 	}
 
-	@Override
-	public Class<List<UserVO>> getResultType() {
-		Class clazz=List.class;
-		return clazz;
-	}
+	
 
 	@Override
 	public void validate() {
 		
 		
+	}
+
+	@Override
+	public Class<SearchNickNameVO> getResultType() {
+		return SearchNickNameVO.class;
 	}
 
 }

@@ -107,6 +107,7 @@ import com.wxxr.security.vo.SimpleResultVo;
 import com.wxxr.security.vo.UserParamVO;
 import com.wxxr.stock.common.valobject.ResultBaseVO;
 import com.wxxr.stock.crm.customizing.ejb.api.ActivityUserVo;
+import com.wxxr.stock.crm.customizing.ejb.api.SearchNickNameVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserAttributeVO;
 import com.wxxr.stock.crm.customizing.ejb.api.UserVO;
 import com.wxxr.stock.notification.ejb.api.MessageVO;
@@ -1517,28 +1518,32 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	
 	@Override
 	public SearchUserListBean searchByNickName(String nickName) {
-
+		log.debug("=============================start searchByNickName("+nickName+")");
 		SearchUserCommand command = new SearchUserCommand();
 		UserParamVO vo = new UserParamVO();
 		vo.setNickName(nickName);
 		command.setUserParamVo(vo);
-		// AsyncUtils.execCommandAsyncInUI(getCommandExecutor(), command);
-		AsyncUtils.execCommandAsyncInUI(command, new IDataConverter<List<UserVO>, Object>() {
+		return AsyncUtils.execCommandAsyncInUI(command, new IDataConverter<SearchNickNameVO, SearchUserListBean>() {
 			@Override
-			public Object convert(List<UserVO> vo) throws NestedRuntimeException {
+			public SearchUserListBean convert(SearchNickNameVO vo) throws NestedRuntimeException {
+	
 				if (vo != null) {
 					List<UserWrapper> list = new ArrayList<UserWrapper>();
-					for (UserVO userVO : vo) {
+					List<UserVO> userVOs = vo.getNickList();
+					for (UserVO userVO : userVOs) {
 						UserWrapper userWrapper = new UserWrapper(userVO);
 						
 						list.add(userWrapper);
 					}
 					searchUserListBean.setSearchResult(list);
 				}
+				
+				log.debug("searchUserList="+(searchUserListBean.getSearchResult()==null?"null":searchUserListBean.getSearchResult().size()));
 				return searchUserListBean;
 			}
 		});
-		return searchUserListBean;
+//		log.debug("searchUserList="+(searchUserListBean.getSearchResult()==null?"null":searchUserListBean.getSearchResult().size()));
+//		return searchUserListBean;
 
 	}
 
