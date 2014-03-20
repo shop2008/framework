@@ -225,6 +225,9 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 		if(event.getEventType().equals("ActionDone")) {
 			switch (step) {
 			case PROCESS:
+			
+				isInputDone = true;
+				registerBean("isInputDone", isInputDone);
 				String textContent = (String) event.getProperty("textContent");
 				
 				if(StringUtils.isNotEmpty(textContent)) {
@@ -237,9 +240,6 @@ public abstract class StockSearchViewPage extends PageBase implements IModelUpda
 				break;
 				
 			case NAVIGATION:
-				
-				isInputDone = true;
-				registerBean("isInputDone", isInputDone);
 				break;
 			default:
 				break;
