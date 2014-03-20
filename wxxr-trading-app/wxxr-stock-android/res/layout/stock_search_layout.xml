@@ -40,8 +40,6 @@
                 bind:field="stockBtn"
                 bind:on_Click="stockBtnClicked@StockSearchViewEventDecorator" />
 
-            <include layout="@layout/divider_vertical_line" />
-
             <RadioButton
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
