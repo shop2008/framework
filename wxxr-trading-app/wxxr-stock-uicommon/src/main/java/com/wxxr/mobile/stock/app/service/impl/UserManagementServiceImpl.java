@@ -184,11 +184,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 	private UserSignBean userSignBean;
 	
 	
-	/**
-	 * 用户昵称查询结果
-	 */
-	private SearchUserListBean searchUserListBean = new SearchUserListBean();
-
+	
 	// ============== module life cycle =================
 
 	public void startService() {
@@ -1523,6 +1519,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 		UserParamVO vo = new UserParamVO();
 		vo.setNickName(nickName);
 		command.setUserParamVo(vo);
+		
+		final SearchUserListBean searchUserListBean = new SearchUserListBean();
 		return AsyncUtils.execCommandAsyncInUI(command, new IDataConverter<SearchNickNameVO, SearchUserListBean>() {
 			@Override
 			public SearchUserListBean convert(SearchNickNameVO vo) throws NestedRuntimeException {
@@ -1536,11 +1534,8 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 								
 								list.add(userWrapper);
 						}
-						 searchUserListBean.setSearchResult(list);
-						 
-						
 					}
-					
+					searchUserListBean.setSearchResult(list);
 				}
 					
 				
@@ -1548,8 +1543,7 @@ public class UserManagementServiceImpl extends AbstractModule<IStockAppContext>
 				return searchUserListBean;
 			}
 		});
-//		log.debug("searchUserList="+(searchUserListBean.getSearchResult()==null?"null":searchUserListBean.getSearchResult().size()));
-//		return searchUserListBean;
+
 
 	}
 

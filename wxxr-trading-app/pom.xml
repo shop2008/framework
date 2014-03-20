@@ -5,14 +5,14 @@
     <parent>
         <groupId>com.wxxr.mobile.core</groupId>
         <artifactId>wxxr-mobile-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.3-M1</version>
     </parent>
    <groupId>com.wxxr.mobile.stock</groupId>
    <artifactId>wxxr-stock-app</artifactId>
-   <version>1.0.1-SNAPSHOT</version>
+   <version>1.0.2-SNAPSHOT</version>
    <packaging>pom</packaging>
     <properties>
-        <application.version>1.0.1-SNAPSHOT</application.version>
+        <application.version>1.0.2-SNAPSHOT</application.version>
     </properties>
 
    <modules>
