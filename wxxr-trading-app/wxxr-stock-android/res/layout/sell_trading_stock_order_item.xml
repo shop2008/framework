@@ -33,28 +33,59 @@
             android:textSize="14sp"
             bind:field="currentPirce" />
 
-        <TextView
-            android:id="@+id/textView3"
+        <FrameLayout 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="--"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            bind:field="buy" />
+            >
+	        <TextView
+	            android:id="@+id/textView3"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:text="--"
+	            android:textColor="@color/white"
+	            android:textSize="14sp"
+	            bind:field="buy" />
 
-        <TextView
-            android:id="@+id/textView4"
+	        <TextView
+		            android:id="@+id/textView4"
+		            android:layout_width="fill_parent"
+		            android:layout_height="fill_parent"
+		            android:gravity="center"
+		            android:includeFontPadding="false"
+		            android:text="在途"
+		            android:textColor="@color/white"
+		            android:textSize="14sp"
+		            bind:field="buyDoing" />
+        </FrameLayout>
+        <FrameLayout 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="--"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            bind:field="gain" />
+            >
+	        <TextView
+	            android:id="@+id/textView4"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:includeFontPadding="false"
+	            android:text="--"
+	            android:textColor="@color/white"
+	            android:textSize="14sp"
+	            bind:field="gain" />
+	        
+	        <TextView
+	            android:id="@+id/textView4"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:includeFontPadding="false"
+	            android:text="在途"
+	            android:textColor="@color/white"
+	            android:textSize="14sp"
+	            bind:field="gainDoing" />
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -95,16 +126,32 @@
             android:textSize="14sp"
             bind:field="amount" />
 
-        <TextView
-            android:id="@+id/textView8"
+        
+        <FrameLayout 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="--"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            bind:field="gainRate" />
+            >
+	        <TextView
+	            android:id="@+id/textView8"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:text="--"
+	            android:textColor="@color/white"
+	            android:textSize="14sp"
+	            bind:field="gainRate" />
+        
+	        <TextView
+	            android:id="@+id/textView8"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:text="在途"
+	            android:textColor="@color/white"
+	            android:textSize="14sp"
+	            bind:field="gainRateDoing" />
+        </FrameLayout>
     </LinearLayout>
 
     <include layout="@layout/hlines" />
