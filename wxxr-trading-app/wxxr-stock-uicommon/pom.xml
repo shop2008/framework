@@ -5,7 +5,7 @@
     <parent>
         <artifactId>wxxr-stock-app</artifactId>
         <groupId>com.wxxr.mobile.stock</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<artifactId>wxxr-stock-uicommon</artifactId>
