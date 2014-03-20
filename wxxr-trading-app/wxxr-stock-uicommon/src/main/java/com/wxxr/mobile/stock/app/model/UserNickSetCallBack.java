@@ -8,7 +8,7 @@ public class UserNickSetCallBack {
 	
 	@NotNull
 	@ChineseChars
-	@Size(min=2,max=6)
+	@Size(min=3,max=6)
 	private String nickName;
 
 	public String getNickName() {
