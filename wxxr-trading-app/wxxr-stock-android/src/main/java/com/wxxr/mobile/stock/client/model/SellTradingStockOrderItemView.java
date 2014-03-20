@@ -95,10 +95,10 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	String changeRate;
 	
 	/** 委托价*/
-	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.buy:null}",converter="stockLong2StringConvertorYuan", visibleWhen="${stockTradingOrder==null?(isVirtual==false?false:true):(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==false?false:true):true)}")
+	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.buy:null}",converter="stockLong2StringConvertorYuan", visibleWhen="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?false:true):false}")
 	String buy;
 	
-	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==true?false:true):false):(isVirtual==true?false:true)}")
+	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?true:false):true}")
 	boolean buyDoing;
 	
 	/**委托数量*/
@@ -108,19 +108,19 @@ public abstract class SellTradingStockOrderItemView extends ViewBase implements 
 	/**当前收益*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.gain:null}",converter = "stockLong2StringConvertorYuan",attributes={
 			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.gain>0?'resourceId:color/stock_text_up':(stockTradingOrder.gain<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
-	}, visibleWhen="${stockTradingOrder==null?(isVirtual==false?false:true):(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==false?false:true):true)}")
+	}, visibleWhen="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?false:true):false}")
 	String gain;
 	
-	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==true?false:true):false):(isVirtual==true?false:true)}")
+	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?true:false):true}")
 	boolean gainDoing;
 	
 	/**当前收益率*/
 	@Field(valueKey="text",binding="${stockTradingOrder!=null?stockTradingOrder.gainRate:null}",converter = "stockLong2StringConvertorSpecial",attributes={
 			@Attribute(name = "textColor", value = "${stockTradingOrder==null?'resourceId:color/gray':stockTradingOrder.gainRate>0?'resourceId:color/stock_text_up':(stockTradingOrder.gainRate<0?'resourceId:color/stock_text_down':'resourceId:color/gray')}")
-	}, visibleWhen="${stockTradingOrder==null?(isVirtual==false?false:true):(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==false?false:true):true)}")
+	}, visibleWhen="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?false:true):false}")
 	String gainRate;
 	
-	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.buy==null&&stockTradingOrder.gain==null&&stockTradingOrder.gainRate==null?(isVirtual==true?false:true):false):(isVirtual==true?false:true)}")
+	@Field(valueKey="visible", binding="${stockTradingOrder!=null?(stockTradingOrder.status=='ON_WAY'?true:false):true}")
 	boolean gainRateDoing;
 	/**订单状态*/
 	String status;

@@ -81,7 +81,7 @@
 	            android:layout_height="fill_parent"
 	            android:gravity="center"
 	            android:includeFontPadding="false"
-	            android:text="在途"
+	            android:text="0.00元"
 	            android:textColor="@color/white"
 	            android:textSize="14sp"
 	            bind:field="gainDoing" />
@@ -147,7 +147,7 @@
 	            android:layout_width="fill_parent"
 	            android:layout_height="fill_parent"
 	            android:gravity="center"
-	            android:text="在途"
+	            android:text="0.00%"
 	            android:textColor="@color/white"
 	            android:textSize="14sp"
 	            bind:field="gainRateDoing" />
