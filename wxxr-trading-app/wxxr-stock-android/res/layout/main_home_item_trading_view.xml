@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/listview_selected_item1"
+    android:orientation="vertical" >
+
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+    	android:paddingLeft="2dp">
+	    <FrameLayout
+	        android:id="@+id/icon_layout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true" >
+	
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:layout_margin="8dp"
+	            android:src="@drawable/rz"
+	            bind:field="icon" />
+	    </FrameLayout>
+	
+	    <ImageView
+	        android:id="@+id/status"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:src="@drawable/rz"
+	        bind:field="status" />
+	
+	    <LinearLayout
+	        android:id="@+id/title_layout"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_centerVertical="true"
+	        android:layout_toRightOf="@id/icon_layout"
+	        android:gravity="center"
+	        android:orientation="vertical" >
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center" >
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="left"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="16sp"
+	                bind:field="title" />
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="2"
+	                android:gravity="left"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="14sp"
+	                bind:field="date" />
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="6dp"
+	            android:gravity="center" >
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:gravity="left"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="15sp"
+	                bind:field="name" />
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1.1"
+	                android:gravity="center"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="15sp"
+	                bind:field="incomeRate" />
+	
+	            <TextView
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="0.8"
+	                android:gravity="center"
+	                android:singleLine="true"
+	                android:text="--"
+	                android:textColor="@color/white"
+	                android:textSize="15sp"
+	                bind:field="income" />
+	        </LinearLayout>
+	    </LinearLayout>
+    </RelativeLayout>
+    <include layout="@layout/hlines"/>
+</LinearLayout>

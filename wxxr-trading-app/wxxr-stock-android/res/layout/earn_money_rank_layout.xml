@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            bind:field="acctRefreshView"
+            bind:on_PullRefresh="handleRefresh" >
+
+            <ListView
+                android:id="@+id/listView1"
+                style="@style/mListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:field="earnRankList@StockViewDecorator"
+                bind:itemViewId="earnRankListItemView"
+                bind:on_ItemClick="handleItemClick"
+                bind:updateAllId="resourceId:id/all"
+                bind:updateFaieldId="resourceId:id/failed"
+                bind:updatingViewId="resourceId:id/progress" >
+
+            </ListView>
+        </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+
+        <include layout="@layout/stock_loading_progress_layout" />
+    </FrameLayout>
+
+</LinearLayout>

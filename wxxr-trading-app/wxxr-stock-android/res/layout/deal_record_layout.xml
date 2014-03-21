@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+        
+   <com.wxxr.mobile.stock.client.widget.ScrollViewExtend 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fadingEdge="none">
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+			<LinearLayout
+		        android:id="@+id/tl_deal_record_list"
+		        android:layout_width="match_parent"
+		        android:layout_height="80dip" 
+		        bind:field="*"
+		        bind:on_Click="detailsAction"
+		        >
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    android:layout_weight="1"
+				    android:orientation="vertical">
+					<TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:text="@string/tv_apply_found_label" 
+		                android:gravity="center"
+		                android:textSize="14sp"
+		                android:textColor="@color/white"
+		                />
+				    <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:text="--" 
+		                android:gravity="center"
+		                bind:field="fund"
+		                android:textSize="14sp"
+		                android:textColor="@color/white"
+		                />
+				</LinearLayout>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#000000"/>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#2F2E30"/>
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    android:layout_weight="1"
+				    android:orientation="vertical">
+				    <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:gravity="center"
+		                android:text="@string/tv_profit_loss_rate_label" 
+		                android:textColor="@color/white"
+		                />
+		            <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:text="--" 
+		                android:gravity="center"
+		                android:textSize="14sp"
+		                bind:field="plRisk"
+		                android:textColor="@color/white"
+		                />
+				</LinearLayout>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#000000"/>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#2F2E30"/>
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    android:layout_weight="1"
+				    android:orientation="vertical">
+		            <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="match_parent"
+		                android:layout_weight="1"
+		                android:gravity="center"
+		                android:text="@string/tv_profit_loss_amount_label" 
+		                android:textColor="@color/white"
+		                />
+				    <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:text="--" 
+		                android:gravity="center"
+		                android:textSize="14sp"
+		                android:textColor="@color/white"
+		                bind:field="totalGain"
+		                />	
+				</LinearLayout>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#000000"
+				    android:visibility="gone"/>
+				<View android:layout_width="0.5dp"
+				    android:layout_height="fill_parent"
+				    android:background="#2F2E30"
+				    android:visibility="gone"/>
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    android:layout_weight="1"
+				    android:orientation="vertical"
+				    android:visibility="gone">
+		            <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="match_parent"
+		                android:layout_weight="1"
+		                android:gravity="center"
+		                android:text="实得收益" 
+		                android:textColor="@color/white"
+		                />
+				    <TextView
+		                android:layout_width="fill_parent"
+		                android:layout_height="fill_parent"
+		                android:layout_weight="1"
+		                android:text="--" 
+		                android:gravity="center"
+		                android:textSize="14sp"
+		                android:textColor="@color/white"
+		                bind:field="userGain"
+		                />	
+				</LinearLayout>				
+		    </LinearLayout>
+<!-- 		    <View android:layout_width="fill_parent" -->
+<!-- 		          android:layout_height="0.5dp" -->
+<!-- 		          android:background="#2F2E30"/> -->
+<!-- 			<LinearLayout  -->
+<!-- 		        android:layout_width="fill_parent" -->
+<!-- 		        android:layout_height="wrap_content" -->
+<!-- 		        android:orientation="horizontal" -->
+<!-- 		        android:background="#222325" -->
+<!-- 		        android:gravity="center_vertical" -->
+<!-- 		        android:paddingLeft="8dp" -->
+<!-- 		        > -->
+<!-- 				<TextView  -->
+<!-- 		            android:layout_width="fill_parent" -->
+<!-- 		            android:layout_height="32dp" -->
+<!-- 		            android:text="平安银行操作图" -->
+<!-- 		            android:textColor="#FFFFFF" -->
+<!-- 		            android:textSize="15sp" -->
+<!-- 		            android:gravity="center_vertical" -->
+<!-- 		            /> -->
+<!-- 			</LinearLayout> -->
+			<View android:layout_width="fill_parent"
+			      android:layout_height="0.5dp"
+			      android:background="#000000"/>
+		    <com.wxxr.mobile.stock.client.widget.imageViewPager 
+			    android:layout_width="fill_parent"
+			    android:layout_height="140dp"
+			    bind:field="imgData"
+			    android:background="@color/black">
+			</com.wxxr.mobile.stock.client.widget.imageViewPager>
+			<View android:layout_width="fill_parent"
+		          android:layout_height="0.5dp"
+		          android:background="#2F2E30"/>			
+		    <LinearLayout 
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:background="#222325"
+		        >
+		        <TextView 
+		            android:layout_width="fill_parent"
+		            android:layout_height="32dp"
+		            android:layout_weight="1"
+		            android:enabled="false"
+		            android:text="时间"
+		            android:textColor="#989e9e"
+		            android:gravity="center"
+		            android:textSize="15sp"
+		            />
+				<View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#000000"/>
+		        <View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#2F2E30"/>
+		        <TextView 
+		            android:layout_width="fill_parent"
+		            android:layout_height="32dp"
+		            android:layout_weight="1"
+		            android:enabled="false"
+		            android:text="股票"
+		            android:textColor="#989e9e"
+		            android:gravity="center"
+		            android:textSize="15sp"
+		            />
+				<View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#000000"/>
+		        <View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#2F2E30"/>
+		        <TextView 
+		            android:layout_width="fill_parent"
+		            android:layout_height="32dp"
+		            android:layout_weight="1"
+		            android:enabled="false"
+		            android:text="方向"
+		            android:textColor="#989e9e"
+		            android:gravity="center"
+		            android:textSize="15sp"
+		            />
+				<View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#000000"/>
+		        <View android:layout_width="0.5dp"
+		            android:layout_height="32dp"
+		            android:background="#2F2E30"/>
+		        <TextView 
+		            android:layout_width="fill_parent"
+		            android:layout_height="32dp"
+		            android:layout_weight="1"
+		            android:enabled="false"
+		            android:text="价量"
+		            android:textColor="#989e9e"
+		            android:gravity="center"
+		            android:textSize="15sp"
+		            />
+		    </LinearLayout>
+			<View android:layout_width="fill_parent"
+			      android:layout_height="0.5dp"
+			      android:background="#000000"/>		    
+		    <com.wxxr.mobile.stock.client.widget.AutoHeightListView
+		        android:id="@+id/lv_deal_record"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        style="@style/mListView"
+		        bind:itemViewId="TradingRecordDetailItemView"
+		        bind:field="tradingRecords"
+		        bind:on_ScrollChange="onScrollChange"
+		        bind:on_ItemClick="StockQuotationAction">
+		    </com.wxxr.mobile.stock.client.widget.AutoHeightListView>
+        </LinearLayout>
+   </com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
+</LinearLayout>

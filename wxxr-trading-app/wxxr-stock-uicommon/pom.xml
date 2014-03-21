@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>wxxr-stock-app</artifactId>
+        <groupId>com.wxxr.mobile.stock</groupId>
+        <version>1.0.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+	<artifactId>wxxr-stock-uicommon</artifactId>
+	<packaging>jar</packaging>
+	<version>${application.version}</version>
+	<name>wxxr-stock-uicommon</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-tools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-net</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-xstream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-jackson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-command</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.wxxr.mobile.core</groupId>
+			<artifactId>wxxr-mobile-synclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+    <build>
+        <!-- <finalName>${project.artifactId}</finalName> -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <generatedSourcesDirectory>target/generated</generatedSourcesDirectory>
+                    <annotationProcessors>
+                            <annotationProcessor>com.wxxr.mobile.core.tools.MainAnnotationProcessor</annotationProcessor>
+                    </annotationProcessors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

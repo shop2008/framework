@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+    <com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        bind:field="inputView" >
+
+        <com.wxxr.mobile.stock.client.widget.NewScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="220dp" >
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/content_frame"
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            bind:field="contents" 
+                            bind:on_PageChange="handlerPageChanged">
+                        </android.support.v4.view.ViewPager>
+						<com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup
+		                     android:layout_width="wrap_content"
+		                     android:layout_height="wrap_content"
+		                     android:layout_gravity="center_horizontal|bottom"
+		                     bind:field="indexGroup" >
+		                </com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup>                        
+                   	</FrameLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#212121" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#4e4e4c"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp" >
+
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/inpunt_bj"
+                        android:popupBackground="@color/page_background_color"
+                        android:spinnerMode="dropdown"
+                        bind:field="stockTradingOrder"
+                        bind:itemViewId="dropDownMenuItem"
+                        bind:on_SpinnerItemSelected="dropDownMenuListItemClick" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" >
+
+                            <EditText
+                                android:id="@+id/price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/inpunt_2"
+                                android:ems="10"
+                                android:inputType="numberDecimal"
+                                android:maxLength="6"
+                                android:paddingLeft="8dp"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                bind:field="newprice"
+                                bind:on_TextChanged="priceTextChanged" >
+                            </EditText>
+
+                            <FrameLayout
+		                        android:id="@+id/refresh_layout"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:background="@drawable/refresh_button_style"
+		                        bind:field="*"
+		                        bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator" >
+		
+		                    <ImageView
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:src="@drawable/refresh" 
+		                        bind:field="refresh" />
+		
+		                    <ProgressBar
+		                        style="?android:attr/progressBarStyleSmall"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:visibility="gone"
+		                        bind:field="progress" />
+		                </FrameLayout>
+                        </LinearLayout>
+
+                        <RadioGroup
+                            android:id="@+id/radio_group"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dip"
+                            android:layout_weight="1"
+                            android:orientation="horizontal" >
+
+                            <RadioButton
+                                android:id="@+id/order_price"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/on_off_radiobuttn_left"
+                                android:button="@null"
+                                android:checked="true"
+                                android:gravity="center"
+                                android:text="@string/bt_hang_order_text"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                bind:field="isChecked"
+                                bind:on_Click="GuaDanOnClick" />
+
+                            <RadioButton
+                                android:id="@+id/market_price"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/on_off_radiobuttn_right"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="@string/bt_market_price_text"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                bind:field="isChecked1"
+                                bind:on_Click="ShiJiaOnClick" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/inpunt_bj"
+                        android:ems="10"
+                        android:hint="输入最大可卖股数"
+                        android:inputType="number"
+                        android:paddingLeft="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        bind:field="*"
+                        bind:on_TextChanged="countTextChanged" />
+
+
+                </LinearLayout>
+
+                <Button
+                     android:id="@+id/button1"
+                     android:layout_width="fill_parent"
+                     android:layout_height="40dp"
+                     android:layout_marginLeft="8dp"
+                     android:layout_marginRight="8dp"
+                     android:layout_marginTop="8dp"
+                     android:background="@drawable/blue_button_style"
+                     android:padding="0dp"
+                     android:text="下单卖出"
+                     android:textColor="@color/white"
+                     android:textSize="14sp"
+                     bind:field="isSellBuyBtn"
+                     bind:on_Click="sellStockClick@BuyStockClickedDecorator" />                
+                <com.wxxr.mobile.stock.client.widget.StockInputKeyboard
+                    android:id="@+id/keyboard_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dip"
+                    android:visibility="gone" >
+                </com.wxxr.mobile.stock.client.widget.StockInputKeyboard>
+            </LinearLayout>
+        </com.wxxr.mobile.stock.client.widget.NewScrollView>
+    </com.wxxr.mobile.stock.client.widget.BuyStockDetailInputView>
+ 
+</LinearLayout>

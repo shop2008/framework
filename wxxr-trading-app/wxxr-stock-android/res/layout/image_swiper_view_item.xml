@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    bind:field="*"
+    bind:on_Click="linkItemClick"
+    android:gravity="center"
+    >
+
+<!--     <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="文章标题" 
+        android:background="@drawable/slider_title_bj"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        bind:field="swiperTitle"
+        android:paddingLeft="8dp"
+        />
+ -->
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        bind:field="swiperImage"
+        />
+
+</LinearLayout>

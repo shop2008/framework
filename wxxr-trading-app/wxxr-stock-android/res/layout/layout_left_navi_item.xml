@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp" 
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
+		<ImageView 
+		        android:id="@id/iv_left_navi_item"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        bind:field="menuIcon"
+		        />
+	    <TextView 
+	        android:id="@id/tv_left_navi_item"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/slideMenuStyle"
+	        bind:field="menuLabel"
+	        />        
+    </LinearLayout>
+    <include layout="@layout/lines"/>
+</LinearLayout>

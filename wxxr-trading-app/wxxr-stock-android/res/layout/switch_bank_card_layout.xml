@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginBottom="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            bind:field="confirmedBody" 
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_account_name_label"
+                android:textColor="#F6F7F6"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_account_name_what"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:text="张XX"
+                android:textColor="#F6F7F6"
+                android:textSize="20sp"
+                bind:field="accountName" />
+        </LinearLayout>
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white" 
+            bind:field="unConfirmedBody"
+            >
+
+            <EditText
+                android:id="@+id/et_switch_account_bank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="用户名"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="alteredAccountName"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
+        
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white" >
+
+            <EditText
+                android:id="@+id/et_switch_account_bank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_switch_account_bank"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="bankName"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" >
+
+            <EditText
+                android:id="@+id/et_switch_account_bank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_switch_account_bank_addr"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="bankAddr"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" >
+
+            <EditText
+                android:id="@+id/et_switch_account_bank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:background="@null"
+                android:hint="@string/hint_switch_account_number"
+                android:singleLine="true"
+                android:textSize="15sp"
+                bind:field="bankNum"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        style="@style/LoginRegisterBtnStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:text="提 交 "
+        bind:field="*"
+        bind:on_Click="commit" />
+
+</LinearLayout>

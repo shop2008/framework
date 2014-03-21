@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/text_spinner_selected_item">
+
+    <TextView
+        android:id="@+id/money_text_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="--" 
+        bind:field="moneyValue"
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+	<View android:layout_width="fill_parent"
+	    android:layout_height="0.5dp"
+	    android:background="#E2E2E2"/>
+</LinearLayout>

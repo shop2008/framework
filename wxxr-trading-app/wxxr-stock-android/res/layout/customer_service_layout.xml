@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_construct_us"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rl_extract_cash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_customer_service"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            bind:field="*"
+            bind:on_Click="dialOfficialTel" >
+            
+            <ImageView 
+                android:id="@+id/icon_call_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/icon_call_pone"
+                />
+			
+            <TextView 
+                android:id="@+id/label_call_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="客服电话"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_alignTop="@id/icon_call_phone"
+                android:layout_toRightOf="@id/icon_call_phone"
+                />
+            
+            
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="服务时间：9:00-18:00"
+           	    android:textSize="15sp"
+           	    android:textColor="#A4A9A9"
+           	    android:layout_marginLeft="10dp"
+           	    android:layout_toRightOf="@id/icon_call_phone"
+           	    android:layout_alignBottom="@id/icon_call_phone"
+           	    />
+           	
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="010-57302539"
+           	    android:textSize="15sp"
+           	    android:textColor="@color/black"
+           	    android:textStyle="bold"
+           	    android:layout_marginRight="5dp"
+           	    android:layout_alignParentRight="true"
+           	    android:layout_centerVertical="true"
+           	    />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:background="@color/gray" />
+
+        <RelativeLayout
+            android:id="@+id/rl_extract_cash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_customer_service"
+            android:gravity="center"
+            bind:field="*"
+            bind:on_Click="constructUsByQQ" >
+
+            <ImageView 
+                android:id="@+id/icon_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/icon_qq"
+                />
+			
+            <TextView 
+                android:id="@+id/label_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="客服QQ号"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_alignTop="@id/icon_qq"
+                android:layout_toRightOf="@id/icon_qq"
+                />
+            
+            
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="欢迎！排行榜上的朋友都在这里"
+           	    android:textSize="15sp"
+           	    android:textColor="#A4A9A9"
+           	    android:layout_marginLeft="10dp"
+           	    android:layout_toRightOf="@id/icon_qq"
+           	    android:layout_alignBottom="@id/icon_qq"
+           	    />
+           	
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="2092149934"
+           	    android:textSize="15sp"
+           	    android:textColor="@color/black"
+           	    android:textStyle="bold"
+           	    android:layout_marginRight="5dp"
+           	    android:layout_alignParentRight="true"
+           	    android:layout_centerVertical="true"
+           	    />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:background="@color/gray" />
+
+
+       <RelativeLayout
+            android:id="@+id/rl_extract_cash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_customer_service"
+            android:gravity="center"
+            bind:field="*"
+            bind:on_Click="constructUsByWeChat" >
+
+            <ImageView 
+                android:id="@+id/icon_wechat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/icon_wechat"
+                />
+			
+            <TextView 
+                android:id="@+id/label_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="客服微信号"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_alignTop="@id/icon_wechat"
+                android:layout_toRightOf="@id/icon_wechat"
+                />
+            
+            
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="智能客服随时服务"
+           	    android:textSize="15sp"
+           	    android:textColor="#A4A9A9"
+           	    android:layout_marginLeft="10dp"
+           	    android:layout_toRightOf="@id/icon_wechat"
+           	    android:layout_alignBottom="@id/icon_wechat"
+           	    />
+           	
+           	<TextView 
+           	    android:layout_width="wrap_content"
+           	    android:layout_height="wrap_content"
+           	    android:text="duanxianfangdajing"
+           	    android:textSize="15sp"
+           	    android:textColor="@color/black"
+           	    android:textStyle="bold"
+           	    android:layout_marginRight="5dp"
+           	    android:layout_alignParentRight="true"
+           	    android:layout_centerVertical="true"
+           	    />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

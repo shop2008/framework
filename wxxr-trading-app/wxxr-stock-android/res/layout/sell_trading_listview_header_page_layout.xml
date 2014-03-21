@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+	<!-- 交易盘信息 开始 -->
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="80dp"
+	    bind:field="*"
+	    bind:on_Click="handleStockClick">
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:orientation="vertical">
+			<TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="申请资金" 
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                />	        
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="--"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                bind:field="applyFee" />	        
+	    </LinearLayout>
+		<include layout="@layout/vline"/> 
+		<LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:orientation="vertical">
+	        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="可用资金" 
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                />
+             <TextView
+                 android:id="@+id/textView5"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:layout_weight="1"
+                 android:gravity="center"
+                 android:text="--"
+                 android:textColor="@color/white"
+                 android:textSize="14sp"
+                 bind:field="avalibleFee" />	        
+	    </LinearLayout>
+		<include layout="@layout/vline"/>
+		<LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:orientation="vertical">
+	        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="总盈亏率" 
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                />
+	        <TextView
+                android:id="@+id/textView6"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="--"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                bind:field="gainRate" />
+	    </LinearLayout>
+		<include layout="@layout/vline"/> 
+		<LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:orientation="vertical">
+	        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="总盈亏额" 
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                />
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="--"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    bind:field="totalGain" />	        
+	    </LinearLayout>
+	</LinearLayout>
+	<!-- 交易盘信息 结束 -->
+    
+    <!-- 列表标题  开始 -->
+	<View android:layout_width="fill_parent"
+          android:layout_height="0.5dp"
+          android:background="#2F2E30"/>			
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#222325"
+        >
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="股票"
+            android:textColor="#989e9e"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="最新"
+            android:textColor="#989e9e"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="价量"
+            android:textColor="#989e9e"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+		<View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#000000"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="32dp"
+            android:background="#2F2E30"/>
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="盈亏"
+            android:textColor="#989e9e"
+            android:gravity="center"
+            android:textSize="15sp"
+            />
+    </LinearLayout>
+	<View android:layout_width="fill_parent"
+	      android:layout_height="0.5dp"
+	      android:background="#000000"/>
+	<!-- 列表标题  结束 -->	    
+</LinearLayout>

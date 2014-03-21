@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:background="@color/white" >
+
+            <ImageView
+                android:id="@+id/iv_phone"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="5dip"
+                android:src="@drawable/login_phone" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_toRightOf="@id/iv_phone"
+                android:background="@null"
+                android:hint="@string/hint_mobile_number"
+                android:inputType="number"
+                bind:field="mobileNum"
+                bind:on_FocusChanged="_updateValue" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:text="重置好的密码将直接以短信的方式发送到你的手机上"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+   	<Button 
+   	    android:layout_width="match_parent"
+   	    android:layout_height="60dp"
+   	    style="@style/WhiteBtnStyle"
+   	    android:layout_marginLeft="5dp"
+   	    android:layout_marginRight="5dp"
+   	    android:layout_marginTop="3dp"
+   	    android:text="点击发送密码到手机"
+   	    bind:field="findPasswordBtn"
+   	    bind:on_Click="sendPasswordToMobile"
+   	    />
+
+</LinearLayout>

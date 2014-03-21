@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
+    <com.wxxr.mobile.stock.client.widget.PullToRefreshView
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    bind:field="acctRefreshView"
+	    bind:on_PullRefresh="handleRefresh" >
+		<ListView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@id/lv_help_center_detail"
+	        bind:headerViewId="HelpCenterHeaderView"
+	        bind:itemViewId="helpCenterItemTextView"
+		    bind:field="helpArticles"
+	        bind:on_ItemClick="goWebPageOnItemClick"
+	        style="@style/mListView"
+	        >
+	    </ListView>	            
+    </com.wxxr.mobile.stock.client.widget.PullToRefreshView>
+</LinearLayout> 

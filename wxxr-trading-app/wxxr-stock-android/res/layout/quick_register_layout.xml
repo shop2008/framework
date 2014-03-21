@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white" >
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="5dip"
+            android:src="@drawable/login_phone" />
+
+        <EditText
+            android:id="@+id/et_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_toRightOf="@id/iv_phone"
+            android:background="@null"
+            android:hint="@string/hint_mobile_number"
+            android:inputType="number"
+            bind:field="mobileNum"
+            bind:on_FocusChanged="_updateValue" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:text="手机号用于登录和找回密码"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:id="@+id/edit_text1"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:background="@color/white" >
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="5dip"
+            android:src="@drawable/login_password" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_toRightOf="@id/iv_phone"
+            android:background="@null"
+            android:hint="输入新密码"
+            android:inputType="textPassword"
+            bind:field="newPassword"
+            bind:on_FocusChanged="_updateValue" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_below="@id/edit_text1"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="10dip"
+        android:background="@color/white" >
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="5dip"
+            android:src="@drawable/login_password" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_toRightOf="@id/iv_phone"
+            android:background="@null"
+            android:hint="再次输入新密码"
+            android:inputType="textPassword"
+            bind:field="reNewPassword"
+            bind:on_FocusChanged="_updateValue" />
+    </RelativeLayout>
+
+    
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+      	android:layout_marginLeft="10dp"
+      	android:layout_marginRight="10dp"
+        style="@style/LoginRegisterBtnStyle"
+        android:text="提  交"
+        bind:field="registerBtn"
+        bind:on_Click="commit" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_agree_or_not"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:background="@drawable/bg_cb_read_rule_or_not"
+            android:button="@null"
+            android:checked="true"
+            bind:field="readChecked"
+            bind:on_Click="setReadChecked" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:text="@string/tv_have_read_rule_text"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_trade_rule_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_register_rules"
+            android:textColor="@color/light_blue"
+            bind:field="*"
+            bind:on_Click="registerRules" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

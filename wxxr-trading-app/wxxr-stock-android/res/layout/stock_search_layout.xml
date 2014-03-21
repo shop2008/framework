@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background_color"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="44dp"
+        android:background="#1F2122" >
+
+        <ImageButton
+            android:id="@id/ib_toggle_left_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="@null"
+            android:src="@drawable/back_button_style"
+            bind:field="*"
+            bind:on_Click="back" />
+
+        <RadioGroup
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/stock_search_seletor"
+                android:button="@null"
+                android:gravity="center"
+                android:text="股票"
+                bind:field="stockBtn"
+                bind:on_Click="stockBtnClicked@StockSearchViewEventDecorator" />
+
+            <RadioButton
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/nick_search_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="玩家"
+                bind:field="playerBtn"
+                bind:on_Click="playerBtnClicked" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <com.wxxr.mobile.stock.client.widget.StockSearchView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color" 
+        bind:field="stockSearchViewBody"
+        >
+
+        <RelativeLayout
+            android:id="@+id/edit_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/champion_select"
+            android:gravity="center_vertical"
+            android:padding="4dip" >
+
+            <EditText
+                android:id="@+id/et_stock_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_stock_input"
+                android:drawableLeft="@drawable/menu_search"
+                android:drawablePadding="4dip"
+                android:gravity="left|center_vertical"
+                android:hint="@string/search_hint"
+                android:maxLength="6"
+                android:padding="6dip"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="searchEdit"
+                bind:on_TextChanged="searchTextChanged" />
+            
+            <EditText
+                android:id="@+id/et_nick_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_stock_input"
+                android:drawableLeft="@drawable/menu_search"
+                android:drawablePadding="4dip"
+                android:gravity="left|center_vertical"
+                android:hint="玩家昵称"
+                android:imeOptions="actionSearch"
+                android:maxLength="6"
+                android:padding="6dip"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                bind:field="nickSearchEdit"
+                bind:on_ActionDone="inputDoneAndSearch"
+                bind:on_TextChanged="textIsNull"
+                />
+
+            <ImageView
+                android:id="@+id/bt_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dip"
+                android:src="@drawable/search_2_btn" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/list_divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/edit_box"
+            android:background="@drawable/home_list_divider" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/list_divider" >
+
+            <ListView
+                android:id="@+id/lv_stock_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="true"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                bind:field="stockSearchList"
+                bind:itemViewId="StockSearchItemView"
+                bind:on_ItemClick="handleItemClick" >
+            </ListView>
+
+            
+            <ListView
+                android:id="@+id/lv_nick_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/home_list_divider"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="true"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                android:visibility="gone"
+                bind:field="nickNameSearchList"
+                bind:itemViewId="NickNameSearchItemView"
+                bind:on_ItemClick="handleNickItemClick" >
+            </ListView>
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               	android:text="无搜索结果"
+               	android:gravity="center"
+               	android:textSize="20sp"
+               	android:textStyle="bold"
+               	android:textColor="@color/white"
+               	bind:field="noDataBody"
+               	android:visibility="gone"
+                />
+        </FrameLayout>
+
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:keyTextColor="@color/white"
+            android:keyTextSize="20sp"
+            android:labelTextSize="20sp" />
+    </com.wxxr.mobile.stock.client.widget.StockSearchView>
+
+</LinearLayout>

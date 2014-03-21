@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/listview_selected_item1"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="10dip" >
+
+    <TextView
+        android:id="@+id/tv_result_stock_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        bind:field="stockCode" />
+
+    <TextView
+        android:id="@+id/tv_result_stock_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/tv_result_stock_code"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        bind:field="stockName" />
+
+    <FrameLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        >
+	    <ImageButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/search_add_btn"
+	        android:focusable="false" 
+	        bind:field="unadd"
+	        bind:on_Click="addStock"/>
+
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="已添加" 
+	        android:textSize="15sp"
+	        bind:field="added"
+	        android:textColor="#46566d"
+	        android:visibility="invisible"/>
+        
+    </FrameLayout>
+
+</RelativeLayout>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+        android:background="@drawable/title_background">
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:text="参赛交易盘" 
+            android:gravity="center"
+            android:button="@null"
+            android:textSize="15sp"
+            android:checked="true"
+            bind:field="cansaiRadionBtn"
+            bind:on_Click="csQuickBuyClick"
+            android:layout_marginBottom="0.5dp"
+            android:background="@drawable/tab_left_btn_background"
+            />
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            bind:field="tiaozhanRadionBtn"
+            bind:on_Click="tzQuickBuyClick"
+            android:text="挑战交易盘" 
+            android:textSize="15sp"
+            android:background="@drawable/tab_right_btn_background"
+            android:layout_marginBottom="0.5dp"/>
+    </RadioGroup>      
+	<com.wxxr.mobile.stock.client.widget.ScrollViewExtend 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:scrollbars="none"
+	    android:fadingEdge="none">
+	    <LinearLayout android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	        <LinearLayout 
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:background="@drawable/stock_chart_bj">
+	             <android.support.v4.view.ViewPager
+                    android:id="@+id/content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="202dp"
+                    bind:field="contents" 
+                    bind:on_PageChange="handlerPageChanged" >
+                </android.support.v4.view.ViewPager>
+                <com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center_horizontal"
+                     android:layout_marginTop="6dp"
+                     android:layout_marginBottom="8dp"
+                     bind:field="indexGroup" >
+                </com.wxxr.mobile.stock.client.widget.ViewPagerIndexGroup>
+	        </LinearLayout>
+	        
+	        <LinearLayout 
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:padding="8dp"
+	            android:background="#20201e"
+	            >
+	            <TextView 
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                bind:field="nameCode"
+	                android:textColor="@color/white"
+				    android:textSize="14sp" 
+				    android:paddingLeft="8dp"
+				    android:gravity="center_vertical"
+	                android:background="@drawable/inpunt_bj"/>
+				<LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content" 
+			        android:layout_marginTop="8dp">
+			        <LinearLayout android:layout_width="fill_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1">
+						<TextView
+				            android:id="@+id/editText1"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:layout_weight="1"
+				            android:background="@drawable/inpunt_2"
+				            android:textColor="@color/white"
+				            android:textSize="14sp" 
+				            bind:field="newprice"
+				            android:gravity="center_vertical"
+				            android:paddingLeft="8dp">
+				        </TextView>	 
+				        <FrameLayout
+		                        android:id="@+id/refresh_layout"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:clickable="true"
+		                        android:background="@drawable/refresh_button_style" >
+		
+		                    <ImageView
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:src="@drawable/refresh" 
+		                        bind:field="refresh"
+                                bind:on_Click="handlerRefreshClicked@StockRefreshClickedDecorator"/>
+		
+		                    <ProgressBar
+		                        style="?android:attr/progressBarStyleSmall"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center"
+		                        android:visibility="gone"
+		                        bind:field="progress" />
+		                </FrameLayout>           
+			        </LinearLayout>
+			        
+		           <RadioGroup
+		                  android:layout_width="fill_parent"
+		                  android:layout_height="wrap_content"
+		                  android:layout_marginLeft="6dip"
+		                  android:layout_weight="1"
+		                  android:orientation="horizontal" >
+		
+		                  <RadioButton
+		                      android:layout_width="0dip"
+		                      android:layout_height="wrap_content"
+		                      android:layout_weight="1"
+		                      android:background="@drawable/left_btn_up"
+		                      android:button="@null"
+		                      android:gravity="center"
+		                      android:checked="false"
+		                      android:text="@string/bt_hang_order_text"
+		                      android:textColor="@color/tv_gray_color"
+		                      android:textSize="14sp" />
+		
+		                  <RadioButton
+		                      android:layout_width="0dip"
+		                      android:layout_height="wrap_content"
+		                      android:layout_weight="1"
+		                      android:background="@drawable/right_btn_up"
+		                      android:button="@null"
+		                      android:gravity="center"
+		                      android:checked="true"
+		                      android:text="@string/bt_market_price_text"
+		                      android:textColor="@color/white"
+		                      android:textSize="14sp" />
+		              </RadioGroup>
+			    </LinearLayout>
+			    
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    bind:field="showCanSai">
+				    <include layout="@layout/cansai_quick_buy_layout"/>
+				</LinearLayout>	    
+				<LinearLayout 
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:visibility="gone"
+				    bind:field="showTiaoZhan">
+				    <include layout="@layout/tiaozhan_quick_buy_layout"/>
+				</LinearLayout>	 
+	        </LinearLayout>
+		    
+	    </LinearLayout>
+	</com.wxxr.mobile.stock.client.widget.ScrollViewExtend>
+</LinearLayout>

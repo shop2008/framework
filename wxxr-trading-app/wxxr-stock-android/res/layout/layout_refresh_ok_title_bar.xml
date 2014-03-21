@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/refresh_ok_title"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            bind:field="status" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/push"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_background_color"
+        android:gravity="left|center_vertical"
+        android:maxLines="2"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="invisible"
+        bind:field="pushMessage" />
+
+</FrameLayout>

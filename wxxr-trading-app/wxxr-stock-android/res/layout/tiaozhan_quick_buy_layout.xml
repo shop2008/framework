@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<com.wxxr.mobile.stock.client.widget.TextSpinnerView
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:paddingLeft="8dp"
+        android:clickable="true"
+        android:enabled="true"
+        android:hint="申请金额"
+        bind:field="money"
+        bind:itemViewId="challengeTradeMoneyItem"
+        android:textColor="@color/white"
+        android:background="@drawable/inpunt_bj"
+        android:drawableRight="@drawable/inpunt_arrows"
+        android:drawablePadding="0dp"
+        bind:on_TextChanged="moneyTextChanged"
+        />
+    <RadioGroup
+        android:id="@+id/rg_balance_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp" 
+        >
+
+        <RadioButton
+            android:id="@+id/rb_negative_8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            bind:field="rate1"
+            bind:on_Click="rateClick1"
+            style="@style/create_buy_radion_button"
+            android:text="--" 
+            android:layout_marginRight="4dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_negative_12"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+           	style="@style/create_buy_radion_button"
+            android:text="--" 
+            bind:field="rate2"
+            bind:on_Click="rateClick2"
+            android:layout_marginRight="4dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_negative_5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/create_buy_radion_button"
+            android:text="--" 
+            bind:field="rate3"
+            bind:on_Click="rateClick3"
+            />
+    </RadioGroup>
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="买入数量：" 
+	        android:textSize="14sp"
+	        android:textColor="@color/white"
+	        android:layout_marginTop="8dp"/>
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="***股" 
+	        android:textSize="14sp"
+	        bind:field="TbuyNum"
+	        android:textColor="@color/white"
+	        android:layout_marginTop="8dp"/>	
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/bt_commit_creat_trade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="买入下单" 
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:background="@drawable/red_button_style"
+        bind:field="tiaozhanButton"
+        bind:on_Click="TiaoZhanBuyStockClick@BuyStockClickedDecorator"
+        />
+ 	<TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:text="@string/cansai_message" 
+        android:layout_marginTop="8dp"/>
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bu_message_radius"
+        android:gravity="center_vertical"
+        android:orientation="vertical" 
+        android:layout_marginTop="8dp"
+        android:padding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_marginBottom="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_composite_cost_label"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00元"
+                android:textSize="14sp"
+                bind:field="jiaoyi_zhf"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_assure_cost_label"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                bind:field="assure_visibility"/>
+			<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_jifen_cost_label"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black" 
+                android:visibility="gone"
+                android:textSize="14sp"
+                bind:field="jifen_visibility"
+                />
+            <TextView
+                android:id="@+id/tv_assure_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0元"
+                android:textSize="14sp"
+                bind:field="frozen_money"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout> 	   
+</LinearLayout>

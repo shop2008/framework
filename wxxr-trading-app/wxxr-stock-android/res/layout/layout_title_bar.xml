@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <View android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#2F2E30"/>
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="44dp"
+	    android:background="#1F2122"
+	    >
+	    <ImageButton
+	        android:id="@id/ib_toggle_left_menu"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:visibility="invisible"
+	        android:src="@drawable/list_button_style"
+	        android:background="@null"
+	        bind:field="leftIcon"
+	        bind:on_Click="" 
+	        android:layout_marginLeft="6dp"/>
+	
+	    <TextView
+	        android:id="@id/tv_title_content"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="@string/stock_app_title"
+	        android:textColor="#ffffff"
+	        android:textSize="17.0sp"
+	        android:textStyle="bold"
+	        bind:field="title" />
+	
+	    <ImageButton
+	        android:id="@id/ib_toggle_right_menu"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true"
+	        android:background="@null"
+	        android:layout_marginRight="6dp"
+	        android:src="@drawable/user_button_style"
+	        bind:field="rightIcon"
+	        android:visibility="invisible"
+	        bind:on_Click="" />
+	
+	    <ImageButton
+	        android:id="@id/ib_toggle_search"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="6dp"
+	        android:background="@null"
+	        android:visibility="invisible"
+	        android:src="@drawable/find_button_style"
+	        bind:field="searchIcon"
+	        bind:on_Click="" />
+	</RelativeLayout>
+	<View android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#000000"/>
+</LinearLayout>

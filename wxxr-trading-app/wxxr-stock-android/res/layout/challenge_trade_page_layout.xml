@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/context_bj"
+    android:padding="8dp"
+    >
+
+
+    <!-- 余额创建 bind:on_TextChanged="moneyTextChanged"-->
+
+    <com.wxxr.mobile.stock.client.widget.TextSpinnerView
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        bind:field="money"
+        bind:itemViewId="challengeTradeMoneyItem"
+        android:textSize="14sp"
+        android:paddingLeft="8dp"
+        android:clickable="true"
+        android:enabled="true"
+        android:hint="申请金额"
+        android:textColor="@color/white"
+        android:background="@drawable/inpunt_bj"
+        android:drawableRight="@drawable/inpunt_arrows"
+        android:drawablePadding="0dp"
+        bind:on_TextChanged="moneyTextChanged"/>
+
+    <RadioGroup
+        android:id="@+id/rg_balance_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp" 
+        >
+
+        <RadioButton
+            android:id="@+id/rb_negative_8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            style="@style/create_buy_radion_button"
+            android:text="--" 
+            bind:field="rate1"
+            bind:on_Click="rateClick1"
+            android:layout_marginRight="4dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_negative_12"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+           	style="@style/create_buy_radion_button"
+            android:text="--" 
+            bind:field="rate2"
+            bind:on_Click="rateClick2"
+            android:layout_marginRight="4dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_negative_5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/create_buy_radion_button"
+            android:text="--" 
+            bind:on_Click="rateClick3"
+            bind:field="rate3"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_creat_trade_explain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_creat_trade_explain"
+        android:textSize="14sp"
+        android:textColor="@color/white" 
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bu_message_radius"
+        android:gravity="center_vertical"
+        android:orientation="vertical" 
+        android:layout_marginTop="8dp"
+        android:padding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_composite_cost_label"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/tv_composite_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00元"
+                android:textSize="14sp"
+                bind:field="jiaoyi_zhf"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="3dp" 
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_assure_cost_label"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                bind:field="frozen_visibility"/>
+			<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="实盘积分应支付:"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/black" 
+                android:textSize="14sp"
+                android:visibility="gone"
+                bind:field="jifen_visibility"/>
+            <TextView
+                android:id="@+id/tv_assure_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0元"
+                android:textSize="14sp"
+                bind:field="frozen_money"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 提交申请 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical" 
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/bt_commit_creat_trade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_commit_apply_text" 
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            bind:field="submitBtnStatus"
+            bind:on_Click="submitDataClick@BuyStockClickedDecorator"
+            android:background="@drawable/red_button_style"
+            />
+    </LinearLayout>
+
+    <!-- 是否阅读并同意交易规则 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" 
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        >
+
+        <CheckBox
+            android:id="@+id/cb_agree_or_not"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/bg_cb_read_rule_or_not"
+            android:button="@null"
+            android:checked="true"
+            bind:field="isChecked"
+        	bind:on_Click="isCheckBoxChecked" 
+            />
+
+        <TextView
+            android:layout_marginLeft="5dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_have_read_rule_text"
+            android:textColor="@color/white" 
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_trade_rule_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_trade_rule_text"
+            android:textColor="@color/red" 
+            android:textSize="14sp"
+            bind:field="*"
+            android:enabled="true"
+            android:clickable="true"
+            bind:on_Click="showTradingRulePage"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_right_quotes" 
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_buy_result"
+    android:gravity="center"
+    >
+
+    <TextView 
+        android:id="@+id/tv_buy_result_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="平安银行9.98元买入成交2000股，成交金额19960元 14：27 2013-04-01"
+        />
+</LinearLayout>

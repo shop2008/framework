@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:padding="8dp"
+    android:background="@color/page_background_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="130dp"
+            android:orientation="vertical" 
+            android:layout_weight="1"
+            android:layout_marginRight="4dp"
+            bind:field="*"
+            bind:on_Click="handleSimulateTradingClick"
+            android:background="@drawable/bu_message_radius_01">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:text="参赛模拟盘" 
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:paddingTop="10dp"
+                android:background="@drawable/trading_01"/>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="模拟炒股可以赚真钱" 
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1万" 
+                    android:textColor="@color/red"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                	android:textSize="14sp"
+                	android:layout_marginLeft="4dp"
+                    android:text="积分即可申请实盘操作权" />
+                
+            </LinearLayout>
+			
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="130dp"
+            android:orientation="vertical" 
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            bind:field="*"
+            bind:on_Click="handleT1Click"
+            android:background="@drawable/bu_message_radius_01">
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:text="挑战交易盘T+1" 
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:paddingTop="10dp"
+                android:background="@drawable/trading_02"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10倍" 
+                    android:textColor="@color/red"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                	android:textSize="14sp"
+                	android:layout_marginLeft="4dp"
+                    android:text="杠杆放大您的收益" />
+                
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="模拟炒股可以赚真钱" 
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="8dp">
+        
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="130dp"
+            android:orientation="vertical" 
+            android:layout_weight="1"
+            android:layout_marginRight="4dp"
+            bind:field="*"
+            bind:on_Click="handleT3Click"
+            android:background="@drawable/bu_message_radius_01">
+			<TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:text="挑战交易盘T+3" 
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:paddingTop="10dp"
+                android:background="@drawable/trading_02"/>
+
+			<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                	android:textSize="14sp"
+                	android:layout_weight="1"
+                    android:text="您买入的股票最长持有期为" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4日" 
+                    android:textColor="@color/red"
+                    android:textSize="20sp"/>
+            </LinearLayout>			
+			<TextView
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="适合小波段股票操作！" 
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"/>
+						
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="130dp"
+            android:orientation="vertical" 
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            bind:field="*"
+            bind:on_Click="handleTDClick"
+            android:background="@drawable/bu_message_radius_01">
+			<TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:text="挑战交易盘T+D" 
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:paddingTop="10dp"
+                android:background="@drawable/trading_02"/>
+			<TextView
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="专为大资金量身打造最长可递延到" 
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"/>
+			<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T+20日" 
+                    android:textColor="@color/red"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                	android:textSize="14sp"
+                	android:layout_marginLeft="4dp"
+                    android:text="卖出" />
+                
+            </LinearLayout>			
+        </LinearLayout>        
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="javax.validation.constraints.AssertFalse.message">must be false</string>
+    <string name="javax.validation.constraints.AssertTrue.message">must be true</string>
+    <string name="javax.validation.constraints.DecimalMax.message">must be less than or equal to {value}</string>
+    <string name="javax.validation.constraints.DecimalMin.message">must be greater than or equal to {value}</string>
+    <string name="javax.validation.constraints.Digits.message">numeric value out of bounds (&lt;{integer} digits&gt;.&lt;{fraction} digits&gt; expected)</string>
+    <string name="javax.validation.constraints.Future.message">must be in the future</string>
+    <string name="javax.validation.constraints.Max.message">must be less than or equal to {value}</string>
+    <string name="javax.validation.constraints.Min.message">must be greater than or equal to {value}</string>
+    <string name="javax.validation.constraints.NotNull.message">may not be null</string>
+    <string name="javax.validation.constraints.Null.message">must be null</string>
+    <string name="javax.validation.constraints.Past.message">must be in the past</string>
+    <string name="javax.validation.constraints.Pattern.message">must match "{regexp}"</string>
+    <!-- <string name="javax.validation.constraints.Size.message">size must be between {min} and {max}</string> -->
+    <string name="javax.validation.constraints.Size.message">字符长度{min}~{max}位</string>
+    <string name="org.hibernate.validator.constraints.Email.message">not a well-formed email address</string>
+    <string name="org.hibernate.validator.constraints.Length.message">length must be between {min} and {max}</string>
+    <string name="org.hibernate.validator.constraints.NotBlank.message">may not be empty</string>
+    <string name="org.hibernate.validator.constraints.NotEmpty.message">may not be empty</string>
+    <string name="org.hibernate.validator.constraints.Range.message">must be between {min} and {max}</string>
+    <string name="org.hibernate.validator.constraints.URL.message">must be a valid URL</string>
+    <string name="org.hibernate.validator.constraints.CreditCardNumber.message">invalid credit card number</string>
+    <string name="org.hibernate.validator.constraints.ScriptAssert.message">script expression "{script}" didn\'t evaluate to true</string>
+    <string name="com.wxxr.mobile.stock.app.ChineseChars.message">字符只能是汉字</string>
+    <string name="com.wxxr.mobile.stock.app.NewPassword.message">请确保输入的密码正确</string>
+    
+    <string name="stock_app_title">短线放大镜</string>
+    <string name="app_name">短线放大镜</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="network_not_available">你要展示的页面需要从网络下载数据，你需要打开网络连接...</string>
+    <string name="network_time_out">加载数据超时，请稍后再试...</string>
+    <string name="login_required">您要求的数据、指令要在您登录才能执行，请登录...</string>
+    <string name="default_async_title">数据加载</string>
+    <string name="default_async_message">数据正在加载中，请稍候...</string>
+    
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <!-- left slidingMenu title -->
+    <string name="t_home">首页</string>
+    <string name="t_dsphb">大赛排行榜</string>
+    <string name="t_hqzx">行情中心</string>
+    <string name="t_zqb">赚钱榜</string>
+    <string name="t_gsb">高手榜</string>
+    <string name="t_jrrg">今日热股榜</string>
+    <string name="t_help">帮助中心</string>
+    <string name="t_myrz">我的认证</string>
+    <string name="t_myzh">我的账户</string>
+    <string name="t_jyjl">交易记录</string>
+    <string name="t_seting">设置</string>
+    <string name="tv_default_text">--</string>
+    <string name="loading_text">正在加载数据，请稍候</string>
+    <string name="loading_error_retry">数据加载失败,点击重试</string>
+    <!-- 首页 -->
+    <string name="tv_home_max_stock_label">最大持股</string>
+    <string name="tv_home_amount_label">额度</string>
+    <string name="tv_home_profit_loss">盈亏</string>
+    <!-- Action Bar -->
+    <string name="refresh_ok_title">交易数据更新成功</string>
+
+    <!-- 设置 -->
+    <string name="tv_title_setting">设置</string>
+    <!-- 创建交易盘 -->
+    <string name="tab_challenge_trade_text">挑战交易盘</string>
+    <string name="tab_join_trade_text">参赛交易盘</string>
+    <string name="tv_subscribe_amount_text">申购金额</string>
+    <string name="bt_negative_8_text">余额创建\n-8%止损</string>
+    <string name="bt_negative_12_text">余额创建\n-12%止损</string>
+    <string name="bt_negative_5_text">余额创建\n-5%止损</string>
+    <string name="tv_creat_trade_explain">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
+    <string name="tv_composite_cost_label">交易综合费应支付:</string>
+    <string name="tv_assure_cost_label">风险保证金应冻结:</string>
+    <string name="tv_jifen_cost_label">实盘积分应支付:</string>
+    <string name="bt_commit_apply_text">提交申请</string>
+    <string name="tv_have_read_rule_text">我已阅读并同意</string>
+    <string name="tv_trade_rule_text">交易规则</string>
+    <string name="tv_right_quotes"></string>
+    <string name="trade_unit">万</string>
+    <string name="tv_subscribe_amount_10w">申购金额:10万</string>
+    <string name="tv_stop_loss_percent_5">中止止损:  5%</string>
+    <string name="tv_stop_loss_explain_text">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算。</string>
+
+    <!-- 操作详情 -->
+    <string name="tab_deal_record_text">成交记录</string>
+    <string name="tab_audit_detial_text">清算详情</string>
+    <string name="tv_apply_found_label">申请资金</string>
+    <string name="tv_profit_loss_rate_label">总盈亏率</string>
+    <string name="tv_profit_loss_amount_label">总盈亏额</string>
+    <string name="tv_deal_record_time">时间</string>
+    <string name="tv_deal_record_name_code">名称代码</string>
+    <string name="tv_deal_record_direction">方向</string>
+    <string name="tv_deal_record_price_amount">价量</string>
+    <!-- 我的账户 -->
+    <string name="tv_title_user_account">我的帐户</string>
+    <string name="tv_balance_label">余额</string>
+    <string name="tv_freeze_label">冻结</string>
+    <string name="tv_usable_label">可用</string>
+    <string name="tv_extract_cash">提取现金</string>
+    <string name="tv_income_detail">收支明细</string>
+    <string name="tv_title_income_detail">收支明细</string>
+    <!-- 创建买入 -->
+    <string name="tv_title_create_trade">创建</string>
+    <!-- 搜索股票 -->
+    <string name="tv_title_stock_search">搜索股票</string>
+    <string name="search_hint">拼音/股票代码</string>
+	<!-- 买入股票 -->
+	<string name="buy_stock_count_hint">输入最大可买股数</string>
+	<string name="buy_stock_count_suspension_hint">最大可买股数:--</string>
+	<string name="confirm_cancel_order">是否要撤单</string>
+    <!-- 快速买入 -->
+    <string name="bt_hang_order_text">挂单</string>
+    <string name="bt_market_price_text">市价</string>
+    <string name="tv_buy_amount">买入金额：</string>
+    <string name="tv_join_game_explain">与积分交易盘一起每天只能创建一个，可参加炒股大赛赚实盘积分。</string>
+    <string name="label_buy_amount">买入数量:</string>
+    <string name="btn_buy_order_text">买入下单</string>
+    <string name="tv_stop_loss">中止止损:</string>
+    <string name="tv_titile_quik_buy_in">快速买入</string>
+
+    <!-- 提现认证 -->
+    <string name="tv_title_cash_auth">提现认证</string>
+    <string name="hint_account_name">户名（一经认证，不可修改）</string>
+    <string name="hint_account_bank">开户行（如工商银行、北京银行）</string>
+    <string name="hint_account_bank_addr">开户行所在地（如北京市、广东省番禺市）</string>
+    <string name="hint_account_number">银行卡号</string>
+    <string name="btn_cash_auth_text">认证</string>
+
+    <!-- 更换银行卡 -->
+    <string name="title_switch_bank_card">更换银行卡</string>
+    <string name="tv_account_name_label">户名：</string>
+    <string name="hint_switch_account_bank">开户行</string>
+    <string name="hint_switch_account_bank_addr">开户行所在地</string>
+    <string name="hint_switch_account_number">银行卡号</string>
+    <string name="btn_commit_text">提交</string>
+
+    <!-- 我的认证 -->
+    <string name="tv_auth_state_label">认证状态</string>
+    <!-- 手机认证 -->
+    <string name="tv_mobile_auth">手机认证</string>
+    <string name="tv_mobile_authed_label">已认证</string>
+    <string name="tv_mobile_authed_number">认证手机号</string>
+    <string name="tv_mobile_auth_des">手机号用于登录</string>
+    <!-- 提现认证 -->
+    <string name="tv_cash_auth">提现认证</string>
+    <string name="tv_not_auth">未认证</string>
+    <string name="tv_cash_no_auth_des">经认证后可把实盘收益提现</string>
+    <string name="tv_cash_authed_des">银行卡用于提取收益</string>
+    <string name="tv_account_name">户名：</string>
+    <string name="tv_account_bank">银行：</string>
+    <string name="tv_account_number">卡号：</string>
+    <string name="tv_account_bank_addr">所在地：</string>
+    <string name="btn_switch_bank_text">更换银行卡</string>
+    <string name="btn_now_auth_text">立即认证</string>
+
+    <!-- 提取现金 -->
+    <string name="tv_title_draw_cash">提取现金</string>
+    <string name="tv_avaliable_cash_label">可用现金余额:</string>
+    <string name="hint_draw_cash_amount_alert">提现金量：需为100的整数倍</string>
+    <string name="tv_remit_bank_card_label">汇入认证银行卡：</string>
+    <string name="tv_draw_cash_notice">提取现金重要须知</string>
+    <string name="title_draw_cash_text">提现金</string>
+    <string name="hint_withdraw_cash_text">提现金量：需为100的整数倍</string>
+    <string name="label_withdraw_cath_text">汇入认证银行卡</string>
+    <string name="label_account_name">户名</string>
+    <string name="label_bank_name">银行</string>
+    <string name="label_bank_addr">所在地</string>
+    <string name="label_bank_num">卡号</string>
+    <string name="withdraw_cash_rules">《提取现金重要须知》</string>
+    <string name="avalible_cash_amount">可提取现金：</string>
+    <string name="unit_yuan">元</string>
+    <!-- 余额明细 -->
+    <string name="tv_title_balance_detail">余额明细</string>
+
+    <!-- 实盘积分明细 -->
+    
+    <string name="tv_title_actual_panel_integral">实盘积分明细</string>
+    <string name="actual_integral_info_label">实盘积分明细</string>
+    <string name="tv_integral_balance_label">当前实盘积分余额:</string>
+
+    <!-- 登录界面 -->
+    <string name="tv_title_login">登录</string>
+    <string name="tv_quick_register">快速注册</string>
+    <string name="tv_find_psw_back">忘记密码?</string>
+    <string name="btn_login_text">登  录</string>
+    <string name="btn_register_text">注 册</string>
+    <string name="tv_title_quick_reg">快速注册</string>
+    <string name="hint_mobile_number">手机号码</string>
+    <string name="hint_psw">密码</string>
+    <string name="tv_quick_reg_des">请输入您注册的手机号</string>
+    <string name="btn_quick_reg_text">点击发送密码到手机</string>
+    <string name="tv_register_rules">《注册条款》</string>
+    <string name="tv_title_psw_find_back">找回密码</string>
+
+    <!-- 个人主页 -->
+    <string name="tv_title_personal_page">个人主页</string>
+    <string name="tv_total_real_integral">累计实盘积分</string>
+    <string name="tv_total_profit">累计总收益</string>
+    <string name="label_challenge_trade_panel">挑战交易盘</string>
+    <string name="label_join_trade_panel">参赛交易盘</string>
+    <string name="label_stock">股票</string>
+    <string name="label_amount">额度</string>
+    <string name="label_profit_loss">盈亏</string>
+    <string name="label_date">日期</string>
+    <string name="shared_text">已分享</string>
+    <string name="shared_unit">笔</string>
+    <string name="view_more_text">查看更多</string>
+    <string name="user_nick_name">用户昵称</string>
+    <string name="user_personal_setting">个性化</string>
+    <string name="user_no_shared_text">未分享成功操作</string>
+    <string name="title_my_account">我的账号</string>
+    <string name="label_define_pic">修改头像</string>
+    <string name="label_user_home_back">主 页 背 景</string>
+    <string name="hint_please_input_new_nick">请输入昵称</string>
+    <string name="label_login_out">退出登录</string>
+    <string name="btn_manage_text">管理</string>
+
+   	<string name="label_actual_panel">挑战交易盘</string>
+   	<string name="label_join_panel">参赛交易盘</string>
+    <!-- 头像设置 -->
+    <string name="title_user_pic_set">设置头像</string>
+    <string name="btn_done_text">确定</string>
+    <string name="select_from_system_pics_text">选择系统头像</string>
+    <string name="select_from_system_back_text">选择系统背景</string>
+    <string name="title_user_homeback_set">设置背景</string>
+
+    <!-- 设置昵称 -->
+    <string name="title_set_nick">设置昵称</string>
+    <string name="nick_set_instruction">交易操作需要您设置一个昵称，创建的昵称一经确定，不可更改!</string>
+
+    <!-- 我的认证 -->
+    <string name="title_my_auth">我的认证</string>
+
+    <!-- Test string for slider layout -->
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+
+    <!-- 交易记录 -->
+    <string name="tv_title_trade_record">我的交易记录</string>
+	<string name="tab_success_operation_text">成功操作</string>
+	<string name="tab_whole_operation_text">全部操作</string>
+	<string name="record_null_text">无交易记录数据</string>
+	<string name="sucess_record_null_text">无成功交易记录</string>
+	<string name="no_more_virtual_record">无更多参赛交易记录</string>
+	<string name="no_more_actual_record">无更多挑战交易记录</string>
+    <!-- 注册条款 -->
+    <string name="tv_title_register_rules">注册条款</string>
+    <string name="register_rules_title">短线放大镜客户端注册条款</string>
+    <string name="register_rules_content">1、用户应充分认识到证券投资的风险。公司所提供的所有数据与信息,仅供用户参考使用,不构成用户进行投资操作的直接依据,用户据此操作,风险自担，公司不承担任何经济与法律责任。\n2、公司通过软件产品为用户提供财经金融资讯和行情数据信息，并通过相关数据分析系统、统计运算模型对上述资讯和数据进行整理、加工和集成，为用户提供高附加值的信息和数据服务，以利于用户在投资过程中理性决策、控制风险。对于公司提供的信息数据内容，用户不应将其视作公司明示、默示地承诺证券、期货的投资收益，不应将其视为具体证券品种选择/买卖时机的建议，不应将其视为对证券市场/证券品种的走势、投资证券的可行性的分析、预测或建议，或任何其他形式的证券投资咨询/建议。公司对用户的投资决策可能带来的风险或损失不承担任何违约、赔偿或其他民事责任。\n3、手机客户端软件可能会因为网络、地理位置、周围状况等的限制,出现信号不佳导致的网速延迟和连接中断等网络风险,公司不保证行情数据任何时候均正确完整。\n4、用户在使用本软件时，可能因软件开发过程中的开发bug和后期维护过程中的第三方网络服务商的问题,导致用户可能遇到信息内容显示错误、迟延或不能显示，用户应知悉此类软件技术风险。\n5、本软件提供的股票等实时行情信息、交易信息等均来自证券交易所网站,信息传输过程中可能因系统故障、病毒攻击等产生信息异常，在此提醒用户自行核实，并注意由此带来的信息不准确等数据风险。</string>
+    <!-- 下拉刷新字符串 -->
+    <string name="header_hint_refresh_normal">下拉可以刷新</string>
+    <string name="header_hint_refresh_ready">松开可以刷新</string>
+    <string name="header_hint_refresh_loading">正在刷新&#8230;</string>
+    <string name="header_hint_refresh_time">更新于：</string>
+    <string name="footer_hint_load_normal">查看更多</string>
+    <string name="footer_hint_load_ready">松开载入更多</string>
+    <string name="default_error_message">默认错误消息</string>
+    <!-- 用户管理界面 -->
+    <string name="title_user_manager">账号安全</string>
+
+    <string name="label_modify_password">修改密码</string>
+    <string name="title_modify_passwrod">修改密码</string>
+    <string name="hint_old_psw">旧密码</string>
+    <string name="hint_new_psw">新密码</string>
+    <string name="hint_retype_psw">重复新密码</string>
+    
+    <!-- 用户登录界面 -->
+    <string name="login_failed_message">%m%n</string>
+    <string name="login_failed_title">登录失败</string>
+    <!-- 设置界面 -->
+    <string name="not_login_text">未登录</string>
+    <!-- 联系我们 -->
+    <string name="title_constract_us">联系我们</string>
+    <string name="label_official_site">官方网站</string>
+    <string name="label_service_tel">客服电话</string>
+    <string name="label_service_email">客服邮箱</string>
+    <string name="label_platform_support">安信证券</string>
+    <string name="label_platform_addr">北京中关村大街营业部</string>
+    <!-- 消息中心 -->
+    <string name="title_message_center">消息</string>
+    <string name="tab_account_trade_text">账户&amp;交易</string>
+	<string name="tab_info_notice_text">资讯&amp;公告</string>
+	<string name="news_account_is_null_text">无消息记录</string>
+	<string name="notice_infos_is_null_text">无记录数据</string>
+	<!-- 当前版本 -->
+	<string name="vertion_lastest_text">当前已是最新版本</string>
+	<string name="btn_konwn">知道了</string>
+	
+	<string name="error_message">数据加载失败，请重试</string>
+	<string name="cansai_message">T+1日盘中触及或击穿中止止损率，系统自动中止玩家操作权，并以中止止损率进行亏损清算</string>
+	<!-- 他人主页 -->
+	<string name="other_user_title_append">的主页</string>
+	<!-- 软件盘 -->
+	<string name="del">del</string>
+    <string name="_002">002</string>
+    <string name="_300">300</string>
+    <string name="abc">ABC</string>
+    <string name="_600">600</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_clean">清 空</string>
+    <string name="_7">7</string>
+    <string name="_search">搜 索</string>
+    <string name="_hide">隐藏</string>
+    <string name="_9">9</string>
+    <string name="_8">8</string>
+    <string name="_00">00</string>
+    <string name="_0">0</string>
+    <string name="name">名称</string>
+    <string name="_ok">完 成</string>
+    <string name="_point">.</string>
+    <string name="market_price">市 价</string>
+    <string name="all">全 部</string>
+    <string name="scale">比 例</string>
+    <string name="txt_buy">买入</string>
+    <!-- 我的积分 -->
+    <string name="label_today_increase">当日增加</string>
+    <string name="label_today_decrease">当日减少</string>
+    <string name="label_score_balance">余额</string>
+    <string name="label_score_details">积分明细</string>
+</resources>

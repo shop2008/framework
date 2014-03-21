@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://wxxr.com.cn/binding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/page_background_color">
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+        android:background="@drawable/title_background">
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:text="参赛交易盘" 
+            android:gravity="center"
+            android:button="@null"
+            android:textSize="15sp"
+            android:checked="true"
+            bind:field="cansaiRadio"
+            android:background="@drawable/tab_left_btn_background"
+            bind:on_Click="showParticipatingTradingClick"
+            android:layout_marginBottom="0.5dp"
+            />
+        
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            bind:field="tiaozhanRadio"
+            bind:on_Click="showChallengeTradingClick"
+            android:text="挑战交易盘" 
+            android:textSize="15sp"
+            android:background="@drawable/tab_right_btn_background"
+            android:layout_marginBottom="0.5dp"/>        
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:padding="6dp">
+        <!-- 挑战交易盘 开始 -->
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:visibility="visible"
+            bind:field="showChallengeTrading"
+            >
+			<include layout="@layout/challenge_trade_page_layout"/>
+        </LinearLayout>
+        <!-- 挑战交易盘 结束 -->
+         <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            bind:field="showParticipatingTrading">
+			<include layout="@layout/participating_trade_page_layout"/>
+		</LinearLayout>	
+    </FrameLayout>
+
+</LinearLayout>
