@@ -38,7 +38,7 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 	private IView viewModel;	// Logic view component
 	private IWorkbenchRTContext workbenchContext;
 	private IBindingContext bindingContext;
-	private Map<String, String> bindingAttrs;
+	final private Map<String, String> bindingAttrs;
 	private String fieldName;
 	protected boolean updateUIScheduled,active;
 	private IUIComponent field;
@@ -60,11 +60,15 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 			return bindingContext;
 		}
 	};
-	protected Map<String, String> getBindingAttrs(boolean createIfNotExisting){
-		if((bindingAttrs == null)&&createIfNotExisting){
-			this.bindingAttrs = new HashMap<String, String>();
-		}
-		return this.bindingAttrs;
+//	protected Map<String, String> getBindingAttrs(boolean createIfNotExisting){
+//		if((bindingAttrs == null)&&createIfNotExisting){
+//			this.bindingAttrs = new HashMap<String, String>();
+//		}
+//		return this.bindingAttrs;
+//	}
+	
+	public AbstractFieldBinding(Map<String, String> attrs){
+		this.bindingAttrs = attrs;
 	}
 	
 	protected synchronized void scheduleUIUpdating() {
@@ -183,7 +187,7 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 		this.uiControl = null;
 		this.viewModel = null;
 		this.workbenchContext = null;
-		this.bindingAttrs = null;
+//		this.bindingAttrs = null;
 	}
 
 	/* (non-Javadoc)
@@ -240,7 +244,7 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 	/**
 	 * @return the bindingAttrs
 	 */
-	protected Map<String, String> getBindingAttrs() {
+	public Map<String, String> getBindingAttrs() {
 		return bindingAttrs;
 	}
 
@@ -358,12 +362,12 @@ public abstract class AbstractFieldBinding implements IFieldBinding {
 		this.bindingContext = bindingContext;
 	}
 
-	/**
-	 * @param bindingAttrs the bindingAttrs to set
-	 */
-	protected void setBindingAttrs(Map<String, String> bindingAttrs) {
-		this.bindingAttrs = bindingAttrs;
-	}
+//	/**
+//	 * @param bindingAttrs the bindingAttrs to set
+//	 */
+//	protected void setBindingAttrs(Map<String, String> bindingAttrs) {
+//		this.bindingAttrs = bindingAttrs;
+//	}
 
 	/**
 	 * @param fieldName the fieldName to set

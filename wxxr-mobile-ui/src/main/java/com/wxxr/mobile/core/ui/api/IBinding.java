@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.core.ui.api;
 
+import java.util.Map;
+
 
 /**
  * @author neillin
@@ -19,4 +21,5 @@ public interface IBinding<M extends IUIComponent>
 //	IUIComponent getValueModel();
 	Object getUIControl();
 	boolean isInitialized();
+	Map<String, String> getBindingAttrs();
 }

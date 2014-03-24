@@ -4,6 +4,7 @@
 package com.wxxr.mobile.android.ui;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.wxxr.mobile.core.ui.api.IAppToolbar;
@@ -24,4 +25,6 @@ public interface IBindableActivity {
 	IAppToolbar getToolbar();
 	void showFragment(ViewGroup vgControl,String viewId, IAndroidBindingDescriptor bDesc,boolean add2Backstack);
 	void hideFragment(String viewId);
+	View getProgressView();
+	View getProgressFailedView();
 }

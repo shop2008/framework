@@ -54,7 +54,7 @@ public abstract class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T
 						}
 						updateLocalValue(value);
 					}
-					clearUpdatingAttribute();
+					setUpdatingSuccess();
 					callback = null;
 				}
 			});
@@ -86,7 +86,7 @@ public abstract class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T
 				@Override
 				public void run() {
 					cancelled = true;
-					clearUpdatingAttribute();
+					setUpdatingSuccess();
 					callback = null;
 				}
 			});
@@ -106,7 +106,7 @@ public abstract class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T
 						cancellable.cancel();
 					}
 					cancelled = true;
-					clearUpdatingAttribute();
+					setUpdatingSuccess();
 					callback = null;
 				}
 			});
@@ -192,6 +192,22 @@ public abstract class AbstractELValueEvaluator<T,V> implements IValueEvaluator<T
 		}
 	}
 
+	/**
+	 * 
+	 */
+	protected void setUpdatingSuccess() {
+		if(this.progressFieldNames != null){
+			for (String fname : this.progressFieldNames) {
+				@SuppressWarnings("unchecked")
+				IDataField<T> field = elm.getView().getChild(fname, IDataField.class);
+				if(field != null){
+					field.removeAttribute(AttributeKeys.valueUpdatedFailed);
+					field.setAttribute(AttributeKeys.valueUpdating, null);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * @param async
 	 */

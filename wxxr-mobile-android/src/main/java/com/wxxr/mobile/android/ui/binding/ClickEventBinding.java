@@ -4,6 +4,8 @@
 package com.wxxr.mobile.android.ui.binding;
 
 
+import java.util.Map;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -20,7 +22,8 @@ import com.wxxr.mobile.core.ui.common.SimpleInputEvent;
 public class ClickEventBinding extends AbstractEventBinding implements OnClickListener {
 
 	
-	public ClickEventBinding(View view,String cmdName,String field){
+	public ClickEventBinding(View view,String cmdName,String field, Map<String, String> attrs){
+		super(attrs);
 		super.setUIControl(view);
 		super.setCommandName(cmdName);
 		super.setFieldName(field);

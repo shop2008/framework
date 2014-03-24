@@ -181,6 +181,14 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 			return runtimeContext != null;
 		}
 
+		@Override
+		public Map<String, String> getBindingAttrs() {
+			if(this.binding != null){
+				return this.binding.getBindingAttrs();
+			}
+			return null;
+		}
+
 	}
 	
 	protected <T extends IUIComponent> IBinding<T> doDecorate(String decoratorName, IBinding<T> binding) {
@@ -299,13 +307,13 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 						}
 					}
 				}
-			}else{
-				if(map != null){
-					view.setTag(BING_ATTRS_TAG_ID, map);
-				}else{
-					view.setTag(BING_ATTRS_TAG_ID, Collections.EMPTY_MAP);
-				}
 			}
+			if(map != null){
+				view.setTag(BING_ATTRS_TAG_ID, map);
+			}else{
+				view.setTag(BING_ATTRS_TAG_ID, Collections.EMPTY_MAP);
+			}
+			
 			if(map != null){
 				String menuAdaptorClass = map.get("menuAdaptor");
 				if(menuAdaptorClass != null){
@@ -503,6 +511,13 @@ public class AndroidViewBinding implements IAndroidViewBinding{
 	@Override
 	public boolean isInitialized() {
 		return this.runtimeContext != null;
+	}
+
+
+	@Override
+	public Map<String, String> getBindingAttrs() {
+		// TODO Auto-generated method stub
+		return this.bindingContext.getBindingAttrSet();
 	}
 
 }

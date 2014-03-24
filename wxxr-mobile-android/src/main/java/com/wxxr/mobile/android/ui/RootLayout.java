@@ -7,18 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.wxxr.mobile.core.util.ObjectUtils;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class RootLayout extends ViewGroup {
 
 	private Context context;
 	private LayoutInflater layoutInflater;
-	Map<String, String> overMaps = new HashMap<String, String>();
-	Map<String, View> ParamsMaps = new HashMap<String, View>();
+	private Map<String, View> overMaps = new HashMap<String, View>();//id,override view
+	private Map<String, View> ParamsMaps = new HashMap<String, View>();//id,overed view
 	private int headerIhc = -1;
 	private int contentIhc = -1;
 	private int footerIhc = -1;
@@ -116,23 +121,28 @@ public class RootLayout extends ViewGroup {
 		ParamsMaps.clear();
 
 		List<String> keyList = mapKey2List(overMaps);
-		List<String> valueList = mapValue2List(overMaps);
+//		List<String> valueList = mapValue2List(overMaps);
 		int childCount = getChildCount();
 		// 布局非遮盖view并保存params
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
 			int identity = System.identityHashCode(child);
-			if (keyList.contains(identity + "")
+			if (overMaps.containsValue(child)
 					|| child.getVisibility() == View.GONE) {
 				continue;
 			}
 			if (identity == headerIhc) {// 布局headerView
 				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) child
 						.getLayoutParams();
-				for (String id : valueList) {
-					View v = child.findViewById(Integer.valueOf(id));
+				for (String viewid : keyList) {
+					int id = 0;
+					try {
+						id = Integer.valueOf(viewid);
+					} catch (NumberFormatException e) {
+					}
+					View v = child.findViewById(id);
 					if (v != null) {
-						ParamsMaps.put(id, v);
+						ParamsMaps.put(viewid, v);
 					}
 				}
 				int childWidth = child.getMeasuredWidth();
@@ -149,10 +159,15 @@ public class RootLayout extends ViewGroup {
 			} else if (identity == footerIhc) {// 布局FooterView
 				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) child
 						.getLayoutParams();
-				for (String id : valueList) {
-					View v = child.findViewById(Integer.valueOf(id));
+				for (String viewid : keyList) {
+					int id = 0;
+					try {
+						id = Integer.valueOf(viewid);
+					} catch (NumberFormatException e) {
+					}
+					View v = child.findViewById(id);
 					if (v != null) {
-						ParamsMaps.put(id, v);
+						ParamsMaps.put(viewid, v);
 					}
 				}
 				int childWidth = child.getMeasuredWidth();
@@ -167,10 +182,15 @@ public class RootLayout extends ViewGroup {
 			} else {
 				ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) child
 						.getLayoutParams();
-				for (String id : valueList) {
-					View v = child.findViewById(Integer.valueOf(id));
+				for (String viewid : keyList) {
+					int id = 0;
+					try {
+						id = Integer.valueOf(viewid);
+					} catch (NumberFormatException e) {
+					}
+					View v = child.findViewById(id);
 					if (v != null) {
-						ParamsMaps.put(id, v);
+						ParamsMaps.put(viewid, v);
 					}
 				}
 				int childWidth = child.getMeasuredWidth();
@@ -185,10 +205,15 @@ public class RootLayout extends ViewGroup {
 		if (content != null && contentIhc != -1) {
 			ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) content
 					.getLayoutParams();
-			for (String id : valueList) {
-				View v = content.findViewById(Integer.valueOf(id));
+			for (String viewid : keyList) {
+				int id = 0;
+				try {
+					id = Integer.valueOf(viewid);
+				} catch (NumberFormatException e) {
+				}
+				View v = content.findViewById(id);
 				if (v != null) {
-					ParamsMaps.put(id, v);
+					ParamsMaps.put(viewid, v);
 				}
 			}
 			int contentWidth = content.getMeasuredWidth();
@@ -201,8 +226,13 @@ public class RootLayout extends ViewGroup {
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
 			String identity = System.identityHashCode(child) + "";
-			if (keyList.contains(identity)) {
-				String id = overMaps.get(identity);
+			if (overMaps.containsValue(child)) {
+//				String id = overMaps.get(identity);
+				String id = "";
+				Object obj = child.getTag();
+				if(obj != null) {
+					id = (String)obj;
+				}
 				if (child.getVisibility() != View.GONE) {
 					View v = ParamsMaps.get(id);
 					if (v != null) {
@@ -257,25 +287,6 @@ public class RootLayout extends ViewGroup {
 		}
 	}
 
-	int measureNullChild(int childIndex) {
-		return 0;
-	}
-
-	int getChildrenSkipCount(View child, int index) {
-		return 0;
-	}
-
-	int getNextLocationOffset(View child) {
-		return 0;
-	}
-
-	void measureChildBeforeLayout(View child, int childIndex,
-			int widthMeasureSpec, int totalWidth, int heightMeasureSpec,
-			int totalHeight) {
-		measureChildWithMargins(child, widthMeasureSpec, totalWidth,
-				heightMeasureSpec, totalHeight);
-	}
-
 	public static List mapValue2List(Map map) {
 		List list = new ArrayList();
 		Iterator iter = map.entrySet().iterator();
@@ -316,13 +327,311 @@ public class RootLayout extends ViewGroup {
 		return location;
 	}
 
-	public void addOverrideView(View view, int id) {
-		if (overMaps.containsKey(System.identityHashCode(view) + ""))
+	public void addProgressOverrideView(View v, Map<String, Object> params) {
+		View add = ((LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_LAYOUT,
+						"progress_layout"), null);
+		add.setOnClickListener(null);
+		ViewGroup group = (ViewGroup) v.getParent();
+		if (group == null)
+			return;
+		int index = -1;
+		int count = group.getChildCount();
+		for (int j = 0; j < count; j++) {
+			View vj = group.getChildAt(j);
+			if (ObjectUtils.isEquals(v, vj)) {
+				index = j;
+				break;
+			}
+		}
+		if (index < 0)
+			return;
+		if (true) {
+			ViewGroup.LayoutParams p = v.getLayoutParams();
+			FrameLayout frame = new FrameLayout(context);
+			frame.setTag(this);
+			group.removeView(v);
+			frame.addView(v);
+			frame.addView(add);
+			group.addView(frame, index, p);
+		}
+	}
+	
+	public void addProgressOverrideView(int id, Map<String, Object> params) {
+		View add = ((LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_LAYOUT,
+						"progress_layout"), null);
+		if (overMaps.containsKey(id + "")) {
+			removeOverrideView(id);
+//			View v = overMaps.get(id + "");
+//			removeView(v);
+		}
+		if (overMaps.containsValue(add))
 			throw new IllegalStateException(
 					"The specified child already has a parent. You must call removeView() on the child's parent first.");
-		overMaps.put(System.identityHashCode(view) + "", id + "");
-		addView(view);
+		add.setTag(id + "");
+		overMaps.put(id + "", add);
+		add.setOnClickListener(null);
+//		add.requestLayout();
+//		add.postInvalidate();
+//		requestLayout();
+//		postInvalidate();
+		int childCount = getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			View child = getChildAt(i);
+			View v = child.findViewById(id);
+			if(v != null) {
+				ViewGroup group = (ViewGroup)v.getParent();
+				if(group == null)
+					return;
+				int index = -1;
+				int count = group.getChildCount();
+				for(int j = 0; j < count;j++) {
+					View vj = group.getChildAt(j);
+					if(ObjectUtils.isEquals(v, vj)) {
+						index = j;
+						break;
+					}
+				}
+				if(index < 0)
+					return;
+				if(true) {
+					ViewGroup.LayoutParams p = v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else {
+				if(group instanceof LinearLayout) {
+					LinearLayout.LayoutParams p = (LinearLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else if(group instanceof RelativeLayout) {
+					RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					RelativeLayout.LayoutParams pa = new RelativeLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else if(group instanceof FrameLayout) {
+					FrameLayout.LayoutParams p = (FrameLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					FrameLayout.LayoutParams pa = new FrameLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				}
+				}
+			}
+		}
+//		addView(add);
 	}
+	
+	public void addFailedOverrideView(int id, Map<String, Object> params,
+			final IReloadCallBack cb) {
+		View add = ((LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_LAYOUT,
+						"progress_failed_layout"), null);
+		if (overMaps.containsKey(id + "")) {
+			removeOverrideView(id);
+//			View v = overMaps.get(id + "");
+//			removeView(v);
+		}
+		if (overMaps.containsValue(add))
+			throw new IllegalStateException(
+					"The specified child already has a parent. You must call removeView() on the child's parent first.");
+		add.setTag(id + "");
+		overMaps.put(id + "", add);
+		add.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				cb.onReload(null);
+			}
+		});
+//		add.requestLayout();
+//		add.postInvalidate();
+//		requestLayout();
+//		postInvalidate();
+//		View v = add.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID,
+//						"failed"));
+//		if(v != null)
+//			v.requestLayout();
+		
+		int childCount = getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			View child = getChildAt(i);
+			View v = child.findViewById(id);
+			if(v != null) {
+				ViewGroup group = (ViewGroup)v.getParent();
+				if(group == null)
+					return;
+				int index = -1;
+				int count = group.getChildCount();
+				for(int j = 0; j < count;j++) {
+					View vj = group.getChildAt(j);
+					if(ObjectUtils.isEquals(v, vj)) {
+						index = j;
+						break;
+					}
+				}
+				if(index < 0)
+					return;
+				if(true) {
+					ViewGroup.LayoutParams p = v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else {
+				if(group instanceof LinearLayout) {
+					LinearLayout.LayoutParams p = (LinearLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else if(group instanceof RelativeLayout) {
+					RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					RelativeLayout.LayoutParams pa = new RelativeLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				} else if(group instanceof FrameLayout) {
+					FrameLayout.LayoutParams p = (FrameLayout.LayoutParams)v.getLayoutParams();
+					FrameLayout frame = new FrameLayout(context);
+					frame.setTag(this);
+//					FrameLayout.LayoutParams pa = new FrameLayout.LayoutParams(p.width, p.height);
+//					frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//					pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+					group.removeView(v);
+					frame.addView(v);
+					frame.addView(add);
+					group.addView(frame, index, p);
+				}
+				}
+			}
+		}
+//		addView(add);
+	}
+	
+	public void removeOverrideView(int id) {
+		if(overMaps.containsKey(id+"")) {
+			View view = overMaps.get(id + "");
+			overMaps.remove(id+"");
+			
+			int childCount = getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				View child = getChildAt(i);
+				View v = child.findViewById(id);
+				if(v != null) {
+					ViewGroup frame = (ViewGroup)v.getParent();
+					if(frame instanceof FrameLayout && ObjectUtils.isEquals(frame.getTag(), this)) {
+						ViewGroup frameParent = (ViewGroup)frame.getParent();
+						if(frameParent == null)
+							return;
+						int index = -1;
+						int count = frameParent.getChildCount();
+						for(int j = 0; j < count;j++) {
+							View vj = frameParent.getChildAt(j);
+							if(ObjectUtils.isEquals(frame, vj)) {
+								index = j;
+								break;
+							}
+						}
+						if(index < 0)
+							return;
+						if(true) {
+							ViewGroup.LayoutParams p = frame.getLayoutParams();
+//							LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//								frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//							pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+							frame.removeView(v);
+							frame.removeView(view);
+							frameParent.removeView(frame);
+							frameParent.addView(v, index, p);
+						} else {
+						if(frameParent instanceof LinearLayout) {
+							LinearLayout.LayoutParams p = (LinearLayout.LayoutParams)frame.getLayoutParams();
+//							LinearLayout.LayoutParams pa = new LinearLayout.LayoutParams(p.width, p.height);
+//								frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//							pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+							frame.removeView(v);
+							frame.removeView(view);
+							frameParent.removeView(frame);
+							frameParent.addView(v, index, p);
+						} else if(frameParent instanceof RelativeLayout) {
+							RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)frame.getLayoutParams();
+//							RelativeLayout.LayoutParams pa = new RelativeLayout.LayoutParams(p.width, p.height);
+//								frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//							pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+							frame.removeView(v);
+							frame.removeView(view);
+							frameParent.removeView(frame);
+							frameParent.addView(v, index, p);
+						} else if(frameParent instanceof FrameLayout) {
+							FrameLayout.LayoutParams p = (FrameLayout.LayoutParams)frame.getLayoutParams();
+//							FrameLayout.LayoutParams pa = new FrameLayout.LayoutParams(p.width, p.height);
+//							frame.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
+//							pa.setMargins(p.leftMargin, p.topMargin, p.rightMargin, p.bottomMargin);
+							frame.removeView(v);
+							frame.removeView(view);
+							frameParent.removeView(frame);
+							frameParent.addView(v, index, p);
+						}
+						}
+					}
+				}
+			}
+//			removeView(view);
+		}
+	}
+	
+//	public void addOverrideView(View view, int id) {
+//		if (overMaps.containsValue(view))
+//			throw new IllegalStateException(
+//					"The specified child already has a parent. You must call removeView() on the child's parent first.");
+//		view.setTag(id+"");
+//		overMaps.put(id + "", view);
+//		addView(view);
+//	}
 
 	public void addHeaderView(View view) {
 		if (headerIhc != -1)
@@ -353,8 +662,12 @@ public class RootLayout extends ViewGroup {
 	@Override
 	public void removeView(View view) {
 		int ihc = System.identityHashCode(view);
-		if (overMaps.containsKey(ihc + "")) {
-			overMaps.remove(ihc + "");
+		if (overMaps.containsValue(view)) {
+			Object obj = view.getTag();
+			if(obj != null) {
+				String id = (String)obj;
+				overMaps.remove(id);
+			}
 		}
 		if (ihc == headerIhc) {
 			headerIhc = -1;
@@ -376,6 +689,20 @@ public class RootLayout extends ViewGroup {
 		footerIhc = -1;
 	}
 
+	public View getProgressView() {
+		return ((LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_LAYOUT,
+						"progress_layout"), null);
+	}
+	
+	public View getProgressFailedView() {
+		return ((LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_LAYOUT,
+						"progress_failed_layout"), null);
+	}
+	
 	@Override
 	public ViewGroup.MarginLayoutParams generateLayoutParams(AttributeSet attrs) {
 		return new ViewGroup.MarginLayoutParams(getContext(), attrs);

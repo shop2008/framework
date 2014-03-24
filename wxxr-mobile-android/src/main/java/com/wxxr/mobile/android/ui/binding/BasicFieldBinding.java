@@ -19,9 +19,10 @@ public class BasicFieldBinding extends AbstractFieldBinding {
 	
 	
 	public BasicFieldBinding(IAndroidBindingContext ctx, String fieldName,Map<String,String> attrSet){
+		super(attrSet);
 		super.setUIControl(ctx.getBindingControl());
 		super.setFieldName(fieldName);
-		super.setBindingAttrs(attrSet);
+//		super.setBindingAttrs(attrSet);
 		super.setBindingContext(ctx);
 	}
 	

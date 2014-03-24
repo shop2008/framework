@@ -4,6 +4,8 @@
 package com.wxxr.mobile.android.ui.binding;
 
 
+import java.util.Map;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,7 +24,8 @@ public class ItemClickEventBinding extends AbstractEventBinding implements OnIte
 
 	private AdapterView<?> control;
 	
-	public ItemClickEventBinding(View view,String cmdName,String field){
+	public ItemClickEventBinding(View view,String cmdName,String field, Map<String, String> attrs){
+		super(attrs);
 		this.control = (AdapterView<?>)view;
 		super.setUIControl(this.control);
 		super.setCommandName(cmdName);

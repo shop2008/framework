@@ -26,7 +26,7 @@ public class ItemClickEventBinder implements IEventBinder {
 	public IEventBinding createBinding(IBindingContext context,
 			String fieldName, String cmdName, Map<String, String> attrs) {
 		IAndroidBindingContext ctx = (IAndroidBindingContext)context;
-		ItemClickEventBinding binding = new ItemClickEventBinding(ctx.getBindingControl(), cmdName, fieldName);
+		ItemClickEventBinding binding = new ItemClickEventBinding(ctx.getBindingControl(), cmdName, fieldName, attrs);
 		binding.init(this.context);
 		return binding;
 	}

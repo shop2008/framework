@@ -45,7 +45,8 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 	private IViewBinding androidViewBinding;
 	private Map<String, BindableFragment> fragments;
 	private IViewBinding toolbarViewBingding;
-	private View contentRoot;
+	private RootLayout contentRoot;
+	private View contentView;
 	private IView rootView;
 	private IPage page;
 	private IAppToolbar toolbar;
@@ -94,7 +95,7 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 				}
 			}, getBindingDescriptor(IWorkbench.ROOT_VIEW_ID));
 			
-			this.contentRoot = (View)rootViewBingding.getUIControl();
+			this.contentRoot = (RootLayout)rootViewBingding.getUIControl();
 			
 			if(descriptor.withToolbar()){
 				this.toolbarViewBingding = getViewBinder().createBinding(new IAndroidBindingContext() {
@@ -168,10 +169,7 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 					return null;
 				}
 			}, getBindingDescriptor(getBindingPageId()));
-
-			if(this.contentRoot instanceof RootLayout){
-				((RootLayout)contentRoot).addContentView((View)this.androidViewBinding.getUIControl());
-			}
+			contentRoot.addContentView((View)this.androidViewBinding.getUIControl());
 			setContentView(this.contentRoot);
 		} else {
 			if(descriptor.withToolbar()){
@@ -206,14 +204,14 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 						return null;
 					}
 				}, getBindingDescriptor(IWorkbench.TOOL_BAR_VIEW_ID));
-				this.contentRoot = (View)toolbarViewBingding.getUIControl();
+				this.contentView = (View)toolbarViewBingding.getUIControl();
 				this.rootView = AppUtils.getService(IWorkbenchManager.class).getWorkbench().createNInitializedView(IWorkbench.TOOL_BAR_VIEW_ID);
 				if(this.rootView instanceof IAppToolbar){
 					this.toolbar = (IAppToolbar)this.rootView;
 					page.onToolbarCreated(toolbar);
 				}
 			}else{
-				this.contentRoot = null;
+				this.contentView = null;
 			}
 			this.androidViewBinding = getViewBinder().createBinding(new IAndroidBindingContext() {
 	
@@ -247,10 +245,10 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 				}
 			}, getBindingDescriptor(getBindingPageId()));
 	
-			if(this.contentRoot != null){
-				ViewGroup vg = (ViewGroup)this.contentRoot.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
+			if(this.contentView != null){
+				ViewGroup vg = (ViewGroup)this.contentView.findViewById(RUtils.getInstance().getResourceId(RUtils.CATEGORY_NAME_ID, "contents"));
 				vg.addView((View)this.androidViewBinding.getUIControl());
-				setContentView(this.contentRoot);
+				setContentView(this.contentView);
 			}else{
 				setContentView((View)this.androidViewBinding.getUIControl());
 			}
@@ -265,8 +263,16 @@ public abstract class BindableFragmentActivity extends Activity implements IBind
 			log.debug("Activity created !");
 		}
 	}
-
-
+	@Override
+	public View getProgressView() {
+		return contentRoot.getProgressView();
+	}
+	
+	@Override
+	public View getProgressFailedView() {
+		return contentRoot.getProgressFailedView();
+	}
+	
 	@Override
 	public IAppToolbar getToolbar() {
 		return this.toolbar;

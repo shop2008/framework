@@ -3,6 +3,8 @@
  */
 package com.wxxr.mobile.core.ui.common;
 
+import java.util.Map;
+
 import com.wxxr.mobile.core.ui.api.IBindingDecoratorRegistry;
 import com.wxxr.mobile.core.ui.api.IEventBinding;
 import com.wxxr.mobile.core.ui.api.IUIComponent;
@@ -22,6 +24,7 @@ public abstract class AbstractEventBinding implements IEventBinding {
 	private InputEventDecorator decorator;
 	private IView pModel;
 	private IWorkbenchRTContext context;
+	private Map<String, String> bindingAttrs;
 	private String commandName, fieldName;
 	private Object uiControl;
 	private InputEventHandlingContext handlingCtx = new InputEventHandlingContext() {
@@ -52,7 +55,9 @@ public abstract class AbstractEventBinding implements IEventBinding {
 		}
 	};
 	
-
+	public AbstractEventBinding(Map<String, String> attrs) {
+		this.bindingAttrs = attrs;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxxr.mobile.core.ui.api.IBinding#notifyDataChanged(com.wxxr.mobile.core.ui.api.ValueChangedEvent[])
 	 */
@@ -209,5 +214,9 @@ public abstract class AbstractEventBinding implements IEventBinding {
 	@Override
 	public boolean isInitialized() {
 		return this.context != null;
+	}
+	
+	public Map<String, String> getBindingAttrs() {
+		return bindingAttrs;
 	}
 }
