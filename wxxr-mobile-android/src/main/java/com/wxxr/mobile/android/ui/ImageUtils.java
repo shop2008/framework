@@ -163,9 +163,10 @@ public abstract class ImageUtils {
 			con.setRequestProperty("deviceType", AppUtils.getFramework().getDeviceType());
 			con.setRequestProperty("appName", AppUtils.getFramework().getApplicationName());
 			con.setRequestProperty("appVer", AppUtils.getFramework().getApplicationVersion());
+			con.setRequestProperty("buildNumber", AppUtils.getFramework().getApplicationBuildNnumber());
 			output = con.getOutputStream();
 			input = con.getInputStream();
-			if(input.available()>30000){
+			if(input.available()>200000){
 				op.inSampleSize = 6;
 			}
 			bitmap = BitmapFactory.decodeStream(input, null, op);
