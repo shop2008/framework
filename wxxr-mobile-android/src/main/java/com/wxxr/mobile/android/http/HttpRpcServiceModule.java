@@ -26,6 +26,7 @@ public class HttpRpcServiceModule<T extends IAndroidAppContext> extends Abstract
 			request.setHeader("deviceType", context.getApplication().getDeviceType());
 			request.setHeader("appName", context.getApplication().getApplicationName());
 			request.setHeader("appVer", context.getApplication().getApplicationVersion());
+			request.setHeader("buildNumber", context.getApplication().getApplicationBuildNnumber());
 			if(context.getAttribute(HttpHeaderNames.USER_AGENT) != null){
 				request.setHeader(HttpHeaderNames.USER_AGENT, (String)context.getAttribute(HttpHeaderNames.USER_AGENT));
 			}
